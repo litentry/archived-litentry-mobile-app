@@ -12,11 +12,17 @@
   "dependencies": {
     "@eva-design/eva": "^2.0.0",
     "@react-native-community/hooks": "^2.6.0",
+    "@react-native-community/masked-view": "^0.1.10",
+    "@react-navigation/native": "^5.8.10",
     "@ui-kitten/components": "^5.0.0",
     "@ui-kitten/eva-icons": "^5.0.0",
     "proxy-polyfill": "^0.3.2",
     "react": "16.13.1",
     "react-native": "0.63.3",
+    "react-native-gesture-handler": "^1.8.0",
+    "react-native-reanimated": "^1.13.2",
+    "react-native-safe-area-context": "^3.1.9",
+    "react-native-screens": "^2.15.0",
     "react-native-svg": "^12.1.0"
   },
   "devDependencies": {
