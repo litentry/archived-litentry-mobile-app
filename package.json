@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@eva-design/eva": "^2.0.0",
+    "@react-native-community/hooks": "^2.6.0",
     "@ui-kitten/components": "^5.0.0",
     "@ui-kitten/eva-icons": "^5.0.0",
     "proxy-polyfill": "^0.3.2",
