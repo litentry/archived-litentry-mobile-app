@@ -1,5 +1,5 @@
 import React, {useContext, useRef} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import SafeView from 'presentational/SafeView';
 import NetworkItem from 'presentational/NetworkItem';
@@ -9,6 +9,8 @@ import {NetworkContext} from 'context/NetworkContext';
 import {Modalize} from 'react-native-modalize';
 import globalStyles, {standardPadding} from 'src/styles';
 import NetworkSelectionList from 'presentational/NetworkSelectionList';
+import {ScannerContext} from 'context/ScannerContext';
+import ScannerContextProvider from 'context/ScannerContext';
 
 type PropTypes = {navigation: DrawerNavigationProp<{}>};
 
@@ -17,6 +19,7 @@ function RegistrarScreen({navigation}: PropTypes) {
     NetworkContext,
   );
   const modalRef = useRef<Modalize>(null);
+  const {scan} = useContext(ScannerContext);
 
   const renderTitle = () => {
     return (
@@ -38,6 +41,7 @@ function RegistrarScreen({navigation}: PropTypes) {
       <Divider />
       <Layout style={styles.container} level="1">
         <Text category="label">Here comes the main content of Registrar</Text>
+        <Button onPress={scan}>Scann</Button>
       </Layout>
 
       <Modalize
@@ -79,4 +83,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegistrarScreen;
+export default function WithContext(props: PropTypes) {
+  return (
+    <ScannerContextProvider>
+      <RegistrarScreen {...props} />
+    </ScannerContextProvider>
+  );
+}
