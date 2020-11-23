@@ -8,7 +8,7 @@ type PropTypes = {
   children: React.ReactNode;
 };
 
-function Modal(props: PropTypes) {
+function PageModal(props: PropTypes) {
   const {visible, onClose, children} = props;
 
   return (
@@ -24,4 +24,4 @@ function Modal(props: PropTypes) {
   );
 }
 
-export default Modal;
+export default PageModal;
