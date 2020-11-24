@@ -1,5 +1,5 @@
 import React, {useContext, useRef} from 'react';
-import {StyleSheet, TouchableOpacity, View, Text as RNText} from 'react-native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import SafeView from 'presentational/SafeView';
 import NetworkItem from 'presentational/NetworkItem';

@@ -11,6 +11,7 @@ import {
   NotificationProperties,
 } from 'react-native-in-app-message';
 import {standardPadding} from 'src/styles';
+import {truncate} from 'lodash';
 
 type InAppNotificationPayloadType =
   | {
@@ -95,15 +96,16 @@ type RichTextComponentPropTypes = {
 
 export const RichTextComponent = (props: RichTextComponentPropTypes) => {
   const {title, message} = props;
-  const truncatedMsg =
-    message.length > 200
-      ? `${message.slice(0, message.length - 3)}...`
-      : message;
 
   return (
     <View style={{padding: standardPadding * 2}}>
       <Text style={richTextComponentStyles.title}>{title}</Text>
-      <Text>{truncatedMsg}</Text>
+      <Text>
+        {truncate(message, {
+          length: 150,
+          separator: /,? +/,
+        })}
+      </Text>
     </View>
   );
 };
