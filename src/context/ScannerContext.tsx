@@ -5,12 +5,13 @@ import React, {
   useState,
   useMemo,
 } from 'react';
-import {StyleSheet, Dimensions, View} from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import {Text, Layout, Button, Icon, IconProps} from '@ui-kitten/components';
 import {standardPadding} from 'src/styles';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {QRScannedPayload} from 'src/types';
+import useHapticFeedback from 'src/hook/useHapticFeedback';
 
 const {width, height} = Dimensions.get('window');
 
@@ -34,6 +35,7 @@ const QRIcon = (props: IconProps) => (
 
 function ScannerContextProvider({children}: PropTypes) {
   const modalRef = useRef<Modalize>(null);
+  const trigger = useHapticFeedback();
 
   // used for internal rendering, will eventually be used `onConfirm`
   const [scannedResult, setScannedResult] = useState<QRScannedPayload | null>(
@@ -47,9 +49,13 @@ function ScannerContextProvider({children}: PropTypes) {
     modalRef.current?.open();
   }, []);
 
-  const handleScannerRead = useCallback((payload: QRScannedPayload) => {
-    setScannedResult(payload);
-  }, []);
+  const handleScannerRead = useCallback(
+    (payload: QRScannedPayload) => {
+      trigger('success');
+      setScannedResult(payload);
+    },
+    [trigger],
+  );
 
   const handleReset = useCallback(() => {
     setScannedResult(null);

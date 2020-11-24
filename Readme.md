@@ -6,6 +6,8 @@
 * [x] DataContext
 * [x] NetworkContext
 * [ ] ParityProviderContext
+* [x] haptic support
+* [ ] in-app notification
 
 
 ### Distinct colors

@@ -48,3 +48,5 @@ export type QRScannedPayload = {
   target: number;
   type: string;
 };
+
+export type HapticFeedbackType = 'success' | 'warn' | 'error';
