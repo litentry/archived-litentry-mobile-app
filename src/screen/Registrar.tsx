@@ -1,5 +1,5 @@
 import React, {useContext, useRef} from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {StyleSheet, TouchableOpacity, View, Text as RNText} from 'react-native';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import SafeView from 'presentational/SafeView';
 import NetworkItem from 'presentational/NetworkItem';
@@ -9,8 +9,11 @@ import {NetworkContext} from 'context/NetworkContext';
 import {Modalize} from 'react-native-modalize';
 import globalStyles, {standardPadding} from 'src/styles';
 import NetworkSelectionList from 'presentational/NetworkSelectionList';
-import {ScannerContext} from 'context/ScannerContext';
-import ScannerContextProvider from 'context/ScannerContext';
+import ScannerContextProvider, {ScannerContext} from 'context/ScannerContext';
+import InAppNotificationContextProvider, {
+  InAppNotificationContext,
+  RichTextComponent,
+} from 'context/InAppNotificationContext';
 
 type PropTypes = {navigation: DrawerNavigationProp<{}>};
 
@@ -20,6 +23,7 @@ function RegistrarScreen({navigation}: PropTypes) {
   );
   const modalRef = useRef<Modalize>(null);
   const {scan, data} = useContext(ScannerContext);
+  const {trigger} = useContext(InAppNotificationContext);
 
   const renderTitle = () => {
     return (
@@ -42,7 +46,25 @@ function RegistrarScreen({navigation}: PropTypes) {
       <Layout style={styles.container} level="1">
         <Text category="label">Here comes the main content of Registrar</Text>
         {data.result ? <Text>{data.result.data}</Text> : null}
-        <Button onPress={scan}>Scann</Button>
+        <Button onPress={scan}>Scan</Button>
+        <Button
+          onPress={() => trigger({type: 'TextInfo', opts: {text: 'Whatnot'}})}>
+          Show Notification
+        </Button>
+        <Button
+          onPress={() =>
+            trigger({
+              type: 'Component',
+              renderContent: () => (
+                <RichTextComponent
+                  title="Tx detected"
+                  message="aa very long string[a very long string[a very long string[a very long string[a very long string[]]]]]a very long string[]a very long string[a very long string[a very long string[a very long string[a very long string[]]]]]a very long string[] very long string[a very long string[a very long string[a very long string[a very long string[]]]]]a very long string[]"
+                />
+              ),
+            })
+          }>
+          Show Notification
+        </Button>
       </Layout>
 
       <Modalize
@@ -86,8 +108,10 @@ const styles = StyleSheet.create({
 
 export default function WithContext(props: PropTypes) {
   return (
-    <ScannerContextProvider>
-      <RegistrarScreen {...props} />
-    </ScannerContextProvider>
+    <InAppNotificationContextProvider>
+      <ScannerContextProvider>
+        <RegistrarScreen {...props} />
+      </ScannerContextProvider>
+    </InAppNotificationContextProvider>
   );
 }

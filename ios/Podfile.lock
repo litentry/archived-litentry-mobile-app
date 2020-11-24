@@ -246,6 +246,8 @@ PODS:
     - React-Core
   - react-native-camera/RN (3.40.0):
     - React-Core
+  - react-native-in-app-message (1.0.32):
+    - React
   - react-native-safe-area-context (3.1.9):
     - React-Core
   - react-native-sensitive-info (5.5.8):
@@ -371,6 +373,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-camera (from `../node_modules/react-native-camera`)
+  - react-native-in-app-message (from `../node_modules/react-native-in-app-message`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-sensitive-info (from `../node_modules/react-native-sensitive-info`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -444,6 +447,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-camera:
     :path: "../node_modules/react-native-camera"
+  react-native-in-app-message:
+    :path: "../node_modules/react-native-in-app-message"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-sensitive-info:
@@ -518,6 +523,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: b56c03e61c0dd5f5801255f2160a815f4a53d451
   React-jsinspector: 8e68ffbfe23880d3ee9bafa8be2777f60b25cbe2
   react-native-camera: 35854c4f764a4a6cf61c1c3525888b92f0fe4b31
+  react-native-in-app-message: 7a54e2fd7a490e5c33857bbbb260f855205433db
   react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
   react-native-sensitive-info: 400c6e3d27945e15c8cddb5b4b92233c85ee06f8
   React-RCTActionSheet: 53ea72699698b0b47a6421cb1c8b4ab215a774aa
