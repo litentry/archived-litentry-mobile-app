@@ -19,7 +19,7 @@ function RegistrarScreen({navigation}: PropTypes) {
     NetworkContext,
   );
   const modalRef = useRef<Modalize>(null);
-  const {scan} = useContext(ScannerContext);
+  const {scan, data} = useContext(ScannerContext);
 
   const renderTitle = () => {
     return (
@@ -41,6 +41,7 @@ function RegistrarScreen({navigation}: PropTypes) {
       <Divider />
       <Layout style={styles.container} level="1">
         <Text category="label">Here comes the main content of Registrar</Text>
+        {data.result ? <Text>{data.result.data}</Text> : null}
         <Button onPress={scan}>Scann</Button>
       </Layout>
 

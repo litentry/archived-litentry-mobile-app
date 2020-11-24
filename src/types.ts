@@ -38,3 +38,13 @@ export type DataContextValueType = {
     set: (key: AsyncStorageKeyType, value: string) => Promise<void>;
   };
 };
+export type QRScannedPayload = {
+  bounds: {
+    origin: {x: string; y: string};
+    size: {height: string; width: string};
+  };
+  data: string;
+  rawData: string;
+  target: number;
+  type: string;
+};
