@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import {NetworkContext} from './NetworkContext';
 import {ApiPromise, WsProvider} from '@polkadot/api';
-import {createLogger, ReactotronDebug} from 'src/utils';
+import {createLogger} from 'src/utils';
 
 type ApiChainStatusType = 'unknown' | 'connected' | 'disconnected' | 'ready';
 type ChainApiContextValueType = {

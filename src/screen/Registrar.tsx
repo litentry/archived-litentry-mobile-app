@@ -30,7 +30,12 @@ function RegistrarScreen({navigation}: PropTypes) {
       <TouchableOpacity onPress={selectNetwork}>
         <Layout style={styles.titleContainer}>
           <Text category="s1">Litentry</Text>
-          {currentNetwork ? <NetworkItem item={currentNetwork} /> : null}
+          {currentNetwork ? (
+            <NetworkItem
+              item={currentNetwork}
+              isConnected={status === 'ready'}
+            />
+          ) : null}
         </Layout>
       </TouchableOpacity>
     );
