@@ -7,7 +7,9 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "nodeify": "rn-nodeify --hack --install process,crypto,events,constant,console,stream,url,util",
+    "postinstall": "npm run nodeify"
   },
   "dependencies": {
     "@eva-design/eva": "^2.0.0",
@@ -23,23 +25,34 @@
     "@react-navigation/native": "^5.8.10",
     "@ui-kitten/components": "^5.0.0",
     "@ui-kitten/eva-icons": "^5.0.0",
+    "console-browserify": "^1.2.0",
+    "events": "^1.1.1",
     "lodash": "^4.17.20",
+    "process": "^0.11.10",
     "proxy-polyfill": "^0.3.2",
     "react": "16.13.1",
     "react-native": "0.63.3",
     "react-native-camera": "^3.40.0",
+    "react-native-crypto": "^2.2.0",
     "react-native-device-info": "^7.1.0",
     "react-native-gesture-handler": "^1.8.0",
     "react-native-haptic-feedback": "^1.11.0",
     "react-native-in-app-message": "^1.0.32",
+    "react-native-logs": "^2.2.1",
     "react-native-modalize": "^2.0.6",
     "react-native-permissions": "^3.0.0-beta.2",
     "react-native-qrcode-scanner": "^1.4.1",
+    "react-native-randombytes": "^3.6.0",
     "react-native-reanimated": "^1.13.2",
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "^2.15.0",
     "react-native-sensitive-info": "^5.5.8",
-    "react-native-svg": "^12.1.0"
+    "react-native-svg": "^12.1.0",
+    "readable-stream": "^1.0.33",
+    "rn-nodeify": "^10.2.0",
+    "stream-browserify": "^1.0.0",
+    "url": "^0.10.3",
+    "util": "^0.10.4"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
@@ -57,6 +70,7 @@
     "metro-react-native-babel-preset": "^0.59.0",
     "prettier": "^2.2.0",
     "react-test-renderer": "16.13.1",
+    "reactotron-react-native": "^5.0.0",
     "typescript": "^3.8.3"
   },
   "jest": {
@@ -69,5 +83,25 @@
       "json",
       "node"
     ]
+  },
+  "react-native": {
+    "console": "console-browserify",
+    "crypto": "react-native-crypto",
+    "_stream_transform": "readable-stream/transform",
+    "_stream_readable": "readable-stream/readable",
+    "_stream_writable": "readable-stream/writable",
+    "_stream_duplex": "readable-stream/duplex",
+    "_stream_passthrough": "readable-stream/passthrough",
+    "stream": "stream-browserify"
+  },
+  "browser": {
+    "console": "console-browserify",
+    "crypto": "react-native-crypto",
+    "_stream_transform": "readable-stream/transform",
+    "_stream_readable": "readable-stream/readable",
+    "_stream_writable": "readable-stream/writable",
+    "_stream_duplex": "readable-stream/duplex",
+    "_stream_passthrough": "readable-stream/passthrough",
+    "stream": "stream-browserify"
   }
 }

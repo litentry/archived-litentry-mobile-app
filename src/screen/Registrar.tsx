@@ -13,6 +13,9 @@ import InAppNotificationContextProvider, {
 import NetworkSelectionContextProvider, {
   NetworkSelectionContext,
 } from 'context/NetworkSelectionContext';
+import ChainApiContextProvider, {
+  ChainApiContext,
+} from 'context/ChainApiContext';
 
 type PropTypes = {navigation: DrawerNavigationProp<{}>};
 
@@ -20,6 +23,7 @@ function RegistrarScreen({navigation}: PropTypes) {
   const {currentNetwork, selectNetwork} = useContext(NetworkSelectionContext);
   const {scan, data} = useContext(ScannerContext);
   const {trigger} = useContext(InAppNotificationContext);
+  const {status} = useContext(ChainApiContext);
 
   const renderTitle = () => {
     return (
@@ -61,6 +65,7 @@ function RegistrarScreen({navigation}: PropTypes) {
           }>
           Show Notification
         </Button>
+        <Button>{status}</Button>
       </Layout>
     </SafeView>
   );
@@ -80,11 +85,13 @@ const styles = StyleSheet.create({
 export default function WithContext(props: PropTypes) {
   return (
     <NetworkSelectionContextProvider>
-      <InAppNotificationContextProvider>
-        <ScannerContextProvider>
-          <RegistrarScreen {...props} />
-        </ScannerContextProvider>
-      </InAppNotificationContextProvider>
+      <ChainApiContextProvider>
+        <InAppNotificationContextProvider>
+          <ScannerContextProvider>
+            <RegistrarScreen {...props} />
+          </ScannerContextProvider>
+        </InAppNotificationContextProvider>
+      </ChainApiContextProvider>
     </NetworkSelectionContextProvider>
   );
 }

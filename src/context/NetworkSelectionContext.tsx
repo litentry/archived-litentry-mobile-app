@@ -34,6 +34,14 @@ function NetworkSelectionContextProvider({children}: PropTypes) {
   const selectNetwork = useCallback(() => {
     modalRef.current?.open();
   }, []);
+
+  const handleSelection = useCallback(
+    (network: NetworkType) => {
+      select(network);
+      modalRef.current?.close();
+    },
+    [select],
+  );
   const value = useMemo(() => ({selectNetwork, currentNetwork}), [
     selectNetwork,
     currentNetwork,
@@ -56,7 +64,7 @@ function NetworkSelectionContextProvider({children}: PropTypes) {
               <NetworkSelectionList
                 items={availableNetworks}
                 selected={currentNetwork}
-                onSelect={select}
+                onSelect={handleSelection}
               />
               <Divider style={globalStyles.divider} />
               <Button
