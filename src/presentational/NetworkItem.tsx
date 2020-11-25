@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
   },
   connectionIndicator: {
     marginLeft: standardPadding / 2,
+    marginTop: 2,
     width: 4,
     height: 4,
     borderRadius: 10,
