@@ -12,11 +12,13 @@ import {
 } from 'context/InAppNotificationContext';
 import {NetworkSelectionContext} from 'context/NetworkSelectionContext';
 import {ChainApiContext} from 'context/ChainApiContext';
+import {AccountContext} from 'context/AccountContextProvider';
 
 type PropTypes = {navigation: DrawerNavigationProp<{}>};
 
 function RegistrarScreen({navigation}: PropTypes) {
   const {currentNetwork, selectNetwork} = useContext(NetworkSelectionContext);
+  const {setAccount} = useContext(AccountContext);
   const {scan, data} = useContext(ScannerContext);
   const {trigger} = useContext(InAppNotificationContext);
   const {status} = useContext(ChainApiContext);
@@ -47,7 +49,7 @@ function RegistrarScreen({navigation}: PropTypes) {
       <Layout style={styles.container} level="1">
         <Text category="label">Here comes the main content of Registrar</Text>
         {data.result ? <Text>{data.result.data}</Text> : null}
-        <Button onPress={scan}>Scan</Button>
+        <Button onPress={() => scan()}>Scan</Button>
         <Button
           onPress={() => trigger({type: 'TextInfo', opts: {text: 'Whatnot'}})}>
           Show Notification
@@ -66,6 +68,7 @@ function RegistrarScreen({navigation}: PropTypes) {
           }>
           Show Notification
         </Button>
+        <Button onPress={() => setAccount(null)}>Remove accounts</Button>
         <Button>{status}</Button>
       </Layout>
     </SafeView>

@@ -9,8 +9,8 @@ import WebviewScreen from 'screen/Webview';
 import DrawerScreen from 'screen/Drawer';
 import NetworkSelectionContextProvider from 'context/NetworkSelectionContext';
 import ChainApiContextProvider from 'context/ChainApiContext';
-import InAppNotificationContextProvider from 'context/InAppNotificationContext';
 import ScannerContextProvider from 'context/ScannerContext';
+import AccountContextProvider from 'context/AccountContextProvider';
 
 const Drawer = createDrawerNavigator();
 
@@ -27,14 +27,14 @@ export default () => {
       <ApplicationProvider {...eva} theme={eva[theme]}>
         <NetworkSelectionContextProvider>
           <ChainApiContextProvider>
-            <InAppNotificationContextProvider>
-              <ScannerContextProvider>
+            <ScannerContextProvider>
+              <AccountContextProvider>
                 <Drawer.Navigator drawerContent={DrawerContentComp}>
                   <Drawer.Screen name="Registrar" component={RegistrarScreen} />
                   <Drawer.Screen name="Webview" component={WebviewScreen} />
                 </Drawer.Navigator>
-              </ScannerContextProvider>
-            </InAppNotificationContextProvider>
+              </AccountContextProvider>
+            </ScannerContextProvider>
           </ChainApiContextProvider>
         </NetworkSelectionContextProvider>
       </ApplicationProvider>

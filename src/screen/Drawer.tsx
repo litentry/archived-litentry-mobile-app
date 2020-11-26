@@ -1,4 +1,4 @@
-import React, {useContext, useMemo} from 'react';
+import React, {useContext, useMemo, useCallback} from 'react';
 import {StyleSheet, Image, View} from 'react-native';
 import {
   Button,
@@ -14,44 +14,66 @@ import {ThemeContext} from 'context/ThemeProvider';
 import logo from '../image/logo.png';
 import Padder from 'presentational/Padder';
 import {ScannerContext} from 'context/ScannerContext';
-import {trim} from 'lodash';
-
-type AccountAddressType = {
-  address: string;
-  protocol?: string;
-  name?: string;
-};
+import {trim, get} from 'lodash';
+import {AccountAddressType} from 'src/types';
+import {AccountContext} from 'context/AccountContextProvider';
+import {NetworkContext} from 'context/NetworkContext';
+import NetworkLogo from 'presentational/NetworkLogo';
 
 function parseAddress(payload: string): AccountAddressType {
   const parts = trim(payload).split(':').filter(Boolean);
-
-  if (parts.length === 1) {
-    return {address: parts[0]};
+  if (parts.length !== 4) {
+    throw new Error('address format wrong');
   }
 
-  return {protocol: parts[0], address: parts[1], name: parts[2]};
+  return {protocol: parts[0], address: parts[1], name: parts[3]};
 }
 
 function AccountDrawerView() {
-  const {scan, data} = useContext(ScannerContext);
+  const {scan} = useContext(ScannerContext);
+  const {accounts, setAccount} = useContext(AccountContext);
+  const {currentNetwork} = useContext(NetworkContext);
 
-  const parsed = useMemo(() => {
-    if (!data.result) {
-      return null;
-    }
+  const handleScan = useCallback(
+    ({data}) => {
+      setAccount(parseAddress(data));
+    },
+    [setAccount],
+  );
 
-    return parseAddress(data.result.data);
-  }, [data]);
+  const account = useMemo(() => get(accounts, [0]), [accounts]);
 
   return (
-    <Layout style={globalStyles.centeredContainer}>
-      {parsed ? (
-        <Text style={{fontFamily: monofontFamily}}>{parsed.address}</Text>
+    <Layout
+      style={[
+        globalStyles.centeredContainer,
+        account ? {justifyContent: 'flex-end'} : {},
+      ]}>
+      {account ? (
+        <Layout style={accountDrawerViewStyles.container}>
+          <Layout style={accountDrawerViewStyles.accountLogo}>
+            {currentNetwork ? (
+              <NetworkLogo name={currentNetwork.key || 'polkadot'} />
+            ) : null}
+            <Text category="s2">{account.name || 'Untitled Account'}</Text>
+          </Layout>
+          <Layout>
+            <Text
+              style={accountDrawerViewStyles.address}
+              numberOfLines={1}
+              ellipsizeMode="middle">
+              {account.address}
+            </Text>
+          </Layout>
+        </Layout>
       ) : (
         <>
           <Text category="label">No account has been set up.</Text>
           <Padder scale={0.5} />
-          <Button onPress={scan} appearance="ghost" status="info">
+          <Button
+            onPress={() => scan(handleScan)}
+            appearance="ghost"
+            status="info">
             Connect Account
           </Button>
         </>
@@ -59,6 +81,19 @@ function AccountDrawerView() {
     </Layout>
   );
 }
+
+const accountDrawerViewStyles = StyleSheet.create({
+  container: {
+    alignSelf: 'flex-end',
+  },
+  accountLogo: {
+    marginLeft: -standardPadding,
+    paddingBottom: standardPadding,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  address: {fontFamily: monofontFamily},
+});
 
 function Drawer() {
   const {theme, toggleTheme} = useContext(ThemeContext);

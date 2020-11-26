@@ -10,25 +10,27 @@ import {noop} from 'lodash';
 import {NetworkContextValueType, NetworkType} from 'src/types';
 import {DataContext} from './DataContext';
 
-const PolkadotNetwork = {
+const PolkadotNetwork: NetworkType = {
   name: 'Polkadot',
+  key: 'polkadot',
   ws: 'wss://rpc.polkadot.io',
   color: '#800000',
 };
 
-const KusamaNetwork = {
+const KusamaNetwork: NetworkType = {
   name: 'Kusama',
+  key: 'polkadot',
   ws: 'wss://kusama-rpc.polkadot.io/',
   color: '#e6194B',
 };
 
-const WestendNetwork = {
+const WestendNetwork: NetworkType = {
   name: 'Westend (Test)',
   ws: 'wss://westend-rpc.polkadot.io/',
   color: '#fabed4',
 };
 
-const LitentryNetworkTest = {
+const LitentryNetworkTest: NetworkType = {
   name: 'Litentry Testnet',
   ws: 'ws://13.229.136.206:9944',
   isTestnet: true,

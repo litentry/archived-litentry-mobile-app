@@ -16,7 +16,7 @@ import useHapticFeedback from 'src/hook/useHapticFeedback';
 const {width, height} = Dimensions.get('window');
 
 type ScannerContextValueType = {
-  scan: () => void;
+  scan: (onSuccess?: (data: QRScannedPayload) => void) => void;
   data: {result: QRScannedPayload | null};
 };
 
@@ -29,12 +29,15 @@ type PropTypes = {
   children: React.ReactNode;
 };
 
+type OnSuccessCallbackType = (data: QRScannedPayload) => void;
+
 const QRIcon = (props: IconProps) => (
   <Icon fill="#ccc" {...props} name="alert-triangle-outline" />
 );
 
 function ScannerContextProvider({children}: PropTypes) {
   const modalRef = useRef<Modalize>(null);
+  const successCallbackRef = useRef<OnSuccessCallbackType | null>(null);
   const trigger = useHapticFeedback();
 
   // used for internal rendering, will eventually be used `onConfirm`
@@ -44,7 +47,11 @@ function ScannerContextProvider({children}: PropTypes) {
 
   // use for `context value`, which will trigger subscribed comp to update
   const [result, setResult] = useState<QRScannedPayload | null>(null);
-  const scan = useCallback(() => {
+  const scan = useCallback((onSuccess?: OnSuccessCallbackType) => {
+    if (onSuccess) {
+      successCallbackRef.current = onSuccess;
+    }
+
     setScannedResult(null);
     modalRef.current?.open();
   }, []);
@@ -63,6 +70,11 @@ function ScannerContextProvider({children}: PropTypes) {
 
   const handleConfirm = useCallback(() => {
     setResult(scannedResult);
+    if (successCallbackRef.current && scannedResult) {
+      successCallbackRef.current(scannedResult);
+      successCallbackRef.current = null;
+    }
+
     modalRef.current?.close();
   }, [scannedResult]);
 
@@ -86,7 +98,7 @@ function ScannerContextProvider({children}: PropTypes) {
                 <Text style={styles.title} category="label">
                   Scanned Result
                 </Text>
-                <Text style={{marginTop: -50}} category="s1">
+                <Text style={{marginTop: -50}} category="s1" selectable>
                   {scannedResult.data}
                 </Text>
                 <Layout style={styles.buttonGroup}>

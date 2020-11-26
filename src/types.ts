@@ -1,5 +1,44 @@
 export type ThemeType = 'light' | 'dark';
 
+export type SupportedNetworkType =
+  | 'polkadot'
+  | 'reserved1'
+  | 'kusama'
+  | 'reserved3'
+  | 'katalchain'
+  | 'plasm'
+  | 'bifrost'
+  | 'edgeware'
+  | 'karura'
+  | 'reynolds'
+  | 'acala'
+  | 'laminar'
+  | 'polymath'
+  | 'substratee'
+  | 'totem'
+  | 'synesthesia'
+  | 'kulupu'
+  | 'dark'
+  | 'darwinia'
+  | 'geek'
+  | 'stafi'
+  | 'dock-testnet'
+  | 'dock-mainnet'
+  | 'shift'
+  | 'zero'
+  | 'alphaville'
+  | 'subsocial'
+  | 'phala'
+  | 'robonomics'
+  | 'datahighway'
+  | 'centrifuge'
+  | 'nodle'
+  | 'substrate'
+  | 'reserved43'
+  | 'chainx'
+  | 'reserved46'
+  | 'reserved47';
+
 export type ThemeContextValueType = {
   theme: ThemeType;
   toggleTheme: () => void;
@@ -19,6 +58,7 @@ export type DeviceType = {
 
 export type NetworkType = {
   name: string;
+  key?: SupportedNetworkType | null;
   ws: string;
   isTestnet?: boolean;
   color: string;
@@ -38,6 +78,7 @@ export type DataContextValueType = {
     set: (key: AsyncStorageKeyType, value: string) => Promise<void>;
   };
 };
+
 export type QRScannedPayload = {
   bounds: {
     origin: {x: string; y: string};
@@ -47,6 +88,12 @@ export type QRScannedPayload = {
   rawData: string;
   target: number;
   type: string;
+};
+
+export type AccountAddressType = {
+  address: string;
+  protocol?: string;
+  name: string;
 };
 
 export type HapticFeedbackType = 'success' | 'warn' | 'error';
