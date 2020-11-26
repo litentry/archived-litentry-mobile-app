@@ -1,15 +1,34 @@
 import React, {useContext} from 'react';
 import {StyleSheet, Image, View} from 'react-native';
-import {Layout, Button, Text, Divider} from '@ui-kitten/components';
+import {
+  Button,
+  Layout,
+  Text,
+  Divider,
+  Toggle,
+  ListItem,
+} from '@ui-kitten/components';
 import SafeView from 'presentational/SafeView';
 import globalStyles, {standardPadding, monofontFamily} from 'src/styles';
 import {ThemeContext} from 'context/ThemeProvider';
 import logo from '../image/logo.png';
 
-type PropTypes = {};
+// type PropTypes = {};
 
-function Drawer(props: PropTypes) {
-  const {toggleTheme} = useContext(ThemeContext);
+function AccountDrawerView() {
+  return (
+    <Layout style={globalStyles.centeredContainer}>
+      <Text category="label">No account has been set up.</Text>
+      <Button appearance="ghost" status="info">
+        Connect Account
+      </Button>
+    </Layout>
+  );
+}
+
+function Drawer() {
+  const {theme, toggleTheme} = useContext(ThemeContext);
+
   return (
     <SafeView>
       <Layout style={styles.container}>
@@ -18,13 +37,23 @@ function Drawer(props: PropTypes) {
             <Image source={logo} style={styles.logoImage} />
             <Text style={styles.slogan}>Decentralized Identity</Text>
           </View>
+          <Divider />
+          <AccountDrawerView />
         </Layout>
         <Divider />
-        <Layout style={[styles.rest, globalStyles.paddedContainer]} level="2">
-          <Text category="h6">Settings</Text>
-          <Button appearance="ghost" onPress={toggleTheme}>
-            Toggle Theme
-          </Button>
+        <Layout style={styles.rest} level="2">
+          <Layout style={globalStyles.paddedContainer}>
+            <Text category="h6">Settings</Text>
+          </Layout>
+          <ListItem
+            title="Dark theme"
+            accessoryRight={() => (
+              <Toggle
+                checked={theme === 'dark'}
+                onChange={() => toggleTheme()}
+              />
+            )}
+          />
         </Layout>
       </Layout>
     </SafeView>
@@ -33,7 +62,11 @@ function Drawer(props: PropTypes) {
 
 const styles = StyleSheet.create({
   container: {flex: 1},
-  logoContainer: {alignItems: 'center', flexDirection: 'row'},
+  logoContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    paddingBottom: standardPadding * 2,
+  },
   logoImage: {width: 50, height: 50},
   slogan: {
     marginLeft: standardPadding * 2,

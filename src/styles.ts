@@ -10,6 +10,11 @@ const globalStyles = StyleSheet.create({
     marginVertical: standardPadding,
     width: '100%',
   },
+  centeredContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
 });
 
 export const monofontFamily = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
