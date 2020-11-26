@@ -12,13 +12,13 @@ import SafeView from 'presentational/SafeView';
 import globalStyles, {standardPadding, monofontFamily} from 'src/styles';
 import {ThemeContext} from 'context/ThemeProvider';
 import logo from '../image/logo.png';
-
-// type PropTypes = {};
+import Padder from 'presentational/Padder';
 
 function AccountDrawerView() {
   return (
     <Layout style={globalStyles.centeredContainer}>
       <Text category="label">No account has been set up.</Text>
+      <Padder scale={0.5} />
       <Button appearance="ghost" status="info">
         Connect Account
       </Button>
