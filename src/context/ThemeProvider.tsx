@@ -1,5 +1,6 @@
-import React, {createContext, useState} from 'react';
+import React, {createContext, useState, useEffect} from 'react';
 import {ThemeContextValueType, ThemeType} from '../types';
+import {useAsyncStorage} from '@react-native-community/async-storage';
 
 export const ThemeContext = createContext<ThemeContextValueType>({
   theme: 'light',
@@ -11,12 +12,27 @@ type PropTypes = {
 };
 
 export default function ThemeContextProvider({children}: PropTypes) {
-  const [theme, setTheme] = useState<ThemeType>('light');
+  const [theme, setTheme] = useState<ThemeType | null>(null);
+
+  const {getItem, setItem} = useAsyncStorage('theme');
+
+  useEffect(() => {
+    getItem((_, result) => {
+      setTheme((result || 'light') as ThemeType);
+    });
+  }, [getItem]);
 
   const toggleTheme = () => {
     const nextTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(nextTheme);
+
+    setItem(nextTheme, () => {
+      setTheme(nextTheme);
+    });
   };
+
+  if (!theme) {
+    return null;
+  }
 
   const value = {
     theme,

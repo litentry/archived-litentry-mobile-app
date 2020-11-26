@@ -5,17 +5,13 @@ import SafeView from 'presentational/SafeView';
 import NetworkItem from 'presentational/NetworkItem';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {Text, Layout, Divider, Button} from '@ui-kitten/components';
-import ScannerContextProvider, {ScannerContext} from 'context/ScannerContext';
-import InAppNotificationContextProvider, {
+import {ScannerContext} from 'context/ScannerContext';
+import {
   InAppNotificationContext,
   RichTextComponent,
 } from 'context/InAppNotificationContext';
-import NetworkSelectionContextProvider, {
-  NetworkSelectionContext,
-} from 'context/NetworkSelectionContext';
-import ChainApiContextProvider, {
-  ChainApiContext,
-} from 'context/ChainApiContext';
+import {NetworkSelectionContext} from 'context/NetworkSelectionContext';
+import {ChainApiContext} from 'context/ChainApiContext';
 
 type PropTypes = {navigation: DrawerNavigationProp<{}>};
 
@@ -88,15 +84,5 @@ const styles = StyleSheet.create({
 });
 
 export default function WithContext(props: PropTypes) {
-  return (
-    <NetworkSelectionContextProvider>
-      <ChainApiContextProvider>
-        <InAppNotificationContextProvider>
-          <ScannerContextProvider>
-            <RegistrarScreen {...props} />
-          </ScannerContextProvider>
-        </InAppNotificationContextProvider>
-      </ChainApiContextProvider>
-    </NetworkSelectionContextProvider>
-  );
+  return <RegistrarScreen {...props} />;
 }
