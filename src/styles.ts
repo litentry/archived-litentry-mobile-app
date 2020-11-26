@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Platform} from 'react-native';
 
 export const standardPadding = 8;
 
@@ -11,5 +11,7 @@ const globalStyles = StyleSheet.create({
     width: '100%',
   },
 });
+
+export const monofontFamily = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
 
 export default globalStyles;
