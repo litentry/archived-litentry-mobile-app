@@ -42,7 +42,7 @@ function AccountContextProvider({children}: PropTypes) {
         });
       } else {
         removeItem(() => {
-          setAccounts([account]);
+          setAccounts(null);
         });
       }
     },
