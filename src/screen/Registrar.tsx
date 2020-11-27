@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useRef, useCallback} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import SafeView from 'presentational/SafeView';
@@ -14,6 +14,8 @@ import {NetworkSelectionContext} from 'context/NetworkSelectionContext';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {AccountContext} from 'context/AccountContextProvider';
 
+import {createLogger} from 'src/utils';
+
 type PropTypes = {navigation: DrawerNavigationProp<{}>};
 
 function RegistrarScreen({navigation}: PropTypes) {
@@ -21,7 +23,12 @@ function RegistrarScreen({navigation}: PropTypes) {
   const {setAccount} = useContext(AccountContext);
   const {scan, data} = useContext(ScannerContext);
   const {trigger} = useContext(InAppNotificationContext);
-  const {status} = useContext(ChainApiContext);
+
+  const {status, api, addSection, removeSection} = useContext(ChainApiContext);
+  const showNotification = useCallback(
+    (text: string) => trigger({type: 'TextInfo', opts: {text}}),
+    [trigger],
+  );
 
   const renderTitle = () => {
     return (
@@ -69,7 +76,18 @@ function RegistrarScreen({navigation}: PropTypes) {
           Show Notification
         </Button>
         <Button onPress={() => setAccount(null)}>Remove accounts</Button>
-        <Button>{status}</Button>
+        <Button
+          onPress={() => {
+            addSection('identity');
+          }}>
+          {status}
+        </Button>
+        <Button
+          onPress={() => {
+            removeSection('identity');
+          }}>
+          Remove Section Identity
+        </Button>
       </Layout>
     </SafeView>
   );

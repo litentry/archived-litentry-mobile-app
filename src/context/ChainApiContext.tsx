@@ -4,6 +4,8 @@ import React, {
   useState,
   useContext,
   useEffect,
+  useRef,
+  useCallback,
 } from 'react';
 import {NetworkContext} from './NetworkContext';
 import {ApiPromise, WsProvider} from '@polkadot/api';
@@ -14,12 +16,16 @@ type ChainApiContextValueType = {
   status: ApiChainStatusType;
   error: Error | null;
   api: ApiPromise | null;
+  addSection: (section: string) => void;
+  removeSection: (section: string) => void;
 };
 
 export const ChainApiContext = createContext<ChainApiContextValueType>({
   api: null,
   status: 'unknown',
   error: null,
+  addSection: () => undefined,
+  removeSection: () => undefined,
 });
 type PropTypes = {children: React.ReactNode};
 
@@ -31,7 +37,33 @@ function ChainApiContextProvider(props: PropTypes) {
   const [error, setError] = useState<Error | null>(null);
   const {currentNetwork} = useContext(NetworkContext);
   const [api, setApi] = useState<ApiPromise | null>(null);
+  const [sections, setSections] = useState<string[]>([]);
+  const eventStreamHandlerRef = useRef<Function | null>(null);
 
+  /**
+   * Add section to watch, such as `identity`
+   */
+  const addSection = useCallback(
+    (section: string) => {
+      if (!sections.includes(section)) {
+        setSections(sections.concat(section));
+      }
+    },
+    [sections],
+  );
+
+  /**
+   * Remove section from watch list
+   */
+  const removeSection = useCallback(
+    (section: string) => {
+      return setSections(sections.filter((s) => s !== section));
+    },
+    [sections],
+  );
+
+  // addSection /removeSection
+  // addSubscription / removeSubscription
   useEffect(() => {
     if (currentNetwork) {
       try {
@@ -71,7 +103,56 @@ function ChainApiContextProvider(props: PropTypes) {
     }
   }, [currentNetwork]);
 
-  const value = useMemo(() => ({api, status, error}), [status, error, api]);
+  useEffect(() => {
+    if (status === 'ready' && api) {
+      if (eventStreamHandlerRef.current) {
+        eventStreamHandlerRef.current();
+      }
+
+      logger.info(`Start waring chain events for "${sections.join(',')}"`);
+      // @ts-ignore
+      api.query.system
+        .events((events) => {
+          // Loop through the Vec<EventRecord>
+          events.forEach((record) => {
+            // Extract the phase, event and the event types
+            const {event, phase} = record;
+            const types = event.typeDef;
+
+            if (sections.includes(event.section)) {
+              logger.info(event.section);
+            }
+            // if (event.section === 'identity') {
+            //   logger.info(JSON.stringify(event, null, 4));
+            //   logger.info(
+            //     `\t${event.section}:${
+            //       event.method
+            //     }:: (phase=${phase.toString()})`,
+            //   );
+            //
+            //   logger.info(`\t\t${event.meta.documentation.toString()}`);
+            //
+            //   // Loop through each of the parameters, displaying the type and data
+            //   event.data.forEach((data, index) => {
+            //     logger.info(`\t\t\t${types[index].type}: ${data.toString()}`);
+            //     console.log('data', data, index);
+            //   });
+            // }
+          });
+        })
+        .then((unsub) => {
+          eventStreamHandlerRef.current = unsub;
+        });
+    } else {
+      eventStreamHandlerRef.current?.();
+      eventStreamHandlerRef.current = null;
+    }
+  }, [currentNetwork, status, api, sections]);
+
+  const value = useMemo(
+    () => ({api, status, error, addSection, removeSection}),
+    [status, error, api, addSection, removeSection],
+  );
 
   return (
     <ChainApiContext.Provider value={value}>
