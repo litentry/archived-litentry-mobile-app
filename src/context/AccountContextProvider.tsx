@@ -28,11 +28,12 @@ function AccountContextProvider({children}: PropTypes) {
 
   useEffect(() => {
     getItem((_, result) => {
-      if (result) {
+      // hack: this string check is added to prevent infinite rerenders
+      if (result && JSON.stringify(accounts) !== result) {
         setAccounts(JSON.parse(result));
       }
     });
-  }, [getItem]);
+  }, [getItem, accounts]);
 
   const setAccount = useCallback(
     (account: AccountAddressType | null) => {

@@ -48,6 +48,7 @@
     "react-native-screens": "^2.15.0",
     "react-native-sensitive-info": "^5.5.8",
     "react-native-svg": "^12.1.0",
+    "react-native-webview": "^11.0.0",
     "readable-stream": "^1.0.33",
     "rn-nodeify": "^10.2.0",
     "stream-browserify": "^1.0.0",

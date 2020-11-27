@@ -14,8 +14,6 @@ import {NetworkSelectionContext} from 'context/NetworkSelectionContext';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {AccountContext} from 'context/AccountContextProvider';
 
-import {createLogger} from 'src/utils';
-
 type PropTypes = {navigation: DrawerNavigationProp<{}>};
 
 function RegistrarScreen({navigation}: PropTypes) {
@@ -24,7 +22,7 @@ function RegistrarScreen({navigation}: PropTypes) {
   const {scan, data} = useContext(ScannerContext);
   const {trigger} = useContext(InAppNotificationContext);
 
-  const {status, api, addSection, removeSection} = useContext(ChainApiContext);
+  const {status, addSection, removeSection} = useContext(ChainApiContext);
   const showNotification = useCallback(
     (text: string) => trigger({type: 'TextInfo', opts: {text}}),
     [trigger],

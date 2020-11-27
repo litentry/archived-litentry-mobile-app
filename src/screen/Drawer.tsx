@@ -1,4 +1,4 @@
-import React, {useContext, useMemo, useCallback} from 'react';
+import React, {useContext, useCallback} from 'react';
 import {StyleSheet, Image, View} from 'react-native';
 import {
   Button,
@@ -7,6 +7,7 @@ import {
   Divider,
   Toggle,
   ListItem,
+  Icon,
 } from '@ui-kitten/components';
 import SafeView from 'presentational/SafeView';
 import globalStyles, {standardPadding, monofontFamily} from 'src/styles';
@@ -14,11 +15,12 @@ import {ThemeContext} from 'context/ThemeProvider';
 import logo from '../image/logo.png';
 import Padder from 'presentational/Padder';
 import {ScannerContext} from 'context/ScannerContext';
-import {trim, get} from 'lodash';
-import {AccountAddressType} from 'src/types';
+import {trim} from 'lodash';
+import {AccountAddressType, DrawerParamList} from 'src/types';
 import {AccountContext} from 'context/AccountContextProvider';
 import {NetworkContext} from 'context/NetworkContext';
 import NetworkLogo from 'presentational/NetworkLogo';
+import {DrawerNavigationProp} from '@react-navigation/drawer';
 
 function parseAddress(payload: string): AccountAddressType {
   const parts = trim(payload).split(':').filter(Boolean);
@@ -41,14 +43,10 @@ function AccountDrawerView() {
     [setAccount],
   );
 
-  const account = useMemo(() => get(accounts, [0]), [accounts]);
+  const account = accounts && accounts[0];
 
   return (
-    <Layout
-      style={[
-        globalStyles.centeredContainer,
-        account ? {justifyContent: 'flex-end'} : {},
-      ]}>
+    <Layout style={[globalStyles.centeredContainer, account ? {} : {}]}>
       {account ? (
         <Layout style={accountDrawerViewStyles.container}>
           <Layout style={accountDrawerViewStyles.accountLogo}>
@@ -84,7 +82,7 @@ function AccountDrawerView() {
 
 const accountDrawerViewStyles = StyleSheet.create({
   container: {
-    alignSelf: 'flex-end',
+    alignSelf: 'center',
   },
   accountLogo: {
     marginLeft: -standardPadding,
@@ -95,7 +93,11 @@ const accountDrawerViewStyles = StyleSheet.create({
   address: {fontFamily: monofontFamily},
 });
 
-function Drawer() {
+type PropTypes = {
+  navigation: DrawerNavigationProp<DrawerParamList>;
+};
+
+function Drawer({navigation}: PropTypes) {
   const {theme, toggleTheme} = useContext(ThemeContext);
 
   return (
@@ -116,10 +118,24 @@ function Drawer() {
           </Layout>
           <ListItem
             title="Dark theme"
+            accessoryLeft={(props) => <Icon {...props} name="sun-outline" />}
             accessoryRight={() => (
               <Toggle checked={theme === 'dark'} onChange={toggleTheme} />
             )}
           />
+          <Divider />
+          <ListItem
+            title="About Litentry"
+            description="Read more about us."
+            accessoryLeft={(props) => <Icon {...props} name="hash-outline" />}
+            onPress={() =>
+              navigation.navigate('Webview', {
+                title: 'Litentry',
+                uri: 'https://www.litentry.com',
+              })
+            }
+          />
+          <Divider />
         </Layout>
       </Layout>
     </SafeView>
@@ -127,7 +143,7 @@ function Drawer() {
 }
 
 const styles = StyleSheet.create({
-  container: {flex: 1},
+  container: {flex: 1, borderStartColor: 'red'},
   logoContainer: {
     alignItems: 'center',
     flexDirection: 'row',

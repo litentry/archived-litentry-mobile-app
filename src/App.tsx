@@ -3,7 +3,10 @@ import * as eva from '@eva-design/eva';
 import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
 import {ThemeContext} from './context/ThemeProvider';
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import {
+  createDrawerNavigator,
+  DrawerNavigationProp,
+} from '@react-navigation/drawer';
 import RegistrarScreen from 'screen/Registrar';
 import WebviewScreen from 'screen/Webview';
 import DrawerScreen from 'screen/Drawer';
@@ -11,11 +14,16 @@ import NetworkSelectionContextProvider from 'context/NetworkSelectionContext';
 import ChainApiContextProvider from 'context/ChainApiContext';
 import ScannerContextProvider from 'context/ScannerContext';
 import AccountContextProvider from 'context/AccountContextProvider';
+import {DrawerParamList} from './types';
 
 const Drawer = createDrawerNavigator();
 
-const DrawerContentComp = () => {
-  return <DrawerScreen />;
+type PropTypes = {
+  navigation: DrawerNavigationProp<DrawerParamList>;
+};
+
+const DrawerContentComp = (props: PropTypes) => {
+  return <DrawerScreen {...props} />;
 };
 
 export default () => {
