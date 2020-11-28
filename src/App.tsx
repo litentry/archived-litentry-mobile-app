@@ -9,6 +9,7 @@ import {
 } from '@react-navigation/drawer';
 import RegistrarScreen from 'screen/Registrar';
 import WebviewScreen from 'screen/Webview';
+import DevScreen from 'screen/DevScreen';
 import DrawerScreen from 'screen/Drawer';
 import NetworkSelectionContextProvider from 'context/NetworkSelectionContext';
 import ChainApiContextProvider from 'context/ChainApiContext';
@@ -40,6 +41,7 @@ export default () => {
                 <Drawer.Navigator drawerContent={DrawerContentComp}>
                   <Drawer.Screen name="Registrar" component={RegistrarScreen} />
                   <Drawer.Screen name="Webview" component={WebviewScreen} />
+                  <Drawer.Screen name="DevScreen" component={DevScreen} />
                 </Drawer.Navigator>
               </AccountContextProvider>
             </ScannerContextProvider>

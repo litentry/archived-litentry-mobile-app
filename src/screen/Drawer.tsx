@@ -130,12 +130,25 @@ function Drawer({navigation}: PropTypes) {
             accessoryLeft={(props) => <Icon {...props} name="hash-outline" />}
             onPress={() =>
               navigation.navigate('Webview', {
-                title: 'Litentry',
+                title: 'About Litentry',
                 uri: 'https://www.litentry.com',
               })
             }
           />
           <Divider />
+          {__DEV__ && (
+            <>
+              <ListItem
+                title="Dev Kit"
+                description="Here lists the helpers for devs"
+                accessoryLeft={(props) => (
+                  <Icon {...props} name="code-outline" />
+                )}
+                onPress={() => navigation.navigate('DevScreen')}
+              />
+              <Divider />
+            </>
+          )}
         </Layout>
       </Layout>
     </SafeView>

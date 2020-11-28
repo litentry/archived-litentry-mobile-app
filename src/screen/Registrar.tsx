@@ -1,32 +1,19 @@
-import React, {useContext, useEffect, useRef, useCallback} from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import SafeView from 'presentational/SafeView';
 import NetworkItem from 'presentational/NetworkItem';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {Text, Layout, Divider, Button} from '@ui-kitten/components';
-import {ScannerContext} from 'context/ScannerContext';
-import {
-  InAppNotificationContext,
-  RichTextComponent,
-} from 'context/InAppNotificationContext';
+import {Text, Layout, Divider} from '@ui-kitten/components';
 import {NetworkSelectionContext} from 'context/NetworkSelectionContext';
 import {ChainApiContext} from 'context/ChainApiContext';
-import {AccountContext} from 'context/AccountContextProvider';
 
 type PropTypes = {navigation: DrawerNavigationProp<{}>};
 
 function RegistrarScreen({navigation}: PropTypes) {
   const {currentNetwork, selectNetwork} = useContext(NetworkSelectionContext);
-  const {setAccount} = useContext(AccountContext);
-  const {scan, data} = useContext(ScannerContext);
-  const {trigger} = useContext(InAppNotificationContext);
 
-  const {status, addSection, removeSection} = useContext(ChainApiContext);
-  const showNotification = useCallback(
-    (text: string) => trigger({type: 'TextInfo', opts: {text}}),
-    [trigger],
-  );
+  const {status} = useContext(ChainApiContext);
 
   const renderTitle = () => {
     return (
@@ -53,39 +40,6 @@ function RegistrarScreen({navigation}: PropTypes) {
       <Divider />
       <Layout style={styles.container} level="1">
         <Text category="label">Here comes the main content of Registrar</Text>
-        {data.result ? <Text>{data.result.data}</Text> : null}
-        <Button onPress={() => scan()}>Scan</Button>
-        <Button
-          onPress={() => trigger({type: 'TextInfo', opts: {text: 'Whatnot'}})}>
-          Show Notification
-        </Button>
-        <Button
-          onPress={() =>
-            trigger({
-              type: 'Component',
-              renderContent: () => (
-                <RichTextComponent
-                  title="Tx detected"
-                  message="aa very long string[a very long string[a very long string[a very long string[a very long string[]]]]]a very long string[]a very long string[a very long string[a very long string[a very long string[a very long string[]]]]]a very long string[] very long string[a very long string[a very long string[a very long string[a very long string[]]]]]a very long string[]"
-                />
-              ),
-            })
-          }>
-          Show Notification
-        </Button>
-        <Button onPress={() => setAccount(null)}>Remove accounts</Button>
-        <Button
-          onPress={() => {
-            addSection('identity');
-          }}>
-          {status}
-        </Button>
-        <Button
-          onPress={() => {
-            removeSection('identity');
-          }}>
-          Remove Section Identity
-        </Button>
       </Layout>
     </SafeView>
   );
