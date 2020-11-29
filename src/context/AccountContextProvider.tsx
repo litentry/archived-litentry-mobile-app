@@ -4,13 +4,17 @@ import React, {
   useEffect,
   useCallback,
   useMemo,
+  useContext,
 } from 'react';
 import {useAsyncStorage} from '@react-native-community/async-storage';
 import {AccountAddressType} from 'src/types';
+import {ChainApiContext} from './ChainApiContext';
+import {Registration} from '@polkadot/types/interfaces';
 
 type AccountContextValueType = {
   accounts: AccountAddressType[] | null;
   setAccount: (account: AccountAddressType | null) => void;
+  currentIdentity: Registration | null;
 };
 
 type PropTypes = {
@@ -20,11 +24,16 @@ type PropTypes = {
 export const AccountContext = createContext<AccountContextValueType>({
   accounts: [],
   setAccount: () => undefined,
+  currentIdentity: null,
 });
 
 function AccountContextProvider({children}: PropTypes) {
   const {getItem, setItem, removeItem} = useAsyncStorage('accounts');
   const [accounts, setAccounts] = useState<AccountAddressType[] | null>(null);
+  const {status, api} = useContext(ChainApiContext);
+  const [currentIdentity, setCurrentIdentity] = useState<Registration | null>(
+    null,
+  );
 
   useEffect(() => {
     getItem((_, result) => {
@@ -34,6 +43,15 @@ function AccountContextProvider({children}: PropTypes) {
       }
     });
   }, [getItem, accounts]);
+
+  useEffect(() => {
+    if (status && api && accounts?.[0]) {
+      const account = accounts[0];
+      api?.query.identity?.identityOf(account.address).then((registration) => {
+        setCurrentIdentity(registration.unwrap());
+      });
+    }
+  }, [status, api, accounts]);
 
   const setAccount = useCallback(
     (account: AccountAddressType | null) => {
@@ -54,8 +72,9 @@ function AccountContextProvider({children}: PropTypes) {
     () => ({
       accounts,
       setAccount,
+      currentIdentity,
     }),
-    [accounts, setAccount],
+    [accounts, setAccount, currentIdentity],
   );
 
   return (
