@@ -1,3 +1,4 @@
+import {DeriveAccountRegistration} from '@polkadot/api-derive/types';
 export type ThemeType = 'light' | 'dark';
 
 export type SupportedNetworkType =
@@ -103,3 +104,15 @@ export type DrawerParamList = {
   Webview: {uri: string; title: string};
   DevScreen: undefined;
 };
+
+// Polkadot specific
+export interface AddressIdentity extends DeriveAccountRegistration {
+  isGood: boolean;
+  isBad: boolean;
+  isKnownGood: boolean;
+  isReasonable: boolean;
+  isErroneous: boolean;
+  isLowQuality: boolean;
+  isExistent: boolean;
+  waitCount: number;
+}

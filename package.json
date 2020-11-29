@@ -14,6 +14,7 @@
   "dependencies": {
     "@eva-design/eva": "^2.0.0",
     "@polkadot/api": "^2.8.1",
+    "@polkadot/api-derive": "^2.8.2",
     "@polkadot/types": "^2.8.1",
     "@polkadot/types-known": "^2.8.1",
     "@polkadot/util": "^4.2.1",
