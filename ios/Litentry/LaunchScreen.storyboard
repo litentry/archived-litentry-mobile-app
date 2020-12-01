@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
-    <device id="retina6_1" orientation="portrait" appearance="dark"/>
+    <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
@@ -15,27 +15,13 @@
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_256.png" translatesAutoresizingMaskIntoConstraints="NO" id="bx6-JK-E3M">
-                                <rect key="frame" x="118" y="300.5" width="178" height="295"/>
-                            </imageView>
-                        </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="bx6-JK-E3M" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" constant="117.7969401947089" id="2gi-R3-4tM"/>
-                            <constraint firstItem="bx6-JK-E3M" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="Q1g-d9-1Rp"/>
-                            <constraint firstItem="bx6-JK-E3M" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="jkH-HI-uAD"/>
-                            <constraint firstItem="bx6-JK-E3M" firstAttribute="top" secondItem="Bcu-3y-fUS" secondAttribute="top" constant="256.45618915164823" id="xP6-yl-NhC"/>
-                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="51.86915887850467" y="374.51403887688986"/>
+            <point key="canvasLocation" x="46.153846153846153" y="371.80094786729859"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="logo_256.png" width="256" height="241"/>
-    </resources>
 </document>
