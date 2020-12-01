@@ -67,10 +67,6 @@ export default function BalanceContextProvider({children}: PropTypes) {
     [show],
   );
 
-  if (!currentAccount) {
-    return null;
-  }
-
   return (
     <BalanceContext.Provider value={value}>
       <>

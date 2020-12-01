@@ -10,7 +10,7 @@ import React, {
 import {NetworkContext} from './NetworkContext';
 import {ApiPromise, WsProvider} from '@polkadot/api';
 import {createLogger} from 'src/utils';
-import {formatBalance} from '@polkadot/util';
+import {formatBalance, BN_ZERO} from '@polkadot/util';
 
 type ApiChainStatusType = 'unknown' | 'connected' | 'disconnected' | 'ready';
 type ChainApiContextValueType = {
@@ -116,8 +116,9 @@ function ChainApiContextProvider(props: PropTypes) {
         const tokenSymbol = properties.tokenSymbol
           .unwrapOr(undefined)
           ?.toString();
-        // @ts-ignore
-        const tokenDecimals = properties.tokenDecimals.unwrapOr(0).toNumber();
+        const tokenDecimals = properties.tokenDecimals
+          .unwrapOr(BN_ZERO)
+          .toNumber();
 
         logger.info(
           `Chain Properties setup:\n${JSON.stringify(
