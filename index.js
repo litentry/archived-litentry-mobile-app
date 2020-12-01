@@ -8,6 +8,7 @@ import DataContextProvider from './src/context/DataContext';
 import ThemeContextProvider from './src/context/ThemeProvider';
 import NetworkContextProvider from './src/context/NetworkContext';
 import InAppNotificationContextProvider from './src/context/InAppNotificationContext';
+import ModalContextProvider from './src/context/ModalContextProvider';
 import {name as appName} from './app.json';
 import {NavigationContainer} from '@react-navigation/native';
 

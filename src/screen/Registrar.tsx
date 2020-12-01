@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import SafeView from 'presentational/SafeView';
 import NetworkItem from 'presentational/NetworkItem';
@@ -7,11 +7,13 @@ import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {Text, Layout, Divider} from '@ui-kitten/components';
 import {NetworkSelectionContext} from 'context/NetworkSelectionContext';
 import {ChainApiContext} from 'context/ChainApiContext';
+import {BalanceContext} from 'context/BalanceContext';
 
 type PropTypes = {navigation: DrawerNavigationProp<{}>};
 
 function RegistrarScreen({navigation}: PropTypes) {
   const {currentNetwork, selectNetwork} = useContext(NetworkSelectionContext);
+  const {show} = useContext(BalanceContext);
 
   const {status} = useContext(ChainApiContext);
 
@@ -35,6 +37,7 @@ function RegistrarScreen({navigation}: PropTypes) {
     <SafeView>
       <ScreenNavigation
         onMenuPress={() => navigation.openDrawer()}
+        onBalancePress={show}
         renderTitle={renderTitle}
       />
       <Divider />

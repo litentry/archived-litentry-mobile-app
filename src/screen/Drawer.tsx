@@ -21,6 +21,7 @@ import {AccountContext} from 'context/AccountContextProvider';
 import {NetworkContext} from 'context/NetworkContext';
 import NetworkLogo from 'presentational/NetworkLogo';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
+import AddressInfoBadge from 'presentational/AddressInfoBadge';
 
 function parseAddress(payload: string): AccountAddressType {
   const parts = trim(payload).split(':').filter(Boolean);
@@ -33,7 +34,7 @@ function parseAddress(payload: string): AccountAddressType {
 
 function AccountDrawerView() {
   const {scan} = useContext(ScannerContext);
-  const {accounts, setAccount} = useContext(AccountContext);
+  const {accounts, setAccount, currentIdentity} = useContext(AccountContext);
   const {currentNetwork} = useContext(NetworkContext);
 
   const handleScan = useCallback(
@@ -53,12 +54,22 @@ function AccountDrawerView() {
             {currentNetwork ? (
               <NetworkLogo name={currentNetwork.key || 'polkadot'} />
             ) : null}
-            <Text category="s2">{account.name || 'Untitled Account'}</Text>
+            <Layout>
+              <Text category="s2">{account.name || 'Untitled Account'}</Text>
+              {currentIdentity && currentNetwork && (
+                <AddressInfoBadge
+                  info={currentIdentity.info}
+                  network={currentNetwork}
+                  judgements={currentIdentity.judgements}
+                />
+              )}
+            </Layout>
           </Layout>
           <Layout>
             <Text
               style={accountDrawerViewStyles.address}
               numberOfLines={1}
+              selectable
               ellipsizeMode="middle">
               {account.address}
             </Text>
@@ -118,7 +129,9 @@ function Drawer({navigation}: PropTypes) {
           </Layout>
           <ListItem
             title="Dark theme"
-            accessoryLeft={(props) => <Icon {...props} name="sun-outline" />}
+            accessoryLeft={(props) => (
+              <Icon {...props} name="sun-outline" animation="zoom" />
+            )}
             accessoryRight={() => (
               <Toggle checked={theme === 'dark'} onChange={toggleTheme} />
             )}
@@ -127,7 +140,9 @@ function Drawer({navigation}: PropTypes) {
           <ListItem
             title="About Litentry"
             description="Read more about us."
-            accessoryLeft={(props) => <Icon {...props} name="hash-outline" />}
+            accessoryLeft={(props) => (
+              <Icon {...props} name="hash-outline" animation="zoom" />
+            )}
             onPress={() =>
               navigation.navigate('Webview', {
                 title: 'About Litentry',
@@ -142,7 +157,7 @@ function Drawer({navigation}: PropTypes) {
                 title="Dev Kit"
                 description="Here lists the helpers for devs"
                 accessoryLeft={(props) => (
-                  <Icon {...props} name="code-outline" />
+                  <Icon {...props} name="code-outline" animation="zoom" />
                 )}
                 onPress={() => navigation.navigate('DevScreen')}
               />

@@ -18,5 +18,6 @@ const globalStyles = StyleSheet.create({
 });
 
 export const monofontFamily = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
+export const colorGreen = '#1BC575';
 
 export default globalStyles;

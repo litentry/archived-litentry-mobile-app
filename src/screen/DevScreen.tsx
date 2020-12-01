@@ -152,6 +152,24 @@ function DevScreen(props: PropTypes) {
             )}
           />
           <Divider />
+          <ListItem
+            title="Set Address"
+            description="Manually set address"
+            accessoryRight={() => (
+              <Button
+                size="small"
+                onPress={() => {
+                  setAccount({
+                    name: 'Manu. set Acct',
+                    address: '167rjWHghVwBJ52mz8sNkqr5bKu5vpchbc9CBoieBhVX714h',
+                  });
+                  Alert.alert('Done');
+                }}>
+                Trigger
+              </Button>
+            )}
+          />
+          <Divider />
         </Layout>
 
         <Modalize

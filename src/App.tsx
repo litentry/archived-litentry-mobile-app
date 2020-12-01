@@ -16,6 +16,8 @@ import ChainApiContextProvider from 'context/ChainApiContext';
 import ScannerContextProvider from 'context/ScannerContext';
 import AccountContextProvider from 'context/AccountContextProvider';
 import {DrawerParamList} from './types';
+import ModalContextProvider from 'context/ModalContextProvider';
+import BalanceContextProvider from 'context/BalanceContext';
 
 const Drawer = createDrawerNavigator();
 
@@ -34,19 +36,26 @@ export default () => {
     <>
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider {...eva} theme={eva[theme]}>
-        <NetworkSelectionContextProvider>
-          <ChainApiContextProvider>
-            <ScannerContextProvider>
-              <AccountContextProvider>
-                <Drawer.Navigator drawerContent={DrawerContentComp}>
-                  <Drawer.Screen name="Registrar" component={RegistrarScreen} />
-                  <Drawer.Screen name="Webview" component={WebviewScreen} />
-                  <Drawer.Screen name="DevScreen" component={DevScreen} />
-                </Drawer.Navigator>
-              </AccountContextProvider>
-            </ScannerContextProvider>
-          </ChainApiContextProvider>
-        </NetworkSelectionContextProvider>
+        <ModalContextProvider>
+          <NetworkSelectionContextProvider>
+            <ChainApiContextProvider>
+              <ScannerContextProvider>
+                <AccountContextProvider>
+                  <BalanceContextProvider>
+                    <Drawer.Navigator drawerContent={DrawerContentComp}>
+                      <Drawer.Screen
+                        name="Registrar"
+                        component={RegistrarScreen}
+                      />
+                      <Drawer.Screen name="Webview" component={WebviewScreen} />
+                      <Drawer.Screen name="DevScreen" component={DevScreen} />
+                    </Drawer.Navigator>
+                  </BalanceContextProvider>
+                </AccountContextProvider>
+              </ScannerContextProvider>
+            </ChainApiContextProvider>
+          </NetworkSelectionContextProvider>
+        </ModalContextProvider>
       </ApplicationProvider>
     </>
   );

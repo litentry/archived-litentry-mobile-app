@@ -10,6 +10,7 @@ import React, {
 import {NetworkContext} from './NetworkContext';
 import {ApiPromise, WsProvider} from '@polkadot/api';
 import {createLogger} from 'src/utils';
+import {formatBalance} from '@polkadot/util';
 
 type ApiChainStatusType = 'unknown' | 'connected' | 'disconnected' | 'ready';
 type ChainApiContextValueType = {
@@ -106,8 +107,33 @@ function ChainApiContextProvider(props: PropTypes) {
   useEffect(() => {
     if (status === 'ready' && api) {
       if (eventStreamHandlerRef.current) {
+        // unsub
         eventStreamHandlerRef.current();
       }
+
+      // setup chain properties
+      api.rpc.system.properties().then((properties) => {
+        const tokenSymbol = properties.tokenSymbol
+          .unwrapOr(undefined)
+          ?.toString();
+        // @ts-ignore
+        const tokenDecimals = properties.tokenDecimals.unwrapOr(0).toNumber();
+
+        logger.info(
+          `Chain Properties setup:\n${JSON.stringify(
+            {
+              decimals: tokenDecimals,
+              unit: tokenSymbol,
+            },
+            null,
+            4,
+          )}`,
+        );
+        formatBalance.setDefaults({
+          decimals: tokenDecimals,
+          unit: tokenSymbol,
+        });
+      });
 
       logger.info(`Start waring chain events for "${sections.join(',')}"`);
       // @ts-ignore

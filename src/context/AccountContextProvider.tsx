@@ -47,9 +47,19 @@ function AccountContextProvider({children}: PropTypes) {
   useEffect(() => {
     if (status && api && accounts?.[0]) {
       const account = accounts[0];
-      api?.query.identity?.identityOf(account.address).then((registration) => {
-        setCurrentIdentity(registration.unwrap());
-      });
+      let localUnsub: () => void | null;
+
+      api?.query.identity
+        ?.identityOf(account.address, (registration) => {
+          setCurrentIdentity(registration.unwrapOr(null));
+        })
+        .then((unsub) => {
+          localUnsub = unsub;
+        });
+
+      return () => {
+        localUnsub && localUnsub();
+      };
     }
   }, [status, api, accounts]);
 
