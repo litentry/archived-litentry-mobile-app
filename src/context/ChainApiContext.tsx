@@ -130,9 +130,10 @@ function ChainApiContextProvider(props: PropTypes) {
             4,
           )}`,
         );
+
         formatBalance.setDefaults({
           decimals: tokenDecimals,
-          unit: tokenSymbol,
+          unit: tokenSymbol || 'UNIT',
         });
       });
 
