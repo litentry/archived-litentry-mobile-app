@@ -99,7 +99,12 @@ function DevScreen(props: PropTypes) {
             title="Account reset"
             description="Reset current stored accounts"
             accessoryRight={() => (
-              <Button size="small" onPress={() => setAccount(null)}>
+              <Button
+                size="small"
+                onPress={() => {
+                  setAccount(null);
+                  Alert.alert('Info', 'Account is reset');
+                }}>
                 Trigger
               </Button>
             )}

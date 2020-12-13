@@ -10,7 +10,9 @@ import React, {
 import {NetworkContext} from './NetworkContext';
 import {ApiPromise, WsProvider} from '@polkadot/api';
 import {createLogger} from 'src/utils';
-import {formatBalance, BN_ZERO} from '@polkadot/util';
+import {formatBalance} from '@polkadot/util';
+import {defaults as addressDefaults} from '@polkadot/util-crypto/address/defaults';
+import {setSS58Format} from '@polkadot/util-crypto';
 
 type ApiChainStatusType = 'unknown' | 'connected' | 'disconnected' | 'ready';
 type ChainApiContextValueType = {
@@ -20,6 +22,10 @@ type ChainApiContextValueType = {
   addSection: (section: string) => void;
   removeSection: (section: string) => void;
 };
+import registry from 'src/typeRegistry';
+
+export const DEFAULT_DECIMALS = registry.createType('u32', 15);
+export const DEFAULT_SS58 = registry.createType('u32', 0);
 
 export const ChainApiContext = createContext<ChainApiContextValueType>({
   api: null,
@@ -116,9 +122,22 @@ function ChainApiContextProvider(props: PropTypes) {
         const tokenSymbol = properties.tokenSymbol
           .unwrapOr(undefined)
           ?.toString();
-        const tokenDecimals = properties.tokenDecimals
-          .unwrapOr(BN_ZERO)
+
+        const ss58Format = properties.ss58Format
+          .unwrapOr(DEFAULT_SS58)
           .toNumber();
+        const tokenDecimals = properties.tokenDecimals
+          .unwrapOr(DEFAULT_DECIMALS)
+          .toNumber();
+
+        setSS58Format(ss58Format);
+        registry.setChainProperties(
+          registry.createType('ChainProperties', {
+            ss58Format,
+            tokenDecimals,
+            tokenSymbol,
+          }),
+        );
 
         logger.info(
           `Chain Properties setup:\n${JSON.stringify(

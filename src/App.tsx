@@ -18,6 +18,10 @@ import AccountContextProvider from 'context/AccountContextProvider';
 import {DrawerParamList} from './types';
 import ModalContextProvider from 'context/ModalContextProvider';
 import BalanceContextProvider from 'context/BalanceContext';
+import TxContextProvider from 'context/TxContext';
+
+// init type registry
+import 'src/typeRegistry';
 
 const Drawer = createDrawerNavigator();
 
@@ -42,14 +46,19 @@ export default () => {
               <ScannerContextProvider>
                 <AccountContextProvider>
                   <BalanceContextProvider>
-                    <Drawer.Navigator drawerContent={DrawerContentComp}>
-                      <Drawer.Screen
-                        name="Registrar"
-                        component={RegistrarScreen}
-                      />
-                      <Drawer.Screen name="Webview" component={WebviewScreen} />
-                      <Drawer.Screen name="DevScreen" component={DevScreen} />
-                    </Drawer.Navigator>
+                    <TxContextProvider>
+                      <Drawer.Navigator drawerContent={DrawerContentComp}>
+                        <Drawer.Screen
+                          name="Registrar"
+                          component={RegistrarScreen}
+                        />
+                        <Drawer.Screen
+                          name="Webview"
+                          component={WebviewScreen}
+                        />
+                        <Drawer.Screen name="DevScreen" component={DevScreen} />
+                      </Drawer.Navigator>
+                    </TxContextProvider>
                   </BalanceContextProvider>
                 </AccountContextProvider>
               </ScannerContextProvider>

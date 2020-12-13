@@ -9,11 +9,10 @@ import React, {
 } from 'react';
 import {AccountContext} from './AccountContextProvider';
 import {Modalize} from 'react-native-modalize';
-import {Layout, Button, Text, Divider} from '@ui-kitten/components';
+import {Layout, Button, Divider} from '@ui-kitten/components';
 import globalStyles, {standardPadding} from 'src/styles';
 import {ChainApiContext} from './ChainApiContext';
 import {AccountInfo} from '@polkadot/types/interfaces';
-import {formatBalance} from '@polkadot/util';
 import ModalTitle from 'presentational/ModalTitle';
 import {NetworkContext} from './NetworkContext';
 import {StyleSheet} from 'react-native';
