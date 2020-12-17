@@ -33,6 +33,24 @@ const DrawerContentComp = (props: PropTypes) => {
   return <DrawerScreen {...props} />;
 };
 
+function WithContexts({children}: {children: React.ReactNode}) {
+  return (
+    <ModalContextProvider>
+      <NetworkSelectionContextProvider>
+        <ChainApiContextProvider>
+          <ScannerContextProvider>
+            <AccountContextProvider>
+              <BalanceContextProvider>
+                <TxContextProvider>{children}</TxContextProvider>
+              </BalanceContextProvider>
+            </AccountContextProvider>
+          </ScannerContextProvider>
+        </ChainApiContextProvider>
+      </NetworkSelectionContextProvider>
+    </ModalContextProvider>
+  );
+}
+
 export default () => {
   const {theme} = useContext(ThemeContext);
 
@@ -40,31 +58,13 @@ export default () => {
     <>
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider {...eva} theme={eva[theme]}>
-        <ModalContextProvider>
-          <NetworkSelectionContextProvider>
-            <ChainApiContextProvider>
-              <ScannerContextProvider>
-                <AccountContextProvider>
-                  <BalanceContextProvider>
-                    <TxContextProvider>
-                      <Drawer.Navigator drawerContent={DrawerContentComp}>
-                        <Drawer.Screen
-                          name="Registrar"
-                          component={RegistrarScreen}
-                        />
-                        <Drawer.Screen
-                          name="Webview"
-                          component={WebviewScreen}
-                        />
-                        <Drawer.Screen name="DevScreen" component={DevScreen} />
-                      </Drawer.Navigator>
-                    </TxContextProvider>
-                  </BalanceContextProvider>
-                </AccountContextProvider>
-              </ScannerContextProvider>
-            </ChainApiContextProvider>
-          </NetworkSelectionContextProvider>
-        </ModalContextProvider>
+        <WithContexts>
+          <Drawer.Navigator drawerContent={DrawerContentComp}>
+            <Drawer.Screen name="Registrar" component={RegistrarScreen} />
+            <Drawer.Screen name="Webview" component={WebviewScreen} />
+            <Drawer.Screen name="DevScreen" component={DevScreen} />
+          </Drawer.Navigator>
+        </WithContexts>
       </ApplicationProvider>
     </>
   );

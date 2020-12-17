@@ -11,11 +11,7 @@ function NetworkItem(props: PropTypes) {
   return (
     <Layout style={styles.container}>
       <View style={[styles.dot, {backgroundColor: item.color}]} />
-      <Text
-        category="label"
-        style={[isConnected ? {} : styles.notConnectedText]}>
-        {item.name}
-      </Text>
+      <Text category="label">{item.name}</Text>
       <View
         style={[
           styles.connectionIndicator,

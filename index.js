@@ -31,4 +31,5 @@ function WithContext(props) {
     </InAppNotificationContextProvider>
   );
 }
+
 AppRegistry.registerComponent(appName, () => WithContext);

@@ -11,11 +11,11 @@ import {NetworkContext} from './NetworkContext';
 import {ApiPromise, WsProvider} from '@polkadot/api';
 import {createLogger} from 'src/utils';
 import {formatBalance} from '@polkadot/util';
-import {defaults as addressDefaults} from '@polkadot/util-crypto/address/defaults';
 import {setSS58Format} from '@polkadot/util-crypto';
 
 type ApiChainStatusType = 'unknown' | 'connected' | 'disconnected' | 'ready';
 type ChainApiContextValueType = {
+  inProgress: boolean;
   status: ApiChainStatusType;
   error: Error | null;
   api: ApiPromise | null;
@@ -23,6 +23,9 @@ type ChainApiContextValueType = {
   removeSection: (section: string) => void;
 };
 import registry from 'src/typeRegistry';
+import {ActivityIndicator} from 'react-native';
+import {Layout} from '@ui-kitten/components';
+import globalStyles from 'src/styles';
 
 export const DEFAULT_DECIMALS = registry.createType('u32', 15);
 export const DEFAULT_SS58 = registry.createType('u32', 0);
@@ -33,6 +36,7 @@ export const ChainApiContext = createContext<ChainApiContextValueType>({
   error: null,
   addSection: () => undefined,
   removeSection: () => undefined,
+  inProgress: false,
 });
 type PropTypes = {children: React.ReactNode};
 
@@ -40,6 +44,7 @@ const logger = createLogger('ChainApiContext');
 
 function ChainApiContextProvider(props: PropTypes) {
   const {children} = props;
+  const [inProgress, setInProgress] = useState(true);
   const [status, setStatus] = useState<ApiChainStatusType>('unknown');
   const [error, setError] = useState<Error | null>(null);
   const {currentNetwork} = useContext(NetworkContext);
@@ -74,6 +79,7 @@ function ChainApiContextProvider(props: PropTypes) {
   useEffect(() => {
     if (currentNetwork) {
       try {
+        setInProgress(true);
         logger.debug(
           `ChainApiContext: trying to connected to ${currentNetwork.ws}`,
         );
@@ -96,12 +102,14 @@ function ChainApiContextProvider(props: PropTypes) {
 
         apiPromise.on('ready', () => {
           logger.debug('ChainApiContext: Api ready');
+          setInProgress(false);
           setError(null);
           setStatus('ready');
           setApi(apiPromise);
         });
 
         apiPromise.on('error', (e: Error) => {
+          setInProgress(false);
           setError(e);
         });
       } catch (e) {
@@ -197,13 +205,19 @@ function ChainApiContextProvider(props: PropTypes) {
   }, [currentNetwork, status, api, sections]);
 
   const value = useMemo(
-    () => ({api, status, error, addSection, removeSection}),
-    [status, error, api, addSection, removeSection],
+    () => ({api, status, error, addSection, removeSection, inProgress}),
+    [status, error, api, addSection, removeSection, inProgress],
   );
 
   return (
     <ChainApiContext.Provider value={value}>
-      {children}
+      {inProgress ? (
+        <Layout style={globalStyles.centeredContainer}>
+          <ActivityIndicator size="large" />
+        </Layout>
+      ) : (
+        children
+      )}
     </ChainApiContext.Provider>
   );
 }
