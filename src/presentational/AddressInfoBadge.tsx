@@ -51,7 +51,7 @@ function AddressInfoBadge({info, judgements, network}: PropTypes) {
           accessoryLeft={(props) => <Icon {...props} name="email-outline" />}
           accessoryRight={() => (
             <Text selectable category="label">
-              {u8aToString(info.email.asRaw)}
+              {u8aToString(info.email.asRaw) || 'Unset'}
             </Text>
           )}
         />
