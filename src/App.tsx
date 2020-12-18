@@ -20,6 +20,8 @@ import ModalContextProvider from 'context/ModalContextProvider';
 import BalanceContextProvider from 'context/BalanceContext';
 import TxContextProvider from 'context/TxContext';
 
+import {IonicIconsPack} from './Ionic-icons';
+
 // init type registry
 import 'src/typeRegistry';
 
@@ -56,7 +58,7 @@ export default () => {
 
   return (
     <>
-      <IconRegistry icons={EvaIconsPack} />
+      <IconRegistry icons={[EvaIconsPack, IonicIconsPack]} />
       <ApplicationProvider {...eva} theme={eva[theme]}>
         <WithContexts>
           <Drawer.Navigator drawerContent={DrawerContentComp}>

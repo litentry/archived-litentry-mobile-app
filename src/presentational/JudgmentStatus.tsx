@@ -23,16 +23,14 @@ function JudgmentStatus(props: PropTypes) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colorGreen,
-    paddingVertical: standardPadding / 4,
-    paddingHorizontal: standardPadding / 2,
-    borderWidth: 1,
+    paddingVertical: standardPadding / 2,
+    paddingHorizontal: standardPadding,
     borderRadius: 3,
     marginLeft: standardPadding / 2,
   },
   text: {
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: 'bold',
-    color: '#fcfcfc',
   },
 });
 

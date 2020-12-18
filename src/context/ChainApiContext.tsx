@@ -23,9 +23,9 @@ type ChainApiContextValueType = {
   removeSection: (section: string) => void;
 };
 import registry from 'src/typeRegistry';
-import {ActivityIndicator} from 'react-native';
-import {Layout} from '@ui-kitten/components';
-import globalStyles from 'src/styles';
+import LoadingView from 'presentational/LoadingView';
+import {Icon} from '@ui-kitten/components';
+import globalStyles, {colorGreen} from 'src/styles';
 
 export const DEFAULT_DECIMALS = registry.createType('u32', 15);
 export const DEFAULT_SS58 = registry.createType('u32', 0);
@@ -212,9 +212,16 @@ function ChainApiContextProvider(props: PropTypes) {
   return (
     <ChainApiContext.Provider value={value}>
       {inProgress ? (
-        <Layout style={globalStyles.centeredContainer}>
-          <ActivityIndicator size="large" />
-        </Layout>
+        <LoadingView
+          text={`Switching to ${currentNetwork?.name}`}
+          renderIcon={() => (
+            <Icon
+              style={[globalStyles.inlineIconDimension, {color: colorGreen}]}
+              name="planet"
+              pack="ionic"
+            />
+          )}
+        />
       ) : (
         children
       )}

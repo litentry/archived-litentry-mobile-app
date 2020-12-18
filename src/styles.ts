@@ -21,6 +21,13 @@ const globalStyles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
   },
+  inlineIconDimension: {
+    width: 20,
+    height: 20,
+  },
+  dialogMinHeight: {
+    minHeight: 240,
+  },
 });
 
 export const monofontFamily = Platform.OS === 'ios' ? 'Menlo' : 'monospace';

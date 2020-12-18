@@ -10,12 +10,11 @@ import React, {
 import {AccountContext} from './AccountContextProvider';
 import {Modalize} from 'react-native-modalize';
 import {Layout, Button, Divider} from '@ui-kitten/components';
-import globalStyles, {standardPadding} from 'src/styles';
+import globalStyles from 'src/styles';
 import {ChainApiContext} from './ChainApiContext';
 import {AccountInfo} from '@polkadot/types/interfaces';
 import ModalTitle from 'presentational/ModalTitle';
 import {NetworkContext} from './NetworkContext';
-import {StyleSheet} from 'react-native';
 import Balances from 'presentational/Balances';
 
 type BalanceContextValueType = {
@@ -79,29 +78,25 @@ export default function BalanceContextProvider({children}: PropTypes) {
             handlePosition="outside"
             closeOnOverlayTap
             panGestureEnabled>
-            <Layout level="1" style={styles.container}>
-              <ModalTitle
-                title={currentAccount.name}
-                subtitle={` (@${currentNetwork?.name})`}
-              />
-              <Divider />
-              <Balances balance={balance} />
-              <Divider style={globalStyles.divider} />
-              <Button
-                appearance="ghost"
-                onPress={() => modalRef.current?.close()}>
-                Close
-              </Button>
-            </Layout>
+            {balance && (
+              <Layout level="1" style={globalStyles.paddedContainer}>
+                <ModalTitle
+                  title={currentAccount.name}
+                  subtitle={` (@${currentNetwork?.name})`}
+                />
+                <Divider />
+                <Balances balance={balance} />
+                <Divider style={globalStyles.divider} />
+                <Button
+                  appearance="ghost"
+                  onPress={() => modalRef.current?.close()}>
+                  Close
+                </Button>
+              </Layout>
+            )}
           </Modalize>
         )}
       </>
     </BalanceContext.Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: standardPadding * 2,
-  },
-});

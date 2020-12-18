@@ -23,6 +23,7 @@ function ModalTitle(props: PropTypes) {
 const styles = StyleSheet.create({
   title: {
     alignSelf: 'center',
+    fontSize: 18,
     paddingBottom: standardPadding * 2,
   },
 });

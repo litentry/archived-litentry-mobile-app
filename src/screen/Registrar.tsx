@@ -4,16 +4,34 @@ import ScreenNavigation from 'layout/ScreenNavigation';
 import SafeView from 'presentational/SafeView';
 import NetworkItem from 'presentational/NetworkItem';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {Text, Layout, Divider, Button} from '@ui-kitten/components';
+
+import {
+  Text,
+  Layout,
+  Divider,
+  Button,
+  Icon,
+  IconProps,
+} from '@ui-kitten/components';
 import {NetworkSelectionContext} from 'context/NetworkSelectionContext';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {BalanceContext} from 'context/BalanceContext';
 import {AccountContext} from 'context/AccountContextProvider';
 import {TxContext} from 'context/TxContext';
+import Identicon from '@polkadot/reactnative-identicon';
+import FadeInAnimatedView from 'presentational/FadeInAnimatedView';
+import withAddAccount, {InjectedPropTypes} from 'src/hoc/withAddAccount';
 
 type PropTypes = {navigation: DrawerNavigationProp<{}>};
 
-function RegistrarScreen({navigation}: PropTypes) {
+const AddIcon = (props: IconProps) => (
+  <Icon {...props} name="person-add-outline" />
+);
+
+function RegistrarScreen({
+  navigation,
+  accountAddProps,
+}: PropTypes & InjectedPropTypes) {
   const {currentNetwork, selectNetwork} = useContext(NetworkSelectionContext);
   const {show} = useContext(BalanceContext);
   const {accounts} = useContext(AccountContext);
@@ -76,10 +94,26 @@ function RegistrarScreen({navigation}: PropTypes) {
         renderTitle={renderTitle}
       />
       <Divider />
-      <Layout style={styles.container} level="1">
-        <Text category="label">Here comes the main content of Registrar</Text>
-        <Button onPress={startTx}>Tx</Button>
-      </Layout>
+      <FadeInAnimatedView>
+        {!account ? (
+          <Layout style={styles.container} level="1">
+            <Button
+              size="large"
+              appearance="ghost"
+              onPress={accountAddProps.open}
+              accessoryLeft={AddIcon}>
+              Add Account
+            </Button>
+          </Layout>
+        ) : (
+          <Layout>
+            <Identicon
+              value={'5FZnXDZ1X44GSpZYnJjGe6Ygo74ByDFj1YhqqAV3G2GZTSRN'}
+              size={60}
+            />
+          </Layout>
+        )}
+      </FadeInAnimatedView>
     </SafeView>
   );
 }
@@ -95,6 +129,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function WithContext(props: PropTypes) {
-  return <RegistrarScreen {...props} />;
-}
+export default withAddAccount(RegistrarScreen);

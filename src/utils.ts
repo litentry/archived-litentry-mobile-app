@@ -10,6 +10,8 @@ import {decodeAddress, blake2AsU8a} from '@polkadot/util-crypto';
 import {SignerPayloadJSON} from '@polkadot/types/types';
 import {ExtrinsicPayload} from '@polkadot/types/interfaces';
 import registry from 'src/typeRegistry';
+import {AccountAddressType} from './types';
+import {trim} from 'lodash';
 
 const MULTIPART = new Uint8Array([0]);
 
@@ -149,6 +151,15 @@ export function rawDataToU8A(rawData: string): Uint8Array | null {
   }
 
   return bytes;
+}
+
+export function parseAddress(payload: string): AccountAddressType {
+  const parts = trim(payload).split(':').filter(Boolean);
+  if (parts.length !== 4) {
+    throw new Error('address format wrong');
+  }
+
+  return {protocol: parts[0], address: parts[1], name: parts[3]};
 }
 
 export const ReactotronDebug = Reactotron.debug;

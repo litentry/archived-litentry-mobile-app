@@ -15,22 +15,13 @@ import {ThemeContext} from 'context/ThemeProvider';
 import logo from '../image/logo.png';
 import Padder from 'presentational/Padder';
 import {ScannerContext} from 'context/ScannerContext';
-import {trim} from 'lodash';
-import {AccountAddressType, DrawerParamList} from 'src/types';
+import {DrawerParamList} from 'src/types';
 import {AccountContext} from 'context/AccountContextProvider';
 import {NetworkContext} from 'context/NetworkContext';
-import NetworkLogo from 'presentational/NetworkLogo';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import AddressInfoBadge from 'presentational/AddressInfoBadge';
-
-function parseAddress(payload: string): AccountAddressType {
-  const parts = trim(payload).split(':').filter(Boolean);
-  if (parts.length !== 4) {
-    throw new Error('address format wrong');
-  }
-
-  return {protocol: parts[0], address: parts[1], name: parts[3]};
-}
+import Identicon from '@polkadot/reactnative-identicon';
+import {parseAddress} from 'src/utils';
 
 function AccountDrawerView() {
   const {scan} = useContext(ScannerContext);
@@ -51,11 +42,10 @@ function AccountDrawerView() {
       {account ? (
         <Layout style={accountDrawerViewStyles.container}>
           <Layout style={accountDrawerViewStyles.accountLogo}>
-            {currentNetwork ? (
-              <NetworkLogo name={currentNetwork.key || 'polkadot'} />
-            ) : null}
-            <Layout>
-              <Text category="s2">{account.name || 'Untitled Account'}</Text>
+            <Identicon value={account.address} size={40} />
+
+            <Layout style={accountDrawerViewStyles.account}>
+              {account.name ? <Text category="s2">{account.name}</Text> : null}
               {currentIdentity && currentNetwork && (
                 <AddressInfoBadge
                   info={currentIdentity.info}
@@ -94,6 +84,9 @@ function AccountDrawerView() {
 const accountDrawerViewStyles = StyleSheet.create({
   container: {
     alignSelf: 'center',
+  },
+  account: {
+    padding: standardPadding,
   },
   accountLogo: {
     marginLeft: -standardPadding,
