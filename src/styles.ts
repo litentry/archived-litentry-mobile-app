@@ -33,5 +33,7 @@ const globalStyles = StyleSheet.create({
 export const monofontFamily = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
 export const colorGreen = '#1BC575';
 export const colorRed = '#FF3D71';
+export const getIconColorByTheme = (theme: 'light' | 'dark') =>
+  theme === 'light' ? 'black' : 'white';
 
 export default globalStyles;

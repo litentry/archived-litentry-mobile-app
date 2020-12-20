@@ -18,9 +18,9 @@ import {ChainApiContext} from 'context/ChainApiContext';
 import {BalanceContext} from 'context/BalanceContext';
 import {AccountContext} from 'context/AccountContextProvider';
 import {TxContext} from 'context/TxContext';
-import Identicon from '@polkadot/reactnative-identicon';
 import FadeInAnimatedView from 'presentational/FadeInAnimatedView';
 import withAddAccount, {InjectedPropTypes} from 'src/hoc/withAddAccount';
+import AccountTeaser from 'presentational/AccountTeaser';
 
 type PropTypes = {navigation: DrawerNavigationProp<{}>};
 
@@ -93,7 +93,7 @@ function RegistrarScreen({
         onBalancePress={show}
         renderTitle={renderTitle}
       />
-      <Divider />
+      <Divider style={{height: 2}} />
       <FadeInAnimatedView>
         {!account ? (
           <Layout style={styles.container} level="1">
@@ -106,12 +106,10 @@ function RegistrarScreen({
             </Button>
           </Layout>
         ) : (
-          <Layout>
-            <Identicon
-              value={'5FZnXDZ1X44GSpZYnJjGe6Ygo74ByDFj1YhqqAV3G2GZTSRN'}
-              size={60}
-            />
-          </Layout>
+          <>
+            <AccountTeaser address={account.address} />
+            <Divider />
+          </>
         )}
       </FadeInAnimatedView>
     </SafeView>

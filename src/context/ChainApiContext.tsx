@@ -52,6 +52,7 @@ function ChainApiContextProvider(props: PropTypes) {
   const [sections, setSections] = useState<string[]>([]);
   const eventStreamHandlerRef = useRef<Function | null>(null);
 
+  const shouldConnect = useRef(true);
   /**
    * Add section to watch, such as `identity`
    */
@@ -77,7 +78,8 @@ function ChainApiContextProvider(props: PropTypes) {
   // addSection /removeSection
   // addSubscription / removeSubscription
   useEffect(() => {
-    if (currentNetwork) {
+    console.log('Render ChainApiContext');
+    if (currentNetwork && shouldConnect) {
       try {
         setInProgress(true);
         logger.debug(
@@ -97,6 +99,7 @@ function ChainApiContextProvider(props: PropTypes) {
 
           setError(null);
           setApi(null);
+          shouldConnect.current = true;
           setStatus('disconnected');
         });
 
@@ -104,8 +107,10 @@ function ChainApiContextProvider(props: PropTypes) {
           logger.debug('ChainApiContext: Api ready');
           setInProgress(false);
           setError(null);
+
           setStatus('ready');
           setApi(apiPromise);
+          shouldConnect.current = false;
         });
 
         apiPromise.on('error', (e: Error) => {
@@ -116,7 +121,7 @@ function ChainApiContextProvider(props: PropTypes) {
         setError(e);
       }
     }
-  }, [currentNetwork]);
+  }, [currentNetwork, shouldConnect]);
 
   useEffect(() => {
     if (status === 'ready' && api) {
@@ -213,7 +218,7 @@ function ChainApiContextProvider(props: PropTypes) {
     <ChainApiContext.Provider value={value}>
       {inProgress ? (
         <LoadingView
-          text={`Switching to ${currentNetwork?.name}`}
+          text={`Connecting to ${currentNetwork?.name}`}
           renderIcon={() => (
             <Icon
               style={[globalStyles.inlineIconDimension, {color: colorGreen}]}
