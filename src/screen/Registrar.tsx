@@ -34,7 +34,7 @@ function RegistrarScreen({
 }: PropTypes & InjectedPropTypes) {
   const {currentNetwork, selectNetwork} = useContext(NetworkSelectionContext);
   const {show} = useContext(BalanceContext);
-  const {accounts} = useContext(AccountContext);
+  const {accounts, currentIdentity} = useContext(AccountContext);
 
   const {status, api} = useContext(ChainApiContext);
   const {start} = useContext(TxContext);
@@ -107,7 +107,11 @@ function RegistrarScreen({
           </Layout>
         ) : (
           <>
-            <AccountTeaser address={account.address} />
+            <AccountTeaser
+              address={account.address}
+              info={currentIdentity?.info}
+              judgements={currentIdentity?.judgements}
+            />
             <Divider />
           </>
         )}

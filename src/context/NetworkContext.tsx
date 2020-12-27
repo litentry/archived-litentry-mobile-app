@@ -32,7 +32,7 @@ const WestendNetwork: NetworkType = {
 
 const LitentryNetworkTest: NetworkType = {
   name: 'Litentry Testnet',
-  ws: 'ws://13.229.136.206:9944',
+  ws: 'ws://18.140.130.138:9944',
   isTestnet: true,
   color: '#006400',
 };

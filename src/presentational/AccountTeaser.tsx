@@ -19,14 +19,20 @@ import globalStyles, {
 import {ThemeContext} from 'context/ThemeProvider';
 import QRCode from './QRCode';
 import Padder from './Padder';
+import AccountInfoInlineTeaser from './AccountInfoInlineTeaser';
+import {IdentityInfo, RegistrationJudgement} from '@polkadot/types/interfaces';
+import LoadingView from './LoadingView';
+import {Vec} from '@polkadot/types';
 const {width} = Dimensions.get('window');
 
 type PropTypes = {
   address: string;
+  info?: IdentityInfo;
+  judgements?: Vec<RegistrationJudgement>;
 };
 
 function AccountTeaser(props: PropTypes) {
-  const {address} = props;
+  const {address, info, judgements} = props;
   const [copyTooltipVisible, setCopyTooltipVisible] = useState(false);
   const [qrVisible, setQrVisible] = useState(false);
   const {theme} = useContext(ThemeContext);
@@ -49,6 +55,11 @@ function AccountTeaser(props: PropTypes) {
   return (
     <Layout style={[globalStyles.paddedContainer, styles.container]}>
       <Identicon value={address} size={60} />
+      {info ? (
+        <AccountInfoInlineTeaser info={info} judgements={judgements} />
+      ) : (
+        <LoadingView />
+      )}
       <Layout style={styles.addressContainer}>
         <TouchableOpacity onPress={() => setQrVisible(true)}>
           <Icon
@@ -96,7 +107,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'space-around',
     alignItems: 'center',
-    height: '30%',
+    height: '25%',
   },
   addressContainer: {
     flexDirection: 'row',

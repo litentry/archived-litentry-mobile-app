@@ -12,7 +12,7 @@ import globalStyles, {
 } from 'src/styles';
 
 type PropTypes = {
-  text: string;
+  text?: string;
   renderIcon?: () => ReactNode;
   size?: ActivityIndicatorProps['size'];
   appearance?: 'secondary' | 'primary';
