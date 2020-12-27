@@ -24,9 +24,11 @@ import {DrawerNavigationProp} from '@react-navigation/drawer';
 import AddressInfoBadge from 'presentational/AddressInfoBadge';
 import Identicon from '@polkadot/reactnative-identicon';
 import {parseAddress} from 'src/utils';
+import {BalanceContext} from 'context/BalanceContext';
 
 function AccountDrawerView() {
   const {scan} = useContext(ScannerContext);
+  const {show} = useContext(BalanceContext);
   const {accounts, setAccount, currentIdentity} = useContext(AccountContext);
   const {currentNetwork} = useContext(NetworkContext);
   const [visible, setVisible] = useState(false);
@@ -50,6 +52,10 @@ function AccountDrawerView() {
         ],
         {cancelable: false},
       );
+    }
+
+    if (row === 1) {
+      show();
     }
   };
 
@@ -104,6 +110,12 @@ function AccountDrawerView() {
                   title="Remove Account"
                   accessoryLeft={(iconProps) => (
                     <Icon name="trash-2-outline" {...iconProps} />
+                  )}
+                />
+                <MenuItem
+                  title="Show balance"
+                  accessoryLeft={(iconProps) => (
+                    <Icon {...iconProps} name="credit-card-outline" />
                   )}
                 />
               </OverflowMenu>

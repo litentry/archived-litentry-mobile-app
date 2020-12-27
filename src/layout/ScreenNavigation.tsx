@@ -6,7 +6,6 @@ import {
   IconProps,
 } from '@ui-kitten/components';
 import {StyleSheet, SafeAreaView, View} from 'react-native';
-import globalStyles from 'src/styles';
 
 const MenuIcon = (props: IconProps) => (
   <Icon {...props} name="menu-2-outline" />
