@@ -21,9 +21,9 @@ import QRCode from './QRCode';
 import Padder from './Padder';
 import AccountInfoInlineTeaser from './AccountInfoInlineTeaser';
 import {IdentityInfo, RegistrationJudgement} from '@polkadot/types/interfaces';
-import LoadingView from './LoadingView';
 import {Vec} from '@polkadot/types';
-const {width} = Dimensions.get('window');
+
+const {width, height} = Dimensions.get('window');
 
 type PropTypes = {
   address: string;
@@ -57,9 +57,7 @@ function AccountTeaser(props: PropTypes) {
       <Identicon value={address} size={60} />
       {info ? (
         <AccountInfoInlineTeaser info={info} judgements={judgements} />
-      ) : (
-        <LoadingView />
-      )}
+      ) : null}
       <Layout style={styles.addressContainer}>
         <TouchableOpacity onPress={() => setQrVisible(true)}>
           <Icon
@@ -107,7 +105,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'space-around',
     alignItems: 'center',
-    height: '25%',
+    height: height * 0.2,
   },
   addressContainer: {
     flexDirection: 'row',

@@ -155,6 +155,11 @@ export function rawDataToU8A(rawData: string): Uint8Array | null {
 
 export function parseAddress(payload: string): AccountAddressType {
   const parts = trim(payload).split(':').filter(Boolean);
+
+  if (parts.length === 1) {
+    return {protocol: '', address: parts[0], name: ''};
+  }
+
   if (parts.length !== 4) {
     throw new Error('address format wrong');
   }

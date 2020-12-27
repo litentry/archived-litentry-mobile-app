@@ -1,5 +1,11 @@
 import React, {useContext, useCallback} from 'react';
-import {StyleSheet, TouchableOpacity, Alert} from 'react-native';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  ScrollView,
+  View,
+} from 'react-native';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import SafeView from 'presentational/SafeView';
 import NetworkItem from 'presentational/NetworkItem';
@@ -12,6 +18,7 @@ import {
   Button,
   Icon,
   IconProps,
+  useTheme,
 } from '@ui-kitten/components';
 import {NetworkSelectionContext} from 'context/NetworkSelectionContext';
 import {ChainApiContext} from 'context/ChainApiContext';
@@ -21,6 +28,7 @@ import {TxContext} from 'context/TxContext';
 import FadeInAnimatedView from 'presentational/FadeInAnimatedView';
 import withAddAccount, {InjectedPropTypes} from 'src/hoc/withAddAccount';
 import AccountTeaser from 'presentational/AccountTeaser';
+import globalStyles, {standardPadding, colorGreen} from 'src/styles';
 
 type PropTypes = {navigation: DrawerNavigationProp<{}>};
 
@@ -39,6 +47,7 @@ function RegistrarScreen({
   const {status, api} = useContext(ChainApiContext);
   const {start} = useContext(TxContext);
   const account = accounts?.[0];
+  const theme = useTheme();
 
   const startTx = useCallback(async () => {
     // const info = {
@@ -87,7 +96,7 @@ function RegistrarScreen({
   };
 
   return (
-    <SafeView>
+    <Layout style={globalStyles.flex}>
       <ScreenNavigation
         onMenuPress={() => navigation.openDrawer()}
         onBalancePress={show}
@@ -106,21 +115,38 @@ function RegistrarScreen({
             </Button>
           </Layout>
         ) : (
-          <>
-            <AccountTeaser
-              address={account.address}
-              info={currentIdentity?.info}
-              judgements={currentIdentity?.judgements}
-            />
-            <Divider />
-          </>
+          <AccountTeaser
+            address={account.address}
+            info={currentIdentity?.info}
+            judgements={currentIdentity?.judgements}
+          />
         )}
+        <View
+          style={[
+            globalStyles.flex,
+            globalStyles.shadow,
+            styles.main,
+            {backgroundColor: theme['background-basic-color-2']},
+          ]}>
+          <ScrollView style={styles.scrollView}>
+            <Text>Governance Dashboard</Text>
+          </ScrollView>
+        </View>
       </FadeInAnimatedView>
-    </SafeView>
+    </Layout>
   );
 }
 
 const styles = StyleSheet.create({
+  main: {
+    backgroundColor: '#fcfcfc',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+  },
+  scrollView: {
+    paddingHorizontal: standardPadding * 2,
+    paddingVertical: standardPadding * 4,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',

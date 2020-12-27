@@ -1,12 +1,12 @@
 import React from 'react';
 import {
   Icon,
-  Layout,
   TopNavigation,
   TopNavigationAction,
   IconProps,
 } from '@ui-kitten/components';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, SafeAreaView, View} from 'react-native';
+import globalStyles from 'src/styles';
 
 const MenuIcon = (props: IconProps) => (
   <Icon {...props} name="menu-2-outline" />
@@ -34,14 +34,16 @@ export default function ScreenNavigation({
   );
 
   return (
-    <Layout style={styles.container}>
-      <TopNavigation
-        alignment="center"
-        title={renderTitle}
-        accessoryLeft={renderMenuButton}
-        accessoryRight={renderBalanceButton}
-      />
-    </Layout>
+    <SafeAreaView style={{backgroundColor: 'white'}}>
+      <View style={styles.container}>
+        <TopNavigation
+          alignment="center"
+          title={renderTitle}
+          accessoryLeft={renderMenuButton}
+          accessoryRight={renderBalanceButton}
+        />
+      </View>
+    </SafeAreaView>
   );
 }
 

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {RegistrationJudgement} from '@polkadot/types/interfaces';
-import {Icon, Tooltip, Button} from '@ui-kitten/components';
+import {Icon, Tooltip} from '@ui-kitten/components';
 import {standardPadding, colorGreen} from 'src/styles';
 import {mapStatusText} from 'src/identityUtils';
 
@@ -18,6 +18,9 @@ function JudgmentStatus(props: PropTypes) {
     <TouchableOpacity
       onPress={() => {
         setVisible(true);
+        setTimeout(() => {
+          setVisible(false);
+        }, 3000);
       }}>
       <Icon
         pack="ionic"
@@ -35,7 +38,7 @@ function JudgmentStatus(props: PropTypes) {
       anchor={renderIcon}
       visible={visible}
       onBackdropPress={() => setVisible(false)}>
-      {`Judgment provided by Registrar #${judgement[0]}`}
+      {`"${status.text}" provided by Registrar #${judgement[0]}`}
     </Tooltip>
   );
 }

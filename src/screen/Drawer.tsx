@@ -1,5 +1,5 @@
-import React, {useContext, useCallback} from 'react';
-import {StyleSheet, Image, View} from 'react-native';
+import React, {useContext, useCallback, useState} from 'react';
+import {StyleSheet, Image, View, TouchableOpacity, Alert} from 'react-native';
 import {
   Button,
   Layout,
@@ -8,6 +8,8 @@ import {
   Toggle,
   ListItem,
   Icon,
+  OverflowMenu,
+  MenuItem,
 } from '@ui-kitten/components';
 import SafeView from 'presentational/SafeView';
 import globalStyles, {standardPadding, monofontFamily} from 'src/styles';
@@ -27,6 +29,29 @@ function AccountDrawerView() {
   const {scan} = useContext(ScannerContext);
   const {accounts, setAccount, currentIdentity} = useContext(AccountContext);
   const {currentNetwork} = useContext(NetworkContext);
+  const [visible, setVisible] = useState(false);
+  const account = accounts && accounts[0];
+
+  const handleMenuItemSelect = ({row}: {row: number}) => {
+    if (row === 0) {
+      Alert.alert(
+        'Confirm Account deletion',
+        `Sure to delete account ${account?.address}`,
+        [
+          {
+            text: 'Yes',
+            onPress: () => setAccount(null),
+          },
+          {
+            text: 'Cancel',
+            onPress: () => setVisible(false),
+            style: 'cancel',
+          },
+        ],
+        {cancelable: false},
+      );
+    }
+  };
 
   const handleScan = useCallback(
     ({data}) => {
@@ -35,7 +60,20 @@ function AccountDrawerView() {
     [setAccount],
   );
 
-  const account = accounts && accounts[0];
+  const renderOptions = () => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          setVisible(true);
+        }}>
+        <Icon
+          name="md-options"
+          pack="ionic"
+          style={[globalStyles.inlineIconDimension, {color: '#ccc'}]}
+        />
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <Layout style={[globalStyles.centeredContainer, account ? {} : {}]}>
@@ -45,14 +83,30 @@ function AccountDrawerView() {
             <Identicon value={account.address} size={40} />
 
             <Layout style={accountDrawerViewStyles.account}>
-              {account.name ? <Text category="s2">{account.name}</Text> : null}
-              {currentIdentity && currentNetwork && (
+              {currentIdentity && currentNetwork ? (
                 <AddressInfoBadge
                   info={currentIdentity.info}
                   network={currentNetwork}
                   judgements={currentIdentity.judgements}
                 />
+              ) : (
+                <Text category="s2">{account?.name || 'Untitled Account'}</Text>
               )}
+              <OverflowMenu
+                anchor={renderOptions}
+                placement="bottom end"
+                backdropStyle={styles.backdrop}
+                style={styles.overflowMenu}
+                visible={visible}
+                onSelect={handleMenuItemSelect}
+                onBackdropPress={() => setVisible(false)}>
+                <MenuItem
+                  title="Remove Account"
+                  accessoryLeft={(iconProps) => (
+                    <Icon name="trash-2-outline" {...iconProps} />
+                  )}
+                />
+              </OverflowMenu>
             </Layout>
           </Layout>
           <Layout>
@@ -87,6 +141,10 @@ const accountDrawerViewStyles = StyleSheet.create({
   },
   account: {
     padding: standardPadding,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   accountLogo: {
     marginLeft: -standardPadding,
@@ -180,6 +238,12 @@ const styles = StyleSheet.create({
     height: '35%',
   },
   rest: {flex: 1},
+  backdrop: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  overflowMenu: {
+    minWidth: 200,
+  },
 });
 
 export default Drawer;
