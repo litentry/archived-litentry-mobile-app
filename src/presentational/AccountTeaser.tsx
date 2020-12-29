@@ -26,6 +26,7 @@ import {Vec} from '@polkadot/types';
 const {width, height} = Dimensions.get('window');
 
 type PropTypes = {
+  level: '1' | '2';
   address: string;
   info?: IdentityInfo;
   judgements?: Vec<RegistrationJudgement>;
@@ -53,12 +54,14 @@ function AccountTeaser(props: PropTypes) {
   );
 
   return (
-    <Layout style={[globalStyles.paddedContainer, styles.container]}>
+    <Layout
+      level={props.level}
+      style={[globalStyles.paddedContainer, styles.container]}>
       <Identicon value={address} size={60} />
       {info ? (
         <AccountInfoInlineTeaser info={info} judgements={judgements} />
       ) : null}
-      <Layout style={styles.addressContainer}>
+      <Layout level={props.level} style={styles.addressContainer}>
         <TouchableOpacity onPress={() => setQrVisible(true)}>
           <Icon
             style={[styles.icon, {color: getIconColorByTheme(theme)}]}

@@ -53,8 +53,8 @@ const styles = StyleSheet.create({
     marginLeft: standardPadding / 2,
   },
   icon: {
-    width: 24,
-    height: 24,
+    width: 20,
+    height: 20,
     marginHorizontal: standardPadding,
   },
   good: {color: colorGreen},

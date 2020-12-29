@@ -102,7 +102,10 @@ function AddressInfoBadge({info, judgements, network}: PropTypes) {
           />
           <Layout style={{flexDirection: 'row'}}>
             {judgements.map((judgement) => (
-              <JudgmentStatus judgement={judgement} />
+              <JudgmentStatus
+                key={String(judgement[0])}
+                judgement={judgement}
+              />
             ))}
           </Layout>
         </Layout>

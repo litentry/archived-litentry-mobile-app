@@ -52,7 +52,6 @@ function ChainApiContextProvider(props: PropTypes) {
   const [sections, setSections] = useState<string[]>([]);
   const eventStreamHandlerRef = useRef<Function | null>(null);
 
-  const shouldConnect = useRef(true);
   /**
    * Add section to watch, such as `identity`
    */
@@ -79,7 +78,7 @@ function ChainApiContextProvider(props: PropTypes) {
   // addSubscription / removeSubscription
   useEffect(() => {
     console.log('Render ChainApiContext');
-    if (currentNetwork && shouldConnect) {
+    if (currentNetwork) {
       try {
         setInProgress(true);
         logger.debug(
@@ -99,7 +98,6 @@ function ChainApiContextProvider(props: PropTypes) {
 
           setError(null);
           setApi(null);
-          shouldConnect.current = true;
           setStatus('disconnected');
         });
 
@@ -110,7 +108,6 @@ function ChainApiContextProvider(props: PropTypes) {
 
           setStatus('ready');
           setApi(apiPromise);
-          shouldConnect.current = false;
         });
 
         apiPromise.on('error', (e: Error) => {
@@ -121,7 +118,7 @@ function ChainApiContextProvider(props: PropTypes) {
         setError(e);
       }
     }
-  }, [currentNetwork, shouldConnect]);
+  }, [currentNetwork]);
 
   useEffect(() => {
     if (status === 'ready' && api) {

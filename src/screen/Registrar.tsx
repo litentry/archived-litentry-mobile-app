@@ -7,7 +7,6 @@ import {
   View,
 } from 'react-native';
 import ScreenNavigation from 'layout/ScreenNavigation';
-import SafeView from 'presentational/SafeView';
 import NetworkItem from 'presentational/NetworkItem';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 
@@ -19,6 +18,7 @@ import {
   Icon,
   IconProps,
   useTheme,
+  Card,
 } from '@ui-kitten/components';
 import {NetworkSelectionContext} from 'context/NetworkSelectionContext';
 import {ChainApiContext} from 'context/ChainApiContext';
@@ -28,7 +28,8 @@ import {TxContext} from 'context/TxContext';
 import FadeInAnimatedView from 'presentational/FadeInAnimatedView';
 import withAddAccount, {InjectedPropTypes} from 'src/hoc/withAddAccount';
 import AccountTeaser from 'presentational/AccountTeaser';
-import globalStyles, {standardPadding, colorGreen} from 'src/styles';
+import globalStyles from 'src/styles';
+import CouncilTeaserCard from 'layout/CouncilTeaserCard';
 
 type PropTypes = {navigation: DrawerNavigationProp<{}>};
 
@@ -96,7 +97,7 @@ function RegistrarScreen({
   };
 
   return (
-    <Layout style={globalStyles.flex}>
+    <Layout style={[globalStyles.flex]}>
       <ScreenNavigation
         onMenuPress={() => navigation.openDrawer()}
         onBalancePress={show}
@@ -115,38 +116,67 @@ function RegistrarScreen({
             </Button>
           </Layout>
         ) : (
-          <AccountTeaser
-            address={account.address}
-            info={currentIdentity?.info}
-            judgements={currentIdentity?.judgements}
-          />
+          <>
+            <AccountTeaser
+              level="2"
+              address={account.address}
+              info={currentIdentity?.info}
+              judgements={currentIdentity?.judgements}
+            />
+            <Divider />
+            <View
+              style={[
+                globalStyles.flex,
+                styles.main,
+                {backgroundColor: theme['background-basic-color-1']},
+              ]}>
+              <ScrollView style={styles.scrollView}>
+                <CouncilTeaserCard
+                  onMorePress={() => alert('Navigate to Council Screen')}
+                />
+                <Card
+                  style={styles.card}
+                  appearance="filled"
+                  status="control"
+                  activeOpacity={0.8}
+                  header={(headerProps) => (
+                    <View {...headerProps}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                        }}>
+                        <Text category="h6">Governance</Text>
+                        <Icon
+                          pack="ionic"
+                          name="chevron-forward-outline"
+                          style={[
+                            globalStyles.inlineIconDimension,
+                            {color: '#ccc'},
+                          ]}
+                        />
+                      </View>
+                    </View>
+                  )}>
+                  <Text>
+                    The Maldives, officially the Republic of Maldives, is a
+                    small country in South Asia, located in the Arabian Sea of
+                    the Indian Ocean. It lies southwest of Sri Lanka and India,
+                    about 1,000 kilometres (620 mi) from the Asian continent
+                  </Text>
+                </Card>
+              </ScrollView>
+            </View>
+          </>
         )}
-        <View
-          style={[
-            globalStyles.flex,
-            globalStyles.shadow,
-            styles.main,
-            {backgroundColor: theme['background-basic-color-2']},
-          ]}>
-          <ScrollView style={styles.scrollView}>
-            <Text>Governance Dashboard</Text>
-          </ScrollView>
-        </View>
       </FadeInAnimatedView>
     </Layout>
   );
 }
 
 const styles = StyleSheet.create({
-  main: {
-    backgroundColor: '#fcfcfc',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-  },
-  scrollView: {
-    paddingHorizontal: standardPadding * 2,
-    paddingVertical: standardPadding * 4,
-  },
+  main: {},
+  scrollView: {},
   container: {
     flex: 1,
     justifyContent: 'center',

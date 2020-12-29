@@ -75,7 +75,7 @@ function AccountDrawerView() {
         <Icon
           name="md-options"
           pack="ionic"
-          style={[globalStyles.inlineIconDimension, {color: '#ccc'}]}
+          style={[globalStyles.inlineIconDimension, globalStyles.iconColor]}
         />
       </TouchableOpacity>
     );
@@ -86,7 +86,7 @@ function AccountDrawerView() {
       {account ? (
         <Layout style={accountDrawerViewStyles.container}>
           <Layout style={accountDrawerViewStyles.accountLogo}>
-            <Identicon value={account.address} size={40} />
+            <Identicon value={account.address} size={25} />
 
             <Layout style={accountDrawerViewStyles.account}>
               {currentIdentity && currentNetwork ? (

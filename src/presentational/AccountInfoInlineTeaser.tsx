@@ -1,7 +1,7 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {IdentityInfo, RegistrationJudgement} from '@polkadot/types/interfaces';
-import {Layout, Text} from '@ui-kitten/components';
+import {Text} from '@ui-kitten/components';
 import {u8aToString} from '@polkadot/util';
 import {monofontFamily} from 'src/styles';
 import {Vec} from '@polkadot/types';
@@ -16,7 +16,7 @@ function AccountInfoInlineTeaser({info, judgements}: PropTypes) {
   const displayName = u8aToString(info.display.asRaw) || 'untitled account';
 
   return (
-    <Layout style={styles.container}>
+    <View style={styles.container}>
       <Text category="s1" style={{fontFamily: monofontFamily}}>
         {displayName}
       </Text>
@@ -25,7 +25,7 @@ function AccountInfoInlineTeaser({info, judgements}: PropTypes) {
             <JudgmentStatus judgement={judgement} />
           ))
         : null}
-    </Layout>
+    </View>
   );
 }
 
