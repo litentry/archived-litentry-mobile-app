@@ -15,6 +15,7 @@ import usePolkascan, {
   mapMotion,
   MotionSummaryPSType,
 } from 'src/hook/usePolkascan';
+import MotionDetailPage from 'layout/MotionDetailPage';
 
 export type InjectedPropTypes = {
   motionDetail: {
@@ -22,7 +23,7 @@ export type InjectedPropTypes = {
   };
 };
 
-function mapMotionDetail(
+export function mapMotionDetail(
   deriveData: DeriveCollectiveProposal,
   polkascanData: MotionSummaryPSType,
 ) {
@@ -59,7 +60,14 @@ function withMotionDetail<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
       [api, get],
     );
 
-    console.log(detail);
+    // useEffect(() => {
+    //   show(
+    //     '0x494a12921d5219628f44c86401c7c2e58fda487e3db5c6f452e0e29e3c324f2c',
+    //     51,
+    //   );
+    // }, []);
+
+    console.log(JSON.stringify(detail, null, 2));
     const motionDetail = useMemo(
       () => ({
         inProgress,
@@ -72,9 +80,7 @@ function withMotionDetail<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
       <>
         <Comp {...props} motionDetail={motionDetail} />
         <PageModal visible={detail !== null} onClose={() => setDetail(null)}>
-          <Text>{JSON.stringify(detail, null, 4)}</Text>
-
-          <Text>fei</Text>
+          <MotionDetailPage motion={detail} onDismiss={() => setDetail(null)} />
         </PageModal>
       </>
     );

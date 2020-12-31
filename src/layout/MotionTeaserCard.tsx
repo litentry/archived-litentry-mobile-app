@@ -2,7 +2,7 @@ import React, {useCallback} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Card, Text} from '@ui-kitten/components';
 import {flowRight as compose} from 'lodash';
-import {
+import globalStyles, {
   monofontFamily,
   standardPadding,
   colorGreen,
@@ -24,7 +24,7 @@ function MotionTeaserCard(
   const latestMotion = props.electionsInfo.motions?.[0];
 
   const handleDetail = useCallback(() => {
-    if (latestMotion.votes) {
+    if (latestMotion && latestMotion.votes) {
       motionDetail.show(latestMotion.hash, latestMotion.votes.index.toNumber());
     }
   }, [latestMotion, motionDetail]);
@@ -37,11 +37,11 @@ function MotionTeaserCard(
           <Text style={styles.motionIndex}>
             #{latestMotion.votes.index.toNumber() ?? 'unknown'}
           </Text>
-          <Text style={styles.aye}>
+          <Text style={globalStyles.aye}>
             Aye ({latestMotion.votes.ayes.length}/
             {latestMotion.votes.threshold.toNumber()})
           </Text>
-          <Text style={styles.nye}>
+          <Text style={globalStyles.nye}>
             Nay ({latestMotion.votes.nays.length}/
             {latestMotion.votes.threshold.toNumber()})
           </Text>
@@ -66,14 +66,6 @@ const styles = StyleSheet.create({
   motionIndex: {
     fontSize: 16,
     fontWeight: 'bold',
-    fontFamily: monofontFamily,
-  },
-  aye: {
-    color: colorGreen,
-    fontFamily: monofontFamily,
-  },
-  nye: {
-    color: colorRed,
     fontFamily: monofontFamily,
   },
 });
