@@ -1,43 +1,24 @@
 import React from 'react';
-import {StyleSheet, View, ViewProps, TouchableOpacity} from 'react-native';
-import {Card, Text, Icon, Layout, useTheme} from '@ui-kitten/components';
-import globalStyles, {
-  hitSlop,
-  monofontFamily,
-  standardPadding,
-  colorGreen,
-  colorRed,
-} from 'src/styles';
+import {StyleSheet, View} from 'react-native';
+import {Card, Text, Layout, useTheme} from '@ui-kitten/components';
+import {monofontFamily, standardPadding} from 'src/styles';
 import withElectionInfo, {InjectedPropTypes} from 'src/hoc/withElectionInfo';
 import Padder from 'presentational/Padder';
 import {ProgressChart} from 'react-native-chart-kit';
 import AddressInlineTeaser from './AddressInlineTeaser';
+import MotionTeaserCard from './MotionTeaserCard';
+import SeactionTeaserContainer from 'presentational/SectionTeaserContainer';
 
 type PropTypes = {
   onMorePress: () => void;
 };
 
-const Header = (props?: ViewProps & Partial<PropTypes>) => (
-  <View style={styles.headerContainer}>
-    <Text category="h6">Concil</Text>
-    <TouchableOpacity onPress={props?.onMorePress} hitSlop={hitSlop}>
-      <Icon
-        pack="ionic"
-        name="chevron-forward-outline"
-        style={[globalStyles.inlineIconDimension, globalStyles.iconColor]}
-      />
-    </TouchableOpacity>
-  </View>
-);
-
 function CouncilTeaserCard(props: PropTypes & InjectedPropTypes) {
-  const latestMotion = props.electionsInfo.motions?.[0];
   const theme = useTheme();
 
   return (
-    <Card appearance="filled" status="control" activeOpacity={0.8}>
+    <SeactionTeaserContainer onMorePress={props.onMorePress} title="Concil">
       <View>
-        <Header onMorePress={props.onMorePress} />
         <Layout style={styles.container}>
           <Card style={[styles.item, styles.left]}>
             <View
@@ -97,37 +78,13 @@ function CouncilTeaserCard(props: PropTypes & InjectedPropTypes) {
             </View>
           </Card>
         </Layout>
-        <Card style={styles.motionCard}>
-          <Text category="c1">Latest Motion</Text>
-          {latestMotion && latestMotion.votes ? (
-            <View style={styles.motionContainer}>
-              <Text style={styles.motionIndex}>
-                #{latestMotion.votes.index.toNumber() ?? 'unknown'}
-              </Text>
-              <Text style={styles.aye}>
-                Aye ({latestMotion.votes.ayes.length}/
-                {latestMotion.votes.threshold.toNumber()})
-              </Text>
-              <Text style={styles.nye}>
-                Nay ({latestMotion.votes.nays.length}/
-                {latestMotion.votes.threshold.toNumber()})
-              </Text>
-            </View>
-          ) : (
-            <Text>There is currently no motion.</Text>
-          )}
-        </Card>
       </View>
-    </Card>
+      <MotionTeaserCard />
+    </SeactionTeaserContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingBottom: standardPadding,
-  },
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -155,28 +112,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: standardPadding,
-  },
-  motionCard: {
-    marginTop: 4,
-  },
-  motionContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: standardPadding,
-  },
-  motionIndex: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    fontFamily: monofontFamily,
-  },
-  aye: {
-    color: colorGreen,
-    fontFamily: monofontFamily,
-  },
-  nye: {
-    color: colorRed,
-    fontFamily: monofontFamily,
   },
 });
 
