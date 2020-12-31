@@ -21,8 +21,8 @@ function AccountInfoInlineTeaser({info, judgements}: PropTypes) {
         {displayName}
       </Text>
       {judgements && judgements.length
-        ? judgements.map((judgement) => (
-            <JudgmentStatus judgement={judgement} />
+        ? judgements.map((judgement, i) => (
+            <JudgmentStatus key={i} judgement={judgement} />
           ))
         : null}
     </View>
