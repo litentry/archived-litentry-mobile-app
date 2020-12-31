@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Card, Text} from '@ui-kitten/components';
+import {flowRight as compose} from 'lodash';
 import {
   monofontFamily,
   standardPadding,
@@ -10,14 +11,26 @@ import {
 import withElectionInfo, {
   InjectedPropTypes as ElectionInjectedPropTypes,
 } from 'src/hoc/withElectionInfo';
+import withMotionDetail, {
+  InjectedPropTypes as MotionDetailInjectedPropTypes,
+} from 'src/hoc/withMotionDetail';
 
 type PropTypes = {};
 
-function MotionTeaserCard(props: PropTypes & ElectionInjectedPropTypes) {
+function MotionTeaserCard(
+  props: PropTypes & ElectionInjectedPropTypes & MotionDetailInjectedPropTypes,
+) {
+  const {motionDetail} = props;
   const latestMotion = props.electionsInfo.motions?.[0];
 
+  const handleDetail = useCallback(() => {
+    if (latestMotion.votes) {
+      motionDetail.show(latestMotion.hash, latestMotion.votes.index.toNumber());
+    }
+  }, [latestMotion, motionDetail]);
+
   return (
-    <Card style={styles.motionCard}>
+    <Card style={styles.motionCard} onPress={handleDetail}>
       <Text category="c1">Latest Motion</Text>
       {latestMotion && latestMotion.votes ? (
         <View style={styles.motionContainer}>
@@ -65,4 +78,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withElectionInfo(MotionTeaserCard);
+export default compose(withElectionInfo, withMotionDetail)(MotionTeaserCard);
