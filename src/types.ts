@@ -60,7 +60,7 @@ export type DeviceType = {
 export type NetworkType = {
   name: string;
   key?: SupportedNetworkType | null;
-  ws: string;
+  ws: string[];
   isTestnet?: boolean;
   color: string;
 };

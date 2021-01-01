@@ -17,7 +17,6 @@ type ApiChainStatusType = 'unknown' | 'connected' | 'disconnected' | 'ready';
 type ChainApiContextValueType = {
   inProgress: boolean;
   status: ApiChainStatusType;
-  error: Error | null;
   api: ApiPromise | null;
   addSection: (section: string) => void;
   removeSection: (section: string) => void;
@@ -33,7 +32,6 @@ export const DEFAULT_SS58 = registry.createType('u32', 0);
 export const ChainApiContext = createContext<ChainApiContextValueType>({
   api: null,
   status: 'unknown',
-  error: null,
   addSection: () => undefined,
   removeSection: () => undefined,
   inProgress: false,
@@ -46,11 +44,12 @@ function ChainApiContextProvider(props: PropTypes) {
   const {children} = props;
   const [inProgress, setInProgress] = useState(true);
   const [status, setStatus] = useState<ApiChainStatusType>('unknown');
-  const [error, setError] = useState<Error | null>(null);
   const {currentNetwork} = useContext(NetworkContext);
   const [api, setApi] = useState<ApiPromise | null>(null);
   const [sections, setSections] = useState<string[]>([]);
+  const [wsConnectionIndex, setWsConnectionIndex] = useState(0);
   const eventStreamHandlerRef = useRef<Function | null>(null);
+  const retryCounter = useRef(0);
 
   /**
    * Add section to watch, such as `identity`
@@ -78,47 +77,80 @@ function ChainApiContextProvider(props: PropTypes) {
   // addSubscription / removeSubscription
   useEffect(() => {
     console.log('Render ChainApiContext');
-    if (currentNetwork) {
-      try {
-        setInProgress(true);
-        logger.debug(
-          `ChainApiContext: trying to connected to ${currentNetwork.ws}`,
-        );
-        const provider = new WsProvider(currentNetwork.ws);
-        const apiPromise = new ApiPromise({provider});
 
-        apiPromise.on('connected', () => {
-          logger.debug('ChainApiContext: Api connected');
-          setError(null);
-          setStatus('connected');
-        });
-
-        apiPromise.on('disconnected', () => {
-          logger.debug('ChainApiContext: Api disconnected');
-
-          setError(null);
-          setApi(null);
-          setStatus('disconnected');
-        });
-
-        apiPromise.on('ready', () => {
-          logger.debug('ChainApiContext: Api ready');
-          setInProgress(false);
-          setError(null);
-
-          setStatus('ready');
-          setApi(apiPromise);
-        });
-
-        apiPromise.on('error', (e: Error) => {
-          setInProgress(false);
-          setError(e);
-        });
-      } catch (e) {
-        setError(e);
-      }
+    if (!currentNetwork) {
+      return;
     }
-  }, [currentNetwork]);
+
+    if (retryCounter.current > 100) {
+      return;
+    }
+
+    setInProgress(true);
+    logger.debug(
+      `ChainApiContext: trying to connected to (${wsConnectionIndex}) ${currentNetwork.ws[wsConnectionIndex]}`,
+    );
+
+    // const provider = new WsProvider(currentNetwork.ws[wsConnectionIndex]);
+    const provider = new WsProvider(currentNetwork.ws[wsConnectionIndex]);
+    const apiPromise = new ApiPromise({provider});
+
+    function handleConnect() {
+      setStatus('connected');
+    }
+
+    function handleDisconnect() {
+      logger.debug('ChainApiContext: Api disconnected');
+
+      setApi(null);
+
+      if (currentNetwork) {
+        setWsConnectionIndex(
+          (wsConnectionIndex + 1) % currentNetwork.ws.length,
+        );
+
+        logger.debug(
+          `ChainApiContext: switching ws provider to (${wsConnectionIndex}) ${currentNetwork.ws[wsConnectionIndex]}`,
+        );
+      }
+      retryCounter.current = retryCounter.current + 1;
+
+      setStatus('disconnected');
+      throw new Error(
+        `ws connect to ${
+          currentNetwork?.ws[wsConnectionIndex] || 'unknown ws connection'
+        } failed`,
+      );
+    }
+
+    function handleReady() {
+      logger.debug(
+        `ChainApiContext: Api ready at ${wsConnectionIndex} ${
+          currentNetwork?.ws[wsConnectionIndex] || 'Unknown'
+        }`,
+      );
+      setInProgress(false);
+
+      setStatus('ready');
+      setApi(apiPromise);
+    }
+
+    function handleError() {
+      setInProgress(false);
+    }
+
+    apiPromise.on('connected', handleConnect);
+    apiPromise.on('disconnected', handleDisconnect);
+    apiPromise.on('ready', handleReady);
+    apiPromise.on('error', handleError);
+
+    return () => {
+      apiPromise.off('connected', handleConnect);
+      apiPromise.off('disconnected', handleDisconnect);
+      apiPromise.off('ready', handleReady);
+      apiPromise.off('error', handleError);
+    };
+  }, [currentNetwork, wsConnectionIndex]);
 
   useEffect(() => {
     if (status === 'ready' && api) {
@@ -207,8 +239,8 @@ function ChainApiContextProvider(props: PropTypes) {
   }, [currentNetwork, status, api, sections]);
 
   const value = useMemo(
-    () => ({api, status, error, addSection, removeSection, inProgress}),
-    [status, error, api, addSection, removeSection, inProgress],
+    () => ({api, status, addSection, removeSection, inProgress}),
+    [status, api, addSection, removeSection, inProgress],
   );
 
   return (

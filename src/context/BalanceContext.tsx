@@ -42,7 +42,6 @@ export default function BalanceContextProvider({children}: PropTypes) {
     if (status && api && currentAccount) {
       api?.query.system
         .account(currentAccount.address, (accountInfo) => {
-          console.log('----', accountInfo);
           setBalance(accountInfo);
         })
         .then((unsub) => {

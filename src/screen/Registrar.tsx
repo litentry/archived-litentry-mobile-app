@@ -146,7 +146,7 @@ function RegistrarScreen({
                           flexDirection: 'row',
                           justifyContent: 'space-between',
                         }}>
-                        <Text category="h6">Governance</Text>
+                        <Text category="h6">Treasary</Text>
                         <Icon
                           pack="ionic"
                           name="chevron-forward-outline"

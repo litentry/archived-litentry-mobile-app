@@ -13,36 +13,25 @@ import {DataContext} from './DataContext';
 const PolkadotNetwork: NetworkType = {
   name: 'Polkadot',
   key: 'polkadot',
-  ws: 'wss://rpc.polkadot.io',
+  ws: ['wss://cc1-1.polkadot.network', 'wss://rpc.polkadot.io'],
   color: '#800000',
 };
 
 const KusamaNetwork: NetworkType = {
   name: 'Kusama',
   key: 'kusama',
-  ws: 'wss://kusama-rpc.polkadot.io/',
+  ws: ['wss://kusama-rpc.polkadot.io'],
   color: '#e6194B',
-};
-
-const WestendNetwork: NetworkType = {
-  name: 'Westend (Test)',
-  ws: 'wss://westend-rpc.polkadot.io/',
-  color: '#fabed4',
 };
 
 const LitentryNetworkTest: NetworkType = {
   name: 'Litentry Testnet',
-  ws: 'ws://18.140.130.138:9944',
+  ws: ['ws://18.140.130.138:9944'],
   isTestnet: true,
   color: '#006400',
 };
 
-const availableNetworks = [
-  PolkadotNetwork,
-  KusamaNetwork,
-  WestendNetwork,
-  LitentryNetworkTest,
-];
+const availableNetworks = [PolkadotNetwork, KusamaNetwork, LitentryNetworkTest];
 
 export const NetworkContext = createContext<NetworkContextValueType>({
   currentNetwork: PolkadotNetwork,
