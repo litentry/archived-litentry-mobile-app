@@ -2,12 +2,7 @@ import React, {useCallback} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Card, Text} from '@ui-kitten/components';
 import {flowRight as compose} from 'lodash';
-import globalStyles, {
-  monofontFamily,
-  standardPadding,
-  colorGreen,
-  colorRed,
-} from 'src/styles';
+import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 import withElectionInfo, {
   InjectedPropTypes as ElectionInjectedPropTypes,
 } from 'src/hoc/withElectionInfo';

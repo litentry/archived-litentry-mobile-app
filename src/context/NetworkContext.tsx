@@ -19,7 +19,7 @@ const PolkadotNetwork: NetworkType = {
 
 const KusamaNetwork: NetworkType = {
   name: 'Kusama',
-  key: 'polkadot',
+  key: 'kusama',
   ws: 'wss://kusama-rpc.polkadot.io/',
   color: '#e6194B',
 };

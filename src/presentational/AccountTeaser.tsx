@@ -85,7 +85,7 @@ function AccountTeaser(props: PropTypes) {
         </Tooltip>
         <Modal
           visible={qrVisible}
-          backdropStyle={styles.backdrop}
+          backdropStyle={globalStyles.backdrop}
           style={{width: width * 0.8}}
           onBackdropPress={() => setQrVisible(false)}>
           <Card style={styles.qrContainer} disabled={true}>
@@ -131,9 +131,6 @@ const styles = StyleSheet.create({
   },
   qrAddressText: {
     padding: standardPadding,
-  },
-  backdrop: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
 });
 

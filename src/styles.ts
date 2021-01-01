@@ -51,7 +51,9 @@ const globalStyles = StyleSheet.create({
     minHeight: 240,
   },
   flex: {flex: 1},
-
+  backdrop: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
   shadow: {
     shadowColor: '#000',
     shadowOffset: {

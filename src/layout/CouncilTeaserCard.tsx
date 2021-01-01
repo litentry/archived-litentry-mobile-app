@@ -46,7 +46,7 @@ function CouncilTeaserCard(props: PropTypes & InjectedPropTypes) {
               )}
             </Text>
           </Card>
-          <Card style={[styles.item, styles.right, styles.center]}>
+          <Card style={[styles.item, styles.right, styles.center]} disabled>
             <Text category="c1">Term Progress</Text>
             <View style={styles.chartContainer}>
               <Text

@@ -1,15 +1,8 @@
-import React, {
-  useState,
-  useMemo,
-  useContext,
-  useCallback,
-  useEffect,
-} from 'react';
+import React, {useState, useMemo, useContext, useCallback} from 'react';
 import {ChainApiContext} from 'context/ChainApiContext';
 
 import {Hash} from '@polkadot/types/interfaces';
 import type {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
-import {Text} from '@ui-kitten/components';
 import PageModal from 'presentational/PageModal';
 import usePolkascan, {
   mapMotion,
@@ -60,14 +53,6 @@ function withMotionDetail<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
       [api, get],
     );
 
-    // useEffect(() => {
-    //   show(
-    //     '0x494a12921d5219628f44c86401c7c2e58fda487e3db5c6f452e0e29e3c324f2c',
-    //     51,
-    //   );
-    // }, []);
-
-    console.log(JSON.stringify(detail, null, 2));
     const motionDetail = useMemo(
       () => ({
         inProgress,

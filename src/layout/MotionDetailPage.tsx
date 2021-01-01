@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useRef, useContext} from 'react';
 import * as _ from 'lodash';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, TouchableOpacity, Dimensions} from 'react-native';
 import {mapMotionDetail} from 'src/hoc/withMotionDetail';
 import {Button, Text, Layout, Card, Icon} from '@ui-kitten/components';
 import globalStyles, {
@@ -13,6 +13,13 @@ import Padder from 'presentational/Padder';
 import AddressInlineTeaser from './AddressInlineTeaser';
 import Badge from 'presentational/Badge';
 import {AccountId} from '@polkadot/types/interfaces';
+import RNWebView from 'react-native-webview';
+import {Modalize} from 'react-native-modalize';
+import {ScrollView} from 'react-native-gesture-handler';
+import {buildMotionDetailUrl} from 'src/service/Polkasembly';
+import {NetworkContext} from 'context/NetworkContext';
+
+const {height} = Dimensions.get('window');
 
 type PropTypes = {
   motion: ReturnType<typeof mapMotionDetail> | null;
@@ -47,8 +54,11 @@ function VoteItem({
     </View>
   );
 }
+
 function MotionDetailPage(props: PropTypes) {
   const {motion, onDismiss} = props;
+  const modalRef = useRef(null);
+  const {currentNetwork} = useContext(NetworkContext);
 
   if (!motion) {
     return null;
@@ -56,7 +66,7 @@ function MotionDetailPage(props: PropTypes) {
 
   return (
     <>
-      <View style={[globalStyles.paddedContainer, styles.container]}>
+      <ScrollView style={[globalStyles.paddedContainer, styles.container]}>
         <Text category="h4" style={styles.header}>
           Motion #{motion.proposalId}
         </Text>
@@ -71,19 +81,25 @@ function MotionDetailPage(props: PropTypes) {
                 </View>
                 <View>
                   <Text category="c1">#Detail</Text>
-                  <View
-                    style={[
-                      globalStyles.rowContainer,
-                      globalStyles.rowAlignCenter,
-                    ]}>
-                    <Text style={styles.stats}>Polkassembly</Text>
-                    <Padder scale={0.3} />
-                    <Icon
-                      pack="ionic"
-                      name="share-outline"
-                      style={globalStyles.icon}
-                    />
-                  </View>
+                  <TouchableOpacity onPress={() => modalRef.current?.open()}>
+                    <View
+                      style={[
+                        globalStyles.rowContainer,
+                        globalStyles.rowAlignCenter,
+                      ]}>
+                      <Text
+                        style={[styles.stats, styles.small, {width: 70}]}
+                        numberOfLines={1}>
+                        on Polkassembly
+                      </Text>
+                      <Padder scale={0.3} />
+                      <Icon
+                        pack="ionic"
+                        name="share-outline"
+                        style={globalStyles.icon}
+                      />
+                    </View>
+                  </TouchableOpacity>
                 </View>
                 <View>
                   <Text category="c1">Status</Text>
@@ -100,7 +116,7 @@ function MotionDetailPage(props: PropTypes) {
         <Padder scale={0.3} />
         <View>
           <Layout style={styles.rowContainer}>
-            <Card style={[styles.item, styles.left]}>
+            <Card style={[styles.item, styles.left]} disabled>
               <View>
                 <Text category="c1">#Section</Text>
                 <Text style={[styles.stats, {textAlign: 'left'}]}>
@@ -121,7 +137,7 @@ function MotionDetailPage(props: PropTypes) {
                 </View>
               </View>
             </Card>
-            <Card style={[styles.item, styles.right]}>
+            <Card style={[styles.item, styles.right]} disabled>
               <View>
                 <Text category="c1">Votes</Text>
                 <Padder scale={0.5} />
@@ -166,10 +182,37 @@ function MotionDetailPage(props: PropTypes) {
             )}
           </View>
         ) : null}
-      </View>
+      </ScrollView>
       <Button appearance="ghost" style={styles.btn} onPress={onDismiss}>
         Dismiss
       </Button>
+      <Modalize
+        ref={modalRef}
+        threshold={250}
+        scrollViewProps={{showsVerticalScrollIndicator: false}}
+        adjustToContentHeight
+        handlePosition="outside"
+        closeOnOverlayTap
+        withReactModal
+        useNativeDriver
+        panGestureEnabled>
+        <RNWebView
+          injectedJavaScript={`(function() {
+                // remove some html element
+                document.getElementById('menubar').remove();
+                var footer = document.getElementsByTagName('footer');
+                Array.prototype.forEach.call(footer, el => el.remove());
+            })();`}
+          source={{
+            uri: buildMotionDetailUrl(
+              motion.proposalId,
+              currentNetwork?.key || 'polkadot',
+            ),
+          }}
+          style={{height: height * 0.6}}
+          onMessage={() => null}
+        />
+      </Modalize>
     </>
   );
 }
@@ -181,6 +224,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   header: {paddingBottom: standardPadding * 2},
+  small: {fontSize: 10},
   stats: {
     textAlign: 'center',
     paddingVertical: standardPadding,
