@@ -1,6 +1,7 @@
 import React, {useState, useMemo, useContext, useEffect} from 'react';
 import {ChainApiContext} from 'context/ChainApiContext';
 
+import BN from 'bn.js';
 import type {
   DeriveElectionsInfo,
   DeriveCollectiveProposal,
@@ -12,6 +13,8 @@ type ProcessedElectionDataType = {
   seatDisplay: string;
   runnersupDisplay: string;
   percentage: number;
+  termDuration?: BlockNumber;
+  termLeft?: BN;
 };
 export type InjectedPropTypes = {
   electionsInfo: {
@@ -45,6 +48,8 @@ const mapData = (
       electionsInfo.desiredRunnersUp,
     )}`,
     percentage,
+    termDuration: electionsInfo.termDuration,
+    termLeft: value,
   };
 };
 
@@ -55,6 +60,8 @@ function withElectionInfo<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
       seatDisplay: '',
       runnersupDisplay: '',
       percentage: 0,
+      termDuration: undefined,
+      termLeft: undefined,
     });
     const [raw, setRaw] = useState<DeriveElectionsInfo>();
     const [prime, setPrime] = useState<AccountId>();
@@ -73,7 +80,6 @@ function withElectionInfo<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
           setRaw(electionsInfo);
           setData(mapData(electionsInfo, bestNumber));
           setPrime(primeMember.unwrapOr(undefined));
-          console.log(JSON.stringify(motionsData, null, 4));
           setMotions(motionsData);
           setInProgress(false);
         });

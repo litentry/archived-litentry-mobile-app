@@ -8,6 +8,7 @@ import {ProgressChart} from 'react-native-chart-kit';
 import AddressInlineTeaser from './AddressInlineTeaser';
 import MotionTeaserCard from './MotionTeaserCard';
 import SeactionTeaserContainer from 'presentational/SectionTeaserContainer';
+import {useBlockTime} from 'src/hook/useBlockTime';
 
 type PropTypes = {
   onMorePress: () => void;
@@ -15,6 +16,10 @@ type PropTypes = {
 
 function CouncilTeaserCard(props: PropTypes & InjectedPropTypes) {
   const theme = useTheme();
+  const {timeStringParts} = useBlockTime(props.electionsInfo.data.termDuration);
+  const {timeStringParts: termLeft} = useBlockTime(
+    props.electionsInfo.data.termLeft,
+  );
 
   return (
     <SeactionTeaserContainer onMorePress={props.onMorePress} title="Concil">
@@ -47,22 +52,24 @@ function CouncilTeaserCard(props: PropTypes & InjectedPropTypes) {
             </Text>
           </Card>
           <Card style={[styles.item, styles.right, styles.center]} disabled>
-            <Text category="c1">Term Progress</Text>
+            <Text category="c1" numberOfLines={1}>
+              Term Progress ({timeStringParts[0]})
+            </Text>
             <View style={styles.chartContainer}>
               <Text
-                category="s1"
+                category="c1"
                 style={[
                   StyleSheet.absoluteFillObject,
-                  {zIndex: 1, left: '36%', top: '47%'},
+                  {zIndex: 1, left: '39%', top: '42%'},
                 ]}>
-                {`${props.electionsInfo.data.percentage}%`}
+                {`${props.electionsInfo.data.percentage}%\n${termLeft[0]}\n${termLeft[1]}`}
               </Text>
               <ProgressChart
                 data={[props.electionsInfo.data.percentage / 100]}
                 width={100}
                 height={100}
                 strokeWidth={12}
-                radius={40}
+                radius={44}
                 chartConfig={{
                   backgroundGradientFromOpacity: 0.5,
                   backgroundGradientFrom: theme['background-basic-color-1'],
@@ -111,7 +118,7 @@ const styles = StyleSheet.create({
   chartContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: standardPadding,
+    paddingTop: standardPadding * 2,
   },
 });
 
