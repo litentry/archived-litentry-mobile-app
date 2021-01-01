@@ -137,7 +137,6 @@ function RegistrarScreen({
                 <Card
                   style={styles.card}
                   appearance="filled"
-                  status="control"
                   activeOpacity={0.8}
                   header={(headerProps) => (
                     <View {...headerProps}>

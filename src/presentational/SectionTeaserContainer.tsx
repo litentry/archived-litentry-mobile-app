@@ -24,7 +24,7 @@ const Header = (props?: ViewProps & Partial<PropTypes>) => (
 
 function SeactionTeaserContainer(props: PropTypes) {
   return (
-    <Card appearance="filled" status="control" activeOpacity={0.8} disabled>
+    <Card appearance="filled" activeOpacity={0.8} disabled>
       <Header onMorePress={props.onMorePress} title={props.title} />
       {props.children}
     </Card>
