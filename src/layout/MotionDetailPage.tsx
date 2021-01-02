@@ -13,11 +13,12 @@ import Padder from 'presentational/Padder';
 import AddressInlineTeaser from './AddressInlineTeaser';
 import Badge from 'presentational/Badge';
 import {AccountId} from '@polkadot/types/interfaces';
-import RNWebView from 'react-native-webview';
+import WebView from 'react-native-webview';
 import {Modalize} from 'react-native-modalize';
 import {ScrollView} from 'react-native-gesture-handler';
 import {buildMotionDetailUrl} from 'src/service/Polkasembly';
 import {NetworkContext} from 'context/NetworkContext';
+import StatInfoBlock from 'presentational/StatInfoBlock';
 
 const {height} = Dimensions.get('window');
 
@@ -57,7 +58,7 @@ function VoteItem({
 
 function MotionDetailPage(props: PropTypes) {
   const {motion, onDismiss} = props;
-  const modalRef = useRef(null);
+  const modalRef = useRef<Modalize>(null);
   const {currentNetwork} = useContext(NetworkContext);
 
   if (!motion) {
@@ -75,12 +76,10 @@ function MotionDetailPage(props: PropTypes) {
             <Card style={[styles.item, styles.left]}>
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <View>
-                  <Text category="c1">#ID</Text>
-                  <Text style={styles.stats}>{motion.proposalId}</Text>
-                </View>
-                <View>
-                  <Text category="c1">#Detail</Text>
+                <StatInfoBlock title="#ID">
+                  {String(motion.proposalId)}
+                </StatInfoBlock>
+                <StatInfoBlock title="#Detail">
                   <TouchableOpacity onPress={() => modalRef.current?.open()}>
                     <View
                       style={[
@@ -100,16 +99,16 @@ function MotionDetailPage(props: PropTypes) {
                       />
                     </View>
                   </TouchableOpacity>
-                </View>
-                <View>
-                  <Text category="c1">Status</Text>
+                </StatInfoBlock>
+                <StatInfoBlock title="Status">
                   <Padder scale={0.3} />
                   <Badge text={motion.status.toUpperCase()} />
-                </View>
+                </StatInfoBlock>
               </View>
               <Padder scale={1} />
-              <Text category="c1">Proposer</Text>
-              <AddressInlineTeaser address={motion.proposerAddress} />
+              <StatInfoBlock title="Proposer">
+                <AddressInlineTeaser address={motion.proposerAddress} />
+              </StatInfoBlock>
             </Card>
           </Layout>
         </View>
@@ -117,25 +116,11 @@ function MotionDetailPage(props: PropTypes) {
         <View>
           <Layout style={styles.rowContainer}>
             <Card style={[styles.item, styles.left]} disabled>
-              <View>
-                <Text category="c1">#Section</Text>
-                <Text style={[styles.stats, {textAlign: 'left'}]}>
-                  {_.capitalize(motion.section)}
-                </Text>
-              </View>
+              <StatInfoBlock title="#Section">
+                {_.capitalize(motion.section)}
+              </StatInfoBlock>
               <Padder scale={0.5} />
-              <View>
-                <Text category="c1">#Method</Text>
-                <View
-                  style={[
-                    globalStyles.rowContainer,
-                    globalStyles.rowAlignCenter,
-                  ]}>
-                  <Text style={styles.stats} numberOfLines={1}>
-                    {motion.methodName}
-                  </Text>
-                </View>
-              </View>
+              <StatInfoBlock title="#Method">{motion.methodName}</StatInfoBlock>
             </Card>
             <Card style={[styles.item, styles.right]} disabled>
               <View>
@@ -196,7 +181,7 @@ function MotionDetailPage(props: PropTypes) {
         withReactModal
         useNativeDriver
         panGestureEnabled>
-        <RNWebView
+        <WebView
           injectedJavaScript={`(function() {
                 // remove some html element
                 document.getElementById('menubar').remove();
