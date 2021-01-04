@@ -29,7 +29,8 @@ import FadeInAnimatedView from 'presentational/FadeInAnimatedView';
 import withAddAccount, {InjectedPropTypes} from 'src/hoc/withAddAccount';
 import AccountTeaser from 'presentational/AccountTeaser';
 import globalStyles from 'src/styles';
-import CouncilTeaserCard from 'layout/CouncilTeaserCard';
+import CouncilSummaryTeaser from 'layout/CouncilSummaryTeaser';
+import TreasurySummaryTeaser from 'layout/TreasurySummaryTeaser';
 
 type PropTypes = {navigation: DrawerNavigationProp<{}>};
 
@@ -132,36 +133,12 @@ function DashboardScreen({
                 {backgroundColor: theme['background-basic-color-1']},
               ]}>
               <ScrollView style={styles.scrollView}>
-                <CouncilTeaserCard
+                <CouncilSummaryTeaser
                   onMorePress={() => alert('Navigate to Council Screen')}
                 />
-                <Card
-                  style={styles.card}
-                  appearance="filled"
-                  activeOpacity={0.8}
-                  disabled
-                  header={(headerProps) => (
-                    <View {...headerProps}>
-                      <View style={globalStyles.spaceBetweenRowContainer}>
-                        <Text category="h6">Treasary</Text>
-                        <Icon
-                          pack="ionic"
-                          name="chevron-forward-outline"
-                          style={[
-                            globalStyles.inlineIconDimension,
-                            {color: '#ccc'},
-                          ]}
-                        />
-                      </View>
-                    </View>
-                  )}>
-                  <Text>
-                    The Maldives, officially the Republic of Maldives, is a
-                    small country in South Asia, located in the Arabian Sea of
-                    the Indian Ocean. It lies southwest of Sri Lanka and India,
-                    about 1,000 kilometres (620 mi) from the Asian continent
-                  </Text>
-                </Card>
+                <TreasurySummaryTeaser
+                  onMorePress={() => alert('Navigate to Treasury Screen')}
+                />
               </ScrollView>
             </View>
           </>

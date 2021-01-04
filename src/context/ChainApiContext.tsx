@@ -17,7 +17,7 @@ type ApiChainStatusType = 'unknown' | 'connected' | 'disconnected' | 'ready';
 type ChainApiContextValueType = {
   inProgress: boolean;
   status: ApiChainStatusType;
-  api: ApiPromise | null;
+  api?: ApiPromise;
   addSection: (section: string) => void;
   removeSection: (section: string) => void;
 };
@@ -30,7 +30,7 @@ export const DEFAULT_DECIMALS = registry.createType('u32', 15);
 export const DEFAULT_SS58 = registry.createType('u32', 0);
 
 export const ChainApiContext = createContext<ChainApiContextValueType>({
-  api: null,
+  api: undefined,
   status: 'unknown',
   addSection: () => undefined,
   removeSection: () => undefined,
@@ -45,7 +45,7 @@ function ChainApiContextProvider(props: PropTypes) {
   const [inProgress, setInProgress] = useState(true);
   const [status, setStatus] = useState<ApiChainStatusType>('unknown');
   const {currentNetwork} = useContext(NetworkContext);
-  const [api, setApi] = useState<ApiPromise | null>(null);
+  const [api, setApi] = useState<ApiPromise>();
   const [sections, setSections] = useState<string[]>([]);
   const [wsConnectionIndex, setWsConnectionIndex] = useState(0);
   const eventStreamHandlerRef = useRef<Function | null>(null);
@@ -102,7 +102,7 @@ function ChainApiContextProvider(props: PropTypes) {
     function handleDisconnect() {
       logger.debug('ChainApiContext: Api disconnected');
 
-      setApi(null);
+      setApi(undefined);
 
       if (currentNetwork) {
         setWsConnectionIndex(
@@ -245,22 +245,24 @@ function ChainApiContextProvider(props: PropTypes) {
     [status, api, addSection, removeSection, inProgress],
   );
 
+  if (!api || inProgress) {
+    return (
+      <LoadingView
+        text={`Connecting to ${currentNetwork?.name}`}
+        renderIcon={() => (
+          <Icon
+            style={[globalStyles.inlineIconDimension, {color: colorGreen}]}
+            name="planet"
+            pack="ionic"
+          />
+        )}
+      />
+    );
+  }
+
   return (
     <ChainApiContext.Provider value={value}>
-      {inProgress ? (
-        <LoadingView
-          text={`Connecting to ${currentNetwork?.name}`}
-          renderIcon={() => (
-            <Icon
-              style={[globalStyles.inlineIconDimension, {color: colorGreen}]}
-              name="planet"
-              pack="ionic"
-            />
-          )}
-        />
-      ) : (
-        children
-      )}
+      {children}
     </ChainApiContext.Provider>
   );
 }

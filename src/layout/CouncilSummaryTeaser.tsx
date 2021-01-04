@@ -15,7 +15,7 @@ type PropTypes = {
   onMorePress: () => void;
 };
 
-function CouncilTeaserCard(props: PropTypes & InjectedPropTypes) {
+function CouncilSummaryTeaser(props: PropTypes & InjectedPropTypes) {
   const {timeStringParts} = useBlockTime(props.electionsInfo.data.termDuration);
   const {timeStringParts: termLeft} = useBlockTime(
     props.electionsInfo.data.termLeft,
@@ -76,4 +76,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withElectionInfo(CouncilTeaserCard);
+export default withElectionInfo(CouncilSummaryTeaser);

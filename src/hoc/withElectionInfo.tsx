@@ -49,7 +49,7 @@ const mapData = (
     )}`,
     percentage,
     termDuration: electionsInfo.termDuration,
-    termLeft: value,
+    termLeft: total.sub(value),
   };
 };
 
