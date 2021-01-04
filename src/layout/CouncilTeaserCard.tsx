@@ -1,11 +1,11 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Card, Layout} from '@ui-kitten/components';
-import {monofontFamily, standardPadding} from 'src/styles';
+import globalStyles from 'src/styles';
 import withElectionInfo, {InjectedPropTypes} from 'src/hoc/withElectionInfo';
 import Padder from 'presentational/Padder';
 import AddressInlineTeaser from './AddressInlineTeaser';
-import MotionTeaserCard from './MotionTeaserCard';
+import MotionTeaserCard from './MotionTeaser';
 import SeactionTeaserContainer from 'presentational/SectionTeaserContainer';
 import {useBlockTime} from 'src/hook/useBlockTime';
 import ProgressChartWidget from 'presentational/ProgressWidget';
@@ -26,18 +26,15 @@ function CouncilTeaserCard(props: PropTypes & InjectedPropTypes) {
       <View>
         <Layout style={styles.container}>
           <Card style={[styles.item, styles.left]}>
-            <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <View style={globalStyles.spaceBetweenRowContainer}>
               <StatInfoBlock title="Seats">
                 {props.electionsInfo.data.seatDisplay}
               </StatInfoBlock>
-
               <StatInfoBlock title="Runners up">
                 {props.electionsInfo.data.runnersupDisplay}
               </StatInfoBlock>
             </View>
             <Padder scale={1} />
-
             <StatInfoBlock title="Prime Voter">
               {props.electionsInfo.prime && (
                 <AddressInlineTeaser
@@ -55,7 +52,7 @@ function CouncilTeaserCard(props: PropTypes & InjectedPropTypes) {
           </Card>
         </Layout>
       </View>
-      <MotionTeaserCard />
+      <MotionTeaserCard title="Latest Motion" />
     </SeactionTeaserContainer>
   );
 }

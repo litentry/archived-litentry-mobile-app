@@ -10,12 +10,12 @@ import withMotionDetail, {
   InjectedPropTypes as MotionDetailInjectedPropTypes,
 } from 'src/hoc/withMotionDetail';
 
-type PropTypes = {};
+type PropTypes = {title: string};
 
-function MotionTeaserCard(
+function MotionTeaser(
   props: PropTypes & ElectionInjectedPropTypes & MotionDetailInjectedPropTypes,
 ) {
-  const {motionDetail} = props;
+  const {motionDetail, title} = props;
   const latestMotion = props.electionsInfo.motions?.[0];
 
   const handleDetail = useCallback(() => {
@@ -26,7 +26,7 @@ function MotionTeaserCard(
 
   return (
     <Card style={styles.motionCard} onPress={handleDetail}>
-      <Text category="c1">Latest Motion</Text>
+      <Text category="c1">{title}</Text>
       {latestMotion && latestMotion.votes ? (
         <View style={styles.motionContainer}>
           <Text style={styles.motionIndex}>
@@ -42,7 +42,9 @@ function MotionTeaserCard(
           </Text>
         </View>
       ) : (
-        <Text>There is currently no motion.</Text>
+        <View style={styles.emptyState}>
+          <Text>There is currently no motion.</Text>
+        </View>
       )}
     </Card>
   );
@@ -63,6 +65,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontFamily: monofontFamily,
   },
+  emptyState: {
+    paddingVertical: standardPadding,
+  },
 });
 
-export default compose(withElectionInfo, withMotionDetail)(MotionTeaserCard);
+export default compose(withElectionInfo, withMotionDetail)(MotionTeaser);
