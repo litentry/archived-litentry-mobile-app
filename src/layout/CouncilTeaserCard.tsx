@@ -5,7 +5,7 @@ import globalStyles from 'src/styles';
 import withElectionInfo, {InjectedPropTypes} from 'src/hoc/withElectionInfo';
 import Padder from 'presentational/Padder';
 import AddressInlineTeaser from './AddressInlineTeaser';
-import MotionTeaserCard from './MotionTeaser';
+import MotionTeaser from './MotionTeaser';
 import SeactionTeaserContainer from 'presentational/SectionTeaserContainer';
 import {useBlockTime} from 'src/hook/useBlockTime';
 import ProgressChartWidget from 'presentational/ProgressWidget';
@@ -52,7 +52,7 @@ function CouncilTeaserCard(props: PropTypes & InjectedPropTypes) {
           </Card>
         </Layout>
       </View>
-      <MotionTeaserCard title="Latest Motion" />
+      <MotionTeaser title="Latest Motion" />
     </SeactionTeaserContainer>
   );
 }

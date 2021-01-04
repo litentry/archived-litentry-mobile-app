@@ -7,7 +7,7 @@ import {
   createDrawerNavigator,
   DrawerNavigationProp,
 } from '@react-navigation/drawer';
-import RegistrarScreen from 'screen/Registrar';
+import DashboardScreen from 'screen/Dashboard';
 import WebviewScreen from 'screen/Webview';
 import DevScreen from 'screen/DevScreen';
 import DrawerScreen from 'screen/Drawer';
@@ -62,7 +62,7 @@ export default () => {
       <ApplicationProvider {...eva} theme={eva[theme]}>
         <WithContexts>
           <Drawer.Navigator drawerContent={DrawerContentComp}>
-            <Drawer.Screen name="Registrar" component={RegistrarScreen} />
+            <Drawer.Screen name="Dashboard" component={DashboardScreen} />
             <Drawer.Screen name="Webview" component={WebviewScreen} />
             <Drawer.Screen name="DevScreen" component={DevScreen} />
           </Drawer.Navigator>

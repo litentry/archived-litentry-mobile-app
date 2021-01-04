@@ -100,7 +100,7 @@ export type AccountAddressType = {
 export type HapticFeedbackType = 'success' | 'warn' | 'error';
 
 export type DrawerParamList = {
-  Registrar: undefined;
+  Dashboard: undefined;
   Webview: {uri: string; title: string};
   DevScreen: undefined;
 };

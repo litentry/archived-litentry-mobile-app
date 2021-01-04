@@ -37,7 +37,7 @@ const AddIcon = (props: IconProps) => (
   <Icon {...props} name="person-add-outline" />
 );
 
-function RegistrarScreen({
+function DashboardScreen({
   navigation,
   accountAddProps,
 }: PropTypes & InjectedPropTypes) {
@@ -187,4 +187,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withAddAccount(RegistrarScreen);
+export default withAddAccount(DashboardScreen);
