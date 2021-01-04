@@ -50,6 +50,7 @@ function DashboardScreen({
   const account = accounts?.[0];
   const theme = useTheme();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const startTx = useCallback(async () => {
     // const info = {
     //   display: {raw: 'test1'},
@@ -141,11 +142,7 @@ function DashboardScreen({
                   disabled
                   header={(headerProps) => (
                     <View {...headerProps}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
-                        }}>
+                      <View style={globalStyles.spaceBetweenRowContainer}>
                         <Text category="h6">Treasary</Text>
                         <Icon
                           pack="ionic"

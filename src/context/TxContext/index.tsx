@@ -266,7 +266,6 @@ function TxContextProvider({children}: PropTypes) {
     chainApi,
     errorMsg,
     onDismiss,
-    reset,
   ]);
 
   return (

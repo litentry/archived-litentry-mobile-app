@@ -205,7 +205,9 @@ function ChainApiContextProvider(props: PropTypes) {
           // Loop through the Vec<EventRecord>
           events.forEach((record) => {
             // Extract the phase, event and the event types
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const {event, phase} = record;
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const types = event.typeDef;
 
             if (sections.includes(event.section)) {

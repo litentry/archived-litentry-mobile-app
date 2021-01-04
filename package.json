@@ -7,7 +7,7 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint": "eslint . --ext .ts,.tsx",
     "nodeify": "rn-nodeify --hack --install process,crypto,events,constant,console,stream,url,util",
     "postinstall": "npm run nodeify"
   },
