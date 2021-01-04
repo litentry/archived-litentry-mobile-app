@@ -36,7 +36,7 @@ function MotionTeaserCard(
             Aye ({latestMotion.votes.ayes.length}/
             {latestMotion.votes.threshold.toNumber()})
           </Text>
-          <Text style={globalStyles.nye}>
+          <Text style={globalStyles.nay}>
             Nay ({latestMotion.votes.nays.length}/
             {latestMotion.votes.threshold.toNumber()})
           </Text>

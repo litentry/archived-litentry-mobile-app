@@ -70,7 +70,7 @@ const globalStyles = StyleSheet.create({
     color: colorGreen,
     fontFamily: monofontFamily,
   },
-  nye: {
+  nay: {
     color: colorRed,
     fontFamily: monofontFamily,
   },

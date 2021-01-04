@@ -33,7 +33,7 @@ function VoteItem({
   emptyText,
 }: {
   vote?: AccountId;
-  type?: 'aye' | 'nye';
+  type?: 'aye' | 'nay';
   emptyText?: string;
 }) {
   return (
@@ -132,7 +132,7 @@ function MotionDetailPage(props: PropTypes) {
                     {motion.votes?.threshold.toNumber()})
                   </Text>
                   <Padder scale={0.5} />
-                  <Text style={globalStyles.nye}>
+                  <Text style={globalStyles.nay}>
                     Nay ({motion.votes?.nays.length}/
                     {motion.votes?.threshold.toNumber()})
                   </Text>
@@ -157,12 +157,12 @@ function MotionDetailPage(props: PropTypes) {
             )}
             {motion.votes.nays.length ? (
               motion.votes.nays.map((vote) => (
-                <VoteItem key={vote.toString()} vote={vote} type="nye" />
+                <VoteItem key={vote.toString()} vote={vote} type="nay" />
               ))
             ) : (
               <>
                 <Padder scale={0.5} />
-                <VoteItem emptyText='No one voted "Nye" yet.' type="nye" />
+                <VoteItem emptyText='No one voted "Nye" yet.' type="nay" />
               </>
             )}
           </View>
