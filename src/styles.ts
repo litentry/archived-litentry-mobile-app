@@ -28,6 +28,10 @@ const globalStyles = StyleSheet.create({
   paddedContainer: {
     padding: standardPadding * 2,
   },
+  spaceBetweenRowContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   rowContainer: {
     flexDirection: 'row',
   },

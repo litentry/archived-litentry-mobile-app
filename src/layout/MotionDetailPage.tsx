@@ -1,5 +1,5 @@
 import React, {useRef, useContext} from 'react';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import {StyleSheet, View, TouchableOpacity, Dimensions} from 'react-native';
 import {mapMotionDetail} from 'src/hoc/withMotionDetail';
 import {Button, Text, Layout, Card, Icon} from '@ui-kitten/components';
@@ -74,8 +74,7 @@ function MotionDetailPage(props: PropTypes) {
         <View>
           <Layout style={styles.rowContainer}>
             <Card style={[styles.item, styles.left]}>
-              <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <View style={globalStyles.spaceBetweenRowContainer}>
                 <StatInfoBlock title="#ID">
                   {String(motion.proposalId)}
                 </StatInfoBlock>
@@ -87,7 +86,11 @@ function MotionDetailPage(props: PropTypes) {
                         globalStyles.rowAlignCenter,
                       ]}>
                       <Text
-                        style={[styles.stats, styles.small, {width: 70}]}
+                        style={[
+                          styles.stats,
+                          styles.small,
+                          styles.hackPolkassemblyTextWidth,
+                        ]}
                         numberOfLines={1}>
                         on Polkassembly
                       </Text>
@@ -231,6 +234,9 @@ const styles = StyleSheet.create({
   },
   btn: {
     margin: standardPadding,
+  },
+  hackPolkassemblyTextWidth: {
+    width: 70,
   },
 });
 
