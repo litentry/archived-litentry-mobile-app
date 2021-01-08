@@ -1,13 +1,12 @@
 import * as _ from 'lodash';
 
-const baseUrl = 'https://explorer-31.polkascan.io/polkadot/api/v1';
-
 interface ResponseType {
   success: boolean;
   data: any | Error;
 }
 
-function usePolkascan() {
+function usePolkascan(network: string = 'polkadot') {
+  const baseUrl = `https://explorer-31.polkascan.io/${network}/api/v1`;
   const get = (url: string): Promise<ResponseType> =>
     fetch(`${baseUrl}/${url}`, {
       headers: {

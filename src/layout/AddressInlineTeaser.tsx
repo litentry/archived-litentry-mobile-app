@@ -25,7 +25,6 @@ function AddressInlineTeaser(props: PropTypes) {
     }
   }, [address, api]);
 
-  console.log(address);
   return (
     <View style={styles.container}>
       <Identicon value={address} size={20} />

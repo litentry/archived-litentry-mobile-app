@@ -19,8 +19,6 @@ function withRegistrarList<T>(
       api?.query.identity.registrars,
     );
 
-    console.log(JSON.stringify(registrars, null, 2));
-
     return <Comp {...props} registrars={registrars} />;
   };
 }

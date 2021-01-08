@@ -65,7 +65,7 @@ function TreasurySummaryTeaser(props: PropTypes & InjectedPropTypes) {
         </Layout>
         <Padder scale={0.3} />
         <Card>
-          <View style={globalStyles.spaceAroundRowContainer}>
+          <View style={globalStyles.spaceBetweenRowContainer}>
             <StatInfoBlock title="Available">
               {formatBalance(treasuryInfo.treasuryBalance?.freeBalance)}
             </StatInfoBlock>

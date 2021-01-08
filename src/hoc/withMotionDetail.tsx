@@ -9,6 +9,7 @@ import usePolkascan, {
   MotionSummaryPSType,
 } from 'src/hook/usePolkascan';
 import MotionDetailPage from 'layout/MotionDetailPage';
+import {NetworkContext} from 'context/NetworkContext';
 
 export type InjectedPropTypes = {
   motionDetail: {
@@ -35,7 +36,8 @@ function withMotionDetail<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
       typeof mapMotionDetail
     > | null>(null);
     const {api} = useContext(ChainApiContext);
-    const {get} = usePolkascan();
+    const {currentNetwork} = useContext(NetworkContext);
+    const {get} = usePolkascan(currentNetwork?.key || 'polkadot');
 
     const show = useCallback(
       (hash: Hash, votesId: number) => {
