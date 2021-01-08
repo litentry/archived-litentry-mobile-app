@@ -18,7 +18,6 @@ import {
   Icon,
   IconProps,
   useTheme,
-  Card,
 } from '@ui-kitten/components';
 import {NetworkSelectionContext} from 'context/NetworkSelectionContext';
 import {ChainApiContext} from 'context/ChainApiContext';

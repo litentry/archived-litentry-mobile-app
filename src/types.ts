@@ -101,6 +101,7 @@ export type HapticFeedbackType = 'success' | 'warn' | 'error';
 
 export type DrawerParamList = {
   Dashboard: undefined;
+  RegistrarList: undefined;
   Webview: {uri: string; title: string};
   DevScreen: undefined;
 };

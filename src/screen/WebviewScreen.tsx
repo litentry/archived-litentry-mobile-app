@@ -11,7 +11,7 @@ type PropTypes = {
   navigation: DrawerNavigationProp<DrawerParamList>;
 };
 
-function Webview(props: PropTypes) {
+function WebviewScreen(props: PropTypes) {
   const {
     route: {params},
     navigation,
@@ -30,4 +30,4 @@ const styles = StyleSheet.create({
   container: {flex: 1},
 });
 
-export default Webview;
+export default WebviewScreen;

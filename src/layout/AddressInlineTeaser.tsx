@@ -5,7 +5,8 @@ import Identicon from '@polkadot/reactnative-identicon';
 import {Registration} from '@polkadot/types/interfaces';
 import {ChainApiContext} from 'context/ChainApiContext';
 import Padder from 'presentational/Padder';
-import {standardPadding} from 'src/styles';
+import {standardPadding, monofontFamily} from 'src/styles';
+import {Text} from '@ui-kitten/components';
 
 type PropTypes = {
   address: string;
@@ -24,18 +25,24 @@ function AddressInlineTeaser(props: PropTypes) {
     }
   }, [address, api]);
 
-  if (!account) {
-    return null;
-  }
-
+  console.log(address);
   return (
     <View style={styles.container}>
       <Identicon value={address} size={20} />
       <Padder scale={0.5} />
-      <AccountInfoInlineTeaser
-        info={account.info}
-        judgements={account.judgements}
-      />
+      {account ? (
+        <AccountInfoInlineTeaser
+          info={account.info}
+          judgements={account.judgements}
+        />
+      ) : (
+        <Text
+          style={styles.bareAddress}
+          numberOfLines={1}
+          ellipsizeMode="middle">
+          {address}
+        </Text>
+      )}
     </View>
   );
 }
@@ -45,6 +52,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: standardPadding,
+  },
+  bareAddress: {
+    fontWeight: 'bold',
+    fontSize: 13,
+    width: 140,
+    fontFamily: monofontFamily,
   },
 });
 

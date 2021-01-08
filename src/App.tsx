@@ -7,10 +7,10 @@ import {
   createDrawerNavigator,
   DrawerNavigationProp,
 } from '@react-navigation/drawer';
-import DashboardScreen from 'screen/Dashboard';
-import WebviewScreen from 'screen/Webview';
+import DashboardScreen from 'screen/DashboardScreen';
+import WebviewScreen from 'screen/WebviewScreen';
 import DevScreen from 'screen/DevScreen';
-import DrawerScreen from 'screen/Drawer';
+import DrawerScreen from 'screen/DrawerScreen';
 import NetworkSelectionContextProvider from 'context/NetworkSelectionContext';
 import ChainApiContextProvider from 'context/ChainApiContext';
 import ScannerContextProvider from 'context/ScannerContext';
@@ -19,6 +19,7 @@ import {DrawerParamList} from './types';
 import ModalContextProvider from 'context/ModalContextProvider';
 import BalanceContextProvider from 'context/BalanceContext';
 import TxContextProvider from 'context/TxContext';
+import RegistrarListScreen from 'screen/RegistrarListScreen';
 
 import {IonicIconsPack} from './Ionic-icons';
 
@@ -63,6 +64,10 @@ export default () => {
         <WithContexts>
           <Drawer.Navigator drawerContent={DrawerContentComp}>
             <Drawer.Screen name="Dashboard" component={DashboardScreen} />
+            <Drawer.Screen
+              name="RegistrarList"
+              component={RegistrarListScreen}
+            />
             <Drawer.Screen name="Webview" component={WebviewScreen} />
             <Drawer.Screen name="DevScreen" component={DevScreen} />
           </Drawer.Navigator>

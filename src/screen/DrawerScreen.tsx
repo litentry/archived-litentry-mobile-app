@@ -171,7 +171,7 @@ type PropTypes = {
   navigation: DrawerNavigationProp<DrawerParamList>;
 };
 
-function Drawer({navigation}: PropTypes) {
+function DrawerScreen({navigation}: PropTypes) {
   const {theme, toggleTheme} = useContext(ThemeContext);
 
   return (
@@ -190,6 +190,14 @@ function Drawer({navigation}: PropTypes) {
           <Layout style={globalStyles.paddedContainer}>
             <Text category="h6">Settings</Text>
           </Layout>
+          <ListItem
+            title="Registrars"
+            accessoryLeft={(props) => (
+              <Icon {...props} name="award-outline" animation="zoom" />
+            )}
+            onPress={() => navigation.navigate('RegistrarList')}
+          />
+          <Divider />
           <ListItem
             title="Dark theme"
             accessoryLeft={(props) => (
@@ -258,4 +266,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Drawer;
+export default DrawerScreen;
