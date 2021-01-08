@@ -165,7 +165,7 @@ function MotionDetailPage(props: PropTypes) {
             ) : (
               <>
                 <Padder scale={0.5} />
-                <VoteItem emptyText='No one voted "Nye" yet.' type="nay" />
+                <VoteItem emptyText='No one voted "Nay" yet.' type="nay" />
               </>
             )}
           </View>
