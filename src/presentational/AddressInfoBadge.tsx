@@ -1,14 +1,15 @@
-import React, {useContext, useMemo} from 'react';
+import React, {useCallback, useRef, useMemo} from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {IdentityInfo, RegistrationJudgement} from '@polkadot/types/interfaces';
 import {Layout, Text, Icon, ListItem, Divider} from '@ui-kitten/components';
 import {u8aToString} from '@polkadot/util';
-import {standardPadding} from 'src/styles';
-import {ModalContext} from 'context/ModalContextProvider';
+import globalStyles, {standardPadding} from 'src/styles';
 import JudgmentStatus from './JudgmentStatus';
 import {Vec} from '@polkadot/types';
 import {NetworkType} from 'src/types';
 import ModalTitle from './ModalTitle';
+import {Modalize} from 'react-native-modalize';
+import {Portal} from 'react-native-portalize';
 
 type PropTypes = {
   network: NetworkType | null;
@@ -18,7 +19,10 @@ type PropTypes = {
 
 function AddressInfoBadge({info, judgements, network}: PropTypes) {
   const {display} = info;
-  const {show} = useContext(ModalContext);
+  const modalRef = useRef<Modalize>(null);
+  const onOpen = useCallback(() => {
+    modalRef.current?.open();
+  }, []);
 
   const detailView = useMemo(() => {
     const displayName = u8aToString(info.display.asRaw) || 'untitled account';
@@ -91,7 +95,7 @@ function AddressInfoBadge({info, judgements, network}: PropTypes) {
 
   return (
     <>
-      <TouchableOpacity onPress={() => show(detailView)}>
+      <TouchableOpacity onPress={onOpen}>
         <Layout style={styles.container}>
           <Text category="c2">{u8aToString(display.asRaw)}</Text>
           <Icon
@@ -100,7 +104,7 @@ function AddressInfoBadge({info, judgements, network}: PropTypes) {
             fill="#ccc"
             animation="pulse"
           />
-          <Layout style={{flexDirection: 'row'}}>
+          <Layout style={globalStyles.rowContainer}>
             {judgements.map((judgement) => (
               <JudgmentStatus
                 key={String(judgement[0])}
@@ -110,6 +114,18 @@ function AddressInfoBadge({info, judgements, network}: PropTypes) {
           </Layout>
         </Layout>
       </TouchableOpacity>
+      <Portal>
+        <Modalize
+          ref={modalRef}
+          threshold={250}
+          scrollViewProps={{showsVerticalScrollIndicator: false}}
+          handlePosition="outside"
+          adjustToContentHeight
+          closeOnOverlayTap
+          panGestureEnabled>
+          <View style={styles.modal}>{detailView}</View>
+        </Modalize>
+      </Portal>
     </>
   );
 }

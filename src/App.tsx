@@ -16,16 +16,15 @@ import ChainApiContextProvider from 'context/ChainApiContext';
 import ScannerContextProvider from 'context/ScannerContext';
 import AccountContextProvider from 'context/AccountContextProvider';
 import {DrawerParamList} from './types';
-import ModalContextProvider from 'context/ModalContextProvider';
 import BalanceContextProvider from 'context/BalanceContext';
 import TxContextProvider from 'context/TxContext';
 import RegistrarListScreen from 'screen/RegistrarListScreen';
+import {Host} from 'react-native-portalize';
 
 import {IonicIconsPack} from './Ionic-icons';
 
 // init type registry
 import 'src/typeRegistry';
-import {StatusBar} from 'react-native';
 
 const Drawer = createDrawerNavigator();
 
@@ -39,19 +38,17 @@ const DrawerContentComp = (props: PropTypes) => {
 
 function WithContexts({children}: {children: React.ReactNode}) {
   return (
-    <ModalContextProvider>
-      <NetworkSelectionContextProvider>
-        <ChainApiContextProvider>
-          <ScannerContextProvider>
-            <AccountContextProvider>
-              <BalanceContextProvider>
-                <TxContextProvider>{children}</TxContextProvider>
-              </BalanceContextProvider>
-            </AccountContextProvider>
-          </ScannerContextProvider>
-        </ChainApiContextProvider>
-      </NetworkSelectionContextProvider>
-    </ModalContextProvider>
+    <NetworkSelectionContextProvider>
+      <ChainApiContextProvider>
+        <ScannerContextProvider>
+          <AccountContextProvider>
+            <BalanceContextProvider>
+              <TxContextProvider>{children}</TxContextProvider>
+            </BalanceContextProvider>
+          </AccountContextProvider>
+        </ScannerContextProvider>
+      </ChainApiContextProvider>
+    </NetworkSelectionContextProvider>
   );
 }
 
@@ -62,17 +59,19 @@ export default () => {
     <>
       <IconRegistry icons={[EvaIconsPack, IonicIconsPack]} />
       <ApplicationProvider {...eva} theme={eva[theme]}>
-        <WithContexts>
-          <Drawer.Navigator drawerContent={DrawerContentComp}>
-            <Drawer.Screen name="Dashboard" component={DashboardScreen} />
-            <Drawer.Screen
-              name="RegistrarList"
-              component={RegistrarListScreen}
-            />
-            <Drawer.Screen name="Webview" component={WebviewScreen} />
-            <Drawer.Screen name="DevScreen" component={DevScreen} />
-          </Drawer.Navigator>
-        </WithContexts>
+        <Host>
+          <WithContexts>
+            <Drawer.Navigator drawerContent={DrawerContentComp}>
+              <Drawer.Screen name="Dashboard" component={DashboardScreen} />
+              <Drawer.Screen
+                name="RegistrarList"
+                component={RegistrarListScreen}
+              />
+              <Drawer.Screen name="Webview" component={WebviewScreen} />
+              <Drawer.Screen name="DevScreen" component={DevScreen} />
+            </Drawer.Navigator>
+          </WithContexts>
+        </Host>
       </ApplicationProvider>
     </>
   );
