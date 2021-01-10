@@ -23,6 +23,7 @@ import {ChainApiContext} from 'context/ChainApiContext';
 import SuccessDialog from 'presentational/SuccessDialog';
 import QRCamera from 'presentational/QRCamera';
 import {parseAddress} from 'src/utils';
+import {Portal} from 'react-native-portalize';
 
 export type InjectedPropTypes = {
   accountAddProps: {
@@ -166,32 +167,34 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
     return (
       <>
         <Comp {...props} accountAddProps={accountAddProps} />
-        <Modalize
-          ref={modalRef}
-          threshold={250}
-          scrollViewProps={{showsVerticalScrollIndicator: false}}
-          adjustToContentHeight
-          handlePosition="outside"
-          closeOnOverlayTap
-          panGestureEnabled>
-          <Layout
-            level="1"
-            style={[globalStyles.paddedContainer, styles.modal]}>
-            <ModalTitle
-              title="Add Account"
-              subtitle={` (@${currentNetwork?.name || 'Unknown Network'})`}
-            />
-            <Divider />
-            {content}
-            <Divider style={globalStyles.divider} />
-            <Button
-              appearance="ghost"
-              disabled={disabled}
-              onPress={handleConfirm}>
-              {step === 'success' ? 'Close' : 'Confirm'}
-            </Button>
-          </Layout>
-        </Modalize>
+        <Portal>
+          <Modalize
+            ref={modalRef}
+            threshold={250}
+            scrollViewProps={{showsVerticalScrollIndicator: false}}
+            adjustToContentHeight
+            handlePosition="outside"
+            closeOnOverlayTap
+            panGestureEnabled>
+            <Layout
+              level="1"
+              style={[globalStyles.paddedContainer, styles.modal]}>
+              <ModalTitle
+                title="Add Account"
+                subtitle={` (@${currentNetwork?.name || 'Unknown Network'})`}
+              />
+              <Divider />
+              {content}
+              <Divider style={globalStyles.divider} />
+              <Button
+                appearance="ghost"
+                disabled={disabled}
+                onPress={handleConfirm}>
+                {step === 'success' ? 'Close' : 'Confirm'}
+              </Button>
+            </Layout>
+          </Modalize>
+        </Portal>
       </>
     );
   };

@@ -1,4 +1,4 @@
-import React, {useContext, useCallback, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {StyleSheet, Image, View, TouchableOpacity, Alert} from 'react-native';
 import {
   Button,
@@ -16,18 +16,16 @@ import globalStyles, {standardPadding, monofontFamily} from 'src/styles';
 import {ThemeContext} from 'context/ThemeProvider';
 import logo from '../image/logo.png';
 import Padder from 'presentational/Padder';
-import {ScannerContext} from 'context/ScannerContext';
 import {DrawerParamList} from 'src/types';
 import {AccountContext} from 'context/AccountContextProvider';
 import {NetworkContext} from 'context/NetworkContext';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import AddressInfoBadge from 'presentational/AddressInfoBadge';
 import Identicon from '@polkadot/reactnative-identicon';
-import {parseAddress} from 'src/utils';
 import {BalanceContext} from 'context/BalanceContext';
+import withAddAccount, {InjectedPropTypes} from 'src/hoc/withAddAccount';
 
-function AccountDrawerView() {
-  const {scan} = useContext(ScannerContext);
+function AccountDrawerView({accountAddProps}: InjectedPropTypes) {
   const {show} = useContext(BalanceContext);
   const {accounts, setAccount, currentIdentity} = useContext(AccountContext);
   const {currentNetwork} = useContext(NetworkContext);
@@ -58,13 +56,6 @@ function AccountDrawerView() {
       show();
     }
   };
-
-  const handleScan = useCallback(
-    ({data}) => {
-      setAccount(parseAddress(data));
-    },
-    [setAccount],
-  );
 
   const renderOptions = () => {
     return (
@@ -136,7 +127,7 @@ function AccountDrawerView() {
           <Text category="label">No account has been set up.</Text>
           <Padder scale={0.5} />
           <Button
-            onPress={() => scan(handleScan)}
+            onPress={accountAddProps.open}
             appearance="ghost"
             status="info">
             Connect Account
@@ -167,6 +158,8 @@ const accountDrawerViewStyles = StyleSheet.create({
   address: {fontFamily: monofontFamily},
 });
 
+const ConnectedAccountDrawer = withAddAccount(AccountDrawerView);
+
 type PropTypes = {
   navigation: DrawerNavigationProp<DrawerParamList>;
 };
@@ -183,7 +176,7 @@ function DrawerScreen({navigation}: PropTypes) {
             <Text style={styles.slogan}>Decentralized Identity</Text>
           </View>
           <Divider />
-          <AccountDrawerView />
+          <ConnectedAccountDrawer />
         </Layout>
         <Divider />
         <Layout style={styles.rest} level="2">

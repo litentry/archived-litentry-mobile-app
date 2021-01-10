@@ -12,7 +12,6 @@ import WebviewScreen from 'screen/WebviewScreen';
 import DevScreen from 'screen/DevScreen';
 import DrawerScreen from 'screen/DrawerScreen';
 import ChainApiContextProvider from 'context/ChainApiContext';
-import ScannerContextProvider from 'context/ScannerContext';
 import AccountContextProvider from 'context/AccountContextProvider';
 import {DrawerParamList} from './types';
 import BalanceContextProvider from 'context/BalanceContext';
@@ -38,13 +37,11 @@ const DrawerContentComp = (props: PropTypes) => {
 function WithContexts({children}: {children: React.ReactNode}) {
   return (
     <ChainApiContextProvider>
-      <ScannerContextProvider>
-        <AccountContextProvider>
-          <BalanceContextProvider>
-            <TxContextProvider>{children}</TxContextProvider>
-          </BalanceContextProvider>
-        </AccountContextProvider>
-      </ScannerContextProvider>
+      <AccountContextProvider>
+        <BalanceContextProvider>
+          <TxContextProvider>{children}</TxContextProvider>
+        </BalanceContextProvider>
+      </AccountContextProvider>
     </ChainApiContextProvider>
   );
 }

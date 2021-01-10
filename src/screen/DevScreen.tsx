@@ -4,7 +4,6 @@ import GenericNavigationLayout from 'presentational/GenericNavigationLayout';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {DrawerParamList} from 'src/types';
 import {AccountContext} from 'context/AccountContextProvider';
-import {ScannerContext} from 'context/ScannerContext';
 import {
   InAppNotificationContext,
   RichTextComponent,
@@ -25,7 +24,6 @@ function DevScreen(props: PropTypes) {
 
   const {currentNetwork} = useContext(NetworkContext);
   const {accounts, setAccount} = useContext(AccountContext);
-  const {scan} = useContext(ScannerContext);
   const {trigger} = useContext(InAppNotificationContext);
   const {status, addSection, removeSection, api} = useContext(ChainApiContext);
   const [debugInfo, setDebugInfo] = useState('');
@@ -45,16 +43,6 @@ function DevScreen(props: PropTypes) {
             title={`Network: ${currentNetwork?.name}`}
             description={`Currently connected to ${currentNetwork?.ws}`}
             accessoryRight={() => <Button size="tiny">{status}</Button>}
-          />
-          <Divider />
-          <ListItem
-            title="Scan QR"
-            description="Trigger `scan` fn from ScannerContext"
-            accessoryRight={() => (
-              <Button size="small" onPress={() => scan()}>
-                Trigger
-              </Button>
-            )}
           />
           <Divider />
 
