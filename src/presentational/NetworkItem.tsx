@@ -10,7 +10,6 @@ function NetworkItem(props: PropTypes) {
   const {item, isConnected} = props;
   return (
     <Layout style={styles.container}>
-      <View style={[styles.dot, {backgroundColor: item.color}]} />
       <Text category="label">{item.name}</Text>
       <View
         style={[
@@ -26,12 +25,6 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  dot: {
-    width: 10,
-    height: 10,
-    borderRadius: 50,
-    marginRight: standardPadding / 2,
   },
   connectionIndicator: {
     marginLeft: standardPadding / 2,

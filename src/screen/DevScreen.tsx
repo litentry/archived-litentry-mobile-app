@@ -3,7 +3,6 @@ import {Layout, Button, ListItem, Divider, Text} from '@ui-kitten/components';
 import GenericNavigationLayout from 'presentational/GenericNavigationLayout';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {DrawerParamList} from 'src/types';
-import {NetworkSelectionContext} from 'context/NetworkSelectionContext';
 import {AccountContext} from 'context/AccountContextProvider';
 import {ScannerContext} from 'context/ScannerContext';
 import {
@@ -15,6 +14,7 @@ import {Alert, StyleSheet} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Modalize} from 'react-native-modalize';
 import {standardPadding} from 'src/styles';
+import {NetworkContext} from 'context/NetworkContext';
 
 type PropTypes = {
   navigation: DrawerNavigationProp<DrawerParamList>;
@@ -23,7 +23,7 @@ type PropTypes = {
 function DevScreen(props: PropTypes) {
   const {navigation} = props;
 
-  const {currentNetwork} = useContext(NetworkSelectionContext);
+  const {currentNetwork} = useContext(NetworkContext);
   const {accounts, setAccount} = useContext(AccountContext);
   const {scan} = useContext(ScannerContext);
   const {trigger} = useContext(InAppNotificationContext);

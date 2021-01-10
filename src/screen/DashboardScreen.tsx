@@ -6,6 +6,7 @@ import {
   ScrollView,
   View,
 } from 'react-native';
+import {flowRight as compose} from 'lodash';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import NetworkItem from 'presentational/NetworkItem';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
@@ -19,17 +20,21 @@ import {
   IconProps,
   useTheme,
 } from '@ui-kitten/components';
-import {NetworkSelectionContext} from 'context/NetworkSelectionContext';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {BalanceContext} from 'context/BalanceContext';
 import {AccountContext} from 'context/AccountContextProvider';
 import {TxContext} from 'context/TxContext';
 import FadeInAnimatedView from 'presentational/FadeInAnimatedView';
-import withAddAccount, {InjectedPropTypes} from 'src/hoc/withAddAccount';
+import withAddAccount, {
+  InjectedPropTypes as AddAccountInjectedPropTypes,
+} from 'src/hoc/withAddAccount';
 import AccountTeaser from 'presentational/AccountTeaser';
 import globalStyles from 'src/styles';
 import CouncilSummaryTeaser from 'layout/CouncilSummaryTeaser';
 import TreasurySummaryTeaser from 'layout/TreasurySummaryTeaser';
+import withNetworkSelect, {
+  InjectedPropTypes as NetworkSelectInjectedPropTypes,
+} from 'src/hoc/withNetworkSelect';
 
 type PropTypes = {navigation: DrawerNavigationProp<{}>};
 
@@ -40,8 +45,8 @@ const AddIcon = (props: IconProps) => (
 function DashboardScreen({
   navigation,
   accountAddProps,
-}: PropTypes & InjectedPropTypes) {
-  const {currentNetwork, selectNetwork} = useContext(NetworkSelectionContext);
+  networkSelection,
+}: PropTypes & AddAccountInjectedPropTypes & NetworkSelectInjectedPropTypes) {
   const {show} = useContext(BalanceContext);
   const {accounts, currentIdentity} = useContext(AccountContext);
 
@@ -83,12 +88,12 @@ function DashboardScreen({
 
   const renderTitle = () => {
     return (
-      <TouchableOpacity onPress={selectNetwork}>
+      <TouchableOpacity onPress={networkSelection.selectNetwork}>
         <Layout style={styles.titleContainer}>
           <Text category="s1">Litentry</Text>
-          {currentNetwork ? (
+          {networkSelection.currentNetwork ? (
             <NetworkItem
-              item={currentNetwork}
+              item={networkSelection.currentNetwork}
               isConnected={status === 'ready'}
             />
           ) : null}
@@ -156,8 +161,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   titleContainer: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
 });
 
-export default withAddAccount(DashboardScreen);
+export default compose(withAddAccount, withNetworkSelect)(DashboardScreen);
