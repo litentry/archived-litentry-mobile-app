@@ -25,6 +25,7 @@ import {IonicIconsPack} from './Ionic-icons';
 
 // init type registry
 import 'src/typeRegistry';
+import {StatusBar} from 'react-native';
 
 const Drawer = createDrawerNavigator();
 

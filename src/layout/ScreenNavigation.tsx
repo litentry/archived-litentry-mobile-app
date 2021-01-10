@@ -1,11 +1,13 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {
   Icon,
   TopNavigation,
   TopNavigationAction,
   IconProps,
+  useTheme,
 } from '@ui-kitten/components';
-import {StyleSheet, SafeAreaView, View} from 'react-native';
+import {StyleSheet, SafeAreaView, View, StatusBar} from 'react-native';
+import {ThemeContext} from 'context/ThemeProvider';
 
 const MenuIcon = (props: IconProps) => (
   <Icon {...props} name="menu-2-outline" />
@@ -25,6 +27,8 @@ export default function ScreenNavigation({
   onBalancePress,
   renderTitle,
 }: PropTypes) {
+  const themeVars = useTheme();
+  const {theme} = useContext(ThemeContext);
   const renderMenuButton = () => (
     <TopNavigationAction onPress={onMenuPress} icon={MenuIcon} />
   );
@@ -33,7 +37,11 @@ export default function ScreenNavigation({
   );
 
   return (
-    <SafeAreaView style={{backgroundColor: 'white'}}>
+    <SafeAreaView
+      style={{backgroundColor: themeVars['background-basic-color-1']}}>
+      <StatusBar
+        barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
+      />
       <View style={styles.container}>
         <TopNavigation
           alignment="center"

@@ -98,7 +98,7 @@ function DashboardScreen({
   };
 
   return (
-    <Layout style={[globalStyles.flex]}>
+    <View style={[globalStyles.flex]}>
       <ScreenNavigation
         onMenuPress={() => navigation.openDrawer()}
         onBalancePress={show}
@@ -143,7 +143,7 @@ function DashboardScreen({
           </>
         )}
       </FadeInAnimatedView>
-    </Layout>
+    </View>
   );
 }
 
