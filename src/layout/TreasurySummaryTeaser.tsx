@@ -57,7 +57,7 @@ function TreasurySummaryTeaser(props: PropTypes & InjectedPropTypes) {
           </Card>
           <Card style={[styles.item, styles.right, styles.center]} disabled>
             <ProgressChartWidget
-              title={`Term Progress (${timeStringParts[0]})`}
+              title={`Spend period s (${timeStringParts[0]})`}
               detail={`${percentage}%\n${termLeft[0]}\n${termLeft[1]}`}
               data={[percentage / 100]}
             />

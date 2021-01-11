@@ -22,7 +22,7 @@ function CouncilSummaryTeaser(props: PropTypes & InjectedPropTypes) {
   );
 
   return (
-    <SeactionTeaserContainer onMorePress={props.onMorePress} title="Concil">
+    <SeactionTeaserContainer onMorePress={props.onMorePress} title="Council">
       <View>
         <Layout style={styles.container}>
           <Card style={[styles.item, styles.left]}>
