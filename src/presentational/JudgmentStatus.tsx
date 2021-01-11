@@ -44,14 +44,6 @@ function JudgmentStatus(props: PropTypes) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colorGreen,
-    // opacity: 0.9,
-    paddingVertical: standardPadding / 2,
-    paddingHorizontal: standardPadding,
-    borderRadius: 3,
-    marginLeft: standardPadding / 2,
-  },
   icon: {
     width: 20,
     height: 20,
