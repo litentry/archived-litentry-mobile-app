@@ -5,12 +5,23 @@ import {logger} from 'react-native-logs';
 import {ansiColorConsoleSync} from 'react-native-logs/dist/transports/ansiColorConsoleSync';
 import Reactotron from 'reactotron-react-native';
 import {u8aConcat, u8aToU8a} from '@polkadot/util';
-import {FRAME_SIZE, SUBSTRATE_ID, CRYPTO_SR25519} from './constants';
-import {decodeAddress, blake2AsU8a} from '@polkadot/util-crypto';
+import {
+  FRAME_SIZE,
+  SUBSTRATE_ID,
+  CRYPTO_SR25519,
+  ADDRESS_PREFIX_POLKADOT,
+  ADDRESS_PREFIX_KUSAMA,
+} from './constants';
+import {
+  decodeAddress,
+  blake2AsU8a,
+  checkAddress,
+  isEthereumChecksum,
+} from '@polkadot/util-crypto';
 import {SignerPayloadJSON} from '@polkadot/types/types';
 import {ExtrinsicPayload} from '@polkadot/types/interfaces';
 import registry from 'src/typeRegistry';
-import {AccountAddressType} from './types';
+import {AccountAddressType, NetworkType} from './types';
 import {trim} from 'lodash';
 
 const MULTIPART = new Uint8Array([0]);
@@ -168,3 +179,16 @@ export function parseAddress(payload: string): AccountAddressType {
 }
 
 export const ReactotronDebug = Reactotron.debug;
+
+export const isAddressValid = (network: NetworkType, address: string) => {
+  switch (network.key) {
+    case 'polkadot':
+      return checkAddress(address, ADDRESS_PREFIX_POLKADOT)[0];
+    case 'kusama':
+      return checkAddress(address, ADDRESS_PREFIX_KUSAMA)[0];
+    case 'ethereum':
+      return isEthereumChecksum(address); // fixme
+    default:
+      return false;
+  }
+};

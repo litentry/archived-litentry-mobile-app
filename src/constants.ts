@@ -12,6 +12,8 @@ const CMD_SIGN_MSG = new Uint8Array([3]);
 
 const CMD_HASH = 1;
 const CMD_MORTAL = 2;
+export const ADDRESS_PREFIX_POLKADOT = 0;
+export const ADDRESS_PREFIX_KUSAMA = 2;
 
 const TREASURY_ACCOUNT = stringToU8a('modlpy/trsry'.padEnd(32, '\0'));
 

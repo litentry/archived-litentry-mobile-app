@@ -16,13 +16,13 @@ import {AccountAddressType, NetworkType} from 'src/types';
 import globalStyles, {standardPadding, monofontFamily} from 'src/styles';
 import ModalTitle from 'presentational/ModalTitle';
 import {NetworkContext} from 'context/NetworkContext';
-import {StyleSheet, Platform} from 'react-native';
+import {StyleSheet, Platform, Alert} from 'react-native';
 import Padder from 'presentational/Padder';
 import AddressInfoPreview from './AddressPreview';
 import {ChainApiContext} from 'context/ChainApiContext';
 import SuccessDialog from 'presentational/SuccessDialog';
 import QRCamera from 'presentational/QRCamera';
-import {parseAddress} from 'src/utils';
+import {parseAddress, isAddressValid} from 'src/utils';
 import {Portal} from 'react-native-portalize';
 import NetworkSelection from 'presentational/NetworkSelection';
 
@@ -48,7 +48,7 @@ const InputIcon = (props: IconProps) => (
     <Icon {...props} pack="ionic" name="keypad-outline" />
   </Layout>
 );
-type StepType = 'input' | 'preview' | 'success';
+type StepType = 'input' | 'preview' | 'success' | 'selectNetwork';
 
 function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
   return function Hoc(props: T) {
@@ -56,7 +56,7 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const {accounts, setAccount} = useContext(AccountContext);
     const {availableNetworks} = useContext(NetworkContext);
-    const [network, setNetwork] = useState<NetworkType>(availableNetworks[0]);
+    const [network, setNetwork] = useState<NetworkType>();
     const [disabled, setDisabled] = useState(true);
     const [step, setStep] = useState<StepType>('input');
     const [address, setAddress] = useState('');
@@ -82,13 +82,25 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
         const parsed = parseAddress(data);
         setAddress(parsed.address);
         setDisabled(false);
-        setStep('preview');
+        setStep('selectNetwork');
       },
       [setAddress],
     );
 
     const handleConfirm = useCallback(() => {
       if (step === 'input') {
+        if (network && isAddressValid(network, address)) {
+          setStep('preview');
+          return;
+        }
+
+        Alert.alert(
+          'Validation Failed',
+          'Either network or address is invalid.',
+        );
+      }
+
+      if (step === 'selectNetwork') {
         setStep('preview');
         return;
       }
@@ -106,7 +118,15 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
         setDisabled(true);
         return;
       }
-    }, [step, setAccount, address]);
+    }, [step, setAccount, address, network]);
+
+    const confirmBtnDisabled = useMemo(() => {
+      if (step === 'input' || step === 'selectNetwork') {
+        return !network;
+      }
+
+      return disabled;
+    }, [disabled, step, network]);
 
     const content = useMemo(() => {
       switch (step) {
@@ -143,13 +163,30 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
               </Tab>
             </TabView>
           );
-        case 'preview':
-          if (!network) {
-            return <Text>Network is not available</Text>;
-          }
 
+        case 'selectNetwork':
           return (
-            <AddressInfoPreview address={address} api={api} network={network} />
+            <Layout
+              style={[
+                styles.tabContainer,
+                {minHeight: 200, marginTop: standardPadding * 2},
+              ]}>
+              <NetworkSelection
+                data={availableNetworks}
+                onSelect={setNetwork}
+              />
+            </Layout>
+          );
+
+        case 'preview':
+          return (
+            network && (
+              <AddressInfoPreview
+                address={address}
+                api={api}
+                network={network}
+              />
+            )
           );
         case 'success':
           return (
@@ -190,7 +227,7 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
               <Divider style={globalStyles.divider} />
               <Button
                 appearance="ghost"
-                disabled={disabled}
+                disabled={confirmBtnDisabled}
                 onPress={handleConfirm}>
                 {step === 'success' ? 'Close' : 'Confirm'}
               </Button>
