@@ -12,7 +12,7 @@ import {
 } from '@ui-kitten/components';
 import {Modalize} from 'react-native-modalize';
 import {AccountContext} from 'context/AccountContextProvider';
-import {AccountAddressType} from 'src/types';
+import {AccountAddressType, NetworkType} from 'src/types';
 import globalStyles, {standardPadding, monofontFamily} from 'src/styles';
 import ModalTitle from 'presentational/ModalTitle';
 import {NetworkContext} from 'context/NetworkContext';
@@ -24,6 +24,7 @@ import SuccessDialog from 'presentational/SuccessDialog';
 import QRCamera from 'presentational/QRCamera';
 import {parseAddress} from 'src/utils';
 import {Portal} from 'react-native-portalize';
+import NetworkSelection from 'presentational/NetworkSelection';
 
 export type InjectedPropTypes = {
   accountAddProps: {
@@ -54,7 +55,8 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
     const modalRef = useRef<Modalize>();
     const [selectedIndex, setSelectedIndex] = useState(0);
     const {accounts, setAccount} = useContext(AccountContext);
-    const {currentNetwork} = useContext(NetworkContext);
+    const {availableNetworks} = useContext(NetworkContext);
+    const [network, setNetwork] = useState<NetworkType>(availableNetworks[0]);
     const [disabled, setDisabled] = useState(true);
     const [step, setStep] = useState<StepType>('input');
     const [address, setAddress] = useState('');
@@ -120,6 +122,10 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
               onSelect={setSelectedIndex}>
               <Tab title={InputIcon}>
                 <Layout style={styles.tabContainer}>
+                  <NetworkSelection
+                    data={availableNetworks}
+                    onSelect={setNetwork}
+                  />
                   <Padder scale={1} />
                   <Input
                     onChangeText={handleInputChange}
@@ -128,22 +134,6 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
                     textStyle={styles.input}
                     placeholder="👉 Paste address here, e.g. 167r...14h"
                   />
-                  {currentNetwork && (
-                    <>
-                      <Padder scale={0.2} />
-                      <Layout style={styles.networkHint}>
-                        <Icon
-                          pack="ionic"
-                          style={styles.inlineIcon}
-                          name="information-circle-outline"
-                        />
-                        <Text>
-                          Current network is{' '}
-                          <Text status="info">{currentNetwork.name}</Text>
-                        </Text>
-                      </Layout>
-                    </>
-                  )}
                 </Layout>
               </Tab>
               <Tab title={QrIcon}>
@@ -154,7 +144,13 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
             </TabView>
           );
         case 'preview':
-          return <AddressInfoPreview address={address} api={api} />;
+          if (!network) {
+            return <Text>Network is not available</Text>;
+          }
+
+          return (
+            <AddressInfoPreview address={address} api={api} network={network} />
+          );
         case 'success':
           return (
             <Layout style={globalStyles.dialogMinHeight}>
@@ -162,7 +158,16 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
             </Layout>
           );
       }
-    }, [address, currentNetwork, selectedIndex, api, step, handleScan]);
+    }, [
+      address,
+      network,
+      availableNetworks,
+      selectedIndex,
+      api,
+      step,
+      handleScan,
+      setNetwork,
+    ]);
 
     return (
       <>
@@ -179,10 +184,7 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
             <Layout
               level="1"
               style={[globalStyles.paddedContainer, styles.modal]}>
-              <ModalTitle
-                title="Add Account"
-                subtitle={` (@${currentNetwork?.name || 'Unknown Network'})`}
-              />
+              <ModalTitle title="Add Account" />
               <Divider />
               {content}
               <Divider style={globalStyles.divider} />

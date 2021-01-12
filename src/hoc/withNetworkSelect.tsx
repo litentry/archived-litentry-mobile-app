@@ -1,10 +1,10 @@
 import React, {useCallback, useRef, useContext, useMemo} from 'react';
 import {Modalize} from 'react-native-modalize';
 import {Portal} from 'react-native-portalize';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import NetworkSelectionList from 'presentational/NetworkSelectionList';
 import globalStyles, {standardPadding} from 'src/styles';
-import {Divider, Button} from '@ui-kitten/components';
+import {Divider, Button, Layout} from '@ui-kitten/components';
 import {NetworkContext} from 'context/NetworkContext';
 import {NetworkType} from 'src/types';
 
@@ -50,7 +50,7 @@ function withNetworkSelect<T>(
             adjustToContentHeight
             closeOnOverlayTap
             panGestureEnabled>
-            <View style={styles.networkModal}>
+            <Layout style={styles.networkModal}>
               <NetworkSelectionList
                 items={availableNetworks}
                 selected={currentNetwork}
@@ -62,7 +62,7 @@ function withNetworkSelect<T>(
                 onPress={() => modalRef.current?.close()}>
                 Close
               </Button>
-            </View>
+            </Layout>
           </Modalize>
         </Portal>
       </>

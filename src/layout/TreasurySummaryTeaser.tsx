@@ -51,7 +51,7 @@ function TreasurySummaryTeaser(props: PropTypes & InjectedPropTypes) {
               </StatInfoBlock>
             </View>
             <Padder scale={1} />
-            <StatInfoBlock title="Approves">
+            <StatInfoBlock title="Approved">
               {String(treasuryInfo.info?.approvals.length)}
             </StatInfoBlock>
           </Card>

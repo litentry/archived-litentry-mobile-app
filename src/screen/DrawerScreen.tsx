@@ -40,7 +40,10 @@ function AccountDrawerView({accountAddProps}: InjectedPropTypes) {
         [
           {
             text: 'Yes',
-            onPress: () => setAccount(null),
+            onPress: () => {
+              setVisible(false);
+              setAccount(null);
+            },
           },
           {
             text: 'Cancel',

@@ -2,6 +2,7 @@ import {DeriveAccountRegistration} from '@polkadot/api-derive/types';
 export type ThemeType = 'light' | 'dark';
 
 export type SupportedNetworkType =
+  | 'ethereum'
   | 'polkadot'
   | 'reserved1'
   | 'kusama'
@@ -38,7 +39,8 @@ export type SupportedNetworkType =
   | 'reserved43'
   | 'chainx'
   | 'reserved46'
-  | 'reserved47';
+  | 'reserved47'
+  | 'litentry_test';
 
 export type ThemeContextValueType = {
   theme: ThemeType;
@@ -60,9 +62,9 @@ export type DeviceType = {
 export type NetworkType = {
   name: string;
   key?: SupportedNetworkType | null;
-  ws: string[];
+  ws?: string[];
   isTestnet?: boolean;
-  color: string;
+  color?: string;
 };
 
 export type NetworkContextValueType = {

@@ -8,16 +8,18 @@ import {u8aToString} from '@polkadot/util';
 import {AccountInfo, Registration} from '@polkadot/types/interfaces';
 import Identicon from '@polkadot/reactnative-identicon';
 import JudgmentStatus from 'presentational/JudgmentStatus';
+import {NetworkType} from 'src/types';
 
 const {height} = Dimensions.get('window');
 
 type PropTypes = {
-  api: ApiPromise | null;
+  api?: ApiPromise;
+  network: NetworkType;
   address: string;
 };
 
 function AddressInfoPreview(props: PropTypes) {
-  const {address, api} = props;
+  const {address, api, network} = props;
   const [identity, setIdentity] = useState<Registration>();
   const [account, setAccount] = useState<AccountInfo>();
   const [inProgress, setInProgress] = useState(false);
@@ -102,6 +104,17 @@ function AddressInfoPreview(props: PropTypes) {
                 )}
               />
             )}
+          <ListItem
+            title="Network"
+            accessoryLeft={(iconProps: IconProps) => (
+              <Icon {...iconProps} name="planet" pack="ionic" />
+            )}
+            accessoryRight={() => (
+              <Text selectable category="label">
+                {network.name}
+              </Text>
+            )}
+          />
         </Layout>
       )}
     </Layout>

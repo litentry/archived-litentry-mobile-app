@@ -13,7 +13,7 @@ import {DataContext} from './DataContext';
 const PolkadotNetwork: NetworkType = {
   name: 'Polkadot',
   key: 'polkadot',
-  ws: ['wss://cc1-1.polkadot.network', 'wss://rpc.polkadot.io'],
+  ws: ['wss://rpc.polkadot.io'],
   color: '#800000',
 };
 
@@ -24,14 +24,27 @@ const KusamaNetwork: NetworkType = {
   color: '#e6194B',
 };
 
+const EthereumNetwork: NetworkType = {
+  name: 'Ethereum',
+  key: 'ethereum',
+  ws: [],
+  color: '#e6194B',
+};
+
 const LitentryNetworkTest: NetworkType = {
   name: 'Litentry Testnet',
+  key: 'litentry_test',
   ws: ['ws://18.140.130.138:9944'],
   isTestnet: true,
   color: '#006400',
 };
 
-const availableNetworks = [PolkadotNetwork, KusamaNetwork, LitentryNetworkTest];
+const availableNetworks = [
+  PolkadotNetwork,
+  KusamaNetwork,
+  EthereumNetwork,
+  LitentryNetworkTest,
+];
 
 export const NetworkContext = createContext<NetworkContextValueType>({
   currentNetwork: PolkadotNetwork,
