@@ -6,23 +6,23 @@ import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 import withElectionInfo, {
   InjectedPropTypes as ElectionInjectedPropTypes,
 } from 'src/hoc/withElectionInfo';
-import withMotionDetail, {
-  InjectedPropTypes as MotionDetailInjectedPropTypes,
-} from 'src/hoc/withMotionDetail';
+import {useNavigation} from '@react-navigation/native';
 
 type PropTypes = {title: string};
 
-function MotionTeaser(
-  props: PropTypes & ElectionInjectedPropTypes & MotionDetailInjectedPropTypes,
-) {
-  const {motionDetail, title} = props;
+function MotionTeaser(props: PropTypes & ElectionInjectedPropTypes) {
+  const navigation = useNavigation();
+  const {title} = props;
   const latestMotion = props.electionsInfo.motions?.[0];
 
   const handleDetail = useCallback(() => {
     if (latestMotion && latestMotion.votes) {
-      motionDetail.show(latestMotion.hash, latestMotion.votes.index.toNumber());
+      navigation.navigate('MotionDetail', {
+        hash: latestMotion.hash.toString(),
+        id: latestMotion.votes.index.toNumber(),
+      });
     }
-  }, [latestMotion, motionDetail]);
+  }, [latestMotion, navigation]);
 
   return (
     <Card style={styles.motionCard} onPress={handleDetail}>
@@ -70,4 +70,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default compose(withElectionInfo, withMotionDetail)(MotionTeaser);
+export default compose(withElectionInfo)(MotionTeaser);

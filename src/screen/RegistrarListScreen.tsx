@@ -1,5 +1,4 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {DrawerParamList} from 'src/types';
 import GenericNavigationLayout from 'presentational/GenericNavigationLayout';
@@ -20,7 +19,5 @@ function RegistrarListScreen(props: PropTypes) {
     </GenericNavigationLayout>
   );
 }
-
-const styles = StyleSheet.create({});
 
 export default RegistrarListScreen;

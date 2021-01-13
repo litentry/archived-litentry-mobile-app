@@ -1,4 +1,5 @@
 import {DeriveAccountRegistration} from '@polkadot/api-derive/types';
+import {Hash} from '@polkadot/types/interfaces';
 export type ThemeType = 'light' | 'dark';
 
 export type SupportedNetworkType =
@@ -104,6 +105,7 @@ export type HapticFeedbackType = 'success' | 'warn' | 'error';
 export type DrawerParamList = {
   Dashboard: undefined;
   RegistrarList: undefined;
+  MotionDetail: {hash: string; id: number};
   Webview: {uri: string; title: string};
   DevScreen: undefined;
 };

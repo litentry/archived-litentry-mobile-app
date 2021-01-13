@@ -17,6 +17,7 @@ import {DrawerParamList} from './types';
 import BalanceContextProvider from 'context/BalanceContext';
 import TxContextProvider from 'context/TxContext';
 import RegistrarListScreen from 'screen/RegistrarListScreen';
+import MotionDetailScreen from 'screen/MotionDetailScreen';
 import {Host} from 'react-native-portalize';
 
 import {IonicIconsPack} from './Ionic-icons';
@@ -60,6 +61,10 @@ export default () => {
               <Drawer.Screen
                 name="RegistrarList"
                 component={RegistrarListScreen}
+              />
+              <Drawer.Screen
+                name="MotionDetail"
+                component={MotionDetailScreen}
               />
               <Drawer.Screen name="Webview" component={WebviewScreen} />
               <Drawer.Screen name="DevScreen" component={DevScreen} />

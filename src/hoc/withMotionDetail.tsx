@@ -1,19 +1,17 @@
 import React, {useState, useMemo, useContext, useCallback} from 'react';
 import {ChainApiContext} from 'context/ChainApiContext';
 
-import {Hash} from '@polkadot/types/interfaces';
 import type {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
-import PageModal from 'presentational/PageModal';
 import usePolkascan, {
   mapMotion,
   MotionSummaryPSType,
 } from 'src/hook/usePolkascan';
-import MotionDetailPage from 'layout/MotionDetailPage';
 import {NetworkContext} from 'context/NetworkContext';
 
 export type InjectedPropTypes = {
   motionDetail: {
-    show: (hash: Hash, votesId: number) => void;
+    show: (hash: string, votesId: number) => void;
+    motion: ReturnType<typeof mapMotionDetail>;
   };
 };
 
@@ -31,7 +29,6 @@ export function mapMotionDetail(
 
 function withMotionDetail<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
   return function Hoc(props: T) {
-    const [inProgress, setInProgress] = useState(false);
     const [detail, setDetail] = useState<ReturnType<
       typeof mapMotionDetail
     > | null>(null);
@@ -40,9 +37,7 @@ function withMotionDetail<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
     const {get} = usePolkascan(currentNetwork?.key || 'polkadot');
 
     const show = useCallback(
-      (hash: Hash, votesId: number) => {
-        setInProgress(true);
-
+      (hash: string, votesId: number) => {
         Promise.all([
           api?.derive.council.proposal(hash),
           get(`council/motion/${votesId}?include=votes`).then(mapMotion),
@@ -57,18 +52,15 @@ function withMotionDetail<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
 
     const motionDetail = useMemo(
       () => ({
-        inProgress,
         show,
+        motion: detail,
       }),
-      [inProgress, show],
+      [show, detail],
     );
 
     return (
       <>
         <Comp {...props} motionDetail={motionDetail} />
-        <PageModal visible={detail !== null} onClose={() => setDetail(null)}>
-          <MotionDetailPage motion={detail} onDismiss={() => setDetail(null)} />
-        </PageModal>
       </>
     );
   };

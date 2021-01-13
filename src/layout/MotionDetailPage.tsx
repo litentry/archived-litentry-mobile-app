@@ -2,7 +2,7 @@ import React, {useRef, useContext} from 'react';
 import _ from 'lodash';
 import {StyleSheet, View, TouchableOpacity, Dimensions} from 'react-native';
 import {mapMotionDetail} from 'src/hoc/withMotionDetail';
-import {Button, Text, Layout, Card, Icon} from '@ui-kitten/components';
+import {Text, Layout, Card, Icon} from '@ui-kitten/components';
 import globalStyles, {
   standardPadding,
   monofontFamily,
@@ -24,7 +24,6 @@ const {height} = Dimensions.get('window');
 
 type PropTypes = {
   motion: ReturnType<typeof mapMotionDetail> | null;
-  onDismiss: () => void;
 };
 
 function VoteItem({
@@ -57,7 +56,7 @@ function VoteItem({
 }
 
 function MotionDetailPage(props: PropTypes) {
-  const {motion, onDismiss} = props;
+  const {motion} = props;
   const modalRef = useRef<Modalize>(null);
   const {currentNetwork} = useContext(NetworkContext);
 
@@ -68,9 +67,6 @@ function MotionDetailPage(props: PropTypes) {
   return (
     <>
       <ScrollView style={[globalStyles.paddedContainer, styles.container]}>
-        <Text category="h4" style={styles.header}>
-          Motion #{motion.proposalId}
-        </Text>
         <View>
           <Layout style={styles.rowContainer}>
             <Card style={[styles.item, styles.left]}>
@@ -171,9 +167,6 @@ function MotionDetailPage(props: PropTypes) {
           </View>
         ) : null}
       </ScrollView>
-      <Button appearance="ghost" style={styles.btn} onPress={onDismiss}>
-        Dismiss
-      </Button>
       <Modalize
         ref={modalRef}
         threshold={250}
@@ -211,7 +204,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  header: {paddingBottom: standardPadding * 2},
   small: {fontSize: 10},
   stats: {
     textAlign: 'center',
@@ -231,9 +223,6 @@ const styles = StyleSheet.create({
   },
   votesContainer: {
     marginTop: standardPadding * 2,
-  },
-  btn: {
-    margin: standardPadding,
   },
   hackPolkassemblyTextWidth: {
     width: 70,
