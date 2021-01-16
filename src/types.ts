@@ -1,5 +1,4 @@
 import {DeriveAccountRegistration} from '@polkadot/api-derive/types';
-import {Hash} from '@polkadot/types/interfaces';
 export type ThemeType = 'light' | 'dark';
 
 export type SupportedNetworkType =
