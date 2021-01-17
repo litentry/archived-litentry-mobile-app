@@ -20,7 +20,7 @@ import {ThemeContext} from 'context/ThemeProvider';
 import QRCode from './QRCode';
 import Padder from './Padder';
 import AccountInfoInlineTeaser from './AccountInfoInlineTeaser';
-import {IdentityInfo, RegistrationJudgement} from '@polkadot/types/interfaces';
+import {RegistrationJudgement} from '@polkadot/types/interfaces';
 import {Vec} from '@polkadot/types';
 
 const {width, height} = Dimensions.get('window');
@@ -28,12 +28,12 @@ const {width, height} = Dimensions.get('window');
 type PropTypes = {
   level: '1' | '2';
   address: string;
-  info?: IdentityInfo;
+  display?: string;
   judgements?: Vec<RegistrationJudgement>;
 };
 
 function AccountTeaser(props: PropTypes) {
-  const {address, info, judgements} = props;
+  const {address, display, judgements} = props;
   const [copyTooltipVisible, setCopyTooltipVisible] = useState(false);
   const [qrVisible, setQrVisible] = useState(false);
   const {theme} = useContext(ThemeContext);
@@ -58,8 +58,8 @@ function AccountTeaser(props: PropTypes) {
       level={props.level}
       style={[globalStyles.paddedContainer, styles.container]}>
       <Identicon value={address} size={60} />
-      {info ? (
-        <AccountInfoInlineTeaser info={info} judgements={judgements} />
+      {display ? (
+        <AccountInfoInlineTeaser display={display} judgements={judgements} />
       ) : null}
       <Layout level={props.level} style={styles.addressContainer}>
         <TouchableOpacity onPress={() => setQrVisible(true)}>

@@ -1,43 +1,51 @@
 import React, {useCallback, useRef, useMemo} from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
-import {IdentityInfo, RegistrationJudgement} from '@polkadot/types/interfaces';
 import {Layout, Text, Icon, ListItem, Divider} from '@ui-kitten/components';
 import {u8aToString} from '@polkadot/util';
 import globalStyles, {standardPadding} from 'src/styles';
 import JudgmentStatus from './JudgmentStatus';
-import {Vec} from '@polkadot/types';
-import {NetworkType} from 'src/types';
+import {NetworkType, SupportedNetworkType} from 'src/types';
 import ModalTitle from './ModalTitle';
 import {Modalize} from 'react-native-modalize';
 import {Portal} from 'react-native-portalize';
+import useAccountDetail from 'src/hook/useAccountDetail';
+import {ApiPromise} from '@polkadot/api';
 
 type PropTypes = {
   network: NetworkType | null;
-  info: IdentityInfo;
-  judgements: Vec<RegistrationJudgement>;
+  address: string;
+  api?: ApiPromise;
 };
 
-function AddressInfoBadge({info, judgements, network}: PropTypes) {
-  const {display} = info;
+function AddressInfoBadge({address, network, api}: PropTypes) {
+  const {detail, display} = useAccountDetail(
+    (network?.key || 'polkadot') as SupportedNetworkType,
+    address,
+    api,
+  );
   const modalRef = useRef<Modalize>(null);
   const onOpen = useCallback(() => {
     modalRef.current?.open();
   }, []);
 
   const detailView = useMemo(() => {
-    const displayName = u8aToString(info.display.asRaw) || 'untitled account';
     return (
       <Layout style={styles.detailContainer}>
         <Layout>
-          <ModalTitle title={displayName} subtitle={` (@${network?.name})`} />
+          <ModalTitle title={display} subtitle={` (@${network?.name})`} />
         </Layout>
         <Divider />
         <ListItem
           title="Display"
           accessoryLeft={(props) => <Icon {...props} name="person-outline" />}
           accessoryRight={() => (
-            <Text selectable category="label">
-              {displayName}
+            <Text
+              style={{maxWidth: '55%'}}
+              selectable
+              category="label"
+              numberOfLines={1}
+              ellipsizeMode="middle">
+              {display}
             </Text>
           )}
         />
@@ -46,7 +54,7 @@ function AddressInfoBadge({info, judgements, network}: PropTypes) {
           accessoryLeft={(props) => <Icon {...props} name="award-outline" />}
           accessoryRight={() => (
             <Text selectable category="label">
-              {u8aToString(info.legal.asRaw) || 'Unset'}
+              {u8aToString(detail?.data?.info.legal.asRaw) || 'Unset'}
             </Text>
           )}
         />
@@ -55,7 +63,7 @@ function AddressInfoBadge({info, judgements, network}: PropTypes) {
           accessoryLeft={(props) => <Icon {...props} name="email-outline" />}
           accessoryRight={() => (
             <Text selectable category="label">
-              {u8aToString(info.email.asRaw) || 'Unset'}
+              {u8aToString(detail?.data?.info.email.asRaw) || 'Unset'}
             </Text>
           )}
         />
@@ -64,7 +72,7 @@ function AddressInfoBadge({info, judgements, network}: PropTypes) {
           accessoryLeft={(props) => <Icon {...props} name="twitter-outline" />}
           accessoryRight={() => (
             <Text selectable category="label">
-              {u8aToString(info.twitter.asRaw) || 'Unset'}
+              {u8aToString(detail?.data?.info.twitter.asRaw) || 'Unset'}
             </Text>
           )}
         />
@@ -75,7 +83,7 @@ function AddressInfoBadge({info, judgements, network}: PropTypes) {
           )}
           accessoryRight={() => (
             <Text selectable category="label">
-              {u8aToString(info.riot.asRaw) || 'Unset'}
+              {u8aToString(detail?.data?.info.riot.asRaw) || 'Unset'}
             </Text>
           )}
         />
@@ -84,20 +92,27 @@ function AddressInfoBadge({info, judgements, network}: PropTypes) {
           accessoryLeft={(props) => <Icon {...props} name="browser-outline" />}
           accessoryRight={() => (
             <Text selectable category="label">
-              {u8aToString(info.web.asRaw) || 'Unset'}
+              {u8aToString(detail?.data?.info.web.asRaw) || 'Unset'}
             </Text>
           )}
         />
         <View style={styles.padding} />
       </Layout>
     );
-  }, [info, network]);
+  }, [detail, network, display]);
 
   return (
     <>
       <TouchableOpacity onPress={onOpen}>
         <Layout style={styles.container}>
-          <Text category="c2">{u8aToString(display.asRaw)}</Text>
+          <Text
+            category="c2"
+            selectable
+            numberOfLines={1}
+            style={styles.display}
+            ellipsizeMode="middle">
+            {display}
+          </Text>
           <Icon
             name="arrow-down"
             style={styles.icon}
@@ -105,7 +120,7 @@ function AddressInfoBadge({info, judgements, network}: PropTypes) {
             animation="pulse"
           />
           <Layout style={globalStyles.rowContainer}>
-            {judgements.map((judgement) => (
+            {detail?.data?.judgements.map((judgement) => (
               <JudgmentStatus
                 key={String(judgement[0])}
                 judgement={judgement}
@@ -134,6 +149,9 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  display: {
+    maxWidth: '90%',
   },
   modal: {},
   icon: {

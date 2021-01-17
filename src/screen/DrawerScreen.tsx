@@ -24,9 +24,11 @@ import AddressInfoBadge from 'presentational/AddressInfoBadge';
 import Identicon from '@polkadot/reactnative-identicon';
 import {BalanceContext} from 'context/BalanceContext';
 import withAddAccount, {InjectedPropTypes} from 'src/hoc/withAddAccount';
+import {ChainApiContext} from 'context/ChainApiContext';
 
 function AccountDrawerView({accountAddProps}: InjectedPropTypes) {
   const {show} = useContext(BalanceContext);
+  const {api} = useContext(ChainApiContext);
   const {accounts, setAccount, currentIdentity} = useContext(AccountContext);
   const {currentNetwork} = useContext(NetworkContext);
   const [visible, setVisible] = useState(false);
@@ -83,15 +85,11 @@ function AccountDrawerView({accountAddProps}: InjectedPropTypes) {
             <Identicon value={account.address} size={25} />
 
             <Layout style={accountDrawerViewStyles.account}>
-              {currentIdentity && currentNetwork ? (
-                <AddressInfoBadge
-                  info={currentIdentity.info}
-                  network={currentNetwork}
-                  judgements={currentIdentity.judgements}
-                />
-              ) : (
-                <Text category="s2">{account?.name || 'Untitled Account'}</Text>
-              )}
+              <AddressInfoBadge
+                network={currentNetwork}
+                address={account.address}
+                api={api}
+              />
               <OverflowMenu
                 anchor={renderOptions}
                 placement="bottom end"

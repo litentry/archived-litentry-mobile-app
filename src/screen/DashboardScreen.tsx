@@ -35,6 +35,8 @@ import TreasurySummaryTeaser from 'layout/TreasurySummaryTeaser';
 import withNetworkSelect, {
   InjectedPropTypes as NetworkSelectInjectedPropTypes,
 } from 'src/hoc/withNetworkSelect';
+import useAccountDetail from 'src/hook/useAccountDetail';
+import {NetworkContext} from 'context/NetworkContext';
 
 type PropTypes = {navigation: DrawerNavigationProp<{}>};
 
@@ -49,11 +51,17 @@ function DashboardScreen({
 }: PropTypes & AddAccountInjectedPropTypes & NetworkSelectInjectedPropTypes) {
   const {show} = useContext(BalanceContext);
   const {accounts, currentIdentity} = useContext(AccountContext);
+  const {currentNetwork} = useContext(NetworkContext);
 
   const {status, api} = useContext(ChainApiContext);
   const {start} = useContext(TxContext);
   const account = accounts?.[0];
   const theme = useTheme();
+  const {display, detail} = useAccountDetail(
+    currentNetwork?.key || 'polkadot',
+    account?.address,
+    api,
+  );
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const startTx = useCallback(async () => {
@@ -126,8 +134,8 @@ function DashboardScreen({
             <AccountTeaser
               level="2"
               address={account.address}
-              info={currentIdentity?.info}
-              judgements={currentIdentity?.judgements}
+              display={display}
+              judgements={detail?.data?.judgements}
             />
             <Divider />
             <View

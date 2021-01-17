@@ -1,12 +1,13 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, View} from 'react-native';
 import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
 import Identicon from '@polkadot/reactnative-identicon';
-import {Registration} from '@polkadot/types/interfaces';
 import {ChainApiContext} from 'context/ChainApiContext';
 import Padder from 'presentational/Padder';
 import {standardPadding, monofontFamily} from 'src/styles';
 import {Text} from '@ui-kitten/components';
+import useAccountDetail from 'src/hook/useAccountDetail';
+import {NetworkContext} from 'context/NetworkContext';
 
 type PropTypes = {
   address: string;
@@ -14,25 +15,18 @@ type PropTypes = {
 
 function AddressInlineTeaser(props: PropTypes) {
   const {address} = props;
-  const [account, setAccount] = useState<Registration>();
   const {api} = useContext(ChainApiContext);
-
-  useEffect(() => {
-    if (api) {
-      api.query.identity.identityOf(address).then((data) => {
-        setAccount(data.unwrapOr(undefined));
-      });
-    }
-  }, [address, api]);
+  const {currentNetwork} = useContext(NetworkContext);
+  const {display, detail} = useAccountDetail(currentNetwork?.key, address, api);
 
   return (
     <View style={styles.container}>
       <Identicon value={address} size={20} />
       <Padder scale={0.5} />
-      {account ? (
+      {display ? (
         <AccountInfoInlineTeaser
-          info={account.info}
-          judgements={account.judgements}
+          display={display}
+          judgements={detail?.data?.judgements}
         />
       ) : (
         <Text
