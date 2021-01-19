@@ -23,6 +23,7 @@ import {IonicIconsPack} from './Ionic-icons';
 
 // init type registry
 import 'src/typeRegistry';
+import TestScreen from 'screen/TestScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -63,6 +64,7 @@ export default () => {
               />
               <Drawer.Screen name="Webview" component={WebviewScreen} />
               <Drawer.Screen name="DevScreen" component={DevScreen} />
+              <Drawer.Screen name="TestScreen" component={TestScreen} />
             </Drawer.Navigator>
           </WithContexts>
         </Host>

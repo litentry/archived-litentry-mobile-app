@@ -104,6 +104,7 @@ export type DrawerParamList = {
   RegistrarList: undefined;
   Webview: {uri: string; title: string};
   DevScreen: undefined;
+  TestScreen: undefined;
 };
 
 // Polkadot specific
