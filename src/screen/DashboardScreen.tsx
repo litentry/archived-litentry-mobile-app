@@ -50,7 +50,7 @@ function DashboardScreen({
   networkSelection,
 }: PropTypes & AddAccountInjectedPropTypes & NetworkSelectInjectedPropTypes) {
   const {show} = useContext(BalanceContext);
-  const {accounts, currentIdentity} = useContext(AccountContext);
+  const {accounts} = useContext(AccountContext);
   const {currentNetwork} = useContext(NetworkContext);
 
   const {status, api} = useContext(ChainApiContext);

@@ -29,7 +29,7 @@ import {ChainApiContext} from 'context/ChainApiContext';
 function AccountDrawerView({accountAddProps}: InjectedPropTypes) {
   const {show} = useContext(BalanceContext);
   const {api} = useContext(ChainApiContext);
-  const {accounts, setAccount, currentIdentity} = useContext(AccountContext);
+  const {accounts, setAccount} = useContext(AccountContext);
   const {currentNetwork} = useContext(NetworkContext);
   const [visible, setVisible] = useState(false);
   const account = accounts && accounts[0];
