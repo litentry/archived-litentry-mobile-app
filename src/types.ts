@@ -118,3 +118,12 @@ export interface AddressIdentity extends DeriveAccountRegistration {
   isExistent: boolean;
   waitCount: number;
 }
+
+export type IdentityInfo = {
+  display: string;
+  legal: string;
+  email: string;
+  riot: string;
+  twitter: string;
+  web: string;
+};
