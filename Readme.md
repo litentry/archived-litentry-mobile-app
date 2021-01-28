@@ -1,6 +1,6 @@
 ## Introduction
 
-Aggregated identity means an identity linked with accounts from different blockchains and off-chain applications/services, which represent the owner behind the accounts, and further present the owner's credibility and reputation from various aspects. In this proposal, we provide a governance app, with gathered participants' info integration. It could facilitate the governance process, integrate participants' more information from linked accounts on other networks, and encourage more users to join on-chain governance once we provide Litentry native token as incentives.
+Aggregated identity means an identity linked with accounts from different blockchains and off-chain applications/services, which represent the owner behind the accounts, and further present the owner's credibility and reputation from various aspects. In this repo, we provide a governance app, with gathered participants' info integration. It could facilitate the governance process, integrate participants' more information from linked accounts on other networks, and encourage more users to join on-chain governance once we provide Litentry native token as incentives.
 
 
 With this app, we want to create a governance mobile application which could:
