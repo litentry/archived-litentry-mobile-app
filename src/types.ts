@@ -104,6 +104,7 @@ export type DrawerParamList = {
   RegistrarList: undefined;
   Webview: {uri: string; title: string};
   DevScreen: undefined;
+  TestScreen: undefined;
 };
 
 // Polkadot specific
@@ -117,3 +118,12 @@ export interface AddressIdentity extends DeriveAccountRegistration {
   isExistent: boolean;
   waitCount: number;
 }
+
+export type IdentityInfo = {
+  display: string;
+  legal: string;
+  email: string;
+  riot: string;
+  twitter: string;
+  web: string;
+};
