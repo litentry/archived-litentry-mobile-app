@@ -14,7 +14,11 @@ type PropTypes = {
 function AccountInfoInlineTeaser({display, judgements}: PropTypes) {
   return (
     <View style={styles.container}>
-      <Text category="s1" style={{fontFamily: monofontFamily}}>
+      <Text
+        category="s1"
+        style={[{fontFamily: monofontFamily}, styles.text]}
+        ellipsizeMode="middle"
+        numberOfLines={1}>
         {display}
       </Text>
       {judgements && judgements.length
@@ -27,6 +31,9 @@ function AccountInfoInlineTeaser({display, judgements}: PropTypes) {
 }
 
 const styles = StyleSheet.create({
+  text: {
+    maxWidth: 140,
+  },
   container: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 13,
     width: 140,
+    maxWidth: 140,
     fontFamily: monofontFamily,
   },
 });
