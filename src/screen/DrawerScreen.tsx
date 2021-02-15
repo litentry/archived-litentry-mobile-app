@@ -227,6 +227,19 @@ function DrawerScreen({navigation}: PropTypes) {
                 onPress={() => navigation.navigate('DevScreen')}
               />
               <Divider />
+              <ListItem
+                title="Test Screen"
+                description="Test screen"
+                accessoryLeft={(props) => (
+                  <Icon
+                    {...props}
+                    name="alert-triangle-outline"
+                    animation="zoom"
+                  />
+                )}
+                onPress={() => navigation.navigate('TestScreen')}
+              />
+              <Divider />
             </>
           )}
         </Layout>
