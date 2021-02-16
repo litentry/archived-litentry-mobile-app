@@ -24,12 +24,12 @@ const KusamaNetwork: NetworkType = {
   color: '#e6194B',
 };
 
-const EthereumNetwork: NetworkType = {
-  name: 'Ethereum',
-  key: 'ethereum',
-  ws: [],
-  color: '#e6194B',
-};
+// const EthereumNetwork: NetworkType = {
+//   name: 'Ethereum',
+//   key: 'ethereum',
+//   ws: [],
+//   color: '#e6194B',
+// };
 
 const LitentryNetworkTest: NetworkType = {
   name: 'Litentry Testnet',
@@ -42,7 +42,7 @@ const LitentryNetworkTest: NetworkType = {
 const availableNetworks = [
   PolkadotNetwork,
   KusamaNetwork,
-  EthereumNetwork,
+  // EthereumNetwork,
   LitentryNetworkTest,
 ];
 

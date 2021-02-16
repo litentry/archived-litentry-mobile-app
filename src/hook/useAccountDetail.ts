@@ -1,4 +1,4 @@
-import {useState, useEffect, useMemo} from 'react';
+import {useState, useEffect} from 'react';
 import {Registration} from '@polkadot/types/interfaces';
 import {ApiPromise} from '@polkadot/api';
 import {u8aToString} from '@polkadot/util';
@@ -12,6 +12,7 @@ type AccountDetail =
       network: 'polkadot' | 'kusama';
       data?: Registration;
     };
+
 function useAccountDetail(
   network?: SupportedNetworkType | null,
   address?: string,
@@ -24,6 +25,7 @@ function useAccountDetail(
 
   useEffect(() => {
     let localUnsub: () => void | null;
+
     if (
       api &&
       identityAddress &&
@@ -59,16 +61,14 @@ function useAccountDetail(
         });
     }
     return () => {
+      console.log('unsub is called');
       localUnsub && localUnsub();
     };
   }, [api, identityAddress, network]);
 
-  const displayFull = useMemo(() => {
-    if (subAccountDisplay) {
-      return `${display}/${subAccountDisplay}`;
-    }
-    return display;
-  }, [display, subAccountDisplay]);
+  const displayFull = subAccountDisplay
+    ? `${display}/${subAccountDisplay}`
+    : display;
 
   return {display: displayFull, detail};
 }

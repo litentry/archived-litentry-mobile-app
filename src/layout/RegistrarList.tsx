@@ -56,6 +56,7 @@ function RegistrarList(props: PropTypes & InjectedPropTypes) {
       <View style={styles.registrarList}>
         {registrars.map((registrar) => {
           const unwraped = registrar.unwrapOr({fee: BN_ZERO, account: ''});
+
           return (
             <RegistrarTeaser
               key={unwraped.account.toString()}

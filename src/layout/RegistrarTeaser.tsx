@@ -13,6 +13,7 @@ type PropTypes = {
 
 function RegistrarTeaser(props: PropTypes) {
   const {address, fee} = props;
+
   return (
     <View style={styles.container}>
       <AddressInlineTeaser address={address} />

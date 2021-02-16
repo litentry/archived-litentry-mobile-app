@@ -17,26 +17,36 @@ import globalStyles, {
   standardPadding,
 } from 'src/styles';
 import {ThemeContext} from 'context/ThemeProvider';
-import QRCode from './QRCode';
-import Padder from './Padder';
-import AccountInfoInlineTeaser from './AccountInfoInlineTeaser';
-import {RegistrationJudgement} from '@polkadot/types/interfaces';
-import {Vec} from '@polkadot/types';
+import QRCode from '../presentational/QRCode';
+import Padder from '../presentational/Padder';
+import AccountInfoInlineTeaser from '../presentational/AccountInfoInlineTeaser';
+import {AccountContext} from 'context/AccountContextProvider';
+import {NetworkContext} from 'context/NetworkContext';
+import {ChainApiContext} from 'context/ChainApiContext';
+import useAccountDetail from 'src/hook/useAccountDetail';
 
 const {width, height} = Dimensions.get('window');
 
 type PropTypes = {
   level: '1' | '2';
   address: string;
-  display?: string;
-  judgements?: Vec<RegistrationJudgement>;
 };
 
 function AccountTeaser(props: PropTypes) {
-  const {address, display, judgements} = props;
+  const {address} = props;
   const [copyTooltipVisible, setCopyTooltipVisible] = useState(false);
   const [qrVisible, setQrVisible] = useState(false);
   const {theme} = useContext(ThemeContext);
+  const {accounts} = useContext(AccountContext);
+  const {currentNetwork} = useContext(NetworkContext);
+
+  const {api} = useContext(ChainApiContext);
+  const account = accounts?.[0];
+  const {display, detail} = useAccountDetail(
+    currentNetwork?.key || 'polkadot',
+    account?.address,
+    api,
+  );
 
   const renderCopyIcon = () => (
     <TouchableOpacity
@@ -59,7 +69,10 @@ function AccountTeaser(props: PropTypes) {
       style={[globalStyles.paddedContainer, styles.container]}>
       <Identicon value={address} size={60} />
       {display ? (
-        <AccountInfoInlineTeaser display={display} judgements={judgements} />
+        <AccountInfoInlineTeaser
+          display={display}
+          judgements={detail?.data?.judgements}
+        />
       ) : null}
       <Layout level={props.level} style={styles.addressContainer}>
         <TouchableOpacity onPress={() => setQrVisible(true)}>

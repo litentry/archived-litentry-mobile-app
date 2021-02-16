@@ -28,15 +28,13 @@ import FadeInAnimatedView from 'presentational/FadeInAnimatedView';
 import withAddAccount, {
   InjectedPropTypes as AddAccountInjectedPropTypes,
 } from 'src/hoc/withAddAccount';
-import AccountTeaser from 'presentational/AccountTeaser';
+import AccountTeaser from 'layout/AccountTeaser';
 import globalStyles from 'src/styles';
 import CouncilSummaryTeaser from 'layout/CouncilSummaryTeaser';
 import TreasurySummaryTeaser from 'layout/TreasurySummaryTeaser';
 import withNetworkSelect, {
   InjectedPropTypes as NetworkSelectInjectedPropTypes,
 } from 'src/hoc/withNetworkSelect';
-import useAccountDetail from 'src/hook/useAccountDetail';
-import {NetworkContext} from 'context/NetworkContext';
 
 type PropTypes = {navigation: DrawerNavigationProp<{}>};
 
@@ -51,17 +49,11 @@ function DashboardScreen({
 }: PropTypes & AddAccountInjectedPropTypes & NetworkSelectInjectedPropTypes) {
   const {show} = useContext(BalanceContext);
   const {accounts} = useContext(AccountContext);
-  const {currentNetwork} = useContext(NetworkContext);
 
   const {status, api} = useContext(ChainApiContext);
   const {start} = useContext(TxContext);
   const account = accounts?.[0];
   const theme = useTheme();
-  const {display, detail} = useAccountDetail(
-    currentNetwork?.key || 'polkadot',
-    account?.address,
-    api,
-  );
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const startTx = useCallback(async () => {
@@ -131,12 +123,7 @@ function DashboardScreen({
           </Layout>
         ) : (
           <>
-            <AccountTeaser
-              level="2"
-              address={account.address}
-              display={display}
-              judgements={detail?.data?.judgements}
-            />
+            <AccountTeaser level="2" address={account.address} />
             <Divider />
             <View
               style={[
