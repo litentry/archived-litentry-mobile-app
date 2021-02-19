@@ -4,11 +4,11 @@ import {Layout, Text, Icon, IconProps, ListItem} from '@ui-kitten/components';
 import {formatBalance} from '@polkadot/util';
 import LoadingView from 'presentational/LoadingView';
 import {ApiPromise} from '@polkadot/api';
-import {u8aToString} from '@polkadot/util';
-import {AccountInfo, Registration} from '@polkadot/types/interfaces';
+import {AccountInfo} from '@polkadot/types/interfaces';
 import Identicon from '@polkadot/reactnative-identicon';
 import JudgmentStatus from 'presentational/JudgmentStatus';
 import {NetworkType} from 'src/types';
+import useAccountDetail from 'src/hook/useAccountDetail';
 
 const {height} = Dimensions.get('window');
 
@@ -20,18 +20,16 @@ type PropTypes = {
 
 function AddressInfoPreview(props: PropTypes) {
   const {address, api, network} = props;
-  const [identity, setIdentity] = useState<Registration>();
   const [account, setAccount] = useState<AccountInfo>();
   const [inProgress, setInProgress] = useState(false);
+
+  const {display, detail} = useAccountDetail(network?.key, address, api);
+  const identity = detail?.data;
 
   useEffect(() => {
     if (api && address) {
       setInProgress(true);
-      Promise.all([
-        api.query.identity.identityOf(address),
-        api.query.system.account(address),
-      ]).then(([iden, acc]) => {
-        setIdentity(iden.unwrapOr(undefined));
+      api.query.system.account(address).then((acc) => {
         setAccount(acc);
 
         setInProgress(false);
@@ -74,8 +72,7 @@ function AddressInfoPreview(props: PropTypes) {
             )}
             accessoryRight={() => (
               <Text selectable category="label">
-                {u8aToString(identity?.info.display.asRaw) ||
-                  'untitled account'}
+                {display || 'untitled account'}
               </Text>
             )}
           />
