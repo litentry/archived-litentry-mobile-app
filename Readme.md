@@ -23,3 +23,10 @@ With this app, we want to create a governance mobile application which could:
 
 ### Distinct colors
 https://sashamaps.net/docs/resources/20-colors/
+
+
+### Development
+
+Litentry test network
+
+wss://18.140.130.138
