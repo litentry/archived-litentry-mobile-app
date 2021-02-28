@@ -18,6 +18,11 @@ type PropTypes = {
   address: string;
 };
 
+const OnelineAddressStyle = {
+  numberOfLines: 1,
+  style: {width: '50%'},
+};
+
 function AddressInfoPreview(props: PropTypes) {
   const {address, api, network} = props;
   const [account, setAccount] = useState<AccountInfo>();
@@ -58,6 +63,7 @@ function AddressInfoPreview(props: PropTypes) {
               <Text
                 selectable
                 category="label"
+                {...OnelineAddressStyle}
                 ellipsizeMode="middle"
                 numberOfLines={1}
                 style={{width: '50%'}}>
@@ -71,7 +77,11 @@ function AddressInfoPreview(props: PropTypes) {
               <Icon {...iconProps} name="person-outline" />
             )}
             accessoryRight={() => (
-              <Text selectable category="label">
+              <Text
+                selectable
+                category="label"
+                {...OnelineAddressStyle}
+                ellipsizeMode="middle">
                 {display || 'untitled account'}
               </Text>
             )}
