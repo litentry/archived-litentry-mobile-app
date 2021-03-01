@@ -7,11 +7,14 @@ import React, {
   useRef,
   useCallback,
 } from 'react';
+
+import type BN from 'bn.js';
 import {NetworkContext} from './NetworkContext';
 import {ApiPromise, WsProvider} from '@polkadot/api';
 import {createLogger} from 'src/utils';
 import {formatBalance} from '@polkadot/util';
 import {setSS58Format} from '@polkadot/util-crypto';
+import {defaults as addressDefaults} from '@polkadot/util-crypto/address/defaults';
 
 type ApiChainStatusType = 'unknown' | 'connected' | 'disconnected' | 'ready';
 type ChainApiContextValueType = {
@@ -26,8 +29,19 @@ import LoadingView from 'presentational/LoadingView';
 import {Icon} from '@ui-kitten/components';
 import globalStyles, {colorGreen} from 'src/styles';
 
-export const DEFAULT_DECIMALS = registry.createType('u32', 15);
-export const DEFAULT_SS58 = registry.createType('u32', 0);
+export const DEFAULT_DECIMALS = registry.createType('u32', 12);
+export const DEFAULT_SS58 = registry.createType('u32', addressDefaults.prefix);
+export const DEFAULT_AUX = [
+  'Aux1',
+  'Aux2',
+  'Aux3',
+  'Aux4',
+  'Aux5',
+  'Aux6',
+  'Aux7',
+  'Aux8',
+  'Aux9',
+];
 
 export const ChainApiContext = createContext<ChainApiContextValueType>({
   api: undefined,
@@ -138,8 +152,8 @@ function ChainApiContextProvider(props: PropTypes) {
     function handleError() {
       setInProgress(false);
     }
-
     apiPromise.on('connected', handleConnect);
+
     apiPromise.on('disconnected', handleDisconnect);
     apiPromise.on('ready', handleReady);
     apiPromise.on('error', handleError);
@@ -161,15 +175,17 @@ function ChainApiContextProvider(props: PropTypes) {
 
       // setup chain properties
       api.rpc.system.properties().then((properties) => {
-        const tokenSymbol = properties.tokenSymbol
-          .unwrapOr(undefined)
-          ?.toString();
+        console.log('chain props', JSON.stringify(properties, null, 4));
+        const tokenSymbol = properties.tokenSymbol.unwrapOr([
+          formatBalance.getDefaults().unit,
+          ...DEFAULT_AUX,
+        ]);
+        const tokenDecimals = properties.tokenDecimals.unwrapOr([
+          DEFAULT_DECIMALS,
+        ]);
 
         const ss58Format = properties.ss58Format
           .unwrapOr(DEFAULT_SS58)
-          .toNumber();
-        const tokenDecimals = properties.tokenDecimals
-          .unwrapOr(DEFAULT_DECIMALS)
           .toNumber();
 
         setSS58Format(ss58Format);
@@ -193,8 +209,8 @@ function ChainApiContextProvider(props: PropTypes) {
         );
 
         formatBalance.setDefaults({
-          decimals: tokenDecimals,
-          unit: tokenSymbol || 'UNIT',
+          decimals: (tokenDecimals as BN[]).map((b) => b.toNumber())[0],
+          unit: tokenSymbol[0].toString(),
         });
       });
 

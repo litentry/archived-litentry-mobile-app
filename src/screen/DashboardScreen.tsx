@@ -57,30 +57,27 @@ function DashboardScreen({
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const startTx = useCallback(async () => {
-    // const info = {
-    //   display: {raw: 'test1'},
-    //   email: {
-    //     none: null,
-    //   },
-    //   legal: {
-    //     none: null,
-    //   },
-    //   riot: {
-    //     none: null,
-    //   },
-    //   twitter: {
-    //     none: null,
-    //   },
-    //   web: {
-    //     none: null,
-    //   },
-    // };
+    const info = {
+      display: {raw: 'RN'},
+      email: {
+        none: null,
+      },
+      legal: {
+        none: null,
+      },
+      riot: {
+        none: null,
+      },
+      twitter: {
+        none: null,
+      },
+      web: {
+        none: null,
+      },
+    };
 
     if (account && api) {
-      await start(api, account.address, 'balances.transfer', [
-        '5FZnXDZ1X44GSpZYnJjGe6Ygo74ByDFj1YhqqAV3G2GZTSRN',
-        '30000000000000000',
-      ]);
+      await start(api, account.address, 'identity.setIdentity', [info]);
     } else {
       Alert.alert('account/api is not ready');
     }
@@ -110,6 +107,7 @@ function DashboardScreen({
         renderTitle={renderTitle}
       />
       <Divider style={{height: 2}} />
+      <Button onPress={startTx}>Test Tx</Button>
       <FadeInAnimatedView>
         {!account ? (
           <Layout style={styles.container} level="1">
