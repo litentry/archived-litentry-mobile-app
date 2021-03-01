@@ -209,7 +209,9 @@ function ChainApiContextProvider(props: PropTypes) {
         );
 
         formatBalance.setDefaults({
-          decimals: (tokenDecimals as BN[]).map((b) => b.toNumber())[0],
+          decimals:
+            (tokenDecimals as BN[]).map((b) => b.toNumber())[0] ||
+            DEFAULT_DECIMALS.toNumber(),
           unit: tokenSymbol[0].toString(),
         });
       });
