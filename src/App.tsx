@@ -10,6 +10,7 @@ import {
 import DashboardScreen from 'screen/DashboardScreen';
 import WebviewScreen from 'screen/WebviewScreen';
 import DevScreen from 'screen/DevScreen';
+import MyIdentityScreen from 'screen/MyIdentityScreen';
 import DrawerScreen from 'screen/DrawerScreen';
 import ChainApiContextProvider from 'context/ChainApiContext';
 import AccountContextProvider from 'context/AccountContextProvider';
@@ -69,6 +70,7 @@ export default () => {
               />
               <Drawer.Screen name="Webview" component={WebviewScreen} />
               <Drawer.Screen name="DevScreen" component={DevScreen} />
+              <Drawer.Screen name="MyIdentity" component={MyIdentityScreen} />
               <Drawer.Screen name="TestScreen" component={TestScreen} />
             </Drawer.Navigator>
           </WithContexts>

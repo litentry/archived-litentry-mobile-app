@@ -72,6 +72,7 @@ export type DrawerParamList = {
   MotionDetail: {hash: string; id: number};
   Webview: {uri: string; title: string};
   DevScreen: undefined;
+  MyIdentity: undefined;
   TestScreen: undefined;
 };
 

@@ -70,7 +70,11 @@ function useAccountDetail(
     ? `${display}/${subAccountDisplay}`
     : display;
 
-  return {display: displayFull, detail};
+  return {
+    display: displayFull,
+    isNaked: displayFull === identityAddress,
+    detail,
+  };
 }
 
 export default useAccountDetail;
