@@ -1,5 +1,4 @@
 import {useState, useEffect} from 'react';
-import {Registration} from '@polkadot/types/interfaces';
 import {ApiPromise} from '@polkadot/api';
 import {u8aToString} from '@polkadot/util';
 import {SupportedNetworkType, AddressDetailType} from 'src/types';
