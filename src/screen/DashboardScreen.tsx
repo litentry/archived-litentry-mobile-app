@@ -35,6 +35,8 @@ import TreasurySummaryTeaser from 'layout/TreasurySummaryTeaser';
 import withNetworkSelect, {
   InjectedPropTypes as NetworkSelectInjectedPropTypes,
 } from 'src/hoc/withNetworkSelect';
+import {useTreasuryTips} from 'src/hook/useTreasuryTips';
+import TipsSummaryTeaser from 'layout/TipsSummaryTeaser';
 
 type PropTypes = {navigation: DrawerNavigationProp<{}>};
 
@@ -54,6 +56,12 @@ function DashboardScreen({
   const {start} = useContext(TxContext);
   const account = accounts?.[0];
   const theme = useTheme();
+
+  const tips = useTreasuryTips();
+
+  if (tips) {
+    console.log('TIPS *******', tips);
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const startTx = useCallback(async () => {
@@ -138,6 +146,7 @@ function DashboardScreen({
                 <TreasurySummaryTeaser
                   onMorePress={() => alert('Navigate to Treasury Screen')}
                 />
+                <TipsSummaryTeaser />
               </ScrollView>
             </View>
           </>

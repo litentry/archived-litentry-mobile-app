@@ -40,14 +40,16 @@ export function useTreasuryTips() {
   const {api} = useContext(ChainApiContext);
 
   useEffect(() => {
-    api?.query.tips.tips
-      .keys()
-      .then((keys) => setHashes(keys.map((key) => key.args[0].toHex())))
-      .catch((e) => {
-        if (__DEV__) {
-          console.error(e);
-        }
-      });
+    if (api) {
+      api.query.tips.tips
+        .keys()
+        .then((keys) => setHashes(keys.map((key) => key.args[0].toHex())))
+        .catch((e) => {
+          if (__DEV__) {
+            console.error(e);
+          }
+        });
+    }
   }, [api]);
 
   const tipsWithHashes = useCall<[[string[]], Option<OpenTip>[]]>(
