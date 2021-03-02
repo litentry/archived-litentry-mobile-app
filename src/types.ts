@@ -1,4 +1,5 @@
 import {DeriveAccountRegistration} from '@polkadot/api-derive/types';
+import {Registration} from '@polkadot/types/interfaces';
 export type ThemeType = 'light' | 'dark';
 
 export type SupportedNetworkType =
@@ -63,6 +64,13 @@ export type AccountAddressType = {
   protocol?: string;
   name: string;
 };
+
+export type AddressDetailType =
+  | {network: 'ethereum'; data: null}
+  | {
+      network: 'polkadot' | 'kusama';
+      data?: Registration;
+    };
 
 export type HapticFeedbackType = 'success' | 'warn' | 'error';
 

@@ -83,7 +83,6 @@ function AccountDrawerView({accountAddProps}: InjectedPropTypes) {
         <Layout style={accountDrawerViewStyles.container}>
           <Layout style={accountDrawerViewStyles.accountLogo}>
             <Identicon value={account.address} size={25} />
-
             <Layout style={accountDrawerViewStyles.account}>
               <AddressInfoBadge
                 network={currentNetwork}

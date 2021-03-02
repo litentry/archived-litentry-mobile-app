@@ -1,5 +1,4 @@
 import React, {useContext, useMemo} from 'react';
-import {StyleSheet} from 'react-native';
 import {Text} from '@ui-kitten/components';
 import GenericNavigationLayout from 'presentational/GenericNavigationLayout';
 import {useNavigation} from '@react-navigation/native';
@@ -28,13 +27,22 @@ function MyIdentity(props: PropTypes) {
 
   const content = useMemo(() => {
     if (detail?.data?.judgements.length) {
-      return <DisplayJudgement />;
+      // there is already judgements to display
+      return (
+        <DisplayJudgement
+          display={display}
+          detail={detail}
+          address={account?.address}
+        />
+      );
     }
 
     if (isNaked) {
+      // there is not identity at all
       return <SetInfo />;
     }
 
+    // there is `setIdentity`, but no judgements are provided
     return <RequestJudgement />;
   }, [isNaked, detail]);
 
@@ -42,11 +50,9 @@ function MyIdentity(props: PropTypes) {
     <GenericNavigationLayout
       title="My Identity"
       onBackPressed={() => navigation.goBack()}>
-      <Text>{content}</Text>
+      {content}
     </GenericNavigationLayout>
   );
 }
-
-const styles = StyleSheet.create({});
 
 export default MyIdentity;

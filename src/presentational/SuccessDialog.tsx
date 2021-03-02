@@ -1,34 +1,43 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, StyleProp, TextStyle, ViewStyle} from 'react-native';
 import {Layout, Text, Icon} from '@ui-kitten/components';
-import globalStyles, {
-  standardPadding,
-  monofontFamily,
-  colorGreen,
-} from 'src/styles';
+import {standardPadding, monofontFamily, colorGreen} from 'src/styles';
 
 type PropTypes = {
   text: string;
+  inline?: boolean;
+  textStyles?: StyleProp<TextStyle>;
+  containerStyle?: StyleProp<ViewStyle>;
 };
 
 function SuccessDialog(props: PropTypes) {
-  const {text} = props;
+  const {text, inline = false, textStyles = {}, containerStyle = {}} = props;
 
   return (
-    <Layout style={globalStyles.centeredContainer}>
+    <Layout
+      style={[styles.container, inline ? {} : styles.flex, containerStyle]}>
       <Layout style={styles.textContainer}>
         <Icon
           style={styles.icon}
           fill={colorGreen}
           name="checkmark-circle-outline"
         />
-        <Text style={[styles.text, styles.withIcon]}>{text}</Text>
+        <Text
+          numberOfLines={2}
+          style={[styles.text, styles.withIcon, textStyles]}>
+          {text}
+        </Text>
       </Layout>
     </Layout>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  flex: {flex: 1},
   textContainer: {
     flexDirection: 'row',
     alignItems: 'center',

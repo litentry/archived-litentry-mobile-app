@@ -2,16 +2,9 @@ import {useState, useEffect} from 'react';
 import {Registration} from '@polkadot/types/interfaces';
 import {ApiPromise} from '@polkadot/api';
 import {u8aToString} from '@polkadot/util';
-import {SupportedNetworkType} from 'src/types';
+import {SupportedNetworkType, AddressDetailType} from 'src/types';
 import {createLogger} from 'src/utils';
 const logger = createLogger('useAccountDetail');
-
-type AccountDetail =
-  | {network: 'ethereum'; data: null}
-  | {
-      network: 'polkadot' | 'kusama';
-      data?: Registration;
-    };
 
 function useAccountDetail(
   network?: SupportedNetworkType | null,
@@ -20,7 +13,7 @@ function useAccountDetail(
 ) {
   const [display, setDisplay] = useState(address || '');
   const [identityAddress, setIdentityAddress] = useState(address || '');
-  const [detail, setDetail] = useState<AccountDetail>();
+  const [detail, setDetail] = useState<AddressDetailType>();
   const [subAccountDisplay, setSubAccountDisplay] = useState('');
 
   useEffect(() => {
