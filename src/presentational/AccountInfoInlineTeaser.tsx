@@ -9,14 +9,19 @@ import JudgmentStatus from './JudgmentStatus';
 type PropTypes = {
   display: string;
   judgements?: Vec<RegistrationJudgement>;
+  fullWidth?: boolean;
 };
 
-function AccountInfoInlineTeaser({display, judgements}: PropTypes) {
+function AccountInfoInlineTeaser({
+  display,
+  judgements,
+  fullWidth = false,
+}: PropTypes) {
   return (
     <View style={styles.container}>
       <Text
         category="s1"
-        style={[{fontFamily: monofontFamily}, styles.text]}
+        style={[{fontFamily: monofontFamily}, fullWidth ? {} : styles.text]}
         ellipsizeMode="middle"
         numberOfLines={1}>
         {display}

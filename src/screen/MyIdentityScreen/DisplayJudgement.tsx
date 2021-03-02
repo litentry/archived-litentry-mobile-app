@@ -1,5 +1,5 @@
 import React, {useRef, useContext} from 'react';
-import {View, StyleSheet, Dimensions} from 'react-native';
+import {View, StyleSheet, Dimensions, ScrollView} from 'react-native';
 import {
   Text,
   Layout,
@@ -22,6 +22,12 @@ import {u8aToString} from '@polkadot/util';
 import {Modalize} from 'react-native-modalize';
 import {buildAddressDetailUrl} from 'src/service/Polkasembly';
 import {NetworkContext} from 'context/NetworkContext';
+import {useCall} from 'src/hook/useCall';
+import {ChainApiContext} from 'context/ChainApiContext';
+import {ITuple} from '@polkadot/types/types';
+import {BalanceOf, AccountId} from '@polkadot/types/interfaces';
+import {Vec} from '@polkadot/types';
+import AddressInlineTeaser from 'layout/AddressInlineTeaser';
 const {height} = Dimensions.get('window');
 
 type PropTypes = {
@@ -30,14 +36,21 @@ type PropTypes = {
   detail: AddressDetailType;
 };
 
+const SubAccountsIcon = (props: IconProps) => (
+  <Icon {...props} pack="ionic" name="ios-people" />
+);
+
 const MoreIcon = (props: IconProps) => (
   <Icon {...props} pack="ionic" name="ios-apps-outline" />
 );
+
+type SubAccounts = ITuple<[BalanceOf, Vec<AccountId>]>;
 
 function DisplayJudgement(props: PropTypes) {
   const {display, detail, address} = props;
   const judgementCount = detail.data?.judgements.length || 0;
   const {currentNetwork} = useContext(NetworkContext);
+  const {api} = useContext(ChainApiContext);
   const successMsg = `This address has ${judgementCount} judgement${
     judgementCount > 1 ? 's' : ''
   } from Registrar ${detail.data?.judgements
@@ -46,9 +59,14 @@ function DisplayJudgement(props: PropTypes) {
 
   const identity = detail?.data;
   const modalRef = useRef<Modalize>(null);
+  const subAccounts: SubAccounts | undefined = useCall(
+    api?.query.identity.subsOf,
+    [address],
+  );
+  const subAccountsArray = subAccounts?.[1] || [];
 
   return (
-    <>
+    <ScrollView>
       <Layout style={[globalStyles.paddedContainer]}>
         <View style={{paddingVertical: standardPadding * 4}}>
           <SuccessDialog
@@ -182,6 +200,28 @@ function DisplayJudgement(props: PropTypes) {
               </Text>
             )}
           />
+
+          {subAccountsArray.length ? (
+            <Menu style={{backgroundColor: 'transparent'}}>
+              <MenuGroup
+                title={`Sub accounts (${subAccountsArray.length})`}
+                accessoryLeft={SubAccountsIcon}>
+                {subAccountsArray.map((addr: AccountId) => (
+                  <MenuItem
+                    key={addr.toString()}
+                    accessoryRight={() => (
+                      <View style={{paddingLeft: standardPadding}}>
+                        <AddressInlineTeaser
+                          fullWidth
+                          address={addr.toString()}
+                        />
+                      </View>
+                    )}
+                  />
+                ))}
+              </MenuGroup>
+            </Menu>
+          ) : null}
         </Layout>
       </Layout>
       <Modalize
@@ -209,7 +249,7 @@ function DisplayJudgement(props: PropTypes) {
           onMessage={() => null}
         />
       </Modalize>
-    </>
+    </ScrollView>
   );
 }
 
