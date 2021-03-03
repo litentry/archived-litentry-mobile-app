@@ -29,6 +29,7 @@ function MyIdentity(props: PropTypes) {
     if (inProgress) {
       return <LoadingView />;
     }
+
     if (detail?.data?.judgements.length) {
       // there is already judgements to display
       return (
@@ -47,7 +48,7 @@ function MyIdentity(props: PropTypes) {
 
     // there is `setIdentity`, but no judgements are provided
     return <RequestJudgement />;
-  }, [account, display, isNaked, detail]);
+  }, [inProgress, account, display, isNaked, detail]);
 
   return (
     <GenericNavigationLayout

@@ -11,7 +11,7 @@ function useAccountDetail(
   api?: ApiPromise,
 ) {
   const [display, setDisplay] = useState(address || '');
-  const [inProgress, setInProgress] = useState(false);
+  const [inProgress, setInProgress] = useState(true);
   const [identityAddress, setIdentityAddress] = useState(address || '');
   const [detail, setDetail] = useState<AddressDetailType>();
   const [subAccountDisplay, setSubAccountDisplay] = useState('');
@@ -24,7 +24,6 @@ function useAccountDetail(
       identityAddress &&
       (network === 'polkadot' || network === 'kusama')
     ) {
-      setInProgress(true);
       api?.query.identity
         ?.identityOf(identityAddress, (registration) => {
           const accountDetail = registration.unwrapOr(undefined);

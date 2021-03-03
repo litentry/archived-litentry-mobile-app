@@ -80,7 +80,8 @@ function AddressInfoPreview(props: PropTypes) {
               <Text
                 selectable
                 category="label"
-                {...OnelineAddressStyle}
+                numberOfLines={1}
+                style={{width: '50%', textAlign: 'right'}}
                 ellipsizeMode="middle">
                 {display || 'untitled account'}
               </Text>
