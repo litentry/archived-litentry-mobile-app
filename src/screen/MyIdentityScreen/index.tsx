@@ -26,7 +26,7 @@ function MyIdentity(props: PropTypes) {
   );
 
   const content = useMemo(() => {
-    if (inProgress) {
+    if (inProgress || !account?.address) {
       return <LoadingView />;
     }
 
@@ -43,7 +43,7 @@ function MyIdentity(props: PropTypes) {
 
     if (isNaked) {
       // there is not identity at all
-      return <SetInfo />;
+      return <SetInfo address={account?.address} />;
     }
 
     // there is `setIdentity`, but no judgements are provided

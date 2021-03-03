@@ -116,12 +116,12 @@ function IdentityInfoForm({onSubmit}: IdentityInfoFormProps) {
 
   const onSubmitPress = () => {
     onSubmit({
-      display,
-      email,
-      legal,
-      riot,
-      twitter,
-      web,
+      display: display ? {raw: display} : {none: null},
+      email: email ? {raw: email} : {none: null},
+      legal: legal ? {raw: legal} : {none: null},
+      riot: riot ? {raw: riot} : {none: null},
+      twitter: twitter ? {raw: twitter} : {none: null},
+      web: web ? {raw: web} : {none: null},
     });
   };
 

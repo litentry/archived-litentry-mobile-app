@@ -97,10 +97,10 @@ export interface AddressIdentity extends DeriveAccountRegistration {
 }
 
 export type IdentityInfo = {
-  display: string;
-  legal: string;
-  email: string;
-  riot: string;
-  twitter: string;
-  web: string;
+  display: {raw: string} | {none: null};
+  legal: {raw: string} | {none: null};
+  email: {raw: string} | {none: null};
+  riot: {raw: string} | {none: null};
+  twitter: {raw: string} | {none: null};
+  web: {raw: string} | {none: null};
 };
