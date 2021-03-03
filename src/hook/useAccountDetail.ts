@@ -11,6 +11,7 @@ function useAccountDetail(
   api?: ApiPromise,
 ) {
   const [display, setDisplay] = useState(address || '');
+  const [inProgress, setInProgress] = useState(false);
   const [identityAddress, setIdentityAddress] = useState(address || '');
   const [detail, setDetail] = useState<AddressDetailType>();
   const [subAccountDisplay, setSubAccountDisplay] = useState('');
@@ -23,6 +24,7 @@ function useAccountDetail(
       identityAddress &&
       (network === 'polkadot' || network === 'kusama')
     ) {
+      setInProgress(true);
       api?.query.identity
         ?.identityOf(identityAddress, (registration) => {
           const accountDetail = registration.unwrapOr(undefined);
@@ -33,6 +35,7 @@ function useAccountDetail(
               u8aToString(info.display.asRaw) || identityAddress;
             setDisplay(displayName);
             setDetail({network, data: registration.unwrapOr(undefined)});
+            setInProgress(false);
           } else {
             api.query.identity
               .superOf(identityAddress)
@@ -44,6 +47,7 @@ function useAccountDetail(
                   setIdentityAddress(superAccountAddress.toString());
                   setSubAccountDisplay(u8aToString(displayData.asRaw));
                 }
+                setInProgress(false);
               });
           }
         })
@@ -54,6 +58,7 @@ function useAccountDetail(
     }
     return () => {
       console.log('unsub is called');
+      setInProgress(false);
       localUnsub && localUnsub();
     };
   }, [api, identityAddress, network]);
@@ -64,6 +69,7 @@ function useAccountDetail(
 
   return {
     display: displayFull,
+    inProgress,
     isNaked: displayFull === identityAddress,
     detail,
   };

@@ -1,5 +1,4 @@
 import React, {useContext, useMemo} from 'react';
-import {Text} from '@ui-kitten/components';
 import GenericNavigationLayout from 'presentational/GenericNavigationLayout';
 import {useNavigation} from '@react-navigation/native';
 import {AccountContext} from 'context/AccountContextProvider';
@@ -9,6 +8,7 @@ import useAccountDetail from 'src/hook/useAccountDetail';
 import SetInfo from './SetInfo';
 import RequestJudgement from './RequestJudgement';
 import DisplayJudgement from './DisplayJudgement';
+import LoadingView from 'presentational/LoadingView';
 
 type PropTypes = {address: string};
 
@@ -19,13 +19,16 @@ function MyIdentity(props: PropTypes) {
   const {currentNetwork} = useContext(NetworkContext);
   const {api} = useContext(ChainApiContext);
   const account = accounts?.[0];
-  const {display, isNaked, detail} = useAccountDetail(
+  const {inProgress, display, isNaked, detail} = useAccountDetail(
     currentNetwork?.key || 'polkadot',
     account?.address,
     api,
   );
 
   const content = useMemo(() => {
+    if (inProgress) {
+      return <LoadingView />;
+    }
     if (detail?.data?.judgements.length) {
       // there is already judgements to display
       return (
@@ -44,7 +47,7 @@ function MyIdentity(props: PropTypes) {
 
     // there is `setIdentity`, but no judgements are provided
     return <RequestJudgement />;
-  }, [isNaked, detail]);
+  }, [account, display, isNaked, detail]);
 
   return (
     <GenericNavigationLayout

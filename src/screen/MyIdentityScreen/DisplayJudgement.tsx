@@ -28,6 +28,7 @@ import {ITuple} from '@polkadot/types/types';
 import {BalanceOf, AccountId} from '@polkadot/types/interfaces';
 import {Vec} from '@polkadot/types';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
+
 const {height} = Dimensions.get('window');
 
 type PropTypes = {
