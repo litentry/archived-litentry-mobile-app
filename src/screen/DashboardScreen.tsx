@@ -57,12 +57,6 @@ function DashboardScreen({
   const account = accounts?.[0];
   const theme = useTheme();
 
-  const tips = useTreasuryTips();
-
-  if (tips) {
-    console.log('TIPS *******', tips);
-  }
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const startTx = useCallback(async () => {
     // const info = {
