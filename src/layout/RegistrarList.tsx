@@ -1,14 +1,12 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import withRegistrarList, {InjectedPropTypes} from 'src/hoc/withRegistrarList';
+import {BN_ZERO, formatBalance} from '@polkadot/util';
 import {Text} from '@ui-kitten/components';
+import withRegistrarList, {InjectedPropTypes} from 'src/hoc/withRegistrarList';
 import globalStyles, {standardPadding, monofontFamily} from 'src/styles';
 import StatInfoBlock from 'presentational/StatInfoBlock';
 import Padder from 'presentational/Padder';
-import {sortBy} from 'lodash';
-import {BN_ZERO, formatBalance} from '@polkadot/util';
 import RegistrarTeaser from './RegistrarTeaser';
-import {RegistrarInfo} from '@polkadot/types/interfaces';
 
 type PropTypes = {};
 
