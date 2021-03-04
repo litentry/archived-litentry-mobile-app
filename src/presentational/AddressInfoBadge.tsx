@@ -12,7 +12,7 @@ import useAccountDetail from 'src/hook/useAccountDetail';
 import {ApiPromise} from '@polkadot/api';
 
 type PropTypes = {
-  network: NetworkType | null;
+  network: NetworkType | undefined;
   address: string;
   api?: ApiPromise;
 };

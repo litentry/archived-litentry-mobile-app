@@ -133,10 +133,10 @@ function DashboardScreen({
               ]}>
               <ScrollView style={styles.scrollView}>
                 <CouncilSummaryTeaser
-                  onMorePress={() => alert('Navigate to Council Screen')}
+                  onMorePress={() => Alert.alert('Navigate to Council Screen')}
                 />
                 <TreasurySummaryTeaser
-                  onMorePress={() => alert('Navigate to Treasury Screen')}
+                  onMorePress={() => Alert.alert('Navigate to Treasury Screen')}
                 />
                 <TipsSummaryTeaser
                   onMorePress={() => alert('Navigate to Tips Screen')}

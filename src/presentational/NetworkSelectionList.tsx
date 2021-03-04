@@ -34,11 +34,14 @@ function NetworkSelectionList(props: PropTypes) {
           setSelectedIndex(index);
           onSelect(items[index]);
         }}>
-        {items.map((item) => (
-          <Radio checked={isEqual(item.ws, selected.ws)} key={item.ws[0]}>
-            {item.name}
-          </Radio>
-        ))}
+        {items.map((item, index) => {
+          const key = item.ws ? item.ws[0] : `key-${index}`;
+          return (
+            <Radio checked={isEqual(item.ws, selected.ws)} key={key}>
+              {item.name}
+            </Radio>
+          );
+        })}
       </RadioGroup>
     </Layout>
   );
