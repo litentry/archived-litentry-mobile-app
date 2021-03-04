@@ -1,80 +1,69 @@
-import React, {useContext, useEffect} from 'react';
+import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {hexToString} from '@polkadot/util';
 import {Card, Layout, Text} from '@ui-kitten/components';
 import {useTreasuryTips} from 'src/hook/useTreasuryTips';
 import StatInfoBlock from 'presentational/StatInfoBlock';
 import SeactionTeaserContainer from 'presentational/SectionTeaserContainer';
 import AddressInlineTeaser from './AddressInlineTeaser';
-import {useCall} from 'src/hook/useCall';
-import {Option, Bytes} from '@polkadot/types';
-import {ChainApiContext} from 'context/ChainApiContext';
 import {Hash} from '@polkadot/types/interfaces';
+import {monofontFamily, standardPadding} from 'src/styles';
+import {useTipReason} from 'src/hook/useTipReason';
 
-const transformTip = {
-  transform: (optBytes: Option<Bytes>) =>
-    optBytes.isSome ? hexToString(optBytes.unwrap().toHex()) : null,
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  tipReasonText: {
+    fontSize: 14,
+    color: '#ccc',
+    fontFamily: monofontFamily,
+    paddingVertical: standardPadding,
+  },
+});
+
+function TipReason({reasonHash}: {reasonHash: Hash}) {
+  const reasonText = useTipReason(reasonHash);
+
+  return <Text style={styles.tipReasonText}>{reasonText}</Text>;
+}
+
+type TipsSummaryTeaserProps = {
+  onMorePress: () => void;
 };
 
-function TipsSummaryTeaser() {
+function TipsSummaryTeaser({onMorePress}: TipsSummaryTeaserProps) {
   const tips = useTreasuryTips();
 
-  if (!tips[0]) {
+  if (tips.length < 1) {
     return null;
   }
 
-  const tip = tips[0][1];
+  const latestTip = tips[tips.length - 1][1];
 
-  // TODO create a badge component ??
   return (
     <SeactionTeaserContainer
       title={`Tips (${tips.length})`}
-      onMorePress={() => alert('navigate to tips list')}>
+      onMorePress={onMorePress}>
       <>
         <Layout>
           <Card onPress={() => alert('navigate to tip detail')}>
-            <Text category="c2" style={{textAlign: 'center'}}>
-              Latest Tip
-            </Text>
-            <View>
+            <View style={styles.container}>
               <StatInfoBlock title="Who">
-                <AddressInlineTeaser address={String(tip.who)} />
+                <AddressInlineTeaser address={String(latestTip.who)} />
               </StatInfoBlock>
               <StatInfoBlock title="Finder">
-                <AddressInlineTeaser address={String(tip.finder)} />
+                <AddressInlineTeaser address={String(latestTip.finder)} />
               </StatInfoBlock>
             </View>
-            <TipReason reasonHash={tip.reason} />
+            <StatInfoBlock title="Reason">
+              <TipReason reasonHash={latestTip.reason} />
+            </StatInfoBlock>
           </Card>
         </Layout>
       </>
     </SeactionTeaserContainer>
   );
 }
-
-function useTipReason(hash: Hash) {
-  const {api} = useContext(ChainApiContext);
-
-  const reasonText = useCall<string | null>(
-    api?.query.tips.reasons,
-    [hash],
-    transformTip,
-  );
-
-  return reasonText || hash.toHex();
-}
-
-function TipReason({reasonHash}: {reasonHash: Hash}) {
-  const reasonText = useTipReason(reasonHash);
-
-  return <StatInfoBlock title="Reason">{reasonText}</StatInfoBlock>;
-}
-
-// const styles = StyleSheet.create({
-// container: {
-// flexDirection: 'row',
-// justifyContent: 'space-between',
-// },
-// });
 
 export default TipsSummaryTeaser;

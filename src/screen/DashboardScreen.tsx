@@ -146,7 +146,9 @@ function DashboardScreen({
                 <TreasurySummaryTeaser
                   onMorePress={() => alert('Navigate to Treasury Screen')}
                 />
-                <TipsSummaryTeaser />
+                <TipsSummaryTeaser
+                  onMorePress={() => alert('Navigate to Tips Screen')}
+                />
               </ScrollView>
             </View>
           </>
