@@ -28,6 +28,8 @@ import TreasurySummaryTeaser from 'layout/TreasurySummaryTeaser';
 import withNetworkSelect, {
   InjectedPropTypes as NetworkSelectInjectedPropTypes,
 } from 'src/hoc/withNetworkSelect';
+import {useTreasuryTips} from 'src/hook/useTreasuryTips';
+import TipsSummaryTeaser from 'layout/TipsSummaryTeaser';
 
 type PropTypes = {navigation: DrawerNavigationProp<{}>};
 
@@ -98,6 +100,9 @@ function DashboardScreen({
                 />
                 <TreasurySummaryTeaser
                   onMorePress={() => alert('Navigate to Treasury Screen')}
+                />
+                <TipsSummaryTeaser
+                  onMorePress={() => alert('Navigate to Tips Screen')}
                 />
               </ScrollView>
             </View>
