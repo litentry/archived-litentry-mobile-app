@@ -47,7 +47,13 @@ function MyIdentity(props: PropTypes) {
     }
 
     // there is `setIdentity`, but no judgements are provided
-    return <RequestJudgement />;
+    return (
+      <RequestJudgement
+        display={display}
+        detail={detail}
+        address={account?.address}
+      />
+    );
   }, [inProgress, account, display, isNaked, detail]);
 
   return (

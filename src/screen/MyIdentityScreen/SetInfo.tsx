@@ -74,6 +74,7 @@ function SetInfo({address}: PropTypes) {
               </Text>
             )}
           />
+
           <Padder scale={1} />
           <Button onPress={handleOpenForm}>Set Identity</Button>
         </Layout>
