@@ -10,6 +10,7 @@
     "isolatedModules": true,
     "strict": true,
     "moduleResolution": "node",
+    "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
       "context/*": ["src/context/*"],
