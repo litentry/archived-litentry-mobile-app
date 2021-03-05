@@ -12,7 +12,8 @@
     "prettier": "./node_modules/.bin/prettier --ignore-path .gitignore \"**/*.+(js|ts|tsx|json)\"",
     "nodeify": "rn-nodeify --hack --install process,crypto,events,constant,console,stream,url,util",
     "validate": "./node_modules/.bin/npm-run-all --parallel check-types lint",
-    "postinstall": "npm run nodeify"
+    "postinstall": "npm run nodeify",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@eva-design/eva": "^2.0.0",
@@ -120,13 +121,8 @@
     "_stream_passthrough": "readable-stream/passthrough",
     "stream": "stream-browserify"
   },
-  "husky": {
-    "hooks": {
-      "pre-push": "yarn check-types && lint-staged"
-    }
-  },
   "lint-staged": {
-    "*.+(js|ts|tsx)": "eslint --fix",
-    "*.+(js|ts|tsx|json)": "prettier --write"
+    "*.+(ts|tsx)": "eslint --fix",
+    "*.+(ts|tsx|json)": "prettier --write"
   }
 }
