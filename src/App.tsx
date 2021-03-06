@@ -5,7 +5,7 @@ import {EvaIconsPack} from '@ui-kitten/eva-icons';
 import {ThemeContext} from './context/ThemeProvider';
 import {
   createDrawerNavigator,
-  DrawerNavigationProp,
+  DrawerContentComponentProps,
 } from '@react-navigation/drawer';
 import DashboardScreen from 'screen/DashboardScreen';
 import WebviewScreen from 'screen/WebviewScreen';
@@ -13,7 +13,6 @@ import DevScreen from 'screen/DevScreen';
 import DrawerScreen from 'screen/DrawerScreen';
 import ChainApiContextProvider from 'context/ChainApiContext';
 import AccountContextProvider from 'context/AccountContextProvider';
-import {DrawerParamList} from './types';
 import BalanceContextProvider from 'context/BalanceContext';
 import TxContextProvider from 'context/TxContext';
 import RegistrarListScreen from 'screen/RegistrarListScreen';
@@ -28,11 +27,7 @@ import TestScreen from 'screen/TestScreen';
 
 const Drawer = createDrawerNavigator();
 
-type PropTypes = {
-  navigation: DrawerNavigationProp<DrawerParamList>;
-};
-
-const DrawerContentComp = (props: PropTypes) => {
+const DrawerContentComp = (props: DrawerContentComponentProps) => {
   return <DrawerScreen {...props} />;
 };
 

@@ -16,10 +16,9 @@ import globalStyles, {standardPadding, monofontFamily} from 'src/styles';
 import {ThemeContext} from 'context/ThemeProvider';
 import logo from '../image/logo.png';
 import Padder from 'presentational/Padder';
-import {DrawerParamList} from 'src/types';
 import {AccountContext} from 'context/AccountContextProvider';
 import {NetworkContext} from 'context/NetworkContext';
-import {DrawerNavigationProp} from '@react-navigation/drawer';
+import {DrawerContentComponentProps} from '@react-navigation/drawer';
 import AddressInfoBadge from 'presentational/AddressInfoBadge';
 import Identicon from '@polkadot/reactnative-identicon';
 import {BalanceContext} from 'context/BalanceContext';
@@ -161,11 +160,7 @@ const accountDrawerViewStyles = StyleSheet.create({
 
 const ConnectedAccountDrawer = withAddAccount(AccountDrawerView);
 
-type PropTypes = {
-  navigation: DrawerNavigationProp<DrawerParamList>;
-};
-
-function DrawerScreen({navigation}: PropTypes) {
+function DrawerScreen({navigation}: DrawerContentComponentProps) {
   const {theme, toggleTheme} = useContext(ThemeContext);
 
   return (

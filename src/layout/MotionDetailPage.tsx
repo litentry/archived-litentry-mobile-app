@@ -127,13 +127,15 @@ function MotionDetailPage(props: PropTypes) {
                 <Padder scale={0.5} />
                 <View>
                   <Text style={globalStyles.aye}>
-                    Aye ({motion.votes?.ayes.length}/
-                    {motion.votes?.threshold.toNumber()})
+                    {`Aye (${
+                      motion.votes?.ayes.length
+                    }/${motion.votes?.threshold.toNumber()})`}
                   </Text>
                   <Padder scale={0.5} />
                   <Text style={globalStyles.nay}>
-                    Nay ({motion.votes?.nays.length}/
-                    {motion.votes?.threshold.toNumber()})
+                    {`Nay (${
+                      motion.votes?.nays.length
+                    }/${motion.votes?.threshold.toNumber()})`}
                   </Text>
                   <Padder scale={0.5} />
                 </View>

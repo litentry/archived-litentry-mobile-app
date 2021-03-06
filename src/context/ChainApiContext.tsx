@@ -15,6 +15,11 @@ import {createLogger} from 'src/utils';
 import {formatBalance} from '@polkadot/util';
 import {setSS58Format} from '@polkadot/util-crypto';
 import {defaults as addressDefaults} from '@polkadot/util-crypto/address/defaults';
+import {U32} from '@polkadot/types';
+import registry from 'src/typeRegistry';
+import LoadingView from 'presentational/LoadingView';
+import {Icon} from '@ui-kitten/components';
+import globalStyles, {colorGreen} from 'src/styles';
 
 type ApiChainStatusType = 'unknown' | 'connected' | 'disconnected' | 'ready';
 type ChainApiContextValueType = {
@@ -24,10 +29,6 @@ type ChainApiContextValueType = {
   addSection: (section: string) => void;
   removeSection: (section: string) => void;
 };
-import registry from 'src/typeRegistry';
-import LoadingView from 'presentational/LoadingView';
-import {Icon} from '@ui-kitten/components';
-import globalStyles, {colorGreen} from 'src/styles';
 
 export const DEFAULT_DECIMALS = registry.createType('u32', 12);
 export const DEFAULT_SS58 = registry.createType('u32', addressDefaults.prefix);
@@ -102,11 +103,13 @@ function ChainApiContextProvider(props: PropTypes) {
 
     setInProgress(true);
     logger.debug(
-      `ChainApiContext: trying to connected to (${wsConnectionIndex}) ${currentNetwork.ws[wsConnectionIndex]}`,
+      `ChainApiContext: trying to connected to (${wsConnectionIndex}) ${
+        currentNetwork.ws![wsConnectionIndex]
+      }`,
     );
 
     // const provider = new WsProvider(currentNetwork.ws[wsConnectionIndex]);
-    const provider = new WsProvider(currentNetwork.ws[wsConnectionIndex]);
+    const provider = new WsProvider(currentNetwork.ws![wsConnectionIndex]);
     const apiPromise = new ApiPromise({provider});
 
     function handleConnect() {
@@ -120,11 +123,13 @@ function ChainApiContextProvider(props: PropTypes) {
 
       if (currentNetwork) {
         setWsConnectionIndex(
-          (wsConnectionIndex + 1) % currentNetwork.ws.length,
+          (wsConnectionIndex + 1) % currentNetwork.ws!.length,
         );
 
         logger.debug(
-          `ChainApiContext: switching ws provider to (${wsConnectionIndex}) ${currentNetwork.ws[wsConnectionIndex]}`,
+          `ChainApiContext: switching ws provider to (${wsConnectionIndex}) ${
+            currentNetwork.ws![wsConnectionIndex]
+          }`,
         );
       }
       retryCounter.current = retryCounter.current + 1;
@@ -132,7 +137,7 @@ function ChainApiContextProvider(props: PropTypes) {
       setStatus('disconnected');
       throw new Error(
         `ws connect to ${
-          currentNetwork?.ws[wsConnectionIndex] || 'unknown ws connection'
+          currentNetwork?.ws![wsConnectionIndex] || 'unknown ws connection'
         } failed`,
       );
     }
@@ -140,7 +145,7 @@ function ChainApiContextProvider(props: PropTypes) {
     function handleReady() {
       logger.debug(
         `ChainApiContext: Api ready at ${wsConnectionIndex} ${
-          currentNetwork?.ws[wsConnectionIndex] || 'Unknown'
+          currentNetwork?.ws![wsConnectionIndex] || 'Unknown'
         }`,
       );
       setInProgress(false);
@@ -153,7 +158,6 @@ function ChainApiContextProvider(props: PropTypes) {
       setInProgress(false);
     }
     apiPromise.on('connected', handleConnect);
-
     apiPromise.on('disconnected', handleDisconnect);
     apiPromise.on('ready', handleReady);
     apiPromise.on('error', handleError);
@@ -187,6 +191,10 @@ function ChainApiContextProvider(props: PropTypes) {
         const ss58Format = properties.ss58Format
           .unwrapOr(DEFAULT_SS58)
           .toNumber();
+        const unwrappedTokenDecimals = properties.tokenDecimals.unwrapOr(
+          DEFAULT_DECIMALS,
+        ) as U32;
+        const tokenDecimals = unwrappedTokenDecimals.toNumber();
 
         setSS58Format(ss58Format);
         registry.setChainProperties(

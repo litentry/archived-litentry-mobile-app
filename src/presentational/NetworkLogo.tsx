@@ -7,6 +7,8 @@ import {SupportedNetworkType} from 'src/types';
 const PlaceholderImg = null;
 
 const LogoMap = {
+  ethereum: PlaceholderImg,
+  litentry_test: PlaceholderImg,
   polkadot: PolkadotLog,
   reserved1: PlaceholderImg,
   kusama: KusamaLogo,

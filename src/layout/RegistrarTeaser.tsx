@@ -1,4 +1,5 @@
 import React from 'react';
+import BN from 'bn.js';
 import {StyleSheet, View} from 'react-native';
 import AddressInlineTeaser from './AddressInlineTeaser';
 import {Text} from '@ui-kitten/components';
@@ -8,7 +9,7 @@ import {standardPadding} from 'src/styles';
 
 type PropTypes = {
   address: string;
-  fee: Balance;
+  fee: Balance | BN;
 };
 
 function RegistrarTeaser(props: PropTypes) {
