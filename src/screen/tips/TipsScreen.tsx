@@ -1,22 +1,22 @@
 import React from 'react';
+import {Text} from '@ui-kitten/components';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
+import {RouteProp} from '@react-navigation/native';
 import GenericNavigationLayout from 'presentational/GenericNavigationLayout';
-import RegistrarList from 'layout/RegistrarList';
 
-type PropTypes = {
+type ScreenProps = {
   navigation: DrawerNavigationProp<DrawerParamList>;
+  route: RouteProp<DashboardStackParamList, 'TipDetail'>;
 };
 
-function RegistrarListScreen(props: PropTypes) {
-  const {navigation} = props;
-
+function TipsScreen({navigation}: ScreenProps) {
   return (
     <GenericNavigationLayout
-      title="Registrars"
+      title="Tips"
       onBackPressed={() => navigation.goBack()}>
-      <RegistrarList />
+      <Text>Tips Screen</Text>
     </GenericNavigationLayout>
   );
 }
 
-export default RegistrarListScreen;
+export default TipsScreen;

@@ -1,5 +1,6 @@
 import React from 'react';
-import {StyleSheet, View, Alert} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {Card, Layout, Text} from '@ui-kitten/components';
 import {useTreasuryTips} from 'src/hook/useTreasuryTips';
 import StatInfoBlock from 'presentational/StatInfoBlock';
@@ -8,6 +9,7 @@ import AddressInlineTeaser from './AddressInlineTeaser';
 import {Hash} from '@polkadot/types/interfaces';
 import {monofontFamily, standardPadding} from 'src/styles';
 import {useTipReason} from 'src/hook/useTipReason';
+import {tipDetail} from 'src/navigation/routeKeys';
 
 const styles = StyleSheet.create({
   container: {
@@ -33,6 +35,7 @@ type TipsSummaryTeaserProps = {
 };
 
 function TipsSummaryTeaser({onMorePress}: TipsSummaryTeaserProps) {
+  const navigation = useNavigation();
   const tips = useTreasuryTips();
 
   if (tips.length < 1) {
@@ -47,7 +50,7 @@ function TipsSummaryTeaser({onMorePress}: TipsSummaryTeaserProps) {
       onMorePress={onMorePress}>
       <>
         <Layout>
-          <Card onPress={() => Alert.alert('navigate to tip detail')}>
+          <Card onPress={() => navigation.navigate(tipDetail)}>
             <View style={styles.container}>
               <StatInfoBlock title="Who">
                 <AddressInlineTeaser address={String(latestTip.who)} />

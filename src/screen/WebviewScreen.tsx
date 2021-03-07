@@ -2,7 +2,6 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import RNWebView from 'react-native-webview';
 import {RouteProp} from '@react-navigation/native';
-import {DrawerParamList} from 'src/types';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import GenericNavigationLayout from 'presentational/GenericNavigationLayout';
 

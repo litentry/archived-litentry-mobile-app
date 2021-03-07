@@ -36,8 +36,16 @@ import withNetworkSelect, {
   InjectedPropTypes as NetworkSelectInjectedPropTypes,
 } from 'src/hoc/withNetworkSelect';
 import TipsSummaryTeaser from 'layout/TipsSummaryTeaser';
+import {CompositeNavigationProp} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {tips} from 'src/navigation/routeKeys';
 
-type PropTypes = {navigation: DrawerNavigationProp<{}>};
+type PropTypes = {
+  navigation: CompositeNavigationProp<
+    StackNavigationProp<DashboardStackParamList>,
+    DrawerNavigationProp<DrawerParamList>
+  >;
+};
 
 const AddIcon = (props: IconProps) => (
   <Icon {...props} name="person-add-outline" />
@@ -138,7 +146,7 @@ function DashboardScreen({
                   onMorePress={() => Alert.alert('Navigate to Treasury Screen')}
                 />
                 <TipsSummaryTeaser
-                  onMorePress={() => Alert.alert('Navigate to Tips Screen')}
+                  onMorePress={() => navigation.navigate(tips)}
                 />
               </ScrollView>
             </View>
