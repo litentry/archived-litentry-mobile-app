@@ -15,7 +15,6 @@ import {createLogger} from 'src/utils';
 import {formatBalance} from '@polkadot/util';
 import {setSS58Format} from '@polkadot/util-crypto';
 import {defaults as addressDefaults} from '@polkadot/util-crypto/address/defaults';
-import {U32} from '@polkadot/types';
 import registry from 'src/typeRegistry';
 import LoadingView from 'presentational/LoadingView';
 import {Icon} from '@ui-kitten/components';
@@ -191,10 +190,6 @@ function ChainApiContextProvider(props: PropTypes) {
         const ss58Format = properties.ss58Format
           .unwrapOr(DEFAULT_SS58)
           .toNumber();
-        const unwrappedTokenDecimals = properties.tokenDecimals.unwrapOr(
-          DEFAULT_DECIMALS,
-        ) as U32;
-        const tokenDecimals = unwrappedTokenDecimals.toNumber();
 
         setSS58Format(ss58Format);
         registry.setChainProperties(

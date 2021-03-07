@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, Alert} from 'react-native';
 import {Card, Layout, Text} from '@ui-kitten/components';
 import {useTreasuryTips} from 'src/hook/useTreasuryTips';
 import StatInfoBlock from 'presentational/StatInfoBlock';
@@ -47,7 +47,7 @@ function TipsSummaryTeaser({onMorePress}: TipsSummaryTeaserProps) {
       onMorePress={onMorePress}>
       <>
         <Layout>
-          <Card onPress={() => alert('navigate to tip detail')}>
+          <Card onPress={() => Alert.alert('navigate to tip detail')}>
             <View style={styles.container}>
               <StatInfoBlock title="Who">
                 <AddressInlineTeaser address={String(latestTip.who)} />
