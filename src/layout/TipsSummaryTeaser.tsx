@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Card, Layout, Text} from '@ui-kitten/components';
-import {useTreasuryTips} from 'src/hook/useTreasuryTips';
+import {useTips} from 'src/hook/useTips';
 import StatInfoBlock from 'presentational/StatInfoBlock';
 import SeactionTeaserContainer from 'presentational/SectionTeaserContainer';
 import AddressInlineTeaser from './AddressInlineTeaser';
@@ -17,14 +17,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   tipReasonText: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#ccc',
     fontFamily: monofontFamily,
     paddingVertical: standardPadding,
+    textAlign: 'justify',
   },
 });
 
-function TipReason({reasonHash}: {reasonHash: Hash}) {
+export function TipReason({reasonHash}: {reasonHash: Hash}) {
   const reasonText = useTipReason(reasonHash);
 
   return <Text style={styles.tipReasonText}>{reasonText}</Text>;
@@ -36,7 +37,7 @@ type TipsSummaryTeaserProps = {
 
 function TipsSummaryTeaser({onMorePress}: TipsSummaryTeaserProps) {
   const navigation = useNavigation();
-  const tips = useTreasuryTips();
+  const tips = useTips();
 
   if (tips.length < 1) {
     return null;

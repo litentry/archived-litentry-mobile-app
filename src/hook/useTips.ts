@@ -4,7 +4,7 @@ import type {OpenTip, OpenTipTo225} from '@polkadot/types/interfaces';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {useCall} from 'src/hook/useCall';
 
-type Tip = [string, OpenTip | OpenTipTo225];
+export type Tip = [string, OpenTip | OpenTipTo225];
 
 function extractTips(
   tipsWithHashes?: [[string[]], Option<OpenTip>[]],
@@ -35,7 +35,7 @@ function extractTips(
     );
 }
 
-export function useTreasuryTips() {
+export function useTips() {
   const [hashes, setHashes] = useState<string[]>([]);
   const {api} = useContext(ChainApiContext);
 
