@@ -1,11 +1,9 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
 import SafeView from 'presentational/SafeView';
 import {
   TopNavigation,
   Icon,
   IconProps,
-  Layout,
   TopNavigationAction,
   Divider,
   Text,
@@ -27,27 +25,21 @@ function GenericNavigationLayout(props: PropTypes) {
 
   return (
     <SafeView>
-      <Layout style={styles.container}>
-        <TopNavigation
-          alignment="center"
-          title={() => (
-            <Text category="s1" style={{fontFamily: monofontFamily}}>
-              {title}
-            </Text>
-          )}
-          accessoryLeft={() => (
-            <TopNavigationAction onPress={onBackPressed} icon={BackIcon} />
-          )}
-        />
-        <Divider />
-        {children}
-      </Layout>
+      <TopNavigation
+        alignment="center"
+        title={() => (
+          <Text category="s1" style={{fontFamily: monofontFamily}}>
+            {title}
+          </Text>
+        )}
+        accessoryLeft={() => (
+          <TopNavigationAction onPress={onBackPressed} icon={BackIcon} />
+        )}
+      />
+      <Divider />
+      {children}
     </SafeView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {flex: 1},
-});
 
 export default GenericNavigationLayout;
