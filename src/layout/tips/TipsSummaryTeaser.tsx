@@ -1,38 +1,23 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {Card, Layout, Text} from '@ui-kitten/components';
+import {Card, Layout} from '@ui-kitten/components';
 import {useTips} from 'src/hook/useTips';
 import StatInfoBlock from 'presentational/StatInfoBlock';
 import SeactionTeaserContainer from 'presentational/SectionTeaserContainer';
-import AddressInlineTeaser from './AddressInlineTeaser';
-import {Hash} from '@polkadot/types/interfaces';
-import {monofontFamily, standardPadding} from 'src/styles';
-import {useTipReason} from 'src/hook/useTipReason';
+import AddressInlineTeaser from 'layout/AddressInlineTeaser';
 import {tipDetail} from 'src/navigation/routeKeys';
+import TipReason from 'src/layout/tips/TipReason';
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  tipReasonText: {
-    fontSize: 12,
-    color: '#ccc',
-    fontFamily: monofontFamily,
-    paddingVertical: standardPadding,
-    textAlign: 'justify',
-  },
   statInfoBlockContainer: {
     paddingRight: 5,
   },
 });
-
-export function TipReason({reasonHash}: {reasonHash: Hash}) {
-  const reasonText = useTipReason(reasonHash);
-
-  return <Text style={styles.tipReasonText}>{reasonText}</Text>;
-}
 
 type TipsSummaryTeaserProps = {
   onMorePress: () => void;

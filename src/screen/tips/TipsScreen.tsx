@@ -6,7 +6,7 @@ import {RouteProp} from '@react-navigation/native';
 
 import GenericNavigationLayout from 'presentational/GenericNavigationLayout';
 import {useTips} from 'src/hook/useTips';
-import TipTeaser from 'layout/TipTeaser';
+import TipTeaser from 'layout/tips/TipTeaser';
 
 type ScreenProps = {
   navigation: StackNavigationProp<DashboardStackParamList>;

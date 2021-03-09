@@ -35,7 +35,7 @@ import TreasurySummaryTeaser from 'layout/TreasurySummaryTeaser';
 import withNetworkSelect, {
   InjectedPropTypes as NetworkSelectInjectedPropTypes,
 } from 'src/hoc/withNetworkSelect';
-import TipsSummaryTeaser from 'layout/TipsSummaryTeaser';
+import TipsSummaryTeaser from 'layout/tips/TipsSummaryTeaser';
 import {CompositeNavigationProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {tips} from 'src/navigation/routeKeys';

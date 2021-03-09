@@ -11,7 +11,7 @@ import {ChainApiContext} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
 import useAccountDetail from 'src/hook/useAccountDetail';
 import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
-import {TipReason} from 'layout/TipsSummaryTeaser';
+import TipReason from 'layout/tips/TipReason';
 import {monofontFamily} from 'src/styles';
 
 const styles = StyleSheet.create({
