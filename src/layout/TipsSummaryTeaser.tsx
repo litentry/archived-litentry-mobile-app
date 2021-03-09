@@ -23,6 +23,9 @@ const styles = StyleSheet.create({
     paddingVertical: standardPadding,
     textAlign: 'justify',
   },
+  statInfoBlockContainer: {
+    paddingRight: 5,
+  },
 });
 
 export function TipReason({reasonHash}: {reasonHash: Hash}) {
@@ -53,12 +56,16 @@ function TipsSummaryTeaser({onMorePress}: TipsSummaryTeaserProps) {
         <Layout>
           <Card onPress={() => navigation.navigate(tipDetail)}>
             <View style={styles.container}>
-              <StatInfoBlock title="Who">
-                <AddressInlineTeaser address={String(latestTip.who)} />
-              </StatInfoBlock>
-              <StatInfoBlock title="Finder">
-                <AddressInlineTeaser address={String(latestTip.finder)} />
-              </StatInfoBlock>
+              <View style={styles.statInfoBlockContainer}>
+                <StatInfoBlock title="Who">
+                  <AddressInlineTeaser address={String(latestTip.who)} />
+                </StatInfoBlock>
+              </View>
+              <View style={styles.statInfoBlockContainer}>
+                <StatInfoBlock title="Finder">
+                  <AddressInlineTeaser address={String(latestTip.finder)} />
+                </StatInfoBlock>
+              </View>
             </View>
             <StatInfoBlock title="Reason">
               <TipReason reasonHash={latestTip.reason} />
