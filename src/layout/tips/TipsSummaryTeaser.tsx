@@ -37,27 +37,25 @@ function TipsSummaryTeaser({onMorePress}: TipsSummaryTeaserProps) {
     <SeactionTeaserContainer
       title={`Tips (${tips.length})`}
       onMorePress={onMorePress}>
-      <>
-        <Layout>
-          <Card onPress={() => navigation.navigate(tipDetail)}>
-            <View style={styles.container}>
-              <View style={styles.statInfoBlockContainer}>
-                <StatInfoBlock title="Who">
-                  <AddressInlineTeaser address={String(latestTip.who)} />
-                </StatInfoBlock>
-              </View>
-              <View style={styles.statInfoBlockContainer}>
-                <StatInfoBlock title="Finder">
-                  <AddressInlineTeaser address={String(latestTip.finder)} />
-                </StatInfoBlock>
-              </View>
+      <Layout>
+        <Card onPress={() => navigation.navigate(tipDetail)}>
+          <View style={styles.container}>
+            <View style={styles.statInfoBlockContainer}>
+              <StatInfoBlock title="Who">
+                <AddressInlineTeaser address={String(latestTip.who)} />
+              </StatInfoBlock>
             </View>
-            <StatInfoBlock title="Reason">
-              <TipReason reasonHash={latestTip.reason} />
-            </StatInfoBlock>
-          </Card>
-        </Layout>
-      </>
+            <View style={styles.statInfoBlockContainer}>
+              <StatInfoBlock title="Finder">
+                <AddressInlineTeaser address={String(latestTip.finder)} />
+              </StatInfoBlock>
+            </View>
+          </View>
+          <StatInfoBlock title="Reason">
+            <TipReason reasonHash={latestTip.reason} />
+          </StatInfoBlock>
+        </Card>
+      </Layout>
     </SeactionTeaserContainer>
   );
 }
