@@ -8,12 +8,14 @@ import {
   Divider,
   Text,
 } from '@ui-kitten/components';
+import {RenderProp} from '@ui-kitten/components/devsupport';
 import {monofontFamily} from 'src/styles';
 
 type PropTypes = {
   title: string;
   children: React.ReactNode;
   onBackPressed: () => void;
+  rightActions?: RenderProp;
 };
 
 const BackIcon = (props: IconProps) => (
@@ -21,7 +23,7 @@ const BackIcon = (props: IconProps) => (
 );
 
 function GenericNavigationLayout(props: PropTypes) {
-  const {children, title, onBackPressed} = props;
+  const {children, title, onBackPressed, rightActions} = props;
 
   return (
     <SafeView>
@@ -35,6 +37,7 @@ function GenericNavigationLayout(props: PropTypes) {
         accessoryLeft={() => (
           <TopNavigationAction onPress={onBackPressed} icon={BackIcon} />
         )}
+        accessoryRight={rightActions}
       />
       <Divider />
       {children}

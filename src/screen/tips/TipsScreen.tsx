@@ -1,7 +1,7 @@
 import React from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {StyleSheet, View} from 'react-native';
-import {List, Divider} from '@ui-kitten/components';
+import {StyleSheet, View, Alert} from 'react-native';
+import {List, Divider, Icon, TopNavigationAction} from '@ui-kitten/components';
 import {RouteProp} from '@react-navigation/native';
 
 import GenericNavigationLayout from 'presentational/GenericNavigationLayout';
@@ -19,13 +19,23 @@ const styles = StyleSheet.create({
   },
 });
 
+const renderTopNavigationRightActions = () => (
+  <>
+    <TopNavigationAction
+      icon={(props) => <Icon {...props} name="plus-circle-outline" />}
+      onPress={() => Alert.alert('Propose Tip')}
+    />
+  </>
+);
+
 function TipsScreen({navigation}: ScreenProps) {
   const tips = useTips();
 
   return (
     <GenericNavigationLayout
       title="Tips"
-      onBackPressed={() => navigation.goBack()}>
+      onBackPressed={() => navigation.goBack()}
+      rightActions={renderTopNavigationRightActions}>
       <View style={styles.container}>
         <List
           data={tips}
