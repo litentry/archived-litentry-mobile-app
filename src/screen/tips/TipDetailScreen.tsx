@@ -1,11 +1,11 @@
 import React from 'react';
 import {Text} from '@ui-kitten/components';
 import GenericNavigationLayout from 'presentational/GenericNavigationLayout';
-import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {RouteProp} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 type ScreenProps = {
-  navigation: DrawerNavigationProp<DrawerParamList>;
+  navigation: StackNavigationProp<DashboardStackParamList>;
   route: RouteProp<DashboardStackParamList, 'TipDetail'>;
 };
 
