@@ -11,7 +11,7 @@ import {NetworkContext} from 'context/NetworkContext';
 export type InjectedPropTypes = {
   motionDetail: {
     show: (hash: string, votesId: number) => void;
-    motion: ReturnType<typeof mapMotionDetail>;
+    motion: ReturnType<typeof mapMotionDetail> | null;
   };
 };
 
@@ -23,7 +23,7 @@ export function mapMotionDetail(
     ...polkascanData,
     ...deriveData,
     section: deriveData.proposal.section,
-    methodName: deriveData.proposal.methodName,
+    methodName: deriveData.proposal.method,
   };
 }
 

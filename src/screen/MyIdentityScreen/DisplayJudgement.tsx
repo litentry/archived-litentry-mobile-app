@@ -64,7 +64,7 @@ function DisplayJudgement(props: PropTypes) {
     api?.query.identity.subsOf,
     [address],
   );
-  const subAccountsArray = subAccounts?.[1] || [];
+  const subAccountsArray = subAccounts?.[1];
 
   return (
     <ScrollView>
@@ -202,7 +202,7 @@ function DisplayJudgement(props: PropTypes) {
             )}
           />
 
-          {subAccountsArray.length ? (
+          {subAccountsArray && subAccountsArray.length ? (
             <Menu style={{backgroundColor: 'transparent'}}>
               <MenuGroup
                 title={`Sub accounts (${subAccountsArray.length})`}

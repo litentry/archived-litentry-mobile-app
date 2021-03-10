@@ -7,6 +7,7 @@ import withElectionInfo, {
   InjectedPropTypes as ElectionInjectedPropTypes,
 } from 'src/hoc/withElectionInfo';
 import {useNavigation} from '@react-navigation/native';
+import {motionDetail} from 'src/navigation/routeKeys';
 
 type PropTypes = {title: string};
 
@@ -17,7 +18,7 @@ function MotionTeaser(props: PropTypes & ElectionInjectedPropTypes) {
 
   const handleDetail = useCallback(() => {
     if (latestMotion && latestMotion.votes) {
-      navigation.navigate('MotionDetail', {
+      navigation.navigate(motionDetail, {
         hash: latestMotion.hash.toString(),
         id: latestMotion.votes.index.toNumber(),
       });

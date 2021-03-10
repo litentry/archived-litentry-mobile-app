@@ -16,15 +16,15 @@ import globalStyles, {standardPadding, monofontFamily} from 'src/styles';
 import {ThemeContext} from 'context/ThemeProvider';
 import logo from '../image/logo.png';
 import Padder from 'presentational/Padder';
-import {DrawerParamList} from 'src/types';
 import {AccountContext} from 'context/AccountContextProvider';
 import {NetworkContext} from 'context/NetworkContext';
-import {DrawerNavigationProp} from '@react-navigation/drawer';
+import {DrawerContentComponentProps} from '@react-navigation/drawer';
 import AddressInfoBadge from 'presentational/AddressInfoBadge';
 import Identicon from '@polkadot/reactnative-identicon';
 import {BalanceContext} from 'context/BalanceContext';
 import withAddAccount, {InjectedPropTypes} from 'src/hoc/withAddAccount';
 import {ChainApiContext} from 'context/ChainApiContext';
+import {registrarList, webview, devScreen} from 'src/navigation/routeKeys';
 
 function AccountDrawerView({accountAddProps}: InjectedPropTypes) {
   const {show} = useContext(BalanceContext);
@@ -160,11 +160,7 @@ const accountDrawerViewStyles = StyleSheet.create({
 
 const ConnectedAccountDrawer = withAddAccount(AccountDrawerView);
 
-type PropTypes = {
-  navigation: DrawerNavigationProp<DrawerParamList>;
-};
-
-function DrawerScreen({navigation}: PropTypes) {
+function DrawerScreen({navigation}: DrawerContentComponentProps) {
   const {theme, toggleTheme} = useContext(ThemeContext);
 
   return (
@@ -188,7 +184,7 @@ function DrawerScreen({navigation}: PropTypes) {
             accessoryLeft={(props) => (
               <Icon {...props} name="award-outline" animation="zoom" />
             )}
-            onPress={() => navigation.navigate('RegistrarList')}
+            onPress={() => navigation.navigate(registrarList)}
           />
           <Divider />
           <ListItem
@@ -208,7 +204,7 @@ function DrawerScreen({navigation}: PropTypes) {
               <Icon {...props} name="hash-outline" animation="zoom" />
             )}
             onPress={() =>
-              navigation.navigate('Webview', {
+              navigation.navigate(webview, {
                 title: 'About Litentry',
                 uri: 'https://www.litentry.com',
               })
@@ -223,20 +219,7 @@ function DrawerScreen({navigation}: PropTypes) {
                 accessoryLeft={(props) => (
                   <Icon {...props} name="code-outline" animation="zoom" />
                 )}
-                onPress={() => navigation.navigate('DevScreen')}
-              />
-              <Divider />
-              <ListItem
-                title="Test Screen"
-                description="Test screen"
-                accessoryLeft={(props) => (
-                  <Icon
-                    {...props}
-                    name="alert-triangle-outline"
-                    animation="zoom"
-                  />
-                )}
-                onPress={() => navigation.navigate('TestScreen')}
+                onPress={() => navigation.navigate(devScreen)}
               />
               <Divider />
             </>

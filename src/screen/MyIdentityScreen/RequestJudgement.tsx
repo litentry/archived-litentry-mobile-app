@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 import {
   Text,
   Layout,
@@ -22,7 +22,7 @@ import {AddressDetailType} from 'src/types';
 type PropTypes = {
   address: string;
   display: string;
-  detail: AddressDetailType;
+  detail?: AddressDetailType;
 };
 
 const MoreIcon = (props: IconProps) => (
@@ -140,7 +140,5 @@ function RequestJudgement({display, address, detail}: PropTypes) {
     </Layout>
   );
 }
-
-const styles = StyleSheet.create({});
 
 export default RequestJudgement;

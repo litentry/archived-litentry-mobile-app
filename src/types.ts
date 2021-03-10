@@ -74,16 +74,6 @@ export type AddressDetailType =
 
 export type HapticFeedbackType = 'success' | 'warn' | 'error';
 
-export type DrawerParamList = {
-  Dashboard: undefined;
-  RegistrarList: undefined;
-  MotionDetail: {hash: string; id: number};
-  Webview: {uri: string; title: string};
-  DevScreen: undefined;
-  MyIdentity: undefined;
-  TestScreen: undefined;
-};
-
 // Polkadot specific
 export interface AddressIdentity extends DeriveAccountRegistration {
   isGood: boolean;

@@ -1,5 +1,11 @@
 import React, {useContext} from 'react';
-import {StyleSheet, TouchableOpacity, ScrollView, View} from 'react-native';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  View,
+  Alert,
+} from 'react-native';
 import {flowRight as compose} from 'lodash';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import NetworkItem from 'presentational/NetworkItem';
@@ -28,10 +34,17 @@ import TreasurySummaryTeaser from 'layout/TreasurySummaryTeaser';
 import withNetworkSelect, {
   InjectedPropTypes as NetworkSelectInjectedPropTypes,
 } from 'src/hoc/withNetworkSelect';
-import {useTreasuryTips} from 'src/hook/useTreasuryTips';
-import TipsSummaryTeaser from 'layout/TipsSummaryTeaser';
+import TipsSummaryTeaser from 'layout/tips/TipsSummaryTeaser';
+import {CompositeNavigationProp} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {tips} from 'src/navigation/routeKeys';
 
-type PropTypes = {navigation: DrawerNavigationProp<{}>};
+type PropTypes = {
+  navigation: CompositeNavigationProp<
+    StackNavigationProp<DashboardStackParamList>,
+    DrawerNavigationProp<DrawerParamList>
+  >;
+};
 
 const AddIcon = (props: IconProps) => (
   <Icon {...props} name="person-add-outline" />
@@ -96,13 +109,13 @@ function DashboardScreen({
               ]}>
               <ScrollView style={styles.scrollView}>
                 <CouncilSummaryTeaser
-                  onMorePress={() => alert('Navigate to Council Screen')}
+                  onMorePress={() => Alert.alert('Navigate to Council Screen')}
                 />
                 <TreasurySummaryTeaser
-                  onMorePress={() => alert('Navigate to Treasury Screen')}
+                  onMorePress={() => Alert.alert('Navigate to Treasury Screen')}
                 />
                 <TipsSummaryTeaser
-                  onMorePress={() => alert('Navigate to Tips Screen')}
+                  onMorePress={() => navigation.navigate(tips)}
                 />
               </ScrollView>
             </View>
