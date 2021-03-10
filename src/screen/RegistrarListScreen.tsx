@@ -1,6 +1,5 @@
 import React from 'react';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {DrawerParamList} from 'src/types';
 import GenericNavigationLayout from 'presentational/GenericNavigationLayout';
 import RegistrarList from 'layout/RegistrarList';
 

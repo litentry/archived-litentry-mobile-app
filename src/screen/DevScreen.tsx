@@ -2,7 +2,6 @@ import React, {useContext, useState, useRef, useCallback} from 'react';
 import {Layout, Button, ListItem, Divider, Text} from '@ui-kitten/components';
 import GenericNavigationLayout from 'presentational/GenericNavigationLayout';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {DrawerParamList} from 'src/types';
 import {AccountContext} from 'context/AccountContextProvider';
 import {
   InAppNotificationContext,

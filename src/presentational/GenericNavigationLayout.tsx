@@ -1,21 +1,21 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
 import SafeView from 'presentational/SafeView';
 import {
   TopNavigation,
   Icon,
   IconProps,
-  Layout,
   TopNavigationAction,
   Divider,
   Text,
 } from '@ui-kitten/components';
+import {RenderProp} from '@ui-kitten/components/devsupport';
 import {monofontFamily} from 'src/styles';
 
 type PropTypes = {
   title: string;
   children: React.ReactNode;
   onBackPressed: () => void;
+  rightActions?: RenderProp;
 };
 
 const BackIcon = (props: IconProps) => (
@@ -23,31 +23,26 @@ const BackIcon = (props: IconProps) => (
 );
 
 function GenericNavigationLayout(props: PropTypes) {
-  const {children, title, onBackPressed} = props;
+  const {children, title, onBackPressed, rightActions} = props;
 
   return (
     <SafeView>
-      <Layout style={styles.container}>
-        <TopNavigation
-          alignment="center"
-          title={() => (
-            <Text category="s1" style={{fontFamily: monofontFamily}}>
-              {title}
-            </Text>
-          )}
-          accessoryLeft={() => (
-            <TopNavigationAction onPress={onBackPressed} icon={BackIcon} />
-          )}
-        />
-        <Divider />
-        {children}
-      </Layout>
+      <TopNavigation
+        alignment="center"
+        title={() => (
+          <Text category="s1" style={{fontFamily: monofontFamily}}>
+            {title}
+          </Text>
+        )}
+        accessoryLeft={() => (
+          <TopNavigationAction onPress={onBackPressed} icon={BackIcon} />
+        )}
+        accessoryRight={rightActions}
+      />
+      <Divider />
+      {children}
     </SafeView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {flex: 1},
-});
 
 export default GenericNavigationLayout;
