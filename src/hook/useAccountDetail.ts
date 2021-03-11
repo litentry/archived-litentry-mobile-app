@@ -64,7 +64,7 @@ function useAccountDetail(
       console.log('unsub is called');
       localUnsub && localUnsub();
     };
-  }, [api, identityAddress, network]);
+  }, [api, identityAddress, network, address]);
 
   const displayFull = subAccountDisplay
     ? `${display}/${subAccountDisplay}`
