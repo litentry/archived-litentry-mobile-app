@@ -12,7 +12,7 @@ import LoadingView from 'presentational/LoadingView';
 
 type PropTypes = {address: string};
 
-function MyIdentity(props: PropTypes) {
+function MyIdentity() {
   const navigation = useNavigation();
 
   const {accounts} = useContext(AccountContext);

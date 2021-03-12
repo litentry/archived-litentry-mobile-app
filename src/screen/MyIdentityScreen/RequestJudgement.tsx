@@ -28,6 +28,7 @@ type PropTypes = {
 const MoreIcon = (props: IconProps) => (
   <Icon {...props} pack="ionic" name="ios-apps-outline" />
 );
+
 function RequestJudgement({display, address, detail}: PropTypes) {
   return (
     <Layout style={globalStyles.paddedContainer}>
