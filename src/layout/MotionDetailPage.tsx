@@ -148,7 +148,9 @@ function MotionDetailPage(props: PropTypes) {
             <Text category="h6">Votes</Text>
             {motion.votes.ayes.length ? (
               motion.votes.ayes.map((vote) => (
-                <VoteItem key={vote.toString()} vote={vote} type="aye" />
+                <View style={styles.voteContainer}>
+                  <VoteItem key={vote.toString()} vote={vote} type="aye" />
+                </View>
               ))
             ) : (
               <>
@@ -158,7 +160,9 @@ function MotionDetailPage(props: PropTypes) {
             )}
             {motion.votes.nays.length ? (
               motion.votes.nays.map((vote) => (
-                <VoteItem key={vote.toString()} vote={vote} type="nay" />
+                <View style={styles.voteContainer}>
+                  <VoteItem key={vote.toString()} vote={vote} type="nay" />
+                </View>
               ))
             ) : (
               <>
@@ -225,6 +229,9 @@ const styles = StyleSheet.create({
   },
   votesContainer: {
     marginTop: standardPadding * 2,
+  },
+  voteContainer: {
+    paddingVertical: standardPadding / 2,
   },
   hackPolkassemblyTextWidth: {
     width: 70,
