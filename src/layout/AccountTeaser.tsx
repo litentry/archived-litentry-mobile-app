@@ -49,8 +49,10 @@ function AccountTeaser(props: PropTypes) {
     api,
   );
 
-  const handleIconPressed = () => {
-    navigation.navigate('MyIdentity');
+  const handleIconPressed = (addr?: string) => {
+    if (addr) {
+      navigation.navigate('MyIdentity', {address: addr});
+    }
   };
 
   const renderCopyIcon = () => (
@@ -72,7 +74,7 @@ function AccountTeaser(props: PropTypes) {
     <Layout
       level={props.level}
       style={[globalStyles.paddedContainer, styles.container]}>
-      <TouchableOpacity onPress={handleIconPressed}>
+      <TouchableOpacity onPress={() => handleIconPressed(account?.address)}>
         <Identicon value={address} size={60} />
       </TouchableOpacity>
       {display ? (

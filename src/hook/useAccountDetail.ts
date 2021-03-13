@@ -22,7 +22,9 @@ function useAccountDetail(
     if (
       api &&
       identityAddress &&
-      (network === 'polkadot' || network === 'kusama')
+      (network === 'polkadot' || //TODO: this looks shit
+        network === 'kusama' ||
+        network === 'litentry_test')
     ) {
       api?.query.identity
         ?.identityOf(identityAddress, (registration) => {

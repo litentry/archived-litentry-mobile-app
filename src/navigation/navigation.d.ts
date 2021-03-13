@@ -15,5 +15,5 @@ type DrawerParamList = {
   RegistrarList: undefined;
   Webview: {uri: string; title: string};
   DevScreen: undefined;
-  MyIdentity: undefined;
+  MyIdentity: {address: string};
 };

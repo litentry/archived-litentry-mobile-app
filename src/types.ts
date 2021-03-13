@@ -68,7 +68,7 @@ export type AccountAddressType = {
 export type AddressDetailType =
   | {network: 'ethereum'; data: null}
   | {
-      network: 'polkadot' | 'kusama';
+      network: 'polkadot' | 'kusama' | 'litentry_test';
       data?: Registration;
     };
 
