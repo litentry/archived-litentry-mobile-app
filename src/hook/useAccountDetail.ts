@@ -62,7 +62,7 @@ function useAccountDetail(
       setInProgress(false);
       localUnsub && localUnsub();
     };
-  }, [api, identityAddress, network]);
+  }, [api, identityAddress, network, address]);
 
   const displayFull = subAccountDisplay
     ? `${display}/${subAccountDisplay}`
