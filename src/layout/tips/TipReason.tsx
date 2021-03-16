@@ -9,7 +9,7 @@ import {monofontFamily, standardPadding} from 'src/styles';
 const styles = StyleSheet.create({
   tipReasonText: {
     fontSize: 12,
-    color: '#ccc',
+    color: '#99a7a3',
     fontFamily: monofontFamily,
     paddingVertical: standardPadding,
     textAlign: 'justify',
