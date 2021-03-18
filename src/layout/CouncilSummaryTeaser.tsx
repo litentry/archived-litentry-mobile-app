@@ -5,7 +5,6 @@ import globalStyles from 'src/styles';
 import withElectionInfo, {InjectedPropTypes} from 'src/hoc/withElectionInfo';
 import Padder from 'presentational/Padder';
 import AddressInlineTeaser from './AddressInlineTeaser';
-import MotionTeaser from './MotionTeaser';
 import SeactionTeaserContainer from 'presentational/SectionTeaserContainer';
 import {useBlockTime} from 'src/hook/useBlockTime';
 import ProgressChartWidget from 'presentational/ProgressWidget';
@@ -52,7 +51,6 @@ function CouncilSummaryTeaser(props: PropTypes & InjectedPropTypes) {
           </Card>
         </Layout>
       </View>
-      <MotionTeaser title="Latest Motion" />
     </SeactionTeaserContainer>
   );
 }

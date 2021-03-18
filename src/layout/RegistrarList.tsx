@@ -21,7 +21,12 @@ function RegistrarList(props: PropTypes & InjectedPropTypes) {
     );
   }
 
-  const sorted = registrars.sort((a, b) => {
+  const validRegistrars = registrars.filter((registrar) => {
+    // filter out the ones with fee is zero
+    const unwraped = registrar.unwrapOr({fee: BN_ZERO, account: ''});
+    return unwraped.fee.gt(BN_ZERO);
+  });
+  const sorted = validRegistrars.sort((a, b) => {
     if (
       a.unwrapOr({fee: BN_ZERO}).fee.toNumber() >
       b.unwrapOr({fee: BN_ZERO}).fee.toNumber()
@@ -38,7 +43,7 @@ function RegistrarList(props: PropTypes & InjectedPropTypes) {
       <View style={styles.card}>
         <View style={globalStyles.spaceBetweenRowContainer}>
           <StatInfoBlock title="#Reg. Count">
-            <Text style={styles.number}>{String(registrars.length)}</Text>
+            <Text style={styles.number}>{String(validRegistrars.length)}</Text>
           </StatInfoBlock>
           <StatInfoBlock title="Lowest Fee">
             {formatBalance(lowestFee.fee)}
@@ -52,7 +57,7 @@ function RegistrarList(props: PropTypes & InjectedPropTypes) {
       <Padder scale={1} />
       <Text category="h6">Registrar List</Text>
       <View style={styles.registrarList}>
-        {registrars.map((registrar) => {
+        {validRegistrars.map((registrar) => {
           const unwraped = registrar.unwrapOr({fee: BN_ZERO, account: ''});
 
           return (
