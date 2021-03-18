@@ -1,10 +1,10 @@
-import React, {useContext, useCallback} from 'react';
+import React, {useContext} from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
-  Alert,
   ScrollView,
   View,
+  Alert,
 } from 'react-native';
 import {flowRight as compose} from 'lodash';
 import ScreenNavigation from 'layout/ScreenNavigation';
@@ -23,7 +23,6 @@ import {
 import {ChainApiContext} from 'context/ChainApiContext';
 import {BalanceContext} from 'context/BalanceContext';
 import {AccountContext} from 'context/AccountContextProvider';
-import {TxContext} from 'context/TxContext';
 import FadeInAnimatedView from 'presentational/FadeInAnimatedView';
 import withAddAccount, {
   InjectedPropTypes as AddAccountInjectedPropTypes,
@@ -59,38 +58,9 @@ function DashboardScreen({
   const {show} = useContext(BalanceContext);
   const {accounts} = useContext(AccountContext);
 
-  const {status, api} = useContext(ChainApiContext);
-  const {start} = useContext(TxContext);
+  const {status} = useContext(ChainApiContext);
   const account = accounts?.[0];
   const theme = useTheme();
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const startTx = useCallback(async () => {
-    const info = {
-      display: {raw: 'RN'},
-      email: {
-        none: null,
-      },
-      legal: {
-        none: null,
-      },
-      riot: {
-        none: null,
-      },
-      twitter: {
-        none: null,
-      },
-      web: {
-        none: null,
-      },
-    };
-
-    if (account && api) {
-      await start(api, account.address, 'identity.setIdentity', [info]);
-    } else {
-      Alert.alert('account/api is not ready');
-    }
-  }, [account, api, start]);
 
   const renderTitle = () => {
     return (
@@ -116,7 +86,6 @@ function DashboardScreen({
         renderTitle={renderTitle}
       />
       <Divider style={{height: 2}} />
-      <Button onPress={startTx}>Test Tx</Button>
       <FadeInAnimatedView>
         {!account ? (
           <Layout style={styles.container} level="1">

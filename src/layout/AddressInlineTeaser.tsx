@@ -4,17 +4,18 @@ import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
 import Identicon from '@polkadot/reactnative-identicon';
 import {ChainApiContext} from 'context/ChainApiContext';
 import Padder from 'presentational/Padder';
-import {standardPadding, monofontFamily} from 'src/styles';
+import {monofontFamily} from 'src/styles';
 import {Text} from '@ui-kitten/components';
 import useAccountDetail from 'src/hook/useAccountDetail';
 import {NetworkContext} from 'context/NetworkContext';
 
 type PropTypes = {
   address: string;
+  fullWidth?: boolean;
 };
 
 function AddressInlineTeaser(props: PropTypes) {
-  const {address} = props;
+  const {address, fullWidth = false} = props;
   const {api} = useContext(ChainApiContext);
   const {currentNetwork} = useContext(NetworkContext);
   const {display, detail} = useAccountDetail(currentNetwork?.key, address, api);
@@ -25,6 +26,7 @@ function AddressInlineTeaser(props: PropTypes) {
       <Padder scale={0.5} />
       {display ? (
         <AccountInfoInlineTeaser
+          fullWidth={fullWidth}
           display={display}
           judgements={detail?.data?.judgements}
         />
@@ -44,7 +46,6 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: standardPadding,
   },
   bareAddress: {
     fontWeight: 'bold',

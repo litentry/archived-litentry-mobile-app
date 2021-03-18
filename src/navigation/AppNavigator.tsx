@@ -9,6 +9,7 @@ import TipDetailScreen from 'screen/tips/TipDetailScreen';
 import RegistrarListScreen from 'screen/RegistrarListScreen';
 import WebviewScreen from 'screen/WebviewScreen';
 import DevScreen from 'screen/DevScreen';
+import MyIdentityScreen from 'screen/MyIdentityScreen';
 import * as routeKeys from 'src/navigation/routeKeys';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
@@ -46,6 +47,8 @@ function AppNavigator() {
         name={routeKeys.registrarList}
         component={RegistrarListScreen}
       />
+
+      <Drawer.Screen name={routeKeys.myIdentity} component={MyIdentityScreen} />
       <Drawer.Screen name={routeKeys.webview} component={WebviewScreen} />
       <Drawer.Screen name={routeKeys.devScreen} component={DevScreen} />
     </Drawer.Navigator>

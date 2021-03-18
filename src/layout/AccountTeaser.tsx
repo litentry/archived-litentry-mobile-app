@@ -24,6 +24,7 @@ import {AccountContext} from 'context/AccountContextProvider';
 import {NetworkContext} from 'context/NetworkContext';
 import {ChainApiContext} from 'context/ChainApiContext';
 import useAccountDetail from 'src/hook/useAccountDetail';
+import {useNavigation} from '@react-navigation/native';
 
 const {width, height} = Dimensions.get('window');
 
@@ -33,13 +34,13 @@ type PropTypes = {
 };
 
 function AccountTeaser(props: PropTypes) {
+  const navigation = useNavigation();
   const {address} = props;
   const [copyTooltipVisible, setCopyTooltipVisible] = useState(false);
   const [qrVisible, setQrVisible] = useState(false);
   const {theme} = useContext(ThemeContext);
   const {accounts} = useContext(AccountContext);
   const {currentNetwork} = useContext(NetworkContext);
-
   const {api} = useContext(ChainApiContext);
   const account = accounts?.[0];
   const {display, detail} = useAccountDetail(
@@ -47,6 +48,12 @@ function AccountTeaser(props: PropTypes) {
     account?.address,
     api,
   );
+
+  const handleIconPressed = (addr?: string) => {
+    if (addr) {
+      navigation.navigate('MyIdentity', {address: addr});
+    }
+  };
 
   const renderCopyIcon = () => (
     <TouchableOpacity
@@ -67,7 +74,9 @@ function AccountTeaser(props: PropTypes) {
     <Layout
       level={props.level}
       style={[globalStyles.paddedContainer, styles.container]}>
-      <Identicon value={address} size={60} />
+      <TouchableOpacity onPress={() => handleIconPressed(account?.address)}>
+        <Identicon value={address} size={60} />
+      </TouchableOpacity>
       {display ? (
         <AccountInfoInlineTeaser
           display={display}

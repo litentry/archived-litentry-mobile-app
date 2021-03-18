@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, StyleProp, TextStyle, ViewStyle} from 'react-native';
 import {Layout, Text, Icon} from '@ui-kitten/components';
-import {standardPadding, monofontFamily, colorGreen} from 'src/styles';
+import {standardPadding, monofontFamily, colorRed} from 'src/styles';
 
 type PropTypes = {
   text: string;
@@ -10,18 +10,14 @@ type PropTypes = {
   containerStyle?: StyleProp<ViewStyle>;
 };
 
-function SuccessDialog(props: PropTypes) {
+function InfoBanner(props: PropTypes) {
   const {text, inline = false, textStyles = {}, containerStyle = {}} = props;
 
   return (
     <Layout
       style={[styles.container, inline ? {} : styles.flex, containerStyle]}>
       <Layout style={styles.textContainer}>
-        <Icon
-          style={styles.icon}
-          fill={colorGreen}
-          name="checkmark-circle-outline"
-        />
+        <Icon style={styles.icon} fill={colorRed} name="info-outline" />
         <Text
           numberOfLines={2}
           style={[styles.text, styles.withIcon, textStyles]}>
@@ -53,4 +49,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SuccessDialog;
+export default InfoBanner;

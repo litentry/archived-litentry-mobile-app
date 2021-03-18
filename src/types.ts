@@ -1,4 +1,5 @@
 import {DeriveAccountRegistration} from '@polkadot/api-derive/types';
+import {Registration} from '@polkadot/types/interfaces';
 export type ThemeType = 'light' | 'dark';
 
 export type SupportedNetworkType =
@@ -64,6 +65,13 @@ export type AccountAddressType = {
   name: string;
 };
 
+export type AddressDetailType =
+  | {network: 'ethereum'; data: null}
+  | {
+      network: 'polkadot' | 'kusama' | 'litentry_test';
+      data?: Registration;
+    };
+
 export type HapticFeedbackType = 'success' | 'warn' | 'error';
 
 // Polkadot specific
@@ -79,10 +87,10 @@ export interface AddressIdentity extends DeriveAccountRegistration {
 }
 
 export type IdentityInfo = {
-  display: string;
-  legal: string;
-  email: string;
-  riot: string;
-  twitter: string;
-  web: string;
+  display: {raw: string} | {none: null};
+  legal: {raw: string} | {none: null};
+  email: {raw: string} | {none: null};
+  riot: {raw: string} | {none: null};
+  twitter: {raw: string} | {none: null};
+  web: {raw: string} | {none: null};
 };

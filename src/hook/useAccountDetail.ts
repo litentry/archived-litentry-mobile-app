@@ -1,17 +1,9 @@
 import {useState, useEffect} from 'react';
-import {Registration} from '@polkadot/types/interfaces';
 import {ApiPromise} from '@polkadot/api';
 import {u8aToString} from '@polkadot/util';
-import {SupportedNetworkType} from 'src/types';
+import {SupportedNetworkType, AddressDetailType} from 'src/types';
 import {createLogger} from 'src/utils';
 const logger = createLogger('useAccountDetail');
-
-type AccountDetail =
-  | {network: 'ethereum'; data: null}
-  | {
-      network: 'polkadot' | 'kusama';
-      data?: Registration;
-    };
 
 function useAccountDetail(
   network?: SupportedNetworkType | null,
@@ -19,8 +11,9 @@ function useAccountDetail(
   api?: ApiPromise,
 ) {
   const [display, setDisplay] = useState(address || '');
+  const [inProgress, setInProgress] = useState(true);
   const [identityAddress, setIdentityAddress] = useState(address || '');
-  const [detail, setDetail] = useState<AccountDetail>();
+  const [detail, setDetail] = useState<AddressDetailType>();
   const [subAccountDisplay, setSubAccountDisplay] = useState('');
 
   useEffect(() => {
@@ -29,7 +22,9 @@ function useAccountDetail(
     if (
       api &&
       identityAddress &&
-      (network === 'polkadot' || network === 'kusama')
+      (network === 'polkadot' || //TODO: this looks shit
+        network === 'kusama' ||
+        network === 'litentry_test')
     ) {
       api?.query.identity
         ?.identityOf(identityAddress, (registration) => {
@@ -41,6 +36,7 @@ function useAccountDetail(
               u8aToString(info.display.asRaw) || identityAddress;
             setDisplay(displayName);
             setDetail({network, data: registration.unwrapOr(undefined)});
+            setInProgress(false);
           } else {
             api.query.identity
               .superOf(identityAddress)
@@ -52,6 +48,7 @@ function useAccountDetail(
                   setIdentityAddress(superAccountAddress.toString());
                   setSubAccountDisplay(u8aToString(displayData.asRaw));
                 }
+                setInProgress(false);
               });
           }
         })
@@ -62,6 +59,7 @@ function useAccountDetail(
     }
     return () => {
       console.log('unsub is called');
+      setInProgress(false);
       localUnsub && localUnsub();
     };
   }, [api, identityAddress, network, address]);
@@ -70,7 +68,12 @@ function useAccountDetail(
     ? `${display}/${subAccountDisplay}`
     : display;
 
-  return {display: displayFull, detail};
+  return {
+    display: displayFull,
+    inProgress,
+    isNaked: displayFull === identityAddress,
+    detail,
+  };
 }
 
 export default useAccountDetail;

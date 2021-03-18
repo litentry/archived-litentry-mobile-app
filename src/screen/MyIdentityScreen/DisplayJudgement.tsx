@@ -1,0 +1,264 @@
+import React, {useRef, useContext} from 'react';
+import {View, StyleSheet, Dimensions, ScrollView} from 'react-native';
+import {
+  Text,
+  Layout,
+  ListItem,
+  Divider,
+  Icon,
+  IconProps,
+  Menu,
+  MenuGroup,
+  MenuItem,
+} from '@ui-kitten/components';
+import WebView from 'react-native-webview';
+import {AddressDetailType} from 'src/types';
+import globalStyles, {standardPadding} from 'src/styles';
+import SuccessDialog from 'presentational/SuccessDialog';
+import Identicon from '@polkadot/reactnative-identicon';
+import Padder from 'presentational/Padder';
+import JudgmentStatus from 'presentational/JudgmentStatus';
+import {u8aToString} from '@polkadot/util';
+import {Modalize} from 'react-native-modalize';
+import {buildAddressDetailUrl} from 'src/service/Polkasembly';
+import {NetworkContext} from 'context/NetworkContext';
+import {useCall} from 'src/hook/useCall';
+import {ChainApiContext} from 'context/ChainApiContext';
+import {ITuple} from '@polkadot/types/types';
+import {BalanceOf, AccountId} from '@polkadot/types/interfaces';
+import {Vec} from '@polkadot/types';
+import AddressInlineTeaser from 'layout/AddressInlineTeaser';
+
+const {height} = Dimensions.get('window');
+
+type PropTypes = {
+  address?: string;
+  display: string;
+  detail: AddressDetailType;
+};
+
+const SubAccountsIcon = (props: IconProps) => (
+  <Icon {...props} pack="ionic" name="ios-people" />
+);
+
+const MoreIcon = (props: IconProps) => (
+  <Icon {...props} pack="ionic" name="ios-apps-outline" />
+);
+
+type SubAccounts = ITuple<[BalanceOf, Vec<AccountId>]>;
+
+function DisplayJudgement(props: PropTypes) {
+  const {display, detail, address} = props;
+  const judgementCount = detail.data?.judgements.length || 0;
+  const {currentNetwork} = useContext(NetworkContext);
+  const {api} = useContext(ChainApiContext);
+  const successMsg = `This address has ${judgementCount} judgement${
+    judgementCount > 1 ? 's' : ''
+  } from Registrar ${detail.data?.judgements
+    .map((judgement) => `#${judgement[0]}`)
+    .join(',')}. It's all set. 🎉`;
+
+  const identity = detail?.data;
+  const modalRef = useRef<Modalize>(null);
+  const subAccounts: SubAccounts | undefined = useCall(
+    api?.query.identity.subsOf,
+    [address],
+  );
+  const subAccountsArray = subAccounts?.[1];
+
+  return (
+    <ScrollView>
+      <Layout style={[globalStyles.paddedContainer]}>
+        <View style={{paddingVertical: standardPadding * 4}}>
+          <SuccessDialog
+            inline
+            text={successMsg}
+            textStyles={styles.textStyle}
+          />
+        </View>
+        <Padder scale={0.5} />
+        <Divider />
+        <Layout>
+          <ListItem
+            title="Address"
+            accessoryLeft={() => (
+              <View style={{paddingHorizontal: 10}}>
+                <Identicon value={address} size={20} />
+              </View>
+            )}
+            accessoryRight={() => (
+              <Text
+                selectable
+                category="label"
+                numberOfLines={1}
+                style={{width: '50%', textAlign: 'right'}}
+                ellipsizeMode="middle">
+                {address}
+              </Text>
+            )}
+          />
+          <ListItem
+            title="Display"
+            accessoryLeft={(iconProps: IconProps) => (
+              <Icon {...iconProps} name="person-outline" />
+            )}
+            accessoryRight={() => (
+              <Text
+                selectable
+                category="label"
+                numberOfLines={1}
+                style={{width: '50%', textAlign: 'right'}}
+                ellipsizeMode="middle">
+                {display || 'untitled account'}
+              </Text>
+            )}
+          />
+          {identity &&
+            identity.judgements[0] && ( // bug
+              <ListItem
+                title="Judgment"
+                accessoryLeft={(iconProps: IconProps) => (
+                  <Icon {...iconProps} name="ribbon-outline" pack="ionic" />
+                )}
+                accessoryRight={() => (
+                  <JudgmentStatus judgement={identity.judgements[0]} />
+                )}
+              />
+            )}
+          <Menu style={{backgroundColor: 'transparent'}}>
+            <MenuGroup title=" Identity detail" accessoryLeft={MoreIcon}>
+              <MenuItem
+                title="Legal"
+                accessoryLeft={(props) => (
+                  <Icon {...props} name="award-outline" />
+                )}
+                accessoryRight={() => (
+                  <Text selectable category="label">
+                    {u8aToString(detail?.data?.info.legal.asRaw) || 'Unset'}
+                  </Text>
+                )}
+              />
+              <MenuItem
+                title="Email"
+                accessoryLeft={(props) => (
+                  <Icon {...props} name="email-outline" />
+                )}
+                accessoryRight={() => (
+                  <Text selectable category="label">
+                    {u8aToString(detail?.data?.info.email.asRaw) || 'Unset'}
+                  </Text>
+                )}
+              />
+              <MenuItem
+                title="Twitter"
+                accessoryLeft={(props) => (
+                  <Icon {...props} name="twitter-outline" />
+                )}
+                accessoryRight={() => (
+                  <Text selectable category="label">
+                    {u8aToString(detail?.data?.info.twitter.asRaw) || 'Unset'}
+                  </Text>
+                )}
+              />
+              <MenuItem
+                title="Riot"
+                accessoryLeft={(props) => (
+                  <Icon {...props} name="message-square-outline" />
+                )}
+                accessoryRight={() => (
+                  <Text selectable category="label">
+                    {u8aToString(detail?.data?.info.riot.asRaw) || 'Unset'}
+                  </Text>
+                )}
+              />
+              <MenuItem
+                title="Web"
+                accessoryLeft={(props) => (
+                  <Icon {...props} name="browser-outline" />
+                )}
+                accessoryRight={() => (
+                  <Text selectable category="label">
+                    {u8aToString(detail?.data?.info.web.asRaw) || 'Unset'}
+                  </Text>
+                )}
+              />
+            </MenuGroup>
+          </Menu>
+
+          <ListItem
+            title="View externally"
+            onPress={() => modalRef.current?.open()}
+            accessoryLeft={(iconProps: IconProps) => (
+              <Icon {...iconProps} name="md-share" pack="ionic" />
+            )}
+            accessoryRight={() => (
+              <Text
+                selectable
+                category="label"
+                numberOfLines={1}
+                ellipsizeMode="middle">
+                Polkascan
+              </Text>
+            )}
+          />
+
+          {subAccountsArray && subAccountsArray.length ? (
+            <Menu style={{backgroundColor: 'transparent'}}>
+              <MenuGroup
+                title={`Sub accounts (${subAccountsArray.length})`}
+                accessoryLeft={SubAccountsIcon}>
+                {subAccountsArray.map((addr: AccountId) => (
+                  <MenuItem
+                    key={addr.toString()}
+                    accessoryRight={() => (
+                      <View style={{paddingLeft: standardPadding}}>
+                        <AddressInlineTeaser
+                          fullWidth
+                          address={addr.toString()}
+                        />
+                      </View>
+                    )}
+                  />
+                ))}
+              </MenuGroup>
+            </Menu>
+          ) : null}
+        </Layout>
+      </Layout>
+      <Modalize
+        ref={modalRef}
+        threshold={250}
+        scrollViewProps={{showsVerticalScrollIndicator: false}}
+        adjustToContentHeight
+        handlePosition="outside"
+        closeOnOverlayTap
+        withReactModal
+        useNativeDriver
+        panGestureEnabled>
+        <WebView
+          injectedJavaScript={`(function() {
+                // remove some html element
+                document.querySelectorAll('.navbar')[1].remove()
+            })();`}
+          source={{
+            uri: buildAddressDetailUrl(
+              address || '',
+              currentNetwork?.key || 'polkadot',
+            ),
+          }}
+          style={{height: height * 0.75}}
+          onMessage={() => null}
+        />
+      </Modalize>
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  textStyle: {
+    fontWeight: 'normal',
+    padding: standardPadding,
+  },
+});
+
+export default DisplayJudgement;

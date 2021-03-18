@@ -6,3 +6,10 @@ export const buildMotionDetailUrl = (
 ) => {
   return `https://${network}.${baseUrl}/motion/${id}`;
 };
+
+export const buildAddressDetailUrl = (
+  address: string,
+  network: string = 'polkadot',
+) => {
+  return `https://polkascan.io/${network}/account/${address}`;
+};

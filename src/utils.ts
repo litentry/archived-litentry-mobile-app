@@ -11,6 +11,7 @@ import {
   CRYPTO_SR25519,
   ADDRESS_PREFIX_POLKADOT,
   ADDRESS_PREFIX_KUSAMA,
+  ADDRESS_PREFIX_LITENTRY,
 } from './constants';
 import {
   decodeAddress,
@@ -186,6 +187,8 @@ export const isAddressValid = (network: NetworkType, address: string) => {
       return checkAddress(address, ADDRESS_PREFIX_POLKADOT)[0];
     case 'kusama':
       return checkAddress(address, ADDRESS_PREFIX_KUSAMA)[0];
+    case 'litentry_test':
+      return checkAddress(address, ADDRESS_PREFIX_LITENTRY)[0];
     case 'ethereum':
       return isEthereumChecksum(address); // fixme
     default:
