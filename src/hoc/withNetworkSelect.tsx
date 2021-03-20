@@ -1,6 +1,5 @@
 import React, {useCallback, useRef, useContext, useMemo} from 'react';
 import {Modalize} from 'react-native-modalize';
-import {Portal} from 'react-native-portalize';
 import {StyleSheet} from 'react-native';
 import NetworkSelectionList from 'presentational/NetworkSelectionList';
 import globalStyles, {standardPadding} from 'src/styles';
@@ -41,30 +40,28 @@ function withNetworkSelect<T>(
     return (
       <>
         <Comp {...props} networkSelection={value} />
-        <Portal>
-          <Modalize
-            ref={modalRef}
-            threshold={250}
-            scrollViewProps={{showsVerticalScrollIndicator: false}}
-            handlePosition="outside"
-            adjustToContentHeight
-            closeOnOverlayTap
-            panGestureEnabled>
-            <Layout style={styles.networkModal}>
-              <NetworkSelectionList
-                items={availableNetworks}
-                selected={currentNetwork}
-                onSelect={handleSelection}
-              />
-              <Divider style={globalStyles.divider} />
-              <Button
-                appearance="ghost"
-                onPress={() => modalRef.current?.close()}>
-                Close
-              </Button>
-            </Layout>
-          </Modalize>
-        </Portal>
+        <Modalize
+          ref={modalRef}
+          threshold={250}
+          scrollViewProps={{showsVerticalScrollIndicator: false}}
+          handlePosition="outside"
+          adjustToContentHeight
+          closeOnOverlayTap
+          panGestureEnabled>
+          <Layout style={styles.networkModal}>
+            <NetworkSelectionList
+              items={availableNetworks}
+              selected={currentNetwork}
+              onSelect={handleSelection}
+            />
+            <Divider style={globalStyles.divider} />
+            <Button
+              appearance="ghost"
+              onPress={() => modalRef.current?.close()}>
+              Close
+            </Button>
+          </Layout>
+        </Modalize>
       </>
     );
   };

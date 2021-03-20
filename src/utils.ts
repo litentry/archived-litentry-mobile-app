@@ -1,5 +1,6 @@
 // Note: have to patch _qrcode
 import _qrcode from 'qrcode-generator';
+import BN from 'bn.js';
 
 import {logger} from 'react-native-logs';
 import {ansiColorConsoleSync} from 'react-native-logs/dist/transports/ansiColorConsoleSync';
@@ -220,4 +221,17 @@ export function validateFormField(
       !notStarting.some((check) => value.startsWith(check)) &&
       !notEnding.some((check) => value.endsWith(check)))
   );
+}
+
+export function formatNumberWRTDecimal(number: BN) {
+  const chainProps = registry.getChainProperties();
+  const tokenDecimals = chainProps?.tokenDecimals.unwrapOrDefault();
+  let defaultDecimals = 12;
+
+  if (tokenDecimals) {
+    const decimals = new BN(tokenDecimals[0]);
+    defaultDecimals = decimals.toNumber();
+  }
+
+  return number.div(new BN(10 ** defaultDecimals));
 }

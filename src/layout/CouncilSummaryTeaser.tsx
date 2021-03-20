@@ -45,7 +45,9 @@ function CouncilSummaryTeaser(props: PropTypes & InjectedPropTypes) {
           <Card style={[styles.item, styles.right, styles.center]} disabled>
             <ProgressChartWidget
               title={`Term Progress (${timeStringParts[0]})`}
-              detail={`${props.electionsInfo.data.percentage}%\n${termLeft[0]}\n${termLeft[1]}`}
+              detail={`${props.electionsInfo.data.percentage}%\n${
+                termLeft[0] || ''
+              }${termLeft[1] ? `\n${termLeft[1]}` : ''}`}
               data={[props.electionsInfo.data.percentage / 100]}
             />
           </Card>

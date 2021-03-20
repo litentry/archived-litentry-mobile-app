@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View} from 'react-native';
 import {
   Text,
@@ -18,6 +18,7 @@ import Padder from 'presentational/Padder';
 import Identicon from '@polkadot/reactnative-identicon';
 import {u8aToString} from '@polkadot/util';
 import {AddressDetailType} from 'src/types';
+import RegistrarSelectionModal from 'layout/RegistrarSelectionModal';
 
 type PropTypes = {
   address: string;
@@ -30,6 +31,8 @@ const MoreIcon = (props: IconProps) => (
 );
 
 function RequestJudgement({display, address, detail}: PropTypes) {
+  const [visible, setVisible] = useState(false);
+
   return (
     <Layout style={globalStyles.paddedContainer}>
       <View style={{paddingHorizontal: standardPadding * 2}}>
@@ -136,7 +139,12 @@ function RequestJudgement({display, address, detail}: PropTypes) {
           </MenuGroup>
         </Menu>
         <Padder scale={1} />
-        <Button onPress={() => null}>Request Judgement</Button>
+        <Button onPress={() => setVisible(true)}>Request Judgement</Button>
+        <RegistrarSelectionModal
+          onClose={() => setVisible(false)}
+          onSelect={() => null}
+          visible={visible}
+        />
       </Layout>
     </Layout>
   );

@@ -2,7 +2,11 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {BN_ZERO, formatBalance} from '@polkadot/util';
 import {Text} from '@ui-kitten/components';
-import withRegistrarList, {InjectedPropTypes} from 'src/hoc/withRegistrarList';
+import withRegistrarList, {
+  InjectedPropTypes,
+  getValidRegistrars,
+  getSortedRegistrars,
+} from 'src/hoc/withRegistrarList';
 import globalStyles, {standardPadding, monofontFamily} from 'src/styles';
 import StatInfoBlock from 'presentational/StatInfoBlock';
 import Padder from 'presentational/Padder';
@@ -21,20 +25,8 @@ function RegistrarList(props: PropTypes & InjectedPropTypes) {
     );
   }
 
-  const validRegistrars = registrars.filter((registrar) => {
-    // filter out the ones with fee is zero
-    const unwraped = registrar.unwrapOr({fee: BN_ZERO, account: ''});
-    return unwraped.fee.gt(BN_ZERO);
-  });
-  const sorted = validRegistrars.sort((a, b) => {
-    if (
-      a.unwrapOr({fee: BN_ZERO}).fee.toNumber() >
-      b.unwrapOr({fee: BN_ZERO}).fee.toNumber()
-    ) {
-      return 1;
-    }
-    return -1;
-  });
+  const validRegistrars = getValidRegistrars(registrars);
+  const sorted = getSortedRegistrars(validRegistrars);
   const lowestFee = sorted[0].unwrapOr({fee: BN_ZERO});
   const highestFee = sorted[sorted.length - 1].unwrapOr({fee: BN_ZERO});
 
