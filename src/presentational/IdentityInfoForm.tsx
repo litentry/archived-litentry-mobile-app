@@ -155,6 +155,7 @@ function IdentityInfoForm({onSubmit}: IdentityInfoFormProps) {
         <Input
           label={() => <FormLabel text="Email" />}
           placeholder="somebody@example.com"
+          autoCapitalize="none"
           value={email}
           status={formStatus.isEmailValid ? 'basic' : 'danger'}
           onChangeText={setEmail}
@@ -168,6 +169,7 @@ function IdentityInfoForm({onSubmit}: IdentityInfoFormProps) {
           label={() => <FormLabel text="Web" />}
           placeholder="https://example.com"
           value={web}
+          autoCapitalize="none"
           status={formStatus.isWebValid ? 'basic' : 'danger'}
           onChangeText={setWeb}
           accessoryLeft={(props: IconProps) => (
@@ -180,6 +182,7 @@ function IdentityInfoForm({onSubmit}: IdentityInfoFormProps) {
           label={() => <FormLabel text="Twitter" />}
           placeholder="@YourTwitterName"
           value={twitter}
+          autoCapitalize="none"
           status={formStatus.isTwitterValid ? 'basic' : 'danger'}
           onChangeText={setTwitter}
           accessoryLeft={(props: IconProps) => (
@@ -192,6 +195,7 @@ function IdentityInfoForm({onSubmit}: IdentityInfoFormProps) {
           label={() => <FormLabel text="Riot" />}
           placeholder="@yourname:matrix.org"
           value={riot}
+          autoCapitalize="none"
           status={formStatus.isRiotValid ? 'basic' : 'danger'}
           onChangeText={setRiot}
           accessoryLeft={(props: IconProps) => (
