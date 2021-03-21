@@ -1,4 +1,5 @@
 import React, {useCallback, useState} from 'react';
+import BN from 'bn.js';
 import {StyleSheet, Dimensions, View} from 'react-native';
 import {
   Select,
@@ -24,7 +25,7 @@ const {height, width} = Dimensions.get('window');
 type PropTypes = {
   visible: boolean;
   onClose: () => void;
-  onSelect: (index: number, fee: string) => void;
+  onSelect: (index: number, fee?: BN) => void;
 };
 const AlertIcon = (props: IconProps) => (
   <Icon {...props} name="alert-circle-outline" />
@@ -39,7 +40,7 @@ function RegistrarSelectionModal({
   const [selectedRegistrar, setSelectedRegistrar] = useState<
     IndexPath | IndexPath[]
   >();
-  const [feeValue, setFeeValue] = useState<string>();
+  const [feeValue, setFeeValue] = useState<BN>();
   const handleSelect = useCallback(() => {
     const index = (selectedRegistrar as IndexPath).row;
 
@@ -48,6 +49,9 @@ function RegistrarSelectionModal({
     }
   }, [onSelect, selectedRegistrar, feeValue]);
 
+  const feeDisplay =
+    feeValue &&
+    (formatNumberWRTDecimal(feeValue).toNumber() / 10000).toString();
   const selectedRegistrarDisplay = selectedRegistrar
     ? `Registrar #${(selectedRegistrar as IndexPath).row}`
     : undefined;
@@ -62,7 +66,7 @@ function RegistrarSelectionModal({
           account: '',
         });
 
-        setFeeValue(formatNumberWRTDecimal(unwraped.fee).toString());
+        setFeeValue(unwraped.fee);
       }
     },
     [setSelectedRegistrar, registrars, setFeeValue],
@@ -143,12 +147,12 @@ function RegistrarSelectionModal({
         </Select>
         <Padder scale={0.5} />
         <Input
-          value={feeValue}
+          disabled
+          value={feeDisplay}
           label="Fee"
           placeholder="Fee for judgement"
-          caption="This is the fee paid to Registrar for providing the Judgement"
+          caption="Fee paid to Registrar for providing the Judgement"
           captionIcon={AlertIcon}
-          onChangeText={(nextValue) => setFeeValue(nextValue)}
         />
       </Card>
     </Modal>
@@ -157,7 +161,7 @@ function RegistrarSelectionModal({
 
 const styles = StyleSheet.create({
   container: {
-    maxWidth: width * 0.8,
+    width: width * 0.8,
     minHeight: height * 0.5,
   },
   subHeaderOverwrite: {

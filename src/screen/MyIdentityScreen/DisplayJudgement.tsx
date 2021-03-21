@@ -28,6 +28,7 @@ import {ITuple} from '@polkadot/types/types';
 import {BalanceOf, AccountId} from '@polkadot/types/interfaces';
 import {Vec} from '@polkadot/types';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
+import InfoBanner from 'presentational/InfoBanner';
 
 const {height} = Dimensions.get('window');
 
@@ -58,6 +59,13 @@ function DisplayJudgement(props: PropTypes) {
     .map((judgement) => `#${judgement[0]}`)
     .join(',')}. It's all set. 🎉`;
 
+  const pendingJudgement = detail.data?.judgements.find((judgement) => {
+    if (judgement[1].isFeePaid) {
+      return true;
+    }
+    return false;
+  });
+
   const identity = detail?.data;
   const modalRef = useRef<Modalize>(null);
   const subAccounts: SubAccounts | undefined = useCall(
@@ -69,12 +77,19 @@ function DisplayJudgement(props: PropTypes) {
   return (
     <ScrollView>
       <Layout style={[globalStyles.paddedContainer]}>
-        <View style={{paddingVertical: standardPadding * 4}}>
-          <SuccessDialog
-            inline
-            text={successMsg}
-            textStyles={styles.textStyle}
-          />
+        <View style={{paddingHorizontal: standardPadding * 4}}>
+          {pendingJudgement ? (
+            <InfoBanner
+              text={`This address has a pending judgement from #${pendingJudgement[0]}`}
+              inline
+            />
+          ) : (
+            <SuccessDialog
+              inline
+              text={successMsg}
+              textStyles={styles.textStyle}
+            />
+          )}
         </View>
         <Padder scale={0.5} />
         <Divider />
@@ -82,7 +97,7 @@ function DisplayJudgement(props: PropTypes) {
           <ListItem
             title="Address"
             accessoryLeft={() => (
-              <View style={{paddingHorizontal: 10}}>
+              <View style={styles.identiconContainer}>
                 <Identicon value={address} size={20} />
               </View>
             )}
@@ -91,7 +106,7 @@ function DisplayJudgement(props: PropTypes) {
                 selectable
                 category="label"
                 numberOfLines={1}
-                style={{width: '50%', textAlign: 'right'}}
+                style={styles.textDisplay}
                 ellipsizeMode="middle">
                 {address}
               </Text>
@@ -107,7 +122,7 @@ function DisplayJudgement(props: PropTypes) {
                 selectable
                 category="label"
                 numberOfLines={1}
-                style={{width: '50%', textAlign: 'right'}}
+                style={styles.textDisplay}
                 ellipsizeMode="middle">
                 {display || 'untitled account'}
               </Text>
@@ -125,13 +140,11 @@ function DisplayJudgement(props: PropTypes) {
                 )}
               />
             )}
-          <Menu style={{backgroundColor: 'transparent'}}>
+          <Menu style={styles.menu}>
             <MenuGroup title=" Identity detail" accessoryLeft={MoreIcon}>
               <MenuItem
                 title="Legal"
-                accessoryLeft={(props) => (
-                  <Icon {...props} name="award-outline" />
-                )}
+                accessoryLeft={(p) => <Icon {...p} name="award-outline" />}
                 accessoryRight={() => (
                   <Text selectable category="label">
                     {u8aToString(detail?.data?.info.legal.asRaw) || 'Unset'}
@@ -140,9 +153,7 @@ function DisplayJudgement(props: PropTypes) {
               />
               <MenuItem
                 title="Email"
-                accessoryLeft={(props) => (
-                  <Icon {...props} name="email-outline" />
-                )}
+                accessoryLeft={(p) => <Icon {...p} name="email-outline" />}
                 accessoryRight={() => (
                   <Text selectable category="label">
                     {u8aToString(detail?.data?.info.email.asRaw) || 'Unset'}
@@ -151,9 +162,7 @@ function DisplayJudgement(props: PropTypes) {
               />
               <MenuItem
                 title="Twitter"
-                accessoryLeft={(props) => (
-                  <Icon {...props} name="twitter-outline" />
-                )}
+                accessoryLeft={(p) => <Icon {...p} name="twitter-outline" />}
                 accessoryRight={() => (
                   <Text selectable category="label">
                     {u8aToString(detail?.data?.info.twitter.asRaw) || 'Unset'}
@@ -162,8 +171,8 @@ function DisplayJudgement(props: PropTypes) {
               />
               <MenuItem
                 title="Riot"
-                accessoryLeft={(props) => (
-                  <Icon {...props} name="message-square-outline" />
+                accessoryLeft={(p) => (
+                  <Icon {...p} name="message-square-outline" />
                 )}
                 accessoryRight={() => (
                   <Text selectable category="label">
@@ -173,9 +182,7 @@ function DisplayJudgement(props: PropTypes) {
               />
               <MenuItem
                 title="Web"
-                accessoryLeft={(props) => (
-                  <Icon {...props} name="browser-outline" />
-                )}
+                accessoryLeft={(p) => <Icon {...p} name="browser-outline" />}
                 accessoryRight={() => (
                   <Text selectable category="label">
                     {u8aToString(detail?.data?.info.web.asRaw) || 'Unset'}
@@ -203,7 +210,7 @@ function DisplayJudgement(props: PropTypes) {
           />
 
           {subAccountsArray && subAccountsArray.length ? (
-            <Menu style={{backgroundColor: 'transparent'}}>
+            <Menu style={styles.menu}>
               <MenuGroup
                 title={`Sub accounts (${subAccountsArray.length})`}
                 accessoryLeft={SubAccountsIcon}>
@@ -255,6 +262,13 @@ function DisplayJudgement(props: PropTypes) {
 }
 
 const styles = StyleSheet.create({
+  identiconContainer: {
+    paddingHorizontal: 10,
+  },
+  menu: {
+    backgroundColor: 'transparent',
+  },
+  textDisplay: {width: '50%', textAlign: 'right', paddingEnd: 12},
   textStyle: {
     fontWeight: 'normal',
     padding: standardPadding,

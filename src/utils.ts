@@ -233,5 +233,7 @@ export function formatNumberWRTDecimal(number: BN) {
     defaultDecimals = decimals.toNumber();
   }
 
-  return number.div(new BN(10 ** defaultDecimals));
+  const BN_TEN_THOUSAND = new BN(10000);
+
+  return number.mul(BN_TEN_THOUSAND).div(new BN(10 ** defaultDecimals));
 }

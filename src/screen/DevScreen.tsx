@@ -13,6 +13,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {Modalize} from 'react-native-modalize';
 import {standardPadding} from 'src/styles';
 import {NetworkContext} from 'context/NetworkContext';
+import RegistrarSelectionModal from 'layout/RegistrarSelectionModal';
 
 type PropTypes = {
   navigation: DrawerNavigationProp<DrawerParamList>;
@@ -20,6 +21,7 @@ type PropTypes = {
 
 function DevScreen(props: PropTypes) {
   const {navigation} = props;
+  const [visible, setVisible] = useState(false);
 
   const {currentNetwork} = useContext(NetworkContext);
   const {accounts, setAccount} = useContext(AccountContext);
@@ -38,6 +40,21 @@ function DevScreen(props: PropTypes) {
       onBackPressed={() => navigation.goBack()}>
       <>
         <Layout level="1">
+          <ListItem
+            title="Registrar Selection Modal"
+            description="Trigger display of Registrar Selection Modal"
+            accessoryRight={() => (
+              <Button size="small" onPress={() => setVisible(true)}>
+                Trigger
+              </Button>
+            )}
+          />
+          <Divider />
+          <RegistrarSelectionModal
+            onClose={() => setVisible(false)}
+            onSelect={(index, fee) => console.log(index, fee)}
+            visible={visible}
+          />
           <ListItem
             title={`Network: ${currentNetwork?.name}`}
             description={`Currently connected to ${currentNetwork?.ws}`}

@@ -1,23 +1,34 @@
 import React from 'react';
 import {StyleSheet, StyleProp, TextStyle, ViewStyle} from 'react-native';
 import {Layout, Text, Icon} from '@ui-kitten/components';
-import {standardPadding, monofontFamily, colorRed} from 'src/styles';
+import {standardPadding, monofontFamily, colorRed, colorGray} from 'src/styles';
 
 type PropTypes = {
   text: string;
   inline?: boolean;
+  warning?: boolean;
   textStyles?: StyleProp<TextStyle>;
   containerStyle?: StyleProp<ViewStyle>;
 };
 
 function InfoBanner(props: PropTypes) {
-  const {text, inline = false, textStyles = {}, containerStyle = {}} = props;
+  const {
+    text,
+    warning = false,
+    inline = false,
+    textStyles = {},
+    containerStyle = {},
+  } = props;
 
   return (
     <Layout
       style={[styles.container, inline ? {} : styles.flex, containerStyle]}>
       <Layout style={styles.textContainer}>
-        <Icon style={styles.icon} fill={colorRed} name="info-outline" />
+        <Icon
+          style={styles.icon}
+          fill={warning ? colorRed : colorGray}
+          name="info-outline"
+        />
         <Text
           numberOfLines={2}
           style={[styles.text, styles.withIcon, textStyles]}>

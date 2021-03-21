@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
-import {View} from 'react-native';
+import React, {useState, useContext, useCallback} from 'react';
+import BN from 'bn.js';
+import {View, Alert} from 'react-native';
 import {
   Text,
   Layout,
@@ -19,6 +20,8 @@ import Identicon from '@polkadot/reactnative-identicon';
 import {u8aToString} from '@polkadot/util';
 import {AddressDetailType} from 'src/types';
 import RegistrarSelectionModal from 'layout/RegistrarSelectionModal';
+import {ChainApiContext} from 'context/ChainApiContext';
+import {TxContext} from 'context/TxContext';
 
 type PropTypes = {
   address: string;
@@ -32,6 +35,30 @@ const MoreIcon = (props: IconProps) => (
 
 function RequestJudgement({display, address, detail}: PropTypes) {
   const [visible, setVisible] = useState(false);
+
+  const {api} = useContext(ChainApiContext);
+  const {start} = useContext(TxContext);
+
+  const startTx = useCallback(
+    async (index: number, fee: BN) => {
+      if (api) {
+        await start(api, address, 'identity.requestJudgement', [index, fee]);
+      } else {
+        Alert.alert('account/api is not ready');
+      }
+    },
+    [address, api, start],
+  );
+
+  const handleRequestJudgement = useCallback(
+    (index: number, fee?: BN) => {
+      if (fee) {
+        setVisible(false);
+        startTx(index, fee);
+      }
+    },
+    [startTx],
+  );
 
   return (
     <Layout style={globalStyles.paddedContainer}>
@@ -142,7 +169,7 @@ function RequestJudgement({display, address, detail}: PropTypes) {
         <Button onPress={() => setVisible(true)}>Request Judgement</Button>
         <RegistrarSelectionModal
           onClose={() => setVisible(false)}
-          onSelect={() => null}
+          onSelect={handleRequestJudgement}
           visible={visible}
         />
       </Layout>

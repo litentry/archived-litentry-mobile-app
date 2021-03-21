@@ -9,6 +9,7 @@ const dividerPlain = {
 
 export const monofontFamily = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
 export const colorGreen = '#1BC575'; // rgba(27, 197, 117, 0.3)
+export const colorGray = '#A9A9A9';
 export const colorGreenLight = 'rgba(27, 197, 117, 0.3)';
 export const defaultIconColor = '#778899';
 
