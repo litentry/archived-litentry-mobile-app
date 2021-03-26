@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, ScrollView} from 'react-native';
 import {Input, Button, Icon, IconProps} from '@ui-kitten/components';
 import {WHITESPACE, validateFormField} from 'src/utils';
 import FormLabel from 'presentational/FormLabel';
@@ -126,7 +126,7 @@ function IdentityInfoForm({onSubmit}: IdentityInfoFormProps) {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.formFieldContainer}>
         <Input
           label={() => <FormLabel text="Display Name" />}
@@ -211,7 +211,7 @@ function IdentityInfoForm({onSubmit}: IdentityInfoFormProps) {
           Submit
         </Button>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
