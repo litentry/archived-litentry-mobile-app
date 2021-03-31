@@ -1,5 +1,7 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+
 import {Layout} from '@ui-kitten/components';
 
 export default function SafeView({children}: {children: React.ReactNode}) {
