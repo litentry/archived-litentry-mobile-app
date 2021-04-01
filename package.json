@@ -126,6 +126,6 @@
   },
   "lint-staged": {
     "*.+(ts|tsx)": "eslint --fix",
-    "*.+(ts|tsx|json)": "prettier --write"
+    "*.+(ts|tsx|json|js)": "prettier --write"
   }
 }

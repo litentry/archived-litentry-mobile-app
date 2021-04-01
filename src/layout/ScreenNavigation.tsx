@@ -6,7 +6,8 @@ import {
   IconProps,
   useTheme,
 } from '@ui-kitten/components';
-import {StyleSheet, SafeAreaView, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const MenuIcon = (props: IconProps) => (
   <Icon {...props} name="menu-2-outline" />
@@ -36,6 +37,7 @@ export default function ScreenNavigation({
 
   return (
     <SafeAreaView
+      edges={['top', 'right', 'left']}
       style={{backgroundColor: themeVars['background-basic-color-1']}}>
       <View style={styles.container}>
         <TopNavigation
