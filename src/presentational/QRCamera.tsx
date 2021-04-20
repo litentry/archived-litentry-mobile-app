@@ -31,7 +31,7 @@ function QRCamera(props: PropTypes) {
       showMarker
       markerStyle={styles.marker}
       cameraStyle={styles.cameraBase}
-      containerStyle={{maxHeight: 300}}
+      containerStyle={styles.container}
       notAuthorizedView={
         <Layout style={styles.notAuthorized}>
           <Layout style={styles.notAuthorizedHack}>
@@ -47,7 +47,9 @@ function QRCamera(props: PropTypes) {
 }
 
 const styles = StyleSheet.create({
-  modal: {},
+  container: {
+    maxHeight: 300,
+  },
   title: {
     padding: standardPadding * 2,
     fontSize: 14,
