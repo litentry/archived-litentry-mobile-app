@@ -120,6 +120,10 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
       }
     }, [step, setAccount, address, network]);
 
+    const handleCancel = () => {
+      modalRef.current?.close();
+    };
+
     const confirmBtnDisabled = useMemo(() => {
       if (step === 'input' || step === 'selectNetwork') {
         return !network;
@@ -225,12 +229,22 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
               <Divider />
               {content}
               <Divider style={globalStyles.divider} />
-              <Button
-                appearance="ghost"
-                disabled={confirmBtnDisabled}
-                onPress={handleConfirm}>
-                {step === 'success' ? 'Close' : 'Confirm'}
-              </Button>
+              <Layout style={styles.btnContainer}>
+                <Button
+                  style={styles.btn}
+                  appearance="ghost"
+                  status="danger"
+                  onPress={handleCancel}>
+                  {'Cancel'}
+                </Button>
+                <Button
+                  style={styles.btn}
+                  appearance="ghost"
+                  disabled={confirmBtnDisabled}
+                  onPress={handleConfirm}>
+                  {step === 'success' ? 'Close' : 'Confirm'}
+                </Button>
+              </Layout>
             </Layout>
           </Modalize>
         </Portal>
@@ -268,6 +282,13 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     marginRight: standardPadding / 2,
+  },
+  btnContainer: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  btn: {
+    flex: 1,
   },
 });
 
