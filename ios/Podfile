@@ -25,7 +25,9 @@ target 'Litentry' do
   #
   # Note that if you have use_frameworks! enabled, Flipper will not work and
   # you should disable the next line.
-#  use_flipper!({ 'Flipper-Folly' => '2.5.1' })
+  #
+  # Run pod install and build the app with xcode after uncomment this lile
+  # use_flipper!({ 'Flipper' => '0.54.0', 'Flipper-RSocket' => '1.1', 'Flipper-Folly' => '2.3.0' })
   
   post_install do |installer|
       react_native_post_install(installer)
