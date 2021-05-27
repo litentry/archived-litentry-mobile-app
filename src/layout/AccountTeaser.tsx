@@ -26,7 +26,7 @@ import {ChainApiContext} from 'context/ChainApiContext';
 import useAccountDetail from 'src/hook/useAccountDetail';
 import {useNavigation} from '@react-navigation/native';
 
-const {width, height} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 type PropTypes = {
   level: '1' | '2';
@@ -74,7 +74,9 @@ function AccountTeaser(props: PropTypes) {
     <Layout
       level={props.level}
       style={[globalStyles.paddedContainer, styles.container]}>
-      <TouchableOpacity onPress={() => handleIconPressed(account?.address)}>
+      <TouchableOpacity
+        style={styles.identIconContainer}
+        onPress={() => handleIconPressed(account?.address)}>
         <Identicon value={address} size={60} />
       </TouchableOpacity>
       {display ? (
@@ -130,7 +132,6 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'space-around',
     alignItems: 'center',
-    height: height * 0.2,
   },
   addressContainer: {
     flexDirection: 'row',
@@ -153,6 +154,9 @@ const styles = StyleSheet.create({
   },
   qrAddressText: {
     padding: standardPadding,
+  },
+  identIconContainer: {
+    marginBottom: 10,
   },
 });
 
