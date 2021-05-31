@@ -25,8 +25,6 @@ function LoadingView({navigation}: {navigation: NavigationProp<any>}) {
     }
   }, [navigation, api]);
 
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
   return (
     <Layout style={styles.container}>
       <ScreenNavigation
