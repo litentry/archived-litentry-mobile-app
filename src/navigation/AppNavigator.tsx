@@ -12,8 +12,8 @@ import DevScreen from 'screen/DevScreen';
 import MyIdentityScreen from 'screen/MyIdentityScreen';
 import * as routeKeys from 'src/navigation/routeKeys';
 import {ChainApiContext} from 'context/ChainApiContext';
-import ApiLoadingPage from 'src/Atomic/pages/ApiLoadingPage';
-import {NetworkSelectScreen} from 'src/Atomic/pages/NetworkSelectScreen';
+import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
+import {NetworkSelectScreen} from 'screen/NetworkSelectScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -85,7 +85,7 @@ function ApiLoadingNavigator() {
       screenOptions={{gestureEnabled: false}}>
       <ApiLoadingStack.Screen
         name={'ApiLoadingPage'}
-        component={ApiLoadingPage}
+        component={ApiLoadingScreen}
         options={{gestureEnabled: false}}
       />
       <ApiLoadingStack.Screen

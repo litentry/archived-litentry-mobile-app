@@ -13,7 +13,11 @@ import {NetworkContext} from 'context/NetworkContext';
 import {NavigationProp} from '@react-navigation/native';
 import {ChainApiContext} from 'context/ChainApiContext';
 
-function LoadingView({navigation}: {navigation: NavigationProp<any>}) {
+export function ApiLoadingScreen({
+  navigation,
+}: {
+  navigation: NavigationProp<any>;
+}) {
   const {currentNetwork} = useContext(NetworkContext);
   const {api} = useContext(ChainApiContext);
 
@@ -69,5 +73,3 @@ const styles = StyleSheet.create({
     fontFamily: monofontFamily,
   },
 });
-
-export default LoadingView;
