@@ -1,6 +1,13 @@
-import React, {useCallback, useRef, useMemo} from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
-import {Layout, Text, Icon, ListItem, Divider} from '@ui-kitten/components';
+import React, {useCallback, useRef} from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  Button,
+  Divider,
+  Icon,
+  Layout,
+  ListItem,
+  Text,
+} from '@ui-kitten/components';
 import {u8aToString} from '@polkadot/util';
 import globalStyles, {standardPadding} from 'src/styles';
 import JudgmentStatus from './JudgmentStatus';
@@ -27,79 +34,6 @@ function AddressInfoBadge({address, network, api}: PropTypes) {
   const onOpen = useCallback(() => {
     modalRef.current?.open();
   }, []);
-
-  const detailView = useMemo(() => {
-    return (
-      <Layout style={styles.detailContainer}>
-        <Layout>
-          <ModalTitle title={display} subtitle={` (@${network?.name})`} />
-        </Layout>
-        <Divider />
-        <ListItem
-          title="Display"
-          accessoryLeft={(props) => <Icon {...props} name="person-outline" />}
-          accessoryRight={() => (
-            <Text
-              style={{maxWidth: '55%'}}
-              selectable
-              category="label"
-              numberOfLines={1}
-              ellipsizeMode="middle">
-              {display}
-            </Text>
-          )}
-        />
-        <ListItem
-          title="Legal"
-          accessoryLeft={(props) => <Icon {...props} name="award-outline" />}
-          accessoryRight={() => (
-            <Text selectable category="label">
-              {u8aToString(detail?.data?.info.legal.asRaw) || 'Unset'}
-            </Text>
-          )}
-        />
-        <ListItem
-          title="Email"
-          accessoryLeft={(props) => <Icon {...props} name="email-outline" />}
-          accessoryRight={() => (
-            <Text selectable category="label">
-              {u8aToString(detail?.data?.info.email.asRaw) || 'Unset'}
-            </Text>
-          )}
-        />
-        <ListItem
-          title="Twitter"
-          accessoryLeft={(props) => <Icon {...props} name="twitter-outline" />}
-          accessoryRight={() => (
-            <Text selectable category="label">
-              {u8aToString(detail?.data?.info.twitter.asRaw) || 'Unset'}
-            </Text>
-          )}
-        />
-        <ListItem
-          title="Riot"
-          accessoryLeft={(props) => (
-            <Icon {...props} name="message-square-outline" />
-          )}
-          accessoryRight={() => (
-            <Text selectable category="label">
-              {u8aToString(detail?.data?.info.riot.asRaw) || 'Unset'}
-            </Text>
-          )}
-        />
-        <ListItem
-          title="Web"
-          accessoryLeft={(props) => <Icon {...props} name="browser-outline" />}
-          accessoryRight={() => (
-            <Text selectable category="label">
-              {u8aToString(detail?.data?.info.web.asRaw) || 'Unset'}
-            </Text>
-          )}
-        />
-        <View style={styles.padding} />
-      </Layout>
-    );
-  }, [detail, network, display]);
 
   return (
     <>
@@ -138,7 +72,91 @@ function AddressInfoBadge({address, network, api}: PropTypes) {
           adjustToContentHeight
           closeOnOverlayTap
           panGestureEnabled>
-          <View style={styles.modal}>{detailView}</View>
+          <View style={styles.modal}>
+            <Layout style={styles.detailContainer}>
+              <Layout>
+                <ModalTitle title={display} subtitle={` (@${network?.name})`} />
+              </Layout>
+              <Divider />
+              <ListItem
+                title="Display"
+                accessoryLeft={(props) => (
+                  <Icon {...props} name="person-outline" />
+                )}
+                accessoryRight={() => (
+                  <Text
+                    style={{maxWidth: '55%'}}
+                    selectable
+                    category="label"
+                    numberOfLines={1}
+                    ellipsizeMode="middle">
+                    {display}
+                  </Text>
+                )}
+              />
+              <ListItem
+                title="Legal"
+                accessoryLeft={(props) => (
+                  <Icon {...props} name="award-outline" />
+                )}
+                accessoryRight={() => (
+                  <Text selectable category="label">
+                    {u8aToString(detail?.data?.info.legal.asRaw) || 'Unset'}
+                  </Text>
+                )}
+              />
+              <ListItem
+                title="Email"
+                accessoryLeft={(props) => (
+                  <Icon {...props} name="email-outline" />
+                )}
+                accessoryRight={() => (
+                  <Text selectable category="label">
+                    {u8aToString(detail?.data?.info.email.asRaw) || 'Unset'}
+                  </Text>
+                )}
+              />
+              <ListItem
+                title="Twitter"
+                accessoryLeft={(props) => (
+                  <Icon {...props} name="twitter-outline" />
+                )}
+                accessoryRight={() => (
+                  <Text selectable category="label">
+                    {u8aToString(detail?.data?.info.twitter.asRaw) || 'Unset'}
+                  </Text>
+                )}
+              />
+              <ListItem
+                title="Riot"
+                accessoryLeft={(props) => (
+                  <Icon {...props} name="message-square-outline" />
+                )}
+                accessoryRight={() => (
+                  <Text selectable category="label">
+                    {u8aToString(detail?.data?.info.riot.asRaw) || 'Unset'}
+                  </Text>
+                )}
+              />
+              <ListItem
+                title="Web"
+                accessoryLeft={(props) => (
+                  <Icon {...props} name="browser-outline" />
+                )}
+                accessoryRight={() => (
+                  <Text selectable category="label">
+                    {u8aToString(detail?.data?.info.web.asRaw) || 'Unset'}
+                  </Text>
+                )}
+              />
+              <Divider style={globalStyles.divider} />
+              <Button
+                appearance="ghost"
+                onPress={() => modalRef.current?.close()}>
+                Close
+              </Button>
+            </Layout>
+          </View>
         </Modalize>
       </Portal>
     </>
