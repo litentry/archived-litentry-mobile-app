@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import DrawerScreen from 'screen/DrawerScreen';
@@ -11,6 +11,9 @@ import WebviewScreen from 'screen/WebviewScreen';
 import DevScreen from 'screen/DevScreen';
 import MyIdentityScreen from 'screen/MyIdentityScreen';
 import * as routeKeys from 'src/navigation/routeKeys';
+import {ChainApiContext} from 'context/ChainApiContext';
+import ApiLoadingPage from 'src/Atomic/pages/ApiLoadingPage';
+import {NetworkSelectScreen} from 'src/Atomic/pages/NetworkSelectScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -34,9 +37,12 @@ function DashboardStackNavigator() {
   );
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
-function AppNavigator() {
+function DrawerNavigator() {
   return (
     <Drawer.Navigator drawerContent={(props) => <DrawerScreen {...props} />}>
       <Drawer.Screen
@@ -55,4 +61,54 @@ function AppNavigator() {
   );
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const AppStack = createStackNavigator();
+
+function AppNavigator() {
+  const {api} = useContext(ChainApiContext);
+  return (
+    <AppStack.Navigator
+      headerMode={'none'}
+      screenOptions={{gestureEnabled: false}}>
+      {api ? (
+        <AppStack.Screen name={'App'} component={DrawerNavigator} />
+      ) : undefined}
+      <AppStack.Screen name={'ApiNavigator'} component={ApiLoadingNavigator} />
+    </AppStack.Navigator>
+  );
+}
+
 export default AppNavigator;
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const ApiLoadingStack = createStackNavigator();
+function ApiLoadingNavigator() {
+  return (
+    <ApiLoadingStack.Navigator
+      headerMode={'none'}
+      mode={'modal'}
+      screenOptions={{gestureEnabled: false}}>
+      <ApiLoadingStack.Screen
+        name={'ApiLoadingPage'}
+        component={ApiLoadingPage}
+        options={{gestureEnabled: false}}
+      />
+      <ApiLoadingStack.Screen
+        name={'NetworkSelectScreen'}
+        component={NetworkSelectScreen}
+        options={{
+          transitionSpec: {
+            open: {animation: 'timing', config: {duration: 0}},
+            close: {animation: 'timing', config: {duration: 0}},
+          },
+          cardStyle: {backgroundColor: 'transparent'},
+          cardOverlayEnabled: true,
+          gestureEnabled: false,
+        }}
+      />
+    </ApiLoadingStack.Navigator>
+  );
+}

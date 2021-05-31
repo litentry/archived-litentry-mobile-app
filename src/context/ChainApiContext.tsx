@@ -7,7 +7,6 @@ import React, {
   useRef,
   useCallback,
 } from 'react';
-
 import type BN from 'bn.js';
 import {NetworkContext} from './NetworkContext';
 import {ApiPromise, WsProvider} from '@polkadot/api';
@@ -16,9 +15,6 @@ import {formatBalance} from '@polkadot/util';
 import {setSS58Format} from '@polkadot/util-crypto';
 import {defaults as addressDefaults} from '@polkadot/util-crypto/address/defaults';
 import registry from 'src/typeRegistry';
-import LoadingView from 'presentational/LoadingView';
-import {Icon} from '@ui-kitten/components';
-import globalStyles, {colorGreen} from 'src/styles';
 
 type ApiChainStatusType = 'unknown' | 'connected' | 'disconnected' | 'ready';
 type ChainApiContextValueType = {
@@ -154,6 +150,7 @@ function ChainApiContextProvider(props: PropTypes) {
     }
 
     function handleError() {
+      setApi(undefined);
       setInProgress(false);
     }
     apiPromise.on('connected', handleConnect);
@@ -200,16 +197,10 @@ function ChainApiContextProvider(props: PropTypes) {
           }),
         );
 
-        logger.info(
-          `Chain Properties setup:\n${JSON.stringify(
-            {
-              decimals: tokenDecimals,
-              unit: tokenSymbol,
-            },
-            null,
-            4,
-          )}`,
-        );
+        logger.info('Chain Properties setup', {
+          decimals: tokenDecimals,
+          unit: tokenSymbol,
+        });
 
         formatBalance.setDefaults({
           decimals:
@@ -220,7 +211,6 @@ function ChainApiContextProvider(props: PropTypes) {
       });
 
       logger.info(`Start waring chain events for "${sections.join(',')}"`);
-      // @ts-ignore
       api.query.system
         .events((events) => {
           // Loop through the Vec<EventRecord>
@@ -265,21 +255,6 @@ function ChainApiContextProvider(props: PropTypes) {
     () => ({api, status, addSection, removeSection, inProgress}),
     [status, api, addSection, removeSection, inProgress],
   );
-
-  if (!api || inProgress) {
-    return (
-      <LoadingView
-        text={`Connecting to ${currentNetwork?.name}`}
-        renderIcon={() => (
-          <Icon
-            style={[globalStyles.inlineIconDimension, {color: colorGreen}]}
-            name="planet"
-            pack="ionic"
-          />
-        )}
-      />
-    );
-  }
 
   return (
     <ChainApiContext.Provider value={value}>

@@ -17,8 +17,8 @@ const BalanceIcon = (props: IconProps) => (
 );
 
 type PropTypes = {
-  onMenuPress: () => void;
-  onBalancePress: () => void;
+  onMenuPress?: () => void;
+  onBalancePress?: () => void;
   renderTitle: () => React.ReactElement;
 };
 
@@ -28,12 +28,13 @@ export default function ScreenNavigation({
   renderTitle,
 }: PropTypes) {
   const themeVars = useTheme();
-  const renderMenuButton = () => (
-    <TopNavigationAction onPress={onMenuPress} icon={MenuIcon} />
-  );
-  const renderBalanceButton = () => (
-    <TopNavigationAction onPress={onBalancePress} icon={BalanceIcon} />
-  );
+
+  const renderMenuButton = onMenuPress
+    ? () => <TopNavigationAction onPress={onMenuPress} icon={MenuIcon} />
+    : undefined;
+  const renderBalanceButton = onBalancePress
+    ? () => <TopNavigationAction onPress={onBalancePress} icon={BalanceIcon} />
+    : undefined;
 
   return (
     <SafeAreaView

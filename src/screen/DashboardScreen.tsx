@@ -31,17 +31,15 @@ import AccountTeaser from 'layout/AccountTeaser';
 import globalStyles from 'src/styles';
 import CouncilSummaryTeaser from 'layout/CouncilSummaryTeaser';
 import TreasurySummaryTeaser from 'layout/TreasurySummaryTeaser';
-import withNetworkSelect, {
-  InjectedPropTypes as NetworkSelectInjectedPropTypes,
-} from 'src/hoc/withNetworkSelect';
 import TipsSummaryTeaser from 'layout/tips/TipsSummaryTeaser';
 import {CompositeNavigationProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {tips} from 'src/navigation/routeKeys';
+import {NetworkContext} from 'context/NetworkContext';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
-    StackNavigationProp<DashboardStackParamList>,
+    StackNavigationProp<AppStackParamList>,
     DrawerNavigationProp<DrawerParamList>
   >;
 };
@@ -53,10 +51,10 @@ const AddIcon = (props: IconProps) => (
 function DashboardScreen({
   navigation,
   accountAddProps,
-  networkSelection,
-}: PropTypes & AddAccountInjectedPropTypes & NetworkSelectInjectedPropTypes) {
+}: PropTypes & AddAccountInjectedPropTypes) {
   const {show} = useContext(BalanceContext);
   const {accounts} = useContext(AccountContext);
+  const {currentNetwork} = useContext(NetworkContext);
 
   const {status} = useContext(ChainApiContext);
   const account = accounts?.[0];
@@ -64,12 +62,13 @@ function DashboardScreen({
 
   const renderTitle = () => {
     return (
-      <TouchableOpacity onPress={networkSelection.selectNetwork}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('NetworkSelectScreen')}>
         <Layout style={styles.titleContainer}>
           <Text category="s1">Litentry</Text>
-          {networkSelection.currentNetwork ? (
+          {currentNetwork ? (
             <NetworkItem
-              item={networkSelection.currentNetwork}
+              item={currentNetwork}
               isConnected={status === 'ready'}
             />
           ) : null}
@@ -139,4 +138,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default compose(withAddAccount, withNetworkSelect)(DashboardScreen);
+export default compose(withAddAccount)(DashboardScreen);
