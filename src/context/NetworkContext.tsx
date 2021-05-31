@@ -20,7 +20,7 @@ const PolkadotNetwork: NetworkType = {
 const KusamaNetwork: NetworkType = {
   name: 'Kusama',
   key: 'kusama',
-  ws: ['wss://kusama-rpc.polkadot.io'],
+  ws: ['wss://kusama.api.onfinality.io/public-ws'],
   color: '#e6194B',
 };
 
@@ -34,7 +34,7 @@ const KusamaNetwork: NetworkType = {
 const LitentryNetworkTest: NetworkType = {
   name: 'Litentry Testnet',
   key: 'litentry_test',
-  ws: ['ws://18.140.130.138:9944'],
+  ws: ['wss://3.0.201.137'],
   isTestnet: true,
   color: '#006400',
 };

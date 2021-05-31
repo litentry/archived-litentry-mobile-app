@@ -17,3 +17,12 @@ type DrawerParamList = {
   DevScreen: undefined;
   MyIdentity: {address: string};
 };
+
+type AppStackParamList = DrawerParamList &
+  ApiNavigatorParamList &
+  DashboardStackParamList;
+
+type ApiNavigatorParamList = {
+  ApiLoadingPage: undefined;
+  NetworkSelectScreen: undefined;
+};
