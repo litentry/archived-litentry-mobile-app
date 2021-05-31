@@ -1,4 +1,10 @@
-import React, {useRef, useMemo, useContext, useCallback, useState} from 'react';
+import React, {
+  useRef,
+  useMemo,
+  useContext,
+  useCallback,
+  useReducer,
+} from 'react';
 import {
   Text,
   Layout,
@@ -16,7 +22,7 @@ import {AccountAddressType, NetworkType} from 'src/types';
 import globalStyles, {standardPadding, monofontFamily} from 'src/styles';
 import ModalTitle from 'presentational/ModalTitle';
 import {NetworkContext} from 'context/NetworkContext';
-import {StyleSheet, Platform, Alert} from 'react-native';
+import {StyleSheet, Platform, Alert, View} from 'react-native';
 import Padder from 'presentational/Padder';
 import AddressInfoPreview from './AddressPreview';
 import {ChainApiContext} from 'context/ChainApiContext';
@@ -48,49 +54,38 @@ const InputIcon = (props: IconProps) => (
     <Icon {...props} pack="ionic" name="keypad-outline" />
   </Layout>
 );
-type StepType = 'input' | 'preview' | 'success' | 'selectNetwork';
 
 function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
   return function Hoc(props: T) {
     const modalRef = useRef<Modalize>();
-    const [selectedIndex, setSelectedIndex] = useState(0);
-    const {accounts, setAccount} = useContext(AccountContext);
+
     const {availableNetworks} = useContext(NetworkContext);
-    const [network, setNetwork] = useState<NetworkType>();
-    const [disabled, setDisabled] = useState(true);
-    const [step, setStep] = useState<StepType>('input');
-    const [address, setAddress] = useState('');
     const {api} = useContext(ChainApiContext);
+    const {accounts, setAccount} = useContext(AccountContext);
     const account = accounts?.[0];
-    const open = useCallback(() => {
-      modalRef.current?.open();
-    }, []);
+
+    const [state, dispatch] = useReducer(addAccountReducer, initialState);
+    const disabled = state.address.length === 0;
+
     const handleInputChange = (text: string) => {
-      setAddress(text);
-      setDisabled(!text.length);
+      dispatch({type: 'SET_ADDRESS', payload: text});
     };
+
     const accountAddProps = useMemo(
-      () => ({
-        open,
-        account,
-      }),
-      [open, account],
+      () => ({open: () => modalRef.current?.open(), account}),
+      [account],
     );
 
-    const handleScan = useCallback(
-      ({data}) => {
-        const parsed = parseAddress(data);
-        setAddress(parsed.address);
-        setDisabled(false);
-        setStep('selectNetwork');
-      },
-      [setAddress],
-    );
+    const handleScan = useCallback(({data}) => {
+      const parsed = parseAddress(data);
+      dispatch({type: 'SET_ADDRESS', payload: parsed.address});
+      dispatch({type: 'SET_STEP', payload: 'selectNetwork'});
+    }, []);
 
     const handleConfirm = useCallback(() => {
-      if (step === 'input') {
-        if (network && isAddressValid(network, address)) {
-          setStep('preview');
+      if (state.step === 'input') {
+        if (state.network && isAddressValid(state.network, state.address)) {
+          dispatch({type: 'SET_STEP', payload: 'preview'});
           return;
         }
 
@@ -100,60 +95,64 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
         );
       }
 
-      if (step === 'selectNetwork') {
-        setStep('preview');
+      if (state.step === 'selectNetwork') {
+        dispatch({type: 'SET_STEP', payload: 'preview'});
         return;
       }
 
-      if (step === 'preview') {
-        setAccount({name: '', address});
-        setStep('success');
+      if (state.step === 'preview') {
+        setAccount({name: '', address: state.address});
+        dispatch({type: 'SET_STEP', payload: 'success'});
         return;
       }
 
-      if (step === 'success') {
+      if (state.step === 'success') {
         modalRef.current?.close();
-        setStep('input');
-        setAddress('');
-        setDisabled(true);
+        dispatch({type: 'RESET'});
+
         return;
       }
-    }, [step, setAccount, address, network]);
+    }, [setAccount, state.address, state.network, state.step]);
 
     const handleCancel = () => {
       modalRef.current?.close();
+      dispatch({type: 'RESET'});
     };
 
     const confirmBtnDisabled = useMemo(() => {
-      if (step === 'input' || step === 'selectNetwork') {
-        return !network;
+      if (state.step === 'input' || state.step === 'selectNetwork') {
+        return !state.network;
       }
 
       return disabled;
-    }, [disabled, step, network]);
+    }, [disabled, state]);
 
     const content = useMemo(() => {
-      switch (step) {
+      switch (state.step) {
         case 'input':
           return (
             <TabView
               shouldLoadComponent={(index) => {
-                return selectedIndex === index;
+                return state.tabIndex === index;
               }}
               indicatorStyle={styles.tabViewIndicator}
               style={styles.tabViewContainer}
-              selectedIndex={selectedIndex}
-              onSelect={setSelectedIndex}>
+              selectedIndex={state.tabIndex}
+              onSelect={(index) =>
+                dispatch({type: 'SET_TAB_INDEX', payload: index})
+              }>
               <Tab title={InputIcon}>
                 <Layout style={styles.tabContainer}>
                   <NetworkSelection
                     data={availableNetworks}
-                    onSelect={setNetwork}
+                    onSelect={(network) =>
+                      dispatch({type: 'SET_NETWORK', payload: network})
+                    }
                   />
                   <Padder scale={1} />
                   <Input
                     onChangeText={handleInputChange}
-                    value={address}
+                    value={state.address}
                     multiline={true}
                     textStyle={styles.input}
                     placeholder="👉 Paste address here, e.g. 167r...14h"
@@ -177,18 +176,20 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
               ]}>
               <NetworkSelection
                 data={availableNetworks}
-                onSelect={setNetwork}
+                onSelect={(network) =>
+                  dispatch({type: 'SET_NETWORK', payload: network})
+                }
               />
             </Layout>
           );
 
         case 'preview':
           return (
-            network && (
+            state.network && (
               <AddressInfoPreview
-                address={address}
+                address={state.address}
                 api={api}
-                network={network}
+                network={state.network}
               />
             )
           );
@@ -200,14 +201,13 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
           );
       }
     }, [
-      address,
-      network,
+      state.step,
+      state.tabIndex,
+      state.address,
+      state.network,
       availableNetworks,
-      selectedIndex,
-      api,
-      step,
       handleScan,
-      setNetwork,
+      api,
     ]);
 
     return (
@@ -230,19 +230,24 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
               {content}
               <Divider style={globalStyles.divider} />
               <Layout style={styles.btnContainer}>
-                <Button
-                  style={styles.btn}
-                  appearance="ghost"
-                  status="danger"
-                  onPress={handleCancel}>
-                  {'Cancel'}
-                </Button>
+                {state.step !== 'success' ? (
+                  <>
+                    <Button
+                      style={styles.btn}
+                      appearance="ghost"
+                      status="danger"
+                      onPress={handleCancel}>
+                      {'Cancel'}
+                    </Button>
+                    <View style={styles.gap20} />
+                  </>
+                ) : undefined}
                 <Button
                   style={styles.btn}
                   appearance="ghost"
                   disabled={confirmBtnDisabled}
                   onPress={handleConfirm}>
-                  {step === 'success' ? 'Close' : 'Confirm'}
+                  {state.step === 'success' ? 'Close' : 'Confirm'}
                 </Button>
               </Layout>
             </Layout>
@@ -284,12 +289,55 @@ const styles = StyleSheet.create({
     marginRight: standardPadding / 2,
   },
   btnContainer: {
-    flex: 1,
     flexDirection: 'row',
   },
   btn: {
     flex: 1,
   },
+  gap20: {
+    width: 20,
+  },
 });
 
 export default withAddAccount;
+
+/**
+ * Reducer
+ */
+type StepType = 'input' | 'preview' | 'success' | 'selectNetwork';
+type State = {
+  tabIndex: number;
+  network?: NetworkType;
+  step: StepType;
+  address: string;
+};
+
+type Action =
+  | {type: 'RESET'}
+  | {type: 'SET_TAB_INDEX'; payload: number}
+  | {type: 'SET_NETWORK'; payload: NetworkType}
+  | {type: 'SET_ADDRESS'; payload: string}
+  | {type: 'SET_STEP'; payload: StepType};
+
+const initialState: State = {
+  tabIndex: 0,
+  network: undefined,
+  step: 'input',
+  address: '',
+};
+
+function addAccountReducer(state: State, action: Action) {
+  switch (action.type) {
+    case 'SET_ADDRESS':
+      return {...state, address: action.payload};
+    case 'SET_STEP':
+      return {...state, step: action.payload};
+    case 'SET_TAB_INDEX':
+      return {...state, tabIndex: action.payload};
+    case 'SET_NETWORK':
+      return {...state, network: action.payload};
+    case 'RESET':
+      return initialState;
+  }
+  return state;
+}
