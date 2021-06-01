@@ -211,40 +211,41 @@ function ChainApiContextProvider(props: PropTypes) {
       });
 
       logger.info(`Start waring chain events for "${sections.join(',')}"`);
-      api.query.system
-        .events((events) => {
-          // Loop through the Vec<EventRecord>
-          events.forEach((record) => {
-            // Extract the phase, event and the event types
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const {event, phase} = record;
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const types = event.typeDef;
-
-            if (sections.includes(event.section)) {
-              logger.info(event.section);
-            }
-            // if (event.section === 'identity') {
-            //   logger.info(JSON.stringify(event, null, 4));
-            //   logger.info(
-            //     `\t${event.section}:${
-            //       event.method
-            //     }:: (phase=${phase.toString()})`,
-            //   );
-            //
-            //   logger.info(`\t\t${event.meta.documentation.toString()}`);
-            //
-            //   // Loop through each of the parameters, displaying the type and data
-            //   event.data.forEach((data, index) => {
-            //     logger.info(`\t\t\t${types[index].type}: ${data.toString()}`);
-            //     console.log('data', data, index);
-            //   });
-            // }
-          });
-        })
-        .then((unsub) => {
-          eventStreamHandlerRef.current = unsub;
-        });
+      // TODO: currently no need to monitor events in app
+      // api.query.system
+      //   .events((events) => {
+      //     // Loop through the Vec<EventRecord>
+      //     events.forEach((record) => {
+      //       // Extract the phase, event and the event types
+      //       // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      //       const {event, phase} = record;
+      //       // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      //       const types = event.typeDef;
+      //
+      //       if (sections.includes(event.section)) {
+      //         logger.info(event.section);
+      //       }
+      //       // if (event.section === 'identity') {
+      //       //   logger.info(JSON.stringify(event, null, 4));
+      //       //   logger.info(
+      //       //     `\t${event.section}:${
+      //       //       event.method
+      //       //     }:: (phase=${phase.toString()})`,
+      //       //   );
+      //       //
+      //       //   logger.info(`\t\t${event.meta.documentation.toString()}`);
+      //       //
+      //       //   // Loop through each of the parameters, displaying the type and data
+      //       //   event.data.forEach((data, index) => {
+      //       //     logger.info(`\t\t\t${types[index].type}: ${data.toString()}`);
+      //       //     console.log('data', data, index);
+      //       //   });
+      //       // }
+      //     });
+      //   })
+      //   .then((unsub) => {
+      //     eventStreamHandlerRef.current = unsub;
+      //   });
     } else {
       eventStreamHandlerRef.current?.();
       eventStreamHandlerRef.current = null;

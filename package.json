@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@eva-design/eva": "^2.0.0",
-    "@polkadot/api": "3.9.2",
+    "@polkadot/api": "^4.12.1",
     "@polkadot/reactnative-identicon": "0.53.1",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/clipboard": "^1.5.1",
