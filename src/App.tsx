@@ -9,37 +9,33 @@ import AccountContextProvider from 'context/AccountContextProvider';
 import BalanceContextProvider from 'context/BalanceContext';
 import TxContextProvider from 'context/TxContext';
 import AppNavigator from 'src/navigation/AppNavigator';
-
 import {IonicIconsPack} from './Ionic-icons';
+import {ErrorBoundary} from 'src/ErrorBoundary';
 
 // init type registry
 import 'src/typeRegistry';
 
-function WithContexts({children}: {children: React.ReactNode}) {
-  return (
-    <ChainApiContextProvider>
-      <AccountContextProvider>
-        <BalanceContextProvider>
-          <TxContextProvider>{children}</TxContextProvider>
-        </BalanceContextProvider>
-      </AccountContextProvider>
-    </ChainApiContextProvider>
-  );
-}
-
-export default () => {
+export default function App() {
   const {theme} = useContext(ThemeContext);
 
   return (
     <>
       <IconRegistry icons={[EvaIconsPack, IonicIconsPack]} />
       <ApplicationProvider {...eva} theme={eva[theme]}>
-        <Host>
-          <WithContexts>
-            <AppNavigator />
-          </WithContexts>
-        </Host>
+        <ErrorBoundary>
+          <Host>
+            <ChainApiContextProvider>
+              <AccountContextProvider>
+                <BalanceContextProvider>
+                  <TxContextProvider>
+                    <AppNavigator />
+                  </TxContextProvider>
+                </BalanceContextProvider>
+              </AccountContextProvider>
+            </ChainApiContextProvider>
+          </Host>
+        </ErrorBoundary>
       </ApplicationProvider>
     </>
   );
-};
+}
