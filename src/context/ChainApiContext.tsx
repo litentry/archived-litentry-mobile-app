@@ -59,7 +59,6 @@ function ChainApiContextProvider(props: PropTypes) {
   const [sections, setSections] = useState<string[]>([]);
   const [wsConnectionIndex, setWsConnectionIndex] = useState(0);
   const eventStreamHandlerRef = useRef<Function | null>(null);
-  const retryCounter = useRef(0);
 
   /**
    * Add section to watch, such as `identity`
@@ -83,86 +82,73 @@ function ChainApiContextProvider(props: PropTypes) {
     [sections],
   );
 
-  // addSection /removeSection
-  // addSubscription / removeSubscription
   useEffect(() => {
-    console.log('Render ChainApiContext');
-
-    if (!currentNetwork) {
+    const wsAddress = currentNetwork?.ws?.[wsConnectionIndex];
+    if (!wsAddress) {
       return;
     }
 
-    if (retryCounter.current > 100) {
-      return;
-    }
-
+    setApi(undefined);
     setInProgress(true);
-    logger.debug(
-      `ChainApiContext: trying to connected to (${wsConnectionIndex}) ${
-        currentNetwork.ws![wsConnectionIndex]
-      }`,
-    );
+    logger.debug('ChainApiContext: trying to connected to', wsAddress);
 
-    // const provider = new WsProvider(currentNetwork.ws[wsConnectionIndex]);
-    const provider = new WsProvider(currentNetwork.ws![wsConnectionIndex]);
+    const provider = new WsProvider(wsAddress);
     const apiPromise = new ApiPromise({provider});
 
     function handleConnect() {
+      logger.debug('ChainApiContext: Api connected');
       setStatus('connected');
     }
 
-    function handleDisconnect() {
-      logger.debug('ChainApiContext: Api disconnected');
-
-      setApi(undefined);
-
-      if (currentNetwork) {
-        setWsConnectionIndex(
-          (wsConnectionIndex + 1) % currentNetwork.ws!.length,
-        );
-
-        logger.debug(
-          `ChainApiContext: switching ws provider to (${wsConnectionIndex}) ${
-            currentNetwork.ws![wsConnectionIndex]
-          }`,
-        );
-      }
-      retryCounter.current = retryCounter.current + 1;
-
-      setStatus('disconnected');
-      throw new Error(
-        `ws connect to ${
-          currentNetwork?.ws![wsConnectionIndex] || 'unknown ws connection'
-        } failed`,
-      );
-    }
-
     function handleReady() {
-      logger.debug(
-        `ChainApiContext: Api ready at ${wsConnectionIndex} ${
-          currentNetwork?.ws![wsConnectionIndex] || 'Unknown'
-        }`,
-      );
+      logger.debug('ChainApiContext: Api ready at', wsAddress);
       setInProgress(false);
 
       setStatus('ready');
       setApi(apiPromise);
     }
 
-    function handleError() {
+    function handleDisconnect() {
+      logger.debug('ChainApiContext: Api disconnected', wsAddress);
+
+      setApi(undefined);
+      setStatus('disconnected');
+    }
+
+    function handleError(error: any) {
+      logger.debug('ChainApiContext: Api error at', wsAddress, error);
       setApi(undefined);
       setInProgress(false);
     }
+
     apiPromise.on('connected', handleConnect);
-    apiPromise.on('disconnected', handleDisconnect);
     apiPromise.on('ready', handleReady);
+    apiPromise.on('disconnected', handleDisconnect);
     apiPromise.on('error', handleError);
+
+    const retryInterval = setInterval(() => {
+      if (!apiPromise.isConnected) {
+        const webSocketAddresses = currentNetwork?.ws ?? [];
+        // pick the next ws api location
+        // rerun the effect by changing the wsConnectionIndex dependency
+        if (webSocketAddresses.length > 1) {
+          const nextWsConnectionIndex =
+            (wsConnectionIndex + 1) % webSocketAddresses.length;
+          setWsConnectionIndex(nextWsConnectionIndex);
+
+          logger.debug(
+            `ChainApiContext: switching ws provider to (${wsConnectionIndex}) ${webSocketAddresses[nextWsConnectionIndex]}`,
+          );
+        }
+      }
+    }, 5000);
 
     return () => {
       apiPromise.off('connected', handleConnect);
-      apiPromise.off('disconnected', handleDisconnect);
       apiPromise.off('ready', handleReady);
+      apiPromise.off('disconnected', handleDisconnect);
       apiPromise.off('error', handleError);
+      clearInterval(retryInterval);
     };
   }, [currentNetwork, wsConnectionIndex]);
 
