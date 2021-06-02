@@ -22,7 +22,6 @@ export class ErrorBoundary extends React.Component<{}, {hasError: boolean}> {
 
   render() {
     if (this.state.hasError) {
-      // You can render any custom fallback UI
       return (
         <Layout style={globalStyles.centeredContainer}>
           <Text>Something went wrong!</Text>
