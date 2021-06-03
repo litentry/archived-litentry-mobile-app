@@ -7,3 +7,4 @@ export const motionDetail = 'MotionDetail' as const;
 export const webview = 'Webview' as const;
 export const devScreen = 'DevScreen' as const;
 export const myIdentity = 'MyIdentity' as const;
+export const councilScreen = 'CouncilScreen' as const;
