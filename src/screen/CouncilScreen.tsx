@@ -1,8 +1,8 @@
 import React, {useContext} from 'react';
 import {Divider, Icon, Layout, List, ListItem, Spinner, Text, TopNavigationAction} from '@ui-kitten/components';
-import globalStyles from 'src/styles';
+import globalStyles, {standardPadding} from 'src/styles';
 import {ChainApiContext} from 'context/ChainApiContext';
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {u8aToString} from '@polkadot/util';
 import {IdentityInfo} from '@polkadot/types/interfaces/identity/types';
 import {ApiPromise} from '@polkadot/api';
@@ -12,6 +12,7 @@ import useAsyncRetry from 'react-use/lib/useAsyncRetry';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import {NavigationProp} from '@react-navigation/native';
 import Identicon from '@polkadot/reactnative-identicon';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 export function CouncilScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {api} = useContext(ChainApiContext);
@@ -40,29 +41,35 @@ export function CouncilScreen({navigation}: {navigation: NavigationProp<Dashboar
           <TopNavigationAction onPress={navigation.goBack} icon={(p) => <Icon {...p} name={'arrow-back-outline'} />} />
         }
       />
-      {loading ? (
-        <View style={globalStyles.centeredContainer}>
-          <Spinner />
+      <SafeAreaView edges={['bottom']} style={globalStyles.flex}>
+        {loading ? (
+          <View style={globalStyles.centeredContainer}>
+            <Spinner />
+          </View>
+        ) : null}
+        <View style={styles.header}>
+          <Text category={'s1'}>Members</Text>
+          <Text category={'p2'}>{`seats ${data?.length}/${data?.length}`}</Text>
         </View>
-      ) : null}
-      <List
-        data={data}
-        renderItem={({item}: {item: Exclude<typeof data, undefined>[0]}) => {
-          const text = u8aToString(item.info.display.asRaw);
-          return <ListItem title={text} accessoryLeft={() => <Identicon value={item.accountId} size={30} />} />;
-        }}
-        keyExtractor={(item: Exclude<typeof data, undefined>[0], index) =>
-          item.accountId.toString() ?? index.toString()
-        }
-        ItemSeparatorComponent={Divider}
-      />
+        <List
+          data={data}
+          renderItem={({item}: {item: Exclude<typeof data, undefined>[0]}) => {
+            const text = u8aToString(item.info.display.asRaw);
+            return <ListItem title={text} accessoryLeft={() => <Identicon value={item.accountId} size={30} />} />;
+          }}
+          keyExtractor={(item: Exclude<typeof data, undefined>[0], index) =>
+            item.accountId.toString() ?? index.toString()
+          }
+          ItemSeparatorComponent={Divider}
+        />
+      </SafeAreaView>
     </Layout>
   );
 }
 
-// const styles = StyleSheet.create({
-//   loadingContainer: {flex:1}
-// })
+const styles = StyleSheet.create({
+  header: {justifyContent: 'space-between', flexDirection: 'row', padding: standardPadding * 2},
+});
 
 async function getAccountsIdentityInfo(accountIds: Vec<AccountId>, api: ApiPromise) {
   const registrationOptions = await api.query.identity.identityOf.multi<Option<Registration>>(accountIds);
