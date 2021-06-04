@@ -13,5 +13,3 @@ updates:
     allow:
     # check only direct dependencies
       - dependency-type: "direct"
-    labels:
-      - "yarn dependencies"
