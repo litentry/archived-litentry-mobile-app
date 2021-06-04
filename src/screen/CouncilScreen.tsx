@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {Icon, Layout, List, ListItem, Spinner, Text, TopNavigationAction} from '@ui-kitten/components';
+import {Divider, Icon, Layout, List, ListItem, Spinner, Text, TopNavigationAction} from '@ui-kitten/components';
 import globalStyles from 'src/styles';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {View} from 'react-native';
@@ -11,6 +11,7 @@ import {Option, Vec} from '@polkadot/types';
 import useAsyncRetry from 'react-use/lib/useAsyncRetry';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import {NavigationProp} from '@react-navigation/native';
+import Identicon from '@polkadot/reactnative-identicon';
 
 export function CouncilScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {api} = useContext(ChainApiContext);
@@ -45,12 +46,15 @@ export function CouncilScreen({navigation}: {navigation: NavigationProp<Dashboar
         </View>
       ) : null}
       <List
-        data={data ?? []}
-        renderItem={({item}) => {
-          const text = u8aToString(item.display.asRaw);
-          return <ListItem title={text} accessoryLeft={(props) => <Icon {...props} name={'person'} />} />;
+        data={data}
+        renderItem={({item}: {item: Exclude<typeof data, undefined>[0]}) => {
+          const text = u8aToString(item.info.display.asRaw);
+          return <ListItem title={text} accessoryLeft={() => <Identicon value={item.accountId} size={30} />} />;
         }}
-        keyExtractor={(item, index) => item.hash.toString() ?? index.toString()}
+        keyExtractor={(item: Exclude<typeof data, undefined>[0], index) =>
+          item.accountId.toString() ?? index.toString()
+        }
+        ItemSeparatorComponent={Divider}
       />
     </Layout>
   );
@@ -60,15 +64,15 @@ export function CouncilScreen({navigation}: {navigation: NavigationProp<Dashboar
 //   loadingContainer: {flex:1}
 // })
 
-async function getAccountsIdentityInfo(accountIds: Vec<AccountId>, api: ApiPromise): Promise<IdentityInfo[]> {
+async function getAccountsIdentityInfo(accountIds: Vec<AccountId>, api: ApiPromise) {
   const registrationOptions = await api.query.identity.identityOf.multi<Option<Registration>>(accountIds);
 
-  let response: IdentityInfo[] = [];
+  let response: {info: IdentityInfo; accountId: AccountId}[] = [];
 
   for (const index in registrationOptions) {
     const registration = registrationOptions[index].unwrapOr(undefined);
     if (registration) {
-      response.push(registration.info);
+      response.push({accountId: accountIds[index], info: registration.info});
     } else {
       // check for parent accounts
       const superAccount = (await api.query.identity.superOf(accountIds[index])).unwrapOr(undefined);
@@ -76,7 +80,7 @@ async function getAccountsIdentityInfo(accountIds: Vec<AccountId>, api: ApiPromi
         const [accountId] = superAccount;
         const r = (await api.query.identity.identityOf(accountId)).unwrapOr(undefined);
         if (r) {
-          response.push(r.info);
+          response.push({accountId, info: r.info});
         }
       }
     }
