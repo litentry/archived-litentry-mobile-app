@@ -1,11 +1,11 @@
 import React, {useContext} from 'react';
-import {StyleSheet, TouchableOpacity, ScrollView, View, Alert} from 'react-native';
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {flowRight as compose} from 'lodash';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import NetworkItem from 'presentational/NetworkItem';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 
-import {Text, Layout, Divider, Button, Icon, IconProps, useTheme, TopNavigationAction} from '@ui-kitten/components';
+import {Button, Divider, Icon, IconProps, Layout, Text, TopNavigationAction, useTheme} from '@ui-kitten/components';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {BalanceContext} from 'context/BalanceContext';
 import {AccountContext} from 'context/AccountContextProvider';
@@ -18,7 +18,7 @@ import TreasurySummaryTeaser from 'layout/TreasurySummaryTeaser';
 import TipsSummaryTeaser from 'layout/tips/TipsSummaryTeaser';
 import {CompositeNavigationProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {councilScreen, tips} from 'src/navigation/routeKeys';
+import {councilScreen, tips, treasuryScreen} from 'src/navigation/routeKeys';
 import {NetworkContext} from 'context/NetworkContext';
 
 type PropTypes = {
@@ -58,7 +58,7 @@ function DashboardScreen({navigation, accountAddProps}: PropTypes & AddAccountIn
         }
         renderTitle={renderTitle}
       />
-      <Divider style={{height: 2}} />
+      <Divider style={styles.divider} />
       <FadeInAnimatedView>
         {!account ? (
           <Layout style={styles.container} level="1">
@@ -73,7 +73,7 @@ function DashboardScreen({navigation, accountAddProps}: PropTypes & AddAccountIn
             <View style={[globalStyles.flex, styles.main, {backgroundColor: theme['background-basic-color-1']}]}>
               <ScrollView style={styles.scrollView}>
                 <CouncilSummaryTeaser onMorePress={() => navigation.navigate(councilScreen)} />
-                <TreasurySummaryTeaser onMorePress={() => Alert.alert('Navigate to Treasury Screen')} />
+                <TreasurySummaryTeaser onMorePress={() => navigation.navigate(treasuryScreen)} />
                 <TipsSummaryTeaser onMorePress={() => navigation.navigate(tips)} />
               </ScrollView>
             </View>
@@ -95,6 +95,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     alignItems: 'flex-start',
   },
+  divider: {height: 2},
 });
 
 export default compose(withAddAccount)(DashboardScreen);
