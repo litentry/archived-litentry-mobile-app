@@ -1,8 +1,8 @@
 import React, {useContext} from 'react';
-import {Divider, Icon, Layout, List, ListItem, Spinner, Text, TopNavigationAction} from '@ui-kitten/components';
+import {Divider, Icon, Layout, ListItem, Spinner, Text, TopNavigationAction} from '@ui-kitten/components';
 import globalStyles, {standardPadding} from 'src/styles';
 import {ChainApiContext} from 'context/ChainApiContext';
-import {StyleSheet, View} from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
 import {u8aToString} from '@polkadot/util';
 import {ApiPromise} from '@polkadot/api';
 import {AccountId} from '@polkadot/types/interfaces';
@@ -11,7 +11,6 @@ import ScreenNavigation from 'layout/ScreenNavigation';
 import {NavigationProp} from '@react-navigation/native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import type {DeriveTreasuryProposal} from '@polkadot/api-derive/types';
 import {getAccountsIdentityInfo} from 'service/api/account';
 
 export function TreasuryScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
@@ -50,9 +49,9 @@ export function TreasuryScreen({navigation}: {navigation: NavigationProp<Dashboa
           <Text category={'s1'}>Proposals</Text>
           <Text category={'p2'}>{`${data?.proposals.proposals.length} / ${data?.proposals.proposalCount}`}</Text>
         </View>
-        <List
+        <FlatList
           data={data?.proposals.proposals}
-          renderItem={({item}: {item: DeriveTreasuryProposal}) => {
+          renderItem={({item}) => {
             const accountInfo = data?.accountInfos.find((i) => i.accountId.eq(item.proposal.proposer));
             const text = accountInfo ? u8aToString(accountInfo.info.display.asRaw) : 'unknown';
             return (
@@ -65,16 +64,16 @@ export function TreasuryScreen({navigation}: {navigation: NavigationProp<Dashboa
               />
             );
           }}
-          keyExtractor={(item: DeriveTreasuryProposal, index) => item.proposal.proposer.toString() ?? index.toString()}
+          keyExtractor={(item, index) => item.proposal.proposer.toString() ?? index.toString()}
           ItemSeparatorComponent={Divider}
         />
         <View style={styles.header}>
           <Text category={'s1'}>Approved</Text>
           <Text category={'p2'}>{`${data?.proposals.approvals.length}`}</Text>
         </View>
-        <List
+        <FlatList
           data={data?.proposals.approvals}
-          renderItem={({item}: {item: DeriveTreasuryProposal}) => {
+          renderItem={({item}) => {
             const accountInfo = data?.accountInfos.find((i) => i.accountId.eq(item.proposal.proposer));
             const text = accountInfo ? u8aToString(accountInfo.info.display.asRaw) : 'unknown';
             return (
@@ -87,7 +86,7 @@ export function TreasuryScreen({navigation}: {navigation: NavigationProp<Dashboa
               />
             );
           }}
-          keyExtractor={(item: DeriveTreasuryProposal, index) => item.proposal.proposer.toString() ?? index.toString()}
+          keyExtractor={(item, index) => item.proposal.proposer.toString() ?? index.toString()}
           ItemSeparatorComponent={Divider}
         />
       </SafeAreaView>
