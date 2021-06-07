@@ -1,8 +1,8 @@
 import React, {useContext} from 'react';
-import {Divider, Icon, Layout, List, ListItem, Spinner, Text, TopNavigationAction} from '@ui-kitten/components';
+import {Divider, Icon, Layout, ListItem, Spinner, Text, TopNavigationAction} from '@ui-kitten/components';
 import globalStyles, {standardPadding} from 'src/styles';
 import {ChainApiContext} from 'context/ChainApiContext';
-import {StyleSheet, View} from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
 import {u8aToString} from '@polkadot/util';
 import useAsyncRetry from 'react-use/lib/useAsyncRetry';
 import ScreenNavigation from 'layout/ScreenNavigation';
@@ -48,15 +48,13 @@ export function CouncilScreen({navigation}: {navigation: NavigationProp<Dashboar
           <Text category={'s1'}>Members</Text>
           <Text category={'p2'}>{`seats ${data?.length}/${data?.length}`}</Text>
         </View>
-        <List
+        <FlatList
           data={data}
-          renderItem={({item}: {item: Exclude<typeof data, undefined>[0]}) => {
+          renderItem={({item}) => {
             const text = u8aToString(item.info.display.asRaw);
             return <ListItem title={text} accessoryLeft={() => <Identicon value={item.accountId} size={30} />} />;
           }}
-          keyExtractor={(item: Exclude<typeof data, undefined>[0], index) =>
-            item.accountId.toString() ?? index.toString()
-          }
+          keyExtractor={(item, index) => item.accountId.toString() ?? index.toString()}
           ItemSeparatorComponent={Divider}
         />
       </SafeAreaView>
