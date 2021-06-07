@@ -14,8 +14,7 @@ export const colorGreenLight = 'rgba(27, 197, 117, 0.3)';
 export const defaultIconColor = '#778899';
 
 export const colorRed = '#FF3D71';
-export const getIconColorByTheme = (theme: 'light' | 'dark') =>
-  theme === 'light' ? 'black' : 'white';
+export const getIconColorByTheme = (theme: 'light' | 'dark') => (theme === 'light' ? 'black' : 'white');
 export const hitSlop = {top: 5, bottom: 5, left: 5, right: 5};
 
 const inlineIconDimension = {
@@ -75,6 +74,9 @@ const globalStyles = StyleSheet.create({
     elevation: 5,
   },
 
+  monoFont: {
+    fontFamily: monofontFamily,
+  },
   aye: {
     color: colorGreen,
     fontFamily: monofontFamily,

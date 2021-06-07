@@ -8,6 +8,7 @@ type DashboardStackParamList = {
   TipDetail: {
     hash: string;
   };
+  CouncilScreen: undefined;
 };
 
 type DrawerParamList = {
@@ -18,11 +19,9 @@ type DrawerParamList = {
   MyIdentity: {address: string};
 };
 
-type AppStackParamList = DrawerParamList &
-  ApiNavigatorParamList &
-  DashboardStackParamList;
+type AppStackParamList = DrawerParamList & ApiNavigatorParamList & DashboardStackParamList;
 
 type ApiNavigatorParamList = {
-  ApiLoadingPage: undefined;
+  ApiLoadingScreen: undefined;
   NetworkSelectScreen: undefined;
 };
