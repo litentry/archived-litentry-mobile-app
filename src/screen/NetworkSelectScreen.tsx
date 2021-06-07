@@ -15,11 +15,7 @@ export type InjectedPropTypes = {
   };
 };
 
-export function NetworkSelectScreen({
-  navigation,
-}: {
-  navigation: NavigationProp<any>;
-}) {
+export function NetworkSelectScreen({navigation}: {navigation: NavigationProp<any>}) {
   const modalRef = useRef<Modalize>(null);
   React.useEffect(() => {
     modalRef.current?.open();
@@ -27,15 +23,13 @@ export function NetworkSelectScreen({
 
   const {api} = useContext(ChainApiContext);
   function onClose() {
-    navigation.navigate('ApiLoadingPage');
+    navigation.navigate('ApiLoadingScreen');
     if (api) {
       navigation.navigate('App');
     }
   }
 
-  const {currentNetwork, availableNetworks, select} = useContext(
-    NetworkContext,
-  );
+  const {currentNetwork, availableNetworks, select} = useContext(NetworkContext);
 
   return (
     <Modalize

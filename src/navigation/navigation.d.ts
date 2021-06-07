@@ -22,6 +22,6 @@ type DrawerParamList = {
 type AppStackParamList = DrawerParamList & ApiNavigatorParamList & DashboardStackParamList;
 
 type ApiNavigatorParamList = {
-  ApiLoadingPage: undefined;
+  ApiLoadingScreen: undefined;
   NetworkSelectScreen: undefined;
 };

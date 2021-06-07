@@ -63,7 +63,11 @@ const ApiLoadingStack = createStackNavigator();
 function ApiLoadingNavigator() {
   return (
     <ApiLoadingStack.Navigator headerMode={'none'} mode={'modal'} screenOptions={{gestureEnabled: false}}>
-      <ApiLoadingStack.Screen name={'ApiLoadingPage'} component={ApiLoadingScreen} options={{gestureEnabled: false}} />
+      <ApiLoadingStack.Screen
+        name={'ApiLoadingScreen'}
+        component={ApiLoadingScreen}
+        options={{gestureEnabled: false}}
+      />
       <ApiLoadingStack.Screen
         name={'NetworkSelectScreen'}
         component={NetworkSelectScreen}
