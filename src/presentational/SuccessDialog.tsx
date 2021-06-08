@@ -1,17 +1,18 @@
 import React from 'react';
 import {StyleSheet, StyleProp, TextStyle, ViewStyle} from 'react-native';
-import {Layout, Text, Icon} from '@ui-kitten/components';
-import {standardPadding, monofontFamily, colorGreen} from 'src/styles';
+import {Layout, Text, Icon, Button, Divider} from '@ui-kitten/components';
+import globalStyles, {standardPadding, monofontFamily, colorGreen} from 'src/styles';
 
 type PropTypes = {
   text: string;
   inline?: boolean;
   textStyles?: StyleProp<TextStyle>;
   containerStyle?: StyleProp<ViewStyle>;
+  onClosePress?: () => void;
 };
 
 function SuccessDialog(props: PropTypes) {
-  const {text, inline = false, textStyles = {}, containerStyle = {}} = props;
+  const {text, inline = false, textStyles = {}, containerStyle = {}, onClosePress = () => undefined} = props;
 
   return (
     <Layout style={[styles.container, inline ? {} : styles.flex, containerStyle]}>
@@ -21,6 +22,10 @@ function SuccessDialog(props: PropTypes) {
           {text}
         </Text>
       </Layout>
+      <Divider style={styles.divider} />
+      <Button appearance="ghost" onPress={onClosePress}>
+        Close
+      </Button>
     </Layout>
   );
 }
@@ -43,6 +48,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontFamily: monofontFamily,
     padding: standardPadding * 4,
+  },
+  divider: {
+    ...globalStyles.divider,
+    width: '90%',
   },
 });
 
