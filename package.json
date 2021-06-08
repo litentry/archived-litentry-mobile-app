@@ -56,7 +56,7 @@
     "react-native-randombytes": "^3.6.0",
     "react-native-reanimated": "^1.13.2",
     "react-native-safe-area-context": "^3.1.9",
-    "react-native-screens": "^2.15.0",
+    "react-native-screens": "^3.3.0",
     "react-native-sensitive-info": "^5.5.8",
     "react-native-substrate-sign": "^1.1.1",
     "react-native-svg": "^12.1.0",
