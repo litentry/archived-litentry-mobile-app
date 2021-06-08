@@ -1,12 +1,12 @@
 import {Option} from '@polkadot/types';
 import {AccountId, Registration} from '@polkadot/types/interfaces';
-import {ApiPromise} from '@polkadot/api';
 import {IdentityInfo} from '@polkadot/types/interfaces/identity/types';
+import {ApiPromise} from '@polkadot/api';
 
-export async function getAccountsIdentityInfo(accountIds: AccountId[], api: ApiPromise) {
+export async function getAccountsIdentityInfo(accountIds: AccountId[] | string[] | Uint8Array[], api: ApiPromise) {
   const registrationOptions = await api.query.identity.identityOf.multi<Option<Registration>>(accountIds);
 
-  let response: {info: IdentityInfo; accountId: AccountId}[] = [];
+  let response: {info: IdentityInfo; accountId: AccountId | Uint8Array | string}[] = [];
 
   for (const index in registrationOptions) {
     const registration = registrationOptions[index].unwrapOr(undefined);

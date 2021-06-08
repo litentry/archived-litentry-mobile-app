@@ -52,7 +52,9 @@ export function TreasuryScreen({navigation}: {navigation: NavigationProp<Dashboa
         <FlatList
           data={data?.proposals.proposals}
           renderItem={({item}) => {
-            const accountInfo = data?.accountInfos.find((i) => i.accountId.eq(item.proposal.proposer));
+            const accountInfo = data?.accountInfos.find(
+              (i) => i.accountId.toString() === item.proposal.proposer.toString(),
+            );
             const text = accountInfo ? u8aToString(accountInfo.info.display.asRaw) : 'unknown';
             return (
               <ListItem
@@ -74,8 +76,11 @@ export function TreasuryScreen({navigation}: {navigation: NavigationProp<Dashboa
         <FlatList
           data={data?.proposals.approvals}
           renderItem={({item}) => {
-            const accountInfo = data?.accountInfos.find((i) => i.accountId.eq(item.proposal.proposer));
+            const accountInfo = data?.accountInfos.find(
+              (i) => i.accountId.toString() === item.proposal.proposer.toString(),
+            );
             const text = accountInfo ? u8aToString(accountInfo.info.display.asRaw) : 'unknown';
+
             return (
               <ListItem
                 title={text}
