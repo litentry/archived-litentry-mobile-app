@@ -26,7 +26,7 @@
     "@react-native-community/hooks": "^2.6.0",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/drawer": "^5.11.4",
-    "@react-navigation/native": "^5.8.10",
+    "@react-navigation/native": "^5.9.4",
     "@react-navigation/stack": "^5.14.3",
     "@ui-kitten/components": "^5.0.0",
     "@ui-kitten/eva-icons": "^5.0.0",
@@ -66,7 +66,7 @@
     "readable-stream": "^1.0.33",
     "rn-nodeify": "^10.2.0",
     "stream-browserify": "^1.0.0",
-    "url": "^0.10.3",
+    "url": "^0.11.0",
     "util": "^0.10.4"
   },
   "devDependencies": {
@@ -75,7 +75,7 @@
     "@react-native-community/eslint-config": "^2.0.0",
     "@types/jest": "^25.2.3",
     "@types/lodash": "^4.14.165",
-    "@types/react": "^17.0.2",
+    "@types/react": "^17.0.9",
     "@types/react-native": "^0.63.2",
     "@types/react-test-renderer": "^16.9.2",
     "@typescript-eslint/eslint-plugin": "^2.27.0",
