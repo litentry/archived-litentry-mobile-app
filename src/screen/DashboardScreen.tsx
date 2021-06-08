@@ -1,11 +1,10 @@
 import React, {useContext} from 'react';
-import {StyleSheet, TouchableOpacity, ScrollView, View, Alert} from 'react-native';
-import {flowRight as compose} from 'lodash';
+import {Alert, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import NetworkItem from 'presentational/NetworkItem';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-
-import {Text, Layout, Divider, Button, Icon, IconProps, useTheme, TopNavigationAction} from '@ui-kitten/components';
+import {Button, Divider, Icon, IconProps, Layout, Text, TopNavigationAction, useTheme} from '@ui-kitten/components';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {BalanceContext} from 'context/BalanceContext';
 import {AccountContext} from 'context/AccountContextProvider';
@@ -58,28 +57,32 @@ function DashboardScreen({navigation, accountAddProps}: PropTypes & AddAccountIn
         }
         renderTitle={renderTitle}
       />
-      <Divider style={{height: 2}} />
-      <FadeInAnimatedView>
-        {!account ? (
-          <Layout style={styles.container} level="1">
-            <Button size="large" appearance="ghost" onPress={accountAddProps.open} accessoryLeft={AddIcon}>
-              Add Account
-            </Button>
-          </Layout>
-        ) : (
-          <>
-            <AccountTeaser level="2" address={account.address} />
-            <Divider />
-            <View style={[globalStyles.flex, styles.main, {backgroundColor: theme['background-basic-color-1']}]}>
-              <ScrollView style={styles.scrollView}>
-                <CouncilSummaryTeaser onMorePress={() => navigation.navigate(councilScreen)} />
-                <TreasurySummaryTeaser onMorePress={() => Alert.alert('Navigate to Treasury Screen')} />
-                <TipsSummaryTeaser onMorePress={() => navigation.navigate(tips)} />
-              </ScrollView>
-            </View>
-          </>
-        )}
-      </FadeInAnimatedView>
+      <SafeAreaView
+        edges={['bottom']}
+        style={[globalStyles.flex, {backgroundColor: theme['background-basic-color-1']}]}>
+        <Divider style={{height: 2}} />
+        <FadeInAnimatedView>
+          {!account ? (
+            <Layout style={styles.container} level="1">
+              <Button size="large" appearance="ghost" onPress={accountAddProps.open} accessoryLeft={AddIcon}>
+                Add Account
+              </Button>
+            </Layout>
+          ) : (
+            <>
+              <AccountTeaser level="2" address={account.address} />
+              <Divider />
+              <View style={[globalStyles.flex, styles.main]}>
+                <ScrollView style={styles.scrollView}>
+                  <CouncilSummaryTeaser onMorePress={() => navigation.navigate(councilScreen)} />
+                  <TreasurySummaryTeaser onMorePress={() => Alert.alert('Navigate to Treasury Screen')} />
+                  <TipsSummaryTeaser onMorePress={() => navigation.navigate(tips)} />
+                </ScrollView>
+              </View>
+            </>
+          )}
+        </FadeInAnimatedView>
+      </SafeAreaView>
     </View>
   );
 }
@@ -97,4 +100,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default compose(withAddAccount)(DashboardScreen);
+export default withAddAccount(DashboardScreen);
