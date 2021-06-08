@@ -307,8 +307,9 @@ PODS:
     - React-Core
   - RNReanimated (1.13.2):
     - React-Core
-  - RNScreens (2.15.0):
+  - RNScreens (3.3.0):
     - React-Core
+    - React-RCTImage
   - RNSVG (12.1.0):
     - React
   - RNVectorIcons (7.1.0):
@@ -472,10 +473,10 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
-  DoubleConversion: cde416483dac037923206447da6e1454df403714
+  DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: 7b423f9e248eae65987838148c36eec1dbfe0b53
-  FBReactNativeSpec: 75525db4af6e516055da6755982ccc8090b6f553
-  glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
+  FBReactNativeSpec: fb7dea0944d2a3cb07b7ae51f11373d72023391a
+  glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   Permission-Camera: 119b01de97a5b3edb637999e38476b68143b9d17
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
   RCTRequired: ec2ebc96b7bfba3ca5c32740f5a0c6a014a274d2
@@ -515,7 +516,7 @@ SPEC CHECKSUMS:
   RNPermissions: 99dd8d4a30ff13509b949ca63cd1f69edc461775
   RNReactNativeHapticFeedback: 653a8c126a0f5e88ce15ffe280b3ff37e1fbb285
   RNReanimated: e03f7425cb7a38dcf1b644d680d1bfc91c3337ad
-  RNScreens: 2ad555d4d9fa10b91bb765ca07fe9b29d59573f0
+  RNScreens: bf59f17fbf001f1025243eeed5f19419d3c11ef2
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
   Yoga: a7de31c64fe738607e7a3803e3f591a4b1df7393
