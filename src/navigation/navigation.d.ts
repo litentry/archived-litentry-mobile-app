@@ -9,6 +9,7 @@ type DashboardStackParamList = {
     hash: string;
   };
   CouncilScreen: undefined;
+  TreasuryScreen: undefined;
 };
 
 type DrawerParamList = {

@@ -8,3 +8,4 @@ export const webview = 'Webview' as const;
 export const devScreen = 'DevScreen' as const;
 export const myIdentity = 'MyIdentity' as const;
 export const councilScreen = 'CouncilScreen' as const;
+export const treasuryScreen = 'TreasuryScreen' as const;
