@@ -210,13 +210,10 @@ function ChainApiContextProvider(props: PropTypes) {
     }
   }, [currentNetwork, status, api, sections]);
 
-  const value = useMemo(() => ({api, status, addSection, removeSection, inProgress}), [
-    status,
-    api,
-    addSection,
-    removeSection,
-    inProgress,
-  ]);
+  const value = useMemo(
+    () => ({api, status, addSection, removeSection, inProgress}),
+    [status, api, addSection, removeSection, inProgress],
+  );
 
   return <ChainApiContext.Provider value={value}>{children}</ChainApiContext.Provider>;
 }
