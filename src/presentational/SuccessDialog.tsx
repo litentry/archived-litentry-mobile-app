@@ -12,7 +12,7 @@ type PropTypes = {
 };
 
 function SuccessDialog(props: PropTypes) {
-  const {text, inline = false, textStyles = {}, containerStyle = {}, onClosePress = () => undefined} = props;
+  const {text, inline = false, textStyles = {}, containerStyle = {}, onClosePress = undefined} = props;
 
   return (
     <Layout style={[styles.container, inline ? {} : styles.flex, containerStyle]}>
@@ -22,10 +22,14 @@ function SuccessDialog(props: PropTypes) {
           {text}
         </Text>
       </Layout>
-      <Divider style={styles.divider} />
-      <Button appearance="ghost" onPress={onClosePress}>
-        Close
-      </Button>
+      {onClosePress ? (
+        <>
+          <Divider style={styles.divider} />
+          <Button appearance="ghost" onPress={onClosePress}>
+            Close
+          </Button>
+        </>
+      ) : null}
     </Layout>
   );
 }
