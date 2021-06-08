@@ -12,7 +12,7 @@ type PropTypes = {
 };
 
 function SuccessDialog(props: PropTypes) {
-  const {text, inline = false, textStyles = {}, containerStyle = {}, onClosePress = undefined} = props;
+  const {text, inline = false, textStyles = {}, containerStyle = {}, onClosePress} = props;
 
   return (
     <Layout style={[styles.container, inline ? {} : styles.flex, containerStyle]}>
