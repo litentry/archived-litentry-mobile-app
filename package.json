@@ -64,7 +64,7 @@
     "react-native-webview": "^11.0.0",
     "react-use": "^17.2.4",
     "readable-stream": "^1.0.33",
-    "rn-nodeify": "^10.2.0",
+    "rn-nodeify": "^10.3.0",
     "stream-browserify": "^1.0.0",
     "url": "^0.10.3",
     "util": "^0.10.4"
