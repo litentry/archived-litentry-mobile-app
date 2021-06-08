@@ -24,10 +24,7 @@ function TxPayloadQr({api, payload, onConfirm, onCancel}: PropTypes) {
   const [imageUri, setImageUri] = useState<string>();
   // limit size of the transaction
   const isQrHashed = payload.method.length > 5000;
-  const wrapper: ExtrinsicPayload = api.registry.createType(
-    'ExtrinsicPayload',
-    payload,
-  );
+  const wrapper: ExtrinsicPayload = api.registry.createType('ExtrinsicPayload', payload);
 
   const signPayload = createSignPayload(
     payload.address,
@@ -61,19 +58,10 @@ function TxPayloadQr({api, payload, onConfirm, onCancel}: PropTypes) {
         />
       </Layout>
       <Layout style={styles.buttonGroup}>
-        <Button
-          style={styles.cancel}
-          appearance="ghost"
-          size="small"
-          status="warning"
-          onPress={onCancel}>
+        <Button style={styles.cancel} appearance="ghost" size="small" status="warning" onPress={onCancel}>
           Cancel
         </Button>
-        <Button
-          style={styles.submit}
-          appearance="outline"
-          onPress={onConfirm}
-          accessoryRight={QRIcon}>
+        <Button style={styles.submit} appearance="outline" onPress={onConfirm} accessoryRight={QRIcon}>
           Scan Signature
         </Button>
       </Layout>

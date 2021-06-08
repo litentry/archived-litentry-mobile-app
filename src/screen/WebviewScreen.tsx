@@ -17,9 +17,7 @@ function WebviewScreen(props: PropTypes) {
   } = props;
   const {uri, title} = params;
   return (
-    <GenericNavigationLayout
-      title={title}
-      onBackPressed={() => navigation.goBack()}>
+    <GenericNavigationLayout title={title} onBackPressed={() => navigation.goBack()}>
       <RNWebView source={{uri}} style={styles.container} />
     </GenericNavigationLayout>
   );

@@ -3,12 +3,7 @@ import _ from 'lodash';
 import {StyleSheet, View, TouchableOpacity, Dimensions} from 'react-native';
 import {mapMotionDetail} from 'src/hoc/withMotionDetail';
 import {Text, Layout, Card, Icon} from '@ui-kitten/components';
-import globalStyles, {
-  standardPadding,
-  monofontFamily,
-  colorGreen,
-  colorRed,
-} from 'src/styles';
+import globalStyles, {standardPadding, monofontFamily, colorGreen, colorRed} from 'src/styles';
 import Padder from 'presentational/Padder';
 import AddressInlineTeaser from './AddressInlineTeaser';
 import Badge from 'presentational/Badge';
@@ -26,31 +21,16 @@ type PropTypes = {
   motion: ReturnType<typeof mapMotionDetail> | null;
 };
 
-function VoteItem({
-  vote,
-  type = 'aye',
-  emptyText,
-}: {
-  vote?: AccountId;
-  type?: 'aye' | 'nay';
-  emptyText?: string;
-}) {
+function VoteItem({vote, type = 'aye', emptyText}: {vote?: AccountId; type?: 'aye' | 'nay'; emptyText?: string}) {
   return (
     <View style={[globalStyles.rowContainer, globalStyles.rowAlignCenter]}>
       <Icon
         pack="ionic"
         name={type === 'aye' ? 'thumbs-up-outline' : 'thumbs-down-outline'}
-        style={[
-          globalStyles.icon,
-          {color: type === 'aye' ? colorGreen : colorRed},
-        ]}
+        style={[globalStyles.icon, {color: type === 'aye' ? colorGreen : colorRed}]}
       />
       <Padder scale={1} />
-      {emptyText ? (
-        <Text>{emptyText}</Text>
-      ) : (
-        vote && <AddressInlineTeaser address={vote.toString()} />
-      )}
+      {emptyText ? <Text>{emptyText}</Text> : vote && <AddressInlineTeaser address={vote.toString()} />}
     </View>
   );
 }
@@ -71,31 +51,15 @@ function MotionDetailPage(props: PropTypes) {
           <Layout style={styles.rowContainer}>
             <Card style={[styles.item, styles.left]}>
               <View style={globalStyles.spaceBetweenRowContainer}>
-                <StatInfoBlock title="#ID">
-                  {String(motion.proposalId)}
-                </StatInfoBlock>
+                <StatInfoBlock title="#ID">{String(motion.proposalId)}</StatInfoBlock>
                 <StatInfoBlock title="#Detail">
                   <TouchableOpacity onPress={() => modalRef.current?.open()}>
-                    <View
-                      style={[
-                        globalStyles.rowContainer,
-                        globalStyles.rowAlignCenter,
-                      ]}>
-                      <Text
-                        style={[
-                          styles.stats,
-                          styles.small,
-                          styles.hackPolkassemblyTextWidth,
-                        ]}
-                        numberOfLines={1}>
+                    <View style={[globalStyles.rowContainer, globalStyles.rowAlignCenter]}>
+                      <Text style={[styles.stats, styles.small, styles.hackPolkassemblyTextWidth]} numberOfLines={1}>
                         on Polkassembly
                       </Text>
                       <Padder scale={0.3} />
-                      <Icon
-                        pack="ionic"
-                        name="share-outline"
-                        style={globalStyles.icon}
-                      />
+                      <Icon pack="ionic" name="share-outline" style={globalStyles.icon} />
                     </View>
                   </TouchableOpacity>
                 </StatInfoBlock>
@@ -115,9 +79,7 @@ function MotionDetailPage(props: PropTypes) {
         <View>
           <Layout style={styles.rowContainer}>
             <Card style={[styles.item, styles.left]} disabled>
-              <StatInfoBlock title="#Section">
-                {_.capitalize(motion.section)}
-              </StatInfoBlock>
+              <StatInfoBlock title="#Section">{_.capitalize(motion.section)}</StatInfoBlock>
               <Padder scale={0.5} />
               <StatInfoBlock title="#Method">{motion.methodName}</StatInfoBlock>
             </Card>
@@ -127,15 +89,11 @@ function MotionDetailPage(props: PropTypes) {
                 <Padder scale={0.5} />
                 <View>
                   <Text style={globalStyles.aye}>
-                    {`Aye (${
-                      motion.votes?.ayes.length
-                    }/${motion.votes?.threshold.toNumber()})`}
+                    {`Aye (${motion.votes?.ayes.length}/${motion.votes?.threshold.toNumber()})`}
                   </Text>
                   <Padder scale={0.5} />
                   <Text style={globalStyles.nay}>
-                    {`Nay (${
-                      motion.votes?.nays.length
-                    }/${motion.votes?.threshold.toNumber()})`}
+                    {`Nay (${motion.votes?.nays.length}/${motion.votes?.threshold.toNumber()})`}
                   </Text>
                   <Padder scale={0.5} />
                 </View>
@@ -191,10 +149,7 @@ function MotionDetailPage(props: PropTypes) {
                 Array.prototype.forEach.call(footer, el => el.remove());
             })();`}
           source={{
-            uri: buildMotionDetailUrl(
-              motion.proposalId,
-              currentNetwork?.key || 'polkadot',
-            ),
+            uri: buildMotionDetailUrl(motion.proposalId, currentNetwork?.key || 'polkadot'),
           }}
           style={{height: height * 0.6}}
           onMessage={() => null}

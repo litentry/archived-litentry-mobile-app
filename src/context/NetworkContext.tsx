@@ -1,11 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useMemo,
-  useState,
-  useEffect,
-  useCallback,
-} from 'react';
+import React, {createContext, useContext, useMemo, useState, useEffect, useCallback} from 'react';
 import {noop} from 'lodash';
 import {NetworkContextValueType, NetworkType} from 'src/types';
 import {DataContext} from './DataContext';
@@ -85,7 +78,5 @@ export default function NetworkContextProvider({children}: PropTypes) {
     return null;
   }
 
-  return (
-    <NetworkContext.Provider value={value}>{children}</NetworkContext.Provider>
-  );
+  return <NetworkContext.Provider value={value}>{children}</NetworkContext.Provider>;
 }

@@ -4,9 +4,7 @@ import type {SignerPayloadJSON} from '@polkadot/types/types';
 export default class QrSigner implements Signer {
   readonly promise: (payload: SignerPayloadJSON) => Promise<SignerResult>;
 
-  constructor(
-    createPromise: (payload: SignerPayloadJSON) => Promise<SignerResult>,
-  ) {
+  constructor(createPromise: (payload: SignerPayloadJSON) => Promise<SignerResult>) {
     this.promise = createPromise;
   }
 

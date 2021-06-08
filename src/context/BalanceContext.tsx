@@ -1,12 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useMemo,
-  useCallback,
-  useRef,
-  useEffect,
-  useState,
-} from 'react';
+import React, {createContext, useContext, useMemo, useCallback, useRef, useEffect, useState} from 'react';
 import {AccountContext} from './AccountContextProvider';
 import {Modalize} from 'react-native-modalize';
 import {Layout, Button, Divider} from '@ui-kitten/components';
@@ -79,16 +71,11 @@ export default function BalanceContextProvider({children}: PropTypes) {
             panGestureEnabled>
             {balance && (
               <Layout level="1" style={globalStyles.paddedContainer}>
-                <ModalTitle
-                  title={currentAccount.name}
-                  subtitle={` (@${currentNetwork?.name})`}
-                />
+                <ModalTitle title={currentAccount.name} subtitle={` (@${currentNetwork?.name})`} />
                 <Divider />
                 <Balances balance={balance} />
                 <Divider style={globalStyles.divider} />
-                <Button
-                  appearance="ghost"
-                  onPress={() => modalRef.current?.close()}>
+                <Button appearance="ghost" onPress={() => modalRef.current?.close()}>
                   Close
                 </Button>
               </Layout>

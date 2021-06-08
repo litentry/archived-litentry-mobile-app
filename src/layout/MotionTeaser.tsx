@@ -3,9 +3,7 @@ import {StyleSheet, View} from 'react-native';
 import {Card, Text} from '@ui-kitten/components';
 import {flowRight as compose} from 'lodash';
 import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
-import withElectionInfo, {
-  InjectedPropTypes as ElectionInjectedPropTypes,
-} from 'src/hoc/withElectionInfo';
+import withElectionInfo, {InjectedPropTypes as ElectionInjectedPropTypes} from 'src/hoc/withElectionInfo';
 import {useNavigation} from '@react-navigation/native';
 import {motionDetail} from 'src/navigation/routeKeys';
 
@@ -30,16 +28,12 @@ function MotionTeaser(props: PropTypes & ElectionInjectedPropTypes) {
       <Text category="c1">{title}</Text>
       {latestMotion && latestMotion.votes ? (
         <View style={styles.motionContainer}>
-          <Text style={styles.motionIndex}>
-            #{latestMotion.votes.index.toNumber() ?? 'unknown'}
-          </Text>
+          <Text style={styles.motionIndex}>#{latestMotion.votes.index.toNumber() ?? 'unknown'}</Text>
           <Text style={globalStyles.aye}>
-            Aye ({latestMotion.votes.ayes.length}/
-            {latestMotion.votes.threshold.toNumber()})
+            Aye ({latestMotion.votes.ayes.length}/{latestMotion.votes.threshold.toNumber()})
           </Text>
           <Text style={globalStyles.nay}>
-            Nay ({latestMotion.votes.nays.length}/
-            {latestMotion.votes.threshold.toNumber()})
+            Nay ({latestMotion.votes.nays.length}/{latestMotion.votes.threshold.toNumber()})
           </Text>
         </View>
       ) : (

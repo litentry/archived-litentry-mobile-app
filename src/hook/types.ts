@@ -2,10 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type {SubmittableExtrinsic} from '@polkadot/api/promise/types';
-import type {
-  DeriveAccountFlags,
-  DeriveAccountRegistration,
-} from '@polkadot/api-derive/types';
+import type {DeriveAccountFlags, DeriveAccountRegistration} from '@polkadot/api-derive/types';
 import type {
   AccountId,
   Balance,

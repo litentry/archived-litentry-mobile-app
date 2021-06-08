@@ -37,11 +37,7 @@ function TipsScreen({navigation}: ScreenProps) {
       onBackPressed={() => navigation.goBack()}
       rightActions={renderTopNavigationRightActions}>
       <View style={styles.container}>
-        <List
-          data={tips}
-          ItemSeparatorComponent={Divider}
-          renderItem={({item}) => <TipTeaser tip={item} />}
-        />
+        <List data={tips} ItemSeparatorComponent={Divider} renderItem={({item}) => <TipTeaser tip={item} />} />
       </View>
     </GenericNavigationLayout>
   );

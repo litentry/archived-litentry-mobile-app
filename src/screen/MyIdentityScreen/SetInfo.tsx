@@ -1,5 +1,5 @@
 import React, {useRef, useCallback, useContext} from 'react';
-import {StyleSheet, Dimensions, View, Alert} from 'react-native';
+import {Dimensions, View, Alert} from 'react-native';
 import {Layout, Button, Divider, ListItem, Text} from '@ui-kitten/components';
 import Identicon from '@polkadot/reactnative-identicon';
 import {Modalize} from 'react-native-modalize';
@@ -48,10 +48,7 @@ function SetInfo({address}: PropTypes) {
     <>
       <Layout style={globalStyles.paddedContainer}>
         <View style={{paddingHorizontal: standardPadding * 2}}>
-          <InfoBanner
-            text="This address doesn't have any identity connected to it."
-            inline
-          />
+          <InfoBanner text="This address doesn't have any identity connected to it." inline />
         </View>
         <Padder scale={0.5} />
         <Divider />
@@ -97,7 +94,5 @@ function SetInfo({address}: PropTypes) {
     </>
   );
 }
-
-const styles = StyleSheet.create({});
 
 export default SetInfo;

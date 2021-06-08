@@ -24,9 +24,7 @@ export function useBlockTime(blocks?: BlockNumber | BN): Result {
       api.consts.difficulty?.targetBlockTime ||
       api.consts.timestamp?.minimumPeriod.muln(2) ||
       DEFAULT_TIME;
-    const {days, hours, minutes, seconds} = extractTime(
-      blockTime.mul(blocks).toNumber(),
-    );
+    const {days, hours, minutes, seconds} = extractTime(blockTime.mul(blocks).toNumber());
     const timeStr = [
       days ? (days > 1 ? `${days} days` : '1 day') : null,
       hours ? (hours > 1 ? `${hours} hrs` : '1 hr') : null,

@@ -1,16 +1,6 @@
 import React, {useContext, useState} from 'react';
 import {StyleSheet, Image, View, TouchableOpacity, Alert} from 'react-native';
-import {
-  Button,
-  Layout,
-  Text,
-  Divider,
-  Toggle,
-  ListItem,
-  Icon,
-  OverflowMenu,
-  MenuItem,
-} from '@ui-kitten/components';
+import {Button, Layout, Text, Divider, Toggle, ListItem, Icon, OverflowMenu, MenuItem} from '@ui-kitten/components';
 import SafeView from 'presentational/SafeView';
 import globalStyles, {standardPadding, monofontFamily} from 'src/styles';
 import {ThemeContext} from 'context/ThemeProvider';
@@ -68,11 +58,7 @@ function AccountDrawerView({accountAddProps}: InjectedPropTypes) {
         onPress={() => {
           setVisible(true);
         }}>
-        <Icon
-          name="md-options"
-          pack="ionic"
-          style={[globalStyles.inlineIconDimension, globalStyles.iconColor]}
-        />
+        <Icon name="md-options" pack="ionic" style={[globalStyles.inlineIconDimension, globalStyles.iconColor]} />
       </TouchableOpacity>
     );
   };
@@ -84,11 +70,7 @@ function AccountDrawerView({accountAddProps}: InjectedPropTypes) {
           <Layout style={accountDrawerViewStyles.accountLogo}>
             <Identicon value={account.address} size={25} />
             <Layout style={accountDrawerViewStyles.account}>
-              <AddressInfoBadge
-                network={currentNetwork}
-                address={account.address}
-                api={api}
-              />
+              <AddressInfoBadge network={currentNetwork} address={account.address} api={api} />
               <OverflowMenu
                 anchor={renderOptions}
                 placement="bottom end"
@@ -99,25 +81,17 @@ function AccountDrawerView({accountAddProps}: InjectedPropTypes) {
                 onBackdropPress={() => setVisible(false)}>
                 <MenuItem
                   title="Remove Account"
-                  accessoryLeft={(iconProps) => (
-                    <Icon name="trash-2-outline" {...iconProps} />
-                  )}
+                  accessoryLeft={(iconProps) => <Icon name="trash-2-outline" {...iconProps} />}
                 />
                 <MenuItem
                   title="Show balance"
-                  accessoryLeft={(iconProps) => (
-                    <Icon {...iconProps} name="credit-card-outline" />
-                  )}
+                  accessoryLeft={(iconProps) => <Icon {...iconProps} name="credit-card-outline" />}
                 />
               </OverflowMenu>
             </Layout>
           </Layout>
           <Layout>
-            <Text
-              style={accountDrawerViewStyles.address}
-              numberOfLines={1}
-              selectable
-              ellipsizeMode="middle">
+            <Text style={accountDrawerViewStyles.address} numberOfLines={1} selectable ellipsizeMode="middle">
               {account.address}
             </Text>
           </Layout>
@@ -126,10 +100,7 @@ function AccountDrawerView({accountAddProps}: InjectedPropTypes) {
         <>
           <Text category="label">No account has been set up.</Text>
           <Padder scale={0.5} />
-          <Button
-            onPress={accountAddProps.open}
-            appearance="ghost"
-            status="info">
+          <Button onPress={accountAddProps.open} appearance="ghost" status="info">
             Connect Account
           </Button>
         </>
@@ -181,28 +152,20 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
           </Layout>
           <ListItem
             title="Registrars"
-            accessoryLeft={(props) => (
-              <Icon {...props} name="award-outline" animation="zoom" />
-            )}
+            accessoryLeft={(props) => <Icon {...props} name="award-outline" animation="zoom" />}
             onPress={() => navigation.navigate(registrarList)}
           />
           <Divider />
           <ListItem
             title="Dark theme"
-            accessoryLeft={(props) => (
-              <Icon {...props} name="sun-outline" animation="zoom" />
-            )}
-            accessoryRight={() => (
-              <Toggle checked={theme === 'dark'} onChange={toggleTheme} />
-            )}
+            accessoryLeft={(props) => <Icon {...props} name="sun-outline" animation="zoom" />}
+            accessoryRight={() => <Toggle checked={theme === 'dark'} onChange={toggleTheme} />}
           />
           <Divider />
           <ListItem
             title="About Litentry"
             description="Read more about us."
-            accessoryLeft={(props) => (
-              <Icon {...props} name="hash-outline" animation="zoom" />
-            )}
+            accessoryLeft={(props) => <Icon {...props} name="hash-outline" animation="zoom" />}
             onPress={() =>
               navigation.navigate(webview, {
                 title: 'About Litentry',
@@ -216,9 +179,7 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
               <ListItem
                 title="Dev Kit"
                 description="Here lists the helpers for devs"
-                accessoryLeft={(props) => (
-                  <Icon {...props} name="code-outline" animation="zoom" />
-                )}
+                accessoryLeft={(props) => <Icon {...props} name="code-outline" animation="zoom" />}
                 onPress={() => navigation.navigate(devScreen)}
               />
               <Divider />

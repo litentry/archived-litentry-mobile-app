@@ -1,16 +1,6 @@
 import React, {useRef, useContext} from 'react';
 import {View, StyleSheet, Dimensions, ScrollView} from 'react-native';
-import {
-  Text,
-  Layout,
-  ListItem,
-  Divider,
-  Icon,
-  IconProps,
-  Menu,
-  MenuGroup,
-  MenuItem,
-} from '@ui-kitten/components';
+import {Text, Layout, ListItem, Divider, Icon, IconProps, Menu, MenuGroup, MenuItem} from '@ui-kitten/components';
 import WebView from 'react-native-webview';
 import {AddressDetailType} from 'src/types';
 import globalStyles, {standardPadding} from 'src/styles';
@@ -38,13 +28,9 @@ type PropTypes = {
   detail: AddressDetailType;
 };
 
-const SubAccountsIcon = (props: IconProps) => (
-  <Icon {...props} pack="ionic" name="ios-people" />
-);
+const SubAccountsIcon = (props: IconProps) => <Icon {...props} pack="ionic" name="ios-people" />;
 
-const MoreIcon = (props: IconProps) => (
-  <Icon {...props} pack="ionic" name="ios-apps-outline" />
-);
+const MoreIcon = (props: IconProps) => <Icon {...props} pack="ionic" name="ios-apps-outline" />;
 
 type SubAccounts = ITuple<[BalanceOf, Vec<AccountId>]>;
 
@@ -55,9 +41,7 @@ function DisplayJudgement(props: PropTypes) {
   const {api} = useContext(ChainApiContext);
   const successMsg = `This address has ${judgementCount} judgement${
     judgementCount > 1 ? 's' : ''
-  } from Registrar ${detail.data?.judgements
-    .map((judgement) => `#${judgement[0]}`)
-    .join(',')}. It's all set. 🎉`;
+  } from Registrar ${detail.data?.judgements.map((judgement) => `#${judgement[0]}`).join(',')}. It's all set. 🎉`;
 
   const pendingJudgement = detail.data?.judgements.find((judgement) => {
     if (judgement[1].isFeePaid) {
@@ -68,10 +52,7 @@ function DisplayJudgement(props: PropTypes) {
 
   const identity = detail?.data;
   const modalRef = useRef<Modalize>(null);
-  const subAccounts: SubAccounts | undefined = useCall(
-    api?.query.identity.subsOf,
-    [address],
-  );
+  const subAccounts: SubAccounts | undefined = useCall(api?.query.identity.subsOf, [address]);
   const subAccountsArray = subAccounts?.[1];
 
   return (
@@ -79,16 +60,9 @@ function DisplayJudgement(props: PropTypes) {
       <Layout style={[globalStyles.paddedContainer]}>
         <View style={{paddingHorizontal: standardPadding * 4}}>
           {pendingJudgement ? (
-            <InfoBanner
-              text={`This address has a pending judgement from #${pendingJudgement[0]}`}
-              inline
-            />
+            <InfoBanner text={`This address has a pending judgement from #${pendingJudgement[0]}`} inline />
           ) : (
-            <SuccessDialog
-              inline
-              text={successMsg}
-              textStyles={styles.textStyle}
-            />
+            <SuccessDialog inline text={successMsg} textStyles={styles.textStyle} />
           )}
         </View>
         <Padder scale={0.5} />
@@ -102,28 +76,16 @@ function DisplayJudgement(props: PropTypes) {
               </View>
             )}
             accessoryRight={() => (
-              <Text
-                selectable
-                category="label"
-                numberOfLines={1}
-                style={styles.textDisplay}
-                ellipsizeMode="middle">
+              <Text selectable category="label" numberOfLines={1} style={styles.textDisplay} ellipsizeMode="middle">
                 {address}
               </Text>
             )}
           />
           <ListItem
             title="Display"
-            accessoryLeft={(iconProps: IconProps) => (
-              <Icon {...iconProps} name="person-outline" />
-            )}
+            accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="person-outline" />}
             accessoryRight={() => (
-              <Text
-                selectable
-                category="label"
-                numberOfLines={1}
-                style={styles.textDisplay}
-                ellipsizeMode="middle">
+              <Text selectable category="label" numberOfLines={1} style={styles.textDisplay} ellipsizeMode="middle">
                 {display || 'untitled account'}
               </Text>
             )}
@@ -132,12 +94,8 @@ function DisplayJudgement(props: PropTypes) {
             identity.judgements[0] && ( // bug
               <ListItem
                 title="Judgment"
-                accessoryLeft={(iconProps: IconProps) => (
-                  <Icon {...iconProps} name="ribbon-outline" pack="ionic" />
-                )}
-                accessoryRight={() => (
-                  <JudgmentStatus judgement={identity.judgements[0]} />
-                )}
+                accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="ribbon-outline" pack="ionic" />}
+                accessoryRight={() => <JudgmentStatus judgement={identity.judgements[0]} />}
               />
             )}
           <Menu style={styles.menu}>
@@ -171,9 +129,7 @@ function DisplayJudgement(props: PropTypes) {
               />
               <MenuItem
                 title="Riot"
-                accessoryLeft={(p) => (
-                  <Icon {...p} name="message-square-outline" />
-                )}
+                accessoryLeft={(p) => <Icon {...p} name="message-square-outline" />}
                 accessoryRight={() => (
                   <Text selectable category="label">
                     {u8aToString(detail?.data?.info.riot.asRaw) || 'Unset'}
@@ -195,15 +151,9 @@ function DisplayJudgement(props: PropTypes) {
           <ListItem
             title="View externally"
             onPress={() => modalRef.current?.open()}
-            accessoryLeft={(iconProps: IconProps) => (
-              <Icon {...iconProps} name="md-share" pack="ionic" />
-            )}
+            accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="md-share" pack="ionic" />}
             accessoryRight={() => (
-              <Text
-                selectable
-                category="label"
-                numberOfLines={1}
-                ellipsizeMode="middle">
+              <Text selectable category="label" numberOfLines={1} ellipsizeMode="middle">
                 Polkascan
               </Text>
             )}
@@ -211,18 +161,13 @@ function DisplayJudgement(props: PropTypes) {
 
           {subAccountsArray && subAccountsArray.length ? (
             <Menu style={styles.menu}>
-              <MenuGroup
-                title={`Sub accounts (${subAccountsArray.length})`}
-                accessoryLeft={SubAccountsIcon}>
+              <MenuGroup title={`Sub accounts (${subAccountsArray.length})`} accessoryLeft={SubAccountsIcon}>
                 {subAccountsArray.map((addr: AccountId) => (
                   <MenuItem
                     key={addr.toString()}
                     accessoryRight={() => (
                       <View style={{paddingLeft: standardPadding}}>
-                        <AddressInlineTeaser
-                          fullWidth
-                          address={addr.toString()}
-                        />
+                        <AddressInlineTeaser fullWidth address={addr.toString()} />
                       </View>
                     )}
                   />
@@ -248,10 +193,7 @@ function DisplayJudgement(props: PropTypes) {
                 document.querySelectorAll('.navbar')[1].remove()
             })();`}
           source={{
-            uri: buildAddressDetailUrl(
-              address || '',
-              currentNetwork?.key || 'polkadot',
-            ),
+            uri: buildAddressDetailUrl(address || '', currentNetwork?.key || 'polkadot'),
           }}
           style={{height: height * 0.75}}
           onMessage={() => null}

@@ -16,9 +16,7 @@ type PropTypes = {
 
 function CouncilSummaryTeaser(props: PropTypes & InjectedPropTypes) {
   const {timeStringParts} = useBlockTime(props.electionsInfo.data.termDuration);
-  const {timeStringParts: termLeft} = useBlockTime(
-    props.electionsInfo.data.termLeft,
-  );
+  const {timeStringParts: termLeft} = useBlockTime(props.electionsInfo.data.termLeft);
 
   return (
     <SeactionTeaserContainer onMorePress={props.onMorePress} title="Council">
@@ -26,28 +24,20 @@ function CouncilSummaryTeaser(props: PropTypes & InjectedPropTypes) {
         <Layout style={styles.container}>
           <Card style={[styles.item, styles.left]}>
             <View style={globalStyles.spaceBetweenRowContainer}>
-              <StatInfoBlock title="Seats">
-                {props.electionsInfo.data.seatDisplay}
-              </StatInfoBlock>
-              <StatInfoBlock title="Runners up">
-                {props.electionsInfo.data.runnersupDisplay}
-              </StatInfoBlock>
+              <StatInfoBlock title="Seats">{props.electionsInfo.data.seatDisplay}</StatInfoBlock>
+              <StatInfoBlock title="Runners up">{props.electionsInfo.data.runnersupDisplay}</StatInfoBlock>
             </View>
             <Padder scale={1} />
             <StatInfoBlock title="Prime Voter">
-              {props.electionsInfo.prime && (
-                <AddressInlineTeaser
-                  address={props.electionsInfo.prime?.toString()}
-                />
-              )}
+              {props.electionsInfo.prime && <AddressInlineTeaser address={props.electionsInfo.prime?.toString()} />}
             </StatInfoBlock>
           </Card>
           <Card style={[styles.item, styles.right, styles.center]} disabled>
             <ProgressChartWidget
               title={`Term Progress (${timeStringParts[0]})`}
-              detail={`${props.electionsInfo.data.percentage}%\n${
-                termLeft[0] || ''
-              }${termLeft[1] ? `\n${termLeft[1]}` : ''}`}
+              detail={`${props.electionsInfo.data.percentage}%\n${termLeft[0] || ''}${
+                termLeft[1] ? `\n${termLeft[1]}` : ''
+              }`}
               data={[props.electionsInfo.data.percentage / 100]}
             />
           </Card>

@@ -5,11 +5,7 @@ import {SupportedNetworkType, AddressDetailType} from 'src/types';
 import {createLogger} from 'src/utils';
 const logger = createLogger('useAccountDetail');
 
-function useAccountDetail(
-  network?: SupportedNetworkType | null,
-  address?: string,
-  api?: ApiPromise,
-) {
+function useAccountDetail(network?: SupportedNetworkType | null, address?: string, api?: ApiPromise) {
   const [display, setDisplay] = useState(address || '');
   const [inProgress, setInProgress] = useState(true);
   const [identityAddress, setIdentityAddress] = useState(address || '');
@@ -32,24 +28,21 @@ function useAccountDetail(
 
           if (accountDetail) {
             const {info} = accountDetail;
-            const displayName =
-              u8aToString(info.display.asRaw) || identityAddress;
+            const displayName = u8aToString(info.display.asRaw) || identityAddress;
             setDisplay(displayName);
             setDetail({network, data: registration.unwrapOr(undefined)});
             setInProgress(false);
           } else {
-            api.query.identity
-              .superOf(identityAddress)
-              .then((superRegistration) => {
-                const superAccount = superRegistration.unwrapOr(undefined);
+            api.query.identity.superOf(identityAddress).then((superRegistration) => {
+              const superAccount = superRegistration.unwrapOr(undefined);
 
-                if (superAccount) {
-                  const [superAccountAddress, displayData] = superAccount;
-                  setIdentityAddress(superAccountAddress.toString());
-                  setSubAccountDisplay(u8aToString(displayData.asRaw));
-                }
-                setInProgress(false);
-              });
+              if (superAccount) {
+                const [superAccountAddress, displayData] = superAccount;
+                setIdentityAddress(superAccountAddress.toString());
+                setSubAccountDisplay(u8aToString(displayData.asRaw));
+              }
+              setInProgress(false);
+            });
           }
         })
         .then((unsub) => {
@@ -64,9 +57,7 @@ function useAccountDetail(
     };
   }, [api, identityAddress, network, address]);
 
-  const displayFull = subAccountDisplay
-    ? `${display}/${subAccountDisplay}`
-    : display;
+  const displayFull = subAccountDisplay ? `${display}/${subAccountDisplay}` : display;
 
   return {
     display: displayFull,

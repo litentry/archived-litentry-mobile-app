@@ -25,19 +25,13 @@ function JudgmentStatus(props: PropTypes) {
       <Icon
         pack="ionic"
         name={status.icon}
-        style={[
-          styles.icon,
-          styles[status.category as 'good' | 'bad' | 'neutral'],
-        ]}
+        style={[styles.icon, styles[status.category as 'good' | 'bad' | 'neutral']]}
       />
     </TouchableOpacity>
   );
 
   return (
-    <Tooltip
-      anchor={renderIcon}
-      visible={visible}
-      onBackdropPress={() => setVisible(false)}>
+    <Tooltip anchor={renderIcon} visible={visible} onBackdropPress={() => setVisible(false)}>
       {`"${status.text}" provided by Registrar #${judgement[0]}`}
     </Tooltip>
   );

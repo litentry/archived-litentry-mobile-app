@@ -31,9 +31,5 @@ export default function DataContextProvider({children}: PropTypes) {
 
   const asyncStorage = {get, set};
 
-  return (
-    <DataContext.Provider value={{asyncStorage}}>
-      {children}
-    </DataContext.Provider>
-  );
+  return <DataContext.Provider value={{asyncStorage}}>{children}</DataContext.Provider>;
 }

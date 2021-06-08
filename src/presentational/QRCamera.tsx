@@ -6,9 +6,7 @@ import {Layout, Icon, Text, IconProps} from '@ui-kitten/components';
 import {QRScannedPayload} from 'src/types';
 const {width, height} = Dimensions.get('window');
 
-const QRIcon = (props: IconProps) => (
-  <Icon {...props} pack="ionic" name="qr-code-sharp" />
-);
+const QRIcon = (props: IconProps) => <Icon {...props} pack="ionic" name="qr-code-sharp" />;
 
 type PropTypes = {
   onRead: (payload: QRScannedPayload) => void;
@@ -36,9 +34,7 @@ function QRCamera(props: PropTypes) {
         <Layout style={styles.notAuthorized}>
           <Layout style={styles.notAuthorizedHack}>
             <QRIcon style={styles.icon} />
-            <Text category="label">
-              This requires your Camera permission to scan.
-            </Text>
+            <Text category="label">This requires your Camera permission to scan.</Text>
           </Layout>
         </Layout>
       }

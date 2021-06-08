@@ -6,18 +6,13 @@ import {ChainApiContext} from 'context/ChainApiContext';
 import {useCall} from './useCall';
 
 const transformTip = {
-  transform: (optBytes: Option<Bytes>) =>
-    optBytes.isSome ? hexToString(optBytes.unwrap().toHex()) : null,
+  transform: (optBytes: Option<Bytes>) => (optBytes.isSome ? hexToString(optBytes.unwrap().toHex()) : null),
 };
 
 export function useTipReason(reasonHash: Hash) {
   const {api} = useContext(ChainApiContext);
 
-  const reasonText = useCall<string | null>(
-    api?.query.tips.reasons,
-    [reasonHash],
-    transformTip,
-  );
+  const reasonText = useCall<string | null>(api?.query.tips.reasons, [reasonHash], transformTip);
 
   return reasonText || reasonHash.toHex();
 }

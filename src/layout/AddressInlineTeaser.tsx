@@ -25,16 +25,9 @@ function AddressInlineTeaser(props: PropTypes) {
       <Identicon value={address} size={20} />
       <Padder scale={0.5} />
       {display ? (
-        <AccountInfoInlineTeaser
-          fullWidth={fullWidth}
-          display={display}
-          judgements={detail?.data?.judgements}
-        />
+        <AccountInfoInlineTeaser fullWidth={fullWidth} display={display} judgements={detail?.data?.judgements} />
       ) : (
-        <Text
-          style={styles.bareAddress}
-          numberOfLines={1}
-          ellipsizeMode="middle">
+        <Text style={styles.bareAddress} numberOfLines={1} ellipsizeMode="middle">
           {address}
         </Text>
       )}
