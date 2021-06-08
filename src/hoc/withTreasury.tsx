@@ -2,10 +2,7 @@ import React, {useMemo, useContext} from 'react';
 import {ChainApiContext} from 'context/ChainApiContext';
 
 import BN from 'bn.js';
-import type {
-  DeriveTreasuryProposals,
-  DeriveBalancesAccount,
-} from '@polkadot/api-derive/types';
+import type {DeriveTreasuryProposals, DeriveBalancesAccount} from '@polkadot/api-derive/types';
 import {Balance, BlockNumber} from '@polkadot/types/interfaces';
 import {useCall} from 'src/hook/useCall';
 import {TREASURY_ACCOUNT} from 'src/constants';
@@ -29,25 +26,16 @@ function withTreasury<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
   return function Hoc(props: T) {
     const {api} = useContext(ChainApiContext);
 
-    const info = useCall<DeriveTreasuryProposals>(
-      api?.derive.treasury.proposals,
-    );
+    const info = useCall<DeriveTreasuryProposals>(api?.derive.treasury.proposals);
     const bestNumber = useCall<Balance>(api?.derive.chain.bestNumber);
     const totalProposals = useCall<BN>(api?.query.treasury.proposalCount);
-    const treasuryBalance = useCall<DeriveBalancesAccount>(
-      api?.derive.balances.account,
-      [TREASURY_ACCOUNT],
-    );
+    const treasuryBalance = useCall<DeriveBalancesAccount>(api?.derive.balances.account, [TREASURY_ACCOUNT]);
     const spendPeriod = api?.consts.treasury.spendPeriod;
 
-    const value = treasuryBalance?.freeBalance.gtn(0)
-      ? treasuryBalance.freeBalance
-      : null;
+    const value = treasuryBalance?.freeBalance.gtn(0) ? treasuryBalance.freeBalance : null;
     const burn =
       treasuryBalance?.freeBalance.gtn(0) && !api?.consts.treasury.burn.isZero()
-        ? api?.consts.treasury.burn
-            .mul(treasuryBalance?.freeBalance)
-            .div(PM_DIV)
+        ? api?.consts.treasury.burn.mul(treasuryBalance?.freeBalance).div(PM_DIV)
         : null;
 
     const treasuryInfo = useMemo(
@@ -60,15 +48,7 @@ function withTreasury<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
         info,
         burn,
       }),
-      [
-        bestNumber,
-        totalProposals,
-        treasuryBalance,
-        spendPeriod,
-        value,
-        burn,
-        info,
-      ],
+      [bestNumber, totalProposals, treasuryBalance, spendPeriod, value, burn, info],
     );
 
     return <Comp {...props} treasuryInfo={treasuryInfo} />;

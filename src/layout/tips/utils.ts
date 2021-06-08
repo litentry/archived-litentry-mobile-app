@@ -1,19 +1,11 @@
-import {
-  OpenTip,
-  OpenTipTo225,
-  AccountId,
-  Balance,
-} from '@polkadot/types/interfaces';
+import {OpenTip, OpenTipTo225, AccountId, Balance} from '@polkadot/types/interfaces';
 import {BN_ZERO} from '@polkadot/util';
 
 function isCurrentTip(tip: OpenTip | OpenTipTo225): tip is OpenTip {
   return !!(tip as OpenTip)?.findersFee;
 }
 
-export function extractTipState(
-  tip: OpenTip | OpenTipTo225,
-  allAccounts: string[],
-) {
+export function extractTipState(tip: OpenTip | OpenTipTo225, allAccounts: string[]) {
   const closesAt = tip.closes?.unwrapOr(null);
   let finder: AccountId | null = null;
   let deposit: Balance | null = null;
@@ -42,9 +34,7 @@ export function extractTipState(
     finder,
     isFinder: !!finder && allAccounts.includes(finder.toString()),
     isTipped: !!values.length,
-    isTipper: tip.tips.some(([address]) =>
-      allAccounts.includes(address.toString()),
-    ),
+    isTipper: tip.tips.some(([address]) => allAccounts.includes(address.toString())),
     median,
   };
 }

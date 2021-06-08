@@ -12,26 +12,13 @@ type PropTypes = {
 };
 
 function InfoBanner(props: PropTypes) {
-  const {
-    text,
-    warning = false,
-    inline = false,
-    textStyles = {},
-    containerStyle = {},
-  } = props;
+  const {text, warning = false, inline = false, textStyles = {}, containerStyle = {}} = props;
 
   return (
-    <Layout
-      style={[styles.container, inline ? {} : styles.flex, containerStyle]}>
+    <Layout style={[styles.container, inline ? {} : styles.flex, containerStyle]}>
       <Layout style={styles.textContainer}>
-        <Icon
-          style={styles.icon}
-          fill={warning ? colorRed : colorGray}
-          name="info-outline"
-        />
-        <Text
-          numberOfLines={2}
-          style={[styles.text, styles.withIcon, textStyles]}>
+        <Icon style={styles.icon} fill={warning ? colorRed : colorGray} name="info-outline" />
+        <Text numberOfLines={2} style={[styles.text, styles.withIcon, textStyles]}>
           {text}
         </Text>
       </Layout>

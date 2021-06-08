@@ -28,22 +28,10 @@ export type MotionSummaryPSType = {
 };
 
 export const mapMotion = (raw: ResponseType): MotionSummaryPSType => {
-  const proposalId = _.get(
-    raw,
-    'data.data.attributes.proposal_id',
-    0,
-  ) as number;
-  const motionHash = _.get(
-    raw,
-    'data.data.attributes.motion_hash',
-    '',
-  ) as string;
+  const proposalId = _.get(raw, 'data.data.attributes.proposal_id', 0) as number;
+  const motionHash = _.get(raw, 'data.data.attributes.motion_hash', '') as string;
   const status = _.get(raw, 'data.data.attributes.status', '') as string;
-  const proposerAddress = _.get(
-    raw,
-    'data.data.attributes.account.attributes.address',
-    '',
-  ) as string;
+  const proposerAddress = _.get(raw, 'data.data.attributes.account.attributes.address', '') as string;
 
   return {
     proposalId,

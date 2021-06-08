@@ -22,11 +22,7 @@ function QRCode(props: PropTypes) {
   }, [data]);
 
   return (
-    <Layout
-      style={[
-        styles.container,
-        {width: dimention + 20, height: dimention + 20},
-      ]}>
+    <Layout style={[styles.container, {width: dimention + 20, height: dimention + 20}]}>
       {dataUri ? (
         <Image
           style={{width: dimention, height: dimention}}

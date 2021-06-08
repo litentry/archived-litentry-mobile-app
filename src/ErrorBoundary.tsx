@@ -25,9 +25,7 @@ export class ErrorBoundary extends React.Component<{}, {hasError: boolean}> {
       return (
         <Layout style={globalStyles.centeredContainer}>
           <Text>Something went wrong!</Text>
-          <Button onPress={() => this.setState({hasError: false})}>
-            Try again
-          </Button>
+          <Button onPress={() => this.setState({hasError: false})}>Try again</Button>
         </Layout>
       );
     }

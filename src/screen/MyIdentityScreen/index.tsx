@@ -17,11 +17,7 @@ function MyIdentity() {
 
   const {currentNetwork} = useContext(NetworkContext);
   const {api} = useContext(ChainApiContext);
-  const {inProgress, display, isNaked, detail} = useAccountDetail(
-    currentNetwork?.key || 'polkadot',
-    address,
-    api,
-  );
+  const {inProgress, display, isNaked, detail} = useAccountDetail(currentNetwork?.key || 'polkadot', address, api);
 
   const content = useMemo(() => {
     if (inProgress || !address) {
@@ -30,9 +26,7 @@ function MyIdentity() {
 
     if (detail?.data?.judgements.length) {
       // there is already judgements to display
-      return (
-        <DisplayJudgement display={display} detail={detail} address={address} />
-      );
+      return <DisplayJudgement display={display} detail={detail} address={address} />;
     }
 
     if (isNaked) {
@@ -41,15 +35,11 @@ function MyIdentity() {
     }
 
     // there is `setIdentity`, but no judgements are provided
-    return (
-      <RequestJudgement display={display} detail={detail} address={address} />
-    );
+    return <RequestJudgement display={display} detail={detail} address={address} />;
   }, [inProgress, address, display, isNaked, detail]);
 
   return (
-    <GenericNavigationLayout
-      title="My Identity"
-      onBackPressed={() => navigation.goBack()}>
+    <GenericNavigationLayout title="My Identity" onBackPressed={() => navigation.goBack()}>
       {content}
     </GenericNavigationLayout>
   );

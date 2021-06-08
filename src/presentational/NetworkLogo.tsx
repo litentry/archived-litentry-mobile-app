@@ -55,12 +55,7 @@ type PropTypes = {
 };
 
 function NetworkLogo({name, width, height}: PropTypes) {
-  return (
-    <Image
-      source={LogoMap[name]}
-      style={{width: width || 40, height: height || 40}}
-    />
-  );
+  return <Image source={LogoMap[name]} style={{width: width || 40, height: height || 40}} />;
 }
 
 export default NetworkLogo;

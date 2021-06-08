@@ -29,9 +29,7 @@ type PropTypes = {
   detail?: AddressDetailType;
 };
 
-const MoreIcon = (props: IconProps) => (
-  <Icon {...props} pack="ionic" name="ios-apps-outline" />
-);
+const MoreIcon = (props: IconProps) => <Icon {...props} pack="ionic" name="ios-apps-outline" />;
 
 function RequestJudgement({display, address, detail}: PropTypes) {
   const [visible, setVisible] = useState(false);
@@ -63,10 +61,7 @@ function RequestJudgement({display, address, detail}: PropTypes) {
   return (
     <Layout style={globalStyles.paddedContainer}>
       <View style={{paddingHorizontal: standardPadding * 2}}>
-        <InfoBanner
-          text="There is identify data found, however no Judgement is provided."
-          inline
-        />
+        <InfoBanner text="There is identify data found, however no Judgement is provided." inline />
       </View>
       <Padder scale={0.5} />
       <Divider />
@@ -91,9 +86,7 @@ function RequestJudgement({display, address, detail}: PropTypes) {
         />
         <ListItem
           title="Display"
-          accessoryLeft={(iconProps: IconProps) => (
-            <Icon {...iconProps} name="person-outline" />
-          )}
+          accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="person-outline" />}
           accessoryRight={() => (
             <Text
               selectable
@@ -110,9 +103,7 @@ function RequestJudgement({display, address, detail}: PropTypes) {
           <MenuGroup title=" Identity detail" accessoryLeft={MoreIcon}>
             <MenuItem
               title="Legal"
-              accessoryLeft={(props) => (
-                <Icon {...props} name="award-outline" />
-              )}
+              accessoryLeft={(props) => <Icon {...props} name="award-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
                   {u8aToString(detail?.data?.info.legal.asRaw) || 'Unset'}
@@ -121,9 +112,7 @@ function RequestJudgement({display, address, detail}: PropTypes) {
             />
             <MenuItem
               title="Email"
-              accessoryLeft={(props) => (
-                <Icon {...props} name="email-outline" />
-              )}
+              accessoryLeft={(props) => <Icon {...props} name="email-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
                   {u8aToString(detail?.data?.info.email.asRaw) || 'Unset'}
@@ -132,9 +121,7 @@ function RequestJudgement({display, address, detail}: PropTypes) {
             />
             <MenuItem
               title="Twitter"
-              accessoryLeft={(props) => (
-                <Icon {...props} name="twitter-outline" />
-              )}
+              accessoryLeft={(props) => <Icon {...props} name="twitter-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
                   {u8aToString(detail?.data?.info.twitter.asRaw) || 'Unset'}
@@ -143,9 +130,7 @@ function RequestJudgement({display, address, detail}: PropTypes) {
             />
             <MenuItem
               title="Riot"
-              accessoryLeft={(props) => (
-                <Icon {...props} name="message-square-outline" />
-              )}
+              accessoryLeft={(props) => <Icon {...props} name="message-square-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
                   {u8aToString(detail?.data?.info.riot.asRaw) || 'Unset'}
@@ -154,9 +139,7 @@ function RequestJudgement({display, address, detail}: PropTypes) {
             />
             <MenuItem
               title="Web"
-              accessoryLeft={(props) => (
-                <Icon {...props} name="browser-outline" />
-              )}
+              accessoryLeft={(props) => <Icon {...props} name="browser-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
                   {u8aToString(detail?.data?.info.web.asRaw) || 'Unset'}

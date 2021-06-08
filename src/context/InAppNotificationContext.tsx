@@ -1,15 +1,6 @@
-import React, {
-  createContext,
-  useRef,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
+import React, {createContext, useRef, useCallback, useMemo, useState} from 'react';
 import {StyleSheet, View, Text, Platform} from 'react-native';
-import {
-  Notification,
-  NotificationProperties,
-} from 'react-native-in-app-message';
+import {Notification, NotificationProperties} from 'react-native-in-app-message';
 import {standardPadding} from 'src/styles';
 import {truncate} from 'lodash';
 
@@ -27,11 +18,9 @@ type InAppNotificationContextValueType = {
   trigger: (payload: InAppNotificationPayloadType) => void;
 };
 
-export const InAppNotificationContext = createContext<InAppNotificationContextValueType>(
-  {
-    trigger: () => undefined,
-  },
-);
+export const InAppNotificationContext = createContext<InAppNotificationContextValueType>({
+  trigger: () => undefined,
+});
 
 type PropTypes = {
   children: React.ReactNode;
@@ -40,10 +29,7 @@ const DEFAULT_OPTIONS = {duration: 5000, tapticFeedback: true};
 
 function InAppNotificationContextProvider({children}: PropTypes) {
   const notificationRef = useRef<Notification>(null);
-  const [
-    notificationProps,
-    setNotificationProps,
-  ] = useState<NotificationProperties>({});
+  const [notificationProps, setNotificationProps] = useState<NotificationProperties>({});
   const trigger = useCallback((payload: InAppNotificationPayloadType) => {
     if (payload.type === 'TextInfo') {
       setNotificationProps({...DEFAULT_OPTIONS, ...payload.opts});
@@ -52,12 +38,7 @@ function InAppNotificationContextProvider({children}: PropTypes) {
         ...DEFAULT_OPTIONS,
         ...(payload.opts || {}),
         customComponent: (
-          <View
-            style={[
-              Platform.OS === 'ios'
-                ? styles.customView
-                : styles.customViewAndroid,
-            ]}>
+          <View style={[Platform.OS === 'ios' ? styles.customView : styles.customViewAndroid]}>
             {payload.renderContent()}
           </View>
         ),

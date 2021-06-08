@@ -11,9 +11,7 @@ function RegistrarListScreen(props: PropTypes) {
   const {navigation} = props;
 
   return (
-    <GenericNavigationLayout
-      title="Registrars"
-      onBackPressed={() => navigation.goBack()}>
+    <GenericNavigationLayout title="Registrars" onBackPressed={() => navigation.goBack()}>
       <RegistrarList />
     </GenericNavigationLayout>
   );

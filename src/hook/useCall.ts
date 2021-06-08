@@ -45,10 +45,7 @@ function extractParams<T>(
 ): [string, CallParams | null] {
   return [
     JSON.stringify({f: (fn as {name: string})?.name, p: params}),
-    params.length === 0 ||
-    !params.some((param) => isNull(param) || isUndefined(param))
-      ? paramMap(params)
-      : null,
+    params.length === 0 || !params.some((param) => isNull(param) || isUndefined(param)) ? paramMap(params) : null,
   ];
 }
 
@@ -57,9 +54,7 @@ function unsubscribe(tracker: TrackerRef): void {
   tracker.current.isActive = false;
 
   if (tracker.current.subscriber) {
-    tracker.current.subscriber
-      .then((unsubFn) => unsubFn())
-      .catch(console.error);
+    tracker.current.subscriber.then((unsubFn) => unsubFn()).catch(console.error);
     tracker.current.subscriber = null;
   }
 }
@@ -79,35 +74,25 @@ function subscribe<T>(
 
   setTimeout((): void => {
     if (mountedRef.current) {
-      if (
-        fn &&
-        (!fn.meta || !fn.meta.type?.isDoubleMap || validParams.length === 2)
-      ) {
+      if (fn && (!fn.meta || !fn.meta.type?.isDoubleMap || validParams.length === 2)) {
         // swap to acive mode and reset our count
         tracker.current.isActive = true;
         tracker.current.count = 0;
 
-        tracker.current.subscriber = (fn as (
-          ...params: unknown[]
-        ) => Promise<() => void>)(...params, (value: Codec): void => {
-          // when we don't have an active sub, or single-shot, ignore (we use the isActive flag here
-          // since .subscriber may not be set on immediate callback)
-          if (
-            mountedRef.current &&
-            tracker.current.isActive &&
-            (!isSingle || !tracker.current.count)
-          ) {
-            tracker.current.count++;
+        tracker.current.subscriber = (fn as (...params: unknown[]) => Promise<() => void>)(
+          ...params,
+          (value: Codec): void => {
+            // when we don't have an active sub, or single-shot, ignore (we use the isActive flag here
+            // since .subscriber may not be set on immediate callback)
+            if (mountedRef.current && tracker.current.isActive && (!isSingle || !tracker.current.count)) {
+              tracker.current.count++;
 
-            mountedRef.current &&
-              tracker.current.isActive &&
-              setValue(
-                withParams
-                  ? ([params, transform(value)] as any)
-                  : transform(value),
-              );
-          }
-        });
+              mountedRef.current &&
+                tracker.current.isActive &&
+                setValue(withParams ? ([params, transform(value)] as any) : transform(value));
+            }
+          },
+        );
       } else {
         tracker.current.subscriber = null;
       }
@@ -131,9 +116,7 @@ export function useCall<T>(
     serialized: null,
     subscriber: null,
   });
-  const [value, setValue] = useState<T | undefined>(
-    (options || {}).defaultValue,
-  );
+  const [value, setValue] = useState<T | undefined>((options || {}).defaultValue);
 
   // initial effect, we need an un-subscription
   useEffect((): (() => void) => {
@@ -144,11 +127,7 @@ export function useCall<T>(
   useEffect((): void => {
     // check if we have a function & that we are mounted
     if (mountedRef.current && fn) {
-      const [serialized, mappedParams] = extractParams(
-        fn,
-        params || [],
-        options,
-      );
+      const [serialized, mappedParams] = extractParams(fn, params || [], options);
 
       if (mappedParams && serialized !== tracker.current.serialized) {
         tracker.current.serialized = serialized;

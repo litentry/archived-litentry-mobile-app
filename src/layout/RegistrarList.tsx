@@ -2,11 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {BN_ZERO, formatBalance} from '@polkadot/util';
 import {Text} from '@ui-kitten/components';
-import withRegistrarList, {
-  InjectedPropTypes,
-  getValidRegistrars,
-  getSortedRegistrars,
-} from 'src/hoc/withRegistrarList';
+import withRegistrarList, {InjectedPropTypes, getValidRegistrars, getSortedRegistrars} from 'src/hoc/withRegistrarList';
 import globalStyles, {standardPadding, monofontFamily} from 'src/styles';
 import StatInfoBlock from 'presentational/StatInfoBlock';
 import Padder from 'presentational/Padder';
@@ -37,12 +33,8 @@ function RegistrarList(props: PropTypes & InjectedPropTypes) {
           <StatInfoBlock title="#Reg. Count">
             <Text style={styles.number}>{String(validRegistrars.length)}</Text>
           </StatInfoBlock>
-          <StatInfoBlock title="Lowest Fee">
-            {formatBalance(lowestFee.fee)}
-          </StatInfoBlock>
-          <StatInfoBlock title="Highest Fee">
-            {formatBalance(highestFee.fee)}
-          </StatInfoBlock>
+          <StatInfoBlock title="Lowest Fee">{formatBalance(lowestFee.fee)}</StatInfoBlock>
+          <StatInfoBlock title="Highest Fee">{formatBalance(highestFee.fee)}</StatInfoBlock>
         </View>
       </View>
 

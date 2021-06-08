@@ -1,12 +1,4 @@
-import React, {
-  createContext,
-  useMemo,
-  useState,
-  useContext,
-  useEffect,
-  useRef,
-  useCallback,
-} from 'react';
+import React, {createContext, useMemo, useState, useContext, useEffect, useRef, useCallback} from 'react';
 import type BN from 'bn.js';
 import {NetworkContext} from './NetworkContext';
 import {ApiPromise, WsProvider} from '@polkadot/api';
@@ -27,17 +19,7 @@ type ChainApiContextValueType = {
 
 export const DEFAULT_DECIMALS = registry.createType('u32', 12);
 export const DEFAULT_SS58 = registry.createType('u32', addressDefaults.prefix);
-export const DEFAULT_AUX = [
-  'Aux1',
-  'Aux2',
-  'Aux3',
-  'Aux4',
-  'Aux5',
-  'Aux6',
-  'Aux7',
-  'Aux8',
-  'Aux9',
-];
+export const DEFAULT_AUX = ['Aux1', 'Aux2', 'Aux3', 'Aux4', 'Aux5', 'Aux6', 'Aux7', 'Aux8', 'Aux9'];
 
 export const ChainApiContext = createContext<ChainApiContextValueType>({
   api: undefined,
@@ -132,8 +114,7 @@ function ChainApiContextProvider(props: PropTypes) {
         // pick the next ws api location
         // rerun the effect by changing the wsConnectionIndex dependency
         if (webSocketAddresses.length > 1) {
-          const nextWsConnectionIndex =
-            (wsConnectionIndex + 1) % webSocketAddresses.length;
+          const nextWsConnectionIndex = (wsConnectionIndex + 1) % webSocketAddresses.length;
           setWsConnectionIndex(nextWsConnectionIndex);
 
           logger.debug(
@@ -162,17 +143,10 @@ function ChainApiContextProvider(props: PropTypes) {
       // setup chain properties
       api.rpc.system.properties().then((properties) => {
         console.log('chain props', JSON.stringify(properties, null, 4));
-        const tokenSymbol = properties.tokenSymbol.unwrapOr([
-          formatBalance.getDefaults().unit,
-          ...DEFAULT_AUX,
-        ]);
-        const tokenDecimals = properties.tokenDecimals.unwrapOr([
-          DEFAULT_DECIMALS,
-        ]);
+        const tokenSymbol = properties.tokenSymbol.unwrapOr([formatBalance.getDefaults().unit, ...DEFAULT_AUX]);
+        const tokenDecimals = properties.tokenDecimals.unwrapOr([DEFAULT_DECIMALS]);
 
-        const ss58Format = properties.ss58Format
-          .unwrapOr(DEFAULT_SS58)
-          .toNumber();
+        const ss58Format = properties.ss58Format.unwrapOr(DEFAULT_SS58).toNumber();
 
         setSS58Format(ss58Format);
         registry.setChainProperties(
@@ -189,9 +163,7 @@ function ChainApiContextProvider(props: PropTypes) {
         });
 
         formatBalance.setDefaults({
-          decimals:
-            (tokenDecimals as BN[]).map((b) => b.toNumber())[0] ||
-            DEFAULT_DECIMALS.toNumber(),
+          decimals: (tokenDecimals as BN[]).map((b) => b.toNumber())[0] || DEFAULT_DECIMALS.toNumber(),
           unit: tokenSymbol[0].toString(),
         });
       });
@@ -238,16 +210,15 @@ function ChainApiContextProvider(props: PropTypes) {
     }
   }, [currentNetwork, status, api, sections]);
 
-  const value = useMemo(
-    () => ({api, status, addSection, removeSection, inProgress}),
-    [status, api, addSection, removeSection, inProgress],
-  );
+  const value = useMemo(() => ({api, status, addSection, removeSection, inProgress}), [
+    status,
+    api,
+    addSection,
+    removeSection,
+    inProgress,
+  ]);
 
-  return (
-    <ChainApiContext.Provider value={value}>
-      {children}
-    </ChainApiContext.Provider>
-  );
+  return <ChainApiContext.Provider value={value}>{children}</ChainApiContext.Provider>;
 }
 
 export default ChainApiContextProvider;

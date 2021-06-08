@@ -1,11 +1,4 @@
-import React, {
-  createContext,
-  useState,
-  useMemo,
-  useCallback,
-  useRef,
-  useContext,
-} from 'react';
+import React, {createContext, useState, useMemo, useCallback, useRef, useContext} from 'react';
 import {StyleSheet, Dimensions} from 'react-native';
 import {ApiPromise} from '@polkadot/api';
 import {get} from 'lodash';
@@ -29,29 +22,16 @@ const {width, height} = Dimensions.get('window');
 
 type PropTypes = {children: React.ReactNode};
 type TxContextValueType = {
-  start: (
-    api: ApiPromise,
-    address: string,
-    tx: string,
-    params: unknown[],
-  ) => Promise<void>;
+  start: (api: ApiPromise, address: string, tx: string, params: unknown[]) => Promise<void>;
 };
 
 export const TxContext = createContext<TxContextValueType>({
   start: () => Promise.resolve(),
 });
 
-const AlertIcon = (props: IconProps) => (
-  <Icon fill="#ccc" {...props} name="alert-triangle-outline" />
-);
+const AlertIcon = (props: IconProps) => <Icon fill="#ccc" {...props} name="alert-triangle-outline" />;
 
-type StepType =
-  | 'payload'
-  | 'signature'
-  | 'submitting'
-  | 'error'
-  | 'success'
-  | 'none';
+type StepType = 'payload' | 'signature' | 'submitting' | 'error' | 'success' | 'none';
 
 function TxContextProvider({children}: PropTypes) {
   const modalRef = useRef<Modalize>(null);
@@ -90,88 +70,75 @@ function TxContextProvider({children}: PropTypes) {
     [setInProgress, setStep],
   );
 
-  const start = useCallback(
-    async (
-      api: ApiPromise,
-      address: string,
-      txMethod: string,
-      params: unknown[],
-    ) => {
-      const [section, method] = txMethod.split('.');
+  const start = useCallback(async (api: ApiPromise, address: string, txMethod: string, params: unknown[]) => {
+    const [section, method] = txMethod.split('.');
 
-      if (!get(api.tx, [section, method])) {
-        throw new Error(`Unable to find method ${section}.${method}`);
-      }
+    if (!get(api.tx, [section, method])) {
+      throw new Error(`Unable to find method ${section}.${method}`);
+    }
 
-      const transaction: SubmittableExtrinsic<'promise'> = api.tx[section][
-        method
-      ](...params);
+    const transaction: SubmittableExtrinsic<'promise'> = api.tx[section][method](...params);
 
-      modalRef.current?.open();
+    modalRef.current?.open();
 
-      try {
-        const f = await transaction.signAsync(address, {
-          nonce: -1,
-          tip: BN_ZERO,
-          signer: new QrSigner((payload) => {
-            setSignerPayload(payload);
-            setStep('payload');
+    try {
+      const f = await transaction.signAsync(address, {
+        nonce: -1,
+        tip: BN_ZERO,
+        signer: new QrSigner((payload) => {
+          setSignerPayload(payload);
+          setStep('payload');
 
-            return new Promise((resolve) => {
-              signatureRef.current = resolve;
-            });
-          }),
-        });
+          return new Promise((resolve) => {
+            signatureRef.current = resolve;
+          });
+        }),
+      });
 
-        await f.send(({status, events}) => {
-          if (status.isInBlock || status.isFinalized) {
-            const errors = events
-              // find/filter for failed events
-              .filter(
-                ({event: {section, method}}) =>
-                  section === 'system' && method === 'ExtrinsicFailed',
-              )
-              // we know that data for system.ExtrinsicFailed is
-              // (DispatchError, DispatchInfo)
-              .map(
-                ({
-                  event: {
-                    data: [error],
-                  },
-                }) => {
-                  // @ts-ignore
-                  if (error.isModule) {
-                    // for module errors, we have the section indexed, lookup
-                    // @ts-ignore
-                    const decoded = api.registry.findMetaError(error.asModule);
-                    const {documentation} = decoded;
-
-                    return documentation.join(' ').trim();
-                  } else {
-                    // Other, CannotLookup, BadOrigin, no extra info
-                    return error.toString();
-                  }
+      await f.send(({status, events}) => {
+        if (status.isInBlock || status.isFinalized) {
+          const errors = events
+            // find/filter for failed events
+            .filter(({event: {section, method}}) => section === 'system' && method === 'ExtrinsicFailed')
+            // we know that data for system.ExtrinsicFailed is
+            // (DispatchError, DispatchInfo)
+            .map(
+              ({
+                event: {
+                  data: [error],
                 },
-              );
+              }) => {
+                // @ts-ignore
+                if (error.isModule) {
+                  // for module errors, we have the section indexed, lookup
+                  // @ts-ignore
+                  const decoded = api.registry.findMetaError(error.asModule);
+                  const {documentation} = decoded;
 
-            if (errors.length === 0 && status.isFinalized) {
-              setInProgress(false);
-              setStep('success');
-            }
+                  return documentation.join(' ').trim();
+                } else {
+                  // Other, CannotLookup, BadOrigin, no extra info
+                  return error.toString();
+                }
+              },
+            );
 
-            if (errors.length !== 0) {
-              setStep('error');
-              setInProgress(false);
-              setErrorMsg(errors[0]);
-            }
+          if (errors.length === 0 && status.isFinalized) {
+            setInProgress(false);
+            setStep('success');
           }
-        });
-      } catch (e) {
-        setStep('error');
-      }
-    },
-    [],
-  );
+
+          if (errors.length !== 0) {
+            setStep('error');
+            setInProgress(false);
+            setErrorMsg(errors[0]);
+          }
+        }
+      });
+    } catch (e) {
+      setStep('error');
+    }
+  }, []);
 
   const value = useMemo(
     () => ({
@@ -191,12 +158,7 @@ function TxContextProvider({children}: PropTypes) {
       case 'payload':
         return signerPayload && chainApi ? (
           <Layout>
-            <TxPayloadQr
-              api={chainApi}
-              payload={signerPayload}
-              onCancel={onDismiss}
-              onConfirm={onScanSignature}
-            />
+            <TxPayloadQr api={chainApi} payload={signerPayload} onCancel={onDismiss} onConfirm={onScanSignature} />
           </Layout>
         ) : null;
       case 'submitting':
@@ -204,13 +166,7 @@ function TxContextProvider({children}: PropTypes) {
           <Layout style={styles.infoContainer}>
             <LoadingView
               text="Submitting"
-              renderIcon={() => (
-                <Icon
-                  name="cloud-upload-outline"
-                  fill="#ccc"
-                  style={styles.iconText}
-                />
-              )}
+              renderIcon={() => <Icon name="cloud-upload-outline" fill="#ccc" style={styles.iconText} />}
             />
           </Layout>
         );
@@ -246,9 +202,7 @@ function TxContextProvider({children}: PropTypes) {
                 <Layout style={styles.notAuthorized}>
                   <Layout style={styles.notAuthorizedHack}>
                     <AlertIcon style={styles.icon} />
-                    <Text category="label">
-                      This requires your Camera permission to scan.
-                    </Text>
+                    <Text category="label">This requires your Camera permission to scan.</Text>
                   </Layout>
                 </Layout>
               }
@@ -258,15 +212,7 @@ function TxContextProvider({children}: PropTypes) {
       default:
         return null;
     }
-  }, [
-    step,
-    onScanSignature,
-    signerPayload,
-    handleSignatureScan,
-    chainApi,
-    errorMsg,
-    onDismiss,
-  ]);
+  }, [step, onScanSignature, signerPayload, handleSignatureScan, chainApi, errorMsg, onDismiss]);
 
   return (
     <TxContext.Provider value={value}>

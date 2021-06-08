@@ -14,17 +14,10 @@ function SuccessDialog(props: PropTypes) {
   const {text, inline = false, textStyles = {}, containerStyle = {}} = props;
 
   return (
-    <Layout
-      style={[styles.container, inline ? {} : styles.flex, containerStyle]}>
+    <Layout style={[styles.container, inline ? {} : styles.flex, containerStyle]}>
       <Layout style={styles.textContainer}>
-        <Icon
-          style={styles.icon}
-          fill={colorGreen}
-          name="checkmark-circle-outline"
-        />
-        <Text
-          numberOfLines={2}
-          style={[styles.text, styles.withIcon, textStyles]}>
+        <Icon style={styles.icon} fill={colorGreen} name="checkmark-circle-outline" />
+        <Text numberOfLines={2} style={[styles.text, styles.withIcon, textStyles]}>
           {text}
         </Text>
       </Layout>

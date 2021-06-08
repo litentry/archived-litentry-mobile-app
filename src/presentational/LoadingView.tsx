@@ -1,15 +1,7 @@
 import React, {ReactNode} from 'react';
-import {
-  StyleSheet,
-  ActivityIndicator,
-  ActivityIndicatorProps,
-} from 'react-native';
+import {StyleSheet, ActivityIndicator, ActivityIndicatorProps} from 'react-native';
 import {Layout, Text} from '@ui-kitten/components';
-import globalStyles, {
-  standardPadding,
-  monofontFamily,
-  colorGreen,
-} from 'src/styles';
+import globalStyles, {standardPadding, monofontFamily, colorGreen} from 'src/styles';
 
 type PropTypes = {
   text?: string;
@@ -25,14 +17,7 @@ function LoadingView(props: PropTypes) {
     <Layout style={globalStyles.centeredContainer}>
       <Layout style={styles.textContainer}>
         {renderIcon && renderIcon()}
-        <Text
-          style={[
-            styles.text,
-            renderIcon ? styles.withIcon : {},
-            styles[appearance || 'primary'],
-          ]}>
-          {text}
-        </Text>
+        <Text style={[styles.text, renderIcon ? styles.withIcon : {}, styles[appearance || 'primary']]}>{text}</Text>
       </Layout>
       <ActivityIndicator size={size || 'large'} color={colorGreen} />
     </Layout>

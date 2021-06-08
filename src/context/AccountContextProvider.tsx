@@ -1,11 +1,4 @@
-import React, {
-  createContext,
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-  useContext,
-} from 'react';
+import React, {createContext, useState, useEffect, useCallback, useMemo, useContext} from 'react';
 import {useAsyncStorage} from '@react-native-community/async-storage';
 import {AccountAddressType} from 'src/types';
 import {ChainApiContext} from './ChainApiContext';
@@ -31,9 +24,7 @@ function AccountContextProvider({children}: PropTypes) {
   const {getItem, setItem, removeItem} = useAsyncStorage('accounts');
   const [accounts, setAccounts] = useState<AccountAddressType[] | null>(null);
   const {status, api} = useContext(ChainApiContext);
-  const [currentIdentity, setCurrentIdentity] = useState<Registration | null>(
-    null,
-  );
+  const [currentIdentity, setCurrentIdentity] = useState<Registration | null>(null);
 
   useEffect(() => {
     getItem((_, result) => {
@@ -87,9 +78,7 @@ function AccountContextProvider({children}: PropTypes) {
     [accounts, setAccount, currentIdentity],
   );
 
-  return (
-    <AccountContext.Provider value={value}>{children}</AccountContext.Provider>
-  );
+  return <AccountContext.Provider value={value}>{children}</AccountContext.Provider>;
 }
 
 export default AccountContextProvider;

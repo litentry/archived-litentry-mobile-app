@@ -8,13 +8,7 @@ import {useBlockTime} from 'src/hook/useBlockTime';
 import ProgressChartWidget from 'presentational/ProgressWidget';
 import StatInfoBlock from 'presentational/StatInfoBlock';
 import withTreasury, {InjectedPropTypes} from 'src/hoc/withTreasury';
-import {
-  formatNumber,
-  BN_ONE,
-  bnToBn,
-  formatBalance,
-  BN_ZERO,
-} from '@polkadot/util';
+import {formatNumber, BN_ONE, bnToBn, formatBalance, BN_ZERO} from '@polkadot/util';
 
 type PropTypes = {
   onMorePress: () => void;
@@ -23,9 +17,7 @@ type PropTypes = {
 function TreasurySummaryTeaser(props: PropTypes & InjectedPropTypes) {
   const {treasuryInfo} = props;
   const total = treasuryInfo.spendPeriod || BN_ONE;
-  const value = treasuryInfo.bestNumber?.mod(
-    treasuryInfo.spendPeriod?.toBn() ?? BN_ONE,
-  );
+  const value = treasuryInfo.bestNumber?.mod(treasuryInfo.spendPeriod?.toBn() ?? BN_ONE);
   const angle = total.gtn(0)
     ? bnToBn(value || 0)
         .muln(36000)
@@ -43,24 +35,16 @@ function TreasurySummaryTeaser(props: PropTypes & InjectedPropTypes) {
         <Layout style={styles.container}>
           <Card style={[styles.item, styles.left]}>
             <View style={globalStyles.spaceBetweenRowContainer}>
-              <StatInfoBlock title="Proposals">
-                {String(treasuryInfo.info?.proposals.length)}
-              </StatInfoBlock>
-              <StatInfoBlock title="Totals">
-                {formatNumber(treasuryInfo.totalProposals)}
-              </StatInfoBlock>
+              <StatInfoBlock title="Proposals">{String(treasuryInfo.info?.proposals.length)}</StatInfoBlock>
+              <StatInfoBlock title="Totals">{formatNumber(treasuryInfo.totalProposals)}</StatInfoBlock>
             </View>
             <Padder scale={1} />
-            <StatInfoBlock title="Approved">
-              {String(treasuryInfo.info?.approvals.length)}
-            </StatInfoBlock>
+            <StatInfoBlock title="Approved">{String(treasuryInfo.info?.approvals.length)}</StatInfoBlock>
           </Card>
           <Card style={[styles.item, styles.right, styles.center]} disabled>
             <ProgressChartWidget
               title={`Spend period s (${timeStringParts[0]})`}
-              detail={`${percentage}%\n${termLeft[0]}${
-                termLeft[1] ? `\n${termLeft[1]}` : ''
-              }`}
+              detail={`${percentage}%\n${termLeft[0]}${termLeft[1] ? `\n${termLeft[1]}` : ''}`}
               data={[percentage / 100]}
             />
           </Card>
@@ -68,12 +52,8 @@ function TreasurySummaryTeaser(props: PropTypes & InjectedPropTypes) {
         <Padder scale={0.3} />
         <Card>
           <View style={globalStyles.spaceBetweenRowContainer}>
-            <StatInfoBlock title="Available">
-              {formatBalance(treasuryInfo.treasuryBalance?.freeBalance)}
-            </StatInfoBlock>
-            <StatInfoBlock title="Next Burn">
-              {formatBalance(treasuryInfo.burn || BN_ZERO)}
-            </StatInfoBlock>
+            <StatInfoBlock title="Available">{formatBalance(treasuryInfo.treasuryBalance?.freeBalance)}</StatInfoBlock>
+            <StatInfoBlock title="Next Burn">{formatBalance(treasuryInfo.burn || BN_ZERO)}</StatInfoBlock>
           </View>
         </Card>
       </View>

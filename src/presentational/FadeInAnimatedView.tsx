@@ -8,12 +8,7 @@ function FadeInAnimatedView(props: PropTypes) {
   const {children} = props;
 
   return (
-    <Animatable.View
-      useNativeDriver
-      duration={800}
-      animation="fadeIn"
-      iterationCount={1}
-      style={styles.container}>
+    <Animatable.View useNativeDriver duration={800} animation="fadeIn" iterationCount={1} style={styles.container}>
       {children}
     </Animatable.View>
   );

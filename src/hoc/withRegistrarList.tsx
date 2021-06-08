@@ -10,23 +10,17 @@ export type InjectedPropTypes = {
   registrars: Vec<Option<RegistrarInfo>> | undefined;
 };
 
-function withRegistrarList<T>(
-  Comp: React.ComponentType<T & InjectedPropTypes>,
-) {
+function withRegistrarList<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
   return function Hoc(props: T) {
     const {api} = useContext(ChainApiContext);
 
-    const registrars = useCall<Vec<Option<RegistrarInfo>>>(
-      api?.query.identity.registrars,
-    );
+    const registrars = useCall<Vec<Option<RegistrarInfo>>>(api?.query.identity.registrars);
 
     return <Comp {...props} registrars={registrars} />;
   };
 }
 
-export const getValidRegistrars = (
-  registrars: InjectedPropTypes['registrars'],
-) => {
+export const getValidRegistrars = (registrars: InjectedPropTypes['registrars']) => {
   if (!registrars) {
     return [];
   }
@@ -38,18 +32,13 @@ export const getValidRegistrars = (
   });
 };
 
-export const getSortedRegistrars = (
-  registrars: Array<Option<RegistrarInfo>> | undefined,
-) => {
+export const getSortedRegistrars = (registrars: Array<Option<RegistrarInfo>> | undefined) => {
   if (!registrars) {
     return [];
   }
 
   return registrars.sort((a, b) => {
-    if (
-      a.unwrapOr({fee: BN_ZERO}).fee.toNumber() >
-      b.unwrapOr({fee: BN_ZERO}).fee.toNumber()
-    ) {
+    if (a.unwrapOr({fee: BN_ZERO}).fee.toNumber() > b.unwrapOr({fee: BN_ZERO}).fee.toNumber()) {
       return 1;
     }
     return -1;

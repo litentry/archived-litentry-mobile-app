@@ -13,9 +13,7 @@ type PropTypes = {
 
 function NetworkSelectionList(props: PropTypes) {
   const {items, selected, onSelect} = props;
-  const [selectedIndex, setSelectedIndex] = useState(
-    items.findIndex(({ws}) => isEqual(selected?.ws, ws)),
-  );
+  const [selectedIndex, setSelectedIndex] = useState(items.findIndex(({ws}) => isEqual(selected?.ws, ws)));
 
   if (!selected) {
     return null;

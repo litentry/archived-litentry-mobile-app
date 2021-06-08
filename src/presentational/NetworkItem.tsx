@@ -11,12 +11,7 @@ function NetworkItem(props: PropTypes) {
   return (
     <Layout style={styles.container}>
       <Text category="label">{item.name}</Text>
-      <View
-        style={[
-          styles.connectionIndicator,
-          isConnected ? styles.connected : styles.notConnected,
-        ]}
-      />
+      <View style={[styles.connectionIndicator, isConnected ? styles.connected : styles.notConnected]} />
     </Layout>
   );
 }

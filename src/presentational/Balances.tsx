@@ -19,29 +19,19 @@ function Balances(props: PropTypes) {
     <Layout>
       <ListItem
         title="Total Balance"
-        accessoryRight={() => (
-          <Text style={styles.balance}>
-            {formatBalance(data.free.add(data.reserved))}
-          </Text>
-        )}
+        accessoryRight={() => <Text style={styles.balance}>{formatBalance(data.free.add(data.reserved))}</Text>}
       />
       <ListItem
         title="Transferrable"
-        accessoryRight={() => (
-          <Text style={styles.balance}>{formatBalance(data.free)}</Text>
-        )}
+        accessoryRight={() => <Text style={styles.balance}>{formatBalance(data.free)}</Text>}
       />
       <ListItem
         title="Reserved"
-        accessoryRight={() => (
-          <Text style={styles.balance}>{formatBalance(data.reserved)}</Text>
-        )}
+        accessoryRight={() => <Text style={styles.balance}>{formatBalance(data.reserved)}</Text>}
       />
       <ListItem
         title="Locked"
-        accessoryRight={() => (
-          <Text style={styles.balance}>{formatBalance(data.feeFrozen)}</Text>
-        )}
+        accessoryRight={() => <Text style={styles.balance}>{formatBalance(data.feeFrozen)}</Text>}
       />
     </Layout>
   );

@@ -1,7 +1,5 @@
 import React, {useEffect} from 'react';
-import withMotionDetail, {
-  InjectedPropTypes as MotionDetailInjectedPropTypes,
-} from 'src/hoc/withMotionDetail';
+import withMotionDetail, {InjectedPropTypes as MotionDetailInjectedPropTypes} from 'src/hoc/withMotionDetail';
 
 import GenericNavigationLayout from 'presentational/GenericNavigationLayout';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
@@ -29,9 +27,7 @@ function MotionDetailScreen(props: PropTypes & MotionDetailInjectedPropTypes) {
   }, []);
 
   return (
-    <GenericNavigationLayout
-      title={`Motion Detail #${id}`}
-      onBackPressed={() => navigation.goBack()}>
+    <GenericNavigationLayout title={`Motion Detail #${id}`} onBackPressed={() => navigation.goBack()}>
       {motion ? <MotionDetailPage motion={motion} /> : <LoadingView />}
     </GenericNavigationLayout>
   );
