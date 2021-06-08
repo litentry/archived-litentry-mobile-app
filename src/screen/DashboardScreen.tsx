@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {Alert, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import NetworkItem from 'presentational/NetworkItem';
@@ -17,7 +17,7 @@ import TreasurySummaryTeaser from 'layout/TreasurySummaryTeaser';
 import TipsSummaryTeaser from 'layout/tips/TipsSummaryTeaser';
 import {CompositeNavigationProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {councilScreen, tips} from 'src/navigation/routeKeys';
+import {councilScreen, tips, treasuryScreen} from 'src/navigation/routeKeys';
 import {NetworkContext} from 'context/NetworkContext';
 
 type PropTypes = {
@@ -60,7 +60,7 @@ function DashboardScreen({navigation, accountAddProps}: PropTypes & AddAccountIn
       <SafeAreaView
         edges={['bottom']}
         style={[globalStyles.flex, {backgroundColor: theme['background-basic-color-1']}]}>
-        <Divider style={{height: 2}} />
+        <Divider style={styles.divider} />
         <FadeInAnimatedView>
           {!account ? (
             <Layout style={styles.container} level="1">
@@ -75,7 +75,7 @@ function DashboardScreen({navigation, accountAddProps}: PropTypes & AddAccountIn
               <View style={[globalStyles.flex, styles.main]}>
                 <ScrollView style={styles.scrollView}>
                   <CouncilSummaryTeaser onMorePress={() => navigation.navigate(councilScreen)} />
-                  <TreasurySummaryTeaser onMorePress={() => Alert.alert('Navigate to Treasury Screen')} />
+                  <TreasurySummaryTeaser onMorePress={() => navigation.navigate(treasuryScreen)} />
                   <TipsSummaryTeaser onMorePress={() => navigation.navigate(tips)} />
                 </ScrollView>
               </View>
@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     alignItems: 'flex-start',
   },
+  divider: {height: 2},
 });
 
 export default withAddAccount(DashboardScreen);

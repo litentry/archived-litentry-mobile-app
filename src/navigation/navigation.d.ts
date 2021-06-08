@@ -10,6 +10,7 @@ type DashboardStackParamList = {
   };
   CouncilScreen: undefined;
   SubmitTipScreen: undefined;
+  TreasuryScreen: undefined;
 };
 
 type DrawerParamList = {
