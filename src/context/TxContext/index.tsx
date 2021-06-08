@@ -173,7 +173,7 @@ function TxContextProvider({children}: PropTypes) {
       case 'success':
         return (
           <Layout style={styles.infoContainer}>
-            <SuccessDialog text="Tx Success" />
+            <SuccessDialog text="Tx Success" onClosePress={onDismiss} />
           </Layout>
         );
 
