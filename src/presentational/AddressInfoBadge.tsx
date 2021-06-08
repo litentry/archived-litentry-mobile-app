@@ -1,13 +1,6 @@
 import React, {useCallback, useRef} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {
-  Button,
-  Divider,
-  Icon,
-  Layout,
-  ListItem,
-  Text,
-} from '@ui-kitten/components';
+import {Button, Divider, Icon, Layout, ListItem, Text} from '@ui-kitten/components';
 import {u8aToString} from '@polkadot/util';
 import globalStyles, {standardPadding} from 'src/styles';
 import JudgmentStatus from './JudgmentStatus';
@@ -25,11 +18,7 @@ type PropTypes = {
 };
 
 function AddressInfoBadge({address, network, api}: PropTypes) {
-  const {detail, display} = useAccountDetail(
-    (network?.key || 'polkadot') as SupportedNetworkType,
-    address,
-    api,
-  );
+  const {detail, display} = useAccountDetail((network?.key || 'polkadot') as SupportedNetworkType, address, api);
   const modalRef = useRef<Modalize>(null);
   const onOpen = useCallback(() => {
     modalRef.current?.open();
@@ -39,26 +28,13 @@ function AddressInfoBadge({address, network, api}: PropTypes) {
     <>
       <TouchableOpacity onPress={onOpen}>
         <Layout style={styles.container}>
-          <Text
-            category="c2"
-            selectable
-            numberOfLines={1}
-            style={styles.display}
-            ellipsizeMode="middle">
+          <Text category="c2" selectable numberOfLines={1} style={styles.display} ellipsizeMode="middle">
             {display}
           </Text>
-          <Icon
-            name="arrow-down"
-            style={styles.icon}
-            fill="#ccc"
-            animation="pulse"
-          />
+          <Icon name="arrow-down" style={styles.icon} fill="#ccc" animation="pulse" />
           <Layout style={globalStyles.rowContainer}>
             {detail?.data?.judgements.map((judgement) => (
-              <JudgmentStatus
-                key={String(judgement[0])}
-                judgement={judgement}
-              />
+              <JudgmentStatus key={String(judgement[0])} judgement={judgement} />
             ))}
           </Layout>
         </Layout>
@@ -80,25 +56,16 @@ function AddressInfoBadge({address, network, api}: PropTypes) {
               <Divider />
               <ListItem
                 title="Display"
-                accessoryLeft={(props) => (
-                  <Icon {...props} name="person-outline" />
-                )}
+                accessoryLeft={(props) => <Icon {...props} name="person-outline" />}
                 accessoryRight={() => (
-                  <Text
-                    style={{maxWidth: '55%'}}
-                    selectable
-                    category="label"
-                    numberOfLines={1}
-                    ellipsizeMode="middle">
+                  <Text style={{maxWidth: '55%'}} selectable category="label" numberOfLines={1} ellipsizeMode="middle">
                     {display}
                   </Text>
                 )}
               />
               <ListItem
                 title="Legal"
-                accessoryLeft={(props) => (
-                  <Icon {...props} name="award-outline" />
-                )}
+                accessoryLeft={(props) => <Icon {...props} name="award-outline" />}
                 accessoryRight={() => (
                   <Text selectable category="label">
                     {u8aToString(detail?.data?.info.legal.asRaw) || 'Unset'}
@@ -107,9 +74,7 @@ function AddressInfoBadge({address, network, api}: PropTypes) {
               />
               <ListItem
                 title="Email"
-                accessoryLeft={(props) => (
-                  <Icon {...props} name="email-outline" />
-                )}
+                accessoryLeft={(props) => <Icon {...props} name="email-outline" />}
                 accessoryRight={() => (
                   <Text selectable category="label">
                     {u8aToString(detail?.data?.info.email.asRaw) || 'Unset'}
@@ -118,9 +83,7 @@ function AddressInfoBadge({address, network, api}: PropTypes) {
               />
               <ListItem
                 title="Twitter"
-                accessoryLeft={(props) => (
-                  <Icon {...props} name="twitter-outline" />
-                )}
+                accessoryLeft={(props) => <Icon {...props} name="twitter-outline" />}
                 accessoryRight={() => (
                   <Text selectable category="label">
                     {u8aToString(detail?.data?.info.twitter.asRaw) || 'Unset'}
@@ -129,9 +92,7 @@ function AddressInfoBadge({address, network, api}: PropTypes) {
               />
               <ListItem
                 title="Riot"
-                accessoryLeft={(props) => (
-                  <Icon {...props} name="message-square-outline" />
-                )}
+                accessoryLeft={(props) => <Icon {...props} name="message-square-outline" />}
                 accessoryRight={() => (
                   <Text selectable category="label">
                     {u8aToString(detail?.data?.info.riot.asRaw) || 'Unset'}
@@ -140,9 +101,7 @@ function AddressInfoBadge({address, network, api}: PropTypes) {
               />
               <ListItem
                 title="Web"
-                accessoryLeft={(props) => (
-                  <Icon {...props} name="browser-outline" />
-                )}
+                accessoryLeft={(props) => <Icon {...props} name="browser-outline" />}
                 accessoryRight={() => (
                   <Text selectable category="label">
                     {u8aToString(detail?.data?.info.web.asRaw) || 'Unset'}
@@ -150,9 +109,7 @@ function AddressInfoBadge({address, network, api}: PropTypes) {
                 )}
               />
               <Divider style={globalStyles.divider} />
-              <Button
-                appearance="ghost"
-                onPress={() => modalRef.current?.close()}>
+              <Button appearance="ghost" onPress={() => modalRef.current?.close()}>
                 Close
               </Button>
             </Layout>

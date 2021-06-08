@@ -1,11 +1,7 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {Layout, Text, Icon} from '@ui-kitten/components';
-import globalStyles, {
-  standardPadding,
-  monofontFamily,
-  colorRed,
-} from 'src/styles';
+import globalStyles, {standardPadding, monofontFamily, colorRed} from 'src/styles';
 
 type PropTypes = {
   text: string;

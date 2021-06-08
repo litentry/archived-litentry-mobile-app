@@ -1,18 +1,7 @@
 import React, {useCallback, useState} from 'react';
 import BN from 'bn.js';
 import {StyleSheet, Dimensions, View} from 'react-native';
-import {
-  Select,
-  SelectItem,
-  Modal,
-  Card,
-  Text,
-  Button,
-  IndexPath,
-  Input,
-  Icon,
-  IconProps,
-} from '@ui-kitten/components';
+import {Select, SelectItem, Modal, Card, Text, Button, IndexPath, Input, Icon, IconProps} from '@ui-kitten/components';
 import withRegistrarList, {InjectedPropTypes} from 'src/hoc/withRegistrarList';
 import {BN_ZERO, formatBalance} from '@polkadot/util';
 import {standardPadding, monofontFamily} from 'src/styles';
@@ -27,19 +16,10 @@ type PropTypes = {
   onClose: () => void;
   onSelect: (index: number, fee?: BN) => void;
 };
-const AlertIcon = (props: IconProps) => (
-  <Icon {...props} name="alert-circle-outline" />
-);
+const AlertIcon = (props: IconProps) => <Icon {...props} name="alert-circle-outline" />;
 
-function RegistrarSelectionModal({
-  onSelect,
-  registrars,
-  visible,
-  onClose,
-}: PropTypes & InjectedPropTypes) {
-  const [selectedRegistrar, setSelectedRegistrar] = useState<
-    IndexPath | IndexPath[]
-  >();
+function RegistrarSelectionModal({onSelect, registrars, visible, onClose}: PropTypes & InjectedPropTypes) {
+  const [selectedRegistrar, setSelectedRegistrar] = useState<IndexPath | IndexPath[]>();
   const [feeValue, setFeeValue] = useState<BN>();
   const handleSelect = useCallback(() => {
     const index = (selectedRegistrar as IndexPath).row;
@@ -49,12 +29,8 @@ function RegistrarSelectionModal({
     }
   }, [onSelect, selectedRegistrar, feeValue]);
 
-  const feeDisplay =
-    feeValue &&
-    (formatNumberWRTDecimal(feeValue).toNumber() / 10000).toString();
-  const selectedRegistrarDisplay = selectedRegistrar
-    ? `Registrar #${(selectedRegistrar as IndexPath).row}`
-    : undefined;
+  const feeDisplay = feeValue && (formatNumberWRTDecimal(feeValue).toNumber() / 10000).toString();
+  const selectedRegistrarDisplay = selectedRegistrar ? `Registrar #${(selectedRegistrar as IndexPath).row}` : undefined;
 
   const handleRegistrarSelect = useCallback(
     (index: IndexPath | IndexPath[]) => {
@@ -77,43 +53,25 @@ function RegistrarSelectionModal({
   }
 
   return (
-    <Modal
-      visible={visible}
-      style={styles.container}
-      backdropStyle={styles.backdrop}
-      onBackdropPress={onClose}>
+    <Modal visible={visible} style={styles.container} backdropStyle={styles.backdrop} onBackdropPress={onClose}>
       <Card
         disabled={true}
         header={(props) => (
           <>
-            <Text
-              {...props}
-              style={[props?.style, styles.headerStyleOverwrite]}
-              category="h6">
+            <Text {...props} style={[props?.style, styles.headerStyleOverwrite]} category="h6">
               Choose registrar
             </Text>
-            <Text
-              {...props}
-              style={[props?.style, styles.subHeaderOverwrite]}
-              category="s2">
+            <Text {...props} style={[props?.style, styles.subHeaderOverwrite]} category="s2">
               Select a registrar and specify fee
             </Text>
           </>
         )}
         footer={(props) => (
           <View {...props} style={[props?.style, styles.footerContainer]}>
-            <Button
-              style={styles.footerControl}
-              appearance="ghost"
-              size="small"
-              onPress={onClose}
-              status="danger">
+            <Button style={styles.footerControl} appearance="ghost" size="small" onPress={onClose} status="danger">
               Cancel
             </Button>
-            <Button
-              style={styles.footerControl}
-              size="small"
-              onPress={handleSelect}>
+            <Button style={styles.footerControl} size="small" onPress={handleSelect}>
               Submit
             </Button>
           </View>
@@ -131,16 +89,10 @@ function RegistrarSelectionModal({
                 disabled={unwraped.fee.eq(BN_ZERO)}
                 key={unwraped.account.toString()}
                 accessoryLeft={() => {
-                  return (
-                    <Identicon value={unwraped.account.toString()} size={20} />
-                  );
+                  return <Identicon value={unwraped.account.toString()} size={20} />;
                 }}
                 title={`#${index}`}
-                accessoryRight={() => (
-                  <Text style={styles.indexText}>
-                    {formatBalance(unwraped.fee)}
-                  </Text>
-                )}
+                accessoryRight={() => <Text style={styles.indexText}>{formatBalance(unwraped.fee)}</Text>}
               />
             );
           })}

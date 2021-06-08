@@ -1,21 +1,5 @@
-import React, {
-  useRef,
-  useMemo,
-  useContext,
-  useCallback,
-  useReducer,
-} from 'react';
-import {
-  Text,
-  Layout,
-  Divider,
-  Button,
-  TabView,
-  Tab,
-  Icon,
-  IconProps,
-  Input,
-} from '@ui-kitten/components';
+import React, {useRef, useMemo, useContext, useCallback, useReducer} from 'react';
+import {Text, Layout, Divider, Button, TabView, Tab, Icon, IconProps, Input} from '@ui-kitten/components';
 import {Modalize} from 'react-native-modalize';
 import {AccountContext} from 'context/AccountContextProvider';
 import {AccountAddressType, NetworkType} from 'src/types';
@@ -71,10 +55,7 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
       dispatch({type: 'SET_ADDRESS', payload: text});
     };
 
-    const accountAddProps = useMemo(
-      () => ({open: () => modalRef.current?.open(), account}),
-      [account],
-    );
+    const accountAddProps = useMemo(() => ({open: () => modalRef.current?.open(), account}), [account]);
 
     const handleScan = useCallback(({data}) => {
       const parsed = parseAddress(data);
@@ -89,10 +70,7 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
           return;
         }
 
-        Alert.alert(
-          'Validation Failed',
-          'Either network or address is invalid.',
-        );
+        Alert.alert('Validation Failed', 'Either network or address is invalid.');
       }
 
       if (state.step === 'selectNetwork') {
@@ -138,16 +116,12 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
               indicatorStyle={styles.tabViewIndicator}
               style={styles.tabViewContainer}
               selectedIndex={state.tabIndex}
-              onSelect={(index) =>
-                dispatch({type: 'SET_TAB_INDEX', payload: index})
-              }>
+              onSelect={(index) => dispatch({type: 'SET_TAB_INDEX', payload: index})}>
               <Tab title={InputIcon}>
                 <Layout style={styles.tabContainer}>
                   <NetworkSelection
                     data={availableNetworks}
-                    onSelect={(network) =>
-                      dispatch({type: 'SET_NETWORK', payload: network})
-                    }
+                    onSelect={(network) => dispatch({type: 'SET_NETWORK', payload: network})}
                   />
                   <Padder scale={1} />
                   <Input
@@ -169,30 +143,16 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
 
         case 'selectNetwork':
           return (
-            <Layout
-              style={[
-                styles.tabContainer,
-                {minHeight: 200, marginTop: standardPadding * 2},
-              ]}>
+            <Layout style={[styles.tabContainer, {minHeight: 200, marginTop: standardPadding * 2}]}>
               <NetworkSelection
                 data={availableNetworks}
-                onSelect={(network) =>
-                  dispatch({type: 'SET_NETWORK', payload: network})
-                }
+                onSelect={(network) => dispatch({type: 'SET_NETWORK', payload: network})}
               />
             </Layout>
           );
 
         case 'preview':
-          return (
-            state.network && (
-              <AddressInfoPreview
-                address={state.address}
-                api={api}
-                network={state.network}
-              />
-            )
-          );
+          return state.network && <AddressInfoPreview address={state.address} api={api} network={state.network} />;
         case 'success':
           return (
             <Layout style={globalStyles.dialogMinHeight}>
@@ -200,15 +160,7 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
             </Layout>
           );
       }
-    }, [
-      state.step,
-      state.tabIndex,
-      state.address,
-      state.network,
-      availableNetworks,
-      handleScan,
-      api,
-    ]);
+    }, [state.step, state.tabIndex, state.address, state.network, availableNetworks, handleScan, api]);
 
     return (
       <>
@@ -222,9 +174,7 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
             handlePosition="outside"
             closeOnOverlayTap
             panGestureEnabled>
-            <Layout
-              level="1"
-              style={[globalStyles.paddedContainer, styles.modal]}>
+            <Layout level="1" style={[globalStyles.paddedContainer, styles.modal]}>
               <ModalTitle title="Add Account" />
               <Divider />
               {content}
@@ -232,21 +182,13 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
               <Layout style={styles.btnContainer}>
                 {state.step !== 'success' ? (
                   <>
-                    <Button
-                      style={styles.btn}
-                      appearance="ghost"
-                      status="danger"
-                      onPress={handleCancel}>
+                    <Button style={styles.btn} appearance="ghost" status="danger" onPress={handleCancel}>
                       {'Cancel'}
                     </Button>
                     <View style={styles.gap20} />
                   </>
                 ) : undefined}
-                <Button
-                  style={styles.btn}
-                  appearance="ghost"
-                  disabled={confirmBtnDisabled}
-                  onPress={handleConfirm}>
+                <Button style={styles.btn} appearance="ghost" disabled={confirmBtnDisabled} onPress={handleConfirm}>
                   {state.step === 'success' ? 'Close' : 'Confirm'}
                 </Button>
               </Layout>

@@ -1,6 +1,4 @@
-import ReactNativeHapticFeedback, {
-  HapticFeedbackTypes as RNHapticFeedbackTypes,
-} from 'react-native-haptic-feedback';
+import ReactNativeHapticFeedback, {HapticFeedbackTypes as RNHapticFeedbackTypes} from 'react-native-haptic-feedback';
 import {HapticFeedbackType} from 'src/types';
 
 const options = {

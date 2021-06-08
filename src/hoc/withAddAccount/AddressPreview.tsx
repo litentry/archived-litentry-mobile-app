@@ -45,11 +45,7 @@ function AddressInfoPreview(props: PropTypes) {
   return (
     <Layout style={styles.container}>
       {inProgress ? (
-        <LoadingView
-          text="Fetching Address Info"
-          size="small"
-          appearance="secondary"
-        />
+        <LoadingView text="Fetching Address Info" size="small" appearance="secondary" />
       ) : (
         <Layout>
           <ListItem
@@ -73,9 +69,7 @@ function AddressInfoPreview(props: PropTypes) {
           />
           <ListItem
             title="Display"
-            accessoryLeft={(iconProps: IconProps) => (
-              <Icon {...iconProps} name="person-outline" />
-            )}
+            accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="person-outline" />}
             accessoryRight={() => (
               <Text
                 selectable
@@ -90,9 +84,7 @@ function AddressInfoPreview(props: PropTypes) {
           {account && (
             <ListItem
               title="Balance"
-              accessoryLeft={(iconProps: IconProps) => (
-                <Icon {...iconProps} name="credit-card-outline" />
-              )}
+              accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="credit-card-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
                   {formatBalance(account.data.free.add(account.data.reserved))}
@@ -104,19 +96,13 @@ function AddressInfoPreview(props: PropTypes) {
             identity.judgements[0] && ( // bug
               <ListItem
                 title="Judgment"
-                accessoryLeft={(iconProps: IconProps) => (
-                  <Icon {...iconProps} name="ribbon-outline" pack="ionic" />
-                )}
-                accessoryRight={() => (
-                  <JudgmentStatus judgement={identity.judgements[0]} />
-                )}
+                accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="ribbon-outline" pack="ionic" />}
+                accessoryRight={() => <JudgmentStatus judgement={identity.judgements[0]} />}
               />
             )}
           <ListItem
             title="Network"
-            accessoryLeft={(iconProps: IconProps) => (
-              <Icon {...iconProps} name="planet" pack="ionic" />
-            )}
+            accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="planet" pack="ionic" />}
             accessoryRight={() => (
               <Text selectable category="label">
                 {network.name}

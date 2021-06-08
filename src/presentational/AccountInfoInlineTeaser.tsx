@@ -12,11 +12,7 @@ type PropTypes = {
   fullWidth?: boolean;
 };
 
-function AccountInfoInlineTeaser({
-  display,
-  judgements,
-  fullWidth = false,
-}: PropTypes) {
+function AccountInfoInlineTeaser({display, judgements, fullWidth = false}: PropTypes) {
   return (
     <View style={styles.container}>
       <Text
@@ -27,9 +23,7 @@ function AccountInfoInlineTeaser({
         {display}
       </Text>
       {judgements && judgements.length
-        ? judgements.map((judgement, i) => (
-            <JudgmentStatus key={i} judgement={judgement} />
-          ))
+        ? judgements.map((judgement, i) => <JudgmentStatus key={i} judgement={judgement} />)
         : null}
     </View>
   );

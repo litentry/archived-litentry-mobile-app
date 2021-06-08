@@ -6,10 +6,7 @@ import {useCall} from 'src/hook/useCall';
 
 export type Tip = [string, OpenTip | OpenTipTo225];
 
-function extractTips(
-  tipsWithHashes?: [[string[]], Option<OpenTip>[]],
-  inHashes?: string[] | null,
-): Tip[] | undefined {
+function extractTips(tipsWithHashes?: [[string[]], Option<OpenTip>[]], inHashes?: string[] | null): Tip[] | undefined {
   if (!tipsWithHashes || !inHashes) {
     return undefined;
   }
@@ -17,13 +14,8 @@ function extractTips(
   const [[hashes], optTips] = tipsWithHashes;
 
   return optTips
-    .map((opt, index): [string, OpenTip | null] => [
-      hashes[index],
-      opt.unwrapOr(null),
-    ])
-    .filter(
-      (val): val is [string, OpenTip] => inHashes.includes(val[0]) && !!val[1],
-    )
+    .map((opt, index): [string, OpenTip | null] => [hashes[index], opt.unwrapOr(null)])
+    .filter((val): val is [string, OpenTip] => inHashes.includes(val[0]) && !!val[1])
     .sort((a, b) =>
       a[1].closes.isNone
         ? b[1].closes.isNone
@@ -58,10 +50,7 @@ export function useTips() {
     {withParams: true},
   );
 
-  const tips = useMemo(() => extractTips(tipsWithHashes, hashes), [
-    hashes,
-    tipsWithHashes,
-  ]);
+  const tips = useMemo(() => extractTips(tipsWithHashes, hashes), [hashes, tipsWithHashes]);
 
   return tips || [];
 }

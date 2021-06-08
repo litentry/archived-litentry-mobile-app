@@ -3,10 +3,7 @@ import {Layout, Button, ListItem, Divider, Text} from '@ui-kitten/components';
 import GenericNavigationLayout from 'presentational/GenericNavigationLayout';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {AccountContext} from 'context/AccountContextProvider';
-import {
-  InAppNotificationContext,
-  RichTextComponent,
-} from 'context/InAppNotificationContext';
+import {InAppNotificationContext, RichTextComponent} from 'context/InAppNotificationContext';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {Alert, StyleSheet} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -35,9 +32,7 @@ function DevScreen(props: PropTypes) {
   }, []);
 
   return (
-    <GenericNavigationLayout
-      title="DevScreen"
-      onBackPressed={() => navigation.goBack()}>
+    <GenericNavigationLayout title="DevScreen" onBackPressed={() => navigation.goBack()}>
       <>
         <Layout level="1">
           <ListItem
@@ -66,11 +61,7 @@ function DevScreen(props: PropTypes) {
             title="Simple Notification"
             description="Show simple text in app PN"
             accessoryRight={() => (
-              <Button
-                size="small"
-                onPress={() =>
-                  trigger({type: 'TextInfo', opts: {text: 'Whatnot'}})
-                }>
+              <Button size="small" onPress={() => trigger({type: 'TextInfo', opts: {text: 'Whatnot'}})}>
                 Trigger
               </Button>
             )}
@@ -147,11 +138,9 @@ function DevScreen(props: PropTypes) {
                 onPress={() => {
                   const account = accounts?.[0];
                   if (account) {
-                    api?.query.identity
-                      ?.identityOf(account.address)
-                      .then((data) => {
-                        showDebugModal(JSON.stringify(data, null, 4));
-                      });
+                    api?.query.identity?.identityOf(account.address).then((data) => {
+                      showDebugModal(JSON.stringify(data, null, 4));
+                    });
                   } else {
                     Alert.alert('Error', 'No Account connected');
                   }

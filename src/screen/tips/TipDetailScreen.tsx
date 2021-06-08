@@ -165,13 +165,9 @@ function TipDetailScreen({navigation, route}: ScreenProps) {
   }
 
   return (
-    <GenericNavigationLayout
-      title="Tip"
-      onBackPressed={() => navigation.goBack()}>
+    <GenericNavigationLayout title="Tip" onBackPressed={() => navigation.goBack()}>
       <List
-        ListHeaderComponent={
-          <TipDetailContent tip={tip} bestNumber={bestNumber} />
-        }
+        ListHeaderComponent={<TipDetailContent tip={tip} bestNumber={bestNumber} />}
         data={tip.tips}
         style={[globalStyles.paddedContainer, styles.container]}
         ItemSeparatorComponent={Divider}

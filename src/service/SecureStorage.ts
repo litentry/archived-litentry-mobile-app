@@ -8,11 +8,8 @@ const storageConfig = {
   keychainService: IOS,
 };
 
-export const setItem = async (key: string, value: string) =>
-  SecureInfo.setItem(key, value, storageConfig);
+export const setItem = async (key: string, value: string) => SecureInfo.setItem(key, value, storageConfig);
 
-export const getItem = async (key: string) =>
-  SecureInfo.getItem(key, storageConfig);
+export const getItem = async (key: string) => SecureInfo.getItem(key, storageConfig);
 
-export const deleteItem = async (key: string) =>
-  SecureInfo.deleteItem(key, storageConfig);
+export const deleteItem = async (key: string) => SecureInfo.deleteItem(key, storageConfig);

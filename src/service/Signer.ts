@@ -1,7 +1,4 @@
-import {
-  SignerOptions,
-  SubmittableExtrinsic,
-} from '@polkadot/api/submittable/types';
+import {SignerOptions, SubmittableExtrinsic} from '@polkadot/api/submittable/types';
 import {Compact} from '@polkadot/types';
 import {BlockNumber, SignerPayload, Index} from '@polkadot/types/interfaces';
 import {ApiPromise} from '@polkadot/api';
@@ -53,9 +50,7 @@ export const getPayload = async (
     blockNumber = signedBlock.block.header.number;
   }
 
-  const transaction: SubmittableExtrinsic<'promise'> = api.tx[section][method](
-    ...params,
-  );
+  const transaction: SubmittableExtrinsic<'promise'> = api.tx[section][method](...params);
 
   const payload: SignerPayload = api.createType('SignerPayload', {
     genesisHash: api.genesisHash,

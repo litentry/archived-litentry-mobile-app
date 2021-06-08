@@ -2,10 +2,7 @@ import React, {useState, useMemo, useContext, useEffect} from 'react';
 import {ChainApiContext} from 'context/ChainApiContext';
 
 import BN from 'bn.js';
-import type {
-  DeriveElectionsInfo,
-  DeriveCollectiveProposal,
-} from '@polkadot/api-derive/types';
+import type {DeriveElectionsInfo, DeriveCollectiveProposal} from '@polkadot/api-derive/types';
 import {formatNumber, bnToBn} from '@polkadot/util';
 import {BlockNumber, AccountId} from '@polkadot/types/interfaces';
 
@@ -26,10 +23,7 @@ export type InjectedPropTypes = {
   };
 };
 
-const mapData = (
-  electionsInfo: DeriveElectionsInfo,
-  bestNumber: BlockNumber,
-): ProcessedElectionDataType => {
+const mapData = (electionsInfo: DeriveElectionsInfo, bestNumber: BlockNumber): ProcessedElectionDataType => {
   const total = bnToBn(electionsInfo.termDuration || 0);
   const value = bestNumber.mod(electionsInfo.termDuration);
   const angle = total.gtn(0)
@@ -41,12 +35,8 @@ const mapData = (
   const percentage = Math.floor((angle * 100) / 360);
 
   return {
-    seatDisplay: `${electionsInfo.members.length}/${formatNumber(
-      electionsInfo.desiredSeats,
-    )}`,
-    runnersupDisplay: `${electionsInfo.runnersUp.length}/${formatNumber(
-      electionsInfo.desiredRunnersUp,
-    )}`,
+    seatDisplay: `${electionsInfo.members.length}/${formatNumber(electionsInfo.desiredSeats)}`,
+    runnersupDisplay: `${electionsInfo.runnersUp.length}/${formatNumber(electionsInfo.desiredRunnersUp)}`,
     percentage,
     termDuration: electionsInfo.termDuration,
     termLeft: total.sub(value),

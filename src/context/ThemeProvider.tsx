@@ -39,7 +39,5 @@ export default function ThemeContextProvider({children}: PropTypes) {
     toggleTheme,
   };
 
-  return (
-    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }

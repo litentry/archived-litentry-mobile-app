@@ -10,13 +10,7 @@ type IdentityInfoFormProps = {
 };
 
 type FormStatus = Record<
-  | 'isDisplayValid'
-  | 'isLegalValid'
-  | 'isEmailValid'
-  | 'isRiotValid'
-  | 'isTwitterValid'
-  | 'isWebValid'
-  | 'isFormValid',
+  'isDisplayValid' | 'isLegalValid' | 'isEmailValid' | 'isRiotValid' | 'isTwitterValid' | 'isWebValid' | 'isFormValid',
   boolean
 >;
 
@@ -53,45 +47,13 @@ function IdentityInfoForm({onSubmit}: IdentityInfoFormProps) {
 
   React.useEffect(
     function validateForm() {
-      const isDisplayValid = validateFormField(
-        !!display,
-        display,
-        1,
-        [],
-        [],
-        [],
-      );
+      const isDisplayValid = validateFormField(!!display, display, 1, [], [], []);
       const isLegalValid = validateFormField(!!legal, legal, 1, [], [], []);
-      const isEmailValid = validateFormField(
-        !!email,
-        email,
-        3,
-        ['@'],
-        WHITESPACE,
-        [],
-      );
-      const isRiotValid = validateFormField(
-        !!riot,
-        riot,
-        6,
-        [':'],
-        WHITESPACE,
-        ['@', '~'],
-      );
-      const isTwitterValid = validateFormField(
-        !!twitter,
-        twitter,
-        3,
-        [],
-        WHITESPACE,
-        ['@'],
-      );
-      const isWebValid = validateFormField(!!web, web, 8, ['.'], WHITESPACE, [
-        'https://',
-        'http://',
-      ]);
-      const hasOneOrMoreValues =
-        !!display || !!legal || !!email || !!riot || !!twitter || !!web;
+      const isEmailValid = validateFormField(!!email, email, 3, ['@'], WHITESPACE, []);
+      const isRiotValid = validateFormField(!!riot, riot, 6, [':'], WHITESPACE, ['@', '~']);
+      const isTwitterValid = validateFormField(!!twitter, twitter, 3, [], WHITESPACE, ['@']);
+      const isWebValid = validateFormField(!!web, web, 8, ['.'], WHITESPACE, ['https://', 'http://']);
+      const hasOneOrMoreValues = !!display || !!legal || !!email || !!riot || !!twitter || !!web;
 
       const status: FormStatus = {
         isDisplayValid,
@@ -134,9 +96,7 @@ function IdentityInfoForm({onSubmit}: IdentityInfoFormProps) {
           value={display}
           status={formStatus.isDisplayValid ? 'basic' : 'danger'}
           onChangeText={setDisplay}
-          accessoryLeft={(props: IconProps) => (
-            <Icon {...props} name="person-outline" />
-          )}
+          accessoryLeft={(props: IconProps) => <Icon {...props} name="person-outline" />}
         />
       </View>
       <View style={styles.formFieldContainer}>
@@ -146,9 +106,7 @@ function IdentityInfoForm({onSubmit}: IdentityInfoFormProps) {
           value={legal}
           status={formStatus.isLegalValid ? 'basic' : 'danger'}
           onChangeText={setLegal}
-          accessoryLeft={(props: IconProps) => (
-            <Icon {...props} name="credit-card-outline" />
-          )}
+          accessoryLeft={(props: IconProps) => <Icon {...props} name="credit-card-outline" />}
         />
       </View>
       <View style={styles.formFieldContainer}>
@@ -159,9 +117,7 @@ function IdentityInfoForm({onSubmit}: IdentityInfoFormProps) {
           value={email}
           status={formStatus.isEmailValid ? 'basic' : 'danger'}
           onChangeText={setEmail}
-          accessoryLeft={(props: IconProps) => (
-            <Icon {...props} name="email-outline" />
-          )}
+          accessoryLeft={(props: IconProps) => <Icon {...props} name="email-outline" />}
         />
       </View>
       <View style={styles.formFieldContainer}>
@@ -172,9 +128,7 @@ function IdentityInfoForm({onSubmit}: IdentityInfoFormProps) {
           autoCapitalize="none"
           status={formStatus.isWebValid ? 'basic' : 'danger'}
           onChangeText={setWeb}
-          accessoryLeft={(props: IconProps) => (
-            <Icon {...props} name="browser-outline" />
-          )}
+          accessoryLeft={(props: IconProps) => <Icon {...props} name="browser-outline" />}
         />
       </View>
       <View style={styles.formFieldContainer}>
@@ -185,9 +139,7 @@ function IdentityInfoForm({onSubmit}: IdentityInfoFormProps) {
           autoCapitalize="none"
           status={formStatus.isTwitterValid ? 'basic' : 'danger'}
           onChangeText={setTwitter}
-          accessoryLeft={(props: IconProps) => (
-            <Icon {...props} name="twitter-outline" />
-          )}
+          accessoryLeft={(props: IconProps) => <Icon {...props} name="twitter-outline" />}
         />
       </View>
       <View style={styles.formFieldContainer}>
@@ -198,16 +150,11 @@ function IdentityInfoForm({onSubmit}: IdentityInfoFormProps) {
           autoCapitalize="none"
           status={formStatus.isRiotValid ? 'basic' : 'danger'}
           onChangeText={setRiot}
-          accessoryLeft={(props: IconProps) => (
-            <Icon {...props} name="message-square-outline" />
-          )}
+          accessoryLeft={(props: IconProps) => <Icon {...props} name="message-square-outline" />}
         />
       </View>
       <View style={styles.submitButtonContainer}>
-        <Button
-          status="success"
-          onPress={onSubmitPress}
-          disabled={!formStatus.isFormValid}>
+        <Button status="success" onPress={onSubmitPress} disabled={!formStatus.isFormValid}>
           Submit
         </Button>
       </View>

@@ -14,12 +14,7 @@ import {
   ADDRESS_PREFIX_KUSAMA,
   ADDRESS_PREFIX_LITENTRY,
 } from './constants';
-import {
-  decodeAddress,
-  blake2AsU8a,
-  checkAddress,
-  isEthereumChecksum,
-} from '@polkadot/util-crypto';
+import {decodeAddress, blake2AsU8a, checkAddress, isEthereumChecksum} from '@polkadot/util-crypto';
 import {SignerPayloadJSON} from '@polkadot/types/types';
 import {ExtrinsicPayload} from '@polkadot/types/interfaces';
 import registry from 'src/typeRegistry';
@@ -67,13 +62,7 @@ export function createFrames(input: Uint8Array): Uint8Array[] {
   }
 
   return frames.map(
-    (frame, index: number): Uint8Array =>
-      u8aConcat(
-        MULTIPART,
-        encodeNumber(frames.length),
-        encodeNumber(index),
-        frame,
-      ),
+    (frame, index: number): Uint8Array => u8aConcat(MULTIPART, encodeNumber(frames.length), encodeNumber(index), frame),
   );
 }
 
@@ -97,17 +86,11 @@ export const toSignPayload = (payload: SignerPayloadJSON) => {
   // limit size of the transaction
   const isQrHashed = payload.method.length > 5000;
   console.log('ExtrinsicPayload', payload);
-  const wrapper: ExtrinsicPayload = registry.createType(
-    'ExtrinsicPayload',
-    payload,
-    {
-      version: payload.version,
-    },
-  );
+  const wrapper: ExtrinsicPayload = registry.createType('ExtrinsicPayload', payload, {
+    version: payload.version,
+  });
 
-  const qrPayload = isQrHashed
-    ? blake2AsU8a(wrapper.toU8a(true))
-    : wrapper.toU8a(true);
+  const qrPayload = isQrHashed ? blake2AsU8a(wrapper.toU8a(true)) : wrapper.toU8a(true);
 
   return {
     isQrHashed,
@@ -212,10 +195,7 @@ export function validateFormField(
     !hasValue ||
     (!!value &&
       value.length >= minLength &&
-      includes.reduce(
-        (hasIncludes: boolean, check) => hasIncludes && value.includes(check),
-        true,
-      ) &&
+      includes.reduce((hasIncludes: boolean, check) => hasIncludes && value.includes(check), true) &&
       (!starting.length || starting.some((check) => value.startsWith(check))) &&
       !excludes.some((check) => value.includes(check)) &&
       !notStarting.some((check) => value.startsWith(check)) &&

@@ -2,10 +2,7 @@ import React, {useState, useMemo, useContext, useCallback} from 'react';
 import {ChainApiContext} from 'context/ChainApiContext';
 
 import type {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
-import usePolkascan, {
-  mapMotion,
-  MotionSummaryPSType,
-} from 'src/hook/usePolkascan';
+import usePolkascan, {mapMotion, MotionSummaryPSType} from 'src/hook/usePolkascan';
 import {NetworkContext} from 'context/NetworkContext';
 
 export type InjectedPropTypes = {
@@ -15,10 +12,7 @@ export type InjectedPropTypes = {
   };
 };
 
-export function mapMotionDetail(
-  deriveData: DeriveCollectiveProposal,
-  polkascanData: MotionSummaryPSType,
-) {
+export function mapMotionDetail(deriveData: DeriveCollectiveProposal, polkascanData: MotionSummaryPSType) {
   return {
     ...polkascanData,
     ...deriveData,
@@ -29,9 +23,7 @@ export function mapMotionDetail(
 
 function withMotionDetail<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
   return function Hoc(props: T) {
-    const [detail, setDetail] = useState<ReturnType<
-      typeof mapMotionDetail
-    > | null>(null);
+    const [detail, setDetail] = useState<ReturnType<typeof mapMotionDetail> | null>(null);
     const {api} = useContext(ChainApiContext);
     const {currentNetwork} = useContext(NetworkContext);
     const {get} = usePolkascan(currentNetwork?.key || 'polkadot');

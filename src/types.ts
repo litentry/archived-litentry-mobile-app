@@ -2,11 +2,7 @@ import {DeriveAccountRegistration} from '@polkadot/api-derive/types';
 import {Registration} from '@polkadot/types/interfaces';
 export type ThemeType = 'light' | 'dark';
 
-export type SupportedNetworkType =
-  | 'ethereum'
-  | 'polkadot'
-  | 'kusama'
-  | 'litentry_test';
+export type SupportedNetworkType = 'ethereum' | 'polkadot' | 'kusama' | 'litentry_test';
 
 export type ThemeContextValueType = {
   theme: ThemeType;

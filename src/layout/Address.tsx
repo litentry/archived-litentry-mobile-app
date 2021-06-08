@@ -26,19 +26,10 @@ const styles = StyleSheet.create({
 export function Address({address}: Props) {
   const {api} = useContext(ChainApiContext);
   const {currentNetwork} = useContext(NetworkContext);
-  const {display, detail} = useAccountDetail(
-    currentNetwork?.key,
-    String(address),
-    api,
-  );
+  const {display, detail} = useAccountDetail(currentNetwork?.key, String(address), api);
 
   if (display) {
-    return (
-      <AccountInfoInlineTeaser
-        display={display}
-        judgements={detail?.data?.judgements}
-      />
-    );
+    return <AccountInfoInlineTeaser display={display} judgements={detail?.data?.judgements} />;
   }
   return (
     <Text style={styles.bareAddress} numberOfLines={1} ellipsizeMode="middle">

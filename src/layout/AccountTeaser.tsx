@@ -2,20 +2,8 @@ import React, {useState, useContext} from 'react';
 import {StyleSheet, TouchableOpacity, Dimensions} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import Identicon from '@polkadot/reactnative-identicon';
-import {
-  Layout,
-  Text,
-  Icon,
-  Tooltip,
-  Modal,
-  Card,
-  Button,
-} from '@ui-kitten/components';
-import globalStyles, {
-  monofontFamily,
-  getIconColorByTheme,
-  standardPadding,
-} from 'src/styles';
+import {Layout, Text, Icon, Tooltip, Modal, Card, Button} from '@ui-kitten/components';
+import globalStyles, {monofontFamily, getIconColorByTheme, standardPadding} from 'src/styles';
 import {ThemeContext} from 'context/ThemeProvider';
 import QRCode from '../presentational/QRCode';
 import Padder from '../presentational/Padder';
@@ -43,11 +31,7 @@ function AccountTeaser(props: PropTypes) {
   const {currentNetwork} = useContext(NetworkContext);
   const {api} = useContext(ChainApiContext);
   const account = accounts?.[0];
-  const {display, detail} = useAccountDetail(
-    currentNetwork?.key || 'polkadot',
-    account?.address,
-    api,
-  );
+  const {display, detail} = useAccountDetail(currentNetwork?.key || 'polkadot', account?.address, api);
 
   const handleIconPressed = (addr?: string) => {
     if (addr) {
@@ -62,36 +46,19 @@ function AccountTeaser(props: PropTypes) {
         Clipboard.setString(address);
         setTimeout(() => setCopyTooltipVisible(false), 2500);
       }}>
-      <Icon
-        style={[styles.icon, {color: getIconColorByTheme(theme)}]}
-        pack="ionic"
-        name="copy-outline"
-      />
+      <Icon style={[styles.icon, {color: getIconColorByTheme(theme)}]} pack="ionic" name="copy-outline" />
     </TouchableOpacity>
   );
 
   return (
-    <Layout
-      level={props.level}
-      style={[globalStyles.paddedContainer, styles.container]}>
-      <TouchableOpacity
-        style={styles.identIconContainer}
-        onPress={() => handleIconPressed(account?.address)}>
+    <Layout level={props.level} style={[globalStyles.paddedContainer, styles.container]}>
+      <TouchableOpacity style={styles.identIconContainer} onPress={() => handleIconPressed(account?.address)}>
         <Identicon value={address} size={60} />
       </TouchableOpacity>
-      {display ? (
-        <AccountInfoInlineTeaser
-          display={display}
-          judgements={detail?.data?.judgements}
-        />
-      ) : null}
+      {display ? <AccountInfoInlineTeaser display={display} judgements={detail?.data?.judgements} /> : null}
       <Layout level={props.level} style={styles.addressContainer}>
         <TouchableOpacity onPress={() => setQrVisible(true)}>
-          <Icon
-            style={[styles.icon, {color: getIconColorByTheme(theme)}]}
-            pack="ionic"
-            name="qr-code-sharp"
-          />
+          <Icon style={[styles.icon, {color: getIconColorByTheme(theme)}]} pack="ionic" name="qr-code-sharp" />
         </TouchableOpacity>
         <Text
           numberOfLines={1}
@@ -113,9 +80,7 @@ function AccountTeaser(props: PropTypes) {
           style={{width: width * 0.8}}
           onBackdropPress={() => setQrVisible(false)}>
           <Card style={styles.qrContainer} disabled={true}>
-            <Text style={[styles.qrAddressText, {fontFamily: monofontFamily}]}>
-              {address}
-            </Text>
+            <Text style={[styles.qrAddressText, {fontFamily: monofontFamily}]}>{address}</Text>
             <QRCode data={address} dimention={width * 0.6} />
             <Padder scale={1} />
             <Button appearance="outline" onPress={() => setQrVisible(false)}>

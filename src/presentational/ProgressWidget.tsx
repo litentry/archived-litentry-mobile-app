@@ -20,12 +20,7 @@ function ProgressChartWidget(props: PropTypes) {
         {title}
       </Text>
       <View style={styles.chartContainer}>
-        <Text
-          category="c1"
-          style={[
-            StyleSheet.absoluteFillObject,
-            {zIndex: 1, left: '39%', top: '42%'},
-          ]}>
+        <Text category="c1" style={[StyleSheet.absoluteFillObject, {zIndex: 1, left: '39%', top: '42%'}]}>
           {detail}
         </Text>
         <ProgressChart
