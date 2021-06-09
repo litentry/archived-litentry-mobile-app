@@ -28,8 +28,8 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.councilScreen} component={CouncilScreen} />
       <DashboardStack.Screen name={routeKeys.tips} component={TipsScreen} />
       <DashboardStack.Screen name={routeKeys.tipDetail} component={TipDetailScreen} />
-      <DashboardStack.Screen name={routeKeys.submitTip} component={SubmitTipScreen} />
       <DashboardStack.Screen name={routeKeys.treasuryScreen} component={TreasuryScreen} />
+      <DashboardStack.Screen name={routeKeys.submitTip} component={SubmitTipScreen} />
     </DashboardStack.Navigator>
   );
 }
