@@ -65,11 +65,15 @@ function TxContextProvider({children}: PropTypes) {
   const start = useCallback(async (api: ApiPromise, address: string, txMethod: string, params: unknown[]) => {
     const [section, method] = txMethod.split('.');
 
+    if (!section || !method) {
+      throw new Error('section or method undefined');
+    }
+
     if (!get(api.tx, [section, method])) {
       throw new Error(`Unable to find method ${section}.${method}`);
     }
 
-    const transaction: SubmittableExtrinsic<'promise'> = api.tx[section][method](...params);
+    const transaction: SubmittableExtrinsic<'promise'> = api.tx[section]![method]!(...params);
 
     modalRef.current?.open();
 
@@ -110,7 +114,7 @@ function TxContextProvider({children}: PropTypes) {
                   return documentation.join(' ').trim();
                 } else {
                   // Other, CannotLookup, BadOrigin, no extra info
-                  return error.toString();
+                  return error?.toString();
                 }
               },
             );
@@ -123,7 +127,7 @@ function TxContextProvider({children}: PropTypes) {
           if (errors.length !== 0) {
             setStep('error');
             setInProgress(false);
-            setErrorMsg(errors[0]);
+            setErrorMsg(errors[0] ?? 'Unknown Error');
           }
         }
       });

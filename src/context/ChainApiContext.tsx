@@ -164,7 +164,7 @@ function ChainApiContextProvider(props: PropTypes) {
 
         formatBalance.setDefaults({
           decimals: (tokenDecimals as BN[]).map((b) => b.toNumber())[0] || DEFAULT_DECIMALS.toNumber(),
-          unit: tokenSymbol[0].toString(),
+          unit: tokenSymbol[0]?.toString(),
         });
       });
 
@@ -210,13 +210,10 @@ function ChainApiContextProvider(props: PropTypes) {
     }
   }, [currentNetwork, status, api, sections]);
 
-  const value = useMemo(() => ({api, status, addSection, removeSection, inProgress}), [
-    status,
-    api,
-    addSection,
-    removeSection,
-    inProgress,
-  ]);
+  const value = useMemo(
+    () => ({api, status, addSection, removeSection, inProgress}),
+    [status, api, addSection, removeSection, inProgress],
+  );
 
   return <ChainApiContext.Provider value={value}>{children}</ChainApiContext.Provider>;
 }

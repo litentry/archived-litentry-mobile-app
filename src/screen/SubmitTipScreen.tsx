@@ -15,7 +15,6 @@ import Identicon from '@polkadot/reactnative-identicon';
 import Padder from 'presentational/Padder';
 import {TxContext} from 'context/TxContext';
 
-// TODO: is not reachable if no tips already exists
 export function SubmitTipScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {loading, value: data, error} = useAccount();
   const [state, dispatch] = useReducer(reducer, initialState);

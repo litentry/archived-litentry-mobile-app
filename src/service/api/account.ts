@@ -9,12 +9,12 @@ export async function getAccountsIdentityInfo(accountIds: AccountId[] | string[]
   let response: {info: IdentityInfo; accountId: AccountId | Uint8Array | string}[] = [];
 
   for (const index in registrationOptions) {
-    const registration = registrationOptions[index].unwrapOr(undefined);
+    const registration = registrationOptions[index]!.unwrapOr(undefined);
     if (registration) {
-      response.push({accountId: accountIds[index], info: registration.info});
+      response.push({accountId: accountIds[index]!, info: registration.info});
     } else {
       // check for parent accounts
-      const superAccount = (await api.query.identity.superOf(accountIds[index])).unwrapOr(undefined);
+      const superAccount = ((await api.query.identity.superOf(accountIds[index])) as any).unwrapOr(undefined);
       if (superAccount) {
         const [accountId] = superAccount;
         const r = (await api.query.identity.identityOf(accountId)).unwrapOr(undefined);

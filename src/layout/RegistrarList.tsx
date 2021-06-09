@@ -23,8 +23,8 @@ function RegistrarList(props: PropTypes & InjectedPropTypes) {
 
   const validRegistrars = getValidRegistrars(registrars);
   const sorted = getSortedRegistrars(validRegistrars);
-  const lowestFee = sorted[0].unwrapOr({fee: BN_ZERO});
-  const highestFee = sorted[sorted.length - 1].unwrapOr({fee: BN_ZERO});
+  const lowestFee = sorted[0]?.unwrapOr({fee: BN_ZERO});
+  const highestFee = sorted[sorted.length - 1]?.unwrapOr({fee: BN_ZERO});
 
   return (
     <View style={globalStyles.paddedContainer}>
@@ -33,8 +33,8 @@ function RegistrarList(props: PropTypes & InjectedPropTypes) {
           <StatInfoBlock title="#Reg. Count">
             <Text style={styles.number}>{String(validRegistrars.length)}</Text>
           </StatInfoBlock>
-          <StatInfoBlock title="Lowest Fee">{formatBalance(lowestFee.fee)}</StatInfoBlock>
-          <StatInfoBlock title="Highest Fee">{formatBalance(highestFee.fee)}</StatInfoBlock>
+          <StatInfoBlock title="Lowest Fee">{formatBalance(lowestFee?.fee)}</StatInfoBlock>
+          <StatInfoBlock title="Highest Fee">{formatBalance(highestFee?.fee)}</StatInfoBlock>
         </View>
       </View>
 

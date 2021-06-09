@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
   },
 });
 
+// Todo: empty & error states missing
 function TipsScreen({navigation}: ScreenProps) {
   const tips = useTips();
 

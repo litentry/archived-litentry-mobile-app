@@ -41,7 +41,7 @@ function DisplayJudgement(props: PropTypes) {
   const {api} = useContext(ChainApiContext);
   const successMsg = `This address has ${judgementCount} judgement${
     judgementCount > 1 ? 's' : ''
-  } from Registrar ${detail.data?.judgements.map((judgement) => `#${judgement[0]}`).join(',')}. It's all set. 🎉`;
+  } from Registrar ${detail.data?.judgements?.map((judgement) => `#${judgement[0]}`).join(',')}. It's all set. 🎉`;
 
   const pendingJudgement = detail.data?.judgements.find((judgement) => {
     if (judgement[1].isFeePaid) {
@@ -95,7 +95,9 @@ function DisplayJudgement(props: PropTypes) {
               <ListItem
                 title="Judgment"
                 accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="ribbon-outline" pack="ionic" />}
-                accessoryRight={() => <JudgmentStatus judgement={identity.judgements[0]} />}
+                accessoryRight={() =>
+                  identity?.judgements[0] ? <JudgmentStatus judgement={identity.judgements[0]} /> : <View />
+                }
               />
             )}
           <Menu style={styles.menu}>
@@ -162,7 +164,7 @@ function DisplayJudgement(props: PropTypes) {
           {subAccountsArray && subAccountsArray.length ? (
             <Menu style={styles.menu}>
               <MenuGroup title={`Sub accounts (${subAccountsArray.length})`} accessoryLeft={SubAccountsIcon}>
-                {subAccountsArray.map((addr: AccountId) => (
+                {subAccountsArray?.map((addr: AccountId) => (
                   <MenuItem
                     key={addr.toString()}
                     accessoryRight={() => (

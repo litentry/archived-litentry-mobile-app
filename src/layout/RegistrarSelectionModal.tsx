@@ -37,7 +37,7 @@ function RegistrarSelectionModal({onSelect, registrars, visible, onClose}: PropT
       setSelectedRegistrar(index);
 
       if (registrars) {
-        const unwraped = registrars[(index as IndexPath).row].unwrapOr({
+        const unwraped = registrars[(index as IndexPath).row]!.unwrapOr({
           fee: BN_ZERO,
           account: '',
         });
