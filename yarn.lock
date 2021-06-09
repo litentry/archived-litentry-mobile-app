@@ -7173,10 +7173,10 @@ react-native-camera@^3.44.1:
   dependencies:
     prop-types "^15.6.2"
 
-react-native-chart-kit@^6.9.0:
-  version "6.9.0"
-  resolved "https://registry.yarnpkg.com/react-native-chart-kit/-/react-native-chart-kit-6.9.0.tgz#dca879f311c96a4d05f2298d09ca7930a5f7bd83"
-  integrity sha512-wWIsTbfP5D6vRVxKdBcZHByPHCjbb+ohl/mA5JGAEMARuAuUz2MU060+NZqd3XLHnlZH2PMF9/I5iljwZgfrPA==
+react-native-chart-kit@^6.11.0:
+  version "6.11.0"
+  resolved "https://registry.yarnpkg.com/react-native-chart-kit/-/react-native-chart-kit-6.11.0.tgz#513e0944cd8f946e1827facc17fe766ae487d91b"
+  integrity sha512-mRSfW+mcyVSi0UZKFucru5h5TPB6UcWrMi/DphICRpPJWlvIVAv/6VYGFA57NFDLoRVufFjbsRRrms+TOq61jw==
   dependencies:
     lodash "^4.17.13"
     paths-js "^0.4.10"
