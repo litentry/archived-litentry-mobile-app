@@ -46,7 +46,7 @@ function useAccountDetail(network?: SupportedNetworkType | null, address?: strin
           }
         })
         .then((unsub) => {
-          logger.log('debug', `useAccountDetail unsub ${unsub}`);
+          logger.debug(`useAccountDetail unsub ${unsub}`);
           localUnsub = unsub;
         });
     }
