@@ -13,10 +13,14 @@ import {ChainApiContext} from 'context/ChainApiContext';
 import {u8aToString} from '@polkadot/util';
 import Identicon from '@polkadot/reactnative-identicon';
 import Padder from 'presentational/Padder';
+import {TxContext} from 'context/TxContext';
 
+// TODO: is not reachable if no tips already exists
 export function SubmitTipScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {loading, value: data, error} = useAccount();
   const [state, dispatch] = useReducer(reducer, initialState);
+  const {start} = useContext(TxContext);
+  const {api} = useContext(ChainApiContext);
 
   if (loading) {
     return <ActivityIndicator />;
@@ -31,7 +35,7 @@ export function SubmitTipScreen({navigation}: {navigation: NavigationProp<Dashbo
     return <Text>Account not found in this server</Text>;
   }
 
-  const valid = state.beneficiary && state.reason;
+  const valid = state.beneficiary && state.reason && state.reason.length > 4;
 
   return (
     <Layout style={globalStyles.flex}>
@@ -82,7 +86,15 @@ export function SubmitTipScreen({navigation}: {navigation: NavigationProp<Dashbo
           />
         </View>
 
-        <Button disabled={!valid}>Sign and Submit</Button>
+        <Button
+          disabled={!valid}
+          onPress={() => {
+            if (api) {
+              start(api, account.accountId.toString(), 'tips.reportAwesome', [state.reason, state.beneficiary]);
+            }
+          }}>
+          Sign and Submit
+        </Button>
       </SafeAreaView>
     </Layout>
   );

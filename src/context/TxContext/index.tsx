@@ -42,21 +42,12 @@ function TxContextProvider({children}: PropTypes) {
   const [step, setStep] = useState<StepType>('none');
   const [signerPayload, setSignerPayload] = useState<SignerPayloadJSON>();
 
-  const onScanSignature = useCallback(() => {
-    setStep('signature');
-  }, []);
-
   const reset = useCallback(() => {
     setStep('none');
     signatureRef.current = undefined;
     setSignerPayload(undefined);
     setErrorMsg('Unknown Error');
   }, []);
-
-  const onDismiss = useCallback(() => {
-    modalRef.current?.close();
-    setSignerPayload(undefined);
-  }, [setSignerPayload]);
 
   const handleSignatureScan = useCallback(
     (data: QRScannedPayload) => {
@@ -70,6 +61,7 @@ function TxContextProvider({children}: PropTypes) {
     [setInProgress, setStep],
   );
 
+  // TODO: could the api be removed and replaces with `chainApi`
   const start = useCallback(async (api: ApiPromise, address: string, txMethod: string, params: unknown[]) => {
     const [section, method] = txMethod.split('.');
 
@@ -158,7 +150,15 @@ function TxContextProvider({children}: PropTypes) {
       case 'payload':
         return signerPayload && chainApi ? (
           <Layout>
-            <TxPayloadQr api={chainApi} payload={signerPayload} onCancel={onDismiss} onConfirm={onScanSignature} />
+            <TxPayloadQr
+              api={chainApi}
+              payload={signerPayload}
+              onCancel={() => {
+                modalRef.current?.close();
+                setSignerPayload(undefined);
+              }}
+              onConfirm={() => setStep('signature')}
+            />
           </Layout>
         ) : null;
       case 'submitting':
@@ -212,7 +212,7 @@ function TxContextProvider({children}: PropTypes) {
       default:
         return null;
     }
-  }, [step, onScanSignature, signerPayload, handleSignatureScan, chainApi, errorMsg, onDismiss]);
+  }, [step, signerPayload, handleSignatureScan, chainApi, errorMsg]);
 
   return (
     <TxContext.Provider value={value}>
