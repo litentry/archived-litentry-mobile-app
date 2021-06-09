@@ -33,7 +33,7 @@
     "console-browserify": "^1.2.0",
     "events": "^1.1.1",
     "fast-text-encoding": "^1.0.3",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "process": "^0.11.10",
     "proxy-polyfill": "^0.3.2",
     "qrcode-generator": "^1.4.4",
