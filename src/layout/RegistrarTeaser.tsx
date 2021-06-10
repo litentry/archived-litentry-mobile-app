@@ -10,13 +10,15 @@ import {standardPadding} from 'src/styles';
 type PropTypes = {
   address: string;
   fee: Balance | BN;
+  index: number;
 };
 
 function RegistrarTeaser(props: PropTypes) {
-  const {address, fee} = props;
+  const {address, fee, index} = props;
 
   return (
     <View style={styles.container}>
+      <Text category="s1">{`#${index}`}</Text>
       <AddressInlineTeaser address={address} />
       <Text category="s1">{formatBalance(fee)}</Text>
     </View>
