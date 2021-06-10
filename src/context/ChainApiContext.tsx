@@ -40,7 +40,7 @@ function ChainApiContextProvider(props: PropTypes) {
   const [api, setApi] = useState<ApiPromise>();
   const [sections, setSections] = useState<string[]>([]);
   const [wsConnectionIndex, setWsConnectionIndex] = useState(0);
-  const eventStreamHandlerRef = useRef<Function | null>(null);
+  const eventStreamHandlerRef = useRef<(() => void) | null>(null);
 
   /**
    * Add section to watch, such as `identity`
@@ -210,11 +210,9 @@ function ChainApiContextProvider(props: PropTypes) {
     }
   }, [currentNetwork, status, api, sections]);
 
-  const value = useMemo(
-    () => ({api, status, addSection, removeSection, inProgress}),
-    [status, api, addSection, removeSection, inProgress],
-  );
-
+  const value = useMemo(() => {
+    return {api, status, addSection, removeSection, inProgress};
+  }, [status, addSection, api, removeSection, inProgress]);
   return <ChainApiContext.Provider value={value}>{children}</ChainApiContext.Provider>;
 }
 

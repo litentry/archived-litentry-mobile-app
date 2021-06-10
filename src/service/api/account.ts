@@ -6,7 +6,7 @@ import {IdentityInfo} from '@polkadot/types/interfaces/identity/types';
 export async function getAccountsIdentityInfo(accountIds: AccountId[], api: ApiPromise) {
   const registrationOptions = await api.query.identity.identityOf.multi<Option<Registration>>(accountIds);
 
-  let response: {info: IdentityInfo; accountId: AccountId}[] = [];
+  const response: {info: IdentityInfo; accountId: AccountId}[] = [];
 
   for (const index in registrationOptions) {
     const registration = registrationOptions[index].unwrapOr(undefined);

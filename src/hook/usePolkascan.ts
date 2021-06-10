@@ -5,7 +5,7 @@ interface ResponseType {
   data: any | Error;
 }
 
-function usePolkascan(network: string = 'polkadot') {
+function usePolkascan(network = 'polkadot') {
   const baseUrl = `https://explorer-31.polkascan.io/${network}/api/v1`;
   const get = (url: string): Promise<ResponseType> =>
     fetch(`${baseUrl}/${url}`, {

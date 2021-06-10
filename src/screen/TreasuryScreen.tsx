@@ -89,8 +89,8 @@ const styles = StyleSheet.create({
 });
 
 async function getTreasuryInfo(api: ApiPromise) {
-  let proposals = await api.derive.treasury.proposals();
-  let accountIds: AccountId[] = [];
+  const proposals = await api.derive.treasury.proposals();
+  const accountIds: AccountId[] = [];
   for (const p of proposals.proposals) {
     if (!accountIds.includes(p.proposal.proposer)) {
       accountIds.push(p.proposal.proposer);

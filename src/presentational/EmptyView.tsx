@@ -7,11 +7,7 @@ export function EmptyView() {
 
   return (
     <View style={styles.container}>
-      <Icon
-        style={{width: 32, height: 32, marginRight: 10}}
-        fill={themeVars['color-basic-600']}
-        name="close-square-outline"
-      />
+      <Icon style={styles.icon} fill={themeVars['color-basic-600']} name="close-square-outline" />
       <Text>There are no items</Text>
     </View>
   );
@@ -24,5 +20,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 200,
     flexDirection: 'row',
+  },
+  icon: {
+    width: 32,
+    height: 32,
+    marginRight: 10,
   },
 });
