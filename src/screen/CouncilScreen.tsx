@@ -10,6 +10,7 @@ import {NavigationProp} from '@react-navigation/native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {getAccountsIdentityInfo} from 'service/api/account';
+import {EmptyView} from 'presentational/EmptyView';
 
 export function CouncilScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {api} = useContext(ChainApiContext);
@@ -43,20 +44,25 @@ export function CouncilScreen({navigation}: {navigation: NavigationProp<Dashboar
           <View style={globalStyles.centeredContainer}>
             <Spinner />
           </View>
-        ) : null}
-        <View style={styles.header}>
-          <Text category={'s1'}>Members</Text>
-          <Text category={'p2'}>{`seats ${data?.length}/${data?.length}`}</Text>
-        </View>
-        <FlatList
-          data={data}
-          renderItem={({item}) => {
-            const text = u8aToString(item.info.display.asRaw);
-            return <ListItem title={text} accessoryLeft={() => <Identicon value={item.accountId} size={30} />} />;
-          }}
-          keyExtractor={(item, index) => item.accountId.toString() ?? index.toString()}
-          ItemSeparatorComponent={Divider}
-        />
+        ) : (
+          <>
+            <View style={styles.header}>
+              <Text category={'s1'}>Members</Text>
+              <Text category={'p2'}>{`seats ${data?.length}/${data?.length}`}</Text>
+            </View>
+            <FlatList
+              style={globalStyles.flex}
+              data={data}
+              renderItem={({item}) => {
+                const text = u8aToString(item.info.display.asRaw);
+                return <ListItem title={text} accessoryLeft={() => <Identicon value={item.accountId} size={30} />} />;
+              }}
+              keyExtractor={(item, index) => item.accountId.toString() ?? index.toString()}
+              ItemSeparatorComponent={Divider}
+              ListEmptyComponent={EmptyView}
+            />
+          </>
+        )}
       </SafeAreaView>
     </Layout>
   );
