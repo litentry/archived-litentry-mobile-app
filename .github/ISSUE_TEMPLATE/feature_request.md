@@ -1,3 +1,12 @@
+---
+name: "👶 Feature request"
+about: request a new Feature.
+title: 'Feature: '
+labels: 'Status: Unconfirmed'
+
+---
+
+
 > As **[Role]** I'd like to
 > **[do something]**,
 > to **[Motivation]**.
