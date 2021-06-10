@@ -26,9 +26,9 @@ type TipsSummaryTeaserProps = {
 
 function TipsSummaryTeaser({onMorePress}: TipsSummaryTeaserProps) {
   const navigation = useNavigation<StackNavigationProp<DashboardStackParamList>>();
-  const tips = useTips();
+  const {value: tips} = useTips();
 
-  if (tips.length < 1) {
+  if (!tips || tips.length < 1) {
     return null;
   }
 
