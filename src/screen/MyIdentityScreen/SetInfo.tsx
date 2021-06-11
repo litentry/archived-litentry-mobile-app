@@ -14,7 +14,7 @@ const {height} = Dimensions.get('window');
 
 type PropTypes = {address: string};
 
-function SetInfo({address}: PropTypes): React.ReactNode {
+function SetInfo({address}: PropTypes): React.ReactElement {
   const modalRef = useRef<Modalize>(null);
 
   const handleOpenForm = useCallback(() => {

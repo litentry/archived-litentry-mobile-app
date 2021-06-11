@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {StyleSheet, Image} from 'react-native';
+import {StyleSheet, Image, View} from 'react-native';
 import {ExtrinsicPayload} from '@polkadot/types/interfaces';
 import {Layout, Button, Divider, Icon, IconProps} from '@ui-kitten/components';
 import globalStyles, {standardPadding} from 'src/styles';
@@ -50,25 +50,27 @@ function TxPayloadQr({payload, onConfirm, onCancel}: PropTypes): React.ReactElem
   return (
     <Layout style={styles.container} level="1">
       <ModalTitle title="Authorization required" />
-      <Divider style={globalStyles.dividerPlain} />
-      <HashBlock text={payload.blockHash} />
-      <Layout style={styles.qrContainer} level="3">
-        <Image
-          source={{
-            uri: imageUri,
-            width: QR_CODE_DIMENTION.width - standardPadding,
-            height: QR_CODE_DIMENTION.height - standardPadding,
-          }}
-        />
-      </Layout>
-      <Layout style={styles.buttonGroup}>
-        <Button style={styles.cancel} appearance="ghost" size="small" status="warning" onPress={onCancel}>
-          Cancel
-        </Button>
-        <Button style={styles.submit} appearance="outline" onPress={onConfirm} accessoryRight={QRIcon}>
-          Scan Signature
-        </Button>
-      </Layout>
+      <View style={styles.content}>
+        <Divider style={globalStyles.dividerPlain} />
+        <HashBlock text={payload.blockHash} title={'call hash'} />
+        <Layout style={styles.qrContainer} level="3">
+          <Image
+            source={{
+              uri: imageUri,
+              width: QR_CODE_DIMENTION.width - standardPadding,
+              height: QR_CODE_DIMENTION.height - standardPadding,
+            }}
+          />
+        </Layout>
+        <Layout style={styles.buttonGroup}>
+          <Button style={styles.cancel} appearance="ghost" size="small" status="warning" onPress={onCancel}>
+            Cancel
+          </Button>
+          <Button style={styles.submit} appearance="outline" onPress={onConfirm} accessoryRight={QRIcon}>
+            Scan Signature
+          </Button>
+        </Layout>
+      </View>
     </Layout>
   );
 }
@@ -79,6 +81,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: standardPadding * 2,
   },
+  content: {padding: standardPadding * 2},
   qrContainer: {
     backgroundColor: '#ececec',
     justifyContent: 'center',
