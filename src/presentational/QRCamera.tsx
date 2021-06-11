@@ -4,19 +4,20 @@ import {standardPadding} from 'src/styles';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {Layout, Icon, Text, IconProps} from '@ui-kitten/components';
 import {QRScannedPayload} from 'src/types';
+import {BarCodeReadEvent} from 'react-native-camera';
 const {width, height} = Dimensions.get('window');
 
 const QRIcon = (props: IconProps) => <Icon {...props} pack="ionic" name="qr-code-sharp" />;
 
 type PropTypes = {
-  onRead: (payload: QRScannedPayload) => void;
+  onRead: (payload: BarCodeReadEvent) => void;
 };
 
 function QRCamera(props: PropTypes) {
   const {onRead} = props;
 
   const handleScannerRead = useCallback(
-    (payload: QRScannedPayload) => {
+    (payload: BarCodeReadEvent) => {
       onRead(payload);
     },
     [onRead],
@@ -24,7 +25,6 @@ function QRCamera(props: PropTypes) {
 
   return (
     <QRCodeScanner
-      // @ts-ignore
       onRead={handleScannerRead}
       showMarker
       markerStyle={styles.marker}

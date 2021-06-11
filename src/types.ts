@@ -1,5 +1,6 @@
 import {DeriveAccountRegistration} from '@polkadot/api-derive/types';
 import {Registration} from '@polkadot/types/interfaces';
+import {BarCodeReadEvent} from 'react-native-camera';
 export type ThemeType = 'light' | 'dark';
 
 export type SupportedNetworkType = 'ethereum' | 'polkadot' | 'kusama' | 'litentry_test';
@@ -44,16 +45,14 @@ export type DataContextValueType = {
   };
 };
 
-export type QRScannedPayload = {
+export interface QRScannedPayload extends BarCodeReadEvent {
   bounds: {
     origin: {x: string; y: string};
     size: {height: string; width: string};
   };
   data: string;
   rawData: string;
-  target: number;
-  type: string;
-};
+}
 
 export type AccountAddressType = {
   address: string;

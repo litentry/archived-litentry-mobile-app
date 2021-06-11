@@ -108,11 +108,9 @@ function TxContextProvider({children}: PropTypes) {
                   data: [error],
                 },
               }) => {
-                // @ts-ignore
-                if (error.isModule) {
+                if ((error as any).isModule) {
                   // for module errors, we have the section indexed, lookup
-                  // @ts-ignore
-                  const decoded = api.registry.findMetaError(error.asModule);
+                  const decoded = api.registry.findMetaError((error as any).asModule);
                   const {documentation} = decoded;
 
                   return documentation.join(' ').trim();
@@ -188,7 +186,6 @@ function TxContextProvider({children}: PropTypes) {
           // TODO: extract
           <Layout>
             <QRCodeScanner
-              // @ts-ignore
               onRead={handleSignatureScan}
               showMarker
               topContent={

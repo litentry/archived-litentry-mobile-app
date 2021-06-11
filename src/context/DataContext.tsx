@@ -4,8 +4,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 export const DataContext = createContext<DataContextValueType>({
   asyncStorage: {
-    // @ts-ignore
-    get: () => Promise.resolve(),
+    get: () => Promise.resolve(undefined as any),
     set: () => Promise.resolve(),
   },
 });
