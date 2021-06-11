@@ -28,7 +28,14 @@ function SetInfo({address}: PropTypes): React.ReactElement {
     async (info: SubmitIdentityPayload) => {
       if (api) {
         modalRef.current?.close();
-        await start(api, address, 'identity.setIdentity', [info]);
+        await start({
+          api,
+          address,
+          txMethod: 'identity.setIdentity',
+          params: [info],
+          title: `Sending transaction identity.setIdentity(info)`,
+          description: "Set an account's identity information and reserve the appropriate deposit",
+        });
       } else {
         Alert.alert('account/api is not ready');
       }

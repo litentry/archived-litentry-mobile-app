@@ -13,14 +13,12 @@ import {HashBlock} from 'presentational/HashBlock';
 const QRIcon = (props: IconProps) => <Icon {...props} name="video-outline" />;
 
 type PropTypes = {
-  transactionTitle: string;
-  transactionInfo: string;
   payload: SignerPayloadJSON;
   onConfirm: () => void;
   onCancel: () => void;
 };
 
-function TxPayloadQr({transactionInfo, transactionTitle, payload, onConfirm, onCancel}: PropTypes): React.ReactElement {
+function TxPayloadQr({payload, onConfirm, onCancel}: PropTypes): React.ReactElement {
   const {api} = useContext(ChainApiContext);
   const [imageUri, setImageUri] = useState<string>();
 
@@ -52,8 +50,6 @@ function TxPayloadQr({transactionInfo, transactionTitle, payload, onConfirm, onC
       <ModalTitle title="Authorization required" />
       <View style={styles.content}>
         <Divider style={globalStyles.dividerPlain} />
-        <Text>{transactionTitle}</Text>
-        <Text>{transactionInfo}</Text>
         <HashBlock text={payload.blockHash} title={'call hash'} />
         <View style={styles.qrContainer}>
           <Image

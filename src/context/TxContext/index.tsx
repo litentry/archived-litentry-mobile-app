@@ -9,19 +9,19 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import {standardPadding} from 'src/styles';
 import {SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
 import {BN_ZERO} from '@polkadot/util';
-import {QRScannedPayload} from 'src/types';
 import QrSigner from 'src/service/QrSigner';
 import TxPayloadQr from 'presentational/TxPayloadQr';
 import LoadingView from 'presentational/LoadingView';
 import SuccessDialog from 'presentational/SuccessDialog';
 import ErrorDialog from 'presentational/ErrorDialog';
+import {PreviewStep} from 'context/TxContext/PreviewStep';
 let id = 0;
 
 const {width, height} = Dimensions.get('window');
 
 type PropTypes = {children: React.ReactNode};
 type TxContextValueType = {
-  start: (api: ApiPromise, address: string, tx: string, params: unknown[]) => Promise<void>;
+  start: (config: StartConfig) => Promise<void>;
 };
 
 export const TxContext = createContext<TxContextValueType>({
@@ -30,12 +30,22 @@ export const TxContext = createContext<TxContextValueType>({
 
 const AlertIcon = (props: IconProps) => <Icon fill="#ccc" {...props} name="alert-triangle-outline" />;
 
+type StartConfig = {
+  api: ApiPromise;
+  address: string;
+  txMethod: string;
+  params: unknown[];
+  title: string;
+  description: string;
+};
+
 function TxContextProvider({children}: PropTypes) {
   const modalRef = useRef<Modalize>(null);
   const signatureRef = useRef<(value: SignerResult) => void>();
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const start = useCallback(async (api: ApiPromise, address: string, txMethod: string, params: unknown[]) => {
+  const start = useCallback(async (config: StartConfig) => {
+    const {api, txMethod, params, description, address, title} = config;
     const [section, method] = txMethod.split('.');
 
     if (!get(api.tx, [section, method])) {
@@ -51,7 +61,7 @@ function TxContextProvider({children}: PropTypes) {
         nonce: -1,
         tip: BN_ZERO,
         signer: new QrSigner((payload) => {
-          dispatch({type: 'PAYLOAD', payload: payload});
+          dispatch({type: 'PREVIEW', payload: {payload, title, description}});
 
           return new Promise((resolve) => {
             signatureRef.current = resolve;
@@ -66,24 +76,24 @@ function TxContextProvider({children}: PropTypes) {
             .filter(({event: {section, method}}) => section === 'system' && method === 'ExtrinsicFailed')
             // we know that data for system.ExtrinsicFailed is
             // (DispatchError, DispatchInfo)
-            .map(
-              ({
+            .map((eventRecord) => {
+              const {
                 event: {
                   data: [error],
                 },
-              }) => {
-                if ((error as any).isModule) {
-                  // for module errors, we have the section indexed, lookup
-                  const decoded = api.registry.findMetaError((error as any).asModule);
-                  const {documentation} = decoded;
+              } = eventRecord;
 
-                  return documentation.join(' ').trim();
-                } else {
-                  // Other, CannotLookup, BadOrigin, no extra info
-                  return error.toString();
-                }
-              },
-            );
+              if ((error as any).isModule) {
+                // for module errors, we have the section indexed, lookup
+                const decoded = api.registry.findMetaError((error as any).asModule);
+                const {documentation} = decoded;
+
+                return documentation.join(' ').trim();
+              } else {
+                // Other, CannotLookup, BadOrigin, no extra info
+                return error.toString();
+              }
+            });
 
           if (errors.length === 0 && status.isFinalized) {
             dispatch({type: 'NEXT_STEP'});
@@ -99,8 +109,6 @@ function TxContextProvider({children}: PropTypes) {
     }
   }, []);
 
-  const value = useMemo(() => ({start}), [start]);
-
   const modalContent = useMemo(() => {
     switch (state.step) {
       case 'none':
@@ -109,9 +117,10 @@ function TxContextProvider({children}: PropTypes) {
             <Text>Preparing transaction payload...</Text>
           </Layout>
         );
-      case 'payload':
+
+      case 'preview':
         return (
-          <TxPayloadQr
+          <PreviewStep
             transactionInfo={'test'}
             transactionTitle={'set an account'}
             payload={state.payload}
@@ -122,6 +131,19 @@ function TxContextProvider({children}: PropTypes) {
             onConfirm={() => dispatch({type: 'NEXT_STEP'})}
           />
         );
+
+      case 'payload':
+        return (
+          <TxPayloadQr
+            payload={state.payload}
+            onCancel={() => {
+              modalRef.current?.close();
+              dispatch({type: 'RESET'});
+            }}
+            onConfirm={() => dispatch({type: 'NEXT_STEP'})}
+          />
+        );
+
       case 'submitting':
         return (
           <Layout style={styles.infoContainer}>
@@ -131,6 +153,7 @@ function TxContextProvider({children}: PropTypes) {
             />
           </Layout>
         );
+
       case 'success':
         return (
           <Layout style={styles.infoContainer}>
@@ -144,12 +167,6 @@ function TxContextProvider({children}: PropTypes) {
           </Layout>
         );
 
-      case 'error':
-        return (
-          <Layout style={styles.infoContainer}>
-            <ErrorDialog text="Tx Failed" msg={state.error} />
-          </Layout>
-        );
       case 'signature':
         return (
           // TODO: extract
@@ -181,10 +198,19 @@ function TxContextProvider({children}: PropTypes) {
             />
           </Layout>
         );
+
+      case 'error':
+        return (
+          <Layout style={styles.infoContainer}>
+            <ErrorDialog text="Tx Failed" msg={state.error} />
+          </Layout>
+        );
       default:
         return null;
     }
   }, [state]);
+
+  const value = useMemo(() => ({start}), [start]);
 
   return (
     <TxContext.Provider value={value}>
@@ -274,6 +300,7 @@ export default TxContextProvider;
 
 type State =
   | {step: 'none' | 'signature' | 'submitting' | 'success'}
+  | {step: 'preview'; payload: SignerPayloadJSON; title: string; description: string}
   | {step: 'payload'; payload: SignerPayloadJSON}
   | {step: 'error'; error: string};
 
@@ -283,7 +310,7 @@ type Action =
   | {type: 'RESET'}
   | {type: 'NEXT_STEP'}
   | {type: 'ERROR'; payload: string}
-  | {type: 'PAYLOAD'; payload: SignerPayloadJSON};
+  | {type: 'PREVIEW'; payload: {payload: SignerPayloadJSON; title: string; description: string}};
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
@@ -293,11 +320,13 @@ function reducer(state: State, action: Action): State {
     case 'ERROR':
       return {step: 'error', error: action.payload};
 
-    case 'PAYLOAD':
-      return {step: 'payload', payload: action.payload};
+    case 'PREVIEW':
+      return {step: 'preview', ...action.payload};
 
     case 'NEXT_STEP': {
       switch (state.step) {
+        case 'preview':
+          return {step: 'payload', payload: state.payload};
         case 'payload':
           return {step: 'signature'};
         case 'signature':
