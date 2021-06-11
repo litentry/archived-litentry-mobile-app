@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {StyleSheet, Image, View} from 'react-native';
 import {ExtrinsicPayload} from '@polkadot/types/interfaces';
-import {Layout, Button, Divider, Icon, IconProps} from '@ui-kitten/components';
+import {Layout, Button, Divider, Icon, IconProps, Text} from '@ui-kitten/components';
 import globalStyles, {standardPadding} from 'src/styles';
 import {SignerPayloadJSON} from '@polkadot/types/types';
 import {createSignPayload, createFrames, QrCode} from 'src/utils';
@@ -10,17 +10,17 @@ import ModalTitle from './ModalTitle';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {HashBlock} from 'presentational/HashBlock';
 
-const QR_CODE_DIMENTION = {width: 280, height: 280};
-
 const QRIcon = (props: IconProps) => <Icon {...props} name="video-outline" />;
 
 type PropTypes = {
+  transactionTitle: string;
+  transactionInfo: string;
   payload: SignerPayloadJSON;
   onConfirm: () => void;
   onCancel: () => void;
 };
 
-function TxPayloadQr({payload, onConfirm, onCancel}: PropTypes): React.ReactElement {
+function TxPayloadQr({transactionInfo, transactionTitle, payload, onConfirm, onCancel}: PropTypes): React.ReactElement {
   const {api} = useContext(ChainApiContext);
   const [imageUri, setImageUri] = useState<string>();
 
@@ -52,16 +52,18 @@ function TxPayloadQr({payload, onConfirm, onCancel}: PropTypes): React.ReactElem
       <ModalTitle title="Authorization required" />
       <View style={styles.content}>
         <Divider style={globalStyles.dividerPlain} />
+        <Text>{transactionTitle}</Text>
+        <Text>{transactionInfo}</Text>
         <HashBlock text={payload.blockHash} title={'call hash'} />
-        <Layout style={styles.qrContainer} level="3">
+        <View style={styles.qrContainer}>
           <Image
             source={{
               uri: imageUri,
-              width: QR_CODE_DIMENTION.width - standardPadding,
-              height: QR_CODE_DIMENTION.height - standardPadding,
+              width: QR_CODE_DIMENSION.width - standardPadding,
+              height: QR_CODE_DIMENSION.height - standardPadding,
             }}
           />
-        </Layout>
+        </View>
         <Layout style={styles.buttonGroup}>
           <Button style={styles.cancel} appearance="ghost" size="small" status="warning" onPress={onCancel}>
             Cancel
@@ -75,6 +77,7 @@ function TxPayloadQr({payload, onConfirm, onCancel}: PropTypes): React.ReactElem
   );
 }
 
+const QR_CODE_DIMENSION = {width: 180, height: 180};
 const styles = StyleSheet.create({
   container: {
     paddingVertical: standardPadding * 2,
@@ -83,23 +86,17 @@ const styles = StyleSheet.create({
   },
   content: {padding: standardPadding * 2},
   qrContainer: {
-    backgroundColor: '#ececec',
     justifyContent: 'center',
     alignItems: 'center',
     margin: standardPadding * 3,
-    ...QR_CODE_DIMENTION,
   },
   buttonGroup: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: 280,
   },
-  cancel: {
-    width: '30%',
-  },
-  submit: {
-    flex: 1,
-  },
+  cancel: {flex: 1},
+  submit: {flex: 2},
 });
 
 export default TxPayloadQr;

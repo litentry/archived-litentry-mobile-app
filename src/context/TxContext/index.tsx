@@ -1,4 +1,4 @@
-import React, {createContext, useState, useMemo, useCallback, useRef} from 'react';
+import React, {createContext, useState, useMemo, useCallback, useRef, useReducer} from 'react';
 import {StyleSheet, Dimensions} from 'react-native';
 import {ApiPromise} from '@polkadot/api';
 import {get} from 'lodash';
@@ -30,43 +30,10 @@ export const TxContext = createContext<TxContextValueType>({
 
 const AlertIcon = (props: IconProps) => <Icon fill="#ccc" {...props} name="alert-triangle-outline" />;
 
-type StepType = 'payload' | 'signature' | 'submitting' | 'error' | 'success' | 'none';
-
 function TxContextProvider({children}: PropTypes) {
   const modalRef = useRef<Modalize>(null);
   const signatureRef = useRef<(value: SignerResult) => void>();
-  const [errorMsg, setErrorMsg] = useState('Unknown Error');
-  const [, setInProgress] = useState(false);
-  const [step, setStep] = useState<StepType>('none');
-  const [signerPayload, setSignerPayload] = useState<SignerPayloadJSON>();
-
-  const onScanSignature = useCallback(() => {
-    setStep('signature');
-  }, []);
-
-  const reset = useCallback(() => {
-    setStep('none');
-    signatureRef.current = undefined;
-    setSignerPayload(undefined);
-    setErrorMsg('Unknown Error');
-  }, []);
-
-  const onDismiss = useCallback(() => {
-    modalRef.current?.close();
-    setSignerPayload(undefined);
-  }, [setSignerPayload]);
-
-  const handleSignatureScan = useCallback(
-    (data: QRScannedPayload) => {
-      setInProgress(true);
-      setStep('submitting');
-      signatureRef.current?.({
-        id: id++,
-        signature: `0x${data.data}`,
-      });
-    },
-    [setInProgress, setStep],
-  );
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const start = useCallback(async (api: ApiPromise, address: string, txMethod: string, params: unknown[]) => {
     const [section, method] = txMethod.split('.');
@@ -84,8 +51,7 @@ function TxContextProvider({children}: PropTypes) {
         nonce: -1,
         tip: BN_ZERO,
         signer: new QrSigner((payload) => {
-          setSignerPayload(payload);
-          setStep('payload');
+          dispatch({type: 'PAYLOAD', payload: payload});
 
           return new Promise((resolve) => {
             signatureRef.current = resolve;
@@ -120,26 +86,23 @@ function TxContextProvider({children}: PropTypes) {
             );
 
           if (errors.length === 0 && status.isFinalized) {
-            setInProgress(false);
-            setStep('success');
+            dispatch({type: 'NEXT_STEP'});
           }
 
           if (errors.length !== 0) {
-            setStep('error');
-            setInProgress(false);
-            setErrorMsg(errors[0]);
+            dispatch({type: 'ERROR', payload: errors[0]});
           }
         }
       });
     } catch (e) {
-      setStep('error');
+      dispatch({type: 'ERROR', payload: e});
     }
   }, []);
 
   const value = useMemo(() => ({start}), [start]);
 
   const modalContent = useMemo(() => {
-    switch (step) {
+    switch (state.step) {
       case 'none':
         return (
           <Layout style={styles.emptyState}>
@@ -147,9 +110,18 @@ function TxContextProvider({children}: PropTypes) {
           </Layout>
         );
       case 'payload':
-        return signerPayload ? (
-          <TxPayloadQr payload={signerPayload} onCancel={onDismiss} onConfirm={onScanSignature} />
-        ) : null;
+        return (
+          <TxPayloadQr
+            transactionInfo={'test'}
+            transactionTitle={'set an account'}
+            payload={state.payload}
+            onCancel={() => {
+              modalRef.current?.close();
+              dispatch({type: 'RESET'});
+            }}
+            onConfirm={() => dispatch({type: 'NEXT_STEP'})}
+          />
+        );
       case 'submitting':
         return (
           <Layout style={styles.infoContainer}>
@@ -162,14 +134,20 @@ function TxContextProvider({children}: PropTypes) {
       case 'success':
         return (
           <Layout style={styles.infoContainer}>
-            <SuccessDialog text="Tx Success" onClosePress={onDismiss} />
+            <SuccessDialog
+              text="Tx Success"
+              onClosePress={() => {
+                modalRef.current?.close();
+                dispatch({type: 'RESET'});
+              }}
+            />
           </Layout>
         );
 
       case 'error':
         return (
           <Layout style={styles.infoContainer}>
-            <ErrorDialog text="Tx Failed" msg={errorMsg} />
+            <ErrorDialog text="Tx Failed" msg={state.error} />
           </Layout>
         );
       case 'signature':
@@ -177,7 +155,13 @@ function TxContextProvider({children}: PropTypes) {
           // TODO: extract
           <Layout>
             <QRCodeScanner
-              onRead={handleSignatureScan}
+              onRead={(data) => {
+                dispatch({type: 'NEXT_STEP'});
+                signatureRef.current?.({
+                  id: id++,
+                  signature: `0x${data.data}`,
+                });
+              }}
               showMarker
               topContent={
                 <Text style={styles.title} category="label">
@@ -200,7 +184,7 @@ function TxContextProvider({children}: PropTypes) {
       default:
         return null;
     }
-  }, [step, onScanSignature, signerPayload, handleSignatureScan, errorMsg, onDismiss]);
+  }, [state]);
 
   return (
     <TxContext.Provider value={value}>
@@ -211,7 +195,10 @@ function TxContextProvider({children}: PropTypes) {
         scrollViewProps={{showsVerticalScrollIndicator: false}}
         adjustToContentHeight
         handlePosition="outside"
-        onClosed={reset}
+        onClosed={() => {
+          dispatch({type: 'RESET'});
+          signatureRef.current = undefined;
+        }}
         closeOnOverlayTap
         panGestureEnabled>
         {modalContent}
@@ -284,3 +271,42 @@ const styles = StyleSheet.create({
 });
 
 export default TxContextProvider;
+
+type State =
+  | {step: 'none' | 'signature' | 'submitting' | 'success'}
+  | {step: 'payload'; payload: SignerPayloadJSON}
+  | {step: 'error'; error: string};
+
+const initialState: State = {step: 'none'};
+
+type Action =
+  | {type: 'RESET'}
+  | {type: 'NEXT_STEP'}
+  | {type: 'ERROR'; payload: string}
+  | {type: 'PAYLOAD'; payload: SignerPayloadJSON};
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case 'RESET':
+      return initialState;
+
+    case 'ERROR':
+      return {step: 'error', error: action.payload};
+
+    case 'PAYLOAD':
+      return {step: 'payload', payload: action.payload};
+
+    case 'NEXT_STEP': {
+      switch (state.step) {
+        case 'payload':
+          return {step: 'signature'};
+        case 'signature':
+          return {step: 'submitting'};
+        case 'submitting':
+          return {step: 'success'};
+      }
+      break;
+    }
+  }
+  return state;
+}
