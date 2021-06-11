@@ -80,12 +80,3 @@ export interface AddressIdentity extends DeriveAccountRegistration {
   isExistent: boolean;
   waitCount: number;
 }
-
-export type IdentityInfo = {
-  display: {raw: string} | {none: null};
-  legal: {raw: string} | {none: null};
-  email: {raw: string} | {none: null};
-  riot: {raw: string} | {none: null};
-  twitter: {raw: string} | {none: null};
-  web: {raw: string} | {none: null};
-};

@@ -1,4 +1,4 @@
-import React, {createContext, useState, useMemo, useCallback, useRef, useContext} from 'react';
+import React, {createContext, useState, useMemo, useCallback, useRef} from 'react';
 import {StyleSheet, Dimensions} from 'react-native';
 import {ApiPromise} from '@polkadot/api';
 import {get} from 'lodash';
@@ -11,7 +11,6 @@ import {SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
 import {BN_ZERO} from '@polkadot/util';
 import {QRScannedPayload} from 'src/types';
 import QrSigner from 'src/service/QrSigner';
-import {ChainApiContext} from '../ChainApiContext';
 import TxPayloadQr from 'presentational/TxPayloadQr';
 import LoadingView from 'presentational/LoadingView';
 import SuccessDialog from 'presentational/SuccessDialog';
@@ -36,7 +35,6 @@ type StepType = 'payload' | 'signature' | 'submitting' | 'error' | 'success' | '
 function TxContextProvider({children}: PropTypes) {
   const modalRef = useRef<Modalize>(null);
   const signatureRef = useRef<(value: SignerResult) => void>();
-  const {api: chainApi} = useContext(ChainApiContext);
   const [errorMsg, setErrorMsg] = useState('Unknown Error');
   const [, setInProgress] = useState(false);
   const [step, setStep] = useState<StepType>('none');
@@ -138,12 +136,7 @@ function TxContextProvider({children}: PropTypes) {
     }
   }, []);
 
-  const value = useMemo(
-    () => ({
-      start,
-    }),
-    [start],
-  );
+  const value = useMemo(() => ({start}), [start]);
 
   const modalContent = useMemo(() => {
     switch (step) {
@@ -154,10 +147,8 @@ function TxContextProvider({children}: PropTypes) {
           </Layout>
         );
       case 'payload':
-        return signerPayload && chainApi ? (
-          <Layout>
-            <TxPayloadQr api={chainApi} payload={signerPayload} onCancel={onDismiss} onConfirm={onScanSignature} />
-          </Layout>
+        return signerPayload ? (
+          <TxPayloadQr payload={signerPayload} onCancel={onDismiss} onConfirm={onScanSignature} />
         ) : null;
       case 'submitting':
         return (
@@ -209,7 +200,7 @@ function TxContextProvider({children}: PropTypes) {
       default:
         return null;
     }
-  }, [step, onScanSignature, signerPayload, handleSignatureScan, chainApi, errorMsg, onDismiss]);
+  }, [step, onScanSignature, signerPayload, handleSignatureScan, errorMsg, onDismiss]);
 
   return (
     <TxContext.Provider value={value}>

@@ -1,12 +1,12 @@
 import React, {useRef, useCallback, useContext} from 'react';
-import {Dimensions, View, Alert} from 'react-native';
+import {Dimensions, View, Alert, StyleSheet} from 'react-native';
 import {Layout, Button, Divider, ListItem, Text} from '@ui-kitten/components';
 import Identicon from '@polkadot/reactnative-identicon';
 import {Modalize} from 'react-native-modalize';
 import InfoBanner from 'presentational/InfoBanner';
 import globalStyles, {standardPadding} from 'src/styles';
 import Padder from 'presentational/Padder';
-import IdentityInfoForm from 'presentational/IdentityInfoForm';
+import IdentityInfoForm, {SubmitIdentityPayload} from 'presentational/IdentityInfoForm';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {TxContext} from 'context/TxContext';
 
@@ -14,7 +14,7 @@ const {height} = Dimensions.get('window');
 
 type PropTypes = {address: string};
 
-function SetInfo({address}: PropTypes) {
+function SetInfo({address}: PropTypes): React.ReactNode {
   const modalRef = useRef<Modalize>(null);
 
   const handleOpenForm = useCallback(() => {
@@ -24,9 +24,8 @@ function SetInfo({address}: PropTypes) {
   const {api} = useContext(ChainApiContext);
   const {start} = useContext(TxContext);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const startTx = useCallback(
-    async (info) => {
+    async (info: SubmitIdentityPayload) => {
       if (api) {
         modalRef.current?.close();
         await start(api, address, 'identity.setIdentity', [info]);
@@ -35,13 +34,6 @@ function SetInfo({address}: PropTypes) {
       }
     },
     [address, api, start],
-  );
-
-  const handleIdentitySubmit = useCallback(
-    (info) => {
-      startTx(info);
-    },
-    [startTx],
   );
 
   return (
@@ -56,17 +48,12 @@ function SetInfo({address}: PropTypes) {
           <ListItem
             title="Address"
             accessoryLeft={() => (
-              <View style={{paddingHorizontal: 10}}>
+              <View style={styles.identiconContainer}>
                 <Identicon value={address} size={20} />
               </View>
             )}
             accessoryRight={() => (
-              <Text
-                selectable
-                category="label"
-                numberOfLines={1}
-                style={{width: '50%', textAlign: 'right'}}
-                ellipsizeMode="middle">
+              <Text selectable category="label" numberOfLines={1} style={styles.address} ellipsizeMode="middle">
                 {address}
               </Text>
             )}
@@ -87,8 +74,8 @@ function SetInfo({address}: PropTypes) {
         withReactModal
         useNativeDriver
         panGestureEnabled>
-        <View style={{height: height * 0.8}}>
-          <IdentityInfoForm onSubmit={handleIdentitySubmit} />
+        <View style={styles.formContainer}>
+          <IdentityInfoForm onSubmit={startTx} />
         </View>
       </Modalize>
     </>
@@ -96,3 +83,9 @@ function SetInfo({address}: PropTypes) {
 }
 
 export default SetInfo;
+
+const styles = StyleSheet.create({
+  identiconContainer: {paddingHorizontal: 10},
+  address: {width: '50%', textAlign: 'right'},
+  formContainer: {height: height * 0.8},
+});
