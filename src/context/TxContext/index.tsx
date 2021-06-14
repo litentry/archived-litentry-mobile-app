@@ -175,7 +175,13 @@ function TxContextProvider({children}: PropTypes) {
       case 'success':
         return (
           <Layout style={styles.infoContainer}>
-            <SuccessDialog text="Tx Success" />
+            <SuccessDialog
+              text="Tx Success"
+              onClosePress={() => {
+                modalRef.current?.close();
+                setSignerPayload(undefined);
+              }}
+            />
           </Layout>
         );
 

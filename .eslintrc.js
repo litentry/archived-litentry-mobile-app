@@ -4,8 +4,6 @@ module.exports = {
   plugins: ['@typescript-eslint'],
   extends: ['@react-native-community', 'plugin:@typescript-eslint/recommended', 'prettier'],
   rules: {
-    'prettier/prettier': 0,
-    'no-undef': 'off',
     'no-restricted-imports': [
       2,
       {
