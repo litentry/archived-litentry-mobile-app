@@ -6,7 +6,7 @@ import {ApiPromise} from '@polkadot/api';
 export async function getAccountsIdentityInfo(accountIds: AccountId[] | string[] | Uint8Array[], api: ApiPromise) {
   const registrationOptions = await api.query.identity.identityOf.multi<Option<Registration>>(accountIds);
 
-  let response: {info: IdentityInfo; accountId: AccountId | Uint8Array | string}[] = [];
+  const response: {info: IdentityInfo; accountId: AccountId | Uint8Array | string}[] = [];
 
   for (const index in registrationOptions) {
     const registration = registrationOptions[index]!.unwrapOr(undefined);

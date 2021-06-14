@@ -2,8 +2,7 @@
 import _qrcode from 'qrcode-generator';
 import BN from 'bn.js';
 
-import {logger} from 'react-native-logs';
-import {ansiColorConsoleSync} from 'react-native-logs/dist/transports/ansiColorConsoleSync';
+import {logger, consoleTransport} from 'react-native-logs';
 import Reactotron from 'reactotron-react-native';
 import {u8aConcat, u8aToU8a} from '@polkadot/util';
 import {
@@ -38,7 +37,7 @@ export function encodeNumber(value: number): Uint8Array {
 
 export const createLogger = (name: string) => {
   const log = logger.createLogger({
-    transport: ansiColorConsoleSync,
+    transport: consoleTransport,
     transportOptions: {hideDate: true, loggerName: name},
   });
 

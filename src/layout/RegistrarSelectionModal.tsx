@@ -2,7 +2,7 @@ import React, {useCallback, useState} from 'react';
 import BN from 'bn.js';
 import {StyleSheet, Dimensions, View} from 'react-native';
 import {Select, SelectItem, Modal, Card, Text, Button, IndexPath, Input, Icon, IconProps} from '@ui-kitten/components';
-import withRegistrarList, {InjectedPropTypes} from 'src/hoc/withRegistrarList';
+import {useRegistrars} from 'src/hook/useRegistrars';
 import {BN_ZERO, formatBalance} from '@polkadot/util';
 import {standardPadding, monofontFamily} from 'src/styles';
 import Identicon from '@polkadot/reactnative-identicon';
@@ -18,7 +18,7 @@ type PropTypes = {
 };
 const AlertIcon = (props: IconProps) => <Icon {...props} name="alert-circle-outline" />;
 
-function RegistrarSelectionModal({onSelect, registrars, visible, onClose}: PropTypes & InjectedPropTypes) {
+function RegistrarSelectionModal({onSelect, visible, onClose}: PropTypes) {
   const [selectedRegistrar, setSelectedRegistrar] = useState<IndexPath | IndexPath[]>();
   const [feeValue, setFeeValue] = useState<BN>();
   const handleSelect = useCallback(() => {
@@ -28,6 +28,7 @@ function RegistrarSelectionModal({onSelect, registrars, visible, onClose}: PropT
       onSelect(index, feeValue);
     }
   }, [onSelect, selectedRegistrar, feeValue]);
+  const registrars = useRegistrars();
 
   const feeDisplay = feeValue && (formatNumberWRTDecimal(feeValue).toNumber() / 10000).toString();
   const selectedRegistrarDisplay = selectedRegistrar ? `Registrar #${(selectedRegistrar as IndexPath).row}` : undefined;
@@ -35,14 +36,9 @@ function RegistrarSelectionModal({onSelect, registrars, visible, onClose}: PropT
   const handleRegistrarSelect = useCallback(
     (index: IndexPath | IndexPath[]) => {
       setSelectedRegistrar(index);
-
-      if (registrars) {
-        const unwraped = registrars[(index as IndexPath).row]!.unwrapOr({
-          fee: BN_ZERO,
-          account: '',
-        });
-
-        setFeeValue(unwraped.fee);
+      if (registrars.length > 0) {
+        const registrar = registrars[(index as IndexPath).row];
+        setFeeValue(registrar?.fee);
       }
     },
     [setSelectedRegistrar, registrars, setFeeValue],
@@ -82,17 +78,15 @@ function RegistrarSelectionModal({onSelect, registrars, visible, onClose}: PropT
           value={selectedRegistrarDisplay}
           onSelect={handleRegistrarSelect}>
           {registrars.map((registrar, index) => {
-            const unwraped = registrar.unwrapOr({fee: BN_ZERO, account: ''});
-
             return (
               <SelectItem
-                disabled={unwraped.fee.eq(BN_ZERO)}
-                key={unwraped.account.toString()}
+                disabled={registrar.fee.eq(BN_ZERO)}
+                key={registrar.account.toString()}
                 accessoryLeft={() => {
-                  return <Identicon value={unwraped.account.toString()} size={20} />;
+                  return <Identicon value={registrar.account.toString()} size={20} />;
                 }}
                 title={`#${index}`}
-                accessoryRight={() => <Text style={styles.indexText}>{formatBalance(unwraped.fee)}</Text>}
+                accessoryRight={() => <Text style={styles.indexText}>{formatBalance(registrar.fee)}</Text>}
               />
             );
           })}
@@ -147,4 +141,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withRegistrarList(RegistrarSelectionModal);
+export default RegistrarSelectionModal;

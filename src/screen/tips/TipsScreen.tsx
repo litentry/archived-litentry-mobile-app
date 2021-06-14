@@ -1,26 +1,22 @@
 import React from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {StyleSheet, View} from 'react-native';
-import {Divider, Icon, List, TopNavigationAction} from '@ui-kitten/components';
+import {StyleSheet, FlatList, View} from 'react-native';
+import {Divider, Icon, TopNavigationAction} from '@ui-kitten/components';
 import {RouteProp} from '@react-navigation/native';
 import GenericNavigationLayout from 'presentational/GenericNavigationLayout';
 import {useTips} from 'src/hook/useTips';
 import TipTeaser from 'layout/tips/TipTeaser';
+import {EmptyView} from 'presentational/EmptyView';
+import globalStyles from 'src/styles';
+import LoadingView from 'presentational/LoadingView';
 
 type ScreenProps = {
   navigation: StackNavigationProp<DashboardStackParamList>;
   route: RouteProp<DashboardStackParamList, 'TipDetail'>;
 };
 
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 10,
-  },
-});
-
-// Todo: empty & error states missing
 function TipsScreen({navigation}: ScreenProps) {
-  const tips = useTips();
+  const {value: tips, loading} = useTips();
 
   return (
     <GenericNavigationLayout
@@ -33,10 +29,28 @@ function TipsScreen({navigation}: ScreenProps) {
         />
       )}>
       <View style={styles.container}>
-        <List data={tips} ItemSeparatorComponent={Divider} renderItem={({item}) => <TipTeaser tip={item} />} />
+        {loading ? (
+          <LoadingView />
+        ) : (
+          <FlatList
+            style={globalStyles.flex}
+            data={tips}
+            ItemSeparatorComponent={Divider}
+            renderItem={({item}) => <TipTeaser tip={item} />}
+            keyExtractor={(item) => item.toString()}
+            ListEmptyComponent={EmptyView}
+          />
+        )}
       </View>
     </GenericNavigationLayout>
   );
 }
 
 export default TipsScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 10,
+  },
+});

@@ -1,17 +1,17 @@
-import {useContext, useEffect, useState, useMemo} from 'react';
+import {useContext} from 'react';
 import type {Option} from '@polkadot/types';
 import type {OpenTip, OpenTipTo225} from '@polkadot/types/interfaces';
 import {ChainApiContext} from 'context/ChainApiContext';
-import {useCall} from 'src/hook/useCall';
+import {useAsyncRetry} from 'react-use';
 
 export type Tip = [string, OpenTip | OpenTipTo225];
 
-function extractTips(tipsWithHashes?: [[string[]], Option<OpenTip>[]], inHashes?: string[] | null): Tip[] | undefined {
+function extractTips(tipsWithHashes?: [string[], Option<OpenTip>[]], inHashes?: string[] | null): Tip[] | undefined {
   if (!tipsWithHashes || !inHashes) {
     return undefined;
   }
 
-  const [[hashes], optTips] = tipsWithHashes;
+  const [hashes, optTips] = tipsWithHashes;
 
   return optTips
     ?.map((opt, index): [string, OpenTip | null] => [hashes[index]!, opt.unwrapOr(null)])
@@ -28,29 +28,17 @@ function extractTips(tipsWithHashes?: [[string[]], Option<OpenTip>[]], inHashes?
 }
 
 export function useTips() {
-  const [hashes, setHashes] = useState<string[]>([]);
   const {api} = useContext(ChainApiContext);
 
-  useEffect(() => {
-    if (api) {
-      api.query.tips.tips
-        .keys()
-        .then((keys) => setHashes(keys.map((key) => key.args[0].toHex())))
-        .catch((e) => {
-          if (__DEV__) {
-            console.error(e);
-          }
-        });
+  return useAsyncRetry(async () => {
+    if (!api) {
+      throw new Error('Api not defined');
+    }
+    const hashes = await api.query.tips.tips.keys().then((keys) => keys.map((key) => key.args[0].toHex()));
+
+    if (hashes.length) {
+      const tips: Option<OpenTip>[] = await api.query.tips.tips.multi(hashes);
+      return extractTips([hashes, tips], hashes);
     }
   }, [api]);
-
-  const tipsWithHashes = useCall<[[string[]], Option<OpenTip>[]]>(
-    hashes.length > 0 && (api?.query.tips || api?.query.treasury)?.tips.multi,
-    [hashes],
-    {withParams: true},
-  );
-
-  const tips = useMemo(() => extractTips(tipsWithHashes, hashes), [hashes, tipsWithHashes]);
-
-  return tips || [];
 }

@@ -2,7 +2,7 @@ import {Platform} from 'react-native';
 import Device from 'react-native-device-info';
 import {DeviceType} from 'src/types';
 
-export const create = (userId: number, token: string, enableNotification: boolean = true): DeviceType => {
+export const create = (userId: number, token: string, enableNotification = true): DeviceType => {
   const device = {
     firebase_token: token,
     device_model: Device.getDeviceId(),
