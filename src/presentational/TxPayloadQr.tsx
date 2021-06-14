@@ -48,9 +48,8 @@ function TxPayloadQr({payload, onConfirm, onCancel}: PropTypes): React.ReactElem
   return (
     <Layout style={styles.container} level="1">
       <ModalTitle title="Authorization required" />
+      <Divider style={globalStyles.dividerPlain} />
       <View style={styles.content}>
-        <Divider style={globalStyles.dividerPlain} />
-        <HashBlock text={payload.blockHash} title={'call hash'} />
         <View style={styles.qrContainer}>
           <Image
             source={{
@@ -84,7 +83,7 @@ const styles = StyleSheet.create({
   qrContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    margin: standardPadding * 3,
+    marginBottom: standardPadding * 2,
   },
   buttonGroup: {
     flexDirection: 'row',

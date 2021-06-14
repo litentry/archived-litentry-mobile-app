@@ -1,29 +1,55 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {SignerPayloadJSON} from '@polkadot/types/types';
-import {Button, Divider, Icon, Layout, Text} from '@ui-kitten/components';
+import {Button, Divider, Icon, Layout, Text, useTheme} from '@ui-kitten/components';
 import ModalTitle from 'presentational/ModalTitle';
-import {StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import globalStyles, {standardPadding} from 'src/styles';
 import {HashBlock} from 'presentational/HashBlock';
+import Padder from 'presentational/Padder';
 
 type PropTypes = {
   transactionTitle: string;
   transactionInfo: string;
   payload: SignerPayloadJSON;
+  params: any;
   onConfirm: () => void;
   onCancel: () => void;
 };
 export function PreviewStep(props: PropTypes) {
-  const {transactionTitle, transactionInfo, payload, onConfirm, onCancel} = props;
+  const [open, setOpen] = useState(false);
+  const theme = useTheme();
+  const {transactionTitle, transactionInfo, payload, params, onConfirm, onCancel} = props;
 
   return (
     <Layout style={styles.container} level="1">
       <ModalTitle title="Preview" />
-      <View style={styles.content}>
-        <Divider style={globalStyles.dividerPlain} />
-        <Text>{transactionTitle}</Text>
-        <Text>{transactionInfo}</Text>
+      <Divider style={globalStyles.dividerPlain} />
+      <ScrollView style={styles.content}>
         <HashBlock text={payload.blockHash} title={'call hash'} />
+        <Padder scale={0.5} />
+        <TouchableOpacity
+          style={styles.infoContainer}
+          onPress={() => {
+            setOpen(!open);
+          }}>
+          <View style={globalStyles.flex}>
+            <Text category={'c1'}>{transactionTitle}</Text>
+            <Padder scale={0.3} />
+            <Text category={'c1'} style={{color: theme['color-basic-600']}}>
+              {transactionInfo}
+            </Text>
+          </View>
+          <Icon
+            name={open ? 'arrow-up-outline' : 'arrow-down-outline'}
+            style={globalStyles.icon}
+            fill={theme['color-basic-700']}
+          />
+        </TouchableOpacity>
+        {open ? (
+          <Text style={[styles.payload, {backgroundColor: theme['color-basic-300']}]}>
+            {JSON.stringify(params, null, 2)}
+          </Text>
+        ) : undefined}
         <Layout style={styles.buttonGroup}>
           <Button style={styles.cancel} appearance="ghost" size="small" status="warning" onPress={onCancel}>
             Cancel
@@ -36,7 +62,7 @@ export function PreviewStep(props: PropTypes) {
             Continue
           </Button>
         </Layout>
-      </View>
+      </ScrollView>
     </Layout>
   );
 }
@@ -44,15 +70,16 @@ export function PreviewStep(props: PropTypes) {
 const styles = StyleSheet.create({
   container: {
     paddingVertical: standardPadding * 2,
-    alignItems: 'center',
     marginBottom: standardPadding * 2,
   },
   content: {padding: standardPadding * 2},
+  infoContainer: {flexDirection: 'row', alignItems: 'center', paddingVertical: standardPadding},
   buttonGroup: {
+    paddingHorizontal: 30,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: 280,
   },
   cancel: {flex: 1},
   submit: {flex: 2},
+  payload: {fontSize: 9, padding: standardPadding, marginVertical: standardPadding},
 });

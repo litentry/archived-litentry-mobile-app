@@ -6,7 +6,7 @@ import {SubmittableExtrinsic} from '@polkadot/api/submittable/types';
 import {Modalize} from 'react-native-modalize';
 import {Layout, Text, IconProps, Icon} from '@ui-kitten/components';
 import QRCodeScanner from 'react-native-qrcode-scanner';
-import {standardPadding} from 'src/styles';
+import globalStyles, {standardPadding} from 'src/styles';
 import {SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
 import {BN_ZERO} from '@polkadot/util';
 import QrSigner from 'src/service/QrSigner';
@@ -61,7 +61,7 @@ function TxContextProvider({children}: PropTypes) {
         nonce: -1,
         tip: BN_ZERO,
         signer: new QrSigner((payload) => {
-          dispatch({type: 'PREVIEW', payload: {payload, title, description}});
+          dispatch({type: 'PREVIEW', payload: {payload, params, title, description}});
 
           return new Promise((resolve) => {
             signatureRef.current = resolve;
@@ -121,9 +121,10 @@ function TxContextProvider({children}: PropTypes) {
       case 'preview':
         return (
           <PreviewStep
-            transactionInfo={'test'}
-            transactionTitle={'set an account'}
+            transactionInfo={state.description}
+            transactionTitle={state.title}
             payload={state.payload}
+            params={state.params}
             onCancel={() => {
               modalRef.current?.close();
               dispatch({type: 'RESET'});
@@ -170,7 +171,7 @@ function TxContextProvider({children}: PropTypes) {
       case 'signature':
         return (
           // TODO: extract
-          <Layout>
+          <Layout style={globalStyles.paddedContainer}>
             <QRCodeScanner
               onRead={(data) => {
                 dispatch({type: 'NEXT_STEP'});
@@ -300,7 +301,7 @@ export default TxContextProvider;
 
 type State =
   | {step: 'none' | 'signature' | 'submitting' | 'success'}
-  | {step: 'preview'; payload: SignerPayloadJSON; title: string; description: string}
+  | {step: 'preview'; payload: SignerPayloadJSON; params: any; title: string; description: string}
   | {step: 'payload'; payload: SignerPayloadJSON}
   | {step: 'error'; error: string};
 
@@ -310,7 +311,7 @@ type Action =
   | {type: 'RESET'}
   | {type: 'NEXT_STEP'}
   | {type: 'ERROR'; payload: string}
-  | {type: 'PREVIEW'; payload: {payload: SignerPayloadJSON; title: string; description: string}};
+  | {type: 'PREVIEW'; payload: {payload: SignerPayloadJSON; params: any; title: string; description: string}};
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
