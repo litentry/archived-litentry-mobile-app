@@ -11,14 +11,16 @@ type PropTypes = {
   transactionTitle: string;
   transactionInfo: string;
   payload: SignerPayloadJSON;
-  params: any;
+  params: unknown;
+  partialFee: number;
   onConfirm: () => void;
   onCancel: () => void;
 };
-export function PreviewStep(props: PropTypes) {
+
+export function PreviewStep(props: PropTypes): React.ReactElement {
   const [open, setOpen] = useState(false);
   const theme = useTheme();
-  const {transactionTitle, transactionInfo, payload, params, onConfirm, onCancel} = props;
+  const {transactionTitle, transactionInfo, partialFee, payload, params, onConfirm, onCancel} = props;
 
   return (
     <Layout style={styles.container} level="1">
@@ -42,14 +44,16 @@ export function PreviewStep(props: PropTypes) {
           <Icon
             name={open ? 'arrow-up-outline' : 'arrow-down-outline'}
             style={globalStyles.icon}
-            fill={theme['color-basic-700']}
+            fill={theme['color-basic-600']}
           />
         </TouchableOpacity>
         {open ? (
-          <Text style={[styles.payload, {backgroundColor: theme['color-basic-300']}]}>
+          <Text style={[styles.payload, {backgroundColor: theme['color-basic-500']}]}>
             {JSON.stringify(params, null, 2)}
           </Text>
         ) : undefined}
+        <Text category={'c1'}>{`Fees of ${partialFee / 10 ** 6} micro Unit will be applied to the submission`}</Text>
+        <Padder scale={1} />
         <Layout style={styles.buttonGroup}>
           <Button style={styles.cancel} appearance="ghost" size="small" status="warning" onPress={onCancel}>
             Cancel
@@ -58,7 +62,7 @@ export function PreviewStep(props: PropTypes) {
             style={styles.submit}
             appearance="outline"
             onPress={onConfirm}
-            accessoryRight={(props) => <Icon {...props} name="video-outline" />}>
+            accessoryRight={(p) => <Icon {...p} name="video-outline" />}>
             Continue
           </Button>
         </Layout>

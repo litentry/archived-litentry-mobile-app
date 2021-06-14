@@ -1,10 +1,10 @@
-import React, {createContext, useState, useMemo, useCallback, useRef, useReducer} from 'react';
-import {StyleSheet, Dimensions} from 'react-native';
+import React, {createContext, useCallback, useMemo, useReducer, useRef} from 'react';
+import {Dimensions, StyleSheet} from 'react-native';
 import {ApiPromise} from '@polkadot/api';
 import {get} from 'lodash';
 import {SubmittableExtrinsic} from '@polkadot/api/submittable/types';
 import {Modalize} from 'react-native-modalize';
-import {Layout, Text, IconProps, Icon} from '@ui-kitten/components';
+import {Icon, IconProps, Layout, Text} from '@ui-kitten/components';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import globalStyles, {standardPadding} from 'src/styles';
 import {SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
@@ -15,6 +15,7 @@ import LoadingView from 'presentational/LoadingView';
 import SuccessDialog from 'presentational/SuccessDialog';
 import ErrorDialog from 'presentational/ErrorDialog';
 import {PreviewStep} from 'context/TxContext/PreviewStep';
+
 let id = 0;
 
 const {width, height} = Dimensions.get('window');
@@ -39,7 +40,7 @@ type StartConfig = {
   description: string;
 };
 
-function TxContextProvider({children}: PropTypes) {
+function TxContextProvider({children}: PropTypes): React.ReactElement {
   const modalRef = useRef<Modalize>(null);
   const signatureRef = useRef<(value: SignerResult) => void>();
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -61,7 +62,12 @@ function TxContextProvider({children}: PropTypes) {
         nonce: -1,
         tip: BN_ZERO,
         signer: new QrSigner((payload) => {
-          dispatch({type: 'PREVIEW', payload: {payload, params, title, description}});
+          transaction.paymentInfo(address).then((info) => {
+            dispatch({
+              type: 'PREVIEW',
+              payload: {payload, params, title, description, partialFee: info.partialFee.toNumber()},
+            });
+          });
 
           return new Promise((resolve) => {
             signatureRef.current = resolve;
@@ -125,6 +131,7 @@ function TxContextProvider({children}: PropTypes) {
             transactionTitle={state.title}
             payload={state.payload}
             params={state.params}
+            partialFee={state.partialFee}
             onCancel={() => {
               modalRef.current?.close();
               dispatch({type: 'RESET'});
@@ -301,7 +308,14 @@ export default TxContextProvider;
 
 type State =
   | {step: 'none' | 'signature' | 'submitting' | 'success'}
-  | {step: 'preview'; payload: SignerPayloadJSON; params: any; title: string; description: string}
+  | {
+      step: 'preview';
+      payload: SignerPayloadJSON;
+      params: unknown;
+      title: string;
+      description: string;
+      partialFee: number;
+    }
   | {step: 'payload'; payload: SignerPayloadJSON}
   | {step: 'error'; error: string};
 
@@ -311,7 +325,10 @@ type Action =
   | {type: 'RESET'}
   | {type: 'NEXT_STEP'}
   | {type: 'ERROR'; payload: string}
-  | {type: 'PREVIEW'; payload: {payload: SignerPayloadJSON; params: any; title: string; description: string}};
+  | {
+      type: 'PREVIEW';
+      payload: {payload: SignerPayloadJSON; partialFee: number; params: unknown; title: string; description: string};
+    };
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
