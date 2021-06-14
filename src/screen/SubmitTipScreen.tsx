@@ -89,7 +89,16 @@ export function SubmitTipScreen({navigation}: {navigation: NavigationProp<Dashbo
           disabled={!valid}
           onPress={() => {
             if (api) {
-              start(api, account.accountId.toString(), 'tips.reportAwesome', [state.reason, state.beneficiary]);
+              start({
+                api,
+                address: account.accountId.toString(),
+                txMethod: 'tips.reportAwesome',
+                params: [state.reason, state.beneficiary],
+                title: 'Sending transaction tips.reportAwesome(reason, who)',
+                description: "Report something reason that deserves a tip and claim any eventual the finder's fee. ",
+              }).then(() => {
+                navigation.goBack();
+              });
             }
           }}>
           Sign and Submit

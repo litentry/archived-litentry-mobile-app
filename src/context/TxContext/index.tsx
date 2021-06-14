@@ -109,7 +109,7 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
             dispatch({type: 'NEXT_STEP'});
           }
 
-          if (errors.length !== 0) {
+          if (errors[0]) {
             dispatch({type: 'ERROR', payload: errors[0]});
           }
         }
