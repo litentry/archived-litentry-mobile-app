@@ -14,12 +14,14 @@ import {u8aToString} from '@polkadot/util';
 import Identicon from '@polkadot/reactnative-identicon';
 import Padder from 'presentational/Padder';
 import {TxContext} from 'context/TxContext';
+import {useQueryClient} from 'react-query';
 
 export function SubmitTipScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {loading, value: data, error} = useAccount();
   const [state, dispatch] = useReducer(reducer, initialState);
   const {start} = useContext(TxContext);
   const {api} = useContext(ChainApiContext);
+  const queryClient = useQueryClient();
 
   if (loading) {
     return <ActivityIndicator />;
@@ -97,6 +99,7 @@ export function SubmitTipScreen({navigation}: {navigation: NavigationProp<Dashbo
                 title: 'Sending transaction tips.reportAwesome(reason, who)',
                 description: "Report something reason that deserves a tip and claim any eventual the finder's fee. ",
               }).then(() => {
+                queryClient.invalidateQueries('tips');
                 navigation.goBack();
               });
             }

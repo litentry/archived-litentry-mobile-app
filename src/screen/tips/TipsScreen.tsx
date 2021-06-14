@@ -16,7 +16,7 @@ type ScreenProps = {
 };
 
 function TipsScreen({navigation}: ScreenProps) {
-  const {value: tips, loading} = useTips();
+  const {data: tips, isLoading} = useTips();
 
   return (
     <GenericNavigationLayout
@@ -29,7 +29,7 @@ function TipsScreen({navigation}: ScreenProps) {
         />
       )}>
       <View style={styles.container}>
-        {loading ? (
+        {isLoading ? (
           <LoadingView />
         ) : (
           <FlatList

@@ -79,40 +79,44 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
         }),
       });
 
-      await f.send(({status, events}) => {
-        if (status.isInBlock || status.isFinalized) {
-          const errors = events
-            // find/filter for failed events
-            .filter(({event: {section, method}}) => section === 'system' && method === 'ExtrinsicFailed')
-            // we know that data for system.ExtrinsicFailed is
-            // (DispatchError, DispatchInfo)
-            .map((eventRecord) => {
-              const {
-                event: {
-                  data: [error],
-                },
-              } = eventRecord;
+      await new Promise((resolve, reject) => {
+        f.send(({status, events}) => {
+          if (status.isInBlock || status.isFinalized) {
+            const errors = events
+              // find/filter for failed events
+              .filter(({event: {section, method}}) => section === 'system' && method === 'ExtrinsicFailed')
+              // we know that data for system.ExtrinsicFailed is
+              // (DispatchError, DispatchInfo)
+              .map((eventRecord) => {
+                const {
+                  event: {
+                    data: [error],
+                  },
+                } = eventRecord;
 
-              if ((error as any).isModule) {
-                // for module errors, we have the section indexed, lookup
-                const decoded = api.registry.findMetaError((error as any).asModule);
-                const {documentation} = decoded;
+                if ((error as any).isModule) {
+                  // for module errors, we have the section indexed, lookup
+                  const decoded = api.registry.findMetaError((error as any).asModule);
+                  const {documentation} = decoded;
 
-                return documentation.join(' ').trim();
-              } else {
-                // Other, CannotLookup, BadOrigin, no extra info
-                return error?.toString();
-              }
-            });
+                  return documentation.join(' ').trim();
+                } else {
+                  // Other, CannotLookup, BadOrigin, no extra info
+                  return error?.toString();
+                }
+              });
 
-          if (errors.length === 0 && status.isFinalized) {
-            dispatch({type: 'NEXT_STEP'});
+            if (errors.length === 0 && status.isFinalized) {
+              dispatch({type: 'NEXT_STEP'});
+              resolve(undefined);
+            }
+
+            if (errors[0]) {
+              dispatch({type: 'ERROR', payload: errors[0]});
+              reject();
+            }
           }
-
-          if (errors[0]) {
-            dispatch({type: 'ERROR', payload: errors[0]});
-          }
-        }
+        });
       });
     } catch (e) {
       dispatch({type: 'ERROR', payload: e});
