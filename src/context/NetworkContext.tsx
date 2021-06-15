@@ -51,7 +51,7 @@ type PropTypes = {
 
 export default function NetworkContextProvider({children}: PropTypes) {
   const {asyncStorage} = useContext(DataContext);
-  const [currentNetwork, setNetwork] = useState<NetworkType>();
+  const [currentNetwork, setNetwork] = useState<NetworkType>(availableNetworks[0]);
 
   useEffect(() => {
     asyncStorage.get('network', availableNetworks[0]).then(setNetwork);
@@ -73,10 +73,6 @@ export default function NetworkContextProvider({children}: PropTypes) {
     }),
     [currentNetwork, select],
   );
-
-  if (!currentNetwork) {
-    return null;
-  }
 
   return <NetworkContext.Provider value={value}>{children}</NetworkContext.Provider>;
 }
