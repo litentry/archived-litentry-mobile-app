@@ -9,7 +9,7 @@ const logger = createLogger('AccountsContext');
 
 type Account = {
   address: string;
-  name?: string;
+  name: string;
 };
 
 type State = {
