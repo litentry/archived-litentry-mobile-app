@@ -14,8 +14,9 @@ import * as routeKeys from 'src/navigation/routeKeys';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
 import {NetworkSelectScreen} from 'screen/NetworkSelectScreen';
-import {CouncilScreen} from 'screen/CouncilScreen';
+import {CouncilScreen} from 'screen/Council/CouncilScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
+import {MotionsScreen} from 'screen/Council/MotionsScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -28,6 +29,7 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.tipDetail} component={TipDetailScreen} />
       <DashboardStack.Screen name={routeKeys.councilScreen} component={CouncilScreen} />
       <DashboardStack.Screen name={routeKeys.treasuryScreen} component={TreasuryScreen} />
+      <DashboardStack.Screen name={routeKeys.motionsScreen} component={MotionsScreen} />
     </DashboardStack.Navigator>
   );
 }
@@ -62,6 +64,7 @@ function AppNavigator() {
 export default AppNavigator;
 
 const ApiLoadingStack = createStackNavigator();
+
 function ApiLoadingNavigator() {
   return (
     <ApiLoadingStack.Navigator headerMode={'none'} mode={'modal'} screenOptions={{gestureEnabled: false}}>
