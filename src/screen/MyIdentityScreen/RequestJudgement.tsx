@@ -40,7 +40,14 @@ function RequestJudgement({display, address, detail}: PropTypes) {
   const startTx = useCallback(
     async (index: number, fee: BN) => {
       if (api) {
-        await start(api, address, 'identity.requestJudgement', [index, fee]);
+        await start({
+          api,
+          address,
+          txMethod: 'identity.requestJudgement',
+          params: [index, fee],
+          title: `Sending transaction identity.requestJudgement(reg_index, max_fee)`,
+          description: 'Request a judgement from a registrar.',
+        });
       } else {
         Alert.alert('account/api is not ready');
       }
