@@ -13,7 +13,6 @@ import MyIdentityScreen from 'screen/MyIdentityScreen';
 import * as routeKeys from 'src/navigation/routeKeys';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
-import {NetworkSelectScreen} from 'screen/NetworkSelectScreen';
 import {CouncilScreen} from 'screen/CouncilScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
 
@@ -69,19 +68,6 @@ function ApiLoadingNavigator() {
         name={'ApiLoadingScreen'}
         component={ApiLoadingScreen}
         options={{gestureEnabled: false}}
-      />
-      <ApiLoadingStack.Screen
-        name={'NetworkSelectScreen'}
-        component={NetworkSelectScreen}
-        options={{
-          transitionSpec: {
-            open: {animation: 'timing', config: {duration: 0}},
-            close: {animation: 'timing', config: {duration: 0}},
-          },
-          cardStyle: {backgroundColor: 'transparent'},
-          cardOverlayEnabled: true,
-          gestureEnabled: false,
-        }}
       />
     </ApiLoadingStack.Navigator>
   );
