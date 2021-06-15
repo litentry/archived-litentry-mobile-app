@@ -3,11 +3,12 @@ import {Dimensions, StyleSheet} from 'react-native';
 import {ApiPromise} from '@polkadot/api';
 import {get} from 'lodash';
 import {SubmittableExtrinsic} from '@polkadot/api/submittable/types';
+import type {DispatchError} from '@polkadot/types/interfaces';
 import {Modalize} from 'react-native-modalize';
 import {Icon, IconProps, Layout, Text} from '@ui-kitten/components';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import globalStyles, {standardPadding} from 'src/styles';
-import {SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
+import {ITuple, SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
 import {BN_ZERO} from '@polkadot/util';
 import QrSigner from 'src/service/QrSigner';
 import TxPayloadQr from 'presentational/TxPayloadQr';
@@ -61,11 +62,11 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
       const f = await transaction.signAsync(address, {
         nonce: -1,
         tip: BN_ZERO,
-        signer: new QrSigner((payload) => {
+        signer: new QrSigner((txPayload) => {
           transaction.paymentInfo(address).then((info) => {
             dispatch({
               type: 'PREVIEW',
-              payload: {payload, params, title, description, partialFee: info.partialFee.toNumber()},
+              payload: {txPayload: txPayload, params, title, description, partialFee: info.partialFee.toNumber()},
             });
           });
 
@@ -83,21 +84,17 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
             // we know that data for system.ExtrinsicFailed is
             // (DispatchError, DispatchInfo)
             .map((eventRecord) => {
-              const {
-                event: {
-                  data: [error],
-                },
-              } = eventRecord;
+              const [dispatchError] = eventRecord.event.data as unknown as ITuple<[DispatchError]>;
 
-              if ((error as any).isModule) {
+              if (dispatchError.isModule) {
                 // for module errors, we have the section indexed, lookup
-                const decoded = api.registry.findMetaError((error as any).asModule);
+                const decoded = api.registry.findMetaError(dispatchError.asModule);
                 const {documentation} = decoded;
 
                 return documentation.join(' ').trim();
               } else {
                 // Other, CannotLookup, BadOrigin, no extra info
-                return error.toString();
+                return dispatchError.toString();
               }
             });
 
@@ -129,7 +126,7 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
           <PreviewStep
             transactionInfo={state.description}
             transactionTitle={state.title}
-            payload={state.payload}
+            txPayload={state.txPayload}
             params={state.params}
             partialFee={state.partialFee}
             onCancel={() => {
@@ -143,7 +140,7 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
       case 'payload':
         return (
           <TxPayloadQr
-            payload={state.payload}
+            payload={state.txPayload}
             onCancel={() => {
               modalRef.current?.close();
               dispatch({type: 'RESET'});
@@ -310,13 +307,13 @@ type State =
   | {step: 'none' | 'signature' | 'submitting' | 'success'}
   | {
       step: 'preview';
-      payload: SignerPayloadJSON;
-      params: unknown;
+      txPayload: SignerPayloadJSON;
+      params: unknown[];
       title: string;
       description: string;
       partialFee: number;
     }
-  | {step: 'payload'; payload: SignerPayloadJSON}
+  | {step: 'payload'; txPayload: SignerPayloadJSON}
   | {step: 'error'; error: string};
 
 const initialState: State = {step: 'none'};
@@ -327,7 +324,13 @@ type Action =
   | {type: 'ERROR'; payload: string}
   | {
       type: 'PREVIEW';
-      payload: {payload: SignerPayloadJSON; partialFee: number; params: unknown; title: string; description: string};
+      payload: {
+        txPayload: SignerPayloadJSON;
+        partialFee: number;
+        params: unknown[];
+        title: string;
+        description: string;
+      };
     };
 
 function reducer(state: State, action: Action): State {
@@ -344,7 +347,7 @@ function reducer(state: State, action: Action): State {
     case 'NEXT_STEP': {
       switch (state.step) {
         case 'preview':
-          return {step: 'payload', payload: state.payload};
+          return {step: 'payload', txPayload: state.txPayload};
         case 'payload':
           return {step: 'signature'};
         case 'signature':

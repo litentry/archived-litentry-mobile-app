@@ -10,8 +10,8 @@ import Padder from 'presentational/Padder';
 type PropTypes = {
   transactionTitle: string;
   transactionInfo: string;
-  payload: SignerPayloadJSON;
-  params: unknown;
+  txPayload: SignerPayloadJSON;
+  params: unknown[];
   partialFee: number;
   onConfirm: () => void;
   onCancel: () => void;
@@ -20,14 +20,14 @@ type PropTypes = {
 export function PreviewStep(props: PropTypes): React.ReactElement {
   const [open, setOpen] = useState(false);
   const theme = useTheme();
-  const {transactionTitle, transactionInfo, partialFee, payload, params, onConfirm, onCancel} = props;
+  const {transactionTitle, transactionInfo, partialFee, txPayload, params, onConfirm, onCancel} = props;
 
   return (
     <Layout style={styles.container} level="1">
       <ModalTitle title="Preview" />
       <Divider style={globalStyles.dividerPlain} />
       <ScrollView style={styles.content}>
-        <HashBlock text={payload.blockHash} title={'call hash'} />
+        <HashBlock text={txPayload.blockHash} title={'call hash'} />
         <Padder scale={0.5} />
         <TouchableOpacity
           style={styles.infoContainer}

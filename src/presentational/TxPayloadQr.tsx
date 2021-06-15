@@ -1,16 +1,15 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {StyleSheet, Image, View} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {Image, StyleSheet, View} from 'react-native';
 import {ExtrinsicPayload} from '@polkadot/types/interfaces';
-import {Layout, Button, Divider, Icon, IconProps, Text} from '@ui-kitten/components';
+import {Button, Divider, Icon, IconProps, Layout} from '@ui-kitten/components';
 import globalStyles, {standardPadding} from 'src/styles';
 import {SignerPayloadJSON} from '@polkadot/types/types';
-import {createSignPayload, createFrames, QrCode} from 'src/utils';
-import {CMD_MORTAL, CMD_HASH} from 'src/constants';
+import {createFrames, createSignPayload, QrCode} from 'src/utils';
+import {CMD_HASH, CMD_MORTAL} from 'src/constants';
 import ModalTitle from './ModalTitle';
 import {ChainApiContext} from 'context/ChainApiContext';
-import {HashBlock} from 'presentational/HashBlock';
 
-const QRIcon = (props: IconProps) => <Icon {...props} name="video-outline" />;
+const TX_SIZE_LIMIT = 5000;
 
 type PropTypes = {
   payload: SignerPayloadJSON;
@@ -27,7 +26,7 @@ function TxPayloadQr({payload, onConfirm, onCancel}: PropTypes): React.ReactElem
       return;
     }
     // limit size of the transaction
-    const isQrHashed = payload.method.length > 5000;
+    const isQrHashed = payload.method.length > TX_SIZE_LIMIT;
     const wrapper: ExtrinsicPayload = api.registry.createType('ExtrinsicPayload', payload);
     const signPayload = createSignPayload(
       payload.address,
@@ -63,7 +62,11 @@ function TxPayloadQr({payload, onConfirm, onCancel}: PropTypes): React.ReactElem
           <Button style={styles.cancel} appearance="ghost" size="small" status="warning" onPress={onCancel}>
             Cancel
           </Button>
-          <Button style={styles.submit} appearance="outline" onPress={onConfirm} accessoryRight={QRIcon}>
+          <Button
+            style={styles.submit}
+            appearance="outline"
+            onPress={onConfirm}
+            accessoryRight={(props: IconProps) => <Icon {...props} name="video-outline" />}>
             Scan Signature
           </Button>
         </Layout>

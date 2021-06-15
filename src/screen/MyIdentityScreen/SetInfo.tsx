@@ -6,7 +6,7 @@ import {Modalize} from 'react-native-modalize';
 import InfoBanner from 'presentational/InfoBanner';
 import globalStyles, {standardPadding} from 'src/styles';
 import Padder from 'presentational/Padder';
-import IdentityInfoForm, {SubmitIdentityPayload} from 'presentational/IdentityInfoForm';
+import IdentityInfoForm, {IdentityPayload} from 'presentational/IdentityInfoForm';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {TxContext} from 'context/TxContext';
 
@@ -25,7 +25,7 @@ function SetInfo({address}: PropTypes): React.ReactElement {
   const {start} = useContext(TxContext);
 
   const startTx = useCallback(
-    async (info: SubmitIdentityPayload) => {
+    async (info: IdentityPayload) => {
       if (api) {
         modalRef.current?.close();
         await start({
