@@ -15,6 +15,7 @@ export async function getAccountsIdentityInfo(accountIds: AccountId[], api: ApiP
     } else {
       // check for parent accounts
       const superAccount = (await api.query.identity.superOf(accountIds[index])).unwrapOr(undefined);
+
       if (superAccount) {
         const [accountId] = superAccount;
         const r = (await api.query.identity.identityOf(accountId)).unwrapOr(undefined);
