@@ -12,6 +12,7 @@
     "moduleResolution": "node",
     "skipLibCheck": true,
     "baseUrl": ".",
+    "noUncheckedIndexedAccess": true,
     "paths": {
       "context/*": ["src/context/*"],
       "presentational/*": ["src/presentational/*"],
@@ -28,10 +29,5 @@
     "esModuleInterop": true,
     "resolveJsonModule": true
   },
-  "exclude": [
-    "node_modules",
-    "babel.config.js",
-    "metro.config.js",
-    "jest.config.js"
-  ]
+  "exclude": ["node_modules", "babel.config.js", "metro.config.js", "jest.config.js"]
 }

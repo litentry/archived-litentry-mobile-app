@@ -13,6 +13,10 @@ export const getPayload = async (
 ) => {
   const [section, method] = (tx as string).split('.');
 
+  if (!section || !method) {
+    throw new Error('Section or Method missing');
+  }
+
   if (!get(api.tx, [section, method])) {
     throw new Error(`Unable to find method ${section}.${method}`);
   }
@@ -50,7 +54,7 @@ export const getPayload = async (
     blockNumber = signedBlock.block.header.number;
   }
 
-  const transaction: SubmittableExtrinsic<'promise'> = api.tx[section][method](...params);
+  const transaction: SubmittableExtrinsic<'promise'> = api.tx[section]![method]!(...params);
 
   const payload: SignerPayload = api.createType('SignerPayload', {
     genesisHash: api.genesisHash,
