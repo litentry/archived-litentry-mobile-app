@@ -36,7 +36,7 @@ const M_LENGTH = 6 + 1;
 
 function format(value: Compact<any> | BN | string, [decimals, token]: [number, string]): string {
   const [prefix = '', postfix = ''] = formatBalance(value, {decimals, forceUnit: '-', withSi: false}).split('.');
-  const unitPost = '';
+  const unitPost = token;
 
   if (prefix.length > M_LENGTH) {
     const [major, rest] = formatBalance(value, {decimals, withUnit: false}).split('.');
