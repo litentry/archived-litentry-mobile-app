@@ -28,15 +28,11 @@ function TipsSummaryTeaser({onMorePress}: TipsSummaryTeaserProps) {
   const navigation = useNavigation<StackNavigationProp<DashboardStackParamList>>();
   const {data: tips} = useTips();
 
-  if (!tips || tips.length < 1) {
-    return null;
-  }
-
-  const latestTip = tips[tips.length - 1];
+  const latestTip = tips ? tips[tips.length - 1] : undefined;
   const [id, tip] = latestTip ?? [];
 
   return (
-    <SeactionTeaserContainer title={`Tips (${tips.length})`} onMorePress={onMorePress}>
+    <SeactionTeaserContainer title={`Tips ${tips?.length ? `(${tips.length})` : ''}`} onMorePress={onMorePress}>
       {id && tip ? (
         <Layout>
           <Card onPress={() => navigation.navigate(tipDetail, {hash: String(id)})}>

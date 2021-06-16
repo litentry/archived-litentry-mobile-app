@@ -41,7 +41,7 @@ function DisplayJudgement(props: PropTypes) {
   const {api} = useContext(ChainApiContext);
   const successMsg = `This address has ${judgementCount} judgement${
     judgementCount > 1 ? 's' : ''
-  } from Registrar ${detail.data?.judgements?.map((judgement) => `#${judgement[0]}`).join(',')}. It's all set. 🎉`;
+  } from Registrar ${detail.data?.judgements.map((judgement) => `#${judgement[0]}`).join(',')}. It's all set. 🎉`;
 
   const pendingJudgement = detail.data?.judgements.find((judgement) => {
     if (judgement[1].isFeePaid) {

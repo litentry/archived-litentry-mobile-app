@@ -98,10 +98,12 @@ export function SubmitTipScreen({navigation}: {navigation: NavigationProp<Dashbo
                 params: [state.reason, state.beneficiary],
                 title: 'Sending transaction tips.reportAwesome(reason, who)',
                 description: "Report something reason that deserves a tip and claim any eventual the finder's fee. ",
-              }).then(() => {
-                queryClient.invalidateQueries('tips');
-                navigation.goBack();
-              });
+              })
+                .then(() => {
+                  queryClient.invalidateQueries('tips');
+                  navigation.goBack();
+                })
+                .catch((e) => console.warn(e));
             }
           }}>
           Sign and Submit
