@@ -59,7 +59,7 @@
     "react-native-screens": "^3.3.0",
     "react-native-sensitive-info": "^5.5.8",
     "react-native-substrate-sign": "^1.1.1",
-    "react-native-svg": "^12.1.0",
+    "react-native-svg": "^12.1.1",
     "react-native-vector-icons": "^8.1.0",
     "react-native-webview": "^11.0.0",
     "react-use": "^17.2.4",
