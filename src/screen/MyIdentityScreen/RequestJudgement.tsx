@@ -45,8 +45,8 @@ function RequestJudgement({display, address, detail}: PropTypes) {
           address,
           txMethod: 'identity.requestJudgement',
           params: [index, fee],
-          title: `Sending transaction identity.requestJudgement`,
-          description: 'TODO',
+          title: `Sending transaction identity.requestJudgement(reg_index, max_fee)`,
+          description: 'Request a judgement from a registrar.',
         });
       } else {
         Alert.alert('account/api is not ready');

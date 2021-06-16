@@ -4,7 +4,7 @@ import {Input, Button, Icon, IconProps} from '@ui-kitten/components';
 import {WHITESPACE, validateFormField} from 'src/utils';
 import FormLabel from 'presentational/FormLabel';
 
-export type SubmitIdentityPayload = {
+export type IdentityPayload = {
   display: {raw: string} | {none: null};
   legal: {raw: string} | {none: null};
   email: {raw: string} | {none: null};
@@ -14,7 +14,7 @@ export type SubmitIdentityPayload = {
 };
 
 type IdentityInfoFormProps = {
-  onSubmit: (identityInfo: SubmitIdentityPayload) => void;
+  onSubmit: (identityPayload: IdentityPayload) => void;
 };
 
 type FormStatus = Record<
