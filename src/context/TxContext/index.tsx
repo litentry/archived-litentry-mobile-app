@@ -1,28 +1,29 @@
-import React, {createContext, useState, useMemo, useCallback, useRef, useContext} from 'react';
-import {StyleSheet, Dimensions} from 'react-native';
+import React, {createContext, useCallback, useMemo, useReducer, useRef} from 'react';
+import {Dimensions, StyleSheet} from 'react-native';
 import {ApiPromise} from '@polkadot/api';
 import {get} from 'lodash';
 import {SubmittableExtrinsic} from '@polkadot/api/submittable/types';
+import type {DispatchError} from '@polkadot/types/interfaces';
 import {Modalize} from 'react-native-modalize';
-import {Layout, Text, IconProps, Icon} from '@ui-kitten/components';
+import {Icon, IconProps, Layout, Text} from '@ui-kitten/components';
 import QRCodeScanner from 'react-native-qrcode-scanner';
-import {standardPadding} from 'src/styles';
-import {SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
+import globalStyles, {standardPadding} from 'src/styles';
+import {ITuple, SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
 import {BN_ZERO} from '@polkadot/util';
-import {QRScannedPayload} from 'src/types';
 import QrSigner from 'src/service/QrSigner';
-import {ChainApiContext} from '../ChainApiContext';
 import TxPayloadQr from 'presentational/TxPayloadQr';
 import LoadingView from 'presentational/LoadingView';
 import SuccessDialog from 'presentational/SuccessDialog';
 import ErrorDialog from 'presentational/ErrorDialog';
+import {PreviewStep} from 'context/TxContext/PreviewStep';
+
 let id = 0;
 
 const {width, height} = Dimensions.get('window');
 
 type PropTypes = {children: React.ReactNode};
 type TxContextValueType = {
-  start: (api: ApiPromise, address: string, tx: string, params: unknown[]) => Promise<void>;
+  start: (config: StartConfig) => Promise<void>;
 };
 
 export const TxContext = createContext<TxContextValueType>({
@@ -31,46 +32,22 @@ export const TxContext = createContext<TxContextValueType>({
 
 const AlertIcon = (props: IconProps) => <Icon fill="#ccc" {...props} name="alert-triangle-outline" />;
 
-type StepType = 'payload' | 'signature' | 'submitting' | 'error' | 'success' | 'none';
+type StartConfig = {
+  api: ApiPromise;
+  address: string;
+  txMethod: string;
+  params: unknown[];
+  title: string;
+  description: string;
+};
 
-function TxContextProvider({children}: PropTypes) {
+function TxContextProvider({children}: PropTypes): React.ReactElement {
   const modalRef = useRef<Modalize>(null);
   const signatureRef = useRef<(value: SignerResult) => void>();
-  const {api: chainApi} = useContext(ChainApiContext);
-  const [errorMsg, setErrorMsg] = useState('Unknown Error');
-  const [, setInProgress] = useState(false);
-  const [step, setStep] = useState<StepType>('none');
-  const [signerPayload, setSignerPayload] = useState<SignerPayloadJSON>();
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  const onScanSignature = useCallback(() => {
-    setStep('signature');
-  }, []);
-
-  const reset = useCallback(() => {
-    setStep('none');
-    signatureRef.current = undefined;
-    setSignerPayload(undefined);
-    setErrorMsg('Unknown Error');
-  }, []);
-
-  const onDismiss = useCallback(() => {
-    modalRef.current?.close();
-    setSignerPayload(undefined);
-  }, [setSignerPayload]);
-
-  const handleSignatureScan = useCallback(
-    (data: QRScannedPayload) => {
-      setInProgress(true);
-      setStep('submitting');
-      signatureRef.current?.({
-        id: id++,
-        signature: `0x${data.data}`,
-      });
-    },
-    [setInProgress, setStep],
-  );
-
-  const start = useCallback(async (api: ApiPromise, address: string, txMethod: string, params: unknown[]) => {
+  const start = useCallback(async (config: StartConfig) => {
+    const {api, txMethod, params, description, address, title} = config;
     const [section, method] = txMethod.split('.');
 
     if (!get(api.tx, [section, method])) {
@@ -85,9 +62,13 @@ function TxContextProvider({children}: PropTypes) {
       const f = await transaction.signAsync(address, {
         nonce: -1,
         tip: BN_ZERO,
-        signer: new QrSigner((payload) => {
-          setSignerPayload(payload);
-          setStep('payload');
+        signer: new QrSigner((txPayload) => {
+          transaction.paymentInfo(address).then((info) => {
+            dispatch({
+              type: 'PREVIEW',
+              payload: {txPayload: txPayload, params, title, description, partialFee: info.partialFee.toNumber()},
+            });
+          });
 
           return new Promise((resolve) => {
             signatureRef.current = resolve;
@@ -102,63 +83,72 @@ function TxContextProvider({children}: PropTypes) {
             .filter(({event: {section, method}}) => section === 'system' && method === 'ExtrinsicFailed')
             // we know that data for system.ExtrinsicFailed is
             // (DispatchError, DispatchInfo)
-            .map(
-              ({
-                event: {
-                  data: [error],
-                },
-              }) => {
-                if ((error as any).isModule) {
-                  // for module errors, we have the section indexed, lookup
-                  const decoded = api.registry.findMetaError((error as any).asModule);
-                  const {documentation} = decoded;
+            .map((eventRecord) => {
+              const [dispatchError] = eventRecord.event.data as unknown as ITuple<[DispatchError]>;
 
-                  return documentation.join(' ').trim();
-                } else {
-                  // Other, CannotLookup, BadOrigin, no extra info
-                  return error.toString();
-                }
-              },
-            );
+              if (dispatchError.isModule) {
+                // for module errors, we have the section indexed, lookup
+                const decoded = api.registry.findMetaError(dispatchError.asModule);
+                const {documentation} = decoded;
+
+                return documentation.join(' ').trim();
+              } else {
+                // Other, CannotLookup, BadOrigin, no extra info
+                return dispatchError.toString();
+              }
+            });
 
           if (errors.length === 0 && status.isFinalized) {
-            setInProgress(false);
-            setStep('success');
+            dispatch({type: 'NEXT_STEP'});
           }
 
           if (errors.length !== 0) {
-            setStep('error');
-            setInProgress(false);
-            setErrorMsg(errors[0]);
+            dispatch({type: 'ERROR', payload: errors[0]});
           }
         }
       });
     } catch (e) {
-      setStep('error');
+      dispatch({type: 'ERROR', payload: e});
     }
   }, []);
 
-  const value = useMemo(
-    () => ({
-      start,
-    }),
-    [start],
-  );
-
   const modalContent = useMemo(() => {
-    switch (step) {
+    switch (state.step) {
       case 'none':
         return (
           <Layout style={styles.emptyState}>
             <Text>Preparing transaction payload...</Text>
           </Layout>
         );
+
+      case 'preview':
+        return (
+          <PreviewStep
+            transactionInfo={state.description}
+            transactionTitle={state.title}
+            txPayload={state.txPayload}
+            params={state.params}
+            partialFee={state.partialFee}
+            onCancel={() => {
+              modalRef.current?.close();
+              dispatch({type: 'RESET'});
+            }}
+            onConfirm={() => dispatch({type: 'NEXT_STEP'})}
+          />
+        );
+
       case 'payload':
-        return signerPayload && chainApi ? (
-          <Layout>
-            <TxPayloadQr api={chainApi} payload={signerPayload} onCancel={onDismiss} onConfirm={onScanSignature} />
-          </Layout>
-        ) : null;
+        return (
+          <TxPayloadQr
+            payload={state.txPayload}
+            onCancel={() => {
+              modalRef.current?.close();
+              dispatch({type: 'RESET'});
+            }}
+            onConfirm={() => dispatch({type: 'NEXT_STEP'})}
+          />
+        );
+
       case 'submitting':
         return (
           <Layout style={styles.infoContainer}>
@@ -168,25 +158,32 @@ function TxContextProvider({children}: PropTypes) {
             />
           </Layout>
         );
+
       case 'success':
         return (
           <Layout style={styles.infoContainer}>
-            <SuccessDialog text="Tx Success" onClosePress={onDismiss} />
+            <SuccessDialog
+              text="Tx Success"
+              onClosePress={() => {
+                modalRef.current?.close();
+                dispatch({type: 'RESET'});
+              }}
+            />
           </Layout>
         );
 
-      case 'error':
-        return (
-          <Layout style={styles.infoContainer}>
-            <ErrorDialog text="Tx Failed" msg={errorMsg} />
-          </Layout>
-        );
       case 'signature':
         return (
           // TODO: extract
-          <Layout>
+          <Layout style={globalStyles.paddedContainer}>
             <QRCodeScanner
-              onRead={handleSignatureScan}
+              onRead={(data) => {
+                dispatch({type: 'NEXT_STEP'});
+                signatureRef.current?.({
+                  id: id++,
+                  signature: `0x${data.data}`,
+                });
+              }}
               showMarker
               topContent={
                 <Text style={styles.title} category="label">
@@ -206,10 +203,19 @@ function TxContextProvider({children}: PropTypes) {
             />
           </Layout>
         );
+
+      case 'error':
+        return (
+          <Layout style={styles.infoContainer}>
+            <ErrorDialog text="Tx Failed" msg={state.error} />
+          </Layout>
+        );
       default:
         return null;
     }
-  }, [step, onScanSignature, signerPayload, handleSignatureScan, chainApi, errorMsg, onDismiss]);
+  }, [state]);
+
+  const value = useMemo(() => ({start}), [start]);
 
   return (
     <TxContext.Provider value={value}>
@@ -220,7 +226,10 @@ function TxContextProvider({children}: PropTypes) {
         scrollViewProps={{showsVerticalScrollIndicator: false}}
         adjustToContentHeight
         handlePosition="outside"
-        onClosed={reset}
+        onClosed={() => {
+          dispatch({type: 'RESET'});
+          signatureRef.current = undefined;
+        }}
         closeOnOverlayTap
         panGestureEnabled>
         {modalContent}
@@ -293,3 +302,61 @@ const styles = StyleSheet.create({
 });
 
 export default TxContextProvider;
+
+type State =
+  | {step: 'none' | 'signature' | 'submitting' | 'success'}
+  | {
+      step: 'preview';
+      txPayload: SignerPayloadJSON;
+      params: unknown[];
+      title: string;
+      description: string;
+      partialFee: number;
+    }
+  | {step: 'payload'; txPayload: SignerPayloadJSON}
+  | {step: 'error'; error: string};
+
+const initialState: State = {step: 'none'};
+
+type Action =
+  | {type: 'RESET'}
+  | {type: 'NEXT_STEP'}
+  | {type: 'ERROR'; payload: string}
+  | {
+      type: 'PREVIEW';
+      payload: {
+        txPayload: SignerPayloadJSON;
+        partialFee: number;
+        params: unknown[];
+        title: string;
+        description: string;
+      };
+    };
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case 'RESET':
+      return initialState;
+
+    case 'ERROR':
+      return {step: 'error', error: action.payload};
+
+    case 'PREVIEW':
+      return {step: 'preview', ...action.payload};
+
+    case 'NEXT_STEP': {
+      switch (state.step) {
+        case 'preview':
+          return {step: 'payload', txPayload: state.txPayload};
+        case 'payload':
+          return {step: 'signature'};
+        case 'signature':
+          return {step: 'submitting'};
+        case 'submitting':
+          return {step: 'success'};
+      }
+      break;
+    }
+  }
+  return state;
+}

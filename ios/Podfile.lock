@@ -475,7 +475,7 @@ SPEC CHECKSUMS:
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: 7b423f9e248eae65987838148c36eec1dbfe0b53
-  FBReactNativeSpec: fb7dea0944d2a3cb07b7ae51f11373d72023391a
+  FBReactNativeSpec: 76e8c515d6bbe78e087cd1f5296f67bc093e3870
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   Permission-Camera: 119b01de97a5b3edb637999e38476b68143b9d17
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
