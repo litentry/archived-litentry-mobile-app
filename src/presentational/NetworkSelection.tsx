@@ -13,8 +13,7 @@ function NetworkSelection({data, onSelect}: PropTypes) {
   const handleSelection = useCallback(
     (index: IndexPath) => {
       setSelectedIndex(index);
-      console.log(onSelect);
-      onSelect(data[index.row]);
+      onSelect(data[index.row]!);
     },
     [data, onSelect],
   );
@@ -24,7 +23,7 @@ function NetworkSelection({data, onSelect}: PropTypes) {
       label="Network"
       multiSelect={false}
       caption="Select network for this account"
-      value={selectedIndex && data[selectedIndex.row].name}
+      value={selectedIndex && data[selectedIndex.row]?.name}
       selectedIndex={selectedIndex}
       onSelect={(index) => handleSelection(index as IndexPath)}>
       {data.map((item) => (

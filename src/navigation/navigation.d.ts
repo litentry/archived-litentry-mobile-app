@@ -9,6 +9,7 @@ type DashboardStackParamList = {
     hash: string;
   };
   CouncilScreen: undefined;
+  SubmitTipScreen: undefined;
   TreasuryScreen: undefined;
   MotionsScreen: undefined;
 };

@@ -95,7 +95,9 @@ function DisplayJudgement(props: PropTypes) {
               <ListItem
                 title="Judgment"
                 accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="ribbon-outline" pack="ionic" />}
-                accessoryRight={() => <JudgmentStatus judgement={identity.judgements[0]} />}
+                accessoryRight={() =>
+                  identity?.judgements[0] ? <JudgmentStatus judgement={identity.judgements[0]} /> : <View />
+                }
               />
             )}
           <Menu style={styles.menu}>
@@ -162,7 +164,7 @@ function DisplayJudgement(props: PropTypes) {
           {subAccountsArray && subAccountsArray.length ? (
             <Menu style={styles.menu}>
               <MenuGroup title={`Sub accounts (${subAccountsArray.length})`} accessoryLeft={SubAccountsIcon}>
-                {subAccountsArray.map((addr: AccountId) => (
+                {subAccountsArray?.map((addr: AccountId) => (
                   <MenuItem
                     key={addr.toString()}
                     accessoryRight={() => (

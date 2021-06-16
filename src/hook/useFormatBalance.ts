@@ -24,40 +24,29 @@ export function useFormatBalance() {
   };
 }
 
-function getFormat(registry: Registry, formatIndex = 0): [number, string] {
+function getFormat(registry: Registry): [number, string] {
   const decimals = registry.chainDecimals;
   const tokens = registry.chainTokens;
 
-  return [
-    formatIndex < decimals.length ? decimals[formatIndex] : decimals[0],
-    formatIndex < tokens.length ? tokens[formatIndex] : tokens[1],
-  ];
+  return [decimals[0] ?? 0, tokens[0] ?? ''];
 }
+
 // for million, 2 * 3-grouping + comma
 const M_LENGTH = 6 + 1;
-const K_LENGTH = 3 + 1;
 
-function format(
-  value: Compact<any> | BN | string,
-  [decimals, token]: [number, string],
-  withCurrency = true,
-  withSi?: boolean,
-  _isShort?: boolean,
-  labelPost?: string,
-): string {
-  const [prefix, postfix] = formatBalance(value, {decimals, forceUnit: '-', withSi: false}).split('.');
-  const isShort = _isShort || (withSi && prefix.length >= K_LENGTH);
-  const unitPost = withCurrency ? token : '';
+function format(value: Compact<any> | BN | string, [decimals, token]: [number, string]): string {
+  const [prefix = '', postfix = ''] = formatBalance(value, {decimals, forceUnit: '-', withSi: false}).split('.');
+  const unitPost = '';
 
   if (prefix.length > M_LENGTH) {
     const [major, rest] = formatBalance(value, {decimals, withUnit: false}).split('.');
-    const minor = rest.substr(0, 4);
-    const unit = rest.substr(4);
+    const minor = rest?.substr(0, 4);
+    const unit = rest?.substr(4);
 
-    return `${major}.${minor} ${unit} ${unit ? unitPost : ' ' + unitPost} ${labelPost}`;
+    return `${major}.${minor} ${unit} ${unit ? unitPost : ' ' + unitPost}`;
   }
 
-  return formatDisplay(prefix, postfix, unitPost, labelPost, isShort);
+  return formatDisplay(prefix, postfix, unitPost);
 }
 
 function formatDisplay(prefix: string, postfix: string, unit: string, label = '', isShort = false): string {

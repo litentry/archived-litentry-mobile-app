@@ -15,6 +15,7 @@ import {ChainApiContext} from 'context/ChainApiContext';
 import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
 import {NetworkSelectScreen} from 'screen/NetworkSelectScreen';
 import {CouncilScreen} from 'screen/Council/CouncilScreen';
+import {SubmitTipScreen} from 'screen/SubmitTipScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
 
@@ -29,6 +30,7 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.tipDetail} component={TipDetailScreen} />
       <DashboardStack.Screen name={routeKeys.councilScreen} component={CouncilScreen} />
       <DashboardStack.Screen name={routeKeys.treasuryScreen} component={TreasuryScreen} />
+      <DashboardStack.Screen name={routeKeys.submitTip} component={SubmitTipScreen} />
       <DashboardStack.Screen name={routeKeys.motionsScreen} component={MotionsScreen} />
     </DashboardStack.Navigator>
   );

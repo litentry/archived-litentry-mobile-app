@@ -3,6 +3,7 @@ import type {Option} from '@polkadot/types';
 import type {OpenTip, OpenTipTo225} from '@polkadot/types/interfaces';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {useAsyncRetry} from 'react-use';
+import {useQuery} from 'react-query';
 
 export type Tip = [string, OpenTip | OpenTipTo225];
 
@@ -14,7 +15,7 @@ function extractTips(tipsWithHashes?: [string[], Option<OpenTip>[]], inHashes?: 
   const [hashes, optTips] = tipsWithHashes;
 
   return optTips
-    .map((opt, index): [string, OpenTip | null] => [hashes[index], opt.unwrapOr(null)])
+    ?.map((opt, index): [string, OpenTip | null] => [hashes[index]!, opt.unwrapOr(null)])
     .filter((val): val is [string, OpenTip] => inHashes.includes(val[0]) && !!val[1])
     .sort((a, b) =>
       a[1].closes.isNone
@@ -30,7 +31,7 @@ function extractTips(tipsWithHashes?: [string[], Option<OpenTip>[]], inHashes?: 
 export function useTips() {
   const {api} = useContext(ChainApiContext);
 
-  return useAsyncRetry(async () => {
+  return useQuery('tips', async () => {
     if (!api) {
       throw new Error('Api not defined');
     }
@@ -40,5 +41,5 @@ export function useTips() {
       const tips: Option<OpenTip>[] = await api.query.tips.tips.multi(hashes);
       return extractTips([hashes, tips], hashes);
     }
-  }, [api]);
+  });
 }

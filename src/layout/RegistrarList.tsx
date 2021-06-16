@@ -25,8 +25,8 @@ function RegistrarList() {
     );
   }
 
-  const lowestFee = formatBalance(sortedRegistrars[0].fee);
-  const highestFee = formatBalance(sortedRegistrars[sortedRegistrars.length - 1].fee);
+  const lowestFee = formatBalance(sortedRegistrars[0]?.fee);
+  const highestFee = formatBalance(sortedRegistrars[sortedRegistrars.length - 1]?.fee);
 
   return (
     <View style={globalStyles.paddedContainer}>

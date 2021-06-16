@@ -11,9 +11,12 @@ import TxContextProvider from 'context/TxContext';
 import AppNavigator from 'src/navigation/AppNavigator';
 import {IonicIconsPack} from './Ionic-icons';
 import {ErrorBoundary} from 'src/ErrorBoundary';
+import {QueryClient, QueryClientProvider} from 'react-query';
 
 // init type registry
 import 'src/typeRegistry';
+
+const queryClient = new QueryClient();
 
 export default function App() {
   const {theme} = useContext(ThemeContext);
@@ -25,13 +28,15 @@ export default function App() {
         <ErrorBoundary>
           <Host>
             <ChainApiContextProvider>
-              <AccountContextProvider>
-                <BalanceContextProvider>
-                  <TxContextProvider>
-                    <AppNavigator />
-                  </TxContextProvider>
-                </BalanceContextProvider>
-              </AccountContextProvider>
+              <QueryClientProvider client={queryClient}>
+                <AccountContextProvider>
+                  <BalanceContextProvider>
+                    <TxContextProvider>
+                      <AppNavigator />
+                    </TxContextProvider>
+                  </BalanceContextProvider>
+                </AccountContextProvider>
+              </QueryClientProvider>
             </ChainApiContextProvider>
           </Host>
         </ErrorBoundary>
