@@ -16,7 +16,6 @@ type PropTypes = {
   onClose: () => void;
   onSelect: (index: number, fee?: BN) => void;
 };
-const AlertIcon = (props: IconProps) => <Icon {...props} name="alert-circle-outline" />;
 
 function RegistrarSelectionModal({onSelect, visible, onClose}: PropTypes) {
   const [selectedRegistrar, setSelectedRegistrar] = useState<IndexPath | IndexPath[]>();
@@ -98,7 +97,7 @@ function RegistrarSelectionModal({onSelect, visible, onClose}: PropTypes) {
           label="Fee"
           placeholder="Fee for judgement"
           caption="Fee paid to Registrar for providing the Judgement"
-          captionIcon={AlertIcon}
+          accessoryRight={(props: IconProps) => <Icon {...props} name="alert-circle-outline" />}
         />
       </Card>
     </Modal>
