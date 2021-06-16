@@ -3,10 +3,18 @@ import {View, StyleSheet, ScrollView} from 'react-native';
 import {Input, Button, Icon, IconProps} from '@ui-kitten/components';
 import {WHITESPACE, validateFormField} from 'src/utils';
 import FormLabel from 'presentational/FormLabel';
-import {IdentityInfo} from 'src/types';
+
+export type IdentityPayload = {
+  display: {raw: string} | {none: null};
+  legal: {raw: string} | {none: null};
+  email: {raw: string} | {none: null};
+  riot: {raw: string} | {none: null};
+  twitter: {raw: string} | {none: null};
+  web: {raw: string} | {none: null};
+};
 
 type IdentityInfoFormProps = {
-  onSubmit: (identityInfo: IdentityInfo) => void;
+  onSubmit: (identityPayload: IdentityPayload) => void;
 };
 
 type FormStatus = Record<
@@ -14,21 +22,7 @@ type FormStatus = Record<
   boolean
 >;
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-  },
-  formFieldContainer: {
-    paddingHorizontal: 10,
-    marginTop: 15,
-  },
-  submitButtonContainer: {
-    paddingHorizontal: 10,
-    marginVertical: 25,
-  },
-});
-
-function IdentityInfoForm({onSubmit}: IdentityInfoFormProps) {
+function IdentityInfoForm({onSubmit}: IdentityInfoFormProps): React.ReactElement {
   const [display, setDisplay] = React.useState<string>('');
   const [email, setEmail] = React.useState<string>('');
   const [legal, setLegal] = React.useState<string>('');
@@ -163,3 +157,17 @@ function IdentityInfoForm({onSubmit}: IdentityInfoFormProps) {
 }
 
 export default IdentityInfoForm;
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+  },
+  formFieldContainer: {
+    paddingHorizontal: 10,
+    marginTop: 15,
+  },
+  submitButtonContainer: {
+    paddingHorizontal: 10,
+    marginVertical: 25,
+  },
+});
