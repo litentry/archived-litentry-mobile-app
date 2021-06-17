@@ -16,8 +16,9 @@ import {TxContext} from 'context/TxContext';
 import {EmptyView} from 'presentational/EmptyView';
 import Padder from 'presentational/Padder';
 import type {Codec, IExtrinsic, IMethod, TypeDef} from '@polkadot/types/types';
-import {Enum, GenericCall, getTypeDef} from '@polkadot/types';
-import type {ExtrinsicSignature} from '@polkadot/types/interfaces';
+import {GenericCall, getTypeDef} from '@polkadot/types';
+import {Account, AccountName} from 'presentational/Account';
+import Identicon from '@polkadot/reactnative-identicon';
 
 export function MotionsScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {api} = useContext(ChainApiContext);
@@ -82,7 +83,7 @@ function Motion({item, members}: {item: DeriveCollectiveProposal; members: strin
 
   const [open, setOpen] = useState(false);
 
-  console.log(JSON.stringify(extractState(proposal), null, 2));
+  const extractedState = extractState(proposal);
 
   return (
     <View style={motionStyle.container}>
@@ -170,9 +171,30 @@ function Motion({item, members}: {item: DeriveCollectiveProposal; members: strin
         ) : null}
       </View>
       {open ? (
-        <Text category={'c1'} style={[motionStyle.desc, {color: theme['color-basic-600']}]}>{`${formatCallMeta(
-          meta,
-        )}`}</Text>
+        <>
+          <Text category={'c1'} style={[motionStyle.desc, {color: theme['color-basic-600']}]}>{`${formatCallMeta(
+            meta,
+          )}`}</Text>
+          {extractedState.params.map((p) => {
+            if (p.type.type === 'AccountId' && p.value) {
+              return (
+                <Account id={p.value.toString()}>
+                  <View style={motionStyle.paramRow}>
+                    <Text>{p.name}: </Text>
+                    <Identicon value={p.value.toString()} size={30} />
+                    <Padder scale={0.3} />
+                    <AccountName />
+                  </View>
+                </Account>
+              );
+            }
+            return (
+              <View style={motionStyle.paramRow}>
+                <Text>{`${p.name}: ${p.value?.toString()}`}</Text>
+              </View>
+            );
+          })}
+        </>
       ) : null}
     </View>
   );
@@ -185,6 +207,7 @@ const motionStyle = StyleSheet.create({
   title: {},
   desc: {paddingHorizontal: standardPadding},
   buttons: {display: 'flex', flexDirection: 'row'},
+  paramRow: {flexDirection: 'row', alignItems: 'center', padding: standardPadding},
 });
 
 interface Result {
@@ -234,31 +257,17 @@ function splitParts(value: string): string[] {
 interface Param {
   name: string;
   type: TypeDef;
+  value?: Codec;
 }
 
-interface Value {
-  isValid: boolean;
-  value: Codec;
-}
-
-interface Extracted {
-  params: Param[];
-  values: Value[];
-}
-
-function extractState(value: IExtrinsic | IMethod): Extracted {
+function extractState(value: IExtrinsic | IMethod): {params: Param[]} {
   const params = GenericCall.filterOrigin(value.meta).map(
-    ({name, type}): Param => ({
+    ({name, type}, k): Param => ({
       name: name.toString(),
       type: getTypeDef(type.toString()),
-    }),
-  );
-  const values = value.args.map(
-    (value): Value => ({
-      isValid: true,
-      value,
+      value: value.args[k],
     }),
   );
 
-  return {params, values};
+  return {params};
 }
