@@ -6,21 +6,19 @@ import {NavigationProp} from '@react-navigation/native';
 import {ChainApiContext} from 'context/ChainApiContext';
 import useAsyncRetry from 'react-use/lib/useAsyncRetry';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {Balance, FunctionMetadataLatest, ProposalIndex} from '@polkadot/types/interfaces';
-import {formatNumber, isU8a, u8aToString} from '@polkadot/util';
+import {FunctionMetadataLatest, ProposalIndex} from '@polkadot/types/interfaces';
+import {formatNumber} from '@polkadot/util';
 import {AccountContext} from 'context/AccountContextProvider';
 import {useVotingStatus} from '../../hook/useVotingStatus';
 import type {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
 import {TxContext} from 'context/TxContext';
 import {EmptyView} from 'presentational/EmptyView';
 import Padder from 'presentational/Padder';
-import type {Codec, IExtrinsic, IMethod, TypeDef} from '@polkadot/types/types';
+import type {IExtrinsic, IMethod} from '@polkadot/types/types';
 import {Compact, GenericCall, getTypeDef} from '@polkadot/types';
-import {Account, AccountName} from 'presentational/Account';
-import Identicon from '@polkadot/reactnative-identicon';
 import {useCouncilMembers} from 'screen/Council/CouncilScreen';
 import {useQuery} from 'react-query';
-import {useFormatBalance} from '../../hook/useFormatBalance';
+import {Param, Params} from 'presentational/Params';
 
 export function MotionsScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {api} = useContext(ChainApiContext);
@@ -92,16 +90,14 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
       enabled: !!proposalId,
     },
   );
-
-  const [open, setOpen] = useState(false);
-  const formatBalance = useFormatBalance();
-
   const extractedParams = extractParams(proposal);
   if (treasuryProposal) {
     extractedParams.push({type: getTypeDef('AccountId'), value: treasuryProposal.beneficiary, name: 'beneficiary'});
     extractedParams.push({type: getTypeDef('AccountId'), value: treasuryProposal.proposer, name: 'proposer'});
     extractedParams.push({type: getTypeDef('Balance'), value: treasuryProposal.value, name: 'payout'});
   }
+
+  const [open, setOpen] = useState(false);
 
   return (
     <View style={motionStyle.container}>
@@ -199,48 +195,12 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
         })()}
       </View>
       {open ? (
-        <View style={[motionStyle.footer, {backgroundColor: theme['color-basic-700']}]}>
+        <View style={motionStyle.footer}>
           <Text category={'c1'} style={[motionStyle.desc, {color: theme['color-basic-600']}]}>{`${formatCallMeta(
             meta,
           )}`}</Text>
           <Padder scale={1} />
-          {extractedParams.map((p) => {
-            if (p.type.type === 'AccountId' && p.value) {
-              return (
-                <Account id={p.value.toString()}>
-                  <View style={motionStyle.paramRow}>
-                    <Text>{p.name}: </Text>
-                    <Identicon value={p.value.toString()} size={20} />
-                    <Padder scale={0.3} />
-                    <AccountName />
-                  </View>
-                </Account>
-              );
-            }
-
-            if (p.type.type === 'Bytes' && p.value && isU8a(p.value)) {
-              return (
-                <View style={motionStyle.paramRow}>
-                  <Text>{`${p.name}: ${u8aToString(p.value)}`}</Text>
-                </View>
-              );
-            }
-
-            if (p.type.type === 'Balance' && p.value) {
-              return (
-                <View style={motionStyle.paramRow}>
-                  <Text>{p.name}: </Text>
-                  <Text>{formatBalance(p.value as Balance)}</Text>
-                </View>
-              );
-            }
-
-            return (
-              <View style={motionStyle.paramRow}>
-                <Text>{`${p.name}: ${p.value}`}</Text>
-              </View>
-            );
-          })}
+          <Params data={extractedParams} />
         </View>
       ) : null}
     </View>
@@ -304,12 +264,6 @@ function splitSingle(value: string[], sep: string): string[] {
 
 function splitParts(value: string): string[] {
   return ['[', ']'].reduce((result: string[], sep) => splitSingle(result, sep), [value]);
-}
-
-interface Param {
-  name: string;
-  type: TypeDef;
-  value?: Codec;
 }
 
 function extractParams(value: IExtrinsic | IMethod): Param[] {
