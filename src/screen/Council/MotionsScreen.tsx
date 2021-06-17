@@ -11,6 +11,7 @@ import {formatNumber} from '@polkadot/util';
 import {AccountContext} from 'context/AccountContextProvider';
 import {useVotingStatus} from '../../hook/useVotingStatus';
 import type {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
+import type {Call} from '@polkadot/types/interfaces';
 import {TxContext} from 'context/TxContext';
 import {EmptyView} from 'presentational/EmptyView';
 import Padder from 'presentational/Padder';
@@ -67,8 +68,6 @@ export function MotionsScreen({navigation}: {navigation: NavigationProp<Dashboar
 
 const styles = StyleSheet.create({flatList: {padding: standardPadding * 2}});
 
-const METHOD_TREA = ['approveProposal', 'rejectProposal'];
-
 function Motion({item}: {item: DeriveCollectiveProposal}) {
   const theme = useTheme();
   const {api} = useContext(ChainApiContext);
@@ -81,21 +80,7 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
   const {isCloseable, isVoteable} = useVotingStatus(votes, members.length, 'council');
 
   const {meta, method, section} = proposal.registry.findMetaCall(proposal.callIndex);
-  const isTreasury = section === 'treasury' && METHOD_TREA.includes(method);
-  const proposalId = isTreasury ? (proposal.args[0] as Compact<ProposalIndex>).unwrap() : undefined;
-  const {data: treasuryProposal} = useQuery(
-    ['proposal', proposalId?.toString()],
-    () => (proposalId ? api?.query.treasury.proposals(proposalId).then((p) => p.unwrapOr(undefined)) : undefined),
-    {
-      enabled: !!proposalId,
-    },
-  );
-  const extractedParams = extractParams(proposal);
-  if (treasuryProposal) {
-    extractedParams.push({type: getTypeDef('AccountId'), value: treasuryProposal.beneficiary, name: 'beneficiary'});
-    extractedParams.push({type: getTypeDef('AccountId'), value: treasuryProposal.proposer, name: 'proposer'});
-    extractedParams.push({type: getTypeDef('Balance'), value: treasuryProposal.value, name: 'payout'});
-  }
+  const params = useParams(proposal);
 
   const [open, setOpen] = useState(false);
 
@@ -200,7 +185,7 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
             meta,
           )}`}</Text>
           <Padder scale={1} />
-          <Params data={extractedParams} />
+          <Params data={params} />
         </View>
       ) : null}
     </View>
@@ -215,12 +200,6 @@ const motionStyle = StyleSheet.create({
   desc: {paddingHorizontal: standardPadding},
   buttons: {display: 'flex', flexDirection: 'row'},
   footer: {paddingVertical: standardPadding, paddingHorizontal: standardPadding / 2},
-  paramRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: standardPadding,
-    paddingVertical: standardPadding / 3,
-  },
 });
 
 interface Result {
@@ -240,6 +219,34 @@ export function useMembers(): Result {
     };
   }, [accounts, councilMembers]);
 }
+
+const METHOD_TREA = ['approveProposal', 'rejectProposal'];
+function useParams(proposal: Call) {
+  const {api} = useContext(ChainApiContext);
+  const {method, section} = proposal.registry.findMetaCall(proposal.callIndex);
+  const isTreasury = section === 'treasury' && METHOD_TREA.includes(method);
+  const proposalId = isTreasury ? (proposal.args[0] as Compact<ProposalIndex>).unwrap() : undefined;
+  const {data: treasuryProposal} = useQuery(
+    ['proposal', proposalId?.toString()],
+    () => (proposalId ? api?.query.treasury.proposals(proposalId).then((p) => p.unwrapOr(undefined)) : undefined),
+    {
+      enabled: !!proposalId,
+    },
+  );
+  const extractedParams = extractParams(proposal);
+  if (treasuryProposal) {
+    extractedParams.push({type: getTypeDef('AccountId'), value: treasuryProposal.beneficiary, name: 'beneficiary'});
+    extractedParams.push({type: getTypeDef('AccountId'), value: treasuryProposal.proposer, name: 'proposer'});
+    extractedParams.push({type: getTypeDef('Balance'), value: treasuryProposal.value, name: 'payout'});
+  }
+  return extractedParams;
+}
+
+/**
+ * functions bellow help extract useful data
+ * from each motion object. they are mostly loosely copied from
+ * https://github.com/polkadot-js/apps/blob/master/packages/react-components/src/Call.tsx
+ */
 
 export function formatCallMeta(meta?: FunctionMetadataLatest): string {
   if (!meta || !meta.documentation.length) {
