@@ -15,6 +15,9 @@ import type {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
 import {TxContext} from 'context/TxContext';
 import {EmptyView} from 'presentational/EmptyView';
 import Padder from 'presentational/Padder';
+import type {Codec, IExtrinsic, IMethod, TypeDef} from '@polkadot/types/types';
+import {Enum, GenericCall, getTypeDef} from '@polkadot/types';
+import type {ExtrinsicSignature} from '@polkadot/types/interfaces';
 
 export function MotionsScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {api} = useContext(ChainApiContext);
@@ -78,6 +81,8 @@ function Motion({item, members}: {item: DeriveCollectiveProposal; members: strin
   const {meta, method, section} = proposal.registry.findMetaCall(proposal.callIndex);
 
   const [open, setOpen] = useState(false);
+
+  console.log(JSON.stringify(extractState(proposal), null, 2));
 
   return (
     <View style={motionStyle.container}>
@@ -224,4 +229,36 @@ function splitSingle(value: string[], sep: string): string[] {
 
 function splitParts(value: string): string[] {
   return ['[', ']'].reduce((result: string[], sep) => splitSingle(result, sep), [value]);
+}
+
+interface Param {
+  name: string;
+  type: TypeDef;
+}
+
+interface Value {
+  isValid: boolean;
+  value: Codec;
+}
+
+interface Extracted {
+  params: Param[];
+  values: Value[];
+}
+
+function extractState(value: IExtrinsic | IMethod): Extracted {
+  const params = GenericCall.filterOrigin(value.meta).map(
+    ({name, type}): Param => ({
+      name: name.toString(),
+      type: getTypeDef(type.toString()),
+    }),
+  );
+  const values = value.args.map(
+    (value): Value => ({
+      isValid: true,
+      value,
+    }),
+  );
+
+  return {params, values};
 }
