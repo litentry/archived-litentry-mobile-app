@@ -7,10 +7,10 @@ import {ChainApiContext} from 'context/ChainApiContext';
 import useAsyncRetry from 'react-use/lib/useAsyncRetry';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {FunctionMetadataLatest} from '@polkadot/types/interfaces';
-import {formatNumber} from '@polkadot/util';
+import {formatNumber, u8aToString} from '@polkadot/util';
 import {AccountContext} from 'context/AccountContextProvider';
-import {useQuery} from 'react-query';
 import {useVotingStatus} from '../../hook/useVotingStatus';
+import {isU8a} from '@polkadot/util';
 import type {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
 import {TxContext} from 'context/TxContext';
 import {EmptyView} from 'presentational/EmptyView';
@@ -38,8 +38,6 @@ export function MotionsScreen({navigation}: {navigation: NavigationProp<Dashboar
     }
   }, [api]);
 
-  const {members} = useMembers();
-
   return (
     <Layout style={globalStyles.flex}>
       <ScreenNavigation
@@ -58,7 +56,7 @@ export function MotionsScreen({navigation}: {navigation: NavigationProp<Dashboar
         style={styles.flatList}
         data={data}
         renderItem={({item}) => {
-          return <Motion item={item} members={members} />;
+          return <Motion item={item} />;
         }}
         ItemSeparatorComponent={Divider}
         keyExtractor={(item) => item.hash.toHex()}
@@ -70,7 +68,7 @@ export function MotionsScreen({navigation}: {navigation: NavigationProp<Dashboar
 
 const styles = StyleSheet.create({flatList: {padding: standardPadding * 2}});
 
-function Motion({item, members}: {item: DeriveCollectiveProposal; members: string[]}) {
+function Motion({item}: {item: DeriveCollectiveProposal}) {
   const theme = useTheme();
   const {api} = useContext(ChainApiContext);
   const {start} = useContext(TxContext);
@@ -78,6 +76,7 @@ function Motion({item, members}: {item: DeriveCollectiveProposal; members: strin
   const account = accounts?.[0];
 
   const {votes, proposal, hash} = item;
+  const {members, isMember} = useMembers();
   const {isCloseable, isVoteable} = useVotingStatus(votes, members.length, 'council');
 
   const {meta, method, section} = proposal.registry.findMetaCall(proposal.callIndex);
@@ -103,99 +102,119 @@ function Motion({item, members}: {item: DeriveCollectiveProposal; members: strin
         {/*<Text>{formatNumber(votes?.threshold)}</Text>*/}
         <Text category={'c1'}>{`Aye ${votes?.ayes.length}/${members.length} `}</Text>
         <Padder scale={0.5} />
-        {isCloseable ? (
-          <View>
-            <Button
-              status={'warning'}
-              size={'tiny'}
-              onPress={() => {
-                if (api && account) {
-                  start({
-                    api,
-                    address: account.address,
-                    title: 'treasury.approveProposal',
-                    description:
-                      'Approve a proposal. At a later time, the proposal will be allocated to the beneficiary and the original deposit will be returned.',
-                    params:
-                      api.tx.council.close?.meta.args.length === 4 ? [hash, votes?.index, 0, 0] : [hash, votes?.index],
-                    txMethod: 'council.close',
-                  })
-                    .then(() => console.log('success'))
-                    .catch((e) => console.warn(e));
-                }
-              }}>
-              Close
-            </Button>
-          </View>
-        ) : isVoteable ? (
-          <View style={motionStyle.buttons}>
-            <Button
-              status={'danger'}
-              size={'tiny'}
-              onPress={() => {
-                if (api && account) {
-                  start({
-                    api,
-                    address: account.address,
-                    title: 'council.vote(proposal, index, approve)',
-                    description: 'Add a nay vote for the sender to the given proposal.',
-                    params: [hash, votes?.index, false],
-                    txMethod: 'council.vote',
-                  })
-                    .then(() => console.log('success'))
-                    .catch((e) => console.warn(e));
-                }
-              }}>
-              Nay
-            </Button>
-            <Padder scale={0.5} />
-            <Button
-              status={'success'}
-              size={'tiny'}
-              onPress={() => {
-                if (api && account) {
-                  start({
-                    api,
-                    address: account.address,
-                    title: 'council.vote(proposal, index, approve)',
-                    description: 'Add an aye vote for the sender to the given proposal.',
-                    params: [hash, votes?.index, true],
-                    txMethod: 'council.vote',
-                  })
-                    .then(() => console.log('success'))
-                    .catch((e) => console.warn(e));
-                }
-              }}>
-              Aye
-            </Button>
-          </View>
-        ) : null}
+        {(() => {
+          if (isMember) {
+            if (isCloseable) {
+              return (
+                <View>
+                  <Button
+                    status={'warning'}
+                    size={'tiny'}
+                    onPress={() => {
+                      if (api && account) {
+                        start({
+                          api,
+                          address: account.address,
+                          title: 'treasury.approveProposal',
+                          description:
+                            'Approve a proposal. At a later time, the proposal will be allocated to the beneficiary and the original deposit will be returned.',
+                          params:
+                            api.tx.council.close?.meta.args.length === 4
+                              ? [hash, votes?.index, 0, 0]
+                              : [hash, votes?.index],
+                          txMethod: 'council.close',
+                        })
+                          .then(() => console.log('success'))
+                          .catch((e) => console.warn(e));
+                      }
+                    }}>
+                    Close
+                  </Button>
+                </View>
+              );
+            } else if (isVoteable) {
+              return (
+                <View style={motionStyle.buttons}>
+                  <Button
+                    status={'danger'}
+                    size={'tiny'}
+                    onPress={() => {
+                      if (api && account) {
+                        start({
+                          api,
+                          address: account.address,
+                          title: 'council.vote(proposal, index, approve)',
+                          description: 'Add a nay vote for the sender to the given proposal.',
+                          params: [hash, votes?.index, false],
+                          txMethod: 'council.vote',
+                        })
+                          .then(() => console.log('success'))
+                          .catch((e) => console.warn(e));
+                      }
+                    }}>
+                    Nay
+                  </Button>
+                  <Padder scale={0.5} />
+                  <Button
+                    status={'success'}
+                    size={'tiny'}
+                    onPress={() => {
+                      if (api && account) {
+                        start({
+                          api,
+                          address: account.address,
+                          title: 'council.vote(proposal, index, approve)',
+                          description: 'Add an aye vote for the sender to the given proposal.',
+                          params: [hash, votes?.index, true],
+                          txMethod: 'council.vote',
+                        })
+                          .then(() => console.log('success'))
+                          .catch((e) => console.warn(e));
+                      }
+                    }}>
+                    Aye
+                  </Button>
+                </View>
+              );
+            }
+          }
+        })()}
       </View>
       {open ? (
-        <>
+        <View style={[motionStyle.footer, {backgroundColor: theme['color-basic-700']}]}>
           <Text category={'c1'} style={[motionStyle.desc, {color: theme['color-basic-600']}]}>{`${formatCallMeta(
             meta,
           )}`}</Text>
+          <Padder scale={1} />
           {extractedState.params.map((p) => {
             if (p.type.type === 'AccountId' && p.value) {
               return (
                 <Account id={p.value.toString()}>
                   <View style={motionStyle.paramRow}>
                     <Text>{p.name}: </Text>
-                    <Identicon value={p.value.toString()} size={30} />
+                    <Identicon value={p.value.toString()} size={20} />
                     <Padder scale={0.3} />
                     <AccountName />
                   </View>
                 </Account>
               );
             }
+
+            if (p.type.type === 'Bytes' && p.value && isU8a(p.value)) {
+              return (
+                <View style={motionStyle.paramRow}>
+                  <Text>{`${p.name}: ${u8aToString(p.value)}`}</Text>
+                </View>
+              );
+            }
+
             return (
               <View style={motionStyle.paramRow}>
-                <Text>{`${p.name}: ${p.value?.toString()}`}</Text>
+                <Text>{`${p.name}: ${p.value}`}</Text>
               </View>
             );
           })}
-        </>
+        </View>
       ) : null}
     </View>
   );
@@ -208,7 +227,13 @@ const motionStyle = StyleSheet.create({
   title: {},
   desc: {paddingHorizontal: standardPadding},
   buttons: {display: 'flex', flexDirection: 'row'},
-  paramRow: {flexDirection: 'row', alignItems: 'center', padding: standardPadding},
+  footer: {paddingVertical: standardPadding, paddingHorizontal: standardPadding / 2},
+  paramRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: standardPadding,
+    paddingVertical: standardPadding / 3,
+  },
 });
 
 interface Result {
