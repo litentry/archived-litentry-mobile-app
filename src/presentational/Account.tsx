@@ -12,7 +12,6 @@ export function Account({id, children}: {id: string; children: React.ReactNode})
 
   const {value} = useAsyncRetry(async () => (api ? await getAccountsIdentityInfo([id], api) : undefined), [api, id]);
   const account = value?.[0];
-  console.log(value);
 
   if (!account) {
     return null;

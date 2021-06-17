@@ -19,6 +19,7 @@ import type {Codec, IExtrinsic, IMethod, TypeDef} from '@polkadot/types/types';
 import {GenericCall, getTypeDef} from '@polkadot/types';
 import {Account, AccountName} from 'presentational/Account';
 import Identicon from '@polkadot/reactnative-identicon';
+import {useCouncilMembers} from 'screen/Council/CouncilScreen';
 
 export function MotionsScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {api} = useContext(ChainApiContext);
@@ -215,18 +216,17 @@ interface Result {
   members: string[];
 }
 
-export function useMembers(collective: 'council' | 'technicalCommittee' = 'council'): Result {
-  const {api} = useContext(ChainApiContext);
+export function useMembers(): Result {
   const {accounts} = useContext(AccountContext);
-  const {data: retrieved} = useQuery('members', () => api?.query[collective]?.members());
+  const {data: councilMembers} = useCouncilMembers();
 
   return useMemo(() => {
-    const members = retrieved?.map((r) => r.toString()) || [];
+    const members = councilMembers?.map((r) => r.accountId.toString()) || [];
     return {
       isMember: members.some((accountId) => accounts?.find((a) => a.address.toString() === accountId.toString())),
       members,
     };
-  }, [accounts, retrieved]);
+  }, [accounts, councilMembers]);
 }
 
 export function formatCallMeta(meta?: FunctionMetadataLatest): string {

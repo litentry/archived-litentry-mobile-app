@@ -4,28 +4,16 @@ import globalStyles, {standardPadding} from 'src/styles';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {u8aToString} from '@polkadot/util';
-import useAsyncRetry from 'react-use/lib/useAsyncRetry';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import {NavigationProp} from '@react-navigation/native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {getAccountsIdentityInfo} from 'service/api/account';
 import {EmptyView} from 'presentational/EmptyView';
+import {useQuery} from 'react-query';
 
 export function CouncilScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
-  const {api} = useContext(ChainApiContext);
-
-  const {loading, value: data} = useAsyncRetry(async () => {
-    try {
-      if (!api) {
-        return;
-      }
-      const accountIds = await api.query.council.members();
-      return await getAccountsIdentityInfo(accountIds, api);
-    } catch (e) {
-      console.warn(e);
-    }
-  }, [api]);
+  const {data, isLoading} = useCouncilMembers();
 
   return (
     <Layout style={globalStyles.flex}>
@@ -48,7 +36,7 @@ export function CouncilScreen({navigation}: {navigation: NavigationProp<Dashboar
             Motions
           </Button>
         </View>
-        {loading ? (
+        {isLoading ? (
           <View style={globalStyles.centeredContainer}>
             <Spinner />
           </View>
@@ -86,3 +74,13 @@ const styles = StyleSheet.create({
   listHeader: {justifyContent: 'space-between', flexDirection: 'row', padding: standardPadding * 3},
   content: {paddingVertical: standardPadding, paddingHorizontal: standardPadding * 2},
 });
+
+export function useCouncilMembers() {
+  const {api} = useContext(ChainApiContext);
+  return useQuery('members', async () => {
+    const accountIds = await api?.query.council.members();
+    if (accountIds && api) {
+      return getAccountsIdentityInfo(accountIds, api);
+    }
+  });
+}
