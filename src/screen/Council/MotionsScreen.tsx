@@ -6,20 +6,21 @@ import {NavigationProp} from '@react-navigation/native';
 import {ChainApiContext} from 'context/ChainApiContext';
 import useAsyncRetry from 'react-use/lib/useAsyncRetry';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {FunctionMetadataLatest} from '@polkadot/types/interfaces';
-import {formatNumber, u8aToString} from '@polkadot/util';
+import {Balance, FunctionMetadataLatest, ProposalIndex} from '@polkadot/types/interfaces';
+import {formatNumber, isU8a, u8aToString} from '@polkadot/util';
 import {AccountContext} from 'context/AccountContextProvider';
 import {useVotingStatus} from '../../hook/useVotingStatus';
-import {isU8a} from '@polkadot/util';
 import type {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
 import {TxContext} from 'context/TxContext';
 import {EmptyView} from 'presentational/EmptyView';
 import Padder from 'presentational/Padder';
 import type {Codec, IExtrinsic, IMethod, TypeDef} from '@polkadot/types/types';
-import {GenericCall, getTypeDef} from '@polkadot/types';
+import {Compact, GenericCall, getTypeDef} from '@polkadot/types';
 import {Account, AccountName} from 'presentational/Account';
 import Identicon from '@polkadot/reactnative-identicon';
 import {useCouncilMembers} from 'screen/Council/CouncilScreen';
+import {useQuery} from 'react-query';
+import {useFormatBalance} from '../../hook/useFormatBalance';
 
 export function MotionsScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {api} = useContext(ChainApiContext);
@@ -68,6 +69,8 @@ export function MotionsScreen({navigation}: {navigation: NavigationProp<Dashboar
 
 const styles = StyleSheet.create({flatList: {padding: standardPadding * 2}});
 
+const METHOD_TREA = ['approveProposal', 'rejectProposal'];
+
 function Motion({item}: {item: DeriveCollectiveProposal}) {
   const theme = useTheme();
   const {api} = useContext(ChainApiContext);
@@ -80,10 +83,25 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
   const {isCloseable, isVoteable} = useVotingStatus(votes, members.length, 'council');
 
   const {meta, method, section} = proposal.registry.findMetaCall(proposal.callIndex);
+  const isTreasury = section === 'treasury' && METHOD_TREA.includes(method);
+  const proposalId = isTreasury ? (proposal.args[0] as Compact<ProposalIndex>).unwrap() : undefined;
+  const {data: treasuryProposal} = useQuery(
+    ['proposal', proposalId?.toString()],
+    () => (proposalId ? api?.query.treasury.proposals(proposalId).then((p) => p.unwrapOr(undefined)) : undefined),
+    {
+      enabled: !!proposalId,
+    },
+  );
 
   const [open, setOpen] = useState(false);
+  const formatBalance = useFormatBalance();
 
-  const extractedState = extractState(proposal);
+  const extractedParams = extractParams(proposal);
+  if (treasuryProposal) {
+    extractedParams.push({type: getTypeDef('AccountId'), value: treasuryProposal.beneficiary, name: 'beneficiary'});
+    extractedParams.push({type: getTypeDef('AccountId'), value: treasuryProposal.proposer, name: 'proposer'});
+    extractedParams.push({type: getTypeDef('Balance'), value: treasuryProposal.value, name: 'payout'});
+  }
 
   return (
     <View style={motionStyle.container}>
@@ -186,7 +204,7 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
             meta,
           )}`}</Text>
           <Padder scale={1} />
-          {extractedState.params.map((p) => {
+          {extractedParams.map((p) => {
             if (p.type.type === 'AccountId' && p.value) {
               return (
                 <Account id={p.value.toString()}>
@@ -204,6 +222,15 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
               return (
                 <View style={motionStyle.paramRow}>
                   <Text>{`${p.name}: ${u8aToString(p.value)}`}</Text>
+                </View>
+              );
+            }
+
+            if (p.type.type === 'Balance' && p.value) {
+              return (
+                <View style={motionStyle.paramRow}>
+                  <Text>{p.name}: </Text>
+                  <Text>{formatBalance(p.value as Balance)}</Text>
                 </View>
               );
             }
@@ -285,14 +312,12 @@ interface Param {
   value?: Codec;
 }
 
-function extractState(value: IExtrinsic | IMethod): {params: Param[]} {
-  const params = GenericCall.filterOrigin(value.meta).map(
+function extractParams(value: IExtrinsic | IMethod): Param[] {
+  return GenericCall.filterOrigin(value.meta).map(
     ({name, type}, k): Param => ({
       name: name.toString(),
       type: getTypeDef(type.toString()),
       value: value.args[k],
     }),
   );
-
-  return {params};
 }
