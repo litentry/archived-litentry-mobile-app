@@ -83,18 +83,18 @@ function Motion({item, members}: {item: DeriveCollectiveProposal; members: strin
     <View style={motionStyle.container}>
       <View style={motionStyle.mainRow}>
         <Text category={'h4'}>{formatNumber(votes?.index)}</Text>
-        <Text category={'p1'} style={motionStyle.title} numberOfLines={1}>
-          {section}.{method}
-        </Text>
-        {/*<Text>{formatNumber(votes?.threshold)}</Text>*/}
-        <TouchableOpacity onPress={() => setOpen(!open)}>
+        <TouchableOpacity onPress={() => setOpen(!open)} style={motionStyle.titleContainer}>
+          <Text category={'p1'} style={motionStyle.title} numberOfLines={1}>
+            {section}.{method}
+          </Text>
           <Icon
             name={open ? 'arrow-up-outline' : 'arrow-down-outline'}
             style={globalStyles.icon}
             fill={theme['color-basic-600']}
           />
         </TouchableOpacity>
-        <Text>{` ${votes?.ayes.length}/${members.length} `}</Text>
+        {/*<Text>{formatNumber(votes?.threshold)}</Text>*/}
+        <Text category={'c1'}>{`Aye ${votes?.ayes.length}/${members.length} `}</Text>
         <Padder scale={0.5} />
         {isCloseable ? (
           <View>
@@ -176,7 +176,8 @@ function Motion({item, members}: {item: DeriveCollectiveProposal; members: strin
 const motionStyle = StyleSheet.create({
   container: {paddingVertical: standardPadding},
   mainRow: {flexDirection: 'row', alignItems: 'center'},
-  title: {padding: standardPadding, flex: 1},
+  titleContainer: {padding: standardPadding, flexDirection: 'row', flex: 1, alignItems: 'center'},
+  title: {},
   desc: {paddingHorizontal: standardPadding},
   buttons: {display: 'flex', flexDirection: 'row'},
 });
