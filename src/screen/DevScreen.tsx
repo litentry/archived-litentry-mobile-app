@@ -98,7 +98,7 @@ function DevScreen(props: PropTypes) {
                 size="small"
                 onPress={() => {
                   // TODO: change this when adding multi account support
-                  removeAccount(currentNetwork.key, accounts[0]);
+                  removeAccount(currentNetwork.key, accounts[0]!);
                   Alert.alert('Info', 'Account is reset');
                 }}>
                 Trigger
