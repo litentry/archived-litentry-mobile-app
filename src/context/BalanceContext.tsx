@@ -1,5 +1,4 @@
 import React, {createContext, useContext, useMemo, useCallback, useRef, useEffect, useState} from 'react';
-import {AccountContext} from './AccountContextProvider';
 import {Modalize} from 'react-native-modalize';
 import {Layout, Button, Divider} from '@ui-kitten/components';
 import globalStyles from 'src/styles';
@@ -8,6 +7,7 @@ import {AccountInfo} from '@polkadot/types/interfaces';
 import ModalTitle from 'presentational/ModalTitle';
 import {NetworkContext} from './NetworkContext';
 import Balances from 'presentational/Balances';
+import {useAccounts} from 'src/context/AccountsContext';
 
 type BalanceContextValueType = {
   show: () => void;
@@ -23,11 +23,11 @@ type PropTypes = {
 export default function BalanceContextProvider({children}: PropTypes) {
   const {status, api} = useContext(ChainApiContext);
   const {currentNetwork} = useContext(NetworkContext);
-  const {accounts} = useContext(AccountContext);
+  const {accounts} = useAccounts();
   const [balance, setBalance] = useState<AccountInfo | null>(null);
 
   const modalRef = useRef<Modalize>(null);
-  const currentAccount = accounts?.[0];
+  const currentAccount = accounts[0]; // TODO: change this after adding multi account suppport
 
   useEffect(() => {
     let localUnsub: () => void | null;
@@ -71,7 +71,7 @@ export default function BalanceContextProvider({children}: PropTypes) {
             panGestureEnabled>
             {balance && (
               <Layout level="1" style={globalStyles.paddedContainer}>
-                <ModalTitle title={currentAccount.name} subtitle={` (@${currentNetwork?.name})`} />
+                <ModalTitle title={currentAccount.name} subtitle={` (@${currentNetwork.name})`} />
                 <Divider />
                 <Balances balance={balance} />
                 <Divider style={globalStyles.divider} />

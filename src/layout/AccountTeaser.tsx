@@ -8,8 +8,8 @@ import {ThemeContext} from 'context/ThemeProvider';
 import QRCode from '../presentational/QRCode';
 import Padder from '../presentational/Padder';
 import AccountInfoInlineTeaser from '../presentational/AccountInfoInlineTeaser';
-import {AccountContext} from 'context/AccountContextProvider';
 import {NetworkContext} from 'context/NetworkContext';
+import {useAccounts} from 'src/context/AccountsContext';
 import {ChainApiContext} from 'context/ChainApiContext';
 import useAccountDetail from 'src/hook/useAccountDetail';
 import {useNavigation} from '@react-navigation/native';
@@ -27,10 +27,10 @@ function AccountTeaser(props: PropTypes) {
   const [copyTooltipVisible, setCopyTooltipVisible] = useState(false);
   const [qrVisible, setQrVisible] = useState(false);
   const {theme} = useContext(ThemeContext);
-  const {accounts} = useContext(AccountContext);
+  const {accounts} = useAccounts();
   const {currentNetwork} = useContext(NetworkContext);
   const {api} = useContext(ChainApiContext);
-  const account = accounts?.[0];
+  const account = accounts[0]; // TODO: change this when adding multi account support
   const {display, detail} = useAccountDetail(currentNetwork?.key || 'polkadot', account?.address, api);
 
   const handleIconPressed = (addr?: string) => {
