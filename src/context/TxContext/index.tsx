@@ -3,12 +3,12 @@ import {Dimensions, StyleSheet} from 'react-native';
 import {ApiPromise} from '@polkadot/api';
 import {get} from 'lodash';
 import {SubmittableExtrinsic} from '@polkadot/api/submittable/types';
-import type {DispatchError} from '@polkadot/types/interfaces';
 import {Modalize} from 'react-native-modalize';
 import {Icon, IconProps, Layout, Text} from '@ui-kitten/components';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import globalStyles, {standardPadding} from 'src/styles';
 import {ITuple, SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
+import {DispatchError} from '@polkadot/types/interfaces';
 import {BN_ZERO} from '@polkadot/util';
 import QrSigner from 'src/service/QrSigner';
 import TxPayloadQr from 'presentational/TxPayloadQr';
@@ -50,11 +50,15 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
     const {api, txMethod, params, description, address, title} = config;
     const [section, method] = txMethod.split('.');
 
+    if (!section || !method) {
+      throw new Error('section or method undefined');
+    }
+
     if (!get(api.tx, [section, method])) {
       throw new Error(`Unable to find method ${section}.${method}`);
     }
 
-    const transaction: SubmittableExtrinsic<'promise'> = api.tx[section][method](...params);
+    const transaction: SubmittableExtrinsic<'promise'> = api.tx[section]![method]!(...params);
 
     modalRef.current?.open();
 
@@ -76,36 +80,40 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
         }),
       });
 
-      await f.send(({status, events}) => {
-        if (status.isInBlock || status.isFinalized) {
-          const errors = events
-            // find/filter for failed events
-            .filter(({event: {section, method}}) => section === 'system' && method === 'ExtrinsicFailed')
-            // we know that data for system.ExtrinsicFailed is
-            // (DispatchError, DispatchInfo)
-            .map((eventRecord) => {
-              const [dispatchError] = eventRecord.event.data as unknown as ITuple<[DispatchError]>;
+      await new Promise((resolve, reject) => {
+        f.send(({status, events}) => {
+          if (status.isInBlock || status.isFinalized) {
+            const errors = events
+              // find/filter for failed events
+              .filter(({event: {section, method}}) => section === 'system' && method === 'ExtrinsicFailed')
+              // we know that data for system.ExtrinsicFailed is
+              // (DispatchError, DispatchInfo)
+              .map((eventRecord) => {
+                const [dispatchError] = eventRecord.event.data as unknown as ITuple<[DispatchError]>;
 
-              if (dispatchError.isModule) {
-                // for module errors, we have the section indexed, lookup
-                const decoded = api.registry.findMetaError(dispatchError.asModule);
-                const {documentation} = decoded;
+                if (dispatchError.isModule) {
+                  // for module errors, we have the section indexed, lookup
+                  const decoded = api.registry.findMetaError(dispatchError.asModule);
+                  const {documentation} = decoded;
 
-                return documentation.join(' ').trim();
-              } else {
-                // Other, CannotLookup, BadOrigin, no extra info
-                return dispatchError.toString();
-              }
-            });
+                  return documentation.join(' ').trim();
+                } else {
+                  // Other, CannotLookup, BadOrigin, no extra info
+                  return dispatchError?.toString();
+                }
+              });
 
-          if (errors.length === 0 && status.isFinalized) {
-            dispatch({type: 'NEXT_STEP'});
+            if (errors.length === 0 && status.isFinalized) {
+              dispatch({type: 'NEXT_STEP'});
+              resolve(undefined);
+            }
+
+            if (errors[0]) {
+              dispatch({type: 'ERROR', payload: errors[0]});
+              reject();
+            }
           }
-
-          if (errors.length !== 0) {
-            dispatch({type: 'ERROR', payload: errors[0]});
-          }
-        }
+        });
       });
     } catch (e) {
       dispatch({type: 'ERROR', payload: e});

@@ -55,7 +55,9 @@ export function TreasuryScreen({navigation}: {navigation: NavigationProp<Dashboa
             sections={groupedData}
             keyExtractor={(item, index) => item.proposal.proposer.toString() ?? index.toString()}
             renderItem={({item}) => {
-              const accountInfo = treasuryData?.accountInfos.find((i) => i.accountId.eq(item.proposal.proposer));
+              const accountInfo = treasuryData?.accountInfos.find(
+                (i) => i.accountId.toString() === item.proposal.proposer.toString(),
+              );
               const text = accountInfo ? u8aToString(accountInfo.info.display.asRaw) : 'unknown';
               return (
                 <ListItem

@@ -97,7 +97,9 @@ function AddressInfoPreview(props: PropTypes) {
               <ListItem
                 title="Judgment"
                 accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="ribbon-outline" pack="ionic" />}
-                accessoryRight={() => <JudgmentStatus judgement={identity.judgements[0]} />}
+                accessoryRight={() =>
+                  identity?.judgements[0] ? <JudgmentStatus judgement={identity.judgements[0]} /> : <View />
+                }
               />
             )}
           <ListItem

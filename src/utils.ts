@@ -152,14 +152,14 @@ export function parseAddress(payload: string): AccountAddressType {
   const parts = trim(payload).split(':').filter(Boolean);
 
   if (parts.length === 1) {
-    return {protocol: '', address: parts[0], name: ''};
+    return {protocol: '', address: parts[0]!, name: ''};
   }
 
   if (parts.length !== 4) {
     throw new Error('address format wrong');
   }
 
-  return {protocol: parts[0], address: parts[1], name: parts[3]};
+  return {protocol: parts[0], address: parts[1]!, name: parts[3]!};
 }
 
 export const ReactotronDebug = Reactotron.debug;
@@ -207,7 +207,7 @@ export function formatNumberWRTDecimal(number: BN) {
   const tokenDecimals = chainProps?.tokenDecimals.unwrapOrDefault();
   let defaultDecimals = 12;
 
-  if (tokenDecimals) {
+  if (tokenDecimals && tokenDecimals[0]) {
     const decimals = new BN(tokenDecimals[0]);
     defaultDecimals = decimals.toNumber();
   }

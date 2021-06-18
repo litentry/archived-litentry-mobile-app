@@ -30,7 +30,7 @@ function NetworkSelectionList(props: PropTypes) {
         selectedIndex={selectedIndex}
         onChange={(index) => {
           setSelectedIndex(index);
-          onSelect(items[index]);
+          onSelect(items[index]!);
         }}>
         {items.map((item, index) => {
           const key = item.ws ? item.ws[0] : `key-${index}`;
