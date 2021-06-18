@@ -4,39 +4,25 @@ import globalStyles, {standardPadding} from 'src/styles';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import {NavigationProp} from '@react-navigation/native';
 import {ChainApiContext} from 'context/ChainApiContext';
-import useAsyncRetry from 'react-use/lib/useAsyncRetry';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
+import type {Call} from '@polkadot/types/interfaces';
 import {FunctionMetadataLatest, ProposalIndex} from '@polkadot/types/interfaces';
 import {formatNumber} from '@polkadot/util';
 import {AccountContext} from 'context/AccountContextProvider';
 import {useVotingStatus} from '../../hook/useVotingStatus';
 import type {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
-import type {Call} from '@polkadot/types/interfaces';
 import {TxContext} from 'context/TxContext';
 import {EmptyView} from 'presentational/EmptyView';
 import Padder from 'presentational/Padder';
 import type {IExtrinsic, IMethod} from '@polkadot/types/types';
 import {Compact, GenericCall, getTypeDef} from '@polkadot/types';
 import {useCouncilMembers} from 'screen/Council/CouncilScreen';
-import {useQuery} from 'react-query';
+import {useQuery, useQueryClient} from 'react-query';
 import {Param, Params} from 'presentational/Params';
 
 export function MotionsScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {api} = useContext(ChainApiContext);
-
-  const {
-    value: data,
-    retry,
-    loading,
-  } = useAsyncRetry(async () => {
-    try {
-      if (api) {
-        return api.derive.council.proposals();
-      }
-    } catch (e) {
-      console.warn(e);
-    }
-  }, [api]);
+  const {data, refetch, isLoading} = useQuery('motions', () => api?.derive.council.proposals());
 
   return (
     <Layout style={globalStyles.flex}>
@@ -51,8 +37,8 @@ export function MotionsScreen({navigation}: {navigation: NavigationProp<Dashboar
         }
       />
       <FlatList
-        refreshing={loading}
-        onRefresh={retry}
+        refreshing={isLoading}
+        onRefresh={refetch}
         style={styles.flatList}
         data={data}
         renderItem={({item}) => {
@@ -83,6 +69,7 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
   const params = useParams(proposal);
 
   const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   return (
     <View style={motionStyle.container}>
@@ -123,7 +110,9 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
                               : [hash, votes?.index],
                           txMethod: 'council.close',
                         })
-                          .then(() => console.log('success'))
+                          .then(() => {
+                            return queryClient.invalidateQueries('motions');
+                          })
                           .catch((e) => console.warn(e));
                       }
                     }}>
@@ -147,7 +136,7 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
                           params: [hash, votes?.index, false],
                           txMethod: 'council.vote',
                         })
-                          .then(() => console.log('success'))
+                          .then(() => queryClient.invalidateQueries('motions'))
                           .catch((e) => console.warn(e));
                       }
                     }}>
@@ -167,7 +156,7 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
                           params: [hash, votes?.index, true],
                           txMethod: 'council.vote',
                         })
-                          .then(() => console.log('success'))
+                          .then(() => queryClient.invalidateQueries('motions'))
                           .catch((e) => console.warn(e));
                       }
                     }}>
