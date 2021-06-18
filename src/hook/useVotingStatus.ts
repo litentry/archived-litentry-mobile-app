@@ -1,5 +1,7 @@
 // Copyright 2017-2021 @polkadot/react-hooks authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+// from https://github.com/polkadot-js/apps/blob/master/packages/react-hooks/src/useVotingStatus.ts
+
 import type {BlockNumber, Votes} from '@polkadot/types/interfaces';
 import BN from 'bn.js';
 import {useContext, useMemo} from 'react';
