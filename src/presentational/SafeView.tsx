@@ -7,7 +7,9 @@ import {Layout} from '@ui-kitten/components';
 export default function SafeView({children}: {children: React.ReactNode}) {
   return (
     <Layout style={styles.container}>
-      <SafeAreaView style={styles.container}>{children}</SafeAreaView>
+      <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
+        {children}
+      </SafeAreaView>
     </Layout>
   );
 }

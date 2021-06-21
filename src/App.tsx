@@ -13,6 +13,7 @@ import {IonicIconsPack} from './Ionic-icons';
 import {ErrorBoundary} from 'src/ErrorBoundary';
 import {QueryClient, QueryClientProvider} from 'react-query';
 import {NavigationContainer, Theme} from '@react-navigation/native';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 // init type registry
 import 'src/typeRegistry';
@@ -25,25 +26,27 @@ export default function App() {
   return (
     <>
       <IconRegistry icons={[EvaIconsPack, IonicIconsPack]} />
-      <ApplicationProvider {...eva} theme={eva[theme]}>
-        <ErrorBoundary>
-          <Host>
-            <ChainApiContextProvider>
-              <QueryClientProvider client={queryClient}>
-                <AccountsProvider>
-                  <BalanceContextProvider>
-                    <TxContextProvider>
-                      <NavigationContainer theme={theme === 'dark' ? DarkTheme : LightTheme}>
-                        <AppNavigator />
-                      </NavigationContainer>
-                    </TxContextProvider>
-                  </BalanceContextProvider>
-                </AccountsProvider>
-              </QueryClientProvider>
-            </ChainApiContextProvider>
-          </Host>
-        </ErrorBoundary>
-      </ApplicationProvider>
+      <SafeAreaProvider>
+        <ApplicationProvider {...eva} theme={eva[theme]}>
+          <ErrorBoundary>
+            <Host>
+              <ChainApiContextProvider>
+                <QueryClientProvider client={queryClient}>
+                  <AccountsProvider>
+                    <BalanceContextProvider>
+                      <TxContextProvider>
+                        <NavigationContainer theme={theme === 'dark' ? DarkTheme : LightTheme}>
+                          <AppNavigator />
+                        </NavigationContainer>
+                      </TxContextProvider>
+                    </BalanceContextProvider>
+                  </AccountsProvider>
+                </QueryClientProvider>
+              </ChainApiContextProvider>
+            </Host>
+          </ErrorBoundary>
+        </ApplicationProvider>
+      </SafeAreaProvider>
     </>
   );
 }

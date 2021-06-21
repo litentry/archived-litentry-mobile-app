@@ -16,8 +16,7 @@ import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
 import {CouncilScreen} from 'screen/CouncilScreen';
 import {SubmitTipScreen} from 'screen/SubmitTipScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
-import {Icon, Layout, Text, TopNavigation, TopNavigationAction} from '@ui-kitten/components';
-import {NavigationProp} from '@react-navigation/native';
+import {Text} from '@ui-kitten/components';
 import NetworkItem from 'presentational/NetworkItem';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {NetworkContext} from 'context/NetworkContext';
@@ -37,7 +36,7 @@ function DashboardStackNavigator() {
           headerLeft: () => <DashboardHeaderLeft navigation={navigation} />,
           headerRight: DashboardHeaderRight,
           headerTitle: () => (
-            <TouchableOpacity style={styles.titleContainer} onPress={() => navigation.navigate('NetworkSelectScreen')}>
+            <TouchableOpacity style={styles.titleContainer} onPress={() => navigation.navigate('ApiNavigator')}>
               <Text category="s1">Litentry</Text>
               {currentNetwork ? <NetworkItem item={currentNetwork} isConnected={status === 'ready'} /> : null}
             </TouchableOpacity>
