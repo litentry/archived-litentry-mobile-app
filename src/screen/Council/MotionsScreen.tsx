@@ -72,6 +72,54 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
 
+  const onPressClose = () => {
+    if (api && account) {
+      start({
+        api,
+        address: account.address,
+        title: 'treasury.approveProposal',
+        description:
+          'Approve a proposal. At a later time, the proposal will be allocated to the beneficiary and the original deposit will be returned.',
+        params: api.tx.council.close?.meta.args.length === 4 ? [hash, votes?.index, 0, 0] : [hash, votes?.index],
+        txMethod: 'council.close',
+      })
+        .then(() => {
+          return queryClient.invalidateQueries('motions');
+        })
+        .catch((e) => console.warn(e));
+    }
+  };
+
+  const onPressNay = () => {
+    if (api && account) {
+      start({
+        api,
+        address: account.address,
+        title: 'council.vote(proposal, index, approve)',
+        description: 'Add a nay vote for the sender to the given proposal.',
+        params: [hash, votes?.index, false],
+        txMethod: 'council.vote',
+      })
+        .then(() => queryClient.invalidateQueries('motions'))
+        .catch((e) => console.warn(e));
+    }
+  };
+
+  const onPressAye = () => {
+    if (api && account) {
+      start({
+        api,
+        address: account.address,
+        title: 'council.vote(proposal, index, approve)',
+        description: 'Add an aye vote for the sender to the given proposal.',
+        params: [hash, votes?.index, true],
+        txMethod: 'council.vote',
+      })
+        .then(() => queryClient.invalidateQueries('motions'))
+        .catch((e) => console.warn(e));
+    }
+  };
+
   return (
     <View style={motionStyle.container}>
       <View style={motionStyle.mainRow}>
@@ -94,29 +142,7 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
             if (isCloseable) {
               return (
                 <View>
-                  <Button
-                    status={'warning'}
-                    size={'tiny'}
-                    onPress={() => {
-                      if (api && account) {
-                        start({
-                          api,
-                          address: account.address,
-                          title: 'treasury.approveProposal',
-                          description:
-                            'Approve a proposal. At a later time, the proposal will be allocated to the beneficiary and the original deposit will be returned.',
-                          params:
-                            api.tx.council.close?.meta.args.length === 4
-                              ? [hash, votes?.index, 0, 0]
-                              : [hash, votes?.index],
-                          txMethod: 'council.close',
-                        })
-                          .then(() => {
-                            return queryClient.invalidateQueries('motions');
-                          })
-                          .catch((e) => console.warn(e));
-                      }
-                    }}>
+                  <Button status={'warning'} size={'tiny'} onPress={onPressClose}>
                     Close
                   </Button>
                 </View>
@@ -124,43 +150,11 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
             } else if (isVoteable) {
               return (
                 <View style={motionStyle.buttons}>
-                  <Button
-                    status={'danger'}
-                    size={'tiny'}
-                    onPress={() => {
-                      if (api && account) {
-                        start({
-                          api,
-                          address: account.address,
-                          title: 'council.vote(proposal, index, approve)',
-                          description: 'Add a nay vote for the sender to the given proposal.',
-                          params: [hash, votes?.index, false],
-                          txMethod: 'council.vote',
-                        })
-                          .then(() => queryClient.invalidateQueries('motions'))
-                          .catch((e) => console.warn(e));
-                      }
-                    }}>
+                  <Button status={'danger'} size={'tiny'} onPress={onPressNay}>
                     Nay
                   </Button>
                   <Padder scale={0.5} />
-                  <Button
-                    status={'success'}
-                    size={'tiny'}
-                    onPress={() => {
-                      if (api && account) {
-                        start({
-                          api,
-                          address: account.address,
-                          title: 'council.vote(proposal, index, approve)',
-                          description: 'Add an aye vote for the sender to the given proposal.',
-                          params: [hash, votes?.index, true],
-                          txMethod: 'council.vote',
-                        })
-                          .then(() => queryClient.invalidateQueries('motions'))
-                          .catch((e) => console.warn(e));
-                      }
-                    }}>
+                  <Button status={'success'} size={'tiny'} onPress={onPressAye}>
                     Aye
                   </Button>
                 </View>
