@@ -8,7 +8,6 @@ import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import type {Call} from '@polkadot/types/interfaces';
 import {FunctionMetadataLatest, ProposalIndex} from '@polkadot/types/interfaces';
 import {formatNumber} from '@polkadot/util';
-import {AccountContext} from 'context/AccountContextProvider';
 import {useVotingStatus} from '../../hook/useVotingStatus';
 import type {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
 import {TxContext} from 'context/TxContext';
@@ -19,6 +18,7 @@ import {Compact, GenericCall, getTypeDef} from '@polkadot/types';
 import {useCouncilMembers} from 'screen/Council/CouncilScreen';
 import {useQuery, useQueryClient} from 'react-query';
 import {Param, Params} from 'presentational/Params';
+import {useAccounts} from 'context/AccountsContext';
 
 export function MotionsScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {api} = useContext(ChainApiContext);
@@ -58,7 +58,7 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
   const theme = useTheme();
   const {api} = useContext(ChainApiContext);
   const {start} = useContext(TxContext);
-  const {accounts} = useContext(AccountContext);
+  const {accounts} = useAccounts();
   const account = accounts?.[0];
 
   const {votes, proposal, hash} = item;
@@ -197,7 +197,7 @@ interface Result {
 }
 
 export function useMembers(): Result {
-  const {accounts} = useContext(AccountContext);
+  const {accounts} = useAccounts();
   const {data: councilMembers} = useCouncilMembers();
 
   return useMemo(() => {
