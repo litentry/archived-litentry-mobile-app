@@ -5,7 +5,7 @@ import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
 import {ThemeContext} from './context/ThemeProvider';
 import ChainApiContextProvider from 'context/ChainApiContext';
-import AccountContextProvider from 'context/AccountContextProvider';
+import {AccountsProvider} from 'src/context/AccountsContext';
 import BalanceContextProvider from 'context/BalanceContext';
 import TxContextProvider from 'context/TxContext';
 import AppNavigator from 'src/navigation/AppNavigator';
@@ -30,7 +30,7 @@ export default function App() {
           <Host>
             <ChainApiContextProvider>
               <QueryClientProvider client={queryClient}>
-                <AccountContextProvider>
+                <AccountsProvider>
                   <BalanceContextProvider>
                     <TxContextProvider>
                       <NavigationContainer theme={theme === 'dark' ? DarkTheme : LightTheme}>
@@ -38,7 +38,7 @@ export default function App() {
                       </NavigationContainer>
                     </TxContextProvider>
                   </BalanceContextProvider>
-                </AccountContextProvider>
+                </AccountsProvider>
               </QueryClientProvider>
             </ChainApiContextProvider>
           </Host>

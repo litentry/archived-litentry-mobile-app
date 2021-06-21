@@ -1,21 +1,22 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {ActivityIndicator, View, TouchableOpacity, StyleSheet} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {Button, Icon, Layout, Text} from '@ui-kitten/components';
 import globalStyles, {monofontFamily, colorGreen} from 'src/styles';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import NetworkItem from 'presentational/NetworkItem';
 import {NetworkContext} from 'context/NetworkContext';
-import {NavigationProp} from '@react-navigation/native';
 import {ChainApiContext} from 'context/ChainApiContext';
+import NetworkSelect from 'src/layout/NetworkSelect';
 
-export function ApiLoadingScreen({navigation}: {navigation: NavigationProp<any>}) {
+export function ApiLoadingScreen() {
+  const navigation = useNavigation();
   const {currentNetwork, select} = useContext(NetworkContext);
   const {api, inProgress} = useContext(ChainApiContext);
+  const [networkSelectOpen, setNetworkSelectOpen] = useState(false);
 
-  /// navigate to app in case of successfully connecting
-  const prevApi = React.useRef(!!api);
   React.useEffect(() => {
-    if (api && !prevApi.current) {
+    if (api) {
       navigation.navigate('App');
     }
   }, [navigation, api]);
@@ -24,10 +25,10 @@ export function ApiLoadingScreen({navigation}: {navigation: NavigationProp<any>}
     <Layout style={styles.container}>
       <ScreenNavigation
         renderTitle={() => (
-          <TouchableOpacity onPress={() => navigation.navigate('NetworkSelectScreen')}>
+          <TouchableOpacity onPress={() => setNetworkSelectOpen(true)}>
             <Layout style={{}}>
               <Text category="s1">Litentry</Text>
-              {currentNetwork ? <NetworkItem item={currentNetwork} isConnected={false} /> : null}
+              <NetworkItem item={currentNetwork} isConnected={false} />
             </Layout>
           </TouchableOpacity>
         )}
@@ -37,40 +38,32 @@ export function ApiLoadingScreen({navigation}: {navigation: NavigationProp<any>}
           const icon = (
             <Icon style={[globalStyles.inlineIconDimension, {color: colorGreen}]} name="planet" pack="ionic" />
           );
-
-          if (api) {
+          if (inProgress) {
             return (
               <>
                 <View style={styles.row}>
                   {icon}
-                  <Text style={styles.text}>Connected to {currentNetwork?.name ?? ''}</Text>
+                  <Text style={styles.text}>Connecting to {currentNetwork.name}</Text>
                 </View>
-                <Button onPress={() => navigation.navigate('NetworkSelectScreen')}>Switch Network</Button>
-              </>
-            );
-          } else {
-            if (inProgress) {
-              return (
-                <>
-                  <View style={styles.row}>
-                    {icon}
-                    <Text style={styles.text}>Connecting to {currentNetwork?.name ?? ''}</Text>
-                  </View>
-                  <ActivityIndicator size={'large'} color={colorGreen} />
-                </>
-              );
-            }
-            return (
-              <>
-                <View style={styles.row}>
-                  {icon}
-                  <Text style={styles.text}>Disconnected from {currentNetwork?.name ?? ''}</Text>
-                </View>
-                <Button onPress={() => (currentNetwork ? select({...currentNetwork}) : undefined)}>Reconnect</Button>
+                <ActivityIndicator size={'large'} color={colorGreen} />
               </>
             );
           }
+          if (!api) {
+            return (
+              <>
+                <View style={styles.row}>
+                  {icon}
+                  <Text style={styles.text}>Disconnected from {currentNetwork.name}</Text>
+                </View>
+                <Button onPress={() => select({...currentNetwork})}>Reconnect</Button>
+              </>
+            );
+          }
+
+          return null;
         })()}
+        <NetworkSelect open={networkSelectOpen} onClose={() => setNetworkSelectOpen(false)} />
       </View>
     </Layout>
   );

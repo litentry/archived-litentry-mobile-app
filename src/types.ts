@@ -24,14 +24,14 @@ export type DeviceType = {
 
 export type NetworkType = {
   name: string;
-  key?: SupportedNetworkType | null;
-  ws?: string[];
+  key: SupportedNetworkType;
+  ws: string[];
   isTestnet?: boolean;
   color?: string;
 };
 
 export type NetworkContextValueType = {
-  currentNetwork?: NetworkType;
+  currentNetwork: NetworkType;
   availableNetworks: NetworkType[];
   select: (network: NetworkType) => void;
 };

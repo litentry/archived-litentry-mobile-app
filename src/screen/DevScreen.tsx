@@ -2,7 +2,7 @@ import React, {useContext, useState, useRef, useCallback} from 'react';
 import {Layout, Button, ListItem, Divider, Text} from '@ui-kitten/components';
 import GenericNavigationLayout from 'presentational/GenericNavigationLayout';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {AccountContext} from 'context/AccountContextProvider';
+import {useAccounts} from 'src/context/AccountsContext';
 import {InAppNotificationContext, RichTextComponent} from 'context/InAppNotificationContext';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {Alert, StyleSheet} from 'react-native';
@@ -21,7 +21,7 @@ function DevScreen(props: PropTypes) {
   const [visible, setVisible] = useState(false);
 
   const {currentNetwork} = useContext(NetworkContext);
-  const {accounts, setAccount} = useContext(AccountContext);
+  const {accounts, addAccount, removeAccount} = useAccounts();
   const {trigger} = useContext(InAppNotificationContext);
   const {status, addSection, removeSection, api} = useContext(ChainApiContext);
   const [debugInfo, setDebugInfo] = useState('');
@@ -51,8 +51,8 @@ function DevScreen(props: PropTypes) {
             visible={visible}
           />
           <ListItem
-            title={`Network: ${currentNetwork?.name}`}
-            description={`Currently connected to ${currentNetwork?.ws}`}
+            title={`Network: ${currentNetwork.name}`}
+            description={`Currently connected to ${currentNetwork.ws}`}
             accessoryRight={() => <Button size="tiny">{status}</Button>}
           />
           <Divider />
@@ -97,7 +97,8 @@ function DevScreen(props: PropTypes) {
               <Button
                 size="small"
                 onPress={() => {
-                  setAccount(null);
+                  // TODO: change this when adding multi account support
+                  removeAccount(currentNetwork.key, accounts[0]!);
                   Alert.alert('Info', 'Account is reset');
                 }}>
                 Trigger
@@ -157,7 +158,7 @@ function DevScreen(props: PropTypes) {
               <Button
                 size="small"
                 onPress={() => {
-                  setAccount({
+                  addAccount(currentNetwork.key, {
                     name: 'Manu. set Acct',
                     address: '167rjWHghVwBJ52mz8sNkqr5bKu5vpchbc9CBoieBhVX714h',
                   });
