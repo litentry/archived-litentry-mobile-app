@@ -49,7 +49,7 @@ export function CouncilScreen({navigation}: {navigation: NavigationProp<Dashboar
               contentContainerStyle={styles.content}
               data={data?.members}
               renderItem={({item}) => {
-                const text = u8aToString(item.info.display.asRaw);
+                const text = item.info ? u8aToString(item.info.display.asRaw) : item.accountId.toString();
                 return <ListItem title={text} accessoryLeft={() => <Identicon value={item.accountId} size={30} />} />;
               }}
               keyExtractor={(item, index) => item.accountId.toString() ?? index.toString()}

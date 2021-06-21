@@ -5,20 +5,16 @@ import ScreenNavigation from 'layout/ScreenNavigation';
 import {NavigationProp} from '@react-navigation/native';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
-import type {Call} from '@polkadot/types/interfaces';
-import {FunctionMetadataLatest, ProposalIndex} from '@polkadot/types/interfaces';
 import {formatNumber} from '@polkadot/util';
 import {useVotingStatus} from 'src/hook/useVotingStatus';
 import type {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
 import {TxContext} from 'context/TxContext';
 import {EmptyView} from 'presentational/EmptyView';
 import Padder from 'presentational/Padder';
-import type {IExtrinsic, IMethod} from '@polkadot/types/types';
-import {Compact, GenericCall, getTypeDef} from '@polkadot/types';
 import {useQuery, useQueryClient} from 'react-query';
-import {Param, Params} from 'presentational/Params';
 import {useAccounts} from 'context/AccountsContext';
 import {useCouncilMembers} from 'src/hook/useCouncilMembers';
+import {CallInspector, formatCallMeta} from 'src/packages/call_inspector/CallInspector';
 
 export function MotionsScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {api} = useContext(ChainApiContext);
@@ -67,7 +63,6 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
   const {isCloseable, isVoteable} = useVotingStatus(votes, membersCount, 'council');
 
   const {meta, method, section} = proposal.registry.findMetaCall(proposal.callIndex);
-  const params = useParams(proposal);
 
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
@@ -169,7 +164,7 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
             meta,
           )}`}</Text>
           <Padder scale={1} />
-          <Params data={params} />
+          <CallInspector call={proposal} />
         </View>
       ) : null}
     </View>
@@ -185,66 +180,3 @@ const motionStyle = StyleSheet.create({
   buttons: {display: 'flex', flexDirection: 'row'},
   footer: {paddingVertical: standardPadding, paddingHorizontal: standardPadding / 2},
 });
-
-const METHOD_TREA = ['approveProposal', 'rejectProposal'];
-function useParams(proposal: Call) {
-  const {api} = useContext(ChainApiContext);
-  const {method, section} = proposal.registry.findMetaCall(proposal.callIndex);
-  const isTreasury = section === 'treasury' && METHOD_TREA.includes(method);
-  const proposalId = isTreasury ? (proposal.args[0] as Compact<ProposalIndex>).unwrap() : undefined;
-  const {data: treasuryProposal} = useQuery(
-    ['proposal', proposalId?.toString()],
-    () => (proposalId ? api?.query.treasury.proposals(proposalId).then((p) => p.unwrapOr(undefined)) : undefined),
-    {
-      enabled: !!proposalId,
-    },
-  );
-  const extractedParams = extractParams(proposal);
-  if (treasuryProposal) {
-    extractedParams.push({type: getTypeDef('AccountId'), value: treasuryProposal.beneficiary, name: 'beneficiary'});
-    extractedParams.push({type: getTypeDef('AccountId'), value: treasuryProposal.proposer, name: 'proposer'});
-    extractedParams.push({type: getTypeDef('Balance'), value: treasuryProposal.value, name: 'payout'});
-  }
-  return extractedParams;
-}
-
-/**
- * functions bellow help extract useful data
- * from each motion object. they are mostly loosely copied from
- * https://github.com/polkadot-js/apps/blob/master/packages/react-components/src/Call.tsx
- */
-
-export function formatCallMeta(meta?: FunctionMetadataLatest): string {
-  if (!meta || !meta.documentation.length) {
-    return '';
-  }
-
-  const strings = meta.documentation.map((doc) => doc.toString().trim());
-  const firstEmpty = strings.findIndex((doc) => !doc.length);
-  const combined = (firstEmpty === -1 ? strings : strings.slice(0, firstEmpty))
-    .join(' ')
-    .replace(/#(<weight>| <weight>).*<\/weight>/, '');
-  const parts = splitParts(combined.replace(/\\/g, '').replace(/`/g, ''));
-
-  return parts.join(' ');
-}
-
-function splitSingle(value: string[], sep: string): string[] {
-  return value.reduce((result: string[], value: string): string[] => {
-    return value.split(sep).reduce((result: string[], value: string) => result.concat(value), result);
-  }, []);
-}
-
-function splitParts(value: string): string[] {
-  return ['[', ']'].reduce((result: string[], sep) => splitSingle(result, sep), [value]);
-}
-
-function extractParams(value: IExtrinsic | IMethod): Param[] {
-  return GenericCall.filterOrigin(value.meta).map(
-    ({name, type}, k): Param => ({
-      name: name.toString(),
-      type: getTypeDef(type.toString()),
-      value: value.args[k],
-    }),
-  );
-}

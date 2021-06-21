@@ -60,11 +60,11 @@ export function SubmitTipScreen({navigation}: {navigation: NavigationProp<Dashbo
             )}
             footer={(p) => (
               <View {...p}>
-                <Text>{account.accountId.toString()}</Text>
+                <Text category={'c1'}>{account.accountId.toString()}</Text>
               </View>
             )}>
             <ListItem
-              title={u8aToString(account.info.display.asRaw)}
+              title={account.info ? u8aToString(account.info.display.asRaw) : account.accountId.toString()}
               accessoryLeft={() => <Identicon value={account.accountId} size={30} />}
             />
           </Card>

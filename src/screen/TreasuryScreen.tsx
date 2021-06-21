@@ -64,7 +64,9 @@ export function TreasuryScreen({navigation}: {navigation: NavigationProp<Dashboa
               const accountInfo = value?.accountInfos.find(
                 (i) => i.accountId.toString() === item.proposal.proposer.toString(),
               );
-              const text = accountInfo ? u8aToString(accountInfo.info.display.asRaw) : 'unknown';
+              const text = accountInfo?.info
+                ? u8aToString(accountInfo.info.display.asRaw)
+                : accountInfo?.accountId.toString() ?? 'unknown';
               return (
                 <View style={styles.item}>
                   <Identicon value={item.proposal.proposer} size={30} />

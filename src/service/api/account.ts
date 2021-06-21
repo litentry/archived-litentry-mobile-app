@@ -8,7 +8,7 @@ import {AddressDetailType} from 'src/types';
 export async function getAccountsIdentityInfo(accountIds: AccountId[] | string[] | Uint8Array[], api: ApiPromise) {
   const registrationOptions = await api.query.identity.identityOf.multi<Option<Registration>>(accountIds);
 
-  const response: {info: IdentityInfo; accountId: AccountId | Uint8Array | string; registration?: Registration}[] = [];
+  const response: {info?: IdentityInfo; accountId: AccountId | Uint8Array | string; registration?: Registration}[] = [];
 
   for (const index in registrationOptions) {
     const registration = registrationOptions[index]!.unwrapOr(undefined);
@@ -26,6 +26,8 @@ export async function getAccountsIdentityInfo(accountIds: AccountId[] | string[]
         if (r) {
           response.push({accountId, info: r.info});
         }
+      } else {
+        response.push({accountId: accountIds[index]!});
       }
     }
   }
