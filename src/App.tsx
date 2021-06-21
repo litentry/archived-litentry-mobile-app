@@ -12,6 +12,7 @@ import AppNavigator from 'src/navigation/AppNavigator';
 import {IonicIconsPack} from './Ionic-icons';
 import {ErrorBoundary} from 'src/ErrorBoundary';
 import {QueryClient, QueryClientProvider} from 'react-query';
+import {NavigationContainer, Theme} from '@react-navigation/native';
 
 // init type registry
 import 'src/typeRegistry';
@@ -32,7 +33,9 @@ export default function App() {
                 <AccountContextProvider>
                   <BalanceContextProvider>
                     <TxContextProvider>
-                      <AppNavigator />
+                      <NavigationContainer theme={theme === 'dark' ? DarkTheme : LightTheme}>
+                        <AppNavigator />
+                      </NavigationContainer>
                     </TxContextProvider>
                   </BalanceContextProvider>
                 </AccountContextProvider>
@@ -44,3 +47,27 @@ export default function App() {
     </>
   );
 }
+
+const DarkTheme: Theme = {
+  dark: true,
+  colors: {
+    primary: '#3366FF' /*color-primary-default*/,
+    background: '#222B45' /*background-alternative-color-1*/,
+    card: '#222B45' /*background-alternative-color-1*/,
+    text: '#FFFFFF' /*text-alternative-color*/,
+    border: '#222B45',
+    notification: '#222B45',
+  },
+};
+
+const LightTheme: Theme = {
+  dark: false,
+  colors: {
+    primary: '#3366FF' /*color-primary-default*/,
+    background: '#FFFFFF' /*background-alternative-color-1*/,
+    card: '#FFFFFF',
+    text: '#222B45' /*text-basic-color*/,
+    border: '#FFFFFF',
+    notification: '#FFFFFF',
+  },
+};

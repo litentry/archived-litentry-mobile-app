@@ -15,7 +15,7 @@ import globalStyles from 'src/styles';
 import CouncilSummaryTeaser from 'layout/CouncilSummaryTeaser';
 import TreasurySummaryTeaser from 'layout/TreasurySummaryTeaser';
 import TipsSummaryTeaser from 'layout/tips/TipsSummaryTeaser';
-import {CompositeNavigationProp} from '@react-navigation/native';
+import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {councilScreen, tips, treasuryScreen} from 'src/navigation/routeKeys';
 import {NetworkContext} from 'context/NetworkContext';
@@ -48,15 +48,15 @@ function DashboardScreen({navigation, accountAddProps}: PropTypes & AddAccountIn
 
   return (
     <View style={[globalStyles.flex]}>
-      <ScreenNavigation
-        accessoryLeft={
-          <TopNavigationAction onPress={navigation.openDrawer} icon={(p) => <Icon {...p} name={'menu-2-outline'} />} />
-        }
-        accessoryRight={
-          <TopNavigationAction onPress={show} icon={(p) => <Icon {...p} name={'credit-card-outline'} />} />
-        }
-        renderTitle={renderTitle}
-      />
+      {/*<ScreenNavigation*/}
+      {/*  accessoryLeft={*/}
+      {/*    <TopNavigationAction onPress={navigation.openDrawer} icon={(p) => <Icon {...p} name={'menu-2-outline'} />} />*/}
+      {/*  }*/}
+      {/*  accessoryRight={*/}
+      {/*    <TopNavigationAction onPress={show} icon={(p) => <Icon {...p} name={'credit-card-outline'} />} />*/}
+      {/*  }*/}
+      {/*  renderTitle={renderTitle}*/}
+      {/*/>*/}
       <SafeAreaView
         edges={['bottom']}
         style={[globalStyles.flex, {backgroundColor: theme['background-basic-color-1']}]}>
@@ -102,3 +102,12 @@ const styles = StyleSheet.create({
 });
 
 export default withAddAccount(DashboardScreen);
+
+export function DashboardHeaderRight() {
+  const {show} = useContext(BalanceContext);
+  return <TopNavigationAction onPress={show} icon={(p) => <Icon {...p} name={'credit-card-outline'} />} />;
+}
+
+export function DashboardHeaderLeft({navigation}: {navigation: PropTypes['navigation']}) {
+  return <TopNavigationAction onPress={navigation.openDrawer} icon={(p) => <Icon {...p} name={'menu-2-outline'} />} />;
+}

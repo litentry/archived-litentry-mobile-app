@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import DrawerScreen from 'screen/DrawerScreen';
-import DashboardScreen from 'screen/DashboardScreen';
+import DashboardScreen, {DashboardHeaderLeft, DashboardHeaderRight} from 'screen/DashboardScreen';
 import MotionDetailScreen from 'screen/MotionDetailScreen';
 import TipsScreen from 'screen/tips/TipsScreen';
 import TipDetailScreen from 'screen/tips/TipDetailScreen';
@@ -17,22 +17,57 @@ import {NetworkSelectScreen} from 'screen/NetworkSelectScreen';
 import {CouncilScreen} from 'screen/CouncilScreen';
 import {SubmitTipScreen} from 'screen/SubmitTipScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
+import {Icon, Layout, Text, TopNavigation, TopNavigationAction} from '@ui-kitten/components';
+import {NavigationProp} from '@react-navigation/native';
+import NetworkItem from 'presentational/NetworkItem';
+import {StyleSheet, TouchableOpacity} from 'react-native';
+import {NetworkContext} from 'context/NetworkContext';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
 function DashboardStackNavigator() {
+  const {currentNetwork} = useContext(NetworkContext);
+  const {status} = useContext(ChainApiContext);
+
   return (
-    <DashboardStack.Navigator headerMode="none">
-      <DashboardStack.Screen name={routeKeys.dashboard} component={DashboardScreen} />
+    <DashboardStack.Navigator>
+      <DashboardStack.Screen
+        name={routeKeys.dashboard}
+        component={DashboardScreen}
+        options={({navigation}) => ({
+          headerLeft: () => <DashboardHeaderLeft navigation={navigation} />,
+          headerRight: DashboardHeaderRight,
+          headerTitle: () => (
+            <TouchableOpacity style={styles.titleContainer} onPress={() => navigation.navigate('NetworkSelectScreen')}>
+              <Text category="s1">Litentry</Text>
+              {currentNetwork ? <NetworkItem item={currentNetwork} isConnected={status === 'ready'} /> : null}
+            </TouchableOpacity>
+          ),
+        })}
+      />
       <DashboardStack.Screen name={routeKeys.motionDetail} component={MotionDetailScreen} />
-      <DashboardStack.Screen name={routeKeys.councilScreen} component={CouncilScreen} />
       <DashboardStack.Screen name={routeKeys.tips} component={TipsScreen} />
       <DashboardStack.Screen name={routeKeys.tipDetail} component={TipDetailScreen} />
+      <DashboardStack.Screen name={routeKeys.councilScreen} component={CouncilScreen} />
       <DashboardStack.Screen name={routeKeys.treasuryScreen} component={TreasuryScreen} />
       <DashboardStack.Screen name={routeKeys.submitTip} component={SubmitTipScreen} />
     </DashboardStack.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  main: {},
+  scrollView: {},
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  titleContainer: {
+    alignItems: 'flex-start',
+  },
+  divider: {height: 2},
+});
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
@@ -64,6 +99,7 @@ function AppNavigator() {
 export default AppNavigator;
 
 const ApiLoadingStack = createStackNavigator();
+
 function ApiLoadingNavigator() {
   return (
     <ApiLoadingStack.Navigator headerMode={'none'} mode={'modal'} screenOptions={{gestureEnabled: false}}>
