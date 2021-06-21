@@ -39,7 +39,7 @@ export function Params({data}: {data: Param[]}) {
                           <Text>{p.name}: </Text>
                           <Identicon value={accountId} size={20} />
                           <Padder scale={0.3} />
-                          <Text>{u8aToString(info.display.asRaw)}</Text>
+                          <Text>{u8aToString(info?.display.asRaw)}</Text>
                         </>
                       );
                     }}

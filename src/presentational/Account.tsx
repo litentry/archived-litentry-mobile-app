@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {ChainApiContext} from 'context/ChainApiContext';
 import useAsyncRetry from 'react-use/lib/useAsyncRetry';
 import {getAccountsIdentityInfo} from 'service/api/account';
-import {AccountId} from '@polkadot/types/interfaces';
+import {AccountId, Registration} from '@polkadot/types/interfaces';
 import {IdentityInfo} from '@polkadot/types/interfaces/identity/types';
 
 export function Account({
@@ -10,7 +10,11 @@ export function Account({
   children,
 }: {
   id: string;
-  children: (info: {info: IdentityInfo; accountId: string | AccountId | Uint8Array}) => JSX.Element;
+  children: (info: {
+    info?: IdentityInfo;
+    registration?: Registration;
+    accountId: string | AccountId | Uint8Array;
+  }) => JSX.Element;
 }) {
   const {api} = useContext(ChainApiContext);
 
@@ -18,7 +22,7 @@ export function Account({
   const account = value?.[0];
 
   if (!account) {
-    return null;
+    return children({accountId: id});
   }
 
   return children(account);
