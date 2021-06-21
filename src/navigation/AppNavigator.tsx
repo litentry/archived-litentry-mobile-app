@@ -18,7 +18,7 @@ import {SubmitTipScreen} from 'screen/SubmitTipScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
 import {Text} from '@ui-kitten/components';
 import NetworkItem from 'presentational/NetworkItem';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import {NetworkContext} from 'context/NetworkContext';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
@@ -36,7 +36,7 @@ function DashboardStackNavigator() {
           headerLeft: () => <DashboardHeaderLeft navigation={navigation} />,
           headerRight: DashboardHeaderRight,
           headerTitle: () => (
-            <TouchableOpacity style={styles.titleContainer} onPress={() => navigation.navigate('ApiNavigator')}>
+            <TouchableOpacity onPress={() => navigation.navigate('ApiNavigator')}>
               <Text category="s1">Litentry</Text>
               {currentNetwork ? <NetworkItem item={currentNetwork} isConnected={status === 'ready'} /> : null}
             </TouchableOpacity>
@@ -52,20 +52,6 @@ function DashboardStackNavigator() {
     </DashboardStack.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  main: {},
-  scrollView: {},
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  titleContainer: {
-    alignItems: 'flex-start',
-  },
-  divider: {height: 2},
-});
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
