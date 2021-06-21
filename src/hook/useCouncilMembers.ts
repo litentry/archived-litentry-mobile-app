@@ -12,7 +12,7 @@ interface Result {
 export function useCouncilMembers() {
   const {api} = useContext(ChainApiContext);
   const {accounts} = useAccounts();
-  return useQuery(['members', {accounts}], async () => {
+  return useQuery(['council-members', {accounts}], async () => {
     const accountIds = await api?.query.council.members();
 
     if (accountIds && api) {
