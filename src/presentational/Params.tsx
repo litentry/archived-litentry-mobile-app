@@ -1,3 +1,8 @@
+/**
+ * referenced from
+ * https://github.com/polkadot-js/apps/tree/master/packages/react-params/src/Param
+ */
+
 import {Codec, TypeDef} from '@polkadot/types/types';
 import {Account} from 'presentational/Account';
 import {StyleSheet, View} from 'react-native';
@@ -8,7 +13,7 @@ import {isU8a, u8aToString} from '@polkadot/util';
 import {Balance} from '@polkadot/types/interfaces';
 import React from 'react';
 import {standardPadding} from 'src/styles';
-import {useFormatBalance} from '../hook/useFormatBalance';
+import {useFormatBalance} from 'src/hook/useFormatBalance';
 
 export interface Param {
   name: string;
