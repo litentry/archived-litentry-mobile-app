@@ -14,6 +14,10 @@ import {ErrorBoundary} from 'src/ErrorBoundary';
 import {QueryClient, QueryClientProvider} from 'react-query';
 import {NavigationContainer, Theme} from '@react-navigation/native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import DataContextProvider from 'src/context/DataContext';
+import ThemeContextProvider from 'src/context/ThemeProvider';
+import NetworkContextProvider from 'src/context/NetworkContext';
+import InAppNotificationContextProvider from 'src/context/InAppNotificationContext';
 
 // init type registry
 import 'src/typeRegistry';
@@ -26,27 +30,36 @@ export default function App() {
   return (
     <>
       <IconRegistry icons={[EvaIconsPack, IonicIconsPack]} />
-      <SafeAreaProvider>
-        <ApplicationProvider {...eva} theme={eva[theme]}>
-          <ErrorBoundary>
-            <Host>
-              <ChainApiContextProvider>
-                <QueryClientProvider client={queryClient}>
-                  <AccountsProvider>
-                    <BalanceContextProvider>
-                      <TxContextProvider>
-                        <NavigationContainer theme={theme === 'dark' ? DarkTheme : LightTheme}>
-                          <AppNavigator />
-                        </NavigationContainer>
-                      </TxContextProvider>
-                    </BalanceContextProvider>
-                  </AccountsProvider>
-                </QueryClientProvider>
-              </ChainApiContextProvider>
-            </Host>
-          </ErrorBoundary>
-        </ApplicationProvider>
-      </SafeAreaProvider>
+
+      <InAppNotificationContextProvider>
+        <DataContextProvider>
+          <NetworkContextProvider>
+            <ThemeContextProvider>
+              <SafeAreaProvider>
+                <ApplicationProvider {...eva} theme={eva[theme]}>
+                  <ErrorBoundary>
+                    <Host>
+                      <ChainApiContextProvider>
+                        <QueryClientProvider client={queryClient}>
+                          <AccountsProvider>
+                            <BalanceContextProvider>
+                              <TxContextProvider>
+                                <NavigationContainer theme={theme === 'dark' ? DarkTheme : LightTheme}>
+                                  <AppNavigator />
+                                </NavigationContainer>
+                              </TxContextProvider>
+                            </BalanceContextProvider>
+                          </AccountsProvider>
+                        </QueryClientProvider>
+                      </ChainApiContextProvider>
+                    </Host>
+                  </ErrorBoundary>
+                </ApplicationProvider>
+              </SafeAreaProvider>
+            </ThemeContextProvider>
+          </NetworkContextProvider>
+        </DataContextProvider>
+      </InAppNotificationContextProvider>
     </>
   );
 }
