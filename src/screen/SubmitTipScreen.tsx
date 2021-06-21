@@ -6,7 +6,7 @@ import {NavigationProp} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import {useContext, useReducer} from 'react';
-import {AccountContext} from 'context/AccountContextProvider';
+import {useAccounts} from 'context/AccountsContext';
 import {useAsyncRetry} from 'react-use';
 import {getAccountsIdentityInfo} from 'service/api/account';
 import {ChainApiContext} from 'context/ChainApiContext';
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
 
 function useAccount() {
   const {api} = useContext(ChainApiContext);
-  const {accounts} = useContext(AccountContext);
+  const {accounts} = useAccounts();
   const account = accounts?.[0];
 
   return useAsyncRetry(async () => {

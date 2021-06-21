@@ -1,8 +1,7 @@
 import React, {useRef, useMemo, useContext, useCallback, useReducer} from 'react';
 import {Text, Layout, Divider, Button, TabView, Tab, Icon, IconProps, Input} from '@ui-kitten/components';
 import {Modalize} from 'react-native-modalize';
-import {AccountContext} from 'context/AccountContextProvider';
-import {AccountAddressType, NetworkType} from 'src/types';
+import {useAccounts} from 'src/context/AccountsContext';
 import globalStyles, {standardPadding, monofontFamily} from 'src/styles';
 import ModalTitle from 'presentational/ModalTitle';
 import {NetworkContext} from 'context/NetworkContext';
@@ -14,12 +13,10 @@ import SuccessDialog from 'presentational/SuccessDialog';
 import QRCamera from 'presentational/QRCamera';
 import {parseAddress, isAddressValid} from 'src/utils';
 import {Portal} from 'react-native-portalize';
-import NetworkSelection from 'presentational/NetworkSelection';
 
 export type InjectedPropTypes = {
   accountAddProps: {
     open: () => void;
-    account: AccountAddressType | void;
   };
 };
 
@@ -43,11 +40,10 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
   return function Hoc(props: T) {
     const modalRef = useRef<Modalize>();
 
-    const {availableNetworks} = useContext(NetworkContext);
+    const {currentNetwork} = useContext(NetworkContext);
     const {api} = useContext(ChainApiContext);
-    const {accounts, setAccount} = useContext(AccountContext);
-    const account = accounts?.[0];
-
+    const {accounts, addAccount} = useAccounts();
+    const account = accounts[0]; // TODO: change this when adding multi account suppport
     const [state, dispatch] = useReducer(addAccountReducer, initialState);
     const disabled = state.address.length === 0;
 
@@ -60,26 +56,20 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
     const handleScan = useCallback(({data}) => {
       const parsed = parseAddress(data);
       dispatch({type: 'SET_ADDRESS', payload: parsed.address});
-      dispatch({type: 'SET_STEP', payload: 'selectNetwork'});
     }, []);
 
     const handleConfirm = useCallback(() => {
       if (state.step === 'input') {
-        if (state.network && isAddressValid(state.network, state.address)) {
+        if (isAddressValid(currentNetwork, state.address)) {
           dispatch({type: 'SET_STEP', payload: 'preview'});
           return;
         }
 
-        Alert.alert('Validation Failed', 'Either network or address is invalid.');
-      }
-
-      if (state.step === 'selectNetwork') {
-        dispatch({type: 'SET_STEP', payload: 'preview'});
-        return;
+        Alert.alert('Validation Failed', 'Address is invalid.');
       }
 
       if (state.step === 'preview') {
-        setAccount({name: '', address: state.address});
+        addAccount(currentNetwork.key, {address: state.address, name: ''});
         dispatch({type: 'SET_STEP', payload: 'success'});
         return;
       }
@@ -90,7 +80,7 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
 
         return;
       }
-    }, [setAccount, state.address, state.network, state.step]);
+    }, [state.address, currentNetwork, state.step, addAccount]);
 
     const handleCancel = () => {
       modalRef.current?.close();
@@ -98,12 +88,12 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
     };
 
     const confirmBtnDisabled = useMemo(() => {
-      if (state.step === 'input' || state.step === 'selectNetwork') {
-        return !state.network;
+      if (state.step === 'input') {
+        return !currentNetwork;
       }
 
       return disabled;
-    }, [disabled, state]);
+    }, [disabled, state, currentNetwork]);
 
     const content = useMemo(() => {
       switch (state.step) {
@@ -119,11 +109,6 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
               onSelect={(index) => dispatch({type: 'SET_TAB_INDEX', payload: index})}>
               <Tab title={InputIcon}>
                 <Layout style={styles.tabContainer}>
-                  <NetworkSelection
-                    data={availableNetworks}
-                    onSelect={(network) => dispatch({type: 'SET_NETWORK', payload: network})}
-                  />
-                  <Padder scale={1} />
                   <Input
                     onChangeText={handleInputChange}
                     value={state.address}
@@ -140,19 +125,8 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
               </Tab>
             </TabView>
           );
-
-        case 'selectNetwork':
-          return (
-            <Layout style={[styles.tabContainer, {minHeight: 200, marginTop: standardPadding * 2}]}>
-              <NetworkSelection
-                data={availableNetworks}
-                onSelect={(network) => dispatch({type: 'SET_NETWORK', payload: network})}
-              />
-            </Layout>
-          );
-
         case 'preview':
-          return state.network && <AddressInfoPreview address={state.address} api={api} network={state.network} />;
+          return <AddressInfoPreview address={state.address} api={api} network={currentNetwork} />;
         case 'success':
           return (
             <Layout style={globalStyles.dialogMinHeight}>
@@ -160,7 +134,7 @@ function withAddAccount<T>(Comp: React.ComponentType<T & InjectedPropTypes>) {
             </Layout>
           );
       }
-    }, [state.step, state.tabIndex, state.address, state.network, availableNetworks, handleScan, api]);
+    }, [state.step, state.tabIndex, state.address, currentNetwork, handleScan, api]);
 
     return (
       <>
@@ -215,7 +189,7 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 16,
-    minHeight: 74,
+    minHeight: 90,
     fontFamily: monofontFamily,
   },
   tabViewIndicator: {
@@ -246,10 +220,10 @@ export default withAddAccount;
 /**
  * Reducer
  */
-type StepType = 'input' | 'preview' | 'success' | 'selectNetwork';
+type StepType = 'input' | 'preview' | 'success';
+
 type State = {
   tabIndex: number;
-  network?: NetworkType;
   step: StepType;
   address: string;
 };
@@ -257,13 +231,11 @@ type State = {
 type Action =
   | {type: 'RESET'}
   | {type: 'SET_TAB_INDEX'; payload: number}
-  | {type: 'SET_NETWORK'; payload: NetworkType}
   | {type: 'SET_ADDRESS'; payload: string}
   | {type: 'SET_STEP'; payload: StepType};
 
 const initialState: State = {
   tabIndex: 0,
-  network: undefined,
   step: 'input',
   address: '',
 };
@@ -276,10 +248,9 @@ function addAccountReducer(state: State, action: Action) {
       return {...state, step: action.payload};
     case 'SET_TAB_INDEX':
       return {...state, tabIndex: action.payload};
-    case 'SET_NETWORK':
-      return {...state, network: action.payload};
     case 'RESET':
       return initialState;
+    default:
+      return state;
   }
-  return state;
 }

@@ -32,7 +32,7 @@ function AddressInfoPreview(props: PropTypes) {
   const identity = detail?.data;
 
   useEffect(() => {
-    if (api && address) {
+    if (api) {
       setInProgress(true);
       api.query.system.account(address).then((acc) => {
         setAccount(acc);

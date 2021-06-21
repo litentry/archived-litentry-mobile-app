@@ -65,7 +65,7 @@ function ChainApiContextProvider(props: PropTypes) {
   );
 
   useEffect(() => {
-    const wsAddress = currentNetwork?.ws?.[wsConnectionIndex];
+    const wsAddress = currentNetwork.ws[wsConnectionIndex];
     if (!wsAddress) {
       return;
     }
@@ -97,7 +97,7 @@ function ChainApiContextProvider(props: PropTypes) {
       setStatus('disconnected');
     }
 
-    function handleError(error: any) {
+    function handleError(error: unknown) {
       logger.debug('ChainApiContext: Api error at', wsAddress, error);
       setApi(undefined);
       setInProgress(false);
@@ -110,7 +110,7 @@ function ChainApiContextProvider(props: PropTypes) {
 
     const retryInterval = setInterval(() => {
       if (!apiPromise.isConnected) {
-        const webSocketAddresses = currentNetwork?.ws ?? [];
+        const webSocketAddresses = currentNetwork.ws;
         // pick the next ws api location
         // rerun the effect by changing the wsConnectionIndex dependency
         if (webSocketAddresses.length > 1) {

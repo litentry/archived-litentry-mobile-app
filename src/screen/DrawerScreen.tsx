@@ -6,7 +6,7 @@ import globalStyles, {standardPadding, monofontFamily} from 'src/styles';
 import {ThemeContext} from 'context/ThemeProvider';
 import logo from '../image/logo.png';
 import Padder from 'presentational/Padder';
-import {AccountContext} from 'context/AccountContextProvider';
+import {useAccounts} from 'src/context/AccountsContext';
 import {NetworkContext} from 'context/NetworkContext';
 import {DrawerContentComponentProps} from '@react-navigation/drawer';
 import AddressInfoBadge from 'presentational/AddressInfoBadge';
@@ -19,10 +19,12 @@ import {registrarList, webview, devScreen} from 'src/navigation/routeKeys';
 function AccountDrawerView({accountAddProps}: InjectedPropTypes) {
   const {show} = useContext(BalanceContext);
   const {api} = useContext(ChainApiContext);
-  const {accounts, setAccount} = useContext(AccountContext);
+  const {accounts, removeAccount} = useAccounts();
   const {currentNetwork} = useContext(NetworkContext);
   const [visible, setVisible] = useState(false);
-  const account = accounts && accounts[0];
+
+  // TODO: change this logic when adding multi account support
+  const account = accounts.length > 0 ? accounts[0] : null;
 
   const handleMenuItemSelect = ({row}: {row: number}) => {
     if (row === 0) {
@@ -34,7 +36,9 @@ function AccountDrawerView({accountAddProps}: InjectedPropTypes) {
             text: 'Yes',
             onPress: () => {
               setVisible(false);
-              setAccount(null);
+              if (account) {
+                removeAccount(currentNetwork.key, account);
+              }
             },
           },
           {
