@@ -1,5 +1,5 @@
 import {Button, Divider, Icon, Layout, Text, TopNavigationAction, useTheme} from '@ui-kitten/components';
-import React, {useContext, useMemo, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import globalStyles, {standardPadding} from 'src/styles';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import {NavigationProp} from '@react-navigation/native';
@@ -8,17 +8,17 @@ import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import type {Call} from '@polkadot/types/interfaces';
 import {FunctionMetadataLatest, ProposalIndex} from '@polkadot/types/interfaces';
 import {formatNumber} from '@polkadot/util';
-import {useVotingStatus} from '../../hook/useVotingStatus';
+import {useVotingStatus} from 'src/hook/useVotingStatus';
 import type {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
 import {TxContext} from 'context/TxContext';
 import {EmptyView} from 'presentational/EmptyView';
 import Padder from 'presentational/Padder';
 import type {IExtrinsic, IMethod} from '@polkadot/types/types';
 import {Compact, GenericCall, getTypeDef} from '@polkadot/types';
-import {useCouncilMembers} from 'screen/Council/CouncilScreen';
 import {useQuery, useQueryClient} from 'react-query';
 import {Param, Params} from 'presentational/Params';
 import {useAccounts} from 'context/AccountsContext';
+import {useCouncilMembers} from 'src/hook/useCouncilMembers';
 
 export function MotionsScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {api} = useContext(ChainApiContext);
@@ -62,8 +62,9 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
   const account = accounts?.[0];
 
   const {votes, proposal, hash} = item;
-  const {members, isMember} = useMembers();
-  const {isCloseable, isVoteable} = useVotingStatus(votes, members.length, 'council');
+  const {data} = useCouncilMembers();
+  const membersCount = data?.members.length ?? 0;
+  const {isCloseable, isVoteable} = useVotingStatus(votes, membersCount, 'council');
 
   const {meta, method, section} = proposal.registry.findMetaCall(proposal.callIndex);
   const params = useParams(proposal);
@@ -86,10 +87,10 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
           />
         </TouchableOpacity>
         {/*<Text>{formatNumber(votes?.threshold)}</Text>*/}
-        <Text category={'c1'}>{`Aye ${votes?.ayes.length}/${members.length} `}</Text>
+        <Text category={'c1'}>{`Aye ${votes?.ayes.length}/${membersCount} `}</Text>
         <Padder scale={0.5} />
         {(() => {
-          if (isMember) {
+          if (data?.isMember) {
             if (isCloseable) {
               return (
                 <View>
@@ -190,24 +191,6 @@ const motionStyle = StyleSheet.create({
   buttons: {display: 'flex', flexDirection: 'row'},
   footer: {paddingVertical: standardPadding, paddingHorizontal: standardPadding / 2},
 });
-
-interface Result {
-  isMember: boolean;
-  members: string[];
-}
-
-export function useMembers(): Result {
-  const {accounts} = useAccounts();
-  const {data: councilMembers} = useCouncilMembers();
-
-  return useMemo(() => {
-    const members = councilMembers?.map((r) => r.accountId.toString()) || [];
-    return {
-      isMember: members.some((accountId) => accounts?.find((a) => a.address.toString() === accountId.toString())),
-      members,
-    };
-  }, [accounts, councilMembers]);
-}
 
 const METHOD_TREA = ['approveProposal', 'rejectProposal'];
 function useParams(proposal: Call) {
