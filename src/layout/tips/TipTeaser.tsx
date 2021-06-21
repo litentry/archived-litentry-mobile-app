@@ -6,7 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import {Tip} from 'src/hook/useTips';
 import {tipDetail} from 'src/navigation/routeKeys';
 import TipReason from 'layout/tips/TipReason';
-import {Account} from 'presentational/Account';
+import {Account} from 'src/layout/Account';
 import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
 import {u8aToString} from '@polkadot/util';
 

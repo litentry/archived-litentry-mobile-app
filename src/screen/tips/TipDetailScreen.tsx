@@ -1,12 +1,11 @@
-import React, {useMemo, useContext} from 'react';
-import {View, StyleSheet, Image} from 'react-native';
+import React, {useContext, useMemo} from 'react';
+import {Image, StyleSheet, View} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {formatNumber, formatBalance, u8aToString} from '@polkadot/util';
+import {formatBalance, formatNumber, u8aToString} from '@polkadot/util';
 import {BlockNumber, OpenTip} from '@polkadot/types/interfaces';
 import Identicon from '@polkadot/reactnative-identicon';
-import {Card, Text, List, Divider, ListItem} from '@ui-kitten/components';
-
+import {Card, Divider, List, ListItem, Text} from '@ui-kitten/components';
 import GenericNavigationLayout from 'presentational/GenericNavigationLayout';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
 import {useTip} from 'src/hook/useTip';
@@ -17,7 +16,7 @@ import {ChainApiContext} from 'context/ChainApiContext';
 import {BlockTime} from 'layout/BlockTime';
 import {extractTipState} from 'layout/tips/utils';
 import NoDataImage from 'image/no_data.png';
-import {Account} from 'presentational/Account';
+import {Account} from 'src/layout/Account';
 import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
 import {useAccounts} from 'context/AccountsContext';
 

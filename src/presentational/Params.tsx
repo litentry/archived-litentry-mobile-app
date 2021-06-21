@@ -4,7 +4,7 @@
  */
 
 import {Codec, TypeDef} from '@polkadot/types/types';
-import {Account} from 'presentational/Account';
+import {Account} from 'src/layout/Account';
 import {StyleSheet, View} from 'react-native';
 import {Text} from '@ui-kitten/components';
 import Identicon from '@polkadot/reactnative-identicon';
