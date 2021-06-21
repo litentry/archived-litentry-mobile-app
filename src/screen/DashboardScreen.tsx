@@ -38,7 +38,7 @@ function DashboardScreen({navigation, accountAddProps}: PropTypes & AddAccountIn
   const account = accounts[0]; // TODO: change this when adding multi account support
 
   return (
-    <SafeView>
+    <SafeView edges={['left', 'right', 'bottom']}>
       <Divider style={styles.divider} />
       <FadeInAnimatedView>
         {!account ? (
