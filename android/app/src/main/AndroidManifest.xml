@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.litentry"
+    package="com.litentry.governance"
     android:name="android.support.multidex.MultiDexApplication">
 
     <uses-permission android:name="android.permission.INTERNET" />
