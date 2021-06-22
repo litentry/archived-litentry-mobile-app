@@ -3,7 +3,7 @@ import {Layout, Button, ListItem, Divider, Text} from '@ui-kitten/components';
 import GenericNavigationLayout from 'presentational/GenericNavigationLayout';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {useAccounts} from 'src/context/AccountsContext';
-import {InAppNotificationContext, RichTextComponent} from 'context/InAppNotificationContext';
+import {InAppNotificationContext, InAppNotificationContent} from 'context/InAppNotificationContext';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {Alert, StyleSheet} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -78,7 +78,7 @@ function DevScreen(props: PropTypes) {
                   trigger({
                     type: 'Component',
                     renderContent: () => (
-                      <RichTextComponent
+                      <InAppNotificationContent
                         title="Tx detected"
                         message="aa very long string[a very long string[a very long string[a very long string[a very long string[]]]]]a very long string[]a very long string[a very long string[a very long string[a very long string[a very long string[]]]]]a very long string[] very long string[a very long string[a very long string[a very long string[a very long string[]]]]]a very long string[]"
                       />

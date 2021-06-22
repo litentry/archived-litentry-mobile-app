@@ -1,4 +1,4 @@
-import React, {createContext, useRef, useCallback, useMemo, useState} from 'react';
+import React, {createContext, useRef, useCallback, useMemo, useState, useContext} from 'react';
 import {StyleSheet, View, Text, Platform} from 'react-native';
 import {Notification, NotificationProperties} from 'react-native-in-app-message';
 import {standardPadding} from 'src/styles';
@@ -14,6 +14,7 @@ type InAppNotificationPayloadType =
       renderContent: () => React.ReactNode;
       opts?: NotificationProperties;
     };
+
 type InAppNotificationContextValueType = {
   trigger: (payload: InAppNotificationPayloadType) => void;
 };
@@ -22,9 +23,12 @@ export const InAppNotificationContext = createContext<InAppNotificationContextVa
   trigger: () => undefined,
 });
 
+export const useInAppNotification = () => useContext(InAppNotificationContext);
+
 type PropTypes = {
   children: React.ReactNode;
 };
+
 const DEFAULT_OPTIONS = {duration: 5000, tapticFeedback: true};
 
 function InAppNotificationContextProvider({children}: PropTypes) {
@@ -46,14 +50,13 @@ function InAppNotificationContextProvider({children}: PropTypes) {
     }
     notificationRef.current?.show();
   }, []);
+
   const value = useMemo(() => ({trigger}), [trigger]);
 
   return (
     <InAppNotificationContext.Provider value={value}>
-      <>
-        {children}
-        <Notification {...notificationProps} ref={notificationRef} />
-      </>
+      {children}
+      <Notification {...notificationProps} ref={notificationRef} />
     </InAppNotificationContext.Provider>
   );
 }
@@ -75,7 +78,7 @@ type RichTextComponentPropTypes = {
   message: string;
 };
 
-export const RichTextComponent = (props: RichTextComponentPropTypes) => {
+export const InAppNotificationContent = (props: RichTextComponentPropTypes) => {
   const {title, message} = props;
 
   return (
