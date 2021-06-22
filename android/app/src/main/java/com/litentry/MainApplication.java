@@ -1,4 +1,4 @@
-package com.litentry;
+package com.litentry.governance;
 
 import android.app.Application;
 import android.content.Context;

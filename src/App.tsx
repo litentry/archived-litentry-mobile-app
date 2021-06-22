@@ -12,14 +12,25 @@ import AppNavigator from 'src/navigation/AppNavigator';
 import {IonicIconsPack} from './Ionic-icons';
 import {ErrorBoundary} from 'src/ErrorBoundary';
 import {QueryClient, QueryClientProvider} from 'react-query';
+import messaging from '@react-native-firebase/messaging';
 
 // init type registry
 import 'src/typeRegistry';
+import {Alert} from 'react-native';
 
 const queryClient = new QueryClient();
 
 export default function App() {
   const {theme} = useContext(ThemeContext);
+  React.useEffect(() => {
+    requestUserPermission();
+    messaging().getToken().then(console.log);
+    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+
+    return unsubscribe;
+  }, []);
 
   return (
     <>
@@ -43,4 +54,14 @@ export default function App() {
       </ApplicationProvider>
     </>
   );
+}
+
+async function requestUserPermission() {
+  const authStatus = await messaging().requestPermission();
+  const enabled =
+    authStatus === messaging.AuthorizationStatus.AUTHORIZED || authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+  if (enabled) {
+    console.log('Authorization status:', authStatus);
+  }
 }
