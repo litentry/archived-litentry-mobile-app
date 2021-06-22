@@ -1,3 +1,9 @@
 # Windows files should use crlf line endings
 # https://help.github.com/articles/dealing-with-line-endings/
 *.bat text eol=crlf
+
+.gitattributes !filter !diff
+.gitignore !filter !diff
+.git/* !filter !diff
+ios/GoogleService-Info.plist filter=git-crypt diff=git-crypt
+android/app/google-services.json filter=git-crypt diff=git-crypt
