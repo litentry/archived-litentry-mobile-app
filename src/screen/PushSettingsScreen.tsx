@@ -39,6 +39,7 @@ export function PushSettingsScreen(props: PropTypes) {
               />
             ))
           )}
+          <Padder scale={2} />
           <Divider />
         </View>
         <ListItem
