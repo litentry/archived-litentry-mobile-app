@@ -1,13 +1,14 @@
 import React from 'react';
 import Identicon from '@polkadot/reactnative-identicon';
 import {StyleSheet, View} from 'react-native';
-import {ListItem} from '@ui-kitten/components';
+import {ListItem, Text} from '@ui-kitten/components';
 import {useNavigation} from '@react-navigation/native';
-
 import {Tip} from 'src/hook/useTips';
 import {tipDetail} from 'src/navigation/routeKeys';
 import TipReason from 'layout/tips/TipReason';
-import {Address} from 'layout/Address';
+import {Account} from 'src/layout/Account';
+import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
+import {u8aToString} from '@polkadot/util';
 
 const styles = StyleSheet.create({
   identIconContainer: {
@@ -26,7 +27,20 @@ function TipTeaser({tip}: TipTeaserProps) {
 
   return (
     <ListItem
-      title={() => <Address address={who} />}
+      title={() => (
+        <Account id={who.toString()}>
+          {({info, registration, accountId}) => {
+            const display = u8aToString(info?.display.asRaw);
+            return display ? (
+              <AccountInfoInlineTeaser display={display} judgements={registration?.judgements} />
+            ) : (
+              <Text numberOfLines={1} ellipsizeMode="middle" category={'c2'}>
+                {String(accountId)}
+              </Text>
+            );
+          }}
+        </Account>
+      )}
       description={() => <TipReason reasonHash={reason} />}
       accessoryLeft={() => (
         <View style={styles.identIconContainer}>
