@@ -7,8 +7,8 @@ import globalStyles, {standardPadding} from 'src/styles';
 import Padder from 'presentational/Padder';
 import {useDataContext} from 'context/DataContext';
 import {useMutation, useQuery, useQueryClient} from 'react-query';
-import {xor} from 'lodash';
 import LoadingView from 'presentational/LoadingView';
+import messaging from '@react-native-firebase/messaging';
 
 type PropTypes = {
   navigation: DrawerNavigationProp<DrawerParamList>;
@@ -33,7 +33,9 @@ export function PushSettingsScreen(props: PropTypes) {
               <ListItem
                 key={item.id}
                 title={item.label}
-                accessoryRight={() => <Switch value={item.selected} onValueChange={() => toggleTopic(item.id)} />}
+                accessoryRight={() => (
+                  <Switch value={item.selected} onValueChange={(subscribe) => toggleTopic({id: item.id, subscribe})} />
+                )}
               />
             ))
           )}
@@ -71,11 +73,17 @@ function useTopics() {
   );
 
   const {mutate: toggleTopic} = useMutation(
-    (id: string) => {
+    async ({id, subscribe}: {id: string; subscribe: boolean}) => {
       if (!data) {
         throw new Error('DATA NOT LOADED YET!');
       }
-      return asyncStorage.set('selected_push_topics', JSON.stringify(xor(data, [id])));
+      const updatedData = subscribe ? [...data, id] : data.filter((t) => t !== id);
+      await asyncStorage.set('selected_push_topics', JSON.stringify(updatedData));
+      if (subscribe) {
+        await messaging().subscribeToTopic(id);
+      } else {
+        await messaging().unsubscribeFromTopic(id);
+      }
     },
     {
       onSettled: () => queryClient.invalidateQueries('selected_push_topics'),
@@ -84,13 +92,18 @@ function useTopics() {
        * optimistic update
        * more info: https://react-query.tanstack.com/guides/optimistic-updates#updating-a-list-of-todos-when-adding-a-new-todo
        * */
-      onMutate: async (id) => {
+      onMutate: async ({id, subscribe}) => {
         await queryClient.cancelQueries('selected_push_topics');
         const previousTopics = queryClient.getQueryData('selected_push_topics');
-        queryClient.setQueryData<string[]>('selected_push_topics', (data) => xor(data, [id]));
+        queryClient.setQueryData<string[]>('selected_push_topics', (data) => {
+          if (!data) {
+            return [];
+          }
+          return subscribe ? [...data, id] : data.filter((t) => t !== id);
+        });
         return {previousTopics};
       },
-      onError: (err, id, context: any) => {
+      onError: (err, vars, context: any) => {
         queryClient.setQueryData('selected_push_topics', context.previousTopics);
       },
     },
