@@ -16,6 +16,7 @@ import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
 import {CouncilScreen} from 'screen/CouncilScreen';
 import {SubmitTipScreen} from 'screen/SubmitTipScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
+import {PushSettingsScreen} from 'screen/PushSettingsScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -40,10 +41,10 @@ function DrawerNavigator() {
     <Drawer.Navigator drawerContent={(props) => <DrawerScreen {...props} />}>
       <Drawer.Screen name={routeKeys.dashboard} component={DashboardStackNavigator} />
       <Drawer.Screen name={routeKeys.registrarList} component={RegistrarListScreen} />
-
       <Drawer.Screen name={routeKeys.myIdentity} component={MyIdentityScreen} />
       <Drawer.Screen name={routeKeys.webview} component={WebviewScreen} />
       <Drawer.Screen name={routeKeys.devScreen} component={DevScreen} />
+      <Drawer.Screen name={routeKeys.pushSettingsScreen} component={PushSettingsScreen} />
     </Drawer.Navigator>
   );
 }

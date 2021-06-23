@@ -36,7 +36,7 @@ export type NetworkContextValueType = {
   select: (network: NetworkType) => void;
 };
 
-export type AsyncStorageKeyType = 'network';
+export type AsyncStorageKeyType = 'network' | 'selected_push_topics';
 
 export type DataContextValueType = {
   asyncStorage: {
