@@ -1,23 +1,24 @@
-import React, {useMemo, useContext} from 'react';
-import {View, StyleSheet, Image} from 'react-native';
+import React, {useContext, useMemo} from 'react';
+import {Image, StyleSheet, View} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {formatNumber, formatBalance} from '@polkadot/util';
+import {formatBalance, formatNumber, u8aToString} from '@polkadot/util';
 import {BlockNumber, OpenTip} from '@polkadot/types/interfaces';
 import Identicon from '@polkadot/reactnative-identicon';
-import {Card, Text, List, Divider, ListItem} from '@ui-kitten/components';
-
+import {Card, Divider, List, ListItem, Text} from '@ui-kitten/components';
 import GenericNavigationLayout from 'presentational/GenericNavigationLayout';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
 import {useTip} from 'src/hook/useTip';
 import TipReason from 'layout/tips/TipReason';
 import globalStyles, {monofontFamily} from 'src/styles';
-import {Address} from 'layout/Address';
 import {useCall} from 'src/hook/useCall';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {BlockTime} from 'layout/BlockTime';
 import {extractTipState} from 'layout/tips/utils';
 import NoDataImage from 'image/no_data.png';
+import {Account} from 'src/layout/Account';
+import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
+import {useAccounts} from 'context/AccountsContext';
 
 type ScreenProps = {
   navigation: StackNavigationProp<DashboardStackParamList>;
@@ -78,11 +79,15 @@ type TipDetailContentProps = {
 };
 
 function TipDetailContent({tip, bestNumber}: TipDetailContentProps) {
+  const {accounts} = useAccounts();
   const tipState = useMemo(() => {
     if (tip) {
-      return extractTipState(tip, []); // TODO: pass allAccounts when available here
+      return extractTipState(
+        tip,
+        accounts.map((a) => a.address),
+      );
     }
-  }, [tip]);
+  }, [tip, accounts]);
 
   if (!tipState) {
     return null;
@@ -174,7 +179,22 @@ function TipDetailScreen({navigation, route}: ScreenProps) {
           const [tipper, balance] = item;
           return (
             <ListItem
-              title={() => <Address address={tipper} />}
+              title={() => {
+                return (
+                  <Account id={tipper.toString()}>
+                    {({info, registration, accountId}) => {
+                      const display = u8aToString(info?.display.asRaw);
+                      return display ? (
+                        <AccountInfoInlineTeaser display={display} judgements={registration?.judgements} />
+                      ) : (
+                        <Text numberOfLines={1} ellipsizeMode="middle" category={'c2'}>
+                          {String(accountId)}
+                        </Text>
+                      );
+                    }}
+                  </Account>
+                );
+              }}
               description={() => {
                 return <Text>{formatBalance(balance)}</Text>;
               }}

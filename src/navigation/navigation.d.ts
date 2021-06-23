@@ -11,6 +11,7 @@ type DashboardStackParamList = {
   CouncilScreen: undefined;
   SubmitTipScreen: undefined;
   TreasuryScreen: undefined;
+  MotionsScreen: undefined;
 };
 
 type DrawerParamList = {
