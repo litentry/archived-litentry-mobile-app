@@ -34,7 +34,6 @@ export function useAccountIdentity(id?: string) {
   return useQuery(
     ['account_identity', id],
     async () => {
-      console.log('GETTING IDENTITY');
       const accounts = api ? await getAccountsIdentityInfo([id], api) : undefined;
       return accounts?.[0];
     },
