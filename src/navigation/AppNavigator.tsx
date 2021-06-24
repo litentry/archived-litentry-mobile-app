@@ -17,7 +17,7 @@ import {CouncilScreen} from 'screen/Council/CouncilScreen';
 import {SubmitTipScreen} from 'screen/SubmitTipScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
-import {PushSettingsScreen} from 'screen/PushSettingsScreen';
+import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -46,7 +46,7 @@ function DrawerNavigator() {
       <Drawer.Screen name={routeKeys.myIdentity} component={MyIdentityScreen} />
       <Drawer.Screen name={routeKeys.webview} component={WebviewScreen} />
       <Drawer.Screen name={routeKeys.devScreen} component={DevScreen} />
-      <Drawer.Screen name={routeKeys.pushSettingsScreen} component={PushSettingsScreen} />
+      <Drawer.Screen name={routeKeys.notificationSettingsScreen} component={NotificationSettingsScreen} />
     </Drawer.Navigator>
   );
 }

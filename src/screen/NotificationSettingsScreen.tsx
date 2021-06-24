@@ -14,7 +14,7 @@ type PropTypes = {
   navigation: DrawerNavigationProp<DrawerParamList>;
 };
 
-export function PushSettingsScreen(props: PropTypes) {
+export function NotificationSettingsScreen(props: PropTypes) {
   const {navigation} = props;
   const {topics, toggleTopic, isLoading} = useTopics();
 
