@@ -162,7 +162,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.litentry"
+        applicationId "com.litentry.governance.android"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 2

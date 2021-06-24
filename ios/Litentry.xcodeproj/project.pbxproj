@@ -741,7 +741,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.litentry.main.ios.demo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.litentry.governance.ios;
 				PRODUCT_NAME = Litentry;
 				SWIFT_OBJC_BRIDGING_HEADER = "Litentry-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -765,7 +765,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.litentry.main.ios.demo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.litentry.governance.ios;
 				PRODUCT_NAME = Litentry;
 				SWIFT_OBJC_BRIDGING_HEADER = "Litentry-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
