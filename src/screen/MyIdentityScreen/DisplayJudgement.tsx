@@ -19,6 +19,7 @@ import {BalanceOf, AccountId} from '@polkadot/types/interfaces';
 import {Vec} from '@polkadot/types';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
 import InfoBanner from 'presentational/InfoBanner';
+import {useQuery} from 'react-query';
 
 const {height} = Dimensions.get('window');
 
@@ -52,7 +53,11 @@ function DisplayJudgement(props: PropTypes) {
 
   const identity = detail?.data;
   const modalRef = useRef<Modalize>(null);
-  const subAccounts: SubAccounts | undefined = useCall(api?.query.identity.subsOf, [address]);
+  const {data: subAccounts} = useQuery(
+    ['sub_accounts', address],
+    () => api?.query.identity.subsOf(address) as unknown as Promise<SubAccounts>,
+    {enabled: !!address},
+  );
   const subAccountsArray = subAccounts?.[1];
 
   return (
