@@ -13,9 +13,10 @@ import MyIdentityScreen from 'screen/MyIdentityScreen';
 import * as routeKeys from 'src/navigation/routeKeys';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
-import {CouncilScreen} from 'screen/CouncilScreen';
+import {CouncilScreen} from 'screen/Council/CouncilScreen';
 import {SubmitTipScreen} from 'screen/SubmitTipScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
+import {MotionsScreen} from 'screen/Council/MotionsScreen';
 import {PushSettingsScreen} from 'screen/PushSettingsScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
@@ -25,11 +26,12 @@ function DashboardStackNavigator() {
     <DashboardStack.Navigator headerMode="none">
       <DashboardStack.Screen name={routeKeys.dashboard} component={DashboardScreen} />
       <DashboardStack.Screen name={routeKeys.motionDetail} component={MotionDetailScreen} />
-      <DashboardStack.Screen name={routeKeys.councilScreen} component={CouncilScreen} />
       <DashboardStack.Screen name={routeKeys.tips} component={TipsScreen} />
       <DashboardStack.Screen name={routeKeys.tipDetail} component={TipDetailScreen} />
+      <DashboardStack.Screen name={routeKeys.councilScreen} component={CouncilScreen} />
       <DashboardStack.Screen name={routeKeys.treasuryScreen} component={TreasuryScreen} />
       <DashboardStack.Screen name={routeKeys.submitTip} component={SubmitTipScreen} />
+      <DashboardStack.Screen name={routeKeys.motionsScreen} component={MotionsScreen} />
     </DashboardStack.Navigator>
   );
 }
@@ -64,6 +66,7 @@ function AppNavigator() {
 export default AppNavigator;
 
 const ApiLoadingStack = createStackNavigator();
+
 function ApiLoadingNavigator() {
   return (
     <ApiLoadingStack.Navigator headerMode={'none'} mode={'modal'} screenOptions={{gestureEnabled: false}}>
