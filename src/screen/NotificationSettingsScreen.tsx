@@ -44,7 +44,7 @@ export function NotificationSettingsScreen(props: PropTypes) {
         </View>
         <ListItem
           accessoryLeft={(p) => <Icon {...p} name={'info-outline'} />}
-          title={"Don't forget to enable notifications in your phone setting in the app section"}
+          title={"Don't forget to enable notifications in your phone's settings"}
         />
       </Layout>
     </GenericNavigationLayout>
