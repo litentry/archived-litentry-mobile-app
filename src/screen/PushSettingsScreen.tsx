@@ -59,10 +59,10 @@ const styles = StyleSheet.create({
 });
 
 const TOPICS = [
-  {id: 'REF_BEGIN', label: 'New referendum has begun'},
-  {id: 'REF_RESULT', label: 'Results of the referendum'},
-  {id: 'COUNCIL_ELECTION', label: 'Election of a new council'},
-  {id: 'SECOND_PROPOSAL_REMINDER', label: 'Reminder to second proposal'},
+  {id: 'REF_VOTE', label: 'Vote on Active Referenda'},
+  {id: 'COUNCIL_VOTE', label: 'Vote for Council Election'},
+  {id: 'EMERGENCY_VOTE', label: 'Vote for Emergency Proposals'},
+  {id: 'TREASURY_VOTE', label: 'Vote for Treasury Proposals'},
 ];
 
 function useTopics() {
