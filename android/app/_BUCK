@@ -35,12 +35,12 @@ android_library(
 
 android_build_config(
     name = "build_config",
-    package = "com.litentry",
+    package = "com.litentry.governance",
 )
 
 android_resource(
     name = "res",
-    package = "com.litentry",
+    package = "com.litentry.governance",
     res = "src/main/res",
 )
 

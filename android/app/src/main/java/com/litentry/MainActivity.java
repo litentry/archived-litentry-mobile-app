@@ -1,4 +1,4 @@
-package com.litentry;
+package com.litentry.governance;
 
 import com.facebook.react.ReactActivity;
 

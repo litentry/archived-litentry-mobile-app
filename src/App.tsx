@@ -12,6 +12,7 @@ import AppNavigator from 'src/navigation/AppNavigator';
 import {IonicIconsPack} from './Ionic-icons';
 import {ErrorBoundary} from 'src/ErrorBoundary';
 import {QueryClient, QueryClientProvider} from 'react-query';
+import {useFirebase} from 'src/hook/useFirebase';
 
 // init type registry
 import 'src/typeRegistry';
@@ -20,6 +21,7 @@ const queryClient = new QueryClient();
 
 export default function App() {
   const {theme} = useContext(ThemeContext);
+  useFirebase();
 
   return (
     <>
