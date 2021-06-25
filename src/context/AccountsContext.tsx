@@ -1,11 +1,8 @@
-import React, {useContext, useReducer, createContext, useMemo, useState, useEffect} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, {useContext, useReducer, createContext, useState, useMemo, useEffect} from 'react';
 
 import {SupportedNetworkType} from 'src/types';
 import {NetworkContext} from 'src/context/NetworkContext';
-import {createLogger} from 'src/utils';
-
-const logger = createLogger('AccountsContext');
+import {usePersistedData} from 'src/hook/usePersistedData';
 
 type Account = {
   address: string;
@@ -85,29 +82,20 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
   const [isLoading, setIsLoading] = useState(true);
   const networkState = useContext(NetworkContext);
   const currentNetwork = networkState.currentNetwork.key;
+  const {data: persistedState, persistData: persistState} = usePersistedData<State>(STORAGE_KEY);
 
   useEffect(() => {
-    try {
-      AsyncStorage.getItem(STORAGE_KEY).then((persistedState) => {
-        if (persistedState) {
-          dispatch({type: 'INIT_STATE', payload: JSON.parse(persistedState)});
-        }
-        setIsLoading(false);
-      });
-    } catch (e) {
-      logger.error(`Error getting ${STORAGE_KEY} from AsyncStorage`, e);
+    if (persistedState) {
+      dispatch({type: 'INIT_STATE', payload: persistedState});
     }
-  }, []);
+    setIsLoading(false);
+  }, [persistedState]);
 
   useEffect(() => {
     if (state) {
-      try {
-        AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      } catch (e) {
-        logger.error(`Error setting ${STORAGE_KEY} to AsyncStorage`, e);
-      }
+      persistState(state);
     }
-  }, [state]);
+  }, [state, persistState]);
 
   const accountsContextValue = useMemo(() => {
     return {
