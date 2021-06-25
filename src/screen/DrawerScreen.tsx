@@ -14,7 +14,7 @@ import Identicon from '@polkadot/reactnative-identicon';
 import {BalanceContext} from 'context/BalanceContext';
 import withAddAccount, {InjectedPropTypes} from 'src/hoc/withAddAccount';
 import {ChainApiContext} from 'context/ChainApiContext';
-import {registrarList, webview, devScreen} from 'src/navigation/routeKeys';
+import {registrarList, webview, devScreen, notificationSettingsScreen} from 'src/navigation/routeKeys';
 
 function AccountDrawerView({accountAddProps}: InjectedPropTypes) {
   const {show} = useContext(BalanceContext);
@@ -176,6 +176,13 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
                 uri: 'https://www.litentry.com',
               })
             }
+          />
+          <Divider />
+          <ListItem
+            title="Notifications"
+            description="Personalize notifications settings."
+            accessoryLeft={(props) => <Icon {...props} name="bell-outline" animation="zoom" />}
+            onPress={() => navigation.navigate(notificationSettingsScreen)}
           />
           <Divider />
           {__DEV__ && (

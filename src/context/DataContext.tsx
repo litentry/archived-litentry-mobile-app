@@ -1,4 +1,4 @@
-import React, {createContext} from 'react';
+import React, {createContext, useContext} from 'react';
 import {DataContextValueType, AsyncStorageKeyType} from 'src/types';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -8,6 +8,8 @@ export const DataContext = createContext<DataContextValueType>({
     set: () => Promise.resolve(),
   },
 });
+
+export const useDataContext = () => useContext(DataContext);
 
 type PropTypes = {
   children: React.ReactNode;
