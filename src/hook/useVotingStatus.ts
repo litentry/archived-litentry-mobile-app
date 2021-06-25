@@ -8,7 +8,7 @@ import {useContext, useMemo} from 'react';
 import {ApiPromise} from '@polkadot/api';
 import {isFunction} from '@polkadot/util';
 import {ChainApiContext} from 'context/ChainApiContext';
-import {useAsync} from 'react-use';
+import {useQuery} from 'react-query';
 
 interface State {
   hasFailed: boolean;
@@ -84,6 +84,6 @@ export function useBestNumber(): BlockNumber | undefined {
     throw new Error('API is not defined');
   }
 
-  const {value} = useAsync(() => api.derive.chain.bestNumber());
-  return value;
+  const {data} = useQuery(['api_derive_chain_bestNumber'], () => api.derive.chain.bestNumber(), {staleTime: 1000 * 60});
+  return data;
 }
