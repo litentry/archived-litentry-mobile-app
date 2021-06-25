@@ -5,9 +5,10 @@ import {createLogger} from 'src/utils';
 
 const logger = createLogger('usePersistedData');
 
-export function usePersistedData<T>(key: AsyncStorageKeyType) {
+export function usePersistedData<T>(
+  key: AsyncStorageKeyType,
+): [persistedData: T | undefined, persistData: (data: T) => void] {
   const [data, setData] = useState<T>();
-  const [isLoading, setIsLoading] = useState(true);
   const persistData = useCallback(
     (data: T) => {
       try {
@@ -26,7 +27,6 @@ export function usePersistedData<T>(key: AsyncStorageKeyType) {
         if (persistedData) {
           setData(persistedData);
         }
-        setIsLoading(false);
       } catch (e) {
         logger.error(`Error getting ${key} from AsyncStorage`, e);
       }
@@ -34,9 +34,5 @@ export function usePersistedData<T>(key: AsyncStorageKeyType) {
     loadPersistedData();
   }, [key]);
 
-  return {
-    data,
-    persistData,
-    isLoading,
-  };
+  return [data, persistData];
 }

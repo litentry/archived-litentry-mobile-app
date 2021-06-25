@@ -82,7 +82,7 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
   const [isLoading, setIsLoading] = useState(true);
   const networkState = useContext(NetworkContext);
   const currentNetwork = networkState.currentNetwork.key;
-  const {data: persistedState, persistData: persistState} = usePersistedData<State>(STORAGE_KEY);
+  const [persistedState, persistState] = usePersistedData<State>(STORAGE_KEY);
 
   useEffect(() => {
     if (persistedState) {
