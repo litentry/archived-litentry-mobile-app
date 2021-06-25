@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {Host} from 'react-native-portalize';
 import * as eva from '@eva-design/eva';
 import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
@@ -26,42 +26,45 @@ import 'src/typeRegistry';
 const queryClient = new QueryClient();
 
 export default function App() {
-  const {theme} = useContext(ThemeContext);
   useFirebase();
 
   return (
     <>
       <IconRegistry icons={[EvaIconsPack, IonicIconsPack]} />
 
-      <InAppNotificationContextProvider>
-        <DataContextProvider>
-          <NetworkContextProvider>
-            <ThemeContextProvider>
-              <SafeAreaProvider>
-                <ApplicationProvider {...eva} theme={eva[theme]}>
-                  <ErrorBoundary>
-                    <Host>
-                      <ChainApiContextProvider>
-                        <QueryClientProvider client={queryClient}>
-                          <AccountsProvider>
-                            <BalanceContextProvider>
-                              <TxContextProvider>
-                                <NavigationContainer theme={theme === 'dark' ? DarkTheme : LightTheme}>
-                                  <AppNavigator />
-                                </NavigationContainer>
-                              </TxContextProvider>
-                            </BalanceContextProvider>
-                          </AccountsProvider>
-                        </QueryClientProvider>
-                      </ChainApiContextProvider>
-                    </Host>
-                  </ErrorBoundary>
-                </ApplicationProvider>
-              </SafeAreaProvider>
-            </ThemeContextProvider>
-          </NetworkContextProvider>
-        </DataContextProvider>
-      </InAppNotificationContextProvider>
+      <DataContextProvider>
+        <NetworkContextProvider>
+          <ChainApiContextProvider>
+            <QueryClientProvider client={queryClient}>
+              <ThemeContextProvider>
+                <ThemeContext.Consumer>
+                  {({theme}) => (
+                    <ApplicationProvider {...eva} theme={eva[theme]}>
+                      <InAppNotificationContextProvider>
+                        <SafeAreaProvider>
+                          <ErrorBoundary>
+                            <Host>
+                              <AccountsProvider>
+                                <BalanceContextProvider>
+                                  <TxContextProvider>
+                                    <NavigationContainer theme={theme === 'dark' ? DarkTheme : LightTheme}>
+                                      <AppNavigator />
+                                    </NavigationContainer>
+                                  </TxContextProvider>
+                                </BalanceContextProvider>
+                              </AccountsProvider>
+                            </Host>
+                          </ErrorBoundary>
+                        </SafeAreaProvider>
+                      </InAppNotificationContextProvider>
+                    </ApplicationProvider>
+                  )}
+                </ThemeContext.Consumer>
+              </ThemeContextProvider>
+            </QueryClientProvider>
+          </ChainApiContextProvider>
+        </NetworkContextProvider>
+      </DataContextProvider>
     </>
   );
 }

@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import DrawerScreen from 'screen/DrawerScreen';
-import DashboardScreen, {DashboardHeaderLeft, DashboardHeaderRight} from 'screen/DashboardScreen';
+import DashboardScreen from 'screen/DashboardScreen';
 import MotionDetailScreen from 'screen/MotionDetailScreen';
 import TipsScreen from 'screen/tips/TipsScreen';
 import TipDetailScreen from 'screen/tips/TipDetailScreen';
@@ -18,33 +18,13 @@ import {SubmitTipScreen} from 'screen/SubmitTipScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
-import {Text} from '@ui-kitten/components';
-import NetworkItem from 'presentational/NetworkItem';
-import {TouchableOpacity} from 'react-native';
-import {NetworkContext} from 'context/NetworkContext';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
 function DashboardStackNavigator() {
-  const {currentNetwork} = useContext(NetworkContext);
-  const {status} = useContext(ChainApiContext);
-
   return (
     <DashboardStack.Navigator>
-      <DashboardStack.Screen
-        name={routeKeys.dashboard}
-        component={DashboardScreen}
-        options={({navigation}) => ({
-          headerLeft: () => <DashboardHeaderLeft navigation={navigation} />,
-          headerRight: DashboardHeaderRight,
-          headerTitle: () => (
-            <TouchableOpacity onPress={() => navigation.navigate('ApiNavigator')}>
-              <Text category="s1">Litentry</Text>
-              {currentNetwork ? <NetworkItem item={currentNetwork} isConnected={status === 'ready'} /> : null}
-            </TouchableOpacity>
-          ),
-        })}
-      />
+      <DashboardStack.Screen name={routeKeys.dashboard} component={DashboardScreen} />
       <DashboardStack.Screen name={routeKeys.motionDetail} component={MotionDetailScreen} />
       <DashboardStack.Screen name={routeKeys.tips} component={TipsScreen} />
       <DashboardStack.Screen name={routeKeys.tipDetail} component={TipDetailScreen} />

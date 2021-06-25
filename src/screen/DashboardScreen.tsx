@@ -1,6 +1,5 @@
 import React, {useContext, useState} from 'react';
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import NetworkItem from 'presentational/NetworkItem';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {Button, Divider, Icon, IconProps, Layout, Text, TopNavigationAction, useTheme} from '@ui-kitten/components';
@@ -20,6 +19,7 @@ import {councilScreen, tips, treasuryScreen} from 'src/navigation/routeKeys';
 import LoadingView from 'src/presentational/LoadingView';
 import NetworkSelect from 'src/layout/NetworkSelect';
 import SafeView from 'presentational/SafeView';
+import {NetworkContext} from 'context/NetworkContext';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<StackNavigationProp<AppStackParamList>, DrawerNavigationProp<DrawerParamList>>;
@@ -30,6 +30,14 @@ const AddIcon = (props: IconProps) => <Icon {...props} name="person-add-outline"
 function DashboardScreen({navigation, accountAddProps}: PropTypes & AddAccountInjectedPropTypes) {
   const {accounts, isLoading} = useAccounts();
   const [networkSelectOpen, setNetworkSelectOpen] = useState(false);
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: DashboardHeaderLeft,
+      headerRight: DashboardHeaderRight,
+      headerTitle: () => <DashboardTitle setNetworkSelectOpen={setNetworkSelectOpen} />,
+    });
+  }, [navigation, setNetworkSelectOpen]);
 
   if (isLoading) {
     return <LoadingView />;
@@ -75,18 +83,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   titleContainer: {
-    alignItems: 'flex-start',
+    alignItems: 'center',
   },
   divider: {height: 2},
 });
 
 export default withAddAccount(DashboardScreen);
 
-export function DashboardHeaderRight() {
+function DashboardHeaderRight() {
   const {show} = useContext(BalanceContext);
   return <TopNavigationAction onPress={show} icon={(p) => <Icon {...p} name={'credit-card-outline'} />} />;
 }
 
-export function DashboardHeaderLeft({navigation}: {navigation: PropTypes['navigation']}) {
+function DashboardHeaderLeft() {
+  const navigation: PropTypes['navigation'] = useNavigation();
   return <TopNavigationAction onPress={navigation.openDrawer} icon={(p) => <Icon {...p} name={'menu-2-outline'} />} />;
+}
+
+function DashboardTitle({setNetworkSelectOpen}: {setNetworkSelectOpen: (v: boolean) => void}) {
+  const {currentNetwork} = useContext(NetworkContext);
+  const {status} = useContext(ChainApiContext);
+
+  return (
+    <TouchableOpacity style={styles.titleContainer} onPress={() => setNetworkSelectOpen(true)}>
+      <Text category="s1">Litentry</Text>
+      {currentNetwork ? <NetworkItem item={currentNetwork} isConnected={status === 'ready'} /> : null}
+    </TouchableOpacity>
+  );
 }
