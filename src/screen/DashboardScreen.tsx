@@ -20,6 +20,7 @@ import LoadingView from 'src/presentational/LoadingView';
 import NetworkSelect from 'src/layout/NetworkSelect';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {NetworkContext} from 'context/NetworkContext';
+import {AppStackParamList, DrawerParamList} from 'src/navigation/navigation';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<StackNavigationProp<AppStackParamList>, DrawerNavigationProp<DrawerParamList>>;
@@ -95,7 +96,7 @@ function DashboardHeaderRight() {
   return <TopNavigationAction onPress={show} icon={(p) => <Icon {...p} name={'credit-card-outline'} />} />;
 }
 
-function DashboardHeaderLeft() {
+export function DashboardHeaderLeft() {
   const navigation: PropTypes['navigation'] = useNavigation();
   return <TopNavigationAction onPress={navigation.openDrawer} icon={(p) => <Icon {...p} name={'menu-2-outline'} />} />;
 }

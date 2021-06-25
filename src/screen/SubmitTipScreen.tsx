@@ -13,6 +13,7 @@ import {TxContext} from 'context/TxContext';
 import {useQueryClient} from 'react-query';
 import {useAccountIdentity} from 'layout/Account';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
+import {DashboardStackParamList} from 'src/navigation/navigation';
 
 export function SubmitTipScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {isLoading, data: account, error} = useAccount();

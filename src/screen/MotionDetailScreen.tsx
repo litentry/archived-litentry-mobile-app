@@ -5,15 +5,15 @@ import {RouteProp} from '@react-navigation/native';
 import MotionDetailPage from 'layout/MotionDetailPage';
 import LoadingView from 'presentational/LoadingView';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
+import {DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
 
 type PropTypes = {
   navigation: DrawerNavigationProp<DrawerParamList>;
-  route: RouteProp<DashboardStackParamList, 'MotionDetail'>;
+  route: RouteProp<DashboardStackParamList, 'Motion'>;
 };
 
 function MotionDetailScreen(props: PropTypes & MotionDetailInjectedPropTypes) {
   const {
-    navigation,
     motionDetail: {show, motion},
     route: {params},
   } = props;

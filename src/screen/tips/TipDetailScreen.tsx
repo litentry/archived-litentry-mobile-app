@@ -20,10 +20,11 @@ import {Account} from 'src/layout/Account';
 import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
 import {useAccounts} from 'context/AccountsContext';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
+import {DashboardStackParamList} from 'src/navigation/navigation';
 
 type ScreenProps = {
   navigation: StackNavigationProp<DashboardStackParamList>;
-  route: RouteProp<DashboardStackParamList, 'TipDetail'>;
+  route: RouteProp<DashboardStackParamList, 'Tip'>;
 };
 
 const styles = StyleSheet.create({

@@ -1,9 +1,8 @@
-import React, {useContext, useState, useRef, useCallback} from 'react';
-import {Layout, Button, ListItem, Divider, Text} from '@ui-kitten/components';
-import GenericNavigationLayout from 'presentational/GenericNavigationLayout';
+import React, {useCallback, useContext, useRef, useState} from 'react';
+import {Button, Divider, Layout, ListItem, Text} from '@ui-kitten/components';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {useAccounts} from 'src/context/AccountsContext';
-import {InAppNotificationContext, InAppNotificationContent} from 'context/InAppNotificationContext';
+import {InAppNotificationContent, InAppNotificationContext} from 'context/InAppNotificationContext';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {Alert, StyleSheet} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -11,13 +10,14 @@ import {Modalize} from 'react-native-modalize';
 import {standardPadding} from 'src/styles';
 import {NetworkContext} from 'context/NetworkContext';
 import RegistrarSelectionModal from 'layout/RegistrarSelectionModal';
+import SafeView, {noTopEdges} from 'presentational/SafeView';
+import {DrawerParamList} from 'src/navigation/navigation';
 
 type PropTypes = {
   navigation: DrawerNavigationProp<DrawerParamList>;
 };
 
 function DevScreen(props: PropTypes) {
-  const {navigation} = props;
   const [visible, setVisible] = useState(false);
 
   const {currentNetwork} = useContext(NetworkContext);
@@ -32,7 +32,7 @@ function DevScreen(props: PropTypes) {
   }, []);
 
   return (
-    <GenericNavigationLayout title="DevScreen" onBackPressed={() => navigation.goBack()}>
+    <SafeView edges={noTopEdges}>
       <>
         <Layout level="1">
           <ListItem
@@ -190,7 +190,7 @@ function DevScreen(props: PropTypes) {
           </Layout>
         </Modalize>
       </>
-    </GenericNavigationLayout>
+    </SafeView>
   );
 }
 const styles = StyleSheet.create({

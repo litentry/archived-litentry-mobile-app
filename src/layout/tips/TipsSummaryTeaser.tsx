@@ -9,6 +9,7 @@ import AddressInlineTeaser from 'layout/AddressInlineTeaser';
 import {tipDetail} from 'src/navigation/routeKeys';
 import TipReason from 'src/layout/tips/TipReason';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {DashboardStackParamList} from 'src/navigation/navigation';
 
 const styles = StyleSheet.create({
   container: {

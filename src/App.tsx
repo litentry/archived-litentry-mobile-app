@@ -72,7 +72,7 @@ export default function App() {
 const DarkTheme: Theme = {
   dark: true,
   colors: {
-    primary: '#3366FF' /*color-primary-default*/,
+    primary: '#FFFFFF' /*text-alternative-color*/,
     background: '#222B45' /*background-alternative-color-1*/,
     card: '#222B45' /*background-alternative-color-1*/,
     text: '#FFFFFF' /*text-alternative-color*/,
@@ -84,7 +84,7 @@ const DarkTheme: Theme = {
 const LightTheme: Theme = {
   dark: false,
   colors: {
-    primary: '#3366FF' /*color-primary-default*/,
+    primary: '#222B45' /*text-basic-color*/,
     background: '#FFFFFF' /*background-alternative-color-1*/,
     card: '#FFFFFF',
     text: '#222B45' /*text-basic-color*/,

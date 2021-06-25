@@ -1,19 +1,18 @@
 import React from 'react';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import GenericNavigationLayout from 'presentational/GenericNavigationLayout';
 import RegistrarList from 'layout/RegistrarList';
+import SafeView, {noTopEdges} from 'presentational/SafeView';
+import {DrawerParamList} from 'src/navigation/navigation';
 
 type PropTypes = {
   navigation: DrawerNavigationProp<DrawerParamList>;
 };
 
-function RegistrarListScreen(props: PropTypes) {
-  const {navigation} = props;
-
+function RegistrarListScreen({}: PropTypes) {
   return (
-    <GenericNavigationLayout title="Registrars" onBackPressed={() => navigation.goBack()}>
+    <SafeView edges={noTopEdges}>
       <RegistrarList />
-    </GenericNavigationLayout>
+    </SafeView>
   );
 }
 

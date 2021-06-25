@@ -8,11 +8,13 @@ import SetInfo from './SetInfo';
 import RequestJudgement from './RequestJudgement';
 import DisplayJudgement from './DisplayJudgement';
 import LoadingView from 'presentational/LoadingView';
+import SafeView, {noTopEdges} from 'presentational/SafeView';
+import {DashboardStackParamList} from 'src/navigation/navigation';
 
 function MyIdentity() {
   const {
     params: {address},
-  } = useRoute<RouteProp<DrawerParamList, 'MyIdentity'>>();
+  } = useRoute<RouteProp<DashboardStackParamList, 'MyIdentity'>>();
   const navigation = useNavigation();
 
   const {currentNetwork} = useContext(NetworkContext);
@@ -38,11 +40,7 @@ function MyIdentity() {
     return <RequestJudgement display={display} detail={detail} address={address} />;
   }, [inProgress, address, display, isNaked, detail]);
 
-  return (
-    <GenericNavigationLayout title="My Identity" onBackPressed={() => navigation.goBack()}>
-      {content}
-    </GenericNavigationLayout>
-  );
+  return <SafeView edges={noTopEdges}>{content}</SafeView>;
 }
 
 export default MyIdentity;

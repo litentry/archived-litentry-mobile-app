@@ -15,6 +15,7 @@ import {useAccounts} from 'context/AccountsContext';
 import {useCouncilMembers} from 'src/hook/useCouncilMembers';
 import {CallInspector, formatCallMeta} from 'src/packages/call_inspector/CallInspector';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
+import {DashboardStackParamList} from 'src/navigation/navigation';
 
 export function MotionsScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {api} = useContext(ChainApiContext);

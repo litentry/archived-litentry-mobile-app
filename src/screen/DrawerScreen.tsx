@@ -14,7 +14,7 @@ import Identicon from '@polkadot/reactnative-identicon';
 import {BalanceContext} from 'context/BalanceContext';
 import withAddAccount, {InjectedPropTypes} from 'src/hoc/withAddAccount';
 import {ChainApiContext} from 'context/ChainApiContext';
-import {registrarList, webview, devScreen, notificationSettingsScreen} from 'src/navigation/routeKeys';
+import {registrarList, webview, devScreen, notificationSettingsScreen, dashboard} from 'src/navigation/routeKeys';
 
 function AccountDrawerView({accountAddProps}: InjectedPropTypes) {
   const {show} = useContext(BalanceContext);
@@ -142,15 +142,23 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
     <SafeView>
       <Layout style={styles.container}>
         <Layout style={[styles.main, globalStyles.paddedContainer]}>
-          <View style={styles.logoContainer}>
-            <Image source={logo} style={styles.logoImage} />
-            <Text style={styles.slogan}>Decentralized Identity</Text>
-          </View>
+          <TouchableOpacity onPress={() => navigation.navigate(dashboard)}>
+            <View style={styles.logoContainer}>
+              <Image source={logo} style={styles.logoImage} />
+              <Text style={styles.slogan}>Decentralized Identity</Text>
+            </View>
+          </TouchableOpacity>
           <Divider />
           <ConnectedAccountDrawer />
         </Layout>
         <Divider />
         <Layout style={styles.rest} level="2">
+          <ListItem
+            title="Dashboard"
+            accessoryLeft={(props) => <Icon {...props} name="browser-outline" animation="zoom" />}
+            onPress={() => navigation.navigate(dashboard)}
+          />
+          <Divider />
           <Layout style={globalStyles.paddedContainer}>
             <Text category="h6">Settings</Text>
           </Layout>

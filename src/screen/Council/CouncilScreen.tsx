@@ -8,6 +8,8 @@ import Identicon from '@polkadot/reactnative-identicon';
 import {EmptyView} from 'presentational/EmptyView';
 import {useCouncilMembers} from 'src/hook/useCouncilMembers';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
+import {motionsScreen} from 'src/navigation/routeKeys';
+import {DashboardStackParamList} from 'src/navigation/navigation';
 
 export function CouncilScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {data, isLoading} = useCouncilMembers();
@@ -18,7 +20,7 @@ export function CouncilScreen({navigation}: {navigation: NavigationProp<Dashboar
         <View style={styles.header}>
           <Button
             status={'basic'}
-            onPress={() => navigation.navigate('MotionsScreen')}
+            onPress={() => navigation.navigate(motionsScreen)}
             accessoryLeft={(props) => <Icon {...props} name={'activity-outline'} />}>
             Motions
           </Button>
