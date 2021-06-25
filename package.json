@@ -65,7 +65,6 @@
     "react-native-vector-icons": "^8.1.0",
     "react-native-webview": "^11.0.0",
     "react-query": "^3.17.0",
-    "react-use": "^17.2.4",
     "readable-stream": "^1.0.33",
     "rn-nodeify": "^10.3.0",
     "stream-browserify": "^3.0.0",

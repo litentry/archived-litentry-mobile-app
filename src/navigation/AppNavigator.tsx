@@ -17,6 +17,7 @@ import {CouncilScreen} from 'screen/Council/CouncilScreen';
 import {SubmitTipScreen} from 'screen/SubmitTipScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
+import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
 import {useFirebase} from 'src/hook/useFirebase';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
@@ -47,10 +48,10 @@ function DrawerNavigator() {
     <Drawer.Navigator drawerContent={(props) => <DrawerScreen {...props} />}>
       <Drawer.Screen name={routeKeys.dashboard} component={DashboardStackNavigator} />
       <Drawer.Screen name={routeKeys.registrarList} component={RegistrarListScreen} />
-
       <Drawer.Screen name={routeKeys.myIdentity} component={MyIdentityScreen} />
       <Drawer.Screen name={routeKeys.webview} component={WebviewScreen} />
       <Drawer.Screen name={routeKeys.devScreen} component={DevScreen} />
+      <Drawer.Screen name={routeKeys.notificationSettingsScreen} component={NotificationSettingsScreen} />
     </Drawer.Navigator>
   );
 }
