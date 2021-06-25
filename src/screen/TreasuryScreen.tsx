@@ -6,7 +6,6 @@ import {SectionList, StyleSheet, View} from 'react-native';
 import {u8aToString} from '@polkadot/util';
 import {ApiPromise} from '@polkadot/api';
 import {AccountId} from '@polkadot/types/interfaces';
-import useAsyncRetry from 'react-use/lib/useAsyncRetry';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import {NavigationProp} from '@react-navigation/native';
 import Identicon from '@polkadot/reactnative-identicon';
@@ -14,25 +13,15 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {getAccountsIdentityInfo} from 'service/api/account';
 import {EmptyView} from 'presentational/EmptyView';
 import {useFormatBalance} from '../hook/useFormatBalance';
+import {useQuery} from 'react-query';
 
 export function TreasuryScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const theme = useTheme();
-  const {api} = useContext(ChainApiContext);
-
-  const {loading, value, retry} = useAsyncRetry(async () => {
-    try {
-      if (!api) {
-        return;
-      }
-      return await getTreasuryInfo(api);
-    } catch (e) {
-      console.warn(e);
-    }
-  }, [api]);
+  const {isLoading, data, refetch} = useTreasuryInfo();
 
   const groupedData = [
-    {title: 'Proposals', data: value?.proposals.proposals ?? []},
-    {title: 'Approved', data: value?.proposals.approvals ?? []},
+    {title: 'Proposals', data: data?.proposals.proposals ?? []},
+    {title: 'Approved', data: data?.proposals.approvals ?? []},
   ];
 
   const formatBalance = useFormatBalance();
@@ -50,18 +39,18 @@ export function TreasuryScreen({navigation}: {navigation: NavigationProp<Dashboa
         }
       />
       <SafeAreaView edges={['bottom']} style={globalStyles.flex}>
-        {!value ? (
+        {!data ? (
           <View style={globalStyles.centeredContainer}>
             <Spinner />
           </View>
         ) : (
           <SectionList
-            refreshing={loading}
-            onRefresh={retry}
+            refreshing={isLoading}
+            onRefresh={refetch}
             sections={groupedData}
             keyExtractor={(item, index) => item.proposal.proposer.toString() ?? index.toString()}
             renderItem={({item}) => {
-              const accountInfo = value?.accountInfos.find(
+              const accountInfo = data?.accountInfos.find(
                 (i) => i.accountId.toString() === item.proposal.proposer.toString(),
               );
               const text = accountInfo?.info
@@ -106,6 +95,12 @@ const styles = StyleSheet.create({
   },
   itemRight: {flexDirection: 'row', justifyContent: 'center', alignItems: 'center'},
 });
+
+function useTreasuryInfo() {
+  const {api} = useContext(ChainApiContext);
+
+  return useQuery(['treasury_info'], () => (api ? getTreasuryInfo(api) : undefined));
+}
 
 async function getTreasuryInfo(api: ApiPromise) {
   const proposals = await api.derive.treasury.proposals();

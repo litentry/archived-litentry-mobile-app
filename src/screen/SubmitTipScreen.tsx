@@ -1,37 +1,35 @@
 import * as React from 'react';
+import {useContext, useReducer} from 'react';
 import {Button, Card, Icon, Input, Layout, ListItem, Text, TopNavigationAction} from '@ui-kitten/components';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import globalStyles, {standardPadding} from 'src/styles';
 import {NavigationProp} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ActivityIndicator, StyleSheet, View} from 'react-native';
-import {useContext, useReducer} from 'react';
 import {useAccounts} from 'context/AccountsContext';
-import {useAsyncRetry} from 'react-use';
-import {getAccountsIdentityInfo} from 'service/api/account';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {u8aToString} from '@polkadot/util';
 import Identicon from '@polkadot/reactnative-identicon';
 import Padder from 'presentational/Padder';
 import {TxContext} from 'context/TxContext';
 import {useQueryClient} from 'react-query';
+import {useAccountIdentity} from 'layout/Account';
 
 export function SubmitTipScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
-  const {loading, value: data, error} = useAccount();
+  const {isLoading, data: account, error} = useAccount();
   const [state, dispatch] = useReducer(reducer, initialState);
   const {start} = useContext(TxContext);
   const {api} = useContext(ChainApiContext);
   const queryClient = useQueryClient();
 
-  if (loading) {
+  if (isLoading) {
     return <ActivityIndicator />;
   }
 
-  if (error || !data) {
+  if (error || !account) {
     return <Text>Something went wrong</Text>;
   }
 
-  const account = data[0];
   if (!account) {
     return <Text>Account not found in this server</Text>;
   }
@@ -119,16 +117,10 @@ const styles = StyleSheet.create({
 });
 
 function useAccount() {
-  const {api} = useContext(ChainApiContext);
   const {accounts} = useAccounts();
   const account = accounts?.[0];
 
-  return useAsyncRetry(async () => {
-    if (!api || !account) {
-      throw new Error('Context is missing');
-    }
-    return await getAccountsIdentityInfo([account.address], api);
-  }, [api, account]);
+  return useAccountIdentity(account?.address.toString());
 }
 
 type Action =
