@@ -2,7 +2,7 @@ import React, {useContext, useState} from 'react';
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import NetworkItem from 'presentational/NetworkItem';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {Button, Divider, Icon, IconProps, Layout, Text, TopNavigationAction, useTheme} from '@ui-kitten/components';
+import {Button, Divider, Icon, IconProps, Layout, Text, TopNavigationAction} from '@ui-kitten/components';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {BalanceContext} from 'context/BalanceContext';
 import {useAccounts} from 'context/AccountsContext';
@@ -15,10 +15,10 @@ import TreasurySummaryTeaser from 'layout/TreasurySummaryTeaser';
 import TipsSummaryTeaser from 'layout/tips/TipsSummaryTeaser';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {councilScreen, tips, treasuryScreen} from 'src/navigation/routeKeys';
+import {councilScreen, tipsScreen, treasuryScreen} from 'src/navigation/routeKeys';
 import LoadingView from 'src/presentational/LoadingView';
 import NetworkSelect from 'src/layout/NetworkSelect';
-import SafeView from 'presentational/SafeView';
+import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {NetworkContext} from 'context/NetworkContext';
 
 type PropTypes = {
@@ -46,7 +46,7 @@ function DashboardScreen({navigation, accountAddProps}: PropTypes & AddAccountIn
   const account = accounts[0]; // TODO: change this when adding multi account support
 
   return (
-    <SafeView edges={['left', 'right', 'bottom']}>
+    <SafeView edges={noTopEdges}>
       <Divider style={styles.divider} />
       <FadeInAnimatedView>
         {!account ? (
@@ -63,7 +63,7 @@ function DashboardScreen({navigation, accountAddProps}: PropTypes & AddAccountIn
               <ScrollView style={styles.scrollView}>
                 <CouncilSummaryTeaser onMorePress={() => navigation.navigate(councilScreen)} />
                 <TreasurySummaryTeaser onMorePress={() => navigation.navigate(treasuryScreen)} />
-                <TipsSummaryTeaser onMorePress={() => navigation.navigate(tips)} />
+                <TipsSummaryTeaser onMorePress={() => navigation.navigate(tipsScreen)} />
               </ScrollView>
             </View>
           </>

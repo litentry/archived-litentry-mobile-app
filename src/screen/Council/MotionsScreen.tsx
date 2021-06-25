@@ -1,7 +1,6 @@
-import {Button, Divider, Icon, Layout, Text, TopNavigationAction, useTheme} from '@ui-kitten/components';
+import {Button, Divider, Icon, Text, useTheme} from '@ui-kitten/components';
 import React, {useContext, useState} from 'react';
 import globalStyles, {standardPadding} from 'src/styles';
-import ScreenNavigation from 'layout/ScreenNavigation';
 import {NavigationProp} from '@react-navigation/native';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
@@ -15,23 +14,14 @@ import {useQuery, useQueryClient} from 'react-query';
 import {useAccounts} from 'context/AccountsContext';
 import {useCouncilMembers} from 'src/hook/useCouncilMembers';
 import {CallInspector, formatCallMeta} from 'src/packages/call_inspector/CallInspector';
+import SafeView, {noTopEdges} from 'presentational/SafeView';
 
 export function MotionsScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {api} = useContext(ChainApiContext);
   const {data, refetch, isLoading} = useQuery('motions', () => api?.derive.council.proposals());
 
   return (
-    <Layout style={globalStyles.flex}>
-      <ScreenNavigation
-        renderTitle={() => (
-          <Text category={'s1'} style={globalStyles.monoFont}>
-            Motions
-          </Text>
-        )}
-        accessoryLeft={
-          <TopNavigationAction onPress={navigation.goBack} icon={(p) => <Icon {...p} name={'arrow-back-outline'} />} />
-        }
-      />
+    <SafeView edges={noTopEdges}>
       <FlatList
         refreshing={isLoading}
         onRefresh={refetch}
@@ -44,7 +34,7 @@ export function MotionsScreen({navigation}: {navigation: NavigationProp<Dashboar
         keyExtractor={(item) => item.hash.toHex()}
         ListEmptyComponent={EmptyView}
       />
-    </Layout>
+    </SafeView>
   );
 }
 

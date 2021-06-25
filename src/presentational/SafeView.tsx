@@ -17,3 +17,5 @@ export default function SafeView({children, edges}: {children: React.ReactNode; 
 const styles = StyleSheet.create({
   container: {flex: 1},
 });
+
+export const noTopEdges: Edge[] = ['left', 'right', 'bottom'];

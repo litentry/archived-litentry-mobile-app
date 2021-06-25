@@ -18,6 +18,7 @@ import {SubmitTipScreen} from 'screen/SubmitTipScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
+import {Icon, TopNavigationAction} from '@ui-kitten/components';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -26,7 +27,18 @@ function DashboardStackNavigator() {
     <DashboardStack.Navigator>
       <DashboardStack.Screen name={routeKeys.dashboard} component={DashboardScreen} />
       <DashboardStack.Screen name={routeKeys.motionDetail} component={MotionDetailScreen} />
-      <DashboardStack.Screen name={routeKeys.tips} component={TipsScreen} />
+      <DashboardStack.Screen
+        name={routeKeys.tipsScreen}
+        component={TipsScreen}
+        options={({navigation}) => ({
+          headerRight: () => (
+            <TopNavigationAction
+              icon={(props) => <Icon {...props} name="plus-circle-outline" />}
+              onPress={() => navigation.navigate('SubmitTipScreen')}
+            />
+          ),
+        })}
+      />
       <DashboardStack.Screen name={routeKeys.tipDetail} component={TipDetailScreen} />
       <DashboardStack.Screen name={routeKeys.councilScreen} component={CouncilScreen} />
       <DashboardStack.Screen name={routeKeys.treasuryScreen} component={TreasuryScreen} />
