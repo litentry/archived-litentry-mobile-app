@@ -31,6 +31,7 @@ function DashboardStackNavigator() {
       screenOptions={{
         headerBackTitleVisible: false,
         headerLeftContainerStyle: {paddingHorizontal: 10},
+        headerRightContainerStyle: {paddingHorizontal: 10},
         headerBackImage: ({tintColor}) => (
           <Icon
             name={'arrow-back-outline'}
