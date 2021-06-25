@@ -10,7 +10,6 @@ import ThemeContextProvider from './src/context/ThemeProvider';
 import NetworkContextProvider from './src/context/NetworkContext';
 import InAppNotificationContextProvider from './src/context/InAppNotificationContext';
 import {name as appName} from './app.json';
-import {NavigationContainer} from '@react-navigation/native';
 
 if (__DEV__) {
   import('./ReactotronConfig').then(() => console.log('Reactotron Configured'));
@@ -19,15 +18,13 @@ if (__DEV__) {
 function WithContext(props) {
   return (
     <InAppNotificationContextProvider>
-      <NavigationContainer>
-        <DataContextProvider>
-          <NetworkContextProvider>
-            <ThemeContextProvider>
-              <App {...props} />
-            </ThemeContextProvider>
-          </NetworkContextProvider>
-        </DataContextProvider>
-      </NavigationContainer>
+      <DataContextProvider>
+        <NetworkContextProvider>
+          <ThemeContextProvider>
+            <App {...props} />
+          </ThemeContextProvider>
+        </NetworkContextProvider>
+      </DataContextProvider>
     </InAppNotificationContextProvider>
   );
 }

@@ -17,10 +17,15 @@ import {CouncilScreen} from 'screen/Council/CouncilScreen';
 import {SubmitTipScreen} from 'screen/SubmitTipScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
+import {useFirebase} from 'src/hook/useFirebase';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
 function DashboardStackNavigator() {
+  // needs to be called inside a navigator in order to
+  // have access to navigator context
+  useFirebase();
+
   return (
     <DashboardStack.Navigator headerMode="none">
       <DashboardStack.Screen name={routeKeys.dashboard} component={DashboardScreen} />

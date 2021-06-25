@@ -12,37 +12,39 @@ import AppNavigator from 'src/navigation/AppNavigator';
 import {IonicIconsPack} from './Ionic-icons';
 import {ErrorBoundary} from 'src/ErrorBoundary';
 import {QueryClient, QueryClientProvider} from 'react-query';
-import {useFirebase} from 'src/hook/useFirebase';
+import {NavigationContainer} from '@react-navigation/native';
 
 // init type registry
 import 'src/typeRegistry';
+import {linking} from 'src/navigation/routeKeys';
 
 const queryClient = new QueryClient();
 
 export default function App() {
   const {theme} = useContext(ThemeContext);
-  useFirebase();
 
   return (
     <>
       <IconRegistry icons={[EvaIconsPack, IonicIconsPack]} />
-      <ApplicationProvider {...eva} theme={eva[theme]}>
-        <ErrorBoundary>
-          <Host>
-            <ChainApiContextProvider>
-              <QueryClientProvider client={queryClient}>
-                <AccountsProvider>
-                  <BalanceContextProvider>
-                    <TxContextProvider>
-                      <AppNavigator />
-                    </TxContextProvider>
-                  </BalanceContextProvider>
-                </AccountsProvider>
-              </QueryClientProvider>
-            </ChainApiContextProvider>
-          </Host>
-        </ErrorBoundary>
-      </ApplicationProvider>
+      <NavigationContainer linking={linking}>
+        <ApplicationProvider {...eva} theme={eva[theme]}>
+          <ErrorBoundary>
+            <Host>
+              <ChainApiContextProvider>
+                <QueryClientProvider client={queryClient}>
+                  <AccountsProvider>
+                    <BalanceContextProvider>
+                      <TxContextProvider>
+                        <AppNavigator />
+                      </TxContextProvider>
+                    </BalanceContextProvider>
+                  </AccountsProvider>
+                </QueryClientProvider>
+              </ChainApiContextProvider>
+            </Host>
+          </ErrorBoundary>
+        </ApplicationProvider>
+      </NavigationContainer>
     </>
   );
 }
