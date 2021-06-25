@@ -104,7 +104,6 @@ function subscribe<T>(
 //  - returns a promise with an unsubscribe function
 //  - has a callback to set the value
 // FIXME The typings here need some serious TLC
-// TODO: decide between this or useAsyncRetry
 export function useCall<T>(
   fn: TrackFn | undefined | null | false,
   params?: CallParams,

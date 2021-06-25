@@ -11,6 +11,7 @@ type DashboardStackParamList = {
   CouncilScreen: undefined;
   SubmitTipScreen: undefined;
   TreasuryScreen: undefined;
+  MotionsScreen: undefined;
 };
 
 type DrawerParamList = {
@@ -18,6 +19,7 @@ type DrawerParamList = {
   RegistrarList: undefined;
   Webview: {uri: string; title: string};
   DevScreen: undefined;
+  NotificationSettingsScreen: undefined;
   MyIdentity: {address: string};
 };
 

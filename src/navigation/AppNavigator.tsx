@@ -13,9 +13,11 @@ import MyIdentityScreen from 'screen/MyIdentityScreen';
 import * as routeKeys from 'src/navigation/routeKeys';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
-import {CouncilScreen} from 'screen/CouncilScreen';
+import {CouncilScreen} from 'screen/Council/CouncilScreen';
 import {SubmitTipScreen} from 'screen/SubmitTipScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
+import {MotionsScreen} from 'screen/Council/MotionsScreen';
+import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
 import {Text} from '@ui-kitten/components';
 import NetworkItem from 'presentational/NetworkItem';
 import {TouchableOpacity} from 'react-native';
@@ -49,6 +51,7 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.councilScreen} component={CouncilScreen} />
       <DashboardStack.Screen name={routeKeys.treasuryScreen} component={TreasuryScreen} />
       <DashboardStack.Screen name={routeKeys.submitTip} component={SubmitTipScreen} />
+      <DashboardStack.Screen name={routeKeys.motionsScreen} component={MotionsScreen} />
     </DashboardStack.Navigator>
   );
 }
@@ -60,10 +63,10 @@ function DrawerNavigator() {
     <Drawer.Navigator drawerContent={(props) => <DrawerScreen {...props} />}>
       <Drawer.Screen name={routeKeys.dashboard} component={DashboardStackNavigator} />
       <Drawer.Screen name={routeKeys.registrarList} component={RegistrarListScreen} />
-
       <Drawer.Screen name={routeKeys.myIdentity} component={MyIdentityScreen} />
       <Drawer.Screen name={routeKeys.webview} component={WebviewScreen} />
       <Drawer.Screen name={routeKeys.devScreen} component={DevScreen} />
+      <Drawer.Screen name={routeKeys.notificationSettingsScreen} component={NotificationSettingsScreen} />
     </Drawer.Navigator>
   );
 }

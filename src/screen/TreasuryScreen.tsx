@@ -1,37 +1,30 @@
 import React, {useContext} from 'react';
-import {Divider, Icon, Layout, ListItem, Spinner, Text, TopNavigationAction} from '@ui-kitten/components';
+import {Divider, Icon, Layout, Spinner, Text, TopNavigationAction, useTheme} from '@ui-kitten/components';
 import globalStyles, {standardPadding} from 'src/styles';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {SectionList, StyleSheet, View} from 'react-native';
 import {u8aToString} from '@polkadot/util';
 import {ApiPromise} from '@polkadot/api';
 import {AccountId} from '@polkadot/types/interfaces';
-import useAsyncRetry from 'react-use/lib/useAsyncRetry';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import {NavigationProp} from '@react-navigation/native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {getAccountsIdentityInfo} from 'service/api/account';
 import {EmptyView} from 'presentational/EmptyView';
+import {useFormatBalance} from '../hook/useFormatBalance';
+import {useQuery} from 'react-query';
 
 export function TreasuryScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
-  const {api} = useContext(ChainApiContext);
-
-  const {loading, value: treasuryData} = useAsyncRetry(async () => {
-    try {
-      if (!api) {
-        return;
-      }
-      return await getTreasuryInfo(api);
-    } catch (e) {
-      console.warn(e);
-    }
-  }, [api]);
+  const theme = useTheme();
+  const {isLoading, data, refetch} = useTreasuryInfo();
 
   const groupedData = [
-    {title: 'Proposals', data: treasuryData?.proposals.proposals ?? []},
-    {title: 'Approved', data: treasuryData?.proposals.approvals ?? []},
+    {title: 'Proposals', data: data?.proposals.proposals ?? []},
+    {title: 'Approved', data: data?.proposals.approvals ?? []},
   ];
+
+  const formatBalance = useFormatBalance();
 
   return (
     <Layout style={globalStyles.flex}>
@@ -46,32 +39,37 @@ export function TreasuryScreen({navigation}: {navigation: NavigationProp<Dashboa
         }
       />
       <SafeAreaView edges={['bottom']} style={globalStyles.flex}>
-        {loading ? (
+        {!data ? (
           <View style={globalStyles.centeredContainer}>
             <Spinner />
           </View>
         ) : (
           <SectionList
+            refreshing={isLoading}
+            onRefresh={refetch}
             sections={groupedData}
             keyExtractor={(item, index) => item.proposal.proposer.toString() ?? index.toString()}
             renderItem={({item}) => {
-              const accountInfo = treasuryData?.accountInfos.find(
+              const accountInfo = data?.accountInfos.find(
                 (i) => i.accountId.toString() === item.proposal.proposer.toString(),
               );
-              const text = accountInfo ? u8aToString(accountInfo.info.display.asRaw) : 'unknown';
+              const text = accountInfo?.info
+                ? u8aToString(accountInfo.info.display.asRaw)
+                : accountInfo?.accountId.toString() ?? 'unknown';
               return (
-                <ListItem
-                  title={text}
-                  accessoryRight={() => (
-                    <Text>{Math.floor(item.proposal.value.toNumber() / 100000000).toLocaleString()} KSM</Text>
-                  )}
-                  accessoryLeft={() => <Identicon value={item.proposal.proposer} size={30} />}
-                />
+                <View style={styles.item}>
+                  <Identicon value={item.proposal.proposer} size={30} />
+                  <Text style={styles.name}>{text}</Text>
+                  <View style={styles.itemRight}>
+                    <Text category={'c1'}>{formatBalance(item.proposal.value)}</Text>
+                    <Icon name={'arrow-right-outline'} style={globalStyles.icon} fill={theme['color-basic-500']} />
+                  </View>
+                </View>
               );
             }}
             renderSectionHeader={({section: {title, data}}) => {
               return (
-                <View style={styles.header}>
+                <View style={[styles.header, {backgroundColor: theme['color-basic-100']}]}>
                   <Text category={'s1'}>{title}</Text>
                   <Text category={'p2'}>{`${data.length}`}</Text>
                 </View>
@@ -88,11 +86,26 @@ export function TreasuryScreen({navigation}: {navigation: NavigationProp<Dashboa
 
 const styles = StyleSheet.create({
   header: {justifyContent: 'space-between', flexDirection: 'row', padding: standardPadding * 2},
+  name: {marginLeft: 10, flex: 1},
+  item: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: standardPadding,
+    paddingHorizontal: standardPadding * 2,
+  },
+  itemRight: {flexDirection: 'row', justifyContent: 'center', alignItems: 'center'},
 });
+
+function useTreasuryInfo() {
+  const {api} = useContext(ChainApiContext);
+
+  return useQuery(['treasury_info'], () => (api ? getTreasuryInfo(api) : undefined));
+}
 
 async function getTreasuryInfo(api: ApiPromise) {
   const proposals = await api.derive.treasury.proposals();
   const accountIds: AccountId[] = [];
+
   for (const p of proposals.proposals) {
     if (!accountIds.includes(p.proposal.proposer)) {
       accountIds.push(p.proposal.proposer);

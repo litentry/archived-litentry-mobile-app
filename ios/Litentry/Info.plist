@@ -39,6 +39,10 @@
 	<string>We use camera to scan address, raw transaction payload and signed signatures.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Ionicons.ttf</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -51,9 +55,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-    <key>UIAppFonts</key>
-    <array>
-        <string>Ionicons.ttf</string>
-    </array>
 </dict>
 </plist>

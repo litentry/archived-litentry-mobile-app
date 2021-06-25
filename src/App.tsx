@@ -18,6 +18,7 @@ import DataContextProvider from 'src/context/DataContext';
 import ThemeContextProvider from 'src/context/ThemeProvider';
 import NetworkContextProvider from 'src/context/NetworkContext';
 import InAppNotificationContextProvider from 'src/context/InAppNotificationContext';
+import {useFirebase} from 'src/hook/useFirebase';
 
 // init type registry
 import 'src/typeRegistry';
@@ -26,6 +27,7 @@ const queryClient = new QueryClient();
 
 export default function App() {
   const {theme} = useContext(ThemeContext);
+  useFirebase();
 
   return (
     <>
