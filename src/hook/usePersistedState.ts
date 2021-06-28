@@ -4,7 +4,7 @@ import {createLogger} from 'src/utils';
 
 const logger = createLogger('usePersistedState');
 
-export type PersistedStateKey = 'network' | 'accounts' | 'theme';
+export type PersistedStateKey = 'network' | 'accounts' | 'theme' | 'selected_push_topics';
 
 export function usePersistedState<T>(key: PersistedStateKey): [state: T | undefined, setState: (data: T) => void];
 export function usePersistedState<T>(key: PersistedStateKey, initialState: T): [state: T, setState: (data: T) => void];

@@ -13,6 +13,7 @@ import {useAccounts} from 'src/context/AccountsContext';
 import {ChainApiContext} from 'context/ChainApiContext';
 import useAccountDetail from 'src/hook/useAccountDetail';
 import {useNavigation} from '@react-navigation/native';
+import {myIdentityScreen} from 'src/navigation/routeKeys';
 
 const {width} = Dimensions.get('window');
 
@@ -35,7 +36,7 @@ function AccountTeaser(props: PropTypes) {
 
   const handleIconPressed = (addr?: string) => {
     if (addr) {
-      navigation.navigate('MyIdentity', {address: addr});
+      navigation.navigate(myIdentityScreen, {address: addr});
     }
   };
 

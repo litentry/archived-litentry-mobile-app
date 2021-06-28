@@ -19,10 +19,12 @@ import NoDataImage from 'image/no_data.png';
 import {Account} from 'src/layout/Account';
 import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
 import {useAccounts} from 'context/AccountsContext';
+import SafeView, {noTopEdges} from 'presentational/SafeView';
+import {DashboardStackParamList} from 'src/navigation/navigation';
 
 type ScreenProps = {
   navigation: StackNavigationProp<DashboardStackParamList>;
-  route: RouteProp<DashboardStackParamList, 'TipDetail'>;
+  route: RouteProp<DashboardStackParamList, 'Tip'>;
 };
 
 const styles = StyleSheet.create({
@@ -169,7 +171,7 @@ function TipDetailScreen({navigation, route}: ScreenProps) {
   }
 
   return (
-    <GenericNavigationLayout title="Tip" onBackPressed={() => navigation.goBack()}>
+    <SafeView edges={noTopEdges}>
       <List
         ListHeaderComponent={<TipDetailContent tip={tip} bestNumber={bestNumber} />}
         data={tip.tips}
@@ -208,7 +210,7 @@ function TipDetailScreen({navigation, route}: ScreenProps) {
         }}
         ListEmptyComponent={<EmptyTippers />}
       />
-    </GenericNavigationLayout>
+    </SafeView>
   );
 }
 

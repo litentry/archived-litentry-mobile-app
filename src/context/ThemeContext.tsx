@@ -1,4 +1,7 @@
 import React, {createContext, useCallback, useContext} from 'react';
+import {ApplicationProvider} from '@ui-kitten/components';
+import * as eva from '@eva-design/eva';
+
 import {usePersistedState} from 'src/hook/usePersistedState';
 
 type Theme = 'light' | 'dark';
@@ -29,7 +32,13 @@ export default function ThemeProvider({children}: PropTypes) {
     toggleTheme,
   };
 
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+  return (
+    <ThemeContext.Provider value={value}>
+      <ApplicationProvider {...eva} theme={eva[theme]}>
+        {children}
+      </ApplicationProvider>
+    </ThemeContext.Provider>
+  );
 }
 
 export function useTheme() {

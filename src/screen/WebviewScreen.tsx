@@ -3,7 +3,8 @@ import {StyleSheet} from 'react-native';
 import RNWebView from 'react-native-webview';
 import {RouteProp} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import GenericNavigationLayout from 'presentational/GenericNavigationLayout';
+import SafeView, {noTopEdges} from 'presentational/SafeView';
+import {DrawerParamList} from 'src/navigation/navigation';
 
 type PropTypes = {
   route: RouteProp<DrawerParamList, 'Webview'>;
@@ -13,13 +14,13 @@ type PropTypes = {
 function WebviewScreen(props: PropTypes) {
   const {
     route: {params},
-    navigation,
   } = props;
-  const {uri, title} = params;
+  const {uri} = params;
+
   return (
-    <GenericNavigationLayout title={title} onBackPressed={() => navigation.goBack()}>
+    <SafeView edges={noTopEdges}>
       <RNWebView source={{uri}} style={styles.container} />
-    </GenericNavigationLayout>
+    </SafeView>
   );
 }
 
