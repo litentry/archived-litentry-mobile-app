@@ -78,7 +78,7 @@ function useTopics() {
         throw new Error('DATA NOT LOADED YET!');
       }
       const updatedData = subscribe ? [...data, id] : data.filter((t) => t !== id);
-      await AsyncStorage.setItem('selected_push_topics', JSON.stringify(updatedData));
+      await AsyncStorage.setItem('selected_push_topics', updatedData);
       if (subscribe) {
         await messaging().subscribeToTopic(id);
       } else {
