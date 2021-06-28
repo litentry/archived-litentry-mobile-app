@@ -5,7 +5,7 @@ import 'fast-text-encoding';
 import React from 'react';
 import {AppRegistry} from 'react-native';
 import App from './src/App';
-import ThemeContextProvider from './src/context/ThemeProvider';
+import ThemeProvider from './src/context/ThemeContext';
 import NetworkContextProvider from './src/context/NetworkContext';
 import InAppNotificationContextProvider from './src/context/InAppNotificationContext';
 import {name as appName} from './app.json';
@@ -20,9 +20,9 @@ function WithContext(props) {
     <InAppNotificationContextProvider>
       <NavigationContainer>
         <NetworkContextProvider>
-          <ThemeContextProvider>
+          <ThemeProvider>
             <App {...props} />
-          </ThemeContextProvider>
+          </ThemeProvider>
         </NetworkContextProvider>
       </NavigationContainer>
     </InAppNotificationContextProvider>

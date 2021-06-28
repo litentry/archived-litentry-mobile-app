@@ -1,14 +1,8 @@
 import {DeriveAccountRegistration} from '@polkadot/api-derive/types';
 import {Registration} from '@polkadot/types/interfaces';
 import {BarCodeReadEvent} from 'react-native-camera';
-export type ThemeType = 'light' | 'dark';
 
 export type SupportedNetworkType = 'ethereum' | 'polkadot' | 'kusama' | 'litentry_test';
-
-export type ThemeContextValueType = {
-  theme: ThemeType;
-  toggleTheme: () => void;
-};
 
 export type DeviceType = {
   firebase_token: string;

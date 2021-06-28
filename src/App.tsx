@@ -1,9 +1,9 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {Host} from 'react-native-portalize';
 import * as eva from '@eva-design/eva';
 import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
-import {ThemeContext} from './context/ThemeProvider';
+import {useTheme} from './context/ThemeContext';
 import ChainApiContextProvider from 'context/ChainApiContext';
 import {AccountsProvider} from 'src/context/AccountsContext';
 import BalanceContextProvider from 'context/BalanceContext';
@@ -20,7 +20,7 @@ import 'src/typeRegistry';
 const queryClient = new QueryClient();
 
 export default function App() {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useTheme();
   useFirebase();
 
   return (
