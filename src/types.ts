@@ -36,8 +36,6 @@ export type NetworkContextValueType = {
   select: (network: NetworkType) => void;
 };
 
-export type AsyncStorageKeyType = 'network' | 'accounts_state';
-
 export interface QRScannedPayload extends BarCodeReadEvent {
   bounds: {
     origin: {x: string; y: string};
