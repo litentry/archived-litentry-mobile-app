@@ -23,7 +23,13 @@ type DrawerParamList = {
   MyIdentity: {address: string};
 };
 
-type AppStackParamList = DrawerParamList & ApiNavigatorParamList & DashboardStackParamList;
+type AppStackParamList = {
+  App: undefined;
+  ApiNavigator: undefined;
+  PermissionGrantingPrompt: undefined;
+};
+
+type CompleteNavigatorParamList = AppStackParamList & DrawerParamList & ApiNavigatorParamList & DashboardStackParamList;
 
 type ApiNavigatorParamList = {
   ApiLoadingScreen: undefined;

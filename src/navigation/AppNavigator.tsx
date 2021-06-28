@@ -18,6 +18,7 @@ import {SubmitTipScreen} from 'screen/SubmitTipScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
+import {PermissionGrantingPrompt} from 'screen/PermissionGrantingPrompt';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -51,12 +52,14 @@ function DrawerNavigator() {
   );
 }
 
-const AppStack = createStackNavigator();
+const AppStack = createStackNavigator<AppStackParamList>();
 
 function AppNavigator() {
   const {api} = useContext(ChainApiContext);
+
   return (
     <AppStack.Navigator headerMode={'none'} screenOptions={{gestureEnabled: false}}>
+      <AppStack.Screen name={'PermissionGrantingPrompt'} component={PermissionGrantingPrompt} />
       {api ? <AppStack.Screen name={'App'} component={DrawerNavigator} /> : undefined}
       <AppStack.Screen name={'ApiNavigator'} component={ApiLoadingNavigator} />
     </AppStack.Navigator>

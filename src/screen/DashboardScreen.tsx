@@ -23,7 +23,10 @@ import LoadingView from 'src/presentational/LoadingView';
 import NetworkSelect from 'src/layout/NetworkSelect';
 
 type PropTypes = {
-  navigation: CompositeNavigationProp<StackNavigationProp<AppStackParamList>, DrawerNavigationProp<DrawerParamList>>;
+  navigation: CompositeNavigationProp<
+    StackNavigationProp<DashboardStackParamList>,
+    DrawerNavigationProp<DrawerParamList>
+  >;
 };
 
 const AddIcon = (props: IconProps) => <Icon {...props} name="person-add-outline" />;
