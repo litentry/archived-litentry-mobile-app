@@ -19,7 +19,7 @@ import {TreasuryScreen} from 'screen/TreasuryScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
 import {Icon, TopNavigationAction} from '@ui-kitten/components';
-import {DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
+import {AppStackParamList, DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
 import globalStyles from 'src/styles';
 import {submitTipScreen} from 'src/navigation/routeKeys';
 import {PermissionGrantingPrompt, useShowPushPermissionScreen} from 'screen/PermissionGrantingPrompt';

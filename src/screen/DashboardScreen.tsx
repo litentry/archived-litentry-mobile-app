@@ -20,7 +20,7 @@ import LoadingView from 'src/presentational/LoadingView';
 import NetworkSelect from 'src/layout/NetworkSelect';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {NetworkContext} from 'context/NetworkContext';
-import {AppStackParamList, DrawerParamList} from 'src/navigation/navigation';
+import {DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<

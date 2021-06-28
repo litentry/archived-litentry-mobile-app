@@ -8,6 +8,7 @@ import {NavigationProp, useNavigationState} from '@react-navigation/native';
 import messaging, {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
 import {useQuery} from 'react-query';
 import AsyncStorage from '@react-native-community/async-storage';
+import {AppStackParamList} from 'src/navigation/navigation';
 
 export function PermissionGrantingPrompt({navigation}: {navigation: NavigationProp<AppStackParamList>}) {
   const routeNames = useNavigationState((state) => state.routeNames);
