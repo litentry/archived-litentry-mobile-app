@@ -68,8 +68,6 @@ const initialState: State = {
   litentry_test: [],
 };
 
-const STORAGE_KEY = 'accounts_state';
-
 const AccountsContext = createContext<AccountsContextValue>({
   accounts: [],
   isLoading: true,
@@ -82,7 +80,7 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
   const [isLoading, setIsLoading] = useState(true);
   const networkState = useContext(NetworkContext);
   const currentNetwork = networkState.currentNetwork.key;
-  const [persistedState, persistState] = usePersistedState<State>(STORAGE_KEY);
+  const [persistedState, persistState] = usePersistedState<State>('accounts');
 
   useEffect(() => {
     if (persistedState) {
