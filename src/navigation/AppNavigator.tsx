@@ -21,7 +21,7 @@ import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
 import {Icon, TopNavigationAction} from '@ui-kitten/components';
 import {DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
 import globalStyles from 'src/styles';
-import {submitTip} from 'src/navigation/routeKeys';
+import {submitTipScreen} from 'src/navigation/routeKeys';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -41,8 +41,8 @@ function DashboardStackNavigator() {
           />
         ),
       }}>
-      <DashboardStack.Screen name={routeKeys.dashboard} component={DashboardScreen} />
-      <DashboardStack.Screen name={routeKeys.motionDetail} component={MotionDetailScreen} />
+      <DashboardStack.Screen name={routeKeys.dashboardScreen} component={DashboardScreen} />
+      <DashboardStack.Screen name={routeKeys.motionDetailScreen} component={MotionDetailScreen} />
       <DashboardStack.Screen
         name={routeKeys.tipsScreen}
         component={TipsScreen}
@@ -50,17 +50,17 @@ function DashboardStackNavigator() {
           headerRight: () => (
             <TopNavigationAction
               icon={(props) => <Icon {...props} name="plus-circle-outline" />}
-              onPress={() => navigation.navigate(submitTip)}
+              onPress={() => navigation.navigate(submitTipScreen)}
             />
           ),
         })}
       />
-      <DashboardStack.Screen name={routeKeys.tipDetail} component={TipDetailScreen} />
+      <DashboardStack.Screen name={routeKeys.tipDetailScreen} component={TipDetailScreen} />
       <DashboardStack.Screen name={routeKeys.councilScreen} component={CouncilScreen} />
       <DashboardStack.Screen name={routeKeys.treasuryScreen} component={TreasuryScreen} />
-      <DashboardStack.Screen name={routeKeys.submitTip} component={SubmitTipScreen} />
+      <DashboardStack.Screen name={routeKeys.submitTipScreen} component={SubmitTipScreen} />
       <DashboardStack.Screen name={routeKeys.motionsScreen} component={MotionsScreen} />
-      <DashboardStack.Screen name={routeKeys.myIdentity} component={MyIdentityScreen} />
+      <DashboardStack.Screen name={routeKeys.myIdentityScreen} component={MyIdentityScreen} />
     </DashboardStack.Navigator>
   );
 }
@@ -75,10 +75,14 @@ function DrawerNavigator() {
         headerLeft: DashboardHeaderLeft,
       }}
       drawerContent={(props) => <DrawerScreen {...props} />}>
-      <Drawer.Screen name={routeKeys.dashboard} component={DashboardStackNavigator} options={{headerShown: false}} />
-      <Drawer.Screen name={routeKeys.registrarList} component={RegistrarListScreen} />
       <Drawer.Screen
-        name={routeKeys.webview}
+        name={routeKeys.dashboardScreen}
+        component={DashboardStackNavigator}
+        options={{headerShown: false}}
+      />
+      <Drawer.Screen name={routeKeys.registrarListScreen} component={RegistrarListScreen} />
+      <Drawer.Screen
+        name={routeKeys.webviewScreen}
         component={WebviewScreen}
         options={({route}) => ({title: route?.params?.title})}
       />

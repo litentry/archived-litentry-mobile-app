@@ -6,7 +6,7 @@ import {useTips} from 'src/hook/useTips';
 import StatInfoBlock from 'presentational/StatInfoBlock';
 import SeactionTeaserContainer from 'presentational/SectionTeaserContainer';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
-import {tipDetail} from 'src/navigation/routeKeys';
+import {tipDetailScreen} from 'src/navigation/routeKeys';
 import TipReason from 'src/layout/tips/TipReason';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {DashboardStackParamList} from 'src/navigation/navigation';
@@ -36,7 +36,7 @@ function TipsSummaryTeaser({onMorePress}: TipsSummaryTeaserProps) {
     <SeactionTeaserContainer title={`Tips ${tips?.length ? `(${tips.length})` : ''}`} onMorePress={onMorePress}>
       {id && tip ? (
         <Layout>
-          <Card onPress={() => navigation.navigate(tipDetail, {hash: String(id)})}>
+          <Card onPress={() => navigation.navigate(tipDetailScreen, {hash: String(id)})}>
             <View style={styles.container}>
               <View style={styles.statInfoBlockContainer}>
                 <StatInfoBlock title="Who">

@@ -1,40 +1,40 @@
 import {
   councilScreen,
-  dashboard,
+  dashboardScreen,
   devScreen,
-  motionDetail,
+  motionDetailScreen,
   motionsScreen,
-  myIdentity,
+  myIdentityScreen,
   notificationSettingsScreen,
-  registrarList,
-  submitTip,
-  tipDetail,
+  registrarListScreen,
+  submitTipScreen,
+  tipDetailScreen,
   tipsScreen,
   treasuryScreen,
-  webview,
+  webviewScreen,
 } from 'src/navigation/routeKeys';
 
 type DashboardStackParamList = {
-  [dashboard]: undefined;
-  [motionDetail]: {
+  [dashboardScreen]: undefined;
+  [motionDetailScreen]: {
     id: number;
     hash: string;
   };
   [tipsScreen]: undefined;
-  [tipDetail]: {
+  [tipDetailScreen]: {
     hash: string;
   };
   [councilScreen]: undefined;
-  [submitTip]: undefined;
+  [submitTipScreen]: undefined;
   [treasuryScreen]: undefined;
   [motionsScreen]: undefined;
-  [myIdentity]: {address: string};
+  [myIdentityScreen]: {address: string};
 };
 
 type DrawerParamList = {
-  [dashboard]: undefined;
-  [registrarList]: undefined;
-  [webview]: {uri: string; title: string};
+  [dashboardScreen]: undefined;
+  [registrarListScreen]: undefined;
+  [webviewScreen]: {uri: string; title: string};
   [devScreen]: undefined;
   [notificationSettingsScreen]: undefined;
 };

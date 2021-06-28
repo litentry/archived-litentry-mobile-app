@@ -14,7 +14,13 @@ import Identicon from '@polkadot/reactnative-identicon';
 import {BalanceContext} from 'context/BalanceContext';
 import withAddAccount, {InjectedPropTypes} from 'src/hoc/withAddAccount';
 import {ChainApiContext} from 'context/ChainApiContext';
-import {registrarList, webview, devScreen, notificationSettingsScreen, dashboard} from 'src/navigation/routeKeys';
+import {
+  registrarListScreen,
+  webviewScreen,
+  devScreen,
+  notificationSettingsScreen,
+  dashboardScreen,
+} from 'src/navigation/routeKeys';
 
 function AccountDrawerView({accountAddProps}: InjectedPropTypes) {
   const {show} = useContext(BalanceContext);
@@ -142,7 +148,7 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
     <SafeView>
       <Layout style={styles.container}>
         <Layout style={[styles.main, globalStyles.paddedContainer]}>
-          <TouchableOpacity onPress={() => navigation.navigate(dashboard)}>
+          <TouchableOpacity onPress={() => navigation.navigate(dashboardScreen)}>
             <View style={styles.logoContainer}>
               <Image source={logo} style={styles.logoImage} />
               <Text style={styles.slogan}>Decentralized Identity</Text>
@@ -156,7 +162,7 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
           <ListItem
             title="Dashboard"
             accessoryLeft={(props) => <Icon {...props} name="browser-outline" animation="zoom" />}
-            onPress={() => navigation.navigate(dashboard)}
+            onPress={() => navigation.navigate(dashboardScreen)}
           />
           <Divider />
           <Layout style={globalStyles.paddedContainer}>
@@ -165,7 +171,7 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
           <ListItem
             title="Registrars"
             accessoryLeft={(props) => <Icon {...props} name="award-outline" animation="zoom" />}
-            onPress={() => navigation.navigate(registrarList)}
+            onPress={() => navigation.navigate(registrarListScreen)}
           />
           <Divider />
           <ListItem
@@ -179,7 +185,7 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
             description="Read more about us."
             accessoryLeft={(props) => <Icon {...props} name="hash-outline" animation="zoom" />}
             onPress={() =>
-              navigation.navigate(webview, {
+              navigation.navigate(webviewScreen, {
                 title: 'About Litentry',
                 uri: 'https://www.litentry.com',
               })

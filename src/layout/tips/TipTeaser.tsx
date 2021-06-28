@@ -4,7 +4,7 @@ import {StyleSheet, View} from 'react-native';
 import {ListItem, Text} from '@ui-kitten/components';
 import {useNavigation} from '@react-navigation/native';
 import {Tip} from 'src/hook/useTips';
-import {tipDetail} from 'src/navigation/routeKeys';
+import {tipDetailScreen} from 'src/navigation/routeKeys';
 import TipReason from 'layout/tips/TipReason';
 import {Account} from 'src/layout/Account';
 import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
@@ -47,7 +47,7 @@ function TipTeaser({tip}: TipTeaserProps) {
           <Identicon value={who} size={40} />
         </View>
       )}
-      onPress={() => navigation.navigate(tipDetail, {hash: tipHash})}
+      onPress={() => navigation.navigate(tipDetailScreen, {hash: tipHash})}
     />
   );
 }
