@@ -5,7 +5,7 @@ import {flowRight as compose} from 'lodash';
 import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 import withElectionInfo, {InjectedPropTypes as ElectionInjectedPropTypes} from 'src/hoc/withElectionInfo';
 import {useNavigation} from '@react-navigation/native';
-import {motionDetail} from 'src/navigation/routeKeys';
+import {motionDetailScreen} from 'src/navigation/routeKeys';
 
 type PropTypes = {title: string};
 
@@ -16,7 +16,7 @@ function MotionTeaser(props: PropTypes & ElectionInjectedPropTypes) {
 
   const handleDetail = useCallback(() => {
     if (latestMotion && latestMotion.votes) {
-      navigation.navigate(motionDetail, {
+      navigation.navigate(motionDetailScreen, {
         hash: latestMotion.hash.toString(),
         id: latestMotion.votes.index.toNumber(),
       });

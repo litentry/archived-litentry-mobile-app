@@ -5,28 +5,10 @@ import 'fast-text-encoding';
 import React from 'react';
 import {AppRegistry} from 'react-native';
 import App from './src/App';
-import DataContextProvider from './src/context/DataContext';
-import ThemeContextProvider from './src/context/ThemeProvider';
-import NetworkContextProvider from './src/context/NetworkContext';
-import InAppNotificationContextProvider from './src/context/InAppNotificationContext';
 import {name as appName} from './app.json';
 
 if (__DEV__) {
   import('./ReactotronConfig').then(() => console.log('Reactotron Configured'));
 }
 
-function WithContext(props) {
-  return (
-    <InAppNotificationContextProvider>
-      <DataContextProvider>
-        <NetworkContextProvider>
-          <ThemeContextProvider>
-            <App {...props} />
-          </ThemeContextProvider>
-        </NetworkContextProvider>
-      </DataContextProvider>
-    </InAppNotificationContextProvider>
-  );
-}
-
-AppRegistry.registerComponent(appName, () => WithContext);
+AppRegistry.registerComponent(appName, () => App);

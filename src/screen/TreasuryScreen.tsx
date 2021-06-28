@@ -1,21 +1,19 @@
 import React, {useContext} from 'react';
-import {Divider, Icon, Layout, Spinner, Text, TopNavigationAction, useTheme} from '@ui-kitten/components';
+import {Divider, Icon, Layout, Spinner, Text, useTheme} from '@ui-kitten/components';
 import globalStyles, {standardPadding} from 'src/styles';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {SectionList, StyleSheet, View} from 'react-native';
 import {u8aToString} from '@polkadot/util';
 import {ApiPromise} from '@polkadot/api';
 import {AccountId} from '@polkadot/types/interfaces';
-import ScreenNavigation from 'layout/ScreenNavigation';
-import {NavigationProp} from '@react-navigation/native';
 import Identicon from '@polkadot/reactnative-identicon';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {getAccountsIdentityInfo} from 'service/api/account';
 import {EmptyView} from 'presentational/EmptyView';
 import {useFormatBalance} from '../hook/useFormatBalance';
 import {useQuery} from 'react-query';
+import SafeView, {noTopEdges} from 'presentational/SafeView';
 
-export function TreasuryScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
+export function TreasuryScreen() {
   const theme = useTheme();
   const {isLoading, data, refetch} = useTreasuryInfo();
 
@@ -28,17 +26,7 @@ export function TreasuryScreen({navigation}: {navigation: NavigationProp<Dashboa
 
   return (
     <Layout style={globalStyles.flex}>
-      <ScreenNavigation
-        renderTitle={() => (
-          <Text category={'s1'} style={globalStyles.monoFont}>
-            Treasury
-          </Text>
-        )}
-        accessoryLeft={
-          <TopNavigationAction onPress={navigation.goBack} icon={(p) => <Icon {...p} name={'arrow-back-outline'} />} />
-        }
-      />
-      <SafeAreaView edges={['bottom']} style={globalStyles.flex}>
+      <SafeView edges={noTopEdges}>
         {!data ? (
           <View style={globalStyles.centeredContainer}>
             <Spinner />
@@ -79,7 +67,7 @@ export function TreasuryScreen({navigation}: {navigation: NavigationProp<Dashboa
             ListEmptyComponent={EmptyView}
           />
         )}
-      </SafeAreaView>
+      </SafeView>
     </Layout>
   );
 }
