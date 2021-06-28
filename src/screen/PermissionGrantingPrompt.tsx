@@ -1,11 +1,13 @@
 import React, {useState} from 'react';
 import {Button, Icon, Layout, Text, useTheme} from '@ui-kitten/components';
 import SafeView from 'presentational/SafeView';
-import {StyleSheet, View} from 'react-native';
+import {Platform, StyleSheet, View} from 'react-native';
 import globalStyles, {standardPadding} from 'src/styles';
 import Padder from 'presentational/Padder';
 import {NavigationProp, useNavigationState} from '@react-navigation/native';
-import messaging from '@react-native-firebase/messaging';
+import messaging, {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
+import {useQuery} from 'react-query';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export function PermissionGrantingPrompt({navigation}: {navigation: NavigationProp<AppStackParamList>}) {
   const routeNames = useNavigationState((state) => state.routeNames);
@@ -14,20 +16,19 @@ export function PermissionGrantingPrompt({navigation}: {navigation: NavigationPr
   const [error, setError] = useState<string>();
 
   const onSkip = () => navigation.navigate(routeNames.includes('App') ? 'App' : 'ApiNavigator');
-  const onRequestPermissions = () =>
-    messaging()
-      .requestPermission()
-      .then((authorizationStatus) => {
-        if (
-          authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-          authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
-        ) {
-          onSkip();
-        } else {
-          setError('Permission denied, please turn the notification on in the settings app!');
-        }
-      })
-      .catch((e) => setError(e.message));
+  const onRequestPermissions = async () => {
+    try {
+      const status = await messaging().requestPermission();
+      if (permissionAllowed(status)) {
+        await AsyncStorage.setItem(PERMISSION_GRANTING_SCREEN_SHOWN, 'true');
+        onSkip();
+      } else {
+        setError('Permission denied, please turn the notification on in the settings app!');
+      }
+    } catch (e) {
+      setError(e.message);
+    }
+  };
 
   return (
     <Layout style={globalStyles.flex}>
@@ -66,3 +67,19 @@ const styles = StyleSheet.create({
   icon: {width: 180, height: 180},
   container: {alignItems: 'center', justifyContent: 'center', flex: 1, padding: standardPadding * 4},
 });
+
+function permissionAllowed(status: FirebaseMessagingTypes.AuthorizationStatus) {
+  return status === messaging.AuthorizationStatus.AUTHORIZED || status === messaging.AuthorizationStatus.PROVISIONAL;
+}
+
+const PERMISSION_GRANTING_SCREEN_SHOWN = 'PERMISSION_GRANTING_SCREEN_SHOWN';
+
+export function useShowPushPermissionScreen() {
+  return useQuery('permission_granted', async () => {
+    return (
+      Platform.OS === 'ios' &&
+      (await AsyncStorage.getItem(PERMISSION_GRANTING_SCREEN_SHOWN)) !== 'true' &&
+      !permissionAllowed(await messaging().hasPermission())
+    );
+  });
+}

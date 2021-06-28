@@ -18,7 +18,9 @@ import {SubmitTipScreen} from 'screen/SubmitTipScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
-import {PermissionGrantingPrompt} from 'screen/PermissionGrantingPrompt';
+import {PermissionGrantingPrompt, useShowPushPermissionScreen} from 'screen/PermissionGrantingPrompt';
+import {Platform} from 'react-native';
+import LoadingView from 'presentational/LoadingView';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -56,10 +58,17 @@ const AppStack = createStackNavigator<AppStackParamList>();
 
 function AppNavigator() {
   const {api} = useContext(ChainApiContext);
+  const {data: showPermissionGranting, isLoading} = useShowPushPermissionScreen();
+
+  if (isLoading) {
+    return <LoadingView />;
+  }
 
   return (
     <AppStack.Navigator headerMode={'none'} screenOptions={{gestureEnabled: false}}>
-      <AppStack.Screen name={'PermissionGrantingPrompt'} component={PermissionGrantingPrompt} />
+      {showPermissionGranting ? (
+        <AppStack.Screen name={'PermissionGrantingPrompt'} component={PermissionGrantingPrompt} />
+      ) : undefined}
       {api ? <AppStack.Screen name={'App'} component={DrawerNavigator} /> : undefined}
       <AppStack.Screen name={'ApiNavigator'} component={ApiLoadingNavigator} />
     </AppStack.Navigator>
