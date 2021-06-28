@@ -24,10 +24,6 @@ export default function ThemeProvider({children}: PropTypes) {
     setTheme(theme === 'dark' ? 'light' : 'dark');
   }, [theme, setTheme]);
 
-  if (!theme) {
-    return null;
-  }
-
   const value = {
     theme,
     toggleTheme,

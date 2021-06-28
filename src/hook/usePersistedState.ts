@@ -6,9 +6,13 @@ const logger = createLogger('usePersistedState');
 
 export type PersistedStateKey = 'network' | 'accounts' | 'theme';
 
-type UsePersistedStateResult<T> = [state: T | undefined, setState: (data: T) => void];
+export function usePersistedState<T>(key: PersistedStateKey): [state: T | undefined, setState: (data: T) => void];
+export function usePersistedState<T>(key: PersistedStateKey, initialState: T): [state: T, setState: (data: T) => void];
 
-export function usePersistedState<T>(key: PersistedStateKey, initialState?: T): UsePersistedStateResult<T> {
+export function usePersistedState<T>(
+  key: PersistedStateKey,
+  initialState?: T,
+): [state: T | undefined, setState: (data: T) => void] {
   const [state, setState] = useState(initialState);
   const persistState = useCallback(
     (newState: T) => {
