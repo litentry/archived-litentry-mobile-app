@@ -19,7 +19,6 @@ import {TreasuryScreen} from 'screen/TreasuryScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
 import {PermissionGrantingPrompt, useShowPushPermissionScreen} from 'screen/PermissionGrantingPrompt';
-import {Platform} from 'react-native';
 import LoadingView from 'presentational/LoadingView';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
