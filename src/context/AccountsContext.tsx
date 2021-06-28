@@ -2,7 +2,7 @@ import React, {useContext, useReducer, createContext, useState, useMemo, useEffe
 
 import {SupportedNetworkType} from 'src/types';
 import {NetworkContext} from 'src/context/NetworkContext';
-import {usePersistedData} from 'src/hook/usePersistedData';
+import {usePersistedState} from 'src/hook/usePersistedState';
 
 type Account = {
   address: string;
@@ -82,7 +82,7 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
   const [isLoading, setIsLoading] = useState(true);
   const networkState = useContext(NetworkContext);
   const currentNetwork = networkState.currentNetwork.key;
-  const [persistedState, persistState] = usePersistedData<State>(STORAGE_KEY);
+  const [persistedState, persistState] = usePersistedState<State>(STORAGE_KEY);
 
   useEffect(() => {
     if (persistedState) {

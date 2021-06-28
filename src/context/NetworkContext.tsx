@@ -1,7 +1,7 @@
 import React, {createContext, useMemo, useState, useEffect, useCallback} from 'react';
 import {noop} from 'lodash';
 import {NetworkContextValueType, NetworkType} from 'src/types';
-import {usePersistedData} from 'src/hook/usePersistedData';
+import {usePersistedState} from 'src/hook/usePersistedState';
 
 const PolkadotNetwork: NetworkType = {
   name: 'Polkadot',
@@ -50,7 +50,7 @@ type PropTypes = {
 };
 
 export default function NetworkContextProvider({children}: PropTypes) {
-  const [persistedNetwork, persistNetwork] = usePersistedData<NetworkType>('network');
+  const [persistedNetwork, persistNetwork] = usePersistedState<NetworkType>('network');
   const [currentNetwork, setCurrentNetwork] = useState<NetworkType>(PolkadotNetwork);
 
   useEffect(() => {
