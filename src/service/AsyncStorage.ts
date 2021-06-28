@@ -15,4 +15,4 @@ export async function setItem(key: string, value: unknown) {
   return AsyncStorage.setItem(key, JSON.stringify(value));
 }
 
-export const remoteItem = (key: string) => AsyncStorage.removeItem(key);
+export const removeItem = (key: string) => AsyncStorage.removeItem(key);
