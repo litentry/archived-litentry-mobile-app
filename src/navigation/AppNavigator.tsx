@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {createStackNavigator, HeaderStyleInterpolators} from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import DrawerScreen from 'screen/DrawerScreen';
 import DashboardScreen, {DashboardHeaderLeft} from 'screen/DashboardScreen';
