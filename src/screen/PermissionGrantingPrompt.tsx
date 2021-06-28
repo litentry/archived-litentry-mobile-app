@@ -15,12 +15,15 @@ export function PermissionGrantingPrompt({navigation}: {navigation: NavigationPr
 
   const [error, setError] = useState<string>();
 
-  const onSkip = () => navigation.navigate(routeNames.includes('App') ? 'App' : 'ApiNavigator');
+  const onSkip = () => {
+    AsyncStorage.setItem(PERMISSION_GRANTING_SCREEN_SHOWN, 'true');
+    navigation.navigate(routeNames.includes('App') ? 'App' : 'ApiNavigator');
+  };
+
   const onRequestPermissions = async () => {
     try {
       const status = await messaging().requestPermission();
       if (permissionAllowed(status)) {
-        await AsyncStorage.setItem(PERMISSION_GRANTING_SCREEN_SHOWN, 'true');
         onSkip();
       } else {
         setError('Permission denied, please turn the notification on in the settings app!');
