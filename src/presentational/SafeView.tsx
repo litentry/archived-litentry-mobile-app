@@ -1,13 +1,15 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {Edge, SafeAreaView} from 'react-native-safe-area-context';
 
 import {Layout} from '@ui-kitten/components';
 
-export default function SafeView({children}: {children: React.ReactNode}) {
+export default function SafeView({children, edges}: {children: React.ReactNode; edges?: Edge[]}) {
   return (
     <Layout style={styles.container}>
-      <SafeAreaView style={styles.container}>{children}</SafeAreaView>
+      <SafeAreaView edges={edges} style={styles.container}>
+        {children}
+      </SafeAreaView>
     </Layout>
   );
 }
@@ -15,3 +17,5 @@ export default function SafeView({children}: {children: React.ReactNode}) {
 const styles = StyleSheet.create({
   container: {flex: 1},
 });
+
+export const noTopEdges: Edge[] = ['left', 'right', 'bottom'];
