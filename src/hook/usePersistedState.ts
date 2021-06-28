@@ -1,13 +1,14 @@
 import {useState, useEffect, useCallback} from 'react';
 import {setItem, getItem} from 'src/service/AsyncStorage';
-import {AsyncStorageKeyType} from 'src/types';
 import {createLogger} from 'src/utils';
 
 const logger = createLogger('usePersistedState');
 
+export type PersistedStateKey = 'network' | 'accounts' | 'theme';
+
 type UsePersistedStateResult<T> = [state: T | undefined, setState: (data: T) => void];
 
-export function usePersistedState<T>(key: AsyncStorageKeyType, initialState?: T): UsePersistedStateResult<T> {
+export function usePersistedState<T>(key: PersistedStateKey, initialState?: T): UsePersistedStateResult<T> {
   const [state, setState] = useState(initialState);
   const persistState = useCallback(
     (newState: T) => {
