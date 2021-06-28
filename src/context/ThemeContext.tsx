@@ -21,7 +21,7 @@ export default function ThemeProvider({children}: PropTypes) {
   const [theme, setTheme] = usePersistedState<Theme>('theme', 'light');
 
   const toggleTheme = useCallback(() => {
-    setTheme(theme === 'dark' ? 'dark' : 'light');
+    setTheme(theme === 'dark' ? 'light' : 'dark');
   }, [theme, setTheme]);
 
   if (!theme) {
