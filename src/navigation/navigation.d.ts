@@ -1,26 +1,42 @@
+import {
+  councilScreen,
+  dashboardScreen,
+  devScreen,
+  motionDetailScreen,
+  motionsScreen,
+  myIdentityScreen,
+  notificationSettingsScreen,
+  registrarListScreen,
+  submitTipScreen,
+  tipDetailScreen,
+  tipsScreen,
+  treasuryScreen,
+  webviewScreen,
+} from 'src/navigation/routeKeys';
+
 type DashboardStackParamList = {
-  Dashboard: undefined;
-  MotionDetail: {
+  [dashboardScreen]: undefined;
+  [motionDetailScreen]: {
     id: number;
     hash: string;
   };
-  Tips: undefined;
-  TipDetail: {
+  [tipsScreen]: undefined;
+  [tipDetailScreen]: {
     hash: string;
   };
-  CouncilScreen: undefined;
-  SubmitTipScreen: undefined;
-  TreasuryScreen: undefined;
-  MotionsScreen: undefined;
+  [councilScreen]: undefined;
+  [submitTipScreen]: undefined;
+  [treasuryScreen]: undefined;
+  [motionsScreen]: undefined;
+  [myIdentityScreen]: {address: string};
 };
 
 type DrawerParamList = {
-  Dashboard: undefined;
-  RegistrarList: undefined;
-  Webview: {uri: string; title: string};
-  DevScreen: undefined;
-  NotificationSettingsScreen: undefined;
-  MyIdentity: {address: string};
+  [dashboardScreen]: undefined;
+  [registrarListScreen]: undefined;
+  [webviewScreen]: {uri: string; title: string};
+  [devScreen]: undefined;
+  [notificationSettingsScreen]: undefined;
 };
 
 type AppStackParamList = DrawerParamList & ApiNavigatorParamList & DashboardStackParamList;

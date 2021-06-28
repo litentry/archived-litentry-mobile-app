@@ -1,35 +1,26 @@
 import React from 'react';
-import {Button, Divider, Icon, Layout, ListItem, Spinner, Text, TopNavigationAction} from '@ui-kitten/components';
+import {Button, Divider, Icon, Layout, ListItem, Spinner, Text} from '@ui-kitten/components';
 import globalStyles, {standardPadding} from 'src/styles';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {u8aToString} from '@polkadot/util';
-import ScreenNavigation from 'layout/ScreenNavigation';
 import {NavigationProp} from '@react-navigation/native';
 import Identicon from '@polkadot/reactnative-identicon';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {EmptyView} from 'presentational/EmptyView';
 import {useCouncilMembers} from 'src/hook/useCouncilMembers';
+import SafeView, {noTopEdges} from 'presentational/SafeView';
+import {motionsScreen} from 'src/navigation/routeKeys';
+import {DashboardStackParamList} from 'src/navigation/navigation';
 
 export function CouncilScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {data, isLoading} = useCouncilMembers();
 
   return (
     <Layout style={globalStyles.flex}>
-      <ScreenNavigation
-        renderTitle={() => (
-          <Text category={'s1'} style={globalStyles.monoFont}>
-            Council
-          </Text>
-        )}
-        accessoryLeft={
-          <TopNavigationAction onPress={navigation.goBack} icon={(p) => <Icon {...p} name={'arrow-back-outline'} />} />
-        }
-      />
-      <SafeAreaView edges={['bottom']} style={globalStyles.flex}>
+      <SafeView edges={noTopEdges}>
         <View style={styles.header}>
           <Button
             status={'basic'}
-            onPress={() => navigation.navigate('MotionsScreen')}
+            onPress={() => navigation.navigate(motionsScreen)}
             accessoryLeft={(props) => <Icon {...props} name={'activity-outline'} />}>
             Motions
           </Button>
@@ -58,7 +49,7 @@ export function CouncilScreen({navigation}: {navigation: NavigationProp<Dashboar
             />
           </>
         )}
-      </SafeAreaView>
+      </SafeView>
     </Layout>
   );
 }

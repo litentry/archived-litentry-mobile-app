@@ -1,10 +1,8 @@
 import * as React from 'react';
 import {useContext, useReducer} from 'react';
-import {Button, Card, Icon, Input, Layout, ListItem, Text, TopNavigationAction} from '@ui-kitten/components';
-import ScreenNavigation from 'layout/ScreenNavigation';
+import {Button, Card, Input, Layout, ListItem, Text} from '@ui-kitten/components';
 import globalStyles, {standardPadding} from 'src/styles';
 import {NavigationProp} from '@react-navigation/native';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import {useAccounts} from 'context/AccountsContext';
 import {ChainApiContext} from 'context/ChainApiContext';
@@ -14,6 +12,8 @@ import Padder from 'presentational/Padder';
 import {TxContext} from 'context/TxContext';
 import {useQueryClient} from 'react-query';
 import {useAccountIdentity} from 'layout/Account';
+import SafeView, {noTopEdges} from 'presentational/SafeView';
+import {DashboardStackParamList} from 'src/navigation/navigation';
 
 export function SubmitTipScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {isLoading, data: account, error} = useAccount();
@@ -37,18 +37,8 @@ export function SubmitTipScreen({navigation}: {navigation: NavigationProp<Dashbo
   const valid = state.beneficiary && state.reason && state.reason.length > 4;
 
   return (
-    <Layout style={globalStyles.flex}>
-      <ScreenNavigation
-        renderTitle={() => (
-          <Text category={'s1'} style={globalStyles.monoFont}>
-            Submit Tip
-          </Text>
-        )}
-        accessoryLeft={
-          <TopNavigationAction onPress={navigation.goBack} icon={(p) => <Icon {...p} name={'arrow-back-outline'} />} />
-        }
-      />
-      <SafeAreaView edges={['bottom']} style={styles.container}>
+    <SafeView edges={noTopEdges}>
+      <View style={styles.container}>
         <View style={globalStyles.flex}>
           <Card
             header={(p) => (
@@ -106,8 +96,8 @@ export function SubmitTipScreen({navigation}: {navigation: NavigationProp<Dashbo
           }}>
           Sign and Submit
         </Button>
-      </SafeAreaView>
-    </Layout>
+      </View>
+    </SafeView>
   );
 }
 

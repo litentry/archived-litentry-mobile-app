@@ -1,6 +1,5 @@
 import React from 'react';
 import {Divider, Icon, Layout, ListItem, Text} from '@ui-kitten/components';
-import GenericNavigationLayout from 'presentational/GenericNavigationLayout';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {StyleSheet, Switch, View} from 'react-native';
 import globalStyles, {standardPadding} from 'src/styles';
@@ -9,17 +8,18 @@ import {useDataContext} from 'context/DataContext';
 import {useMutation, useQuery, useQueryClient} from 'react-query';
 import LoadingView from 'presentational/LoadingView';
 import messaging from '@react-native-firebase/messaging';
+import SafeView, {noTopEdges} from 'presentational/SafeView';
+import {DrawerParamList} from 'src/navigation/navigation';
 
 type PropTypes = {
   navigation: DrawerNavigationProp<DrawerParamList>;
 };
 
-export function NotificationSettingsScreen(props: PropTypes) {
-  const {navigation} = props;
+export function NotificationSettingsScreen({}: PropTypes) {
   const {topics, toggleTopic, isLoading} = useTopics();
 
   return (
-    <GenericNavigationLayout title="Push Notifications" onBackPressed={() => navigation.goBack()}>
+    <SafeView edges={noTopEdges}>
       <Layout level="1" style={styles.container}>
         <Text>Hi there! To stay informed choose which Push Notifications you'd like to receive.</Text>
         <Padder scale={2} />
@@ -47,7 +47,7 @@ export function NotificationSettingsScreen(props: PropTypes) {
           title={"Don't forget to enable notifications in your phone's settings"}
         />
       </Layout>
-    </GenericNavigationLayout>
+    </SafeView>
   );
 }
 
