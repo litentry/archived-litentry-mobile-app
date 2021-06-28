@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import AsyncStorage from '@react-native-community/async-storage';
 
 export async function getItem<T>(key: string, defaultValue: T | null = null): Promise<T | null> {
