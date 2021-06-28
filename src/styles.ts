@@ -53,7 +53,7 @@ const globalStyles = StyleSheet.create({
     flex: 1,
   },
   icon: {...inlineIconDimension, ...iconColor},
-  icon30: {width: 25, height: 25},
+  icon25: {width: 25, height: 25},
   inlineIconDimension,
   iconColor,
   dialogMinHeight: {

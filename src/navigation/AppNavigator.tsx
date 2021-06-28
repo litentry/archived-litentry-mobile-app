@@ -35,7 +35,7 @@ function DashboardStackNavigator() {
         headerBackImage: ({tintColor}) => (
           <Icon
             name={'arrow-back-outline'}
-            style={[globalStyles.icon30, {color: tintColor}]}
+            style={[globalStyles.icon25, {color: tintColor}]}
             fill={tintColor}
             pack={'ionic'}
           />
