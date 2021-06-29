@@ -1,7 +1,7 @@
-import React, {createContext, useContext, useMemo, useState, useEffect, useCallback} from 'react';
+import React, {createContext, useMemo, useCallback} from 'react';
 import {noop} from 'lodash';
 import {NetworkContextValueType, NetworkType} from 'src/types';
-import {DataContext} from './DataContext';
+import {usePersistedState} from 'src/hook/usePersistedState';
 
 const PolkadotNetwork: NetworkType = {
   name: 'Polkadot',
@@ -50,23 +50,13 @@ type PropTypes = {
 };
 
 export default function NetworkContextProvider({children}: PropTypes) {
-  const {asyncStorage} = useContext(DataContext);
-  const [currentNetwork, setNetwork] = useState<NetworkType>(PolkadotNetwork);
-
-  useEffect(() => {
-    asyncStorage.get('network', availableNetworks[0]).then((network?: NetworkType) => {
-      if (network) {
-        setNetwork(network);
-      }
-    });
-  }, [asyncStorage]);
+  const [currentNetwork, setCurrentNetwork] = usePersistedState<NetworkType>('network', PolkadotNetwork);
 
   const select = useCallback(
     (network: NetworkType) => {
-      setNetwork(network);
-      asyncStorage.set('network', JSON.stringify(network));
+      setCurrentNetwork(network);
     },
-    [asyncStorage],
+    [setCurrentNetwork],
   );
 
   const value = useMemo(

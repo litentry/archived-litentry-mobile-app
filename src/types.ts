@@ -1,14 +1,8 @@
 import {DeriveAccountRegistration} from '@polkadot/api-derive/types';
 import {Registration} from '@polkadot/types/interfaces';
 import {BarCodeReadEvent} from 'react-native-camera';
-export type ThemeType = 'light' | 'dark';
 
 export type SupportedNetworkType = 'ethereum' | 'polkadot' | 'kusama' | 'litentry_test';
-
-export type ThemeContextValueType = {
-  theme: ThemeType;
-  toggleTheme: () => void;
-};
 
 export type DeviceType = {
   firebase_token: string;
@@ -34,15 +28,6 @@ export type NetworkContextValueType = {
   currentNetwork: NetworkType;
   availableNetworks: NetworkType[];
   select: (network: NetworkType) => void;
-};
-
-export type AsyncStorageKeyType = 'network' | 'selected_push_topics';
-
-export type DataContextValueType = {
-  asyncStorage: {
-    get: <T>(key: AsyncStorageKeyType, defaultValue: T) => Promise<T>;
-    set: (key: AsyncStorageKeyType, value: string) => Promise<void>;
-  };
 };
 
 export interface QRScannedPayload extends BarCodeReadEvent {

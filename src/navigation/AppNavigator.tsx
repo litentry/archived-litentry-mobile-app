@@ -1,6 +1,9 @@
 import React, {useContext} from 'react';
+import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
+import {Icon, TopNavigationAction} from '@ui-kitten/components';
+
 import DrawerScreen from 'screen/DrawerScreen';
 import DashboardScreen, {DashboardHeaderLeft} from 'screen/DashboardScreen';
 import MotionDetailScreen from 'screen/MotionDetailScreen';
@@ -18,10 +21,11 @@ import {SubmitTipScreen} from 'screen/SubmitTipScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
-import {Icon, TopNavigationAction} from '@ui-kitten/components';
 import {DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
 import globalStyles from 'src/styles';
 import {submitTipScreen} from 'src/navigation/routeKeys';
+import {useTheme} from 'src/context/ThemeContext';
+import {darkTheme, lightTheme} from 'src/navigation/theme';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -96,11 +100,15 @@ const AppStack = createStackNavigator();
 
 function AppNavigator() {
   const {api} = useContext(ChainApiContext);
+  const {theme} = useTheme();
+
   return (
-    <AppStack.Navigator headerMode={'none'} screenOptions={{gestureEnabled: false}}>
-      {api ? <AppStack.Screen name={'App'} component={DrawerNavigator} /> : undefined}
-      <AppStack.Screen name={'ApiNavigator'} component={ApiLoadingNavigator} />
-    </AppStack.Navigator>
+    <NavigationContainer theme={theme === 'dark' ? darkTheme : lightTheme}>
+      <AppStack.Navigator headerMode={'none'} screenOptions={{gestureEnabled: false}}>
+        {api ? <AppStack.Screen name={'App'} component={DrawerNavigator} /> : undefined}
+        <AppStack.Screen name={'ApiNavigator'} component={ApiLoadingNavigator} />
+      </AppStack.Navigator>
+    </NavigationContainer>
   );
 }
 

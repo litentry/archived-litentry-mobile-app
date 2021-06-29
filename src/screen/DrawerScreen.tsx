@@ -3,7 +3,7 @@ import {StyleSheet, Image, View, TouchableOpacity, Alert} from 'react-native';
 import {Button, Layout, Text, Divider, Toggle, ListItem, Icon, OverflowMenu, MenuItem} from '@ui-kitten/components';
 import SafeView from 'presentational/SafeView';
 import globalStyles, {standardPadding, monofontFamily} from 'src/styles';
-import {ThemeContext} from 'context/ThemeProvider';
+import {useTheme} from 'context/ThemeContext';
 import logo from '../image/logo.png';
 import Padder from 'presentational/Padder';
 import {useAccounts} from 'src/context/AccountsContext';
@@ -142,7 +142,7 @@ const accountDrawerViewStyles = StyleSheet.create({
 const ConnectedAccountDrawer = withAddAccount(AccountDrawerView);
 
 function DrawerScreen({navigation}: DrawerContentComponentProps) {
-  const {theme, toggleTheme} = useContext(ThemeContext);
+  const {theme, toggleTheme} = useTheme();
 
   return (
     <SafeView>
