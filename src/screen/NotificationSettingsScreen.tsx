@@ -58,12 +58,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const TOPICS = [
-  {id: 'REF_VOTE', label: 'Vote on Active Referenda'},
-  {id: 'COUNCIL_VOTE', label: 'Vote for Council Election'},
-  {id: 'EMERGENCY_VOTE', label: 'Vote for Emergency Proposals'},
-  {id: 'TREASURY_VOTE', label: 'Vote for Treasury Proposals'},
-];
+const TOPICS = [{id: 'treasury.Proposed', label: 'New Treasury Proposal'}];
 
 function useTopics() {
   const queryClient = useQueryClient();
@@ -104,6 +99,7 @@ function useTopics() {
         return {previousTopics};
       },
       onError: (err, vars, context: any) => {
+        console.error(err);
         queryClient.setQueryData('selected_push_topics', context.previousTopics);
       },
     },
