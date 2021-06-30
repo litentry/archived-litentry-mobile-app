@@ -12,7 +12,7 @@
     "prettier": "./node_modules/.bin/prettier --ignore-path .gitignore \"**/*.+(js|ts|tsx|json)\"",
     "nodeify": "rn-nodeify --hack --install process,crypto,events,constant,console,stream,url,util",
     "validate": "./node_modules/.bin/npm-run-all --parallel check-types lint",
-    "postinstall": "npm run nodeify",
+    "postinstall": "npm run nodeify && patch-package",
     "prepare": "husky install",
     "bundle:android": "cd android/ && ./gradlew bundleRelease",
     "assemble:android": "cd android/ && ./gradlew clean && ./gradlew assembleRelease"
@@ -36,6 +36,7 @@
     "events": "^3.3.0",
     "fast-text-encoding": "^1.0.3",
     "lodash": "^4.17.21",
+    "patch-package": "^6.4.7",
     "process": "^0.11.10",
     "proxy-polyfill": "^0.3.2",
     "qrcode-generator": "^1.4.4",
