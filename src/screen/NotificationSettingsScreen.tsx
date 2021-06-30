@@ -39,7 +39,7 @@ export function NotificationSettingsScreen({}: PropTypes) {
               />
             ))
           )}
-          <Padder scale={2} />
+          <Padder scale={1} />
           <Divider />
         </View>
         <ListItem
@@ -58,7 +58,10 @@ const styles = StyleSheet.create({
   },
 });
 
-const TOPICS = [{id: 'treasury.Proposed', label: 'New Treasury Proposal'}];
+const TOPICS = [
+  {id: 'treasury.Proposed', label: 'New Treasury Proposal'},
+  {id: 'tips.NewTip', label: 'Tip Suggestion'},
+];
 
 function useTopics() {
   const queryClient = useQueryClient();

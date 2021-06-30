@@ -30,6 +30,7 @@ export const linking: LinkingOptions = {
           [dashboardScreen]: {
             screens: {
               [treasuryScreen]: 'treasury',
+              [tipsScreen]: 'tips',
             },
           },
         },
