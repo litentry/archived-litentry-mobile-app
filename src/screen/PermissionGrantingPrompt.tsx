@@ -7,8 +7,9 @@ import Padder from 'presentational/Padder';
 import {NavigationProp, useNavigationState} from '@react-navigation/native';
 import messaging, {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
 import {useQuery} from 'react-query';
-import AsyncStorage from '@react-native-community/async-storage';
 import {AppStackParamList} from 'src/navigation/navigation';
+import {apiLoadingNavigatorScreen, appNavigatorScreen} from 'src/navigation/routeKeys';
+import * as AsyncStorage from 'src/service/AsyncStorage';
 
 export function PermissionGrantingPrompt({navigation}: {navigation: NavigationProp<AppStackParamList>}) {
   const routeNames = useNavigationState((state) => state.routeNames);
@@ -17,8 +18,8 @@ export function PermissionGrantingPrompt({navigation}: {navigation: NavigationPr
   const [error, setError] = useState<string>();
 
   const onSkip = () => {
-    AsyncStorage.setItem(PERMISSION_GRANTING_SCREEN_SHOWN, 'true');
-    navigation.navigate(routeNames.includes('App') ? 'App' : 'ApiNavigator');
+    AsyncStorage.setItem(PERMISSION_GRANTING_SCREEN_SHOWN, true);
+    navigation.navigate(routeNames.includes(appNavigatorScreen) ? appNavigatorScreen : apiLoadingNavigatorScreen);
   };
 
   const onRequestPermissions = async () => {
@@ -82,7 +83,7 @@ export function useShowPushPermissionScreen() {
   return useQuery('permission_granted', async () => {
     return (
       Platform.OS === 'ios' &&
-      (await AsyncStorage.getItem(PERMISSION_GRANTING_SCREEN_SHOWN)) !== 'true' &&
+      (await AsyncStorage.getItem<boolean>(PERMISSION_GRANTING_SCREEN_SHOWN)) !== true &&
       !permissionAllowed(await messaging().hasPermission())
     );
   });

@@ -1,7 +1,18 @@
+// eslint-disable-next-line no-restricted-imports
 import AsyncStorage from '@react-native-community/async-storage';
 
-export const setItem = async (key: string, value: string) => AsyncStorage.setItem(key, value);
+export async function getItem<T>(key: string, defaultValue: T | null = null): Promise<T | null> {
+  const item = await AsyncStorage.getItem(key);
 
-export const getItem = async (key: string) => AsyncStorage.getItem(key);
+  if (item !== null) {
+    return JSON.parse(item);
+  }
 
-export const deleteItem = async (key: string) => AsyncStorage.removeItem(key);
+  return defaultValue;
+}
+
+export async function setItem(key: string, value: unknown) {
+  return AsyncStorage.setItem(key, JSON.stringify(value));
+}
+
+export const removeItem = (key: string) => AsyncStorage.removeItem(key);

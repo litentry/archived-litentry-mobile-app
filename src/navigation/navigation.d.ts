@@ -1,4 +1,7 @@
 import {
+  apiLoadingNavigatorScreen,
+  apiLoadingScreen,
+  appNavigatorScreen,
   councilScreen,
   dashboardScreen,
   devScreen,
@@ -6,6 +9,7 @@ import {
   motionsScreen,
   myIdentityScreen,
   notificationSettingsScreen,
+  permissionGrantingPromptScreen,
   registrarListScreen,
   submitTipScreen,
   tipDetailScreen,
@@ -40,9 +44,9 @@ type DrawerParamList = {
 };
 
 type AppStackParamList = {
-  App: undefined;
-  ApiNavigator: undefined;
-  PermissionGrantingPrompt: undefined;
+  [appNavigatorScreen]: undefined;
+  [apiLoadingNavigatorScreen]: undefined;
+  [permissionGrantingPromptScreen]: undefined;
 };
 
 type CompleteNavigatorParamList = AppStackParamList & DrawerParamList & ApiNavigatorParamList & DashboardStackParamList;
