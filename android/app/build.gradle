@@ -188,12 +188,14 @@ android {
         }
         release {
             if (System.getenv('BITRISEIO_ANDROID_KEYSTORE_URL')) {
-                def keystoreFile = file(System.getenv('BITRISEIO_ANDROID_KEYSTORE_URL'))
-                storeFile keystoreFile
-                keyAlias System.getenv('BITRISEIO_ANDROID_KEYSTORE_ALIAS')
+                // def keystoreFile = file(System.getenv('BITRISEIO_ANDROID_KEYSTORE_URL'))
+                // storeFile keystoreFile
+                // keyAlias System.getenv('BITRISEIO_ANDROID_KEYSTORE_ALIAS')
+                //
+                // storePassword System.getenv('BITRISEIO_ANDROID_KEYSTORE_PASSWORD')
+                // keyPassword System.getenv('BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD')
 
-                storePassword System.getenv('BITRISEIO_ANDROID_KEYSTORE_PASSWORD')
-                keyPassword System.getenv('BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD')
+              println System.getenv('BITRISEIO_ANDROID_KEYSTORE_URL')
             } else {
               println "RELEASE_STORE_FILE not set. Check your gradle.properties."
             }
