@@ -8,6 +8,7 @@ import NetworkItem from 'presentational/NetworkItem';
 import {NetworkContext} from 'context/NetworkContext';
 import {ChainApiContext} from 'context/ChainApiContext';
 import NetworkSelect from 'src/layout/NetworkSelect';
+import {appNavigatorScreen} from 'src/navigation/routeKeys';
 
 export function ApiLoadingScreen() {
   const navigation = useNavigation();
@@ -17,7 +18,7 @@ export function ApiLoadingScreen() {
 
   React.useEffect(() => {
     if (api) {
-      navigation.navigate('App');
+      navigation.navigate(appNavigatorScreen);
     }
   }, [navigation, api]);
 

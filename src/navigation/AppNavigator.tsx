@@ -22,6 +22,7 @@ import {Icon, TopNavigationAction} from '@ui-kitten/components';
 import {DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
 import globalStyles from 'src/styles';
 import {useFirebase} from 'src/hook/useFirebase';
+import {apiLoadingNavigatorScreen, apiLoadingScreen, appNavigatorScreen} from 'src/navigation/routeKeys';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -102,8 +103,8 @@ function AppNavigator() {
   const {api} = useContext(ChainApiContext);
   return (
     <AppStack.Navigator headerMode={'none'} screenOptions={{gestureEnabled: false}}>
-      {api ? <AppStack.Screen name={'App'} component={DrawerNavigator} /> : undefined}
-      <AppStack.Screen name={'ApiNavigator'} component={ApiLoadingNavigator} />
+      {api ? <AppStack.Screen name={appNavigatorScreen} component={DrawerNavigator} /> : undefined}
+      <AppStack.Screen name={apiLoadingNavigatorScreen} component={ApiLoadingNavigator} />
     </AppStack.Navigator>
   );
 }
@@ -115,11 +116,7 @@ const ApiLoadingStack = createStackNavigator();
 function ApiLoadingNavigator() {
   return (
     <ApiLoadingStack.Navigator headerMode={'none'} mode={'modal'} screenOptions={{gestureEnabled: false}}>
-      <ApiLoadingStack.Screen
-        name={'ApiLoadingScreen'}
-        component={ApiLoadingScreen}
-        options={{gestureEnabled: false}}
-      />
+      <ApiLoadingStack.Screen name={apiLoadingScreen} component={ApiLoadingScreen} options={{gestureEnabled: false}} />
     </ApiLoadingStack.Navigator>
   );
 }
