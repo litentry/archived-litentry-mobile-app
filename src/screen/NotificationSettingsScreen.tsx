@@ -4,12 +4,12 @@ import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {StyleSheet, Switch, View} from 'react-native';
 import globalStyles, {standardPadding} from 'src/styles';
 import Padder from 'presentational/Padder';
-import {useDataContext} from 'context/DataContext';
 import {useMutation, useQuery, useQueryClient} from 'react-query';
 import LoadingView from 'presentational/LoadingView';
 import messaging from '@react-native-firebase/messaging';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {DrawerParamList} from 'src/navigation/navigation';
+import * as AsyncStorage from 'src/service/AsyncStorage';
 
 type PropTypes = {
   navigation: DrawerNavigationProp<DrawerParamList>;
@@ -66,11 +66,10 @@ const TOPICS = [
 ];
 
 function useTopics() {
-  const {asyncStorage} = useDataContext();
   const queryClient = useQueryClient();
 
   const {data, isLoading, isError} = useQuery('selected_push_topics', () =>
-    asyncStorage.get<string[]>('selected_push_topics', []),
+    AsyncStorage.getItem<string[]>('selected_push_topics', []),
   );
 
   const {mutate: toggleTopic} = useMutation(
@@ -79,7 +78,7 @@ function useTopics() {
         throw new Error('DATA NOT LOADED YET!');
       }
       const updatedData = subscribe ? [...data, id] : data.filter((t) => t !== id);
-      await asyncStorage.set('selected_push_topics', JSON.stringify(updatedData));
+      await AsyncStorage.setItem('selected_push_topics', updatedData);
       if (subscribe) {
         await messaging().subscribeToTopic(id);
       } else {

@@ -14,6 +14,10 @@ module.exports = {
             message:
               'Using SafeAreaView from RN may result in buggy appearance, use react-native-safe-area-context instead.',
           },
+          {
+            name: '@react-native-community/async-storage',
+            message: 'Please use src/service/AsyncStorage instead.',
+          },
         ],
       },
     ],

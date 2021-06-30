@@ -4,7 +4,7 @@ import Clipboard from '@react-native-community/clipboard';
 import Identicon from '@polkadot/reactnative-identicon';
 import {Layout, Text, Icon, Tooltip, Modal, Card, Button} from '@ui-kitten/components';
 import globalStyles, {monofontFamily, getIconColorByTheme, standardPadding} from 'src/styles';
-import {ThemeContext} from 'context/ThemeProvider';
+import {useTheme} from 'context/ThemeContext';
 import QRCode from '../presentational/QRCode';
 import Padder from '../presentational/Padder';
 import AccountInfoInlineTeaser from '../presentational/AccountInfoInlineTeaser';
@@ -27,7 +27,7 @@ function AccountTeaser(props: PropTypes) {
   const {address} = props;
   const [copyTooltipVisible, setCopyTooltipVisible] = useState(false);
   const [qrVisible, setQrVisible] = useState(false);
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useTheme();
   const {accounts} = useAccounts();
   const {currentNetwork} = useContext(NetworkContext);
   const {api} = useContext(ChainApiContext);
