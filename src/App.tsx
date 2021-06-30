@@ -18,7 +18,6 @@ import DataContextProvider from 'src/context/DataContext';
 import ThemeContextProvider from 'src/context/ThemeProvider';
 import NetworkContextProvider from 'src/context/NetworkContext';
 import InAppNotificationContextProvider from 'src/context/InAppNotificationContext';
-import {useFirebase} from 'src/hook/useFirebase';
 import {linking} from 'src/navigation/routeKeys';
 
 // init type registry
@@ -27,8 +26,6 @@ import 'src/typeRegistry';
 const queryClient = new QueryClient();
 
 export default function App() {
-  useFirebase();
-
   return (
     <>
       <IconRegistry icons={[EvaIconsPack, IonicIconsPack]} />

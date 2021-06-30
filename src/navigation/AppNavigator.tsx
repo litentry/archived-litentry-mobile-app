@@ -27,8 +27,6 @@ import {apiLoadingNavigatorScreen, apiLoadingScreen, appNavigatorScreen} from 's
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
 function DashboardStackNavigator() {
-  // needs to be called inside a navigator in order to
-  // have access to navigator context
   useFirebase();
 
   return (

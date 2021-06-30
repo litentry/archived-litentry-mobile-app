@@ -18,6 +18,10 @@ export function useFirebase() {
   const linkTo = useLinkTo();
   const {trigger} = useInAppNotification();
 
+  if (!trigger) {
+    throw new Error('InAppNotificationContext most be provided!');
+  }
+
   React.useEffect(() => {
     // TODO: IOS would need permission
     // requestUserPermission();
