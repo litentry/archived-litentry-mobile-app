@@ -187,13 +187,13 @@ android {
             keyPassword 'android'
         }
         release {
-            if (project.hasProperty('RELEASE_STORE_FILE')) {
-                def keystoreFile = file(RELEASE_STORE_FILE)
+            if (System.getenv('BITRISEIO_ANDROID_KEYSTORE_URL')) {
+                def keystoreFile = file(System.getenv('BITRISEIO_ANDROID_KEYSTORE_URL'))
                 storeFile keystoreFile
-                keyAlias RELEASE_KEY_ALIAS
+                keyAlias System.getenv('BITRISEIO_ANDROID_KEYSTORE_ALIAS')
 
-                storePassword fetchPassword("litentry-governance-android")
-                keyPassword fetchPassword("litentry-governance-android")
+                storePassword System.getenv('BITRISEIO_ANDROID_KEYSTORE_PASSWORD')
+                keyPassword System.getenv('BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD')
             } else {
               println "RELEASE_STORE_FILE not set. Check your gradle.properties."
             }
