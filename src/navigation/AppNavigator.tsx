@@ -3,7 +3,6 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {Icon, TopNavigationAction} from '@ui-kitten/components';
-
 import DrawerScreen from 'screen/DrawerScreen';
 import DashboardScreen, {DashboardHeaderLeft} from 'screen/DashboardScreen';
 import MotionDetailScreen from 'screen/MotionDetailScreen';
@@ -23,13 +22,15 @@ import {MotionsScreen} from 'screen/Council/MotionsScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
 import {DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
 import globalStyles from 'src/styles';
-import {submitTipScreen} from 'src/navigation/routeKeys';
 import {useTheme} from 'src/context/ThemeContext';
 import {darkTheme, lightTheme} from 'src/navigation/theme';
+import {useFirebase} from 'src/hook/useFirebase';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
 function DashboardStackNavigator() {
+  useFirebase();
+
   return (
     <DashboardStack.Navigator
       screenOptions={{
@@ -54,7 +55,7 @@ function DashboardStackNavigator() {
           headerRight: () => (
             <TopNavigationAction
               icon={(props) => <Icon {...props} name="plus-circle-outline" />}
-              onPress={() => navigation.navigate(submitTipScreen)}
+              onPress={() => navigation.navigate(routeKeys.submitTipScreen)}
             />
           ),
         })}
@@ -105,8 +106,8 @@ function AppNavigator() {
   return (
     <NavigationContainer theme={theme === 'dark' ? darkTheme : lightTheme}>
       <AppStack.Navigator headerMode={'none'} screenOptions={{gestureEnabled: false}}>
-        {api ? <AppStack.Screen name={'App'} component={DrawerNavigator} /> : undefined}
-        <AppStack.Screen name={'ApiNavigator'} component={ApiLoadingNavigator} />
+        {api ? <AppStack.Screen name={routeKeys.appNavigatorScreen} component={DrawerNavigator} /> : undefined}
+        <AppStack.Screen name={routeKeys.apiLoadingNavigatorScreen} component={ApiLoadingNavigator} />
       </AppStack.Navigator>
     </NavigationContainer>
   );
@@ -120,7 +121,7 @@ function ApiLoadingNavigator() {
   return (
     <ApiLoadingStack.Navigator headerMode={'none'} mode={'modal'} screenOptions={{gestureEnabled: false}}>
       <ApiLoadingStack.Screen
-        name={'ApiLoadingScreen'}
+        name={routeKeys.apiLoadingScreen}
         component={ApiLoadingScreen}
         options={{gestureEnabled: false}}
       />

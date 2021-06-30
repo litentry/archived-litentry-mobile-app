@@ -14,7 +14,6 @@ import {QueryClient, QueryClientProvider} from 'react-query';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import NetworkContextProvider from 'src/context/NetworkContext';
 import InAppNotificationContextProvider from 'src/context/InAppNotificationContext';
-import {useFirebase} from 'src/hook/useFirebase';
 
 // init type registry
 import 'src/typeRegistry';
@@ -22,8 +21,6 @@ import 'src/typeRegistry';
 const queryClient = new QueryClient();
 
 export default function App() {
-  useFirebase();
-
   return (
     <>
       <IconRegistry icons={[EvaIconsPack, IonicIconsPack]} />
