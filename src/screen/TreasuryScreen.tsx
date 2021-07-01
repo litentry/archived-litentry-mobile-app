@@ -36,7 +36,7 @@ export function TreasuryScreen() {
             refreshing={isLoading}
             onRefresh={refetch}
             sections={groupedData}
-            keyExtractor={(item, index) => item.proposal.proposer.toString() ?? index.toString()}
+            keyExtractor={(item) => item.id.toString()}
             renderItem={({item}) => {
               const accountInfo = data?.accountInfos.find(
                 (i) => i.accountId.toString() === item.proposal.proposer.toString(),
