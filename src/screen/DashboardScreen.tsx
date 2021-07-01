@@ -15,7 +15,7 @@ import TreasurySummaryTeaser from 'layout/TreasurySummaryTeaser';
 import TipsSummaryTeaser from 'layout/tips/TipsSummaryTeaser';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {councilScreen, tipsScreen, treasuryScreen} from 'src/navigation/routeKeys';
+import {councilScreen, referendaScreen, tipsScreen, treasuryScreen} from 'src/navigation/routeKeys';
 import LoadingView from 'src/presentational/LoadingView';
 import NetworkSelect from 'src/layout/NetworkSelect';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
@@ -65,6 +65,7 @@ function DashboardScreen({navigation, accountAddProps}: PropTypes & AddAccountIn
                 <CouncilSummaryTeaser onMorePress={() => navigation.navigate(councilScreen)} />
                 <TreasurySummaryTeaser onMorePress={() => navigation.navigate(treasuryScreen)} />
                 <TipsSummaryTeaser onMorePress={() => navigation.navigate(tipsScreen)} />
+                <Button onPress={() => navigation.navigate(referendaScreen)}>Refernda</Button>
               </ScrollView>
             </View>
           </>

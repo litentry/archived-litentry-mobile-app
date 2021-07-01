@@ -25,6 +25,7 @@ import globalStyles from 'src/styles';
 import {useTheme} from 'src/context/ThemeContext';
 import {darkTheme, lightTheme} from 'src/navigation/theme';
 import {useFirebase} from 'src/hook/useFirebase';
+import {ReferendaScreen} from 'screen/ReferendaScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -66,6 +67,7 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.submitTipScreen} component={SubmitTipScreen} />
       <DashboardStack.Screen name={routeKeys.motionsScreen} component={MotionsScreen} />
       <DashboardStack.Screen name={routeKeys.myIdentityScreen} component={MyIdentityScreen} />
+      <DashboardStack.Screen name={routeKeys.referendaScreen} component={ReferendaScreen} />
     </DashboardStack.Navigator>
   );
 }
@@ -104,7 +106,7 @@ function AppNavigator() {
   const {theme} = useTheme();
 
   return (
-    <NavigationContainer theme={theme === 'dark' ? darkTheme : lightTheme}>
+    <NavigationContainer linking={routeKeys.linking} theme={theme === 'dark' ? darkTheme : lightTheme}>
       <AppStack.Navigator headerMode={'none'} screenOptions={{gestureEnabled: false}}>
         {api ? <AppStack.Screen name={routeKeys.appNavigatorScreen} component={DrawerNavigator} /> : undefined}
         <AppStack.Screen name={routeKeys.apiLoadingNavigatorScreen} component={ApiLoadingNavigator} />

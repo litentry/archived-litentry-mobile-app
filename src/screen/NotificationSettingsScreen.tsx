@@ -39,7 +39,7 @@ export function NotificationSettingsScreen({}: PropTypes) {
               />
             ))
           )}
-          <Padder scale={2} />
+          <Padder scale={1} />
           <Divider />
         </View>
         <ListItem
@@ -58,12 +58,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const TOPICS = [
-  {id: 'REF_VOTE', label: 'Vote on Active Referenda'},
-  {id: 'COUNCIL_VOTE', label: 'Vote for Council Election'},
-  {id: 'EMERGENCY_VOTE', label: 'Vote for Emergency Proposals'},
-  {id: 'TREASURY_VOTE', label: 'Vote for Treasury Proposals'},
-];
+const TOPICS = [{id: 'democracy.Started', label: 'New referendum has begun!'}];
 
 function useTopics() {
   const queryClient = useQueryClient();
@@ -95,11 +90,11 @@ function useTopics() {
       onMutate: async ({id, subscribe}) => {
         await queryClient.cancelQueries('selected_push_topics');
         const previousTopics = queryClient.getQueryData('selected_push_topics');
-        queryClient.setQueryData<string[]>('selected_push_topics', (data) => {
-          if (!data) {
+        queryClient.setQueryData<string[]>('selected_push_topics', (previousData) => {
+          if (!previousData) {
             return [];
           }
-          return subscribe ? [...data, id] : data.filter((t) => t !== id);
+          return subscribe ? [...previousData, id] : previousData.filter((t) => t !== id);
         });
         return {previousTopics};
       },

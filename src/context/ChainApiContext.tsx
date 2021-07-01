@@ -1,4 +1,4 @@
-import React, {createContext, useMemo, useState, useContext, useEffect, useRef, useCallback} from 'react';
+import React, {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react';
 import type BN from 'bn.js';
 import {NetworkContext} from './NetworkContext';
 import {ApiPromise, WsProvider} from '@polkadot/api';
@@ -28,6 +28,9 @@ export const ChainApiContext = createContext<ChainApiContextValueType>({
   removeSection: () => undefined,
   inProgress: false,
 });
+
+export const useApi = () => useContext(ChainApiContext);
+
 type PropTypes = {children: React.ReactNode};
 
 const logger = createLogger('ChainApiContext');
