@@ -127,32 +127,6 @@ def jscFlavor = 'org.webkit:android-jsc:+'
  */
 def enableHermes = project.ext.react.get("enableHermes", false);
 
-def fetchPassword(identifier) {
-    if (!Os.isFamily(Os.FAMILY_MAC)) {
-        println "Not on macOS, falling back to using keystore password from Environment: KEY_STORE_PASSWORD"
-        return System.getenv('KEY_STORE_PASSWORD')
-    }
-
-    def keychainLabel = "${identifier}"
-    println "Fetching keychain password with label '${keychainLabel}'"
-
-    def stdout = new ByteArrayOutputStream()
-    def stderr = new ByteArrayOutputStream()
-    def keychainExec = exec {
-        commandLine 'security', '-q', 'find-generic-password', '-gl', "${keychainLabel}"
-        standardOutput = stdout
-        errorOutput = stderr
-        ignoreExitValue true
-    }
-
-    if (keychainExec.exitValue != 0) {
-        println stdout.toString()
-        println stderr.toString()
-        return
-    }
-    (stderr.toString().trim() =~ /password: "(.*)"/)[0][1]
-}
-
 android {
     ndkVersion rootProject.ext.ndkVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
