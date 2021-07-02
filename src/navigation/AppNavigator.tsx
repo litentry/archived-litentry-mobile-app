@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, useNavigationState} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {Icon, TopNavigationAction} from '@ui-kitten/components';
@@ -13,6 +13,7 @@ import WebviewScreen from 'screen/WebviewScreen';
 import DevScreen from 'screen/DevScreen';
 import MyIdentityScreen from 'screen/MyIdentityScreen';
 import * as routeKeys from 'src/navigation/routeKeys';
+import {linking} from 'src/navigation/routeKeys';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
 import {CouncilScreen} from 'screen/Council/CouncilScreen';
@@ -25,7 +26,6 @@ import globalStyles from 'src/styles';
 import {useTheme} from 'src/context/ThemeContext';
 import {darkTheme, lightTheme} from 'src/navigation/theme';
 import {useFirebase} from 'src/hook/useFirebase';
-import {linking} from 'src/navigation/routeKeys';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -74,6 +74,10 @@ function DashboardStackNavigator() {
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
 function DrawerNavigator() {
+  useNavigationState((s) => {
+    console.log(s.routes);
+    return s.history;
+  });
   return (
     <Drawer.Navigator
       screenOptions={{
@@ -82,7 +86,7 @@ function DrawerNavigator() {
       }}
       drawerContent={(props) => <DrawerScreen {...props} />}>
       <Drawer.Screen
-        name={routeKeys.dashboardScreen}
+        name={routeKeys.dashboardNavigator}
         component={DashboardStackNavigator}
         options={{headerShown: false}}
       />
@@ -108,24 +112,14 @@ function AppNavigator() {
     <NavigationContainer linking={linking} theme={theme === 'dark' ? darkTheme : lightTheme}>
       <AppStack.Navigator headerMode={'none'} screenOptions={{gestureEnabled: false}}>
         {api ? <AppStack.Screen name={routeKeys.appNavigatorScreen} component={DrawerNavigator} /> : undefined}
-        <AppStack.Screen name={routeKeys.apiLoadingNavigatorScreen} component={ApiLoadingNavigator} />
+        <AppStack.Screen
+          name={routeKeys.apiLoadingScreen}
+          component={ApiLoadingScreen}
+          options={{gestureEnabled: false}}
+        />
       </AppStack.Navigator>
     </NavigationContainer>
   );
 }
 
 export default AppNavigator;
-
-const ApiLoadingStack = createStackNavigator();
-
-function ApiLoadingNavigator() {
-  return (
-    <ApiLoadingStack.Navigator headerMode={'none'} mode={'modal'} screenOptions={{gestureEnabled: false}}>
-      <ApiLoadingStack.Screen
-        name={routeKeys.apiLoadingScreen}
-        component={ApiLoadingScreen}
-        options={{gestureEnabled: false}}
-      />
-    </ApiLoadingStack.Navigator>
-  );
-}
