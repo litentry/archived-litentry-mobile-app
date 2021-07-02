@@ -1,19 +1,18 @@
 // Note: have to patch _qrcode
 import _qrcode from 'qrcode-generator';
-import BN from 'bn.js';
 
-import {logger, consoleTransport} from 'react-native-logs';
+import {consoleTransport, logger} from 'react-native-logs';
 import Reactotron from 'reactotron-react-native';
 import {u8aConcat, u8aToU8a} from '@polkadot/util';
 import {
-  FRAME_SIZE,
-  SUBSTRATE_ID,
-  CRYPTO_SR25519,
-  ADDRESS_PREFIX_POLKADOT,
   ADDRESS_PREFIX_KUSAMA,
   ADDRESS_PREFIX_LITENTRY,
+  ADDRESS_PREFIX_POLKADOT,
+  CRYPTO_SR25519,
+  FRAME_SIZE,
+  SUBSTRATE_ID,
 } from './constants';
-import {decodeAddress, blake2AsU8a, checkAddress, isEthereumChecksum} from '@polkadot/util-crypto';
+import {blake2AsU8a, checkAddress, decodeAddress, isEthereumChecksum} from '@polkadot/util-crypto';
 import {SignerPayloadJSON} from '@polkadot/types/types';
 import {ExtrinsicPayload} from '@polkadot/types/interfaces';
 import registry from 'src/typeRegistry';
@@ -200,19 +199,4 @@ export function validateFormField(
       !notStarting.some((check) => value.startsWith(check)) &&
       !notEnding.some((check) => value.endsWith(check)))
   );
-}
-
-export function formatNumberWRTDecimal(number: BN) {
-  const chainProps = registry.getChainProperties();
-  const tokenDecimals = chainProps?.tokenDecimals.unwrapOrDefault();
-  let defaultDecimals = 12;
-
-  if (tokenDecimals && tokenDecimals[0]) {
-    const decimals = new BN(tokenDecimals[0]);
-    defaultDecimals = decimals.toNumber();
-  }
-
-  const BN_TEN_THOUSAND = new BN(10000);
-
-  return number.mul(BN_TEN_THOUSAND).div(new BN(10 ** defaultDecimals));
 }

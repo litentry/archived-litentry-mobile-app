@@ -45,14 +45,14 @@ function RegistrarList() {
       <View style={styles.registrarList}>
         <FlatList
           data={registrars}
-          renderItem={({item: registrar}) => {
+          renderItem={({item: registrar, index}) => {
             return (
               <View style={styles.registrarTeaserContainer}>
                 <RegistrarTeaser
                   key={registrar.account.toString()}
                   address={registrar.account.toString()}
                   fee={registrar.fee}
-                  index={registrar.index}
+                  index={index}
                 />
               </View>
             );

@@ -7,22 +7,11 @@ import {BN_ZERO} from '@polkadot/util';
 import {ChainApiContext} from 'src/context/ChainApiContext';
 import {useCall} from 'src/hook/useCall';
 
-function toRegistrar(wrappedRegistrar: Option<RegistrarInfo>, index: number) {
-  const unwrappedRegistrar = wrappedRegistrar.unwrapOr({account: '', fee: BN_ZERO});
-  return {...unwrappedRegistrar, index};
-}
-
-type Registrar = ReturnType<typeof toRegistrar>;
-
-function withFees(registrar: Registrar) {
-  return registrar.fee.gt(BN_ZERO);
-}
-
-export function useRegistrars(): ReadonlyArray<Registrar> {
+export function useRegistrars() {
   const {api} = useContext(ChainApiContext);
   const registrarsInfo = useCall<Option<RegistrarInfo>[]>(api?.query.identity.registrars);
 
-  return useMemo(() => {
-    return (registrarsInfo || []).map(toRegistrar).filter(withFees);
-  }, [registrarsInfo]);
+  return (registrarsInfo || [])
+    .map((r) => r.unwrapOr(undefined))
+    .filter((r): r is RegistrarInfo => !!r?.fee.gt(BN_ZERO));
 }
