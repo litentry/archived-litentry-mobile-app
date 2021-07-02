@@ -1,12 +1,7 @@
 import React, {createContext, useContext, useEffect, useMemo, useState} from 'react';
-import type BN from 'bn.js';
 import {NetworkContext} from './NetworkContext';
 import {ApiPromise, WsProvider} from '@polkadot/api';
 import {createLogger} from 'src/utils';
-import {formatBalance} from '@polkadot/util';
-import {setSS58Format} from '@polkadot/util-crypto';
-import {defaults as addressDefaults} from '@polkadot/util-crypto/address/defaults';
-import registry from 'src/typeRegistry';
 
 type ApiChainStatusType = 'unknown' | 'connected' | 'disconnected' | 'ready';
 type ChainApiContextValueType = {
@@ -15,21 +10,15 @@ type ChainApiContextValueType = {
   api?: ApiPromise;
 };
 
-export const DEFAULT_DECIMALS = registry.createType('u32', 12);
-export const DEFAULT_SS58 = registry.createType('u32', addressDefaults.prefix);
-export const DEFAULT_AUX = ['Aux1', 'Aux2', 'Aux3', 'Aux4', 'Aux5', 'Aux6', 'Aux7', 'Aux8', 'Aux9'];
-
 export const ChainApiContext = createContext<ChainApiContextValueType>({
   api: undefined,
   status: 'unknown',
   inProgress: false,
 });
-type PropTypes = {children: React.ReactNode};
 
 const logger = createLogger('ChainApiContext');
 
-function ChainApiContextProvider(props: PropTypes) {
-  const {children} = props;
+function ChainApiContextProvider({children}: {children: React.ReactNode}) {
   const [inProgress, setInProgress] = useState(true);
   const [status, setStatus] = useState<ApiChainStatusType>('unknown');
   const {currentNetwork} = useContext(NetworkContext);
@@ -104,38 +93,6 @@ function ChainApiContextProvider(props: PropTypes) {
       clearInterval(retryInterval);
     };
   }, [currentNetwork, wsConnectionIndex]);
-
-  useEffect(() => {
-    if (status === 'ready' && api) {
-      // setup chain properties
-      api.rpc.system.properties().then((properties) => {
-        console.log('chain props', JSON.stringify(properties, null, 4));
-        const tokenSymbol = properties.tokenSymbol.unwrapOr([formatBalance.getDefaults().unit, ...DEFAULT_AUX]);
-        const tokenDecimals = properties.tokenDecimals.unwrapOr([DEFAULT_DECIMALS]);
-
-        const ss58Format = properties.ss58Format.unwrapOr(DEFAULT_SS58).toNumber();
-
-        setSS58Format(ss58Format);
-        registry.setChainProperties(
-          registry.createType('ChainProperties', {
-            ss58Format,
-            tokenDecimals,
-            tokenSymbol,
-          }),
-        );
-
-        logger.info('Chain Properties setup', {
-          decimals: tokenDecimals,
-          unit: tokenSymbol,
-        });
-
-        formatBalance.setDefaults({
-          decimals: (tokenDecimals as BN[]).map((b) => b.toNumber())[0] || DEFAULT_DECIMALS.toNumber(),
-          unit: tokenSymbol[0]?.toString(),
-        });
-      });
-    }
-  }, [currentNetwork, status, api]);
 
   const value = useMemo(() => {
     return {api, status, inProgress};
