@@ -23,7 +23,7 @@ function DevScreen(props: PropTypes) {
   const {currentNetwork} = useContext(NetworkContext);
   const {accounts, addAccount, removeAccount} = useAccounts();
   const {trigger} = useContext(InAppNotificationContext);
-  const {status, addSection, removeSection, api} = useContext(ChainApiContext);
+  const {status, api} = useContext(ChainApiContext);
   const [debugInfo, setDebugInfo] = useState('');
   const modalRef = useRef<Modalize>(null);
   const showDebugModal = useCallback((info: string) => {
@@ -100,30 +100,6 @@ function DevScreen(props: PropTypes) {
                   // TODO: change this when adding multi account support
                   removeAccount(currentNetwork.key, accounts[0]!);
                   Alert.alert('Info', 'Account is reset');
-                }}>
-                Trigger
-              </Button>
-            )}
-          />
-          <Divider />
-          <ListItem
-            title="Subscribe `identity` section"
-            description="Add `identity` to subscribed section"
-            accessoryRight={() => (
-              <Button size="small" onPress={() => addSection('identity')}>
-                Trigger
-              </Button>
-            )}
-          />
-          <Divider />
-          <ListItem
-            title="Unsubscribe `identity` section"
-            description="Remove `identity` from the subscribed section"
-            accessoryRight={() => (
-              <Button
-                size="small"
-                onPress={() => {
-                  removeSection('identity');
                 }}>
                 Trigger
               </Button>

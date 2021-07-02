@@ -1,4 +1,4 @@
-import React, {createContext, useMemo, useState, useContext, useEffect, useRef, useCallback} from 'react';
+import React, {createContext, useContext, useEffect, useMemo, useState} from 'react';
 import type BN from 'bn.js';
 import {NetworkContext} from './NetworkContext';
 import {ApiPromise, WsProvider} from '@polkadot/api';
@@ -13,8 +13,6 @@ type ChainApiContextValueType = {
   inProgress: boolean;
   status: ApiChainStatusType;
   api?: ApiPromise;
-  addSection: (section: string) => void;
-  removeSection: (section: string) => void;
 };
 
 export const DEFAULT_DECIMALS = registry.createType('u32', 12);
@@ -24,8 +22,6 @@ export const DEFAULT_AUX = ['Aux1', 'Aux2', 'Aux3', 'Aux4', 'Aux5', 'Aux6', 'Aux
 export const ChainApiContext = createContext<ChainApiContextValueType>({
   api: undefined,
   status: 'unknown',
-  addSection: () => undefined,
-  removeSection: () => undefined,
   inProgress: false,
 });
 type PropTypes = {children: React.ReactNode};
@@ -38,31 +34,7 @@ function ChainApiContextProvider(props: PropTypes) {
   const [status, setStatus] = useState<ApiChainStatusType>('unknown');
   const {currentNetwork} = useContext(NetworkContext);
   const [api, setApi] = useState<ApiPromise>();
-  const [sections, setSections] = useState<string[]>([]);
   const [wsConnectionIndex, setWsConnectionIndex] = useState(0);
-  const eventStreamHandlerRef = useRef<(() => void) | null>(null);
-
-  /**
-   * Add section to watch, such as `identity`
-   */
-  const addSection = useCallback(
-    (section: string) => {
-      if (!sections.includes(section)) {
-        setSections(sections.concat(section));
-      }
-    },
-    [sections],
-  );
-
-  /**
-   * Remove section from watch list
-   */
-  const removeSection = useCallback(
-    (section: string) => {
-      return setSections(sections.filter((s) => s !== section));
-    },
-    [sections],
-  );
 
   useEffect(() => {
     const wsAddress = currentNetwork.ws[wsConnectionIndex];
@@ -135,11 +107,6 @@ function ChainApiContextProvider(props: PropTypes) {
 
   useEffect(() => {
     if (status === 'ready' && api) {
-      if (eventStreamHandlerRef.current) {
-        // unsub
-        eventStreamHandlerRef.current();
-      }
-
       // setup chain properties
       api.rpc.system.properties().then((properties) => {
         console.log('chain props', JSON.stringify(properties, null, 4));
@@ -167,52 +134,12 @@ function ChainApiContextProvider(props: PropTypes) {
           unit: tokenSymbol[0]?.toString(),
         });
       });
-
-      logger.info(`Start waring chain events for "${sections.join(',')}"`);
-      // TODO: currently no need to monitor events in app
-      // api.query.system
-      //   .events((events) => {
-      //     // Loop through the Vec<EventRecord>
-      //     events.forEach((record) => {
-      //       // Extract the phase, event and the event types
-      //       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      //       const {event, phase} = record;
-      //       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      //       const types = event.typeDef;
-      //
-      //       if (sections.includes(event.section)) {
-      //         logger.info(event.section);
-      //       }
-      //       // if (event.section === 'identity') {
-      //       //   logger.info(JSON.stringify(event, null, 4));
-      //       //   logger.info(
-      //       //     `\t${event.section}:${
-      //       //       event.method
-      //       //     }:: (phase=${phase.toString()})`,
-      //       //   );
-      //       //
-      //       //   logger.info(`\t\t${event.meta.documentation.toString()}`);
-      //       //
-      //       //   // Loop through each of the parameters, displaying the type and data
-      //       //   event.data.forEach((data, index) => {
-      //       //     logger.info(`\t\t\t${types[index].type}: ${data.toString()}`);
-      //       //     console.log('data', data, index);
-      //       //   });
-      //       // }
-      //     });
-      //   })
-      //   .then((unsub) => {
-      //     eventStreamHandlerRef.current = unsub;
-      //   });
-    } else {
-      eventStreamHandlerRef.current?.();
-      eventStreamHandlerRef.current = null;
     }
-  }, [currentNetwork, status, api, sections]);
+  }, [currentNetwork, status, api]);
 
   const value = useMemo(() => {
-    return {api, status, addSection, removeSection, inProgress};
-  }, [status, addSection, api, removeSection, inProgress]);
+    return {api, status, inProgress};
+  }, [status, api, inProgress]);
   return <ChainApiContext.Provider value={value}>{children}</ChainApiContext.Provider>;
 }
 
