@@ -8,6 +8,9 @@ import {useQuery} from 'react-query';
 import {EmptyView} from 'presentational/EmptyView';
 import type {DeriveReferendumExt} from '@polkadot/api-derive/types';
 import {Proposal} from 'presentational/Proposal';
+import {useBestNumber} from 'src/hook/useVotingStatus';
+import {BN_ONE} from '@polkadot/util';
+import {useBlockTime} from 'src/hook/useBlockTime';
 
 export function ReferendaScreen() {
   const {data, isLoading, refetch} = useReferendums();
@@ -44,9 +47,21 @@ function useReferendums() {
 
 function Referenda({item}: {item: DeriveReferendumExt}) {
   const {image: {proposal} = {proposal: undefined}} = item;
+  const bestNumber = useBestNumber();
+
+  const remainBlock = bestNumber ? item.status.end.sub(bestNumber).isub(BN_ONE) : undefined;
+  const {timeStringParts} = useBlockTime(remainBlock);
 
   return proposal ? (
-    <Proposal proposal={proposal} accessoryLeft={() => <Text category={'h4'}>{item.index.toString()}</Text>} />
+    <Proposal
+      proposal={proposal}
+      accessoryLeft={() => <Text category={'h4'}>{item.index.toString()}</Text>}
+      accessoryRight={() => (
+        <Text category={'c1'} adjustsFontSizeToFit={true} numberOfLines={1}>
+          {timeStringParts.slice(0, 2).join(' ')}
+        </Text>
+      )}
+    />
   ) : (
     <Text>{item.imageHash.toString()}</Text>
   );

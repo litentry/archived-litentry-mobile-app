@@ -50,7 +50,7 @@ export function Proposal({
 
 const motionStyle = StyleSheet.create({
   container: {paddingVertical: standardPadding},
-  mainRow: {flexDirection: 'row', alignItems: 'center'},
+  mainRow: {flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'},
   titleContainer: {padding: standardPadding, flexDirection: 'row', flex: 1, alignItems: 'center'},
   title: {},
   desc: {paddingHorizontal: standardPadding},
