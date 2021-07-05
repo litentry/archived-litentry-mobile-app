@@ -52,7 +52,7 @@ function RegistrarList() {
                   key={registrar.account.toString()}
                   address={registrar.account.toString()}
                   fee={registrar.fee}
-                  index={index}
+                  index={index} /* TODO: This index is suspicious, check what should be the real registrar index*/
                 />
               </View>
             );
