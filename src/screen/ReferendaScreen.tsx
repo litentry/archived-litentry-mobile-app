@@ -1,19 +1,22 @@
 import * as React from 'react';
 import {Divider, Layout, Text} from '@ui-kitten/components';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import globalStyles, {standardPadding} from 'src/styles';
-import {useApi} from 'context/ChainApiContext';
-import {useQuery} from 'react-query';
 import {EmptyView} from 'presentational/EmptyView';
 import type {DeriveReferendumExt} from '@polkadot/api-derive/types';
 import {Proposal} from 'presentational/Proposal';
 import {useBestNumber} from 'src/hook/useVotingStatus';
 import {BN_ONE} from '@polkadot/util';
 import {useBlockTime} from 'src/hook/useBlockTime';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {DashboardStackParamList} from 'src/navigation/navigation';
+import {referendumScreen} from 'src/navigation/routeKeys';
+import {useReferenda} from 'src/hook/useReferenda';
 
 export function ReferendaScreen() {
-  const {data, isLoading, refetch} = useReferendums();
+  const {data, isLoading, refetch} = useReferenda();
 
   return (
     <Layout style={globalStyles.flex}>
@@ -39,13 +42,8 @@ export function ReferendaScreen() {
 
 const styles = StyleSheet.create({container: {}, flatList: {padding: standardPadding * 2}});
 
-function useReferendums() {
-  const {api} = useApi();
-
-  return useQuery('referendums', () => api?.derive.democracy.referendums());
-}
-
 function Referenda({item}: {item: DeriveReferendumExt}) {
+  const navigation = useNavigation<StackNavigationProp<DashboardStackParamList>>();
   const {image: {proposal} = {proposal: undefined}} = item;
   const bestNumber = useBestNumber();
 
@@ -55,7 +53,14 @@ function Referenda({item}: {item: DeriveReferendumExt}) {
   return proposal ? (
     <Proposal
       proposal={proposal}
-      accessoryLeft={() => <Text category={'h4'}>{item.index.toString()}</Text>}
+      accessoryLeft={() => (
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate(referendumScreen, {index: item.index.toString()});
+          }}>
+          <Text category={'h4'}>{item.index.toString()}</Text>
+        </TouchableOpacity>
+      )}
       accessoryRight={() => (
         <Text category={'c1'} adjustsFontSizeToFit={true} numberOfLines={1}>
           {timeStringParts.slice(0, 2).join(' ')}

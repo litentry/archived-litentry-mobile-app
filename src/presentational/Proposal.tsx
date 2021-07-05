@@ -20,11 +20,11 @@ export function Proposal({
   const [open, setOpen] = useState(false);
 
   return (
-    <View style={motionStyle.container}>
-      <View style={motionStyle.mainRow}>
+    <View style={styles.container}>
+      <View style={styles.mainRow}>
         {accessoryLeft?.()}
-        <TouchableOpacity onPress={() => setOpen(!open)} style={motionStyle.titleContainer}>
-          <Text category={'p1'} style={motionStyle.title} numberOfLines={1}>
+        <TouchableOpacity onPress={() => setOpen(!open)} style={styles.titleContainer}>
+          <Text category={'p1'} style={styles.title} numberOfLines={1}>
             {section}.{method}
           </Text>
           <Icon
@@ -36,8 +36,8 @@ export function Proposal({
         {accessoryRight?.()}
       </View>
       {open ? (
-        <View style={motionStyle.footer}>
-          <Text category={'c1'} style={[motionStyle.desc, {color: theme['color-basic-600']}]}>{`${formatCallMeta(
+        <View style={styles.footer}>
+          <Text category={'c1'} style={[styles.desc, {color: theme['color-basic-600']}]}>{`${formatCallMeta(
             meta,
           )}`}</Text>
           <Padder scale={1} />
@@ -48,7 +48,7 @@ export function Proposal({
   );
 }
 
-const motionStyle = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {paddingVertical: standardPadding},
   mainRow: {flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'},
   titleContainer: {padding: standardPadding, flexDirection: 'row', flex: 1, alignItems: 'center'},

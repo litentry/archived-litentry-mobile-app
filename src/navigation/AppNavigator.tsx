@@ -26,6 +26,7 @@ import {useTheme} from 'src/context/ThemeContext';
 import {darkTheme, lightTheme} from 'src/navigation/theme';
 import {useFirebase} from 'src/hook/useFirebase';
 import {ReferendaScreen} from 'screen/ReferendaScreen';
+import {ReferendumScreen} from 'screen/ReferendumScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -68,6 +69,7 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.motionsScreen} component={MotionsScreen} />
       <DashboardStack.Screen name={routeKeys.myIdentityScreen} component={MyIdentityScreen} />
       <DashboardStack.Screen name={routeKeys.referendaScreen} component={ReferendaScreen} />
+      <DashboardStack.Screen name={routeKeys.referendumScreen} component={ReferendumScreen} />
     </DashboardStack.Navigator>
   );
 }
