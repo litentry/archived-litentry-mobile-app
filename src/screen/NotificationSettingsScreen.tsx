@@ -58,7 +58,6 @@ const styles = StyleSheet.create({
   },
 });
 
-
 const TOPICS = [
   {id: 'treasury.Proposed', label: 'New Treasury Proposal'},
   {id: 'tips.NewTip', label: 'Tip Suggestion'},
