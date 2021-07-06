@@ -1,28 +1,20 @@
-import {useContext, useMemo} from 'react';
-
+import {useContext} from 'react';
 import {RegistrarInfo} from '@polkadot/types/interfaces';
 import {Option} from '@polkadot/types';
 import {BN_ZERO} from '@polkadot/util';
-
 import {ChainApiContext} from 'src/context/ChainApiContext';
 import {useCall} from 'src/hook/useCall';
 
-function toRegistrar(wrappedRegistrar: Option<RegistrarInfo>, index: number) {
-  const unwrappedRegistrar = wrappedRegistrar.unwrapOr({account: '', fee: BN_ZERO});
-  return {...unwrappedRegistrar, index};
+interface RegistrarInfoWithIndex extends RegistrarInfo {
+  index: number;
 }
 
-type Registrar = ReturnType<typeof toRegistrar>;
-
-function withFees(registrar: Registrar) {
-  return registrar.fee.gt(BN_ZERO);
-}
-
-export function useRegistrars(): ReadonlyArray<Registrar> {
+export function useRegistrars(): RegistrarInfoWithIndex[] {
   const {api} = useContext(ChainApiContext);
   const registrarsInfo = useCall<Option<RegistrarInfo>[]>(api?.query.identity.registrars);
 
-  return useMemo(() => {
-    return (registrarsInfo || []).map(toRegistrar).filter(withFees);
-  }, [registrarsInfo]);
+  return (registrarsInfo || [])
+    .map((r) => r.unwrapOr(undefined))
+    .filter((r): r is RegistrarInfo => !!r?.fee.gt(BN_ZERO))
+    .map((r, index) => Object.assign({}, r, {index}));
 }
