@@ -21,7 +21,7 @@ type PropTypes = {
 };
 
 export default function BalanceContextProvider({children}: PropTypes) {
-  const {status, api} = useContext(ChainApiContext);
+  const {api} = useContext(ChainApiContext);
   const {currentNetwork} = useContext(NetworkContext);
   const {accounts} = useAccounts();
   const [balance, setBalance] = useState<AccountInfo | null>(null);
@@ -31,7 +31,7 @@ export default function BalanceContextProvider({children}: PropTypes) {
 
   useEffect(() => {
     let localUnsub: () => void | null;
-    if (status && api && currentAccount) {
+    if (api && currentAccount) {
       api?.query.system
         .account(currentAccount.address, (accountInfo) => {
           setBalance(accountInfo);
@@ -44,7 +44,7 @@ export default function BalanceContextProvider({children}: PropTypes) {
     return () => {
       localUnsub && localUnsub();
     };
-  }, [status, api, currentAccount]);
+  }, [api, currentAccount]);
 
   const show = useCallback(() => {
     modalRef.current?.open();

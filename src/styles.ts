@@ -86,6 +86,9 @@ const globalStyles = StyleSheet.create({
     color: colorRed,
     fontFamily: monofontFamily,
   },
+  textCenter: {
+    textAlign: 'center',
+  },
 });
 
 export default globalStyles;

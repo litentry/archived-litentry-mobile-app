@@ -58,7 +58,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const TOPICS = [{id: 'democracy.Started', label: 'New referendum has begun!'}];
+const TOPICS = [
+  {id: 'treasury.Proposed', label: 'New Treasury Proposal'},
+  {id: 'tips.NewTip', label: 'Tip Suggestion'},
+  {id: 'democracy.Started', label: 'New referendum has begun!'},
+];
 
 function useTopics() {
   const queryClient = useQueryClient();
@@ -98,7 +102,9 @@ function useTopics() {
         });
         return {previousTopics};
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onError: (err, vars, context: any) => {
+        console.error(err);
         queryClient.setQueryData('selected_push_topics', context.previousTopics);
       },
     },

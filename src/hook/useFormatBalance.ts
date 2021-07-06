@@ -15,7 +15,7 @@ export function useFormatBalance() {
   const {api} = useContext(ChainApiContext);
   const formatInfo = useMemo(() => (api ? getFormat(api.registry) : undefined), [api]);
 
-  return (value: Balance) => {
+  return (value: Compact<any> | BN | string) => {
     if (!formatInfo) {
       return undefined;
     }
