@@ -111,6 +111,7 @@ function AppNavigator() {
   if (isLoading) {
     return <LoadingView />;
   }
+
   return (
     <NavigationContainer linking={linking} theme={theme === 'dark' ? darkTheme : lightTheme}>
       <AppStack.Navigator headerMode={'none'} screenOptions={{gestureEnabled: false}}>
@@ -118,11 +119,7 @@ function AppNavigator() {
           <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen} component={PermissionGrantingPrompt} />
         ) : undefined}
         {api ? <AppStack.Screen name={routeKeys.appNavigatorScreen} component={DrawerNavigator} /> : undefined}
-        <AppStack.Screen
-          name={routeKeys.apiLoadingScreen}
-          component={ApiLoadingScreen}
-          options={{gestureEnabled: false}}
-        />
+        <AppStack.Screen name={routeKeys.apiLoadingScreen} component={ApiLoadingScreen} />
       </AppStack.Navigator>
     </NavigationContainer>
   );

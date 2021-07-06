@@ -71,6 +71,10 @@ export function ApiLoadingScreen({
                   {icon}
                   <Text style={styles.text}>Disconnected from {currentNetwork.name}</Text>
                 </View>
+                {/**  TODO: find a better way to make sure
+                 * either the previous apiPromise will be destroyed
+                 * or reconnects the same one
+                 */}
                 <Button onPress={() => select({...currentNetwork})}>Reconnect</Button>
               </>
             );
@@ -80,6 +84,8 @@ export function ApiLoadingScreen({
         })()}
         <NetworkSelect
           open={networkSelectOpen}
+          // TODO: check if we can remove this and make NetworkSelect only responsible to
+          // call select function on NetworkContext
           onSelect={(n) => {
             navigation.setParams({network: n.key, redirectTo: null});
           }}
