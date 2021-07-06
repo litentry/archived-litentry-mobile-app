@@ -62,10 +62,10 @@ function DashboardScreen({navigation, accountAddProps}: PropTypes & AddAccountIn
             <Divider />
             <View style={[globalStyles.flex, styles.main]}>
               <ScrollView style={styles.scrollView}>
+                <Button onPress={() => navigation.navigate(referendaScreen)}>Refernda</Button>
                 <CouncilSummaryTeaser onMorePress={() => navigation.navigate(councilScreen)} />
                 <TreasurySummaryTeaser onMorePress={() => navigation.navigate(treasuryScreen)} />
                 <TipsSummaryTeaser onMorePress={() => navigation.navigate(tipsScreen)} />
-                <Button onPress={() => navigation.navigate(referendaScreen)}>Refernda</Button>
               </ScrollView>
             </View>
           </>

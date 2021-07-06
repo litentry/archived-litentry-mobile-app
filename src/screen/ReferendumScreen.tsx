@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Divider, Layout, Text} from '@ui-kitten/components';
+import {Button, Divider, Icon, Layout, Text} from '@ui-kitten/components';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {StyleSheet, View} from 'react-native';
 import globalStyles, {standardPadding} from 'src/styles';
@@ -84,8 +84,8 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
           <Text category={'h5'}>Vote</Text>
           <Divider />
           <View style={styles.row}>
-            <Button>Vote Yes</Button>
-            <Button>Vote No</Button>
+            <Button accessoryLeft={(p) => <Icon {...p} name={'checkmark-circle-2-outline'} />}>Vote Yes</Button>
+            <Button accessoryLeft={(p) => <Icon {...p} name={'alert-circle-outline'} />}>Vote No</Button>
           </View>
         </View>
       </SafeView>
