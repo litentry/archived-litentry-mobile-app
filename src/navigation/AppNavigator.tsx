@@ -12,6 +12,7 @@ import WebviewScreen from 'screen/WebviewScreen';
 import DevScreen from 'screen/DevScreen';
 import MyIdentityScreen from 'screen/MyIdentityScreen';
 import * as routeKeys from 'src/navigation/routeKeys';
+import {linking} from 'src/navigation/routeKeys';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
 import {CouncilScreen} from 'screen/Council/CouncilScreen';
@@ -24,11 +25,9 @@ import globalStyles from 'src/styles';
 import {useTheme} from 'src/context/ThemeContext';
 import {darkTheme, lightTheme} from 'src/navigation/theme';
 import {useFirebase} from 'src/hook/useFirebase';
-import {linking} from 'src/navigation/routeKeys';
 import {PermissionGrantingPrompt, useShowPushPermissionScreen} from 'screen/PermissionGrantingPrompt';
 import LoadingView from 'presentational/LoadingView';
 import {NavigationContainer} from '@react-navigation/native';
-
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -85,7 +84,7 @@ function DrawerNavigator() {
       }}
       drawerContent={(props) => <DrawerScreen {...props} />}>
       <Drawer.Screen
-        name={routeKeys.dashboardScreen}
+        name={routeKeys.dashboardNavigator}
         component={DashboardStackNavigator}
         options={{headerShown: false}}
       />
@@ -112,6 +111,7 @@ function AppNavigator() {
   if (isLoading) {
     return <LoadingView />;
   }
+
   return (
     <NavigationContainer linking={linking} theme={theme === 'dark' ? darkTheme : lightTheme}>
       <AppStack.Navigator headerMode={'none'} screenOptions={{gestureEnabled: false}}>
@@ -119,24 +119,10 @@ function AppNavigator() {
           <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen} component={PermissionGrantingPrompt} />
         ) : undefined}
         {api ? <AppStack.Screen name={routeKeys.appNavigatorScreen} component={DrawerNavigator} /> : undefined}
-        <AppStack.Screen name={routeKeys.apiLoadingNavigatorScreen} component={ApiLoadingNavigator} />
+        <AppStack.Screen name={routeKeys.apiLoadingScreen} component={ApiLoadingScreen} />
       </AppStack.Navigator>
     </NavigationContainer>
   );
 }
 
 export default AppNavigator;
-
-const ApiLoadingStack = createStackNavigator();
-
-function ApiLoadingNavigator() {
-  return (
-    <ApiLoadingStack.Navigator headerMode={'none'} mode={'modal'} screenOptions={{gestureEnabled: false}}>
-      <ApiLoadingStack.Screen
-        name={routeKeys.apiLoadingScreen}
-        component={ApiLoadingScreen}
-        options={{gestureEnabled: false}}
-      />
-    </ApiLoadingStack.Navigator>
-  );
-}
