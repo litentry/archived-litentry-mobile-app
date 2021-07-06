@@ -39,7 +39,7 @@ export function NotificationSettingsScreen({}: PropTypes) {
               />
             ))
           )}
-          <Padder scale={2} />
+          <Padder scale={1} />
           <Divider />
         </View>
         <ListItem
@@ -59,10 +59,8 @@ const styles = StyleSheet.create({
 });
 
 const TOPICS = [
-  {id: 'REF_VOTE', label: 'Vote on Active Referenda'},
-  {id: 'COUNCIL_VOTE', label: 'Vote for Council Election'},
-  {id: 'EMERGENCY_VOTE', label: 'Vote for Emergency Proposals'},
-  {id: 'TREASURY_VOTE', label: 'Vote for Treasury Proposals'},
+  {id: 'treasury.Proposed', label: 'New Treasury Proposal'},
+  {id: 'tips.NewTip', label: 'Tip Suggestion'},
 ];
 
 function useTopics() {
@@ -104,6 +102,7 @@ function useTopics() {
         return {previousTopics};
       },
       onError: (err, vars, context: any) => {
+        console.error(err);
         queryClient.setQueryData('selected_push_topics', context.previousTopics);
       },
     },

@@ -24,9 +24,11 @@ import globalStyles from 'src/styles';
 import {useTheme} from 'src/context/ThemeContext';
 import {darkTheme, lightTheme} from 'src/navigation/theme';
 import {useFirebase} from 'src/hook/useFirebase';
+import {linking} from 'src/navigation/routeKeys';
 import {PermissionGrantingPrompt, useShowPushPermissionScreen} from 'screen/PermissionGrantingPrompt';
 import LoadingView from 'presentational/LoadingView';
 import {NavigationContainer} from '@react-navigation/native';
+
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -111,7 +113,7 @@ function AppNavigator() {
     return <LoadingView />;
   }
   return (
-    <NavigationContainer theme={theme === 'dark' ? darkTheme : lightTheme}>
+    <NavigationContainer linking={linking} theme={theme === 'dark' ? darkTheme : lightTheme}>
       <AppStack.Navigator headerMode={'none'} screenOptions={{gestureEnabled: false}}>
         {showPermissionGranting ? (
           <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen} component={PermissionGrantingPrompt} />
