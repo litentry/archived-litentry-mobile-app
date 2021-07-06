@@ -1,5 +1,4 @@
 import React, {useContext} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {Icon, TopNavigationAction} from '@ui-kitten/components';
@@ -21,11 +20,14 @@ import {SubmitTipScreen} from 'screen/SubmitTipScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
-import {DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
+import {AppStackParamList, DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
 import globalStyles from 'src/styles';
 import {useTheme} from 'src/context/ThemeContext';
 import {darkTheme, lightTheme} from 'src/navigation/theme';
 import {useFirebase} from 'src/hook/useFirebase';
+import {PermissionGrantingPrompt, useShowPushPermissionScreen} from 'screen/PermissionGrantingPrompt';
+import LoadingView from 'presentational/LoadingView';
+import {NavigationContainer} from '@react-navigation/native';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -98,15 +100,23 @@ function DrawerNavigator() {
   );
 }
 
-const AppStack = createStackNavigator();
+const AppStack = createStackNavigator<AppStackParamList>();
 
 function AppNavigator() {
   const {api} = useContext(ChainApiContext);
   const {theme} = useTheme();
 
+  const {data: showPermissionGranting, isLoading} = useShowPushPermissionScreen();
+
+  if (isLoading) {
+    return <LoadingView />;
+  }
   return (
     <NavigationContainer linking={linking} theme={theme === 'dark' ? darkTheme : lightTheme}>
       <AppStack.Navigator headerMode={'none'} screenOptions={{gestureEnabled: false}}>
+        {showPermissionGranting ? (
+          <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen} component={PermissionGrantingPrompt} />
+        ) : undefined}
         {api ? <AppStack.Screen name={routeKeys.appNavigatorScreen} component={DrawerNavigator} /> : undefined}
         <AppStack.Screen
           name={routeKeys.apiLoadingScreen}

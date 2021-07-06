@@ -1,8 +1,8 @@
 import React, {useContext, useState} from 'react';
-import {ActivityIndicator, View, TouchableOpacity, StyleSheet} from 'react-native';
-import {NavigationProp, RouteProp, useLinkTo, useNavigation, useNavigationState} from '@react-navigation/native';
+import {ActivityIndicator, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {NavigationProp, RouteProp, useLinkTo} from '@react-navigation/native';
 import {Button, Icon, Layout, Text} from '@ui-kitten/components';
-import globalStyles, {monofontFamily, colorGreen} from 'src/styles';
+import globalStyles, {colorGreen, monofontFamily} from 'src/styles';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import NetworkItem from 'presentational/NetworkItem';
 import {NetworkContext} from 'context/NetworkContext';

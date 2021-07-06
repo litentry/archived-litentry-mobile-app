@@ -1,5 +1,6 @@
 import {
   apiLoadingScreen,
+  appNavigatorScreen,
   councilScreen,
   dashboardNavigator,
   dashboardScreen,
@@ -8,6 +9,7 @@ import {
   motionsScreen,
   myIdentityScreen,
   notificationSettingsScreen,
+  permissionGrantingPromptScreen,
   registrarListScreen,
   submitTipScreen,
   tipDetailScreen,
@@ -42,8 +44,10 @@ type DrawerParamList = {
   [notificationSettingsScreen]: undefined;
 };
 
-type AppStackParamList = DrawerParamList & ApiNavigatorParamList & DashboardStackParamList;
-
-type ApiNavigatorParamList = {
+type AppStackParamList = {
+  [appNavigatorScreen]: undefined;
   [apiLoadingScreen]: {network: SupportedNetworkType; redirectTo: string | null} | undefined;
+  [permissionGrantingPromptScreen]: undefined;
 };
+
+type CompleteNavigatorParamList = AppStackParamList & DrawerParamList & ApiNavigatorParamList & DashboardStackParamList;
