@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {NavigationContainer, useNavigationState} from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {Icon, TopNavigationAction} from '@ui-kitten/components';
@@ -74,10 +74,6 @@ function DashboardStackNavigator() {
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
 function DrawerNavigator() {
-  useNavigationState((s) => {
-    console.log(s.routes);
-    return s.history;
-  });
   return (
     <Drawer.Navigator
       screenOptions={{
