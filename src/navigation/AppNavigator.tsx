@@ -25,9 +25,11 @@ import globalStyles from 'src/styles';
 import {useTheme} from 'src/context/ThemeContext';
 import {darkTheme, lightTheme} from 'src/navigation/theme';
 import {useFirebase} from 'src/hook/useFirebase';
+import {linking} from 'src/navigation/routeKeys';
 import {PermissionGrantingPrompt, useShowPushPermissionScreen} from 'screen/PermissionGrantingPrompt';
 import LoadingView from 'presentational/LoadingView';
 import {NavigationContainer} from '@react-navigation/native';
+
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 

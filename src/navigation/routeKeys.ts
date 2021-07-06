@@ -37,6 +37,7 @@ export const linking: LinkingOptions = {
             initialRouteName: dashboardScreen,
             screens: {
               [treasuryScreen]: 'treasury',
+              [tipsScreen]: 'tips',
             },
           },
         },

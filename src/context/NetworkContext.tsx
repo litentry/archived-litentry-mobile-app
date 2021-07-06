@@ -27,7 +27,7 @@ const KusamaNetwork: NetworkType = {
 const LitentryNetworkTest: NetworkType = {
   name: 'Litentry Testnet',
   key: 'litentry_test',
-  ws: ['wss://3.0.201.137'],
+  ws: ['wss://staging.registrar.litentry.io'],
   isTestnet: true,
   color: '#006400',
 };
