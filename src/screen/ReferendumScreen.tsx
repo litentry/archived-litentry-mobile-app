@@ -1,5 +1,17 @@
 import React from 'react';
-import {Button, Card, Divider, Icon, IndexPath, Layout, Modal, Select, SelectItem, Text} from '@ui-kitten/components';
+import {
+  Button,
+  Card,
+  Divider,
+  Icon,
+  IndexPath,
+  Input,
+  Layout,
+  Modal,
+  Select,
+  SelectItem,
+  Text,
+} from '@ui-kitten/components';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {StyleSheet, View} from 'react-native';
 import globalStyles, {standardPadding} from 'src/styles';
@@ -32,6 +44,9 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
   const {accounts} = useAccounts();
   const selectedAccount = state.account && accounts[state.account.row];
   const accountDisplayValue = selectedAccount ? getAccountDisplayValue(selectedAccount) : undefined;
+
+  const selectedConviction = state.conviction && convictions[state.conviction.row];
+  const convictionDisplayValue = selectedConviction ? `${selectedConviction.value}x voting balance` : undefined;
 
   if (!proposal) {
     return null;
@@ -135,14 +150,51 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
                 return <SelectItem key={account.address} title={getAccountDisplayValue(account)} />;
               })}
             </Select>
-            <Button
-              onPress={() => {
-                dispatch({type: 'RESET'});
-              }}
-              appearance="ghost"
-              status="basic">
-              CANCEL
-            </Button>
+            <Padder scale={1.5} />
+
+            <Text>Vote Value</Text>
+            <Padder scale={0.5} />
+            <Input
+              placeholder="Place your Text"
+              keyboardType="decimal-pad"
+              value={state.voteValue}
+              onFocus={() => dispatch({type: 'SET_VOTE_VALUE', payload: ''})}
+              onChangeText={(nextValue) =>
+                dispatch({type: 'SET_VOTE_VALUE', payload: nextValue.replace(/[^(\d+).(\d+)]/g, '')})
+              }
+            />
+            <Padder scale={0.5} />
+
+            <Text>Conviction</Text>
+            <Padder scale={0.5} />
+            <Select
+              selectedIndex={state.conviction}
+              value={convictionDisplayValue}
+              onSelect={(index) => {
+                if (!Array.isArray(index)) {
+                  dispatch({type: 'SELECT_CONVICTION', payload: index});
+                }
+              }}>
+              {convictions.map((conviction) => {
+                return <SelectItem key={conviction.value} title={`${conviction.value}x voting balance`} />;
+              })}
+            </Select>
+            <Padder scale={0.5} />
+
+            <View style={styles.row}>
+              <Button
+                onPress={() => {
+                  dispatch({type: 'RESET'});
+                }}
+                appearance="ghost"
+                status="basic">
+                CANCEL
+              </Button>
+              <Button
+                onPress={() => {
+                  dispatch({type: 'RESET'});
+                }}>{`VOTE ${state.voting}`}</Button>
+            </View>
           </Card>
         </Modal>
       </SafeView>
@@ -158,19 +210,21 @@ const styles = StyleSheet.create({
   modalCard: {width: 300},
 });
 
-const initialState: State = {voteValue: 0, conviction: 0.1};
+const initialState: State = {voteValue: '0.0000'};
 
 type State = {
   voting?: 'YES' | 'NO';
   account?: IndexPath;
-  voteValue: number;
-  conviction: number;
+  voteValue: string;
+  conviction?: IndexPath;
 };
 
 type Action =
   | {type: 'RESET'}
   | {type: 'CHANGE_VOTING'; payload: 'YES' | 'NO' | undefined}
-  | {type: 'SELECT_ACCOUNT'; payload: IndexPath};
+  | {type: 'SET_VOTE_VALUE'; payload: string}
+  | {type: 'SELECT_ACCOUNT'; payload: IndexPath}
+  | {type: 'SELECT_CONVICTION'; payload: IndexPath};
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
@@ -180,10 +234,18 @@ function reducer(state: State, action: Action): State {
     case 'CHANGE_VOTING':
       return {...state, voting: action.payload};
 
+    case 'SELECT_CONVICTION':
+      return {...state, conviction: action.payload};
+
     case 'SELECT_ACCOUNT':
       return {...state, account: action.payload};
+
+    case 'SET_VOTE_VALUE':
+      return {...state, voteValue: action.payload};
 
     default:
       return state;
   }
 }
+
+const convictions = [{value: 0.1}];
