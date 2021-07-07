@@ -21,6 +21,7 @@ import NetworkSelect from 'src/layout/NetworkSelect';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {NetworkContext} from 'context/NetworkContext';
 import {DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
+import SeactionTeaserContainer from 'presentational/SectionTeaserContainer';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
@@ -65,7 +66,7 @@ function DashboardScreen({navigation, accountAddProps}: PropTypes & AddAccountIn
             <Divider />
             <View style={[globalStyles.flex, styles.main]}>
               <ScrollView style={styles.scrollView}>
-                <Button onPress={() => navigation.navigate(referendaScreen)}>Refernda</Button>
+                <SeactionTeaserContainer onMorePress={() => navigation.navigate(referendaScreen)} title="Refernda" />
                 <CouncilSummaryTeaser onMorePress={() => navigation.navigate(councilScreen)} />
                 <TreasurySummaryTeaser onMorePress={() => navigation.navigate(treasuryScreen)} />
                 <TipsSummaryTeaser onMorePress={() => navigation.navigate(tipsScreen)} />

@@ -102,6 +102,7 @@ function useTopics() {
         });
         return {previousTopics};
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onError: (err, vars, context: any) => {
         console.error(err);
         queryClient.setQueryData('selected_push_topics', context.previousTopics);

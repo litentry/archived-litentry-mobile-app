@@ -10,7 +10,6 @@ import {
   myIdentityScreen,
   notificationSettingsScreen,
   referendaScreen,
-  referendumScreen,
   permissionGrantingPromptScreen,
   registrarListScreen,
   submitTipScreen,
@@ -18,6 +17,7 @@ import {
   tipsScreen,
   treasuryScreen,
   webviewScreen,
+  referendumScreen,
 } from 'src/navigation/routeKeys';
 import {SupportedNetworkType} from 'src/types';
 
