@@ -3,6 +3,7 @@ import {LinkingOptions} from '@react-navigation/native';
 export const appNavigatorScreen = 'App' as const;
 export const apiLoadingNavigatorScreen = 'ApiLoadingNavigator' as const;
 export const permissionGrantingPromptScreen = 'PermissionsGrantingPrompt' as const;
+export const dashboardNavigator = 'DashboardNavigator' as const;
 
 export const apiLoadingScreen = 'Api Loading' as const;
 
@@ -27,10 +28,15 @@ export const linking: LinkingOptions = {
   prefixes: ['litentry://'],
 
   config: {
+    initialRouteName: appNavigatorScreen,
     screens: {
+      [apiLoadingScreen]: 'api/:network/:redirectTo?',
       [appNavigatorScreen]: {
+        initialRouteName: dashboardNavigator,
+        path: '',
         screens: {
-          [dashboardScreen]: {
+          [dashboardNavigator]: {
+            initialRouteName: dashboardScreen,
             screens: {
               [treasuryScreen]: 'treasury',
               [referendaScreen]: 'referenda',
