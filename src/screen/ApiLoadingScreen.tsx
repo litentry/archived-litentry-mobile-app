@@ -1,26 +1,40 @@
 import React, {useContext, useState} from 'react';
-import {ActivityIndicator, View, TouchableOpacity, StyleSheet} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {ActivityIndicator, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {NavigationProp, RouteProp, useLinkTo} from '@react-navigation/native';
 import {Button, Icon, Layout, Text} from '@ui-kitten/components';
-import globalStyles, {monofontFamily, colorGreen} from 'src/styles';
+import globalStyles, {colorGreen, monofontFamily} from 'src/styles';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import NetworkItem from 'presentational/NetworkItem';
 import {NetworkContext} from 'context/NetworkContext';
 import {ChainApiContext} from 'context/ChainApiContext';
 import NetworkSelect from 'src/layout/NetworkSelect';
-import {appNavigatorScreen} from 'src/navigation/routeKeys';
+import {apiLoadingScreen} from 'src/navigation/routeKeys';
+import {AppStackParamList} from 'src/navigation/navigation';
 
-export function ApiLoadingScreen() {
-  const navigation = useNavigation();
-  const {currentNetwork, select} = useContext(NetworkContext);
+export function ApiLoadingScreen({
+  navigation,
+  route,
+}: {
+  navigation: NavigationProp<AppStackParamList, typeof apiLoadingScreen>;
+  route: RouteProp<AppStackParamList, typeof apiLoadingScreen>;
+}) {
+  const linkTo = useLinkTo();
+  const {currentNetwork, select, availableNetworks} = useContext(NetworkContext);
   const {api, inProgress} = useContext(ChainApiContext);
   const [networkSelectOpen, setNetworkSelectOpen] = useState(false);
 
   React.useEffect(() => {
-    if (api) {
-      navigation.navigate(appNavigatorScreen);
+    const selectedNetwork = availableNetworks.find((n) => n.key === route.params?.network) ?? currentNetwork;
+    if (selectedNetwork !== currentNetwork) {
+      select(selectedNetwork);
+    } else if (api) {
+      if (!route.params) {
+        linkTo('/');
+      } else if (route.params.network === currentNetwork.key) {
+        linkTo(`/${route.params.redirectTo ?? ''}`);
+      }
     }
-  }, [navigation, api]);
+  }, [api, route.params, linkTo, availableNetworks, select, currentNetwork]);
 
   return (
     <Layout style={styles.container}>
@@ -57,6 +71,10 @@ export function ApiLoadingScreen() {
                   {icon}
                   <Text style={styles.text}>Disconnected from {currentNetwork.name}</Text>
                 </View>
+                {/**  TODO: find a better way to make sure
+                 * either the previous apiPromise will be destroyed
+                 * or reconnects the same one
+                 */}
                 <Button onPress={() => select({...currentNetwork})}>Reconnect</Button>
               </>
             );
@@ -64,7 +82,15 @@ export function ApiLoadingScreen() {
 
           return null;
         })()}
-        <NetworkSelect open={networkSelectOpen} onClose={() => setNetworkSelectOpen(false)} />
+        <NetworkSelect
+          open={networkSelectOpen}
+          // TODO: check if we can remove this and make NetworkSelect only responsible to
+          // call select function on NetworkContext
+          onSelect={(n) => {
+            navigation.setParams({network: n.key, redirectTo: null});
+          }}
+          onClose={() => setNetworkSelectOpen(false)}
+        />
       </View>
     </Layout>
   );
