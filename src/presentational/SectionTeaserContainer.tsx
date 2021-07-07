@@ -6,7 +6,7 @@ import globalStyles, {hitSlop, standardPadding} from 'src/styles';
 type PropTypes = {
   title: string;
   onMorePress: () => void;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 };
 
 const Header = (props?: ViewProps & Partial<PropTypes>) => (
