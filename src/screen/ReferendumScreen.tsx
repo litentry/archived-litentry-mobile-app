@@ -13,7 +13,6 @@ import {
   SelectItem,
   Text,
 } from '@ui-kitten/components';
-import BN from 'bn.js';
 import {getAccountDisplayValue, useAccounts} from 'context/AccountsContext';
 import {useApi} from 'context/ChainApiContext';
 import {useTX} from 'context/TxContext';
@@ -29,6 +28,7 @@ import {useBestNumber} from 'src/hook/useVotingStatus';
 import {DashboardStackParamList} from 'src/navigation/navigation';
 import {referendumScreen} from 'src/navigation/routeKeys';
 import {formatCallMeta} from 'src/packages/call_inspector/CallInspector';
+import {getBalanceFromString} from 'src/service/api/balance';
 import globalStyles, {standardPadding} from 'src/styles';
 
 export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
@@ -201,7 +201,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
               <Button
                 onPress={() => {
                   if (api && selectedAccount?.address && selectedConviction) {
-                    const balance = new BN(parseFloat(state.voteValue));
+                    const balance = getBalanceFromString(api, state.voteValue);
 
                     start({
                       api,
