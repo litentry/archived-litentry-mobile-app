@@ -20,33 +20,41 @@ import {DashboardStackParamList} from 'src/navigation/navigation';
 import {referendumScreen} from 'src/navigation/routeKeys';
 import {useReferenda} from 'src/hook/useReferenda';
 import {formatCallMeta} from 'src/packages/call_inspector/CallInspector';
-import {BN_ONE} from '@polkadot/util';
+import {BN_ONE, BN} from '@polkadot/util';
 import {useBlockTime} from 'src/hook/useBlockTime';
 import {useBestNumber} from 'src/hook/useVotingStatus';
 import {useFormatBalance} from 'src/hook/useFormatBalance';
 import Padder from 'presentational/Padder';
 import {useReducer} from 'react';
 import {getAccountDisplayValue, useAccounts} from 'context/AccountsContext';
+import {useConvictions} from 'src/hook/useConvictions';
+import {useTX} from 'context/TxContext';
+import {useApi} from 'context/ChainApiContext';
 
 export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
+  const {start} = useTX();
+  const {api} = useApi();
+
+  const [state, dispatch] = useReducer(reducer, initialState);
+
   const formatBalance = useFormatBalance();
   const {data} = useReferenda();
   const referendum = data?.find((r) => r.index.toString() === route.params.index);
   const proposal = referendum?.image?.proposal;
+
   const bestNumber = useBestNumber();
   const remainBlock = bestNumber ? referendum?.status.end.sub(bestNumber).isub(BN_ONE) : undefined;
   const enactBlock = bestNumber ? referendum?.status.end.add(referendum.status.delay).sub(bestNumber) : undefined;
   const {timeStringParts: remainingTime} = useBlockTime(remainBlock);
   const {timeStringParts: activateTime} = useBlockTime(enactBlock);
 
-  const [state, dispatch] = useReducer(reducer, initialState);
-
   const {accounts} = useAccounts();
   const selectedAccount = state.account && accounts[state.account.row];
   const accountDisplayValue = selectedAccount ? getAccountDisplayValue(selectedAccount) : undefined;
 
+  const convictions = useConvictions();
   const selectedConviction = state.conviction && convictions[state.conviction.row];
-  const convictionDisplayValue = selectedConviction ? `${selectedConviction.value}x voting balance` : undefined;
+  const convictionDisplayValue = selectedConviction?.text;
 
   if (!proposal) {
     return null;
@@ -163,7 +171,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
                 dispatch({type: 'SET_VOTE_VALUE', payload: nextValue.replace(/[^(\d+).(\d+)]/g, '')})
               }
             />
-            <Padder scale={0.5} />
+            <Padder scale={1.5} />
 
             <Text>Conviction</Text>
             <Padder scale={0.5} />
@@ -176,7 +184,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
                 }
               }}>
               {convictions.map((conviction) => {
-                return <SelectItem key={conviction.value} title={`${conviction.value}x voting balance`} />;
+                return <SelectItem key={conviction.value} title={conviction.text} />;
               })}
             </Select>
             <Padder scale={0.5} />
@@ -192,7 +200,25 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
               </Button>
               <Button
                 onPress={() => {
-                  dispatch({type: 'RESET'});
+                  if (api && selectedAccount?.address && selectedConviction) {
+                    start({
+                      api,
+                      address: selectedAccount?.address,
+                      txMethod: 'democracy.vote',
+                      params: [
+                        referendum?.index,
+                        {
+                          Standard: {
+                            balance: new BN(parseFloat(state.voteValue)),
+                            vote: {aye: state.voting === 'YES' ? true : false, conviction: selectedConviction.value},
+                          },
+                        },
+                      ],
+                      title: 'Sending transaction democracy.vote(ref_index, vote)',
+                      description:
+                        'Vote in a referendum. If vote.is_aye(), the vote is to enact the proposal; otherwise it is a vote to keep the status quo.',
+                    });
+                  }
                 }}>{`VOTE ${state.voting}`}</Button>
             </View>
           </Card>
@@ -247,5 +273,3 @@ function reducer(state: State, action: Action): State {
       return state;
   }
 }
-
-const convictions = [{value: 0.1}];
