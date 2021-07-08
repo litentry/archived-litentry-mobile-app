@@ -171,6 +171,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
                 dispatch({type: 'SET_VOTE_VALUE', payload: nextValue.replace(/[^(\d+).(\d+)]/g, '')})
               }
             />
+            <Text>{api && formatBalance(getBalanceFromString(api, state.voteValue))}</Text>
             <Padder scale={1.5} />
 
             <Text>Conviction</Text>
@@ -199,6 +200,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
                 CANCEL
               </Button>
               <Button
+                disabled={!selectedAccount || !selectedConviction}
                 onPress={() => {
                   if (api && selectedAccount?.address && selectedConviction) {
                     const balance = getBalanceFromString(api, state.voteValue);
