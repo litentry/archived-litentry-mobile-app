@@ -1,4 +1,5 @@
-import React from 'react';
+import {BN_ONE} from '@polkadot/util';
+import {RouteProp} from '@react-navigation/native';
 import {
   Button,
   Card,
@@ -12,24 +13,23 @@ import {
   SelectItem,
   Text,
 } from '@ui-kitten/components';
+import BN from 'bn.js';
+import {getAccountDisplayValue, useAccounts} from 'context/AccountsContext';
+import {useApi} from 'context/ChainApiContext';
+import {useTX} from 'context/TxContext';
+import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
+import React, {useReducer} from 'react';
 import {StyleSheet, View} from 'react-native';
-import globalStyles, {standardPadding} from 'src/styles';
-import {RouteProp} from '@react-navigation/native';
+import {useBlockTime} from 'src/hook/useBlockTime';
+import {useConvictions} from 'src/hook/useConvictions';
+import {useFormatBalance} from 'src/hook/useFormatBalance';
+import {useReferenda} from 'src/hook/useReferenda';
+import {useBestNumber} from 'src/hook/useVotingStatus';
 import {DashboardStackParamList} from 'src/navigation/navigation';
 import {referendumScreen} from 'src/navigation/routeKeys';
-import {useReferenda} from 'src/hook/useReferenda';
 import {formatCallMeta} from 'src/packages/call_inspector/CallInspector';
-import {BN_ONE, BN} from '@polkadot/util';
-import {useBlockTime} from 'src/hook/useBlockTime';
-import {useBestNumber} from 'src/hook/useVotingStatus';
-import {useFormatBalance} from 'src/hook/useFormatBalance';
-import Padder from 'presentational/Padder';
-import {useReducer} from 'react';
-import {getAccountDisplayValue, useAccounts} from 'context/AccountsContext';
-import {useConvictions} from 'src/hook/useConvictions';
-import {useTX} from 'context/TxContext';
-import {useApi} from 'context/ChainApiContext';
+import globalStyles, {standardPadding} from 'src/styles';
 
 export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
   const {start} = useTX();
@@ -201,6 +201,8 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
               <Button
                 onPress={() => {
                   if (api && selectedAccount?.address && selectedConviction) {
+                    const balance = new BN(parseFloat(state.voteValue));
+
                     start({
                       api,
                       address: selectedAccount?.address,
@@ -209,7 +211,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
                         referendum?.index,
                         {
                           Standard: {
-                            balance: new BN(parseFloat(state.voteValue)),
+                            balance,
                             vote: {aye: state.voting === 'YES' ? true : false, conviction: selectedConviction.value},
                           },
                         },
