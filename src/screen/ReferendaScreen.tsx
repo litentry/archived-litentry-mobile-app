@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Divider, Layout, Text} from '@ui-kitten/components';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {FlatList, StyleSheet} from 'react-native';
 import globalStyles, {standardPadding} from 'src/styles';
 import {useApi} from 'context/ChainApiContext';
 import {useQuery} from 'react-query';
@@ -18,26 +18,24 @@ export function ReferendaScreen() {
   return (
     <Layout style={globalStyles.flex}>
       <SafeView edges={noTopEdges}>
-        <View style={styles.container}>
-          <FlatList
-            refreshing={isLoading}
-            onRefresh={refetch}
-            style={styles.flatList}
-            data={data}
-            renderItem={({item}) => {
-              return <Referenda item={item} />;
-            }}
-            ItemSeparatorComponent={Divider}
-            keyExtractor={(item) => item.index.toString()}
-            ListEmptyComponent={EmptyView}
-          />
-        </View>
+        <FlatList
+          refreshing={isLoading}
+          onRefresh={refetch}
+          style={styles.flatList}
+          data={data}
+          renderItem={({item}) => {
+            return <Referenda item={item} />;
+          }}
+          ItemSeparatorComponent={Divider}
+          keyExtractor={(item) => item.index.toString()}
+          ListEmptyComponent={EmptyView}
+        />
       </SafeView>
     </Layout>
   );
 }
 
-const styles = StyleSheet.create({container: {}, flatList: {padding: standardPadding * 2}});
+const styles = StyleSheet.create({flatList: {padding: standardPadding * 2}});
 
 function useReferendums() {
   const {api} = useApi();
