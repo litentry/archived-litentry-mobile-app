@@ -1,22 +1,27 @@
 import {ApiPromise} from '@polkadot/api';
 import {BN, BN_TEN} from '@polkadot/util';
 
+/**
+ * turns a string to a Balance BN in order to send through API or
+ * show the formatted version to user
+ * @param api
+ * @param input String (user input E.g. 2.33 or 20 or 0.33)
+ * @returns BN
+ */
 export function getBalanceFromString(api: ApiPromise, input: string): BN {
+  const chainDecimal = api.registry.chainDecimals[0] ?? 10;
+  const currencyPower = new BN(chainDecimal);
+
   const isDecimalValue = input.match(/^(\d+)\.(\d+)$/);
-
-  let result;
-
-  const siPower = BN_TEN;
-
   if (isDecimalValue) {
-    const div = new BN(input.replace(/\.\d*$/, ''));
-    const modString = input.replace(/^\d+\./, '').substr(0, api.registry.chainDecimals[0]);
-    const mod = new BN(modString);
+    const integerPart = new BN(input.replace(/\.\d*$/, ''));
+    const fractionalPartString = input.replace(/^\d+\./, '').substr(0, chainDecimal);
+    const fractionalPart = new BN(fractionalPartString);
 
-    result = div.mul(BN_TEN.pow(siPower)).add(mod.mul(BN_TEN.pow(new BN(siPower.toNumber() - modString.length))));
-  } else {
-    result = new BN(input.replace(/[^\d]/g, '')).mul(BN_TEN.pow(BN_TEN));
+    return integerPart
+      .mul(BN_TEN.pow(currencyPower))
+      .add(fractionalPart.mul(BN_TEN.pow(new BN(chainDecimal - fractionalPartString.length))));
   }
 
-  return result;
+  return new BN(input.replace(/[^\d]/g, '')).mul(BN_TEN.pow(currencyPower));
 }
