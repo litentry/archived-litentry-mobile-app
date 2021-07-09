@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Divider, Layout, Text} from '@ui-kitten/components';
+import {Divider, Icon, Layout, Text} from '@ui-kitten/components';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import globalStyles, {standardPadding} from 'src/styles';
@@ -50,24 +50,30 @@ function Referenda({item}: {item: DeriveReferendumExt}) {
   const remainBlock = bestNumber ? item.status.end.sub(bestNumber).isub(BN_ONE) : undefined;
   const {timeStringParts} = useBlockTime(remainBlock);
 
+  const goToRefrenda = () => {
+    navigation.navigate(referendumScreen, {index: item.index.toString()});
+  };
+
   return proposal ? (
     <Proposal
       proposal={proposal}
       accessoryLeft={() => (
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate(referendumScreen, {index: item.index.toString()});
-          }}>
+        <TouchableOpacity onPress={goToRefrenda}>
           <Text category={'h4'}>{item.index.toString()}</Text>
         </TouchableOpacity>
       )}
       accessoryRight={() => (
-        <Text category={'c1'} adjustsFontSizeToFit={true} numberOfLines={1}>
-          {timeStringParts.slice(0, 2).join(' ')}
-        </Text>
+        <TouchableOpacity style={referendaStyles.row} onPress={goToRefrenda}>
+          <Text category={'c1'} adjustsFontSizeToFit={true} numberOfLines={1}>
+            {timeStringParts.slice(0, 2).join(' ')}
+          </Text>
+          <Icon name="chevron-right-outline" fill="grey" style={globalStyles.icon25} />
+        </TouchableOpacity>
       )}
     />
   ) : (
     <Text>{item.imageHash.toString()}</Text>
   );
 }
+
+const referendaStyles = StyleSheet.create({row: {flexDirection: 'row', alignItems: 'center'}});

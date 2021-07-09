@@ -24,7 +24,7 @@ export function Proposal({
       <View style={styles.mainRow}>
         {accessoryLeft?.()}
         <TouchableOpacity onPress={() => setOpen(!open)} style={styles.titleContainer}>
-          <Text category={'p1'} style={styles.title} numberOfLines={1}>
+          <Text category={'c1'} style={styles.title} numberOfLines={1}>
             {section}.{method}
           </Text>
           <Icon
