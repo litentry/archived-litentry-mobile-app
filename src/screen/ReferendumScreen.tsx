@@ -1,4 +1,4 @@
-import {BN_ONE} from '@polkadot/util';
+import {BN, BN_ONE} from '@polkadot/util';
 import {RouteProp} from '@react-navigation/native';
 import {
   Button,
@@ -17,6 +17,7 @@ import {getAccountDisplayValue, useAccounts} from 'context/AccountsContext';
 import {useApi} from 'context/ChainApiContext';
 import {useTX} from 'context/TxContext';
 import Padder from 'presentational/Padder';
+import {ProgressBar} from 'presentational/ProgressBar';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React, {useReducer} from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -62,6 +63,15 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
 
   const {meta, method, section} = proposal.registry.findMetaCall(proposal.callIndex);
 
+  const ayePercentage =
+    referendum && !referendum.votedTotal.isZero()
+      ? referendum.allAye
+          .reduce((total: BN, {balance}) => total.add(balance), new BN(0))
+          .muln(10000)
+          .div(referendum.votedTotal)
+          .toNumber() / 100
+      : 0;
+
   return (
     <Layout style={globalStyles.flex}>
       <SafeView edges={noTopEdges}>
@@ -100,6 +110,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
           <Padder scale={0.5} />
           <Divider />
           <View style={styles.paddedBox}>
+            <ProgressBar percentage={ayePercentage} requiredAmount={80} />
             <View style={styles.row}>
               <View style={styles.center}>
                 <Text category={'h6'} status={'success'}>
