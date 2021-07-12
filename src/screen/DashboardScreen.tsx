@@ -4,7 +4,6 @@ import NetworkItem from 'presentational/NetworkItem';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {Button, Divider, Icon, IconProps, Layout, Text, TopNavigationAction} from '@ui-kitten/components';
 import {ChainApiContext} from 'context/ChainApiContext';
-import {BalanceContext} from 'context/BalanceContext';
 import {useAccounts} from 'context/AccountsContext';
 import FadeInAnimatedView from 'presentational/FadeInAnimatedView';
 import AccountTeaser from 'layout/AccountTeaser';
@@ -98,8 +97,14 @@ const styles = StyleSheet.create({
 export default DashboardScreen;
 
 function DashboardHeaderRight() {
-  const {show} = useContext(BalanceContext);
-  return <TopNavigationAction onPress={show} icon={(p) => <Icon {...p} name={'credit-card-outline'} />} />;
+  return (
+    <TopNavigationAction
+      onPress={() => {
+        // TODO: navigation.navigate
+      }}
+      icon={(p) => <Icon {...p} name={'credit-card-outline'} />}
+    />
+  );
 }
 
 export function DashboardHeaderLeft() {

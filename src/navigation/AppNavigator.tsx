@@ -29,6 +29,7 @@ import {PermissionGrantingPrompt, useShowPushPermissionScreen} from 'screen/Perm
 import LoadingView from 'presentational/LoadingView';
 import {NavigationContainer} from '@react-navigation/native';
 import {AddAccountScreen} from 'screen/AddAccountScreen/AddAccountScreen';
+import {BalanceScreen} from 'screen/BalanceScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -124,6 +125,17 @@ function AppNavigator() {
         <AppStack.Screen
           name={routeKeys.addAccountScreen}
           component={AddAccountScreen}
+          options={{
+            animationEnabled: false,
+            cardStyle: {
+              backgroundColor: 'transparent',
+              opacity: 1,
+            },
+          }}
+        />
+        <AppStack.Screen
+          name={routeKeys.balanceScreen}
+          component={BalanceScreen}
           options={{
             animationEnabled: false,
             cardStyle: {

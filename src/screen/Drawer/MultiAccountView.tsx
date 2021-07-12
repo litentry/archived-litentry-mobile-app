@@ -1,13 +1,14 @@
 import Identicon from '@polkadot/reactnative-identicon';
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {Button, Icon, Layout, ListItem, MenuItem, OverflowMenu} from '@ui-kitten/components';
-import {BalanceContext} from 'context/BalanceContext';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
 import AddressInfoBadge from 'presentational/AddressInfoBadge';
 import React, {useContext, useState} from 'react';
 import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useAccounts, Account} from 'src/context/AccountsContext';
+import {AppStackParamList} from 'src/navigation/navigation';
+import {balanceScreen} from 'src/navigation/routeKeys';
 import globalStyles from 'src/styles';
 import {SupportedNetworkType} from 'src/types';
 
@@ -54,8 +55,8 @@ function AccountItem({
 }) {
   const {api} = useContext(ChainApiContext);
   const {currentNetwork} = useContext(NetworkContext);
-  const {show} = useContext(BalanceContext);
   const [visible, setVisible] = useState(false);
+  const navigation = useNavigation<NavigationProp<AppStackParamList>>();
 
   const handleMenuItemSelect = ({row}: {row: number}) => {
     if (row === 0) {
@@ -83,7 +84,7 @@ function AccountItem({
     }
 
     if (row === 1) {
-      show();
+      navigation.navigate(balanceScreen, {address: account.address});
     }
   };
 

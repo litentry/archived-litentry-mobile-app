@@ -2,6 +2,7 @@ import {
   addAccountScreen,
   apiLoadingScreen,
   appNavigatorScreen,
+  balanceScreen,
   councilScreen,
   dashboardNavigator,
   dashboardScreen,
@@ -50,6 +51,7 @@ type AppStackParamList = {
   [apiLoadingScreen]: {network: SupportedNetworkType; redirectTo: string | null} | undefined;
   [permissionGrantingPromptScreen]: undefined;
   [addAccountScreen]: undefined;
+  [balanceScreen]: {address: string};
 };
 
 type CompleteNavigatorParamList = AppStackParamList & DrawerParamList & ApiNavigatorParamList & DashboardStackParamList;
