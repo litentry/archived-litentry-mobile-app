@@ -1,25 +1,61 @@
 import Identicon from '@polkadot/reactnative-identicon';
 import {useNavigation} from '@react-navigation/native';
-import {Button, Icon, Layout, MenuItem, OverflowMenu} from '@ui-kitten/components';
+import {Button, Icon, Layout, ListItem, MenuItem, OverflowMenu} from '@ui-kitten/components';
 import {BalanceContext} from 'context/BalanceContext';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
 import AddressInfoBadge from 'presentational/AddressInfoBadge';
 import React, {useContext, useState} from 'react';
 import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {useAccounts} from 'src/context/AccountsContext';
-import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
+import {useAccounts, Account} from 'src/context/AccountsContext';
+import globalStyles from 'src/styles';
+import {SupportedNetworkType} from 'src/types';
 
 export function MultiAccountView() {
   const navigation = useNavigation();
-  const {show} = useContext(BalanceContext);
-  const {api} = useContext(ChainApiContext);
   const {accounts, removeAccount} = useAccounts();
-  const {currentNetwork} = useContext(NetworkContext);
-  const [visible, setVisible] = useState(false);
 
-  // TODO: change this logic when adding multi account support
-  const account = accounts.length > 0 ? accounts[0] : null;
+  return (
+    <Layout>
+      {accounts.map((account) => (
+        <AccountItem key={account.address} account={account} removeAccount={removeAccount} />
+      ))}
+      <View style={styles.addAccountBtn}>
+        <Button
+          onPress={() => navigation.navigate('AddAccountScreen')}
+          accessoryLeft={(p) => <Icon {...p} name="plus-outline" />}
+          appearance="ghost"
+          size="small">
+          Add Account
+        </Button>
+      </View>
+    </Layout>
+  );
+}
+
+const styles = StyleSheet.create({
+  addAccountBtn: {
+    flexDirection: 'row',
+  },
+  backdrop: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  overflowMenu: {
+    minWidth: 200,
+  },
+});
+
+function AccountItem({
+  account,
+  removeAccount,
+}: {
+  account: Account;
+  removeAccount: (network: SupportedNetworkType, acc: Account) => void;
+}) {
+  const {api} = useContext(ChainApiContext);
+  const {currentNetwork} = useContext(NetworkContext);
+  const {show} = useContext(BalanceContext);
+  const [visible, setVisible] = useState(false);
 
   const handleMenuItemSelect = ({row}: {row: number}) => {
     if (row === 0) {
@@ -63,66 +99,28 @@ export function MultiAccountView() {
   };
 
   return (
-    <Layout>
-      {account ? (
-        <Layout style={styles.accountLogo}>
-          <Identicon value={account.address} size={25} />
-          <Layout style={styles.account}>
-            <AddressInfoBadge network={currentNetwork} address={account.address} api={api} />
-            <OverflowMenu
-              anchor={renderOptions}
-              placement="bottom end"
-              backdropStyle={styles.backdrop}
-              style={styles.overflowMenu}
-              visible={visible}
-              onSelect={handleMenuItemSelect}
-              onBackdropPress={() => setVisible(false)}>
-              <MenuItem
-                title="Remove Account"
-                accessoryLeft={(iconProps) => <Icon name="trash-2-outline" {...iconProps} />}
-              />
-              <MenuItem
-                title="Show balance"
-                accessoryLeft={(iconProps) => <Icon {...iconProps} name="credit-card-outline" />}
-              />
-            </OverflowMenu>
-          </Layout>
-        </Layout>
-      ) : null}
-      <View style={styles.addAccountBtn}>
-        <Button
-          onPress={() => navigation.navigate('AddAccountScreen')}
-          accessoryLeft={(p) => <Icon {...p} name="plus-outline" />}
-          appearance="ghost"
-          size="small">
-          Add Account
-        </Button>
-      </View>
-    </Layout>
+    <ListItem
+      accessoryLeft={() => <Identicon value={account.address} size={25} />}
+      accessoryRight={() => (
+        <OverflowMenu
+          anchor={renderOptions}
+          placement="bottom end"
+          backdropStyle={styles.backdrop}
+          style={styles.overflowMenu}
+          visible={visible}
+          onSelect={handleMenuItemSelect}
+          onBackdropPress={() => setVisible(false)}>
+          <MenuItem
+            title="Remove Account"
+            accessoryLeft={(iconProps) => <Icon name="trash-2-outline" {...iconProps} />}
+          />
+          <MenuItem
+            title="Show balance"
+            accessoryLeft={(iconProps) => <Icon {...iconProps} name="credit-card-outline" />}
+          />
+        </OverflowMenu>
+      )}
+      title={() => <AddressInfoBadge network={currentNetwork} address={account.address} api={api} />}
+    />
   );
 }
-
-const styles = StyleSheet.create({
-  account: {
-    padding: standardPadding,
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  accountLogo: {
-    padding: standardPadding,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  addAccountBtn: {
-    flexDirection: 'row',
-  },
-  address: {fontFamily: monofontFamily},
-  backdrop: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  overflowMenu: {
-    minWidth: 200,
-  },
-});
