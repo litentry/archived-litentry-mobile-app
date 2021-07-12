@@ -1,4 +1,5 @@
 import {
+  addAccountScreen,
   apiLoadingScreen,
   appNavigatorScreen,
   councilScreen,
@@ -48,6 +49,7 @@ type AppStackParamList = {
   [appNavigatorScreen]: undefined;
   [apiLoadingScreen]: {network: SupportedNetworkType; redirectTo: string | null} | undefined;
   [permissionGrantingPromptScreen]: undefined;
+  [addAccountScreen]: undefined;
 };
 
 type CompleteNavigatorParamList = AppStackParamList & DrawerParamList & ApiNavigatorParamList & DashboardStackParamList;

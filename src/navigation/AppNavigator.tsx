@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {Icon, TopNavigationAction} from '@ui-kitten/components';
-import DrawerScreen from 'screen/DrawerScreen';
+import DrawerScreen from 'screen/Drawer/DrawerScreen';
 import DashboardScreen, {DashboardHeaderLeft} from 'screen/DashboardScreen';
 import MotionDetailScreen from 'screen/MotionDetailScreen';
 import TipsScreen from 'screen/tips/TipsScreen';
@@ -28,6 +28,7 @@ import {useFirebase} from 'src/hook/useFirebase';
 import {PermissionGrantingPrompt, useShowPushPermissionScreen} from 'screen/PermissionGrantingPrompt';
 import LoadingView from 'presentational/LoadingView';
 import {NavigationContainer} from '@react-navigation/native';
+import {AddAccountScreen} from 'screen/AddAccountScreen/AddAccountScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -114,12 +115,23 @@ function AppNavigator() {
 
   return (
     <NavigationContainer linking={linking} theme={theme === 'dark' ? darkTheme : lightTheme}>
-      <AppStack.Navigator headerMode={'none'} screenOptions={{gestureEnabled: false}}>
+      <AppStack.Navigator headerMode={'none'} screenOptions={{gestureEnabled: false}} mode="modal">
         {showPermissionGranting ? (
           <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen} component={PermissionGrantingPrompt} />
         ) : undefined}
         {api ? <AppStack.Screen name={routeKeys.appNavigatorScreen} component={DrawerNavigator} /> : undefined}
         <AppStack.Screen name={routeKeys.apiLoadingScreen} component={ApiLoadingScreen} />
+        <AppStack.Screen
+          name={routeKeys.addAccountScreen}
+          component={AddAccountScreen}
+          options={{
+            animationEnabled: false,
+            cardStyle: {
+              backgroundColor: 'transparent',
+              opacity: 1,
+            },
+          }}
+        />
       </AppStack.Navigator>
     </NavigationContainer>
   );
