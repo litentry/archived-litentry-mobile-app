@@ -1,4 +1,4 @@
-import {Button, Divider, Text} from '@ui-kitten/components';
+import {Button, Card, Divider, ListItem, Text} from '@ui-kitten/components';
 import React, {useContext} from 'react';
 import {standardPadding} from 'src/styles';
 import {ChainApiContext} from 'context/ChainApiContext';
@@ -13,7 +13,7 @@ import {useQuery, useQueryClient} from 'react-query';
 import {useAccounts} from 'context/AccountsContext';
 import {useCouncilMembers} from 'src/hook/useCouncilMembers';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
-import {Proposal} from 'presentational/Proposal';
+import {ProposalInfo} from 'presentational/ProposalInfo';
 
 export function MotionsScreen() {
   const {api} = useContext(ChainApiContext);
@@ -101,48 +101,51 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
   };
 
   return (
-    <Proposal
-      proposal={proposal}
-      accessoryLeft={() => {
-        return <Text category={'h4'}>{formatNumber(votes?.index)}</Text>;
-      }}
-      accessoryRight={() => {
-        return (
-          <>
-            <Text category={'c1'}>{`Aye ${votes?.ayes.length}/${membersCount} `}</Text>
-            <Padder scale={0.5} />
-            {(() => {
-              if (data?.isMember) {
-                if (isCloseable) {
-                  return (
-                    <View>
-                      <Button status={'warning'} size={'tiny'} onPress={onPressClose}>
-                        Close
-                      </Button>
-                    </View>
-                  );
-                } else if (isVoteable) {
-                  return (
-                    <View style={motionStyle.buttons}>
-                      <Button status={'danger'} size={'tiny'} onPress={onPressNay}>
-                        Nay
-                      </Button>
-                      <Padder scale={0.5} />
-                      <Button status={'success'} size={'tiny'} onPress={onPressAye}>
-                        Aye
-                      </Button>
-                    </View>
-                  );
+    <Card style={motionStyle.container}>
+      <ListItem
+        accessoryLeft={() => {
+          return <Text category={'h4'}>{formatNumber(votes?.index)}</Text>;
+        }}
+        accessoryRight={() => {
+          return (
+            <>
+              <Text category={'c1'}>{`Aye ${votes?.ayes.length}/${membersCount} `}</Text>
+              <Padder scale={0.5} />
+              {(() => {
+                if (data?.isMember) {
+                  if (isCloseable) {
+                    return (
+                      <View>
+                        <Button status={'warning'} size={'tiny'} onPress={onPressClose}>
+                          Close
+                        </Button>
+                      </View>
+                    );
+                  } else if (isVoteable) {
+                    return (
+                      <View style={motionStyle.buttons}>
+                        <Button status={'danger'} size={'tiny'} onPress={onPressNay}>
+                          Nay
+                        </Button>
+                        <Padder scale={0.5} />
+                        <Button status={'success'} size={'tiny'} onPress={onPressAye}>
+                          Aye
+                        </Button>
+                      </View>
+                    );
+                  }
                 }
-              }
-            })()}
-          </>
-        );
-      }}
-    />
+              })()}
+            </>
+          );
+        }}
+      />
+      <ProposalInfo proposal={proposal} />
+    </Card>
   );
 }
 
 const motionStyle = StyleSheet.create({
+  container: {marginBottom: standardPadding},
   buttons: {display: 'flex', flexDirection: 'row'},
 });
