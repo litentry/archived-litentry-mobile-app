@@ -1,5 +1,5 @@
 import Identicon from '@polkadot/reactnative-identicon';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {CompositeNavigationProp, NavigationProp, useNavigation} from '@react-navigation/native';
 import {Button, Icon, Layout, ListItem, MenuItem, OverflowMenu} from '@ui-kitten/components';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
@@ -7,8 +7,8 @@ import AddressInfoBadge from 'presentational/AddressInfoBadge';
 import React, {useContext, useState} from 'react';
 import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useAccounts, Account} from 'src/context/AccountsContext';
-import {AppStackParamList} from 'src/navigation/navigation';
-import {balanceScreen} from 'src/navigation/routeKeys';
+import {AppStackParamList, DashboardStackParamList} from 'src/navigation/navigation';
+import {balanceScreen, myIdentityScreen} from 'src/navigation/routeKeys';
 import globalStyles from 'src/styles';
 import {SupportedNetworkType} from 'src/types';
 
@@ -56,9 +56,13 @@ function AccountItem({
   const {api} = useContext(ChainApiContext);
   const {currentNetwork} = useContext(NetworkContext);
   const [visible, setVisible] = useState(false);
-  const navigation = useNavigation<NavigationProp<AppStackParamList>>();
+  const navigation =
+    useNavigation<
+      CompositeNavigationProp<NavigationProp<AppStackParamList>, NavigationProp<DashboardStackParamList>>
+    >();
 
   const handleMenuItemSelect = ({row}: {row: number}) => {
+    setVisible(false);
     if (row === 0) {
       Alert.alert(
         'Confirm Account deletion',
@@ -85,6 +89,9 @@ function AccountItem({
 
     if (row === 1) {
       navigation.navigate(balanceScreen, {address: account.address});
+    }
+    if (row === 2) {
+      navigation.navigate(myIdentityScreen, {address: account.address});
     }
   };
 
@@ -118,6 +125,10 @@ function AccountItem({
           <MenuItem
             title="Show balance"
             accessoryLeft={(iconProps) => <Icon {...iconProps} name="credit-card-outline" />}
+          />
+          <MenuItem
+            title="Set identity"
+            accessoryLeft={(iconProps) => <Icon {...iconProps} name="person-add-outline" />}
           />
         </OverflowMenu>
       )}

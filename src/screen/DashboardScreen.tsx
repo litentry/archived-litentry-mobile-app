@@ -6,7 +6,6 @@ import {Button, Divider, Icon, IconProps, Layout, Text, TopNavigationAction} fro
 import {ChainApiContext} from 'context/ChainApiContext';
 import {useAccounts} from 'context/AccountsContext';
 import FadeInAnimatedView from 'presentational/FadeInAnimatedView';
-import AccountTeaser from 'layout/AccountTeaser';
 import globalStyles from 'src/styles';
 import CouncilSummaryTeaser from 'layout/CouncilSummaryTeaser';
 import TreasurySummaryTeaser from 'layout/TreasurySummaryTeaser';
@@ -45,13 +44,11 @@ function DashboardScreen({navigation}: PropTypes) {
     return <LoadingView />;
   }
 
-  const account = accounts[0]; // TODO: change this when adding multi account support
-
   return (
     <SafeView edges={noTopEdges}>
       <Divider style={styles.divider} />
       <FadeInAnimatedView>
-        {!account ? (
+        {!accounts.length ? (
           <Layout style={styles.container} level="1">
             <Button
               size="large"
@@ -63,8 +60,6 @@ function DashboardScreen({navigation}: PropTypes) {
           </Layout>
         ) : (
           <>
-            <AccountTeaser level="2" address={account.address} />
-            <Divider />
             <View style={[globalStyles.flex, styles.main]}>
               <ScrollView style={styles.scrollView}>
                 <CouncilSummaryTeaser onMorePress={() => navigation.navigate(councilScreen)} />
