@@ -11,7 +11,7 @@ import {EmptyView} from 'presentational/EmptyView';
 import Padder from 'presentational/Padder';
 import {useQuery, useQueryClient} from 'react-query';
 import {useAccounts} from 'context/AccountsContext';
-import {useCouncilMembers} from 'src/hook/useCouncilMembers';
+import {useCouncilMembers} from 'src/api/hooks/useCouncilMembers';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {ProposalInfo} from 'presentational/ProposalInfo';
 
