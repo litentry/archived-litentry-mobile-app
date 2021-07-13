@@ -22,11 +22,9 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
     <SafeView>
       <Layout style={styles.container}>
         <Layout style={styles.main}>
-          <TouchableOpacity style={globalStyles.paddedContainer} onPress={() => navigation.navigate(dashboardScreen)}>
-            <View style={styles.logoContainer}>
-              <Image source={logo} style={styles.logoImage} />
-              <Text style={styles.slogan}>Decentralized Identity</Text>
-            </View>
+          <TouchableOpacity style={styles.logoContainer} onPress={() => navigation.navigate(dashboardScreen)}>
+            <Image source={logo} style={styles.logoImage} />
+            <Text style={styles.slogan}>Decentralized Identity</Text>
           </TouchableOpacity>
           <Divider />
           <MultiAccountView />
@@ -95,7 +93,7 @@ const styles = StyleSheet.create({
   logoContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    paddingBottom: standardPadding * 2,
+    padding: standardPadding,
   },
   logoImage: {width: 50, height: 50},
   slogan: {
