@@ -1,18 +1,14 @@
-import {useQuery} from 'react-query';
-import {useApi} from 'context/ChainApiContext';
+import {ApiPromise} from '@polkadot/api';
+import useApiQuery from './useApiQuery';
 import {useAccounts} from 'context/AccountsContext';
 import {getAccountsDetail} from 'src/api/hooks/useAccountsDetail';
 
 export function useCouncilMembers() {
-  const {api} = useApi();
   const {accounts} = useAccounts();
 
-  return useQuery(
+  return useApiQuery(
     ['council-members', accounts],
-    async () => {
-      if (!api) {
-        throw new Error('Api not defined');
-      }
+    async (api: ApiPromise) => {
       const accountIds = await api.query.council.members();
       const members = await getAccountsDetail(api, accountIds);
 
