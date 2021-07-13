@@ -1,6 +1,6 @@
 import Identicon from '@polkadot/reactnative-identicon';
 import {CompositeNavigationProp, NavigationProp, useNavigation} from '@react-navigation/native';
-import {Button, Icon, ListItem, MenuItem, OverflowMenu} from '@ui-kitten/components';
+import {Button, Icon, Layout, ListItem, MenuItem, OverflowMenu} from '@ui-kitten/components';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
 import AddressInfoBadge from 'presentational/AddressInfoBadge';
@@ -17,24 +17,27 @@ export function MultiAccountView() {
   const {accounts, removeAccount} = useAccounts();
 
   return (
-    <FlatList
-      data={accounts}
-      showsVerticalScrollIndicator
-      renderItem={({item: account}) => (
-        <AccountItem key={account.address} account={account} removeAccount={removeAccount} />
-      )}
-      ListFooterComponent={() => (
-        <ListItem
-          onPress={() => navigation.navigate(addAccountScreen)}
-          title="Add Account"
-          accessoryLeft={() => <Icon style={globalStyles.icon25} name="plus-circle-outline" fill={colorGray} />}
-        />
-      )}
-    />
+    <Layout level="2" style={styles.container}>
+      <FlatList
+        data={accounts}
+        showsVerticalScrollIndicator
+        renderItem={({item: account}) => (
+          <AccountItem key={account.address} account={account} removeAccount={removeAccount} />
+        )}
+      />
+      <ListItem
+        style={styles.transparentBG}
+        onPress={() => navigation.navigate(addAccountScreen)}
+        title="Add Account"
+        accessoryLeft={() => <Icon style={globalStyles.icon25} name="plus-circle-outline" fill={colorGray} />}
+      />
+    </Layout>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {paddingHorizontal: 8, flex: 1},
+  transparentBG: {backgroundColor: 'transparent'},
   addAccountBtn: {
     flexDirection: 'row',
   },
@@ -108,6 +111,7 @@ function AccountItem({
 
   return (
     <ListItem
+      style={styles.transparentBG}
       accessoryLeft={() => <Identicon value={account.address} size={25} />}
       accessoryRight={() => (
         <OverflowMenu

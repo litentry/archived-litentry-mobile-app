@@ -1,5 +1,5 @@
 import React, {useCallback, useRef} from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Button, Divider, Icon, Layout, ListItem, Text} from '@ui-kitten/components';
 import {u8aToString} from '@polkadot/util';
 import globalStyles, {standardPadding} from 'src/styles';
@@ -27,17 +27,17 @@ function AddressInfoBadge({address, network, api}: PropTypes) {
   return (
     <>
       <TouchableOpacity onPress={onOpen}>
-        <Layout style={styles.container}>
+        <View style={styles.container}>
           <Text category="c2" selectable numberOfLines={1} style={styles.display} ellipsizeMode="middle">
             {display}
           </Text>
           <Icon name="arrow-down" style={styles.icon} fill="#ccc" animation="pulse" />
-          <Layout style={globalStyles.rowContainer}>
+          <View style={globalStyles.rowContainer}>
             {detail?.data?.judgements.map((judgement) => (
               <JudgmentStatus key={String(judgement[0])} judgement={judgement} />
             ))}
-          </Layout>
-        </Layout>
+          </View>
+        </View>
       </TouchableOpacity>
       <Portal>
         <Modalize

@@ -3,7 +3,7 @@ import {Divider, Icon, Layout, ListItem, Text, Toggle} from '@ui-kitten/componen
 import {useTheme} from 'context/ThemeContext';
 import SafeView from 'presentational/SafeView';
 import React from 'react';
-import {Image, StyleSheet, TouchableOpacity} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {MultiAccountView} from 'screen/Drawer/MultiAccountView';
 import {
   dashboardScreen,
@@ -21,15 +21,15 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
   return (
     <SafeView>
       <Layout style={styles.container}>
-        <Layout style={styles.main}>
+        <View style={styles.main}>
           <TouchableOpacity style={styles.logoContainer} onPress={() => navigation.navigate(dashboardScreen)}>
             <Image source={logo} style={styles.logoImage} />
             <Text style={styles.slogan}>Decentralized Identity</Text>
           </TouchableOpacity>
           <Divider />
           <MultiAccountView />
-        </Layout>
-        <Layout style={styles.rest} level="2">
+        </View>
+        <Layout style={styles.rest}>
           <Divider />
           <ListItem
             title="Dashboard"
@@ -37,19 +37,10 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
             onPress={() => navigation.navigate(dashboardScreen)}
           />
           <Divider />
-          <Layout style={globalStyles.paddedContainer}>
-            <Text category="h6">Settings</Text>
-          </Layout>
           <ListItem
             title="Registrars"
             accessoryLeft={(props) => <Icon {...props} name="award-outline" animation="zoom" />}
             onPress={() => navigation.navigate(registrarListScreen)}
-          />
-          <Divider />
-          <ListItem
-            title="Dark theme"
-            accessoryLeft={(props) => <Icon {...props} name="sun-outline" animation="zoom" />}
-            accessoryRight={() => <Toggle checked={theme === 'dark'} onChange={toggleTheme} />}
           />
           <Divider />
           <ListItem
@@ -62,6 +53,15 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
                 uri: 'https://www.litentry.com',
               })
             }
+          />
+          <Divider />
+          <Layout style={globalStyles.paddedContainer}>
+            <Text category="h6">Settings</Text>
+          </Layout>
+          <ListItem
+            title="Dark theme"
+            accessoryLeft={(props) => <Icon {...props} name="sun-outline" animation="zoom" />}
+            accessoryRight={() => <Toggle checked={theme === 'dark'} onChange={toggleTheme} />}
           />
           <Divider />
           <ListItem
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     fontFamily: monofontFamily,
     fontSize: 12,
   },
-  main: {maxHeight: 240},
+  main: {maxHeight: 288, flex: 1},
   rest: {flex: 1},
   backdrop: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
