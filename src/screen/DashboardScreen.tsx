@@ -17,11 +17,11 @@ import LoadingView from 'src/presentational/LoadingView';
 import NetworkSelect from 'src/layout/NetworkSelect';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {NetworkContext} from 'context/NetworkContext';
-import {AppStackParamList, DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
+import {DashboardStackParamList, DrawerParamList, ApiLoadedParamList} from 'src/navigation/navigation';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
-    CompositeNavigationProp<StackNavigationProp<DashboardStackParamList>, StackNavigationProp<AppStackParamList>>,
+    CompositeNavigationProp<StackNavigationProp<DashboardStackParamList>, StackNavigationProp<ApiLoadedParamList>>,
     DrawerNavigationProp<DrawerParamList>
   >;
 };
@@ -35,6 +35,7 @@ function DashboardScreen({navigation}: PropTypes) {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: DashboardHeaderLeft,
+      headerRight: () => <View />,
       headerTitle: () => <DashboardTitle setNetworkSelectOpen={setNetworkSelectOpen} />,
     });
   }, [navigation, setNetworkSelectOpen]);

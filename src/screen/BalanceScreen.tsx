@@ -6,7 +6,7 @@ import ModalTitle from 'presentational/ModalTitle';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {Modalize} from 'react-native-modalize';
 import {useAccounts} from 'src/context/AccountsContext';
-import {AppStackParamList} from 'src/navigation/navigation';
+import {ApiLoadedParamList, AppStackParamList} from 'src/navigation/navigation';
 import {balanceScreen} from 'src/navigation/routeKeys';
 import globalStyles from 'src/styles';
 import {ChainApiContext} from '../context/ChainApiContext';
@@ -17,7 +17,7 @@ export function BalanceScreen({
   route,
 }: {
   navigation: NavigationProp<AppStackParamList>;
-  route: RouteProp<AppStackParamList, typeof balanceScreen>;
+  route: RouteProp<ApiLoadedParamList, typeof balanceScreen>;
 }) {
   const {api} = useContext(ChainApiContext);
   const {currentNetwork} = useContext(NetworkContext);
