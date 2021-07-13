@@ -3,7 +3,7 @@ import {Divider, Icon, Layout, ListItem, Text, Toggle} from '@ui-kitten/componen
 import {useTheme} from 'context/ThemeContext';
 import SafeView from 'presentational/SafeView';
 import React from 'react';
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {MultiAccountView} from 'screen/Drawer/MultiAccountView';
 import {
   dashboardScreen,
@@ -29,8 +29,8 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
           <Divider />
           <MultiAccountView />
         </Layout>
-        <Divider />
         <Layout style={styles.rest} level="2">
+          <Divider />
           <ListItem
             title="Dashboard"
             accessoryLeft={(props) => <Icon {...props} name="browser-outline" animation="zoom" />}
@@ -89,7 +89,7 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {flex: 1, borderStartColor: 'red'},
+  container: {flex: 1},
   logoContainer: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -101,9 +101,7 @@ const styles = StyleSheet.create({
     fontFamily: monofontFamily,
     fontSize: 12,
   },
-  main: {
-    height: '35%',
-  },
+  main: {maxHeight: 240},
   rest: {flex: 1},
   backdrop: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',

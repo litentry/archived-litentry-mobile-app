@@ -1,15 +1,15 @@
 import Identicon from '@polkadot/reactnative-identicon';
 import {CompositeNavigationProp, NavigationProp, useNavigation} from '@react-navigation/native';
-import {Button, Icon, Layout, ListItem, MenuItem, OverflowMenu} from '@ui-kitten/components';
+import {Button, Icon, ListItem, MenuItem, OverflowMenu} from '@ui-kitten/components';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
 import AddressInfoBadge from 'presentational/AddressInfoBadge';
 import React, {useContext, useState} from 'react';
-import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Alert, FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useAccounts, Account} from 'src/context/AccountsContext';
 import {ApiLoadedParamList, DashboardStackParamList} from 'src/navigation/navigation';
-import {balanceScreen, myIdentityScreen} from 'src/navigation/routeKeys';
-import globalStyles from 'src/styles';
+import {addAccountScreen, balanceScreen, myIdentityScreen} from 'src/navigation/routeKeys';
+import globalStyles, {colorGray} from 'src/styles';
 import {SupportedNetworkType} from 'src/types';
 
 export function MultiAccountView() {
@@ -17,20 +17,20 @@ export function MultiAccountView() {
   const {accounts, removeAccount} = useAccounts();
 
   return (
-    <Layout>
-      {accounts.map((account) => (
+    <FlatList
+      data={accounts}
+      showsVerticalScrollIndicator
+      renderItem={({item: account}) => (
         <AccountItem key={account.address} account={account} removeAccount={removeAccount} />
-      ))}
-      <View style={styles.addAccountBtn}>
-        <Button
-          onPress={() => navigation.navigate('AddAccountScreen')}
-          accessoryLeft={(p) => <Icon {...p} name="plus-outline" />}
-          appearance="ghost"
-          size="small">
-          Add Account
-        </Button>
-      </View>
-    </Layout>
+      )}
+      ListFooterComponent={() => (
+        <ListItem
+          onPress={() => navigation.navigate(addAccountScreen)}
+          title="Add Account"
+          accessoryLeft={() => <Icon style={globalStyles.icon25} name="plus-circle-outline" fill={colorGray} />}
+        />
+      )}
+    />
   );
 }
 
