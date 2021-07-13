@@ -1,23 +1,24 @@
-import React, {useContext, useState} from 'react';
-import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
-import NetworkItem from 'presentational/NetworkItem';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {Button, Divider, Icon, IconProps, Layout, Text, TopNavigationAction} from '@ui-kitten/components';
-import {ChainApiContext} from 'context/ChainApiContext';
-import {useAccounts} from 'context/AccountsContext';
-import FadeInAnimatedView from 'presentational/FadeInAnimatedView';
-import globalStyles from 'src/styles';
-import CouncilSummaryTeaser from 'layout/CouncilSummaryTeaser';
-import TreasurySummaryTeaser from 'layout/TreasurySummaryTeaser';
-import TipsSummaryTeaser from 'layout/tips/TipsSummaryTeaser';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {addAccountScreen, councilScreen, tipsScreen, treasuryScreen} from 'src/navigation/routeKeys';
-import LoadingView from 'src/presentational/LoadingView';
-import NetworkSelect from 'src/layout/NetworkSelect';
-import SafeView, {noTopEdges} from 'presentational/SafeView';
+import {Button, Divider, Icon, IconProps, Layout, Text, TopNavigationAction} from '@ui-kitten/components';
+import {useAccounts} from 'context/AccountsContext';
+import {ChainApiContext} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
-import {DashboardStackParamList, DrawerParamList, ApiLoadedParamList} from 'src/navigation/navigation';
+import CouncilSummaryTeaser from 'layout/CouncilSummaryTeaser';
+import {ReferendaSummaryTeaser} from 'layout/ReferendaSummaryTeaser';
+import TipsSummaryTeaser from 'layout/tips/TipsSummaryTeaser';
+import TreasurySummaryTeaser from 'layout/TreasurySummaryTeaser';
+import FadeInAnimatedView from 'presentational/FadeInAnimatedView';
+import NetworkItem from 'presentational/NetworkItem';
+import SafeView, {noTopEdges} from 'presentational/SafeView';
+import React, {useContext, useState} from 'react';
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import NetworkSelect from 'src/layout/NetworkSelect';
+import {ApiLoadedParamList, DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
+import {addAccountScreen, councilScreen, referendaScreen, tipsScreen, treasuryScreen} from 'src/navigation/routeKeys';
+import LoadingView from 'src/presentational/LoadingView';
+import globalStyles from 'src/styles';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
@@ -62,6 +63,7 @@ function DashboardScreen({navigation}: PropTypes) {
           <>
             <View style={[globalStyles.flex, styles.main]}>
               <ScrollView style={styles.scrollView}>
+                <ReferendaSummaryTeaser onMorePress={() => navigation.navigate(referendaScreen)} />
                 <CouncilSummaryTeaser onMorePress={() => navigation.navigate(councilScreen)} />
                 <TreasurySummaryTeaser onMorePress={() => navigation.navigate(treasuryScreen)} />
                 <TipsSummaryTeaser onMorePress={() => navigation.navigate(tipsScreen)} />

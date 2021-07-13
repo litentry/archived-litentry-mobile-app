@@ -1,7 +1,7 @@
-import React, {createContext, useContext, useEffect, useMemo, useState} from 'react';
-import {NetworkContext} from './NetworkContext';
 import {ApiPromise, WsProvider} from '@polkadot/api';
+import React, {createContext, useContext, useEffect, useMemo, useState} from 'react';
 import {createLogger} from 'src/utils';
+import {NetworkContext} from './NetworkContext';
 
 type ApiChainStatusType = 'unknown' | 'connected' | 'disconnected' | 'ready';
 type ChainApiContextValueType = {
@@ -15,6 +15,8 @@ export const ChainApiContext = createContext<ChainApiContextValueType>({
   status: 'unknown',
   inProgress: false,
 });
+
+export const useApi = () => useContext(ChainApiContext);
 
 const logger = createLogger('ChainApiContext');
 

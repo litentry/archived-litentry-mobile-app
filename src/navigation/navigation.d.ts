@@ -12,6 +12,7 @@ import {
   motionsScreen,
   myIdentityScreen,
   notificationSettingsScreen,
+  referendaScreen,
   permissionGrantingPromptScreen,
   registrarListScreen,
   submitTipScreen,
@@ -37,6 +38,7 @@ type DashboardStackParamList = {
   [treasuryScreen]: undefined;
   [motionsScreen]: undefined;
   [myIdentityScreen]: {address: string};
+  [referendaScreen]: undefined;
 };
 
 type DrawerParamList = {
