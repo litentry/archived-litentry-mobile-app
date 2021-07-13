@@ -8,7 +8,7 @@ type Props = {
 
 export function ReferendaSummaryTeaser(props: Props) {
   return (
-    <SectionTeaserContainer onMorePress={props.onMorePress} title="Refernda">
+    <SectionTeaserContainer onMorePress={props.onMorePress} title="Referenda">
       <View />
     </SectionTeaserContainer>
   );
