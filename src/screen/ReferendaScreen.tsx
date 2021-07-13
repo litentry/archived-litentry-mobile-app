@@ -9,14 +9,14 @@ import SafeView, {noTopEdges} from 'presentational/SafeView';
 import * as React from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {useBlockTime} from 'src/hook/useBlockTime';
-import {useReferenda} from 'src/hook/useReferenda';
+import {useReferendums} from 'src/hook/useReferendums';
 import {useBestNumber} from 'src/hook/useVotingStatus';
 import {DashboardStackParamList} from 'src/navigation/navigation';
 import {referendumScreen} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
 
 export function ReferendaScreen() {
-  const {data, isLoading, refetch} = useReferenda();
+  const {data, isLoading, refetch} = useReferendums();
 
   return (
     <Layout style={globalStyles.flex}>

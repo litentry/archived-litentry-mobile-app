@@ -24,7 +24,7 @@ import {StyleSheet, View} from 'react-native';
 import {useBlockTime} from 'src/hook/useBlockTime';
 import {useConvictions} from 'src/hook/useConvictions';
 import {useFormatBalance} from 'src/hook/useFormatBalance';
-import {useReferenda} from 'src/hook/useReferenda';
+import {useReferendums} from 'src/hook/useReferendums';
 import {useBestNumber} from 'src/hook/useVotingStatus';
 import {DashboardStackParamList} from 'src/navigation/navigation';
 import {referendumScreen} from 'src/navigation/routeKeys';
@@ -39,7 +39,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const formatBalance = useFormatBalance();
-  const {data} = useReferenda();
+  const {data} = useReferendums();
   const referendum = data?.find((r) => r.index.toString() === route.params.index);
   const proposal = referendum?.image?.proposal;
 
