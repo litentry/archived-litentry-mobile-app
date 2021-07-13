@@ -12,7 +12,6 @@ import WebviewScreen from 'screen/WebviewScreen';
 import DevScreen from 'screen/DevScreen';
 import MyIdentityScreen from 'screen/MyIdentityScreen';
 import * as routeKeys from 'src/navigation/routeKeys';
-import {linking} from 'src/navigation/routeKeys';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
 import {CouncilScreen} from 'screen/Council/CouncilScreen';
@@ -25,6 +24,7 @@ import globalStyles from 'src/styles';
 import {useTheme} from 'src/context/ThemeContext';
 import {darkTheme, lightTheme} from 'src/navigation/theme';
 import {useFirebase} from 'src/hook/useFirebase';
+import {ReferendaScreen} from 'screen/ReferendaScreen';
 import {PermissionGrantingPrompt, useShowPushPermissionScreen} from 'screen/PermissionGrantingPrompt';
 import LoadingView from 'presentational/LoadingView';
 import {NavigationContainer} from '@react-navigation/native';
@@ -69,6 +69,7 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.submitTipScreen} component={SubmitTipScreen} />
       <DashboardStack.Screen name={routeKeys.motionsScreen} component={MotionsScreen} />
       <DashboardStack.Screen name={routeKeys.myIdentityScreen} component={MyIdentityScreen} />
+      <DashboardStack.Screen name={routeKeys.referendaScreen} component={ReferendaScreen} />
     </DashboardStack.Navigator>
   );
 }
@@ -113,7 +114,7 @@ function AppNavigator() {
   }
 
   return (
-    <NavigationContainer linking={linking} theme={theme === 'dark' ? darkTheme : lightTheme}>
+    <NavigationContainer linking={routeKeys.linking} theme={theme === 'dark' ? darkTheme : lightTheme}>
       <AppStack.Navigator headerMode={'none'} screenOptions={{gestureEnabled: false}}>
         {showPermissionGranting ? (
           <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen} component={PermissionGrantingPrompt} />

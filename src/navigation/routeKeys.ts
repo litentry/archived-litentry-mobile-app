@@ -21,6 +21,7 @@ export const myIdentityScreen = 'My Identity' as const;
 export const councilScreen = 'Council' as const;
 export const treasuryScreen = 'Treasury' as const;
 export const motionsScreen = 'Motions' as const;
+export const referendaScreen = 'Referenda' as const;
 
 export const linking: LinkingOptions = {
   prefixes: ['litentry://'],
@@ -37,6 +38,7 @@ export const linking: LinkingOptions = {
             initialRouteName: dashboardScreen,
             screens: {
               [treasuryScreen]: 'treasury',
+              [referendaScreen]: 'referenda',
               [tipsScreen]: 'tips',
             },
           },
