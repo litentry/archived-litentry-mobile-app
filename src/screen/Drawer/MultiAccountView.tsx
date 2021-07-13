@@ -1,11 +1,11 @@
 import Identicon from '@polkadot/reactnative-identicon';
 import {CompositeNavigationProp, NavigationProp, useNavigation} from '@react-navigation/native';
-import {Button, Icon, Layout, ListItem, MenuItem, OverflowMenu} from '@ui-kitten/components';
+import {Icon, Layout, ListItem, MenuItem, OverflowMenu} from '@ui-kitten/components';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
 import AddressInfoBadge from 'presentational/AddressInfoBadge';
 import React, {useContext, useState} from 'react';
-import {Alert, FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Alert, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
 import {useAccounts, Account} from 'src/context/AccountsContext';
 import {ApiLoadedParamList, DashboardStackParamList} from 'src/navigation/navigation';
 import {addAccountScreen, balanceScreen, myIdentityScreen} from 'src/navigation/routeKeys';
