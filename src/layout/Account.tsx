@@ -27,16 +27,17 @@ export function Account({
 
 export function useAccountIdentity(id?: string) {
   const {api} = useContext(ChainApiContext);
-  if (!id) {
-    throw new Error('Account Not Provided!');
-  }
 
   return useQuery(
     ['account_identity', id],
     async () => {
+      if (!id) {
+        return undefined;
+      }
+
       const accounts = api ? await getAccountsIdentityInfo([id], api) : undefined;
       return accounts?.[0];
     },
-    {staleTime: 1000 * 60},
+    {staleTime: 1000 * 60, enabled: !!id},
   );
 }
