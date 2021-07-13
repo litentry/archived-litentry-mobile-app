@@ -35,7 +35,6 @@ function DashboardScreen({navigation}: PropTypes) {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: DashboardHeaderLeft,
-      headerRight: DashboardHeaderRight,
       headerTitle: () => <DashboardTitle setNetworkSelectOpen={setNetworkSelectOpen} />,
     });
   }, [navigation, setNetworkSelectOpen]);
@@ -90,17 +89,6 @@ const styles = StyleSheet.create({
 });
 
 export default DashboardScreen;
-
-function DashboardHeaderRight() {
-  return (
-    <TopNavigationAction
-      onPress={() => {
-        // TODO: navigation.navigate
-      }}
-      icon={(p) => <Icon {...p} name={'credit-card-outline'} />}
-    />
-  );
-}
 
 export function DashboardHeaderLeft() {
   const navigation: PropTypes['navigation'] = useNavigation();
