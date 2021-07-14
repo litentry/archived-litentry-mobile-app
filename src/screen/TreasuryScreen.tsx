@@ -74,7 +74,7 @@ export function TreasuryScreen() {
                     </Account>
                   </View>
                   <View style={styles.row}>
-                    <Text>bond: </Text>
+                    <Text category="c1">bond: </Text>
                     <Text category={'c1'} numberOfLines={1} ellipsizeMode="middle">
                       {formatBalance(item.proposal.bond)}
                     </Text>
