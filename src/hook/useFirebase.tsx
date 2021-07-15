@@ -1,8 +1,9 @@
-import messaging from '@react-native-firebase/messaging';
+import messaging, {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
 import React from 'react';
 import {useInAppNotification, InAppNotificationContent} from 'src/context/InAppNotificationContext';
 import {useLinkTo} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native';
+import {useCallback} from 'react';
 
 async function requestUserPermission() {
   const authStatus = await messaging().requestPermission();
@@ -22,6 +23,15 @@ export function useFirebase() {
     throw new Error('InAppNotificationContext most be provided!');
   }
 
+  const handleNotifiction = useCallback(
+    async (message: FirebaseMessagingTypes.RemoteMessage | null) => {
+      if (message?.data?.deeplink) {
+        linkTo(message.data.deeplink.replace('litentry://', '/'));
+      }
+    },
+    [linkTo],
+  );
+
   React.useEffect(() => {
     // TODO: IOS would need permission
     // requestUserPermission();
@@ -30,24 +40,18 @@ export function useFirebase() {
       .getToken()
       .then((token) => console.log(`FCM TOKEN:`, token));
 
-    messaging()
-      .getInitialNotification()
-      .then((remoteMessage) => {
-        if (remoteMessage?.data?.deeplink) {
-          linkTo(remoteMessage.data.deeplink.replace('litentry://', '/'));
-        }
-      })
-      .catch(console.error);
+    messaging().getInitialNotification().then(handleNotifiction).catch(console.error);
 
-    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+    const unsubscribeFromOnNotification = messaging().onNotificationOpenedApp(handleNotifiction);
+
+    const unsubscribeFromOnMessage = messaging().onMessage(async (remoteMessage) => {
+      console.log('onMessage', remoteMessage);
       trigger({
         type: 'Component',
         renderContent: () => (
           <TouchableOpacity
             onPress={() => {
-              if (remoteMessage.data?.deeplink) {
-                linkTo(remoteMessage.data.deeplink.replace('litentry://', '/'));
-              }
+              handleNotifiction(remoteMessage);
             }}>
             <InAppNotificationContent
               title={remoteMessage.notification?.title ?? ''}
@@ -58,6 +62,9 @@ export function useFirebase() {
       });
     });
 
-    return unsubscribe;
-  }, [linkTo, trigger]);
+    return () => {
+      unsubscribeFromOnNotification();
+      unsubscribeFromOnMessage();
+    };
+  }, [handleNotifiction, trigger]);
 }
