@@ -159,7 +159,7 @@ function EmptyTippers() {
   );
 }
 
-function TipDetailScreen({navigation, route}: ScreenProps) {
+function TipDetailScreen({route}: ScreenProps) {
   const {api} = useContext(ChainApiContext);
   const hash = route.params?.hash;
   const tip = useTip(hash);
