@@ -7,7 +7,7 @@ import {u8aToString} from '@polkadot/util';
 import {ApiPromise} from '@polkadot/api';
 import {AccountId} from '@polkadot/types/interfaces';
 import Identicon from '@polkadot/reactnative-identicon';
-import {getAccountsIdentityInfo} from 'service/api/account';
+import {getAccountsIdentityInfo} from 'src/api/queryFunctions/getAccountsIdentityInfo';
 import {EmptyView} from 'presentational/EmptyView';
 import {useFormatBalance} from '../hook/useFormatBalance';
 import {useQuery} from 'react-query';
@@ -104,7 +104,7 @@ async function getTreasuryInfo(api: ApiPromise) {
       accountIds.push(p.proposal.proposer);
     }
   }
-  const accountInfos = await getAccountsIdentityInfo(accountIds, api);
+  const accountInfos = await getAccountsIdentityInfo(api, accountIds);
 
   return {proposals: proposals, accountInfos: accountInfos};
 }

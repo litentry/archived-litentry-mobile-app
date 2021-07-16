@@ -2,18 +2,16 @@ import {ApiPromise} from '@polkadot/api';
 import {Option} from '@polkadot/types';
 import {AccountId, Registration} from '@polkadot/types/interfaces';
 import {IdentityInfo} from '@polkadot/types/interfaces/identity/types';
-import {useQuery} from 'react-query';
-import {useApi} from 'context/ChainApiContext';
 
-type AccountDetail = {
+type AccountIdentityInfo = {
   accountId: AccountId | Uint8Array | string;
   info?: IdentityInfo;
   registration?: Registration;
 };
 
-export async function getAccountsDetail(api: ApiPromise, accountIds: AccountId[] | string[] | Uint8Array[]) {
+export async function getAccountsIdentityInfo(api: ApiPromise, accountIds: AccountId[] | string[] | Uint8Array[]) {
   const registrationOptions = await api.query.identity.identityOf.multi<Option<Registration>>(accountIds);
-  const accountsInfo: Array<AccountDetail> = [];
+  const accountsInfo: Array<AccountIdentityInfo> = [];
 
   for (const [index, registrationOption] of registrationOptions.entries()) {
     const registration = registrationOption.unwrapOr(undefined);
@@ -49,17 +47,3 @@ export async function getAccountsDetail(api: ApiPromise, accountIds: AccountId[]
 
   return accountsInfo;
 }
-
-function useAccountsDetail(accountIds: AccountId[] | string[] | Uint8Array[]) {
-  const {api} = useApi();
-
-  return useQuery(['accounts_detail', accountIds], async () => {
-    if (!api) {
-      throw new Error('Api not defined');
-    }
-
-    return getAccountsDetail(api, accountIds);
-  });
-}
-
-export default useAccountsDetail;
