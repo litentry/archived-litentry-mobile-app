@@ -1,24 +1,28 @@
 import React from 'react';
-import * as AsyncStorage from 'src/service/AsyncStorage';
 import {Platform} from 'react-native';
 import {usePushTopics} from './usePushTopics';
+import {useIsFirstAppStart} from 'src/hook/useIsFirstAppStart';
 
 export function useTurnOnAllNotificationsOnAppStartForAndroid() {
-  const {toggleTopic, topics} = usePushTopics();
+  const {toggleTopic, topics, isLoading: topicsLoading} = usePushTopics();
+  const {data: isFirstAppStart, isLoading: firstAppStartLoading} = useIsFirstAppStart();
+
+  const isRunnedOnceRef = React.useRef(false);
+
+  const isLoaded = !firstAppStartLoading && !topicsLoading && isFirstAppStart;
+  const shouldToggle =
+    isLoaded && isFirstAppStart && Platform.OS === 'android' && !isRunnedOnceRef.current && topics.length > 0;
+
   // toggle all topics to true on first app start
   // on IOS we will do that after push permission granted
   React.useEffect(() => {
     (async () => {
-      if (Platform.OS === 'android' && topics.length > 0) {
-        const isFirstAppStart = await AsyncStorage.getItem('is_first_app_start', false);
-
-        if (!isFirstAppStart) {
-          for (const topic of topics) {
-            toggleTopic({id: topic.id, subscribe: true});
-          }
-          AsyncStorage.setItem('is_first_app_start', true);
+      if (shouldToggle) {
+        isRunnedOnceRef.current = true;
+        for (const topic of topics) {
+          await toggleTopic({id: topic.id, subscribe: true});
         }
       }
     })();
-  }, [toggleTopic, topics]);
+  }, [shouldToggle, toggleTopic, topics]);
 }

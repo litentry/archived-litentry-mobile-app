@@ -1,4 +1,4 @@
-import {useQueryClient, useQuery, useMutation} from 'react-query';
+import {useQueryClient, useQuery, useMutation, UseMutationOptions} from 'react-query';
 import * as AsyncStorage from 'src/service/AsyncStorage';
 import messaging, {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
 import {Platform} from 'react-native';
@@ -6,7 +6,7 @@ import {usePushTopics} from './usePushTopics';
 
 const PERMISSION_GRANTING_SCREEN_SHOWN = 'PERMISSION_GRANTING_SCREEN_SHOWN';
 
-export function useGrantPermission() {
+export function useGrantPermission(options?: UseMutationOptions<boolean, unknown, void, unknown>) {
   const {toggleTopic, topics} = usePushTopics();
   const queryClient = useQueryClient();
 
@@ -24,12 +24,12 @@ export function useGrantPermission() {
 
     if (allowed) {
       for (const topic of topics) {
-        toggleTopic({id: topic.id, subscribe: true});
+        await toggleTopic({id: topic.id, subscribe: true});
       }
     }
 
     return allowed;
-  });
+  }, options);
 
   const setPermissionGrantingToShown = async () => {
     await AsyncStorage.setItem(PERMISSION_GRANTING_SCREEN_SHOWN, true);
@@ -43,11 +43,11 @@ function permissionAllowed(status: FirebaseMessagingTypes.AuthorizationStatus) {
   return status === messaging.AuthorizationStatus.AUTHORIZED || status === messaging.AuthorizationStatus.PROVISIONAL;
 }
 
-export function useShowPushPermissionScreen() {
+export function useShouldShowPushPermissionScreen() {
   const {granted, isLoading} = useGrantPermission();
 
   return useQuery(
-    'show_permission_granting_prompt',
+    'should_show_permission_granting_prompt',
     async () => {
       const hasBeenShown = await AsyncStorage.getItem(PERMISSION_GRANTING_SCREEN_SHOWN);
 

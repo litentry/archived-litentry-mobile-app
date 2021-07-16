@@ -12,25 +12,21 @@ import {useGrantPermission} from 'src/hook/useGrantPermission';
 export function PermissionGrantingPrompt({navigation}: {navigation: NavigationProp<AppStackParamList>}) {
   const routeNames = useNavigationState((state) => state.routeNames);
   const theme = useTheme();
-  const {grant, setPermissionGrantingToShown} = useGrantPermission();
+  const {grant, setPermissionGrantingToShown} = useGrantPermission({
+    onSettled: (granted) => {
+      if (granted) {
+        onSkip();
+      } else {
+        setError('Permission denied, please turn the notification on in the settings app!');
+      }
+    },
+  });
 
   const [error, setError] = useState<string>();
 
   const onSkip = () => {
     setPermissionGrantingToShown();
     navigation.navigate(routeNames.includes(appNavigatorScreen) ? appNavigatorScreen : apiLoadingScreen);
-  };
-
-  const onRequestPermissions = async () => {
-    grant(undefined, {
-      onSettled: (granted) => {
-        if (granted) {
-          onSkip();
-        } else {
-          setError('Permission denied, please turn the notification on in the settings app!');
-        }
-      },
-    });
   };
 
   return (
@@ -53,7 +49,7 @@ export function PermissionGrantingPrompt({navigation}: {navigation: NavigationPr
             </>
           ) : null}
           <Padder scale={2} />
-          <Button status={'success'} onPress={onRequestPermissions}>
+          <Button status={'success'} onPress={() => grant()}>
             Allow Notifications
           </Button>
           <Padder scale={0.5} />

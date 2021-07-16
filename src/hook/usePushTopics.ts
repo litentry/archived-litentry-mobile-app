@@ -17,7 +17,7 @@ export function usePushTopics() {
     AsyncStorage.getItem<string[]>(SELECTED_PUSH_TOPICS_QUERY_KEY, []),
   );
 
-  const {mutate: toggleTopic} = useMutation<
+  const {mutateAsync: toggleTopic} = useMutation<
     void,
     unknown,
     {id: string; subscribe: boolean},
@@ -31,9 +31,9 @@ export function usePushTopics() {
       await AsyncStorage.setItem(SELECTED_PUSH_TOPICS_QUERY_KEY, updatedData);
 
       if (subscribe) {
-        await messaging().subscribeToTopic(id);
+        messaging().subscribeToTopic(id);
       } else {
-        await messaging().unsubscribeFromTopic(id);
+        messaging().unsubscribeFromTopic(id);
       }
     },
     {
