@@ -3,11 +3,11 @@ import BN from 'bn.js';
 import {StyleSheet, Dimensions, View} from 'react-native';
 import {Select, SelectItem, Modal, Card, Text, Button, IndexPath, Input, Icon, IconProps} from '@ui-kitten/components';
 import {useRegistrars} from 'src/hook/useRegistrars';
-import {BN_ZERO, formatBalance} from '@polkadot/util';
+import {BN_ZERO} from '@polkadot/util';
 import {standardPadding, monofontFamily} from 'src/styles';
 import Identicon from '@polkadot/reactnative-identicon';
 import Padder from 'presentational/Padder';
-import {useFormatBalance} from 'src/hook/useFormatBalance';
+import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 
 const {height, width} = Dimensions.get('window');
 

@@ -9,7 +9,7 @@ import {AccountId} from '@polkadot/types/interfaces';
 import Identicon from '@polkadot/reactnative-identicon';
 import {getAccountsIdentityInfo} from 'src/api/queryFunctions/getAccountsIdentityInfo';
 import {EmptyView} from 'presentational/EmptyView';
-import {useFormatBalance} from '../hook/useFormatBalance';
+import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useQuery} from 'react-query';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 
