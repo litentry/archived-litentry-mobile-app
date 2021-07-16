@@ -1,7 +1,7 @@
+import {ApiPromise} from '@polkadot/api';
 import type {Option} from '@polkadot/types';
 import type {OpenTip, OpenTipTo225} from '@polkadot/types/interfaces';
 import useApiQuery from 'src/api/hooks/useApiQuery';
-import {ApiPromise} from '@polkadot/api';
 
 export type Tip = [string, OpenTip | OpenTipTo225];
 
