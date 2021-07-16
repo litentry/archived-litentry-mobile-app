@@ -4,7 +4,7 @@ import {standardPadding} from 'src/styles';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {formatNumber} from '@polkadot/util';
-import {useVotingStatus} from 'src/hook/useVotingStatus';
+import {useVotingStatus} from 'src/api/hooks/useVotingStatus';
 import type {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
 import {TxContext} from 'context/TxContext';
 import {EmptyView} from 'presentational/EmptyView';
