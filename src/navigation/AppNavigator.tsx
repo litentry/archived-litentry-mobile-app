@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {Icon, TopNavigationAction} from '@ui-kitten/components';
-import DrawerScreen from 'screen/DrawerScreen';
+import DrawerScreen from 'screen/Drawer/DrawerScreen';
 import DashboardScreen, {DashboardHeaderLeft} from 'screen/DashboardScreen';
 import MotionDetailScreen from 'screen/MotionDetailScreen';
 import TipsScreen from 'screen/tips/TipsScreen';
@@ -19,7 +19,12 @@ import {SubmitTipScreen} from 'screen/SubmitTipScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
-import {AppStackParamList, DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
+import {
+  ApiLoadedParamList,
+  AppStackParamList,
+  DashboardStackParamList,
+  DrawerParamList,
+} from 'src/navigation/navigation';
 import globalStyles from 'src/styles';
 import {useTheme} from 'src/context/ThemeContext';
 import {darkTheme, lightTheme} from 'src/navigation/theme';
@@ -29,6 +34,8 @@ import {ReferendumScreen} from 'screen/ReferendumScreen';
 import {PermissionGrantingPrompt, useShowPushPermissionScreen} from 'screen/PermissionGrantingPrompt';
 import LoadingView from 'presentational/LoadingView';
 import {NavigationContainer} from '@react-navigation/native';
+import {AddAccountScreen} from 'screen/AddAccountScreen/AddAccountScreen';
+import {BalanceScreen} from 'screen/BalanceScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -103,6 +110,28 @@ function DrawerNavigator() {
   );
 }
 
+const LoadedAppStack = createStackNavigator<ApiLoadedParamList>();
+
+function ApiLoadedNavigator() {
+  return (
+    <LoadedAppStack.Navigator
+      headerMode="none"
+      screenOptions={{
+        animationEnabled: false,
+        cardStyle: {
+          backgroundColor: 'transparent',
+          opacity: 1,
+        },
+        gestureEnabled: false,
+      }}
+      mode="modal">
+      <LoadedAppStack.Screen name={routeKeys.drawerNavigatorScreen} component={DrawerNavigator} />
+      <LoadedAppStack.Screen name={routeKeys.addAccountScreen} component={AddAccountScreen} />
+      <LoadedAppStack.Screen name={routeKeys.balanceScreen} component={BalanceScreen} />
+    </LoadedAppStack.Navigator>
+  );
+}
+
 const AppStack = createStackNavigator<AppStackParamList>();
 
 function AppNavigator() {
@@ -121,7 +150,7 @@ function AppNavigator() {
         {showPermissionGranting ? (
           <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen} component={PermissionGrantingPrompt} />
         ) : undefined}
-        {api ? <AppStack.Screen name={routeKeys.appNavigatorScreen} component={DrawerNavigator} /> : undefined}
+        {api ? <AppStack.Screen name={routeKeys.apiLoadedNavigatorScreen} component={ApiLoadedNavigator} /> : undefined}
         <AppStack.Screen name={routeKeys.apiLoadingScreen} component={ApiLoadingScreen} />
       </AppStack.Navigator>
     </NavigationContainer>
