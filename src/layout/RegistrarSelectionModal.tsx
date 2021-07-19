@@ -2,12 +2,12 @@ import React, {useCallback, useState} from 'react';
 import BN from 'bn.js';
 import {StyleSheet, Dimensions, View} from 'react-native';
 import {Select, SelectItem, Modal, Card, Text, Button, IndexPath, Input, Icon, IconProps} from '@ui-kitten/components';
-import {useRegistrars} from 'src/hook/useRegistrars';
-import {BN_ZERO, formatBalance} from '@polkadot/util';
+import {useRegistrars} from 'src/api/hooks/useRegistrars';
+import {BN_ZERO} from '@polkadot/util';
 import {standardPadding, monofontFamily} from 'src/styles';
 import Identicon from '@polkadot/reactnative-identicon';
 import Padder from 'presentational/Padder';
-import {formatNumberWRTDecimal} from 'src/utils';
+import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 
 const {height, width} = Dimensions.get('window');
 
@@ -18,30 +18,23 @@ type PropTypes = {
 };
 
 function RegistrarSelectionModal({onSelect, visible, onClose}: PropTypes) {
+  const formatBalance = useFormatBalance();
+  const registrars = useRegistrars();
+
   const [selectedRegistrar, setSelectedRegistrar] = useState<IndexPath | IndexPath[]>();
-  const [feeValue, setFeeValue] = useState<BN>();
+  const registrar =
+    selectedRegistrar && !Array.isArray(selectedRegistrar) ? registrars[selectedRegistrar.row] : undefined;
+
   const handleSelect = useCallback(() => {
     const index = (selectedRegistrar as IndexPath).row;
 
-    if (feeValue) {
-      onSelect(index, feeValue);
+    if (registrar) {
+      onSelect(index, registrar.fee);
     }
-  }, [onSelect, selectedRegistrar, feeValue]);
-  const registrars = useRegistrars();
+  }, [onSelect, registrar, selectedRegistrar]);
 
-  const feeDisplay = feeValue && (formatNumberWRTDecimal(feeValue).toNumber() / 10000).toString();
+  const feeDisplay = registrar ? formatBalance(registrar.fee) : '';
   const selectedRegistrarDisplay = selectedRegistrar ? `Registrar #${(selectedRegistrar as IndexPath).row}` : undefined;
-
-  const handleRegistrarSelect = useCallback(
-    (index: IndexPath | IndexPath[]) => {
-      setSelectedRegistrar(index);
-      if (registrars.length > 0) {
-        const registrar = registrars[(index as IndexPath).row];
-        setFeeValue(registrar?.fee);
-      }
-    },
-    [setSelectedRegistrar, registrars, setFeeValue],
-  );
 
   if (!registrars) {
     return null;
@@ -73,9 +66,10 @@ function RegistrarSelectionModal({onSelect, visible, onClose}: PropTypes) {
         )}>
         <Select
           label="Registrar"
+          multiSelect={false}
           selectedIndex={selectedRegistrar}
           value={selectedRegistrarDisplay}
-          onSelect={handleRegistrarSelect}>
+          onSelect={setSelectedRegistrar}>
           {registrars.map((registrar, index) => {
             return (
               <SelectItem

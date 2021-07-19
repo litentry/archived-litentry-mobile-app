@@ -15,15 +15,20 @@ import TreasurySummaryTeaser from 'layout/TreasurySummaryTeaser';
 import TipsSummaryTeaser from 'layout/tips/TipsSummaryTeaser';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {councilScreen, tipsScreen, treasuryScreen} from 'src/navigation/routeKeys';
+import {councilScreen, referendaScreen, tipsScreen, treasuryScreen} from 'src/navigation/routeKeys';
 import LoadingView from 'src/presentational/LoadingView';
 import NetworkSelect from 'src/layout/NetworkSelect';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {NetworkContext} from 'context/NetworkContext';
-import {AppStackParamList, DrawerParamList} from 'src/navigation/navigation';
+import {DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
+import SeactionTeaserContainer from 'presentational/SectionTeaserContainer';
+import {ReferendaSummaryTeaser} from 'layout/ReferendaSummaryTeaser';
 
 type PropTypes = {
-  navigation: CompositeNavigationProp<StackNavigationProp<AppStackParamList>, DrawerNavigationProp<DrawerParamList>>;
+  navigation: CompositeNavigationProp<
+    StackNavigationProp<DashboardStackParamList>,
+    DrawerNavigationProp<DrawerParamList>
+  >;
 };
 
 const AddIcon = (props: IconProps) => <Icon {...props} name="person-add-outline" />;
@@ -62,6 +67,7 @@ function DashboardScreen({navigation, accountAddProps}: PropTypes & AddAccountIn
             <Divider />
             <View style={[globalStyles.flex, styles.main]}>
               <ScrollView style={styles.scrollView}>
+                <ReferendaSummaryTeaser onMorePress={() => navigation.navigate(referendaScreen)} />
                 <CouncilSummaryTeaser onMorePress={() => navigation.navigate(councilScreen)} />
                 <TreasurySummaryTeaser onMorePress={() => navigation.navigate(treasuryScreen)} />
                 <TipsSummaryTeaser onMorePress={() => navigation.navigate(tipsScreen)} />

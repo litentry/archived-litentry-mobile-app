@@ -1,5 +1,4 @@
 import React, {useContext} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {Icon, TopNavigationAction} from '@ui-kitten/components';
@@ -20,11 +19,16 @@ import {SubmitTipScreen} from 'screen/SubmitTipScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
-import {DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
+import {AppStackParamList, DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
 import globalStyles from 'src/styles';
 import {useTheme} from 'src/context/ThemeContext';
 import {darkTheme, lightTheme} from 'src/navigation/theme';
 import {useFirebase} from 'src/hook/useFirebase';
+import {ReferendaScreen} from 'screen/ReferendaScreen';
+import {ReferendumScreen} from 'screen/ReferendumScreen';
+import {PermissionGrantingPrompt, useShowPushPermissionScreen} from 'screen/PermissionGrantingPrompt';
+import LoadingView from 'presentational/LoadingView';
+import {NavigationContainer} from '@react-navigation/native';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -66,6 +70,8 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.submitTipScreen} component={SubmitTipScreen} />
       <DashboardStack.Screen name={routeKeys.motionsScreen} component={MotionsScreen} />
       <DashboardStack.Screen name={routeKeys.myIdentityScreen} component={MyIdentityScreen} />
+      <DashboardStack.Screen name={routeKeys.referendaScreen} component={ReferendaScreen} />
+      <DashboardStack.Screen name={routeKeys.referendumScreen} component={ReferendumScreen} />
     </DashboardStack.Navigator>
   );
 }
@@ -81,7 +87,7 @@ function DrawerNavigator() {
       }}
       drawerContent={(props) => <DrawerScreen {...props} />}>
       <Drawer.Screen
-        name={routeKeys.dashboardScreen}
+        name={routeKeys.dashboardNavigator}
         component={DashboardStackNavigator}
         options={{headerShown: false}}
       />
@@ -97,34 +103,29 @@ function DrawerNavigator() {
   );
 }
 
-const AppStack = createStackNavigator();
+const AppStack = createStackNavigator<AppStackParamList>();
 
 function AppNavigator() {
   const {api} = useContext(ChainApiContext);
   const {theme} = useTheme();
 
+  const {data: showPermissionGranting, isLoading} = useShowPushPermissionScreen();
+
+  if (isLoading) {
+    return <LoadingView />;
+  }
+
   return (
-    <NavigationContainer theme={theme === 'dark' ? darkTheme : lightTheme}>
+    <NavigationContainer linking={routeKeys.linking} theme={theme === 'dark' ? darkTheme : lightTheme}>
       <AppStack.Navigator headerMode={'none'} screenOptions={{gestureEnabled: false}}>
+        {showPermissionGranting ? (
+          <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen} component={PermissionGrantingPrompt} />
+        ) : undefined}
         {api ? <AppStack.Screen name={routeKeys.appNavigatorScreen} component={DrawerNavigator} /> : undefined}
-        <AppStack.Screen name={routeKeys.apiLoadingNavigatorScreen} component={ApiLoadingNavigator} />
+        <AppStack.Screen name={routeKeys.apiLoadingScreen} component={ApiLoadingScreen} />
       </AppStack.Navigator>
     </NavigationContainer>
   );
 }
 
 export default AppNavigator;
-
-const ApiLoadingStack = createStackNavigator();
-
-function ApiLoadingNavigator() {
-  return (
-    <ApiLoadingStack.Navigator headerMode={'none'} mode={'modal'} screenOptions={{gestureEnabled: false}}>
-      <ApiLoadingStack.Screen
-        name={routeKeys.apiLoadingScreen}
-        component={ApiLoadingScreen}
-        options={{gestureEnabled: false}}
-      />
-    </ApiLoadingStack.Navigator>
-  );
-}

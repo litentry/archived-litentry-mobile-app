@@ -39,7 +39,7 @@ export function NotificationSettingsScreen({}: PropTypes) {
               />
             ))
           )}
-          <Padder scale={2} />
+          <Padder scale={1} />
           <Divider />
         </View>
         <ListItem
@@ -59,10 +59,9 @@ const styles = StyleSheet.create({
 });
 
 const TOPICS = [
-  {id: 'REF_VOTE', label: 'Vote on Active Referenda'},
-  {id: 'COUNCIL_VOTE', label: 'Vote for Council Election'},
-  {id: 'EMERGENCY_VOTE', label: 'Vote for Emergency Proposals'},
-  {id: 'TREASURY_VOTE', label: 'Vote for Treasury Proposals'},
+  {id: 'treasury.Proposed', label: 'New Treasury Proposal'},
+  {id: 'tips.NewTip', label: 'Tip Suggestion'},
+  {id: 'democracy.Started', label: 'New referendum has begun!'},
 ];
 
 function useTopics() {
@@ -72,8 +71,13 @@ function useTopics() {
     AsyncStorage.getItem<string[]>('selected_push_topics', []),
   );
 
-  const {mutate: toggleTopic} = useMutation(
-    async ({id, subscribe}: {id: string; subscribe: boolean}) => {
+  const {mutate: toggleTopic} = useMutation<
+    void,
+    unknown,
+    {id: string; subscribe: boolean},
+    {previousTopics: string[]}
+  >(
+    async ({id, subscribe}) => {
       if (!data) {
         throw new Error('DATA NOT LOADED YET!');
       }
@@ -94,17 +98,20 @@ function useTopics() {
        * */
       onMutate: async ({id, subscribe}) => {
         await queryClient.cancelQueries('selected_push_topics');
-        const previousTopics = queryClient.getQueryData('selected_push_topics');
-        queryClient.setQueryData<string[]>('selected_push_topics', (data) => {
-          if (!data) {
+        const previousTopics = queryClient.getQueryData<string[]>('selected_push_topics') ?? [];
+        queryClient.setQueryData<string[]>('selected_push_topics', (previousData) => {
+          if (!previousData) {
             return [];
           }
-          return subscribe ? [...data, id] : data.filter((t) => t !== id);
+          return subscribe ? [...previousData, id] : previousData.filter((t) => t !== id);
         });
         return {previousTopics};
       },
-      onError: (err, vars, context: any) => {
-        queryClient.setQueryData('selected_push_topics', context.previousTopics);
+      onError: (err, vars, context) => {
+        console.error(err);
+        if (context?.previousTopics) {
+          queryClient.setQueryData('selected_push_topics', context.previousTopics);
+        }
       },
     },
   );
