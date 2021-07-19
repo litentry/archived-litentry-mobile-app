@@ -1,6 +1,6 @@
 import {useApi} from 'context/ChainApiContext';
 import {useQuery} from 'react-query';
-import {getAccountsIdentityInfo} from 'src/service/api/account';
+import {getAccountIdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 
 export function useAccountIdentity(id?: string) {
   const {api} = useApi();
@@ -12,8 +12,8 @@ export function useAccountIdentity(id?: string) {
         return undefined;
       }
 
-      const accounts = api ? await getAccountsIdentityInfo([id], api) : undefined;
-      return accounts?.[0];
+      const account = api ? await getAccountIdentityInfo(api, id) : undefined;
+      return account;
     },
     {staleTime: 1000 * 60, enabled: !!id},
   );

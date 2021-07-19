@@ -106,5 +106,7 @@ function reducer(state: State, action: Action): State {
       return {...state, beneficiary: action.payload};
     case 'SET_REASON':
       return {...state, reason: action.payload};
+    default:
+      return state;
   }
 }
