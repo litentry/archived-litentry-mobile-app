@@ -1,33 +1,19 @@
-import React, {useState} from 'react';
 import {Button, Icon, Layout, Text, useTheme} from '@ui-kitten/components';
-import SafeView from 'presentational/SafeView';
-import {StyleSheet, View} from 'react-native';
-import globalStyles, {standardPadding} from 'src/styles';
 import Padder from 'presentational/Padder';
-import {NavigationProp, useNavigationState} from '@react-navigation/native';
-import {AppStackParamList} from 'src/navigation/navigation';
-import {apiLoadingScreen, appNavigatorScreen} from 'src/navigation/routeKeys';
+import SafeView from 'presentational/SafeView';
+import React, {useState} from 'react';
+import {useEffect} from 'react';
+import {StyleSheet, View} from 'react-native';
 import {usePushNotificationsPermissions} from 'src/hook/usePushNotificationsPermissions';
+import globalStyles, {standardPadding} from 'src/styles';
 
-export function PermissionGrantingPrompt({navigation}: {navigation: NavigationProp<AppStackParamList>}) {
-  const routeNames = useNavigationState((state) => state.routeNames);
+export function PermissionGrantingPrompt() {
   const theme = useTheme();
-  const {requestPermissions, setPermissionGrantingToShown} = usePushNotificationsPermissions({
-    onSettled: (granted) => {
-      if (granted) {
-        onSkip();
-      } else {
-        setError('Permission denied, please turn the notification on in the settings app!');
-      }
-    },
-  });
+
+  const {requestPermissions} = usePushNotificationsPermissions();
+  useEffect(() => requestPermissions(), [requestPermissions]);
 
   const [error, setError] = useState<string>();
-
-  const onSkip = () => {
-    setPermissionGrantingToShown();
-    navigation.navigate(routeNames.includes(appNavigatorScreen) ? appNavigatorScreen : apiLoadingScreen);
-  };
 
   return (
     <Layout style={globalStyles.flex}>
@@ -49,11 +35,20 @@ export function PermissionGrantingPrompt({navigation}: {navigation: NavigationPr
             </>
           ) : null}
           <Padder scale={2} />
-          <Button status={'success'} onPress={() => requestPermissions()}>
+          <Button
+            status={'success'}
+            onPress={() =>
+              requestPermissions(undefined, {
+                onError(e) {
+                  console.log(e);
+                  setError('Permission denied, please turn the notification on in the settings app!');
+                },
+              })
+            }>
             Allow Notifications
           </Button>
           <Padder scale={0.5} />
-          <Button appearance={'ghost'} status={'success'} onPress={onSkip}>
+          <Button appearance={'ghost'} status={'success'}>
             Skip
           </Button>
         </View>

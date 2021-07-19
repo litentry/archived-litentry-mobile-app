@@ -1,56 +1,46 @@
-import {useQueryClient, useQuery, useMutation, UseMutationOptions} from 'react-query';
-import * as AsyncStorage from 'src/service/AsyncStorage';
+import {useQueryClient, useQuery, useMutation} from 'react-query';
 import messaging, {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
-import {Platform} from 'react-native';
 import {usePushTopics} from './usePushTopics';
 
-const PERMISSION_GRANTING_SCREEN_SHOWN = 'PERMISSION_GRANTING_SCREEN_SHOWN';
-
-export function usePushNotificationsPermissions(options?: UseMutationOptions<boolean, unknown, void, unknown>) {
+export function usePushNotificationsPermissions() {
   const {subscribeToAllTopics} = usePushTopics();
   const queryClient = useQueryClient();
 
-  const {data: hasPermissions, isLoading} = useQuery('permission_granted', async () => {
-    if (Platform.OS === 'android') {
-      return true;
-    }
+  const {pushAuthorizationStatus} = usePushAuthorizationStatus();
 
-    return Platform.OS === 'ios' && permissionAllowed(await messaging().hasPermission());
-  });
+  const {mutate: requestPermissions} = useMutation(
+    async () => {
+      const status = await messaging().requestPermission();
+      const allowed = permissionAllowed(status);
 
-  const {mutate: requestPermissions} = useMutation(async () => {
-    const status = await messaging().requestPermission();
-    const allowed = permissionAllowed(status);
+      if (allowed) {
+        subscribeToAllTopics();
+      }
 
-    if (allowed) {
-      subscribeToAllTopics();
-    }
+      return allowed;
+    },
+    {
+      onSettled() {
+        queryClient.invalidateQueries('push_authorization_status');
+      },
+    },
+  );
 
-    return allowed;
-  }, options);
-
-  const setPermissionGrantingToShown = async () => {
-    await AsyncStorage.setItem(PERMISSION_GRANTING_SCREEN_SHOWN, true);
-    queryClient.invalidateQueries('permission_granted');
+  return {
+    requestPermissions,
+    hasPermissions: pushAuthorizationStatus && permissionAllowed(pushAuthorizationStatus),
   };
-
-  return {requestPermissions, setPermissionGrantingToShown, hasPermissions, isLoading};
 }
 
 function permissionAllowed(status: FirebaseMessagingTypes.AuthorizationStatus) {
   return status === messaging.AuthorizationStatus.AUTHORIZED || status === messaging.AuthorizationStatus.PROVISIONAL;
 }
 
-export function useShouldShowPushPermissionScreen() {
-  const {hasPermissions, isLoading} = usePushNotificationsPermissions();
-
-  return useQuery(
-    'should_show_permission_granting_prompt',
-    async () => {
-      const hasBeenShown = await AsyncStorage.getItem(PERMISSION_GRANTING_SCREEN_SHOWN);
-
-      return Platform.OS === 'ios' && !hasPermissions && !hasBeenShown;
-    },
-    {enabled: !isLoading},
+export function usePushAuthorizationStatus() {
+  // use query is used here to ensure the query is invalidated when the user changes permissions
+  const {data: pushAuthorizationStatus, isLoading} = useQuery('push_authorization_status', () =>
+    messaging().hasPermission(),
   );
+
+  return {pushAuthorizationStatus, isLoading};
 }

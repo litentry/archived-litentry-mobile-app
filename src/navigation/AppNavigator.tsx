@@ -29,8 +29,9 @@ import {ReferendumScreen} from 'screen/ReferendumScreen';
 import {PermissionGrantingPrompt} from 'screen/PermissionGrantingPrompt';
 import LoadingView from 'presentational/LoadingView';
 import {NavigationContainer} from '@react-navigation/native';
-import {useShouldShowPushPermissionScreen} from 'src/hook/usePushNotificationsPermissions';
+import {usePushAuthorizationStatus} from 'src/hook/usePushNotificationsPermissions';
 import {useTurnOnAllNotificationsOnAppStartForAndroid} from 'src/hook/useTurnOnAllNotificationsOnAppStartForAndroid';
+import messaging from '@react-native-firebase/messaging';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -115,7 +116,7 @@ function AppNavigator() {
   useTurnOnAllNotificationsOnAppStartForAndroid();
   // End: app start hooks
 
-  const {data: showPermissionGranting, isLoading} = useShouldShowPushPermissionScreen();
+  const {pushAuthorizationStatus, isLoading} = usePushAuthorizationStatus();
 
   if (isLoading) {
     return <LoadingView />;
@@ -124,7 +125,7 @@ function AppNavigator() {
   return (
     <NavigationContainer linking={routeKeys.linking} theme={theme === 'dark' ? darkTheme : lightTheme}>
       <AppStack.Navigator headerMode={'none'} screenOptions={{gestureEnabled: false}}>
-        {showPermissionGranting ? (
+        {pushAuthorizationStatus && pushAuthorizationStatus === messaging.AuthorizationStatus.NOT_DETERMINED ? (
           <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen} component={PermissionGrantingPrompt} />
         ) : undefined}
         {api ? <AppStack.Screen name={routeKeys.appNavigatorScreen} component={DrawerNavigator} /> : undefined}
