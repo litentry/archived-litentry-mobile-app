@@ -69,8 +69,7 @@
     "readable-stream": "^1.0.33",
     "rn-nodeify": "^10.3.0",
     "stream-browserify": "^3.0.0",
-    "url": "^0.11.0",
-    "util": "^0.10.4"
+    "url": "^0.11.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
