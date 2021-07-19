@@ -6,11 +6,11 @@ import {usePushTopics} from './usePushTopics';
 
 const PERMISSION_GRANTING_SCREEN_SHOWN = 'PERMISSION_GRANTING_SCREEN_SHOWN';
 
-export function useGrantPermission(options?: UseMutationOptions<boolean, unknown, void, unknown>) {
+export function usePushNotificationsPermissions(options?: UseMutationOptions<boolean, unknown, void, unknown>) {
   const {toggleTopic, topics} = usePushTopics();
   const queryClient = useQueryClient();
 
-  const {data: granted, isLoading} = useQuery('permission_granted', async () => {
+  const {data: hasPermissions, isLoading} = useQuery('permission_granted', async () => {
     if (Platform.OS === 'android') {
       return true;
     }
@@ -18,7 +18,7 @@ export function useGrantPermission(options?: UseMutationOptions<boolean, unknown
     return Platform.OS === 'ios' && permissionAllowed(await messaging().hasPermission());
   });
 
-  const {mutate: grant} = useMutation(async () => {
+  const {mutate: requestPermissions} = useMutation(async () => {
     const status = await messaging().requestPermission();
     const allowed = permissionAllowed(status);
 
@@ -36,7 +36,7 @@ export function useGrantPermission(options?: UseMutationOptions<boolean, unknown
     queryClient.invalidateQueries('permission_granted');
   };
 
-  return {grant, setPermissionGrantingToShown, granted, isLoading};
+  return {requestPermissions, setPermissionGrantingToShown, hasPermissions, isLoading};
 }
 
 function permissionAllowed(status: FirebaseMessagingTypes.AuthorizationStatus) {
@@ -44,14 +44,14 @@ function permissionAllowed(status: FirebaseMessagingTypes.AuthorizationStatus) {
 }
 
 export function useShouldShowPushPermissionScreen() {
-  const {granted, isLoading} = useGrantPermission();
+  const {hasPermissions, isLoading} = usePushNotificationsPermissions();
 
   return useQuery(
     'should_show_permission_granting_prompt',
     async () => {
       const hasBeenShown = await AsyncStorage.getItem(PERMISSION_GRANTING_SCREEN_SHOWN);
 
-      return Platform.OS === 'ios' && !granted && !hasBeenShown;
+      return Platform.OS === 'ios' && !hasPermissions && !hasBeenShown;
     },
     {enabled: !isLoading},
   );

@@ -29,7 +29,7 @@ import {ReferendumScreen} from 'screen/ReferendumScreen';
 import {PermissionGrantingPrompt} from 'screen/PermissionGrantingPrompt';
 import LoadingView from 'presentational/LoadingView';
 import {NavigationContainer} from '@react-navigation/native';
-import {useShouldShowPushPermissionScreen} from 'src/hook/useGrantPermission';
+import {useShouldShowPushPermissionScreen} from 'src/hook/usePushNotificationsPermissions';
 import {useTurnOnAllNotificationsOnAppStartForAndroid} from 'src/hook/useTurnOnAllNotificationsOnAppStartForAndroid';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();

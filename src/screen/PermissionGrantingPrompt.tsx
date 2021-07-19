@@ -7,12 +7,12 @@ import Padder from 'presentational/Padder';
 import {NavigationProp, useNavigationState} from '@react-navigation/native';
 import {AppStackParamList} from 'src/navigation/navigation';
 import {apiLoadingScreen, appNavigatorScreen} from 'src/navigation/routeKeys';
-import {useGrantPermission} from 'src/hook/useGrantPermission';
+import {usePushNotificationsPermissions} from 'src/hook/usePushNotificationsPermissions';
 
 export function PermissionGrantingPrompt({navigation}: {navigation: NavigationProp<AppStackParamList>}) {
   const routeNames = useNavigationState((state) => state.routeNames);
   const theme = useTheme();
-  const {grant, setPermissionGrantingToShown} = useGrantPermission({
+  const {requestPermissions, setPermissionGrantingToShown} = usePushNotificationsPermissions({
     onSettled: (granted) => {
       if (granted) {
         onSkip();
@@ -49,7 +49,7 @@ export function PermissionGrantingPrompt({navigation}: {navigation: NavigationPr
             </>
           ) : null}
           <Padder scale={2} />
-          <Button status={'success'} onPress={() => grant()}>
+          <Button status={'success'} onPress={() => requestPermissions()}>
             Allow Notifications
           </Button>
           <Padder scale={0.5} />
