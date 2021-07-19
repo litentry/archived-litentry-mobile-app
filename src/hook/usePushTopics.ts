@@ -1,6 +1,7 @@
 import {useQueryClient, useQuery, useMutation} from 'react-query';
 import * as AsyncStorage from 'src/service/AsyncStorage';
 import messaging from '@react-native-firebase/messaging';
+import {useCallback, useMemo} from 'react';
 
 export const PUSH_NOTIFICATION_TOPICS = [
   {id: 'treasury.Proposed', label: 'New Treasury Proposal'},
@@ -63,9 +64,18 @@ export function usePushTopics() {
     },
   );
 
+  const topics = useMemo(() => PUSH_NOTIFICATION_TOPICS.map((t) => ({...t, selected: !!data?.includes(t.id)})), [data]);
+
+  const subscribeToAllTopics = useCallback(async () => {
+    for (const topic of topics) {
+      await toggleTopic({id: topic.id, subscribe: true});
+    }
+  }, [topics, toggleTopic]);
+
   return {
-    topics: PUSH_NOTIFICATION_TOPICS.map((t) => ({...t, selected: !!data?.includes(t.id)})),
+    topics,
     toggleTopic,
+    subscribeToAllTopics,
     isError,
     isLoading,
   };

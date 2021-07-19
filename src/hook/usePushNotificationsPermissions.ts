@@ -7,7 +7,7 @@ import {usePushTopics} from './usePushTopics';
 const PERMISSION_GRANTING_SCREEN_SHOWN = 'PERMISSION_GRANTING_SCREEN_SHOWN';
 
 export function usePushNotificationsPermissions(options?: UseMutationOptions<boolean, unknown, void, unknown>) {
-  const {toggleTopic, topics} = usePushTopics();
+  const {subscribeToAllTopics} = usePushTopics();
   const queryClient = useQueryClient();
 
   const {data: hasPermissions, isLoading} = useQuery('permission_granted', async () => {
@@ -23,9 +23,7 @@ export function usePushNotificationsPermissions(options?: UseMutationOptions<boo
     const allowed = permissionAllowed(status);
 
     if (allowed) {
-      for (const topic of topics) {
-        await toggleTopic({id: topic.id, subscribe: true});
-      }
+      subscribeToAllTopics();
     }
 
     return allowed;
