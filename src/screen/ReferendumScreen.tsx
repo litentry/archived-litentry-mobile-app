@@ -29,7 +29,7 @@ import {useBestNumber} from 'src/api/hooks/useVotingStatus';
 import {DashboardStackParamList} from 'src/navigation/navigation';
 import {referendumScreen} from 'src/navigation/routeKeys';
 import {formatCallMeta} from 'src/packages/call_inspector/CallInspector';
-import {getBalanceFromString} from 'src/service/api/balance';
+import {getBalanceFromString} from 'src/api/utils/balance';
 import globalStyles, {standardPadding} from 'src/styles';
 
 export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
