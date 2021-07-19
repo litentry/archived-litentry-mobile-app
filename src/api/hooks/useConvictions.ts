@@ -1,6 +1,6 @@
 import BN from 'bn.js';
 import {useApi} from 'context/ChainApiContext';
-import {useBlockTime} from 'src/hook/useBlockTime';
+import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import {BN_THOUSAND} from '@polkadot/util';
 
 /**
