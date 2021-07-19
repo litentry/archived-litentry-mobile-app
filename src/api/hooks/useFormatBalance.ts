@@ -1,4 +1,3 @@
-import {Balance} from '@polkadot/types/interfaces';
 import {useContext, useMemo} from 'react';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {Registry} from '@polkadot/types/types';
@@ -15,7 +14,7 @@ export function useFormatBalance() {
   const {api} = useContext(ChainApiContext);
   const formatInfo = useMemo(() => (api ? getFormat(api.registry) : undefined), [api]);
 
-  return (value: Balance) => {
+  return (value: Compact<any> | BN | string) => {
     if (!formatInfo) {
       return undefined;
     }
