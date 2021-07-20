@@ -1,41 +1,44 @@
-import React, {useContext} from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import messaging from '@react-native-firebase/messaging';
 import {createDrawerNavigator} from '@react-navigation/drawer';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 import {Icon, TopNavigationAction} from '@ui-kitten/components';
-import DrawerScreen from 'screen/Drawer/DrawerScreen';
-import DashboardScreen, {DashboardHeaderLeft} from 'screen/DashboardScreen';
-import MotionDetailScreen from 'screen/MotionDetailScreen';
-import TipsScreen from 'screen/tips/TipsScreen';
-import TipDetailScreen from 'screen/tips/TipDetailScreen';
-import RegistrarListScreen from 'screen/RegistrarListScreen';
-import WebviewScreen from 'screen/WebviewScreen';
-import DevScreen from 'screen/DevScreen';
-import MyIdentityScreen from 'screen/MyIdentityScreen';
-import * as routeKeys from 'src/navigation/routeKeys';
 import {ChainApiContext} from 'context/ChainApiContext';
+import LoadingView from 'presentational/LoadingView';
+import React, {useContext} from 'react';
+import {AddAccountScreen} from 'screen/AddAccountScreen/AddAccountScreen';
 import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
+import {BalanceScreen} from 'screen/BalanceScreen';
 import {CouncilScreen} from 'screen/Council/CouncilScreen';
-import {SubmitTipScreen} from 'screen/SubmitTipScreen';
-import {TreasuryScreen} from 'screen/TreasuryScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
+import DashboardScreen, {DashboardHeaderLeft} from 'screen/DashboardScreen';
+import DevScreen from 'screen/DevScreen';
+import DrawerScreen from 'screen/Drawer/DrawerScreen';
+import MotionDetailScreen from 'screen/MotionDetailScreen';
+import MyIdentityScreen from 'screen/MyIdentityScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
+import {PermissionGrantingPrompt} from 'screen/PermissionGrantingPrompt';
+import {ReferendaScreen} from 'screen/ReferendaScreen';
+import {ReferendumScreen} from 'screen/ReferendumScreen';
+import RegistrarListScreen from 'screen/RegistrarListScreen';
+import {SubmitTipScreen} from 'screen/SubmitTipScreen';
+import TipDetailScreen from 'screen/tips/TipDetailScreen';
+import TipsScreen from 'screen/tips/TipsScreen';
+import {TreasuryScreen} from 'screen/TreasuryScreen';
+import WebviewScreen from 'screen/WebviewScreen';
+import {useTheme} from 'src/context/ThemeContext';
+import {useFirebase} from 'src/hook/useFirebase';
+import {usePushAuthorizationStatus} from 'src/hook/usePushNotificationsPermissions';
+import {useTurnOnAllNotificationsOnAppStartForAndroid} from 'src/hook/useTurnOnAllNotificationsOnAppStartForAndroid';
 import {
   ApiLoadedParamList,
   AppStackParamList,
   DashboardStackParamList,
   DrawerParamList,
 } from 'src/navigation/navigation';
-import globalStyles from 'src/styles';
-import {useTheme} from 'src/context/ThemeContext';
+import * as routeKeys from 'src/navigation/routeKeys';
 import {darkTheme, lightTheme} from 'src/navigation/theme';
-import {useFirebase} from 'src/hook/useFirebase';
-import {ReferendaScreen} from 'screen/ReferendaScreen';
-import {ReferendumScreen} from 'screen/ReferendumScreen';
-import {PermissionGrantingPrompt, useShowPushPermissionScreen} from 'screen/PermissionGrantingPrompt';
-import LoadingView from 'presentational/LoadingView';
-import {NavigationContainer} from '@react-navigation/native';
-import {AddAccountScreen} from 'screen/AddAccountScreen/AddAccountScreen';
-import {BalanceScreen} from 'screen/BalanceScreen';
+import globalStyles from 'src/styles';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -138,7 +141,11 @@ function AppNavigator() {
   const {api} = useContext(ChainApiContext);
   const {theme} = useTheme();
 
-  const {data: showPermissionGranting, isLoading} = useShowPushPermissionScreen();
+  // Start: app start hooks
+  useTurnOnAllNotificationsOnAppStartForAndroid();
+  // End: app start hooks
+
+  const {pushAuthorizationStatus, isLoading} = usePushAuthorizationStatus();
 
   if (isLoading) {
     return <LoadingView />;
@@ -147,7 +154,7 @@ function AppNavigator() {
   return (
     <NavigationContainer linking={routeKeys.linking} theme={theme === 'dark' ? darkTheme : lightTheme}>
       <AppStack.Navigator headerMode={'none'} screenOptions={{gestureEnabled: false}}>
-        {showPermissionGranting ? (
+        {pushAuthorizationStatus && pushAuthorizationStatus === messaging.AuthorizationStatus.NOT_DETERMINED ? (
           <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen} component={PermissionGrantingPrompt} />
         ) : undefined}
         {api ? <AppStack.Screen name={routeKeys.apiLoadedNavigatorScreen} component={ApiLoadedNavigator} /> : undefined}
