@@ -1,12 +1,11 @@
-import React from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
-import {Divider} from '@ui-kitten/components';
-import {useTips} from 'src/hook/useTips';
 import {TipTeaser} from 'layout/tips/TipTeaser';
 import {EmptyView} from 'presentational/EmptyView';
-import globalStyles from 'src/styles';
 import LoadingView from 'presentational/LoadingView';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
+import React from 'react';
+import {FlatList, StyleSheet, View} from 'react-native';
+import {useTips} from 'src/api/hooks/useTips';
+import globalStyles from 'src/styles';
 
 function TipsScreen() {
   const {data: tips, isLoading} = useTips();

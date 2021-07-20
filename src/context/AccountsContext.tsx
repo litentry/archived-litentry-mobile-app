@@ -4,7 +4,7 @@ import {SupportedNetworkType} from 'src/types';
 import {NetworkContext} from 'src/context/NetworkContext';
 import {usePersistedState} from 'src/hook/usePersistedState';
 
-type Account = {
+export type Account = {
   address: string;
   name: string;
 };
@@ -121,4 +121,8 @@ function useAccounts() {
   return context;
 }
 
-export {AccountsProvider, useAccounts};
+function getAccountDisplayValue(account: Account) {
+  return account.name ? account.name : account.address;
+}
+
+export {AccountsProvider, useAccounts, getAccountDisplayValue};

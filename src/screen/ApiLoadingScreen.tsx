@@ -25,7 +25,7 @@ export function ApiLoadingScreen({
 
   React.useEffect(() => {
     const selectedNetwork = availableNetworks.find((n) => n.key === route.params?.network) ?? currentNetwork;
-    if (selectedNetwork !== currentNetwork) {
+    if (selectedNetwork.key !== currentNetwork.key) {
       select(selectedNetwork);
     } else if (api) {
       if (!route.params) {

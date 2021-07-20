@@ -1,10 +1,13 @@
 import {
+  addAccountScreen,
   apiLoadingScreen,
-  appNavigatorScreen,
+  apiLoadedNavigatorScreen,
+  balanceScreen,
   councilScreen,
   dashboardNavigator,
   dashboardScreen,
   devScreen,
+  drawerNavigatorScreen,
   motionDetailScreen,
   motionsScreen,
   myIdentityScreen,
@@ -17,6 +20,7 @@ import {
   tipsScreen,
   treasuryScreen,
   webviewScreen,
+  referendumScreen,
 } from 'src/navigation/routeKeys';
 import {SupportedNetworkType} from 'src/types';
 
@@ -36,6 +40,7 @@ type DashboardStackParamList = {
   [motionsScreen]: undefined;
   [myIdentityScreen]: {address: string};
   [referendaScreen]: undefined;
+  [referendumScreen]: {index: string};
 };
 
 type DrawerParamList = {
@@ -46,10 +51,16 @@ type DrawerParamList = {
   [notificationSettingsScreen]: undefined;
 };
 
+type ApiLoadedParamList = {
+  [drawerNavigatorScreen]: undefined;
+  [addAccountScreen]: undefined;
+  [balanceScreen]: {address: string};
+};
+
 type AppStackParamList = {
-  [appNavigatorScreen]: undefined;
+  [apiLoadedNavigatorScreen]: undefined;
   [apiLoadingScreen]: {network: SupportedNetworkType; redirectTo: string | null} | undefined;
   [permissionGrantingPromptScreen]: undefined;
 };
 
-type CompleteNavigatorParamList = AppStackParamList & DrawerParamList & DashboardStackParamList;
+type CompleteNavigatorParamList = AppStackParamList & DrawerParamList & ApiLoadedParamList & DashboardStackParamList;
