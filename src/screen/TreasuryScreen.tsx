@@ -56,7 +56,6 @@ export function TreasuryScreen() {
                     </Text>
                     <View style={styles.itemRight}>
                       <Text category={'c2'}>{formatBalance(item.proposal.value)}</Text>
-                      {/* <Icon name={'arrow-right-outline'} style={globalStyles.icon} fill={theme['color-basic-500']} /> */}
                     </View>
                   </View>
                   <View style={styles.row}>
