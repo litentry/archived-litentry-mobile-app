@@ -1,8 +1,7 @@
 import {Button, Icon, Layout, Text, useTheme} from '@ui-kitten/components';
 import Padder from 'presentational/Padder';
 import SafeView from 'presentational/SafeView';
-import React, {useState} from 'react';
-import {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {usePushNotificationsPermissions} from 'src/hook/usePushNotificationsPermissions';
 import globalStyles, {standardPadding} from 'src/styles';
@@ -12,7 +11,6 @@ export function PermissionGrantingPrompt() {
 
   const {requestPermissions} = usePushNotificationsPermissions();
   useEffect(() => requestPermissions(), [requestPermissions]);
-
   const [error, setError] = useState<string>();
 
   return (

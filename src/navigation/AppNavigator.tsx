@@ -1,37 +1,44 @@
-import React, {useContext} from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import messaging from '@react-native-firebase/messaging';
 import {createDrawerNavigator} from '@react-navigation/drawer';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 import {Icon, TopNavigationAction} from '@ui-kitten/components';
-import DrawerScreen from 'screen/DrawerScreen';
-import DashboardScreen, {DashboardHeaderLeft} from 'screen/DashboardScreen';
-import MotionDetailScreen from 'screen/MotionDetailScreen';
-import TipsScreen from 'screen/tips/TipsScreen';
-import TipDetailScreen from 'screen/tips/TipDetailScreen';
-import RegistrarListScreen from 'screen/RegistrarListScreen';
-import WebviewScreen from 'screen/WebviewScreen';
-import DevScreen from 'screen/DevScreen';
-import MyIdentityScreen from 'screen/MyIdentityScreen';
-import * as routeKeys from 'src/navigation/routeKeys';
 import {ChainApiContext} from 'context/ChainApiContext';
+import LoadingView from 'presentational/LoadingView';
+import React, {useContext} from 'react';
+import {AddAccountScreen} from 'screen/AddAccountScreen/AddAccountScreen';
 import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
+import {BalanceScreen} from 'screen/BalanceScreen';
 import {CouncilScreen} from 'screen/Council/CouncilScreen';
-import {SubmitTipScreen} from 'screen/SubmitTipScreen';
-import {TreasuryScreen} from 'screen/TreasuryScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
+import DashboardScreen, {DashboardHeaderLeft} from 'screen/DashboardScreen';
+import DevScreen from 'screen/DevScreen';
+import DrawerScreen from 'screen/Drawer/DrawerScreen';
+import MotionDetailScreen from 'screen/MotionDetailScreen';
+import MyIdentityScreen from 'screen/MyIdentityScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
-import {AppStackParamList, DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
-import globalStyles from 'src/styles';
-import {useTheme} from 'src/context/ThemeContext';
-import {darkTheme, lightTheme} from 'src/navigation/theme';
-import {useFirebase} from 'src/hook/useFirebase';
+import {PermissionGrantingPrompt} from 'screen/PermissionGrantingPrompt';
 import {ReferendaScreen} from 'screen/ReferendaScreen';
 import {ReferendumScreen} from 'screen/ReferendumScreen';
-import {PermissionGrantingPrompt} from 'screen/PermissionGrantingPrompt';
-import LoadingView from 'presentational/LoadingView';
-import {NavigationContainer} from '@react-navigation/native';
+import RegistrarListScreen from 'screen/RegistrarListScreen';
+import {SubmitTipScreen} from 'screen/SubmitTipScreen';
+import TipDetailScreen from 'screen/tips/TipDetailScreen';
+import TipsScreen from 'screen/tips/TipsScreen';
+import {TreasuryScreen} from 'screen/TreasuryScreen';
+import WebviewScreen from 'screen/WebviewScreen';
+import {useTheme} from 'src/context/ThemeContext';
+import {useFirebase} from 'src/hook/useFirebase';
 import {usePushAuthorizationStatus} from 'src/hook/usePushNotificationsPermissions';
 import {useTurnOnAllNotificationsOnAppStartForAndroid} from 'src/hook/useTurnOnAllNotificationsOnAppStartForAndroid';
-import messaging from '@react-native-firebase/messaging';
+import {
+  ApiLoadedParamList,
+  AppStackParamList,
+  DashboardStackParamList,
+  DrawerParamList,
+} from 'src/navigation/navigation';
+import * as routeKeys from 'src/navigation/routeKeys';
+import {darkTheme, lightTheme} from 'src/navigation/theme';
+import globalStyles from 'src/styles';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -106,6 +113,28 @@ function DrawerNavigator() {
   );
 }
 
+const LoadedAppStack = createStackNavigator<ApiLoadedParamList>();
+
+function ApiLoadedNavigator() {
+  return (
+    <LoadedAppStack.Navigator
+      headerMode="none"
+      screenOptions={{
+        animationEnabled: false,
+        cardStyle: {
+          backgroundColor: 'transparent',
+          opacity: 1,
+        },
+        gestureEnabled: false,
+      }}
+      mode="modal">
+      <LoadedAppStack.Screen name={routeKeys.drawerNavigatorScreen} component={DrawerNavigator} />
+      <LoadedAppStack.Screen name={routeKeys.addAccountScreen} component={AddAccountScreen} />
+      <LoadedAppStack.Screen name={routeKeys.balanceScreen} component={BalanceScreen} />
+    </LoadedAppStack.Navigator>
+  );
+}
+
 const AppStack = createStackNavigator<AppStackParamList>();
 
 function AppNavigator() {
@@ -128,7 +157,7 @@ function AppNavigator() {
         {pushAuthorizationStatus && pushAuthorizationStatus === messaging.AuthorizationStatus.NOT_DETERMINED ? (
           <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen} component={PermissionGrantingPrompt} />
         ) : undefined}
-        {api ? <AppStack.Screen name={routeKeys.appNavigatorScreen} component={DrawerNavigator} /> : undefined}
+        {api ? <AppStack.Screen name={routeKeys.apiLoadedNavigatorScreen} component={ApiLoadedNavigator} /> : undefined}
         <AppStack.Screen name={routeKeys.apiLoadingScreen} component={ApiLoadingScreen} />
       </AppStack.Navigator>
     </NavigationContainer>

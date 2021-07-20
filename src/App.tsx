@@ -1,6 +1,5 @@
 import {IconRegistry} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
-import BalanceContextProvider from 'context/BalanceContext';
 import ChainApiContextProvider from 'context/ChainApiContext';
 import TxContextProvider from 'context/TxContext';
 import React from 'react';
@@ -32,11 +31,9 @@ export default function App() {
                   <ErrorBoundary>
                     <Host>
                       <AccountsProvider>
-                        <BalanceContextProvider>
-                          <TxContextProvider>
-                            <AppNavigator />
-                          </TxContextProvider>
-                        </BalanceContextProvider>
+                        <TxContextProvider>
+                          <AppNavigator />
+                        </TxContextProvider>
                       </AccountsProvider>
                     </Host>
                   </ErrorBoundary>
