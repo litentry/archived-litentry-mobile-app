@@ -1,5 +1,6 @@
 import {IconRegistry} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
+import {BeaconContextProvider} from 'context/BeaconContext';
 import ChainApiContextProvider from 'context/ChainApiContext';
 import TxContextProvider from 'context/TxContext';
 import React from 'react';
@@ -24,23 +25,25 @@ export default function App() {
       <IconRegistry icons={[EvaIconsPack, IonicIconsPack]} />
       <NetworkContextProvider>
         <ChainApiContextProvider>
-          <QueryClientProvider client={queryClient}>
-            <ThemeProvider>
-              <InAppNotificationContextProvider>
-                <SafeAreaProvider>
-                  <ErrorBoundary>
-                    <Host>
-                      <AccountsProvider>
-                        <TxContextProvider>
-                          <AppNavigator />
-                        </TxContextProvider>
-                      </AccountsProvider>
-                    </Host>
-                  </ErrorBoundary>
-                </SafeAreaProvider>
-              </InAppNotificationContextProvider>
-            </ThemeProvider>
-          </QueryClientProvider>
+          <BeaconContextProvider>
+            <QueryClientProvider client={queryClient}>
+              <ThemeProvider>
+                <InAppNotificationContextProvider>
+                  <SafeAreaProvider>
+                    <ErrorBoundary>
+                      <Host>
+                        <AccountsProvider>
+                          <TxContextProvider>
+                            <AppNavigator />
+                          </TxContextProvider>
+                        </AccountsProvider>
+                      </Host>
+                    </ErrorBoundary>
+                  </SafeAreaProvider>
+                </InAppNotificationContextProvider>
+              </ThemeProvider>
+            </QueryClientProvider>
+          </BeaconContextProvider>
         </ChainApiContextProvider>
       </NetworkContextProvider>
     </>

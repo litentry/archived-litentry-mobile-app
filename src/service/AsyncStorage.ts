@@ -16,3 +16,13 @@ export async function setItem(key: string, value: unknown) {
 }
 
 export const removeItem = (key: string) => AsyncStorage.removeItem(key);
+
+export const AsyncStorageForBeaconSdk = {
+  get: getItem,
+  set: (key: string, value: unknown) => {
+    if (value) {
+      return setItem(key, value);
+    }
+  },
+  delete: removeItem,
+};
