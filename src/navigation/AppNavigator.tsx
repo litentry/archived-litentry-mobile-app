@@ -9,6 +9,7 @@ import React, {useContext} from 'react';
 import {AddAccountScreen} from 'screen/AddAccountScreen/AddAccountScreen';
 import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
 import {BalanceScreen} from 'screen/BalanceScreen';
+import {BeaconScreen} from 'screen/BeaconScreen';
 import {CouncilScreen} from 'screen/Council/CouncilScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
 import DashboardScreen, {DashboardHeaderLeft} from 'screen/DashboardScreen';
@@ -128,6 +129,7 @@ function ApiLoadedNavigator() {
         gestureEnabled: false,
       }}
       mode="modal">
+      <LoadedAppStack.Screen name={routeKeys.beaconScreen} component={BeaconScreen} />
       <LoadedAppStack.Screen name={routeKeys.drawerNavigatorScreen} component={DrawerNavigator} />
       <LoadedAppStack.Screen name={routeKeys.addAccountScreen} component={AddAccountScreen} />
       <LoadedAppStack.Screen name={routeKeys.balanceScreen} component={BalanceScreen} />

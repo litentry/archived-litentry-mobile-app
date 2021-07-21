@@ -9,6 +9,7 @@ export const dashboardNavigator = 'DashboardNavigator' as const;
 export const apiLoadingScreen = 'Api Loading' as const;
 export const addAccountScreen = 'AddAccountScreen' as const;
 export const balanceScreen = 'BalanceScreen' as const;
+export const beaconScreen = 'BeaconScreen' as const;
 
 export const dashboardScreen = 'Dashboard' as const;
 export const tipsScreen = 'Tips' as const;
