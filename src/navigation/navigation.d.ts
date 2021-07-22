@@ -21,6 +21,7 @@ import {
   treasuryScreen,
   webviewScreen,
   referendumScreen,
+  beaconWebViewScreen,
 } from 'src/navigation/routeKeys';
 import {SupportedNetworkType} from 'src/types';
 
@@ -55,6 +56,7 @@ type ApiLoadedParamList = {
   [drawerNavigatorScreen]: undefined;
   [addAccountScreen]: undefined;
   [balanceScreen]: {address: string};
+  [beaconWebViewScreen]: undefined;
 };
 
 type AppStackParamList = {

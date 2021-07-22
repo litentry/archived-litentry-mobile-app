@@ -1,7 +1,7 @@
 import messaging from '@react-native-firebase/messaging';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createStackNavigator, TransitionSpecs} from '@react-navigation/stack';
 import {Icon, TopNavigationAction} from '@ui-kitten/components';
 import {ChainApiContext} from 'context/ChainApiContext';
 import LoadingView from 'presentational/LoadingView';
@@ -9,6 +9,7 @@ import React, {useContext} from 'react';
 import {AddAccountScreen} from 'screen/AddAccountScreen/AddAccountScreen';
 import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
 import {BalanceScreen} from 'screen/BalanceScreen';
+import {BeaconWebViewScreen} from 'screen/BeaconWebViewScreen';
 import {CouncilScreen} from 'screen/Council/CouncilScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
 import DashboardScreen, {DashboardHeaderLeft} from 'screen/DashboardScreen';
@@ -128,6 +129,16 @@ function ApiLoadedNavigator() {
         gestureEnabled: false,
       }}
       mode="modal">
+      <LoadedAppStack.Screen
+        name={routeKeys.beaconWebViewScreen}
+        component={BeaconWebViewScreen}
+        options={{
+          transitionSpec: {
+            open: TransitionSpecs.TransitionIOSSpec,
+            close: TransitionSpecs.TransitionIOSSpec,
+          },
+        }}
+      />
       <LoadedAppStack.Screen name={routeKeys.drawerNavigatorScreen} component={DrawerNavigator} />
       <LoadedAppStack.Screen name={routeKeys.addAccountScreen} component={AddAccountScreen} />
       <LoadedAppStack.Screen name={routeKeys.balanceScreen} component={BalanceScreen} />
