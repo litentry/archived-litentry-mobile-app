@@ -1,11 +1,12 @@
 import messaging from '@react-native-firebase/messaging';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator, TransitionSpecs} from '@react-navigation/stack';
+import {createStackNavigator, TransitionPresets, TransitionSpecs} from '@react-navigation/stack';
 import {Icon, TopNavigationAction} from '@ui-kitten/components';
 import {ChainApiContext} from 'context/ChainApiContext';
 import LoadingView from 'presentational/LoadingView';
 import React, {useContext} from 'react';
+import {TouchableOpacity} from 'react-native';
 import {AddAccountScreen} from 'screen/AddAccountScreen/AddAccountScreen';
 import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
 import {BalanceScreen} from 'screen/BalanceScreen';
@@ -116,12 +117,14 @@ function DrawerNavigator() {
 
 const LoadedAppStack = createStackNavigator<ApiLoadedParamList>();
 
-function ApiLoadedNavigator() {
+function ApiLoadedNavigator({navigation}: {navigation: any}) {
   return (
     <LoadedAppStack.Navigator
       headerMode="none"
       screenOptions={{
+        headerShown: false,
         animationEnabled: false,
+        cardOverlayEnabled: true,
         cardStyle: {
           backgroundColor: 'transparent',
           opacity: 1,
@@ -129,17 +132,25 @@ function ApiLoadedNavigator() {
         gestureEnabled: false,
       }}
       mode="modal">
+      <LoadedAppStack.Screen name={routeKeys.drawerNavigatorScreen} component={DrawerNavigator} />
       <LoadedAppStack.Screen
         name={routeKeys.beaconWebViewScreen}
         component={BeaconWebViewScreen}
         options={{
-          transitionSpec: {
-            open: TransitionSpecs.TransitionIOSSpec,
-            close: TransitionSpecs.TransitionIOSSpec,
+          animationEnabled: false,
+          gestureEnabled: true,
+          cardOverlayEnabled: true,
+          cardOverlay: (p) => {
+            return (
+              <TouchableOpacity
+                onPress={() => navigation.navigate(routeKeys.drawerNavigatorScreen)}
+                style={{flex: 1, backgroundColor: 'black'}}
+              />
+            );
           },
+          ...TransitionPresets.ModalPresentationIOS,
         }}
       />
-      <LoadedAppStack.Screen name={routeKeys.drawerNavigatorScreen} component={DrawerNavigator} />
       <LoadedAppStack.Screen name={routeKeys.addAccountScreen} component={AddAccountScreen} />
       <LoadedAppStack.Screen name={routeKeys.balanceScreen} component={BalanceScreen} />
     </LoadedAppStack.Navigator>

@@ -16,7 +16,14 @@ import React, {useContext, useState} from 'react';
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import NetworkSelect from 'src/layout/NetworkSelect';
 import {ApiLoadedParamList, DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
-import {addAccountScreen, councilScreen, referendaScreen, tipsScreen, treasuryScreen} from 'src/navigation/routeKeys';
+import {
+  addAccountScreen,
+  beaconWebViewScreen,
+  councilScreen,
+  referendaScreen,
+  tipsScreen,
+  treasuryScreen,
+} from 'src/navigation/routeKeys';
 import LoadingView from 'src/presentational/LoadingView';
 import globalStyles from 'src/styles';
 
@@ -63,6 +70,7 @@ function DashboardScreen({navigation}: PropTypes) {
           <>
             <View style={[globalStyles.flex, styles.main]}>
               <ScrollView style={styles.scrollView}>
+                <Button onPress={() => navigation.navigate(beaconWebViewScreen)}>Beacon</Button>
                 <ReferendaSummaryTeaser onMorePress={() => navigation.navigate(referendaScreen)} />
                 <CouncilSummaryTeaser onMorePress={() => navigation.navigate(councilScreen)} />
                 <TreasurySummaryTeaser onMorePress={() => navigation.navigate(treasuryScreen)} />
