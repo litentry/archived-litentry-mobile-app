@@ -24,13 +24,13 @@ import {StyleSheet, View} from 'react-native';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import {useConvictions} from 'src/api/hooks/useConvictions';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import {useReferendums} from 'src/api/hooks/useReferendums';
 import {useBestNumber} from 'src/api/hooks/useVotingStatus';
 import {DashboardStackParamList} from 'src/navigation/navigation';
 import {referendumScreen} from 'src/navigation/routeKeys';
 import {formatCallMeta} from 'src/packages/call_inspector/CallInspector';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import globalStyles, {standardPadding} from 'src/styles';
+import {useDemocracy} from 'src/api/hooks/useDemocracy';
 
 export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
   const {start} = useTX();
@@ -39,8 +39,8 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const formatBalance = useFormatBalance();
-  const {data} = useReferendums();
-  const referendum = data?.find((r) => r.index.toString() === route.params.index);
+  const {data} = useDemocracy();
+  const referendum = data?.referndums.find((r) => r.index.toString() === route.params.index);
   const proposal = referendum?.image?.proposal;
 
   const bestNumber = useBestNumber();

@@ -6,7 +6,7 @@ import {useAccounts} from 'context/AccountsContext';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
 import CouncilSummaryTeaser from 'layout/CouncilSummaryTeaser';
-import {ReferendaSummaryTeaser} from 'layout/ReferendaSummaryTeaser';
+import {DemocracySummaryTeaser} from 'layout/DemocracySummaryTeaser';
 import TipsSummaryTeaser from 'layout/tips/TipsSummaryTeaser';
 import TreasurySummaryTeaser from 'layout/TreasurySummaryTeaser';
 import FadeInAnimatedView from 'presentational/FadeInAnimatedView';
@@ -63,7 +63,7 @@ function DashboardScreen({navigation}: PropTypes) {
           <>
             <View style={[globalStyles.flex, styles.main]}>
               <ScrollView style={styles.scrollView}>
-                <ReferendaSummaryTeaser onMorePress={() => navigation.navigate(referendaScreen)} />
+                <DemocracySummaryTeaser onMorePress={() => navigation.navigate(referendaScreen)} />
                 <CouncilSummaryTeaser onMorePress={() => navigation.navigate(councilScreen)} />
                 <TreasurySummaryTeaser onMorePress={() => navigation.navigate(treasuryScreen)} />
                 <TipsSummaryTeaser onMorePress={() => navigation.navigate(tipsScreen)} />
