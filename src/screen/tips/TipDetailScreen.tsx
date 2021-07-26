@@ -164,55 +164,6 @@ function TipDetailScreen({route}: ScreenProps) {
     </SafeView>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  whoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-  },
-  sectionTextContainer: {
-    flex: 1,
-  },
-  sectionText: {
-    fontFamily: monofontFamily,
-  },
-  addressContainer: {
-    flex: 4,
-  },
-  finderContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  closesAtContainer: {
-    marginTop: 20,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-  },
-  containerSpacing: {
-    marginTop: 20,
-  },
-  emptyTippersContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  emptyTippersImage: {
-    width: 120,
-    height: 120,
-    alignSelf: 'center',
-  },
-  emptyTippersText: {
-    fontFamily: monofontFamily,
-    marginBottom: 10,
-  },
-  tipperIconContainer: {marginRight: 15},
-});
-
-export default TipDetailScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -264,3 +215,5 @@ const styles = StyleSheet.create({
   },
   tipperIconContainer: {marginRight: 15},
 });
+
+export default TipDetailScreen;
