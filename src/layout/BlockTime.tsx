@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
 
 export function BlockTime({blockNumber}: Props) {
   const {timeStringParts} = useBlockTime(blockNumber);
+  const blockTime = timeStringParts.join(' ');
 
-  return <Text style={styles.timeText}>{`${timeStringParts[0]} ${timeStringParts[1]}`}</Text>;
+  return <Text style={styles.timeText}>{`${blockTime}`}</Text>;
 }
