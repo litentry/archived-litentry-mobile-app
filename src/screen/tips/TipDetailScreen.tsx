@@ -1,78 +1,30 @@
-import React, {useContext, useMemo} from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import Identicon from '@polkadot/reactnative-identicon';
+import {BlockNumber, OpenTip} from '@polkadot/types/interfaces';
+import {formatBalance, formatNumber, u8aToString} from '@polkadot/util';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {formatBalance, formatNumber, u8aToString} from '@polkadot/util';
-import {BlockNumber, OpenTip} from '@polkadot/types/interfaces';
-import Identicon from '@polkadot/reactnative-identicon';
 import {Card, Divider, List, ListItem, Text} from '@ui-kitten/components';
-import AddressInlineTeaser from 'layout/AddressInlineTeaser';
-import {useTip} from 'src/api/hooks/useTip';
-import TipReason from 'layout/tips/TipReason';
-import globalStyles, {monofontFamily} from 'src/styles';
-import {useCall} from 'src/hook/useCall';
-import {ChainApiContext} from 'context/ChainApiContext';
-import {BlockTime} from 'layout/BlockTime';
-import {extractTipState} from 'layout/tips/utils';
-import NoDataImage from 'image/no_data.png';
-import {Account} from 'src/layout/Account';
-import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
 import {useAccounts} from 'context/AccountsContext';
+import {ChainApiContext} from 'context/ChainApiContext';
+import NoDataImage from 'image/no_data.png';
+import AddressInlineTeaser from 'layout/AddressInlineTeaser';
+import {BlockTime} from 'layout/BlockTime';
+import {TipReason} from 'layout/tips/TipReason';
+import {extractTipState} from 'layout/tips/utils';
+import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
+import React, {useContext, useMemo} from 'react';
+import {Image, StyleSheet, View} from 'react-native';
+import {useTip} from 'src/api/hooks/useTip';
+import {useCall} from 'src/hook/useCall';
+import {Account} from 'src/layout/Account';
 import {DashboardStackParamList} from 'src/navigation/navigation';
+import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 
 type ScreenProps = {
   navigation: StackNavigationProp<DashboardStackParamList>;
   route: RouteProp<DashboardStackParamList, 'Tip'>;
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  whoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-  },
-  sectionTextContainer: {
-    flex: 1,
-  },
-  sectionText: {
-    fontFamily: monofontFamily,
-  },
-  addressContainer: {
-    flex: 4,
-  },
-  finderContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  closesAtContainer: {
-    marginTop: 20,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-  },
-  containerSpacing: {
-    marginTop: 20,
-  },
-  emptyTippersContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  emptyTippersImage: {
-    width: 120,
-    height: 120,
-    alignSelf: 'center',
-  },
-  emptyTippersText: {
-    fontFamily: monofontFamily,
-    marginBottom: 10,
-  },
-  tipperIconContainer: {marginRight: 15},
-});
 
 type TipDetailContentProps = {
   tip: OpenTip;
@@ -98,7 +50,7 @@ function TipDetailContent({tip, bestNumber}: TipDetailContentProps) {
   const tippersCount = tip.tips.length;
 
   return (
-    <>
+    <View style={styles.header}>
       <Card>
         <View style={styles.whoContainer}>
           <View style={styles.sectionTextContainer}>
@@ -144,7 +96,7 @@ function TipDetailContent({tip, bestNumber}: TipDetailContentProps) {
         </Text>
         {Number(median) > 0 ? <Text>{formatBalance(median)}</Text> : null}
       </View>
-    </>
+    </View>
   );
 }
 
@@ -214,3 +166,54 @@ function TipDetailScreen({route}: ScreenProps) {
 }
 
 export default TipDetailScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  header: {
+    marginBottom: standardPadding,
+  },
+  whoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  sectionTextContainer: {
+    flex: 1,
+  },
+  sectionText: {
+    fontFamily: monofontFamily,
+  },
+  addressContainer: {
+    flex: 4,
+  },
+  finderContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  closesAtContainer: {
+    marginTop: 20,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+  },
+  containerSpacing: {
+    marginTop: 20,
+  },
+  emptyTippersContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  emptyTippersImage: {
+    width: 120,
+    height: 120,
+    alignSelf: 'center',
+  },
+  emptyTippersText: {
+    fontFamily: monofontFamily,
+    marginBottom: 10,
+  },
+  tipperIconContainer: {marginRight: 15},
+});
