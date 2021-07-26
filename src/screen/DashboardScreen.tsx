@@ -35,8 +35,7 @@ function DashboardScreen({navigation}: PropTypes) {
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      headerLeft: DashboardHeaderLeft,
-      headerRight: () => <View />,
+      headerLeft: () => <DashboardHeaderLeft />,
       headerTitle: () => <DashboardTitle setNetworkSelectOpen={setNetworkSelectOpen} />,
     });
   }, [navigation, setNetworkSelectOpen]);
