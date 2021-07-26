@@ -1,13 +1,11 @@
-import React, {useContext} from 'react';
-import {StyleSheet, View} from 'react-native';
-import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
 import Identicon from '@polkadot/reactnative-identicon';
 import {ChainApiContext} from 'context/ChainApiContext';
-import Padder from 'presentational/Padder';
-import {monofontFamily} from 'src/styles';
-import {Text} from '@ui-kitten/components';
-import useAccountDetail from 'src/api/hooks/useAccountDetail';
 import {NetworkContext} from 'context/NetworkContext';
+import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
+import Padder from 'presentational/Padder';
+import React, {useContext} from 'react';
+import {StyleSheet, View} from 'react-native';
+import useAccountDetail from 'src/api/hooks/useAccountDetail';
 
 type PropTypes = {
   address: string;
