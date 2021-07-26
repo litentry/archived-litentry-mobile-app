@@ -19,60 +19,12 @@ import {useTip} from 'src/api/hooks/useTip';
 import {useCall} from 'src/hook/useCall';
 import {Account} from 'src/layout/Account';
 import {DashboardStackParamList} from 'src/navigation/navigation';
-import globalStyles, {monofontFamily} from 'src/styles';
+import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 
 type ScreenProps = {
   navigation: StackNavigationProp<DashboardStackParamList>;
   route: RouteProp<DashboardStackParamList, 'Tip'>;
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  whoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-  },
-  sectionTextContainer: {
-    flex: 1,
-  },
-  sectionText: {
-    fontFamily: monofontFamily,
-  },
-  addressContainer: {
-    flex: 4,
-  },
-  finderContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  closesAtContainer: {
-    marginTop: 20,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-  },
-  containerSpacing: {
-    marginTop: 20,
-  },
-  emptyTippersContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  emptyTippersImage: {
-    width: 120,
-    height: 120,
-    alignSelf: 'center',
-  },
-  emptyTippersText: {
-    fontFamily: monofontFamily,
-    marginBottom: 10,
-  },
-  tipperIconContainer: {marginRight: 15},
-});
 
 type TipDetailContentProps = {
   tip: OpenTip;
@@ -98,7 +50,7 @@ function TipDetailContent({tip, bestNumber}: TipDetailContentProps) {
   const tippersCount = tip.tips.length;
 
   return (
-    <>
+    <View style={styles.header}>
       <Card>
         <View style={styles.whoContainer}>
           <View style={styles.sectionTextContainer}>
@@ -144,7 +96,7 @@ function TipDetailContent({tip, bestNumber}: TipDetailContentProps) {
         </Text>
         {Number(median) > 0 ? <Text>{formatBalance(median)}</Text> : null}
       </View>
-    </>
+    </View>
   );
 }
 
@@ -214,3 +166,54 @@ function TipDetailScreen({route}: ScreenProps) {
 }
 
 export default TipDetailScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  header: {
+    marginBottom: standardPadding,
+  },
+  whoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  sectionTextContainer: {
+    flex: 1,
+  },
+  sectionText: {
+    fontFamily: monofontFamily,
+  },
+  addressContainer: {
+    flex: 4,
+  },
+  finderContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  closesAtContainer: {
+    marginTop: 20,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+  },
+  containerSpacing: {
+    marginTop: 20,
+  },
+  emptyTippersContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  emptyTippersImage: {
+    width: 120,
+    height: 120,
+    alignSelf: 'center',
+  },
+  emptyTippersText: {
+    fontFamily: monofontFamily,
+    marginBottom: 10,
+  },
+  tipperIconContainer: {marginRight: 15},
+});
