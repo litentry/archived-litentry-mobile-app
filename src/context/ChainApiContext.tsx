@@ -20,7 +20,7 @@ export const useApi = () => useContext(ChainApiContext);
 
 const logger = createLogger('ChainApiContext');
 
-function ChainApiContextProvider({children}: {children: React.ReactNode}) {
+export function ChainApiContextProvider({children}: {children: React.ReactNode}) {
   const [inProgress, setInProgress] = useState(true);
   const [status, setStatus] = useState<ApiChainStatusType>('unknown');
   const {currentNetwork} = useContext(NetworkContext);
@@ -101,5 +101,3 @@ function ChainApiContextProvider({children}: {children: React.ReactNode}) {
   }, [status, api, inProgress]);
   return <ChainApiContext.Provider value={value}>{children}</ChainApiContext.Provider>;
 }
-
-export default ChainApiContextProvider;
