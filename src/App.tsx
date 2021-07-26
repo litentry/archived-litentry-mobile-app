@@ -1,6 +1,6 @@
 import {IconRegistry} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
-import ChainApiContextProvider from 'context/ChainApiContext';
+import {ChainApiContextProvider} from 'context/ChainApiContext';
 import TxContextProvider from 'context/TxContext';
 import React from 'react';
 import {Host} from 'react-native-portalize';
