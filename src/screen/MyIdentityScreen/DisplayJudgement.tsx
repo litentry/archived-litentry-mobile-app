@@ -164,7 +164,7 @@ function DisplayJudgement(props: PropTypes) {
                     key={addr.toString()}
                     accessoryRight={() => (
                       <View style={{paddingLeft: standardPadding}}>
-                        <AddressInlineTeaser fullWidth address={addr.toString()} />
+                        <AddressInlineTeaser address={addr.toString()} />
                       </View>
                     )}
                   />

@@ -1,25 +1,16 @@
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {Card} from '@ui-kitten/components';
+import AddressInlineTeaser from 'layout/AddressInlineTeaser';
+import Padder from 'presentational/Padder';
+import SeactionTeaserContainer from 'presentational/SectionTeaserContainer';
+import StatInfoBlock from 'presentational/StatInfoBlock';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {Card, Layout} from '@ui-kitten/components';
 import {useTips} from 'src/api/hooks/useTips';
-import StatInfoBlock from 'presentational/StatInfoBlock';
-import SeactionTeaserContainer from 'presentational/SectionTeaserContainer';
-import AddressInlineTeaser from 'layout/AddressInlineTeaser';
-import {tipDetailScreen} from 'src/navigation/routeKeys';
-import TipReason from 'src/layout/tips/TipReason';
-import {StackNavigationProp} from '@react-navigation/stack';
+import {TipReason} from 'src/layout/tips/TipReason';
 import {DashboardStackParamList} from 'src/navigation/navigation';
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  statInfoBlockContainer: {
-    paddingRight: 5,
-  },
-});
+import {tipDetailScreen} from 'src/navigation/routeKeys';
 
 type TipsSummaryTeaserProps = {
   onMorePress: () => void;
@@ -35,28 +26,28 @@ function TipsSummaryTeaser({onMorePress}: TipsSummaryTeaserProps) {
   return (
     <SeactionTeaserContainer title={`Tips ${tips?.length ? `(${tips.length})` : ''}`} onMorePress={onMorePress}>
       {id && tip ? (
-        <Layout>
-          <Card onPress={() => navigation.navigate(tipDetailScreen, {hash: String(id)})}>
-            <View style={styles.container}>
-              <View style={styles.statInfoBlockContainer}>
-                <StatInfoBlock title="Who">
-                  <AddressInlineTeaser address={String(tip.who)} />
-                </StatInfoBlock>
-              </View>
-              <View style={styles.statInfoBlockContainer}>
-                <StatInfoBlock title="Finder">
-                  <AddressInlineTeaser address={String(tip.finder)} />
-                </StatInfoBlock>
-              </View>
-            </View>
-            <StatInfoBlock title="Reason">
-              <TipReason reasonHash={tip.reason} />
+        <Card onPress={() => navigation.navigate(tipDetailScreen, {hash: String(id)})}>
+          <View style={styles.row}>
+            <StatInfoBlock title="Who">
+              <AddressInlineTeaser address={String(tip.who)} />
             </StatInfoBlock>
-          </Card>
-        </Layout>
+            <Padder scale={0.5} />
+            <StatInfoBlock title="Finder">
+              <AddressInlineTeaser address={String(tip.finder)} />
+            </StatInfoBlock>
+          </View>
+          <Padder scale={0.5} />
+          <StatInfoBlock title="Reason">{tip.reason && <TipReason reasonHash={tip.reason} />}</StatInfoBlock>
+        </Card>
       ) : undefined}
     </SeactionTeaserContainer>
   );
 }
 
 export default TipsSummaryTeaser;
+
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+  },
+});
