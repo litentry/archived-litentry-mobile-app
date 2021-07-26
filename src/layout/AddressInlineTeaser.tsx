@@ -11,11 +11,10 @@ import {NetworkContext} from 'context/NetworkContext';
 
 type PropTypes = {
   address: string;
-  fullWidth?: boolean;
 };
 
 function AddressInlineTeaser(props: PropTypes) {
-  const {address, fullWidth = false} = props;
+  const {address} = props;
   const {api} = useContext(ChainApiContext);
   const {currentNetwork} = useContext(NetworkContext);
   const {display, detail} = useAccountDetail(currentNetwork?.key, address, api);
@@ -24,13 +23,7 @@ function AddressInlineTeaser(props: PropTypes) {
     <View style={styles.container}>
       <Identicon value={address} size={20} />
       <Padder scale={0.5} />
-      {display ? (
-        <AccountInfoInlineTeaser fullWidth={fullWidth} display={display} judgements={detail?.data?.judgements} />
-      ) : (
-        <Text style={styles.bareAddress} numberOfLines={1} ellipsizeMode="middle">
-          {address}
-        </Text>
-      )}
+      <AccountInfoInlineTeaser display={display} judgements={detail?.data?.judgements} />
     </View>
   );
 }
@@ -39,13 +32,6 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  bareAddress: {
-    fontWeight: 'bold',
-    fontSize: 13,
-    width: 140,
-    maxWidth: 140,
-    fontFamily: monofontFamily,
   },
 });
 

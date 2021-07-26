@@ -1,16 +1,15 @@
-import React from 'react';
 import Identicon from '@polkadot/reactnative-identicon';
-import {StyleSheet, View} from 'react-native';
-import {Card, ListItem, Text} from '@ui-kitten/components';
-import {useNavigation} from '@react-navigation/native';
-import {Tip} from 'src/api/hooks/useTips';
-import {tipDetailScreen} from 'src/navigation/routeKeys';
-import TipReason from 'layout/tips/TipReason';
-import {Account} from 'src/layout/Account';
-import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
 import {u8aToString} from '@polkadot/util';
-import globalStyles, {standardPadding} from 'src/styles';
+import {useNavigation} from '@react-navigation/native';
+import {Card, Text} from '@ui-kitten/components';
+import {TipReason} from 'layout/tips/TipReason';
 import Padder from 'presentational/Padder';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
+import {Tip} from 'src/api/hooks/useTips';
+import {Account} from 'src/layout/Account';
+import {tipDetailScreen} from 'src/navigation/routeKeys';
+import globalStyles, {standardPadding} from 'src/styles';
 
 type TipTeaserProps = {
   tip: Tip;

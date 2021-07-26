@@ -9,17 +9,12 @@ import JudgmentStatus from './JudgmentStatus';
 type PropTypes = {
   display: string;
   judgements?: Vec<RegistrationJudgement>;
-  fullWidth?: boolean;
 };
 
-function AccountInfoInlineTeaser({display, judgements, fullWidth = false}: PropTypes) {
+function AccountInfoInlineTeaser({display, judgements}: PropTypes) {
   return (
     <View style={styles.container}>
-      <Text
-        category="s1"
-        style={[{fontFamily: monofontFamily}, fullWidth ? {} : styles.text]}
-        ellipsizeMode="middle"
-        numberOfLines={1}>
+      <Text category="c1" style={styles.text} ellipsizeMode="middle" numberOfLines={1}>
         {display}
       </Text>
       {judgements && judgements.length
@@ -30,10 +25,9 @@ function AccountInfoInlineTeaser({display, judgements, fullWidth = false}: PropT
 }
 
 const styles = StyleSheet.create({
-  text: {
-    maxWidth: 140,
-  },
+  text: {fontFamily: monofontFamily},
   container: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
   },
