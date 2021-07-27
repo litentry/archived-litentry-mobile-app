@@ -25,7 +25,7 @@ export type InjectedPropTypes = {
 
 const mapData = (electionsInfo: DeriveElectionsInfo, bestNumber: BlockNumber): ProcessedElectionDataType => {
   const total = bnToBn(electionsInfo.termDuration || 0);
-  const value = bestNumber.mod(electionsInfo.termDuration);
+  const value = bestNumber.mod(bnToBn(electionsInfo.termDuration || 0));
   const angle = total.gtn(0)
     ? bnToBn(value || 0)
         .muln(36000)

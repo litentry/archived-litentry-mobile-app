@@ -96,9 +96,9 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
                 if (dispatchError.isModule) {
                   // for module errors, we have the section indexed, lookup
                   const decoded = api.registry.findMetaError(dispatchError.asModule);
-                  const {documentation} = decoded;
+                  const {docs} = decoded;
 
-                  return documentation.join(' ').trim();
+                  return docs.join(' ').trim();
                 } else {
                   // Other, CannotLookup, BadOrigin, no extra info
                   return dispatchError?.toString();
