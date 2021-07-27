@@ -19,6 +19,14 @@ const styles = StyleSheet.create({
 
 export function BlockTime({blockNumber}: Props) {
   const {timeStringParts} = useBlockTime(blockNumber);
+  const [days, hours, minutes, seconds] = timeStringParts;
+  let blockTime = '';
 
-  return <Text style={styles.timeText}>{`${timeStringParts[0]} ${timeStringParts[1]}`}</Text>;
+  if (days || hours) {
+    blockTime = `${days || ''} ${hours || ''}`;
+  } else if (minutes || seconds) {
+    blockTime = `${minutes || ''} ${seconds || ''}`;
+  }
+
+  return <Text style={styles.timeText}>{blockTime}</Text>;
 }
