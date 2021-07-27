@@ -10,7 +10,7 @@ import * as React from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import {useDemocracy} from 'src/api/hooks/useDemocracy';
-import {useBestNumber} from 'src/api/hooks/useVotingStatus';
+import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import {DashboardStackParamList} from 'src/navigation/navigation';
 import {referendumScreen} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
@@ -25,7 +25,7 @@ export function ReferendaScreen() {
           refreshing={isLoading}
           onRefresh={refetch}
           style={styles.flatList}
-          data={data?.referndums}
+          data={data?.referendums}
           renderItem={({item}) => {
             return <Referenda item={item} />;
           }}

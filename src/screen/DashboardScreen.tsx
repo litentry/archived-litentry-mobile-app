@@ -63,10 +63,10 @@ function DashboardScreen({navigation}: PropTypes) {
           <>
             <View style={[globalStyles.flex, styles.main]}>
               <ScrollView style={styles.scrollView}>
-                <DemocracySummaryTeaser onMorePress={() => navigation.navigate(referendaScreen)} />
-                <CouncilSummaryTeaser onMorePress={() => navigation.navigate(councilScreen)} />
-                <TreasurySummaryTeaser onMorePress={() => navigation.navigate(treasuryScreen)} />
-                <TipsSummaryTeaser onMorePress={() => navigation.navigate(tipsScreen)} />
+                <DemocracySummaryTeaser onPressMore={() => navigation.navigate(referendaScreen)} />
+                <CouncilSummaryTeaser onPressMore={() => navigation.navigate(councilScreen)} />
+                <TreasurySummaryTeaser onPressMore={() => navigation.navigate(treasuryScreen)} />
+                <TipsSummaryTeaser onPressMore={() => navigation.navigate(tipsScreen)} />
               </ScrollView>
             </View>
           </>

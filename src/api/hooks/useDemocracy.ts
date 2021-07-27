@@ -2,7 +2,7 @@ import useApiQuery from 'src/api/hooks/useApiQuery';
 
 export function useDemocracy() {
   return useApiQuery(['democracy'], async (api) => {
-    const [referndums, activeProposals, publicPropCount, referendumTotal] = await Promise.all([
+    const [referendums, activeProposals, publicPropCount, referendumTotal] = await Promise.all([
       api.derive.democracy.referendums(),
       api.derive.democracy.proposals(),
       api.query.democracy.publicPropCount(),
@@ -13,7 +13,7 @@ export function useDemocracy() {
       activeProposals,
       publicPropCount,
       referendumTotal,
-      referndums,
+      referendums,
       launchPeriod: api.consts.democracy.launchPeriod,
     };
   });

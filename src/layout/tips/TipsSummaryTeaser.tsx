@@ -13,10 +13,10 @@ import {DashboardStackParamList} from 'src/navigation/navigation';
 import {tipDetailScreen} from 'src/navigation/routeKeys';
 
 type TipsSummaryTeaserProps = {
-  onMorePress: () => void;
+  onPressMore: () => void;
 };
 
-function TipsSummaryTeaser({onMorePress}: TipsSummaryTeaserProps) {
+function TipsSummaryTeaser({onPressMore: onMorePress}: TipsSummaryTeaserProps) {
   const navigation = useNavigation<StackNavigationProp<DashboardStackParamList>>();
   const {data: tips} = useTips();
 

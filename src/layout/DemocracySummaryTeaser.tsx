@@ -6,14 +6,13 @@ import {StyleSheet, View} from 'react-native';
 import {useDemocracy} from 'src/api/hooks/useDemocracy';
 import {formatNumber, BN_ONE, BN_ZERO, BN_HUNDRED} from '@polkadot/util';
 import Padder from 'presentational/Padder';
-import {useBestNumber} from 'src/api/hooks/useVotingStatus';
+import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import ProgressChartWidget from 'presentational/ProgressWidget';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import {standardPadding} from 'src/styles';
-import {notEmpty} from 'src/utils';
 
 type Props = {
-  onMorePress: () => void;
+  onPressMore: () => void;
 };
 
 export function DemocracySummaryTeaser(props: Props) {
@@ -31,11 +30,11 @@ export function DemocracySummaryTeaser(props: Props) {
 
   const {timeStringParts} = useBlockTime(timeLeft);
 
-  const firstTwoNoneEmptyTimeParts = timeStringParts.filter(notEmpty).slice(0, 2);
+  const firstTwoNoneEmptyTimeParts = timeStringParts.filter(Boolean).slice(0, 2);
   const timeLeftString = firstTwoNoneEmptyTimeParts.join('\n');
 
   return (
-    <SectionTeaserContainer onMorePress={props.onMorePress} title="Democracy">
+    <SectionTeaserContainer onMorePress={props.onPressMore} title="Democracy">
       <View style={styles.boxRow}>
         <Card style={styles.card}>
           <View style={styles.itemRow}>
@@ -43,7 +42,7 @@ export function DemocracySummaryTeaser(props: Props) {
             <StatInfoBlock title="Total">{formatNumber(data?.publicPropCount)}</StatInfoBlock>
           </View>
           <View style={styles.itemRow}>
-            <StatInfoBlock title="Referenda">{formatNumber(data?.referndums.length)}</StatInfoBlock>
+            <StatInfoBlock title="Referenda">{formatNumber(data?.referendums.length)}</StatInfoBlock>
             <StatInfoBlock title="Total">{formatNumber(data?.referendumTotal)}</StatInfoBlock>
           </View>
         </Card>

@@ -11,7 +11,7 @@ import withTreasury, {InjectedPropTypes} from 'src/hoc/withTreasury';
 import {formatNumber, BN_ONE, bnToBn, formatBalance, BN_ZERO} from '@polkadot/util';
 
 type PropTypes = {
-  onMorePress: () => void;
+  onPressMore: () => void;
 };
 
 function TreasurySummaryTeaser(props: PropTypes & InjectedPropTypes) {
@@ -30,7 +30,7 @@ function TreasurySummaryTeaser(props: PropTypes & InjectedPropTypes) {
   const {timeStringParts: termLeft} = useBlockTime(total.sub(value || BN_ONE));
 
   return (
-    <SeactionTeaserContainer onMorePress={props.onMorePress} title="Treasury">
+    <SeactionTeaserContainer onMorePress={props.onPressMore} title="Treasury">
       <View>
         <Layout style={styles.container}>
           <Card style={[styles.item, styles.left]}>
