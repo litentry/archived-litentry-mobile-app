@@ -41,6 +41,7 @@ export function SubmitTipScreen({navigation}: {navigation: NavigationProp<Dashbo
             value={state.beneficiary}
             onChangeText={(payload) => dispatch({type: 'SET_BENEFICIARY', payload})}
           />
+          {state.error === 'beneficiary_error' && <Text status="danger">{'Please enter a valid beneficiary!'}</Text>}
           <Padder scale={1.5} />
           <Text>Tip reason</Text>
           <Padder scale={0.5} />
@@ -67,7 +68,12 @@ export function SubmitTipScreen({navigation}: {navigation: NavigationProp<Dashbo
                   queryClient.invalidateQueries('tips');
                   navigation.goBack();
                 })
-                .catch((e) => console.warn(e));
+                .catch((e: Error) => {
+                  if (e.message.includes('failed on who')) {
+                    dispatch({type: 'SET_ERROR', payload: 'beneficiary_error'});
+                  }
+                  console.warn(e);
+                });
             }
           }}>
           Sign and Submit
@@ -88,12 +94,14 @@ type Action =
   | {
       type: 'SET_REASON';
       payload: string;
-    };
+    }
+  | {type: 'SET_ERROR'; payload: State['error']};
 
 type State = {
   account?: string;
   beneficiary: string;
   reason: string;
+  error?: 'beneficiary_error';
 };
 
 const initialState: State = {reason: '', beneficiary: ''};
@@ -103,9 +111,11 @@ function reducer(state: State, action: Action): State {
     case 'SET_ACCOUNT':
       return {...state, account: action.payload};
     case 'SET_BENEFICIARY':
-      return {...state, beneficiary: action.payload};
+      return {...state, beneficiary: action.payload, error: undefined};
     case 'SET_REASON':
       return {...state, reason: action.payload};
+    case 'SET_ERROR':
+      return {...state, error: action.payload};
     default:
       return state;
   }
