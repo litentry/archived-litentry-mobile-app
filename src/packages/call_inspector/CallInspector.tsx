@@ -123,11 +123,11 @@ function extractParams(value: IExtrinsic | IMethod): Param[] {
  */
 
 export function formatCallMeta(meta?: FunctionMetadataLatest): string {
-  if (!meta || !meta.documentation.length) {
+  if (!meta || !meta.docs.length) {
     return '';
   }
 
-  const strings = meta.documentation.map((doc) => doc.toString().trim());
+  const strings = meta.docs.map((doc) => doc.toString().trim());
   const firstEmpty = strings.findIndex((doc) => !doc.length);
   const combined = (firstEmpty === -1 ? strings : strings.slice(0, firstEmpty))
     .join(' ')
