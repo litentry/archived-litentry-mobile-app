@@ -56,7 +56,6 @@ export function SubmitTipScreen({navigation}: {navigation: NavigationProp<Dashbo
           disabled={!valid}
           onPress={() => {
             if (api && state.account) {
-              dispatch({type: 'SET_ERROR', payload: undefined});
               start({
                 api,
                 address: state.account,
