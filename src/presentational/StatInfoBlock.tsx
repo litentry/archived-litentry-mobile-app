@@ -13,7 +13,7 @@ function StatInfoBlock(props: PropTypes) {
   const {children, title} = props;
 
   return (
-    <View>
+    <View style={styles.container}>
       <Text category="c1">{title}</Text>
       {isString(children) ? (
         <Text numberOfLines={1} style={styles.stat}>
@@ -27,6 +27,9 @@ function StatInfoBlock(props: PropTypes) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   stat: {
     textAlign: 'left',
     paddingVertical: standardPadding,
