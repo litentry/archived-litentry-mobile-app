@@ -10,6 +10,7 @@ import {useBestNumber} from 'src/api/hooks/useVotingStatus';
 import ProgressChartWidget from 'presentational/ProgressWidget';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import {standardPadding} from 'src/styles';
+import {notEmpty} from 'src/utils';
 
 type Props = {
   onMorePress: () => void;
@@ -28,9 +29,10 @@ export function DemocracySummaryTeaser(props: Props) {
     .div(total ?? BN_ONE)
     .toNumber();
 
-  const {
-    timeStringParts: [daysLeft, hoursLeft],
-  } = useBlockTime(timeLeft);
+  const {timeStringParts} = useBlockTime(timeLeft);
+
+  const firstTwoNoneEmptyTimeParts = timeStringParts.filter(notEmpty).slice(0, 2);
+  const timeLeftString = firstTwoNoneEmptyTimeParts.join('\n');
 
   return (
     <SectionTeaserContainer onMorePress={props.onMorePress} title="Democracy">
@@ -50,7 +52,7 @@ export function DemocracySummaryTeaser(props: Props) {
           {data?.launchPeriod && bestNumber && (
             <ProgressChartWidget
               title={`Launch period`}
-              detail={`${progressPercent}%\n${daysLeft}\n${hoursLeft}`}
+              detail={`${progressPercent}%\n${timeLeftString}`}
               data={[progressPercent / 100]}
             />
           )}

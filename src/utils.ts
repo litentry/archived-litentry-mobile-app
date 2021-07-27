@@ -200,3 +200,8 @@ export function validateFormField(
       !notEnding.some((check) => value.endsWith(check)))
   );
 }
+
+// Remove all empty values from array
+export function notEmpty<TValue>(value: TValue | null | undefined | ''): value is TValue {
+  return value !== null && value !== undefined && value !== '';
+}
