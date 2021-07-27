@@ -21,6 +21,7 @@ export function MultiAccountView() {
       <FlatList
         data={accounts}
         showsVerticalScrollIndicator
+        keyExtractor={(item) => item.address}
         renderItem={({item: account}) => (
           <AccountItem key={account.address} account={account} removeAccount={removeAccount} />
         )}
