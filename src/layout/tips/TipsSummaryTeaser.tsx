@@ -28,13 +28,17 @@ function TipsSummaryTeaser({onMorePress}: TipsSummaryTeaserProps) {
       {id && tip ? (
         <Card onPress={() => navigation.navigate(tipDetailScreen, {hash: String(id)})}>
           <View style={styles.row}>
-            <StatInfoBlock title="Who">
-              <AddressInlineTeaser address={String(tip.who)} />
-            </StatInfoBlock>
+            <View style={styles.rowItem}>
+              <StatInfoBlock title="Who">
+                <AddressInlineTeaser address={String(tip.who)} />
+              </StatInfoBlock>
+            </View>
             <Padder scale={0.5} />
-            <StatInfoBlock title="Finder">
-              <AddressInlineTeaser address={String(tip.finder)} />
-            </StatInfoBlock>
+            <View style={styles.rowItem}>
+              <StatInfoBlock title="Finder">
+                <AddressInlineTeaser address={String(tip.finder)} />
+              </StatInfoBlock>
+            </View>
           </View>
           <Padder scale={0.5} />
           <StatInfoBlock title="Reason">{tip.reason && <TipReason reasonHash={tip.reason} />}</StatInfoBlock>
@@ -49,5 +53,8 @@ export default TipsSummaryTeaser;
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
+  },
+  rowItem: {
+    flex: 1,
   },
 });
