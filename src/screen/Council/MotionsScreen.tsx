@@ -110,7 +110,7 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
         accessoryRight={() => {
           return (
             <>
-              <Text category={'c1'}>{`Aye ${votes?.ayes.length}/${membersCount} `}</Text>
+              <Text category={'c1'}>{`Aye ${votes?.ayes.length}/${votes?.threshold} `}</Text>
               <Padder scale={0.5} />
               {(() => {
                 if (data?.isMember) {
