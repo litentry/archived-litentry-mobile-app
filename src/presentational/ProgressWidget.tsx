@@ -16,7 +16,7 @@ function ProgressChartWidget(props: PropTypes) {
 
   return (
     <View>
-      <Text category="c1" numberOfLines={1}>
+      <Text category="c1" numberOfLines={1} style={styles.title}>
         {title}
       </Text>
       <View style={styles.chartContainer}>
@@ -47,6 +47,9 @@ function ProgressChartWidget(props: PropTypes) {
 }
 
 const styles = StyleSheet.create({
+  title: {
+    textAlign: 'center',
+  },
   chartContainer: {
     justifyContent: 'center',
     alignItems: 'center',

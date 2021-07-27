@@ -2,13 +2,14 @@ import {Card} from '@ui-kitten/components/ui';
 import SectionTeaserContainer from 'presentational/SectionTeaserContainer';
 import StatInfoBlock from 'presentational/StatInfoBlock';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {useDemocracy} from 'src/api/hooks/useDemocracy';
 import {formatNumber, BN_ONE, BN_ZERO, BN_HUNDRED} from '@polkadot/util';
 import Padder from 'presentational/Padder';
 import {useBestNumber} from 'src/api/hooks/useVotingStatus';
 import ProgressChartWidget from 'presentational/ProgressWidget';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
+import {standardPadding} from 'src/styles';
 
 type Props = {
   onMorePress: () => void;
@@ -44,7 +45,7 @@ export function DemocracySummaryTeaser(props: Props) {
             <StatInfoBlock title="Total">{formatNumber(data?.referendumTotal)}</StatInfoBlock>
           </View>
         </Card>
-        <Padder scale={0.3} />
+        <Padder scale={0.2} />
         <Card style={styles.card}>
           {data?.launchPeriod && bestNumber && (
             <ProgressChartWidget
@@ -60,15 +61,16 @@ export function DemocracySummaryTeaser(props: Props) {
 }
 
 const styles = StyleSheet.create({
-  card: {
-    flex: 1,
-  },
   boxRow: {
     flexDirection: 'row',
+  },
+  card: {
+    flex: 1,
   },
   itemRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginBottom: standardPadding * 2,
   },
 });
