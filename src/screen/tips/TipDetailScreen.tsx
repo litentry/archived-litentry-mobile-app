@@ -79,7 +79,7 @@ function TipDetailContent({tip, bestNumber}: TipDetailContentProps) {
         </Text>
         <TipReason reasonHash={tip.reason} />
       </View>
-      {closesAt && bestNumber ? (
+      {closesAt && bestNumber && closesAt.gt(bestNumber) ? (
         <View style={styles.closesAtContainer}>
           <Text category="s1" style={styles.sectionText}>
             Closes at
@@ -165,8 +165,6 @@ function TipDetailScreen({route}: ScreenProps) {
   );
 }
 
-export default TipDetailScreen;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -217,3 +215,5 @@ const styles = StyleSheet.create({
   },
   tipperIconContainer: {marginRight: 15},
 });
+
+export default TipDetailScreen;
