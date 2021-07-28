@@ -4,6 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Card, Divider, Icon, Layout, ListItem, Text} from '@ui-kitten/components';
 import {EmptyView} from 'presentational/EmptyView';
+import LoadingView from 'presentational/LoadingView';
 import {ProposalInfo} from 'presentational/ProposalInfo';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import * as React from 'react';
@@ -21,18 +22,22 @@ export function ReferendaScreen() {
   return (
     <Layout style={globalStyles.flex}>
       <SafeView edges={noTopEdges}>
-        <FlatList
-          refreshing={isLoading}
-          onRefresh={refetch}
-          style={styles.flatList}
-          data={data}
-          renderItem={({item}) => {
-            return <ReferendumItem item={item} />;
-          }}
-          ItemSeparatorComponent={Divider}
-          keyExtractor={(item) => item.index.toString()}
-          ListEmptyComponent={EmptyView}
-        />
+        {isLoading ? (
+          <LoadingView />
+        ) : (
+          <FlatList
+            refreshing={isLoading}
+            onRefresh={refetch}
+            style={styles.flatList}
+            data={data}
+            renderItem={({item}) => {
+              return <ReferendumItem item={item} />;
+            }}
+            ItemSeparatorComponent={Divider}
+            keyExtractor={(item) => item.index.toString()}
+            ListEmptyComponent={EmptyView}
+          />
+        )}
       </SafeView>
     </Layout>
   );
