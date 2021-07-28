@@ -13,12 +13,12 @@ import {
   SelectItem,
   Text,
 } from '@ui-kitten/components';
-import {getAccountDisplayValue, useAccounts} from 'context/AccountsContext';
 import {useApi} from 'context/ChainApiContext';
 import {useTX} from 'context/TxContext';
 import Padder from 'presentational/Padder';
 import {ProgressBar} from 'presentational/ProgressBar';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
+import {SelectAccount} from 'presentational/SelectAccount';
 import React, {useReducer} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
@@ -26,10 +26,10 @@ import {useConvictions} from 'src/api/hooks/useConvictions';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useReferendums} from 'src/api/hooks/useReferendums';
 import {useBestNumber} from 'src/api/hooks/useVotingStatus';
+import {getBalanceFromString} from 'src/api/utils/balance';
 import {DashboardStackParamList} from 'src/navigation/navigation';
 import {referendumScreen} from 'src/navigation/routeKeys';
 import {formatCallMeta} from 'src/packages/call_inspector/CallInspector';
-import {getBalanceFromString} from 'src/api/utils/balance';
 import globalStyles, {standardPadding} from 'src/styles';
 
 export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
@@ -48,10 +48,6 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
   const enactBlock = bestNumber ? referendum?.status.end.add(referendum.status.delay).sub(bestNumber) : undefined;
   const {timeStringParts: remainingTime} = useBlockTime(remainBlock);
   const {timeStringParts: activateTime} = useBlockTime(enactBlock);
-
-  const {accounts} = useAccounts();
-  const selectedAccount = state.account && accounts[state.account.row];
-  const accountDisplayValue = selectedAccount ? getAccountDisplayValue(selectedAccount) : undefined;
 
   const convictions = useConvictions();
   const selectedConviction = state.conviction && convictions[state.conviction.row];
@@ -164,18 +160,12 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
           <Card disabled={true} style={styles.modalCard}>
             <Text>Vote with account</Text>
             <Padder scale={0.5} />
-            <Select
-              selectedIndex={state.account}
-              value={accountDisplayValue}
-              onSelect={(index) => {
-                if (!Array.isArray(index)) {
-                  dispatch({type: 'SELECT_ACCOUNT', payload: index});
-                }
-              }}>
-              {accounts.map((account) => {
-                return <SelectItem key={account.address} title={getAccountDisplayValue(account)} />;
-              })}
-            </Select>
+            <SelectAccount
+              selected={state.account}
+              onSelect={(account) => {
+                dispatch({type: 'SELECT_ACCOUNT', payload: account});
+              }}
+            />
             <Padder scale={1.5} />
 
             <Text>Vote Value</Text>
@@ -218,14 +208,14 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
                 CANCEL
               </Button>
               <Button
-                disabled={!selectedAccount || !selectedConviction}
+                disabled={!state.account || !selectedConviction}
                 onPress={() => {
-                  if (api && selectedAccount?.address && selectedConviction) {
+                  if (api && state.account && selectedConviction) {
                     const balance = getBalanceFromString(api, state.voteValue);
 
                     start({
                       api,
-                      address: selectedAccount?.address,
+                      address: state.account,
                       txMethod: 'democracy.vote',
                       params: [
                         referendum?.index,
@@ -263,7 +253,7 @@ const initialState: State = {voteValue: '0.0000'};
 
 type State = {
   voting?: 'YES' | 'NO';
-  account?: IndexPath;
+  account?: string;
   voteValue: string;
   conviction?: IndexPath;
 };
@@ -272,7 +262,7 @@ type Action =
   | {type: 'RESET'}
   | {type: 'CHANGE_VOTING'; payload: 'YES' | 'NO' | undefined}
   | {type: 'SET_VOTE_VALUE'; payload: string}
-  | {type: 'SELECT_ACCOUNT'; payload: IndexPath}
+  | {type: 'SELECT_ACCOUNT'; payload: string}
   | {type: 'SELECT_CONVICTION'; payload: IndexPath};
 
 function reducer(state: State, action: Action): State {
