@@ -5,7 +5,7 @@ import {Button, Divider, Icon, IconProps, Layout, Text, TopNavigationAction} fro
 import {useAccounts} from 'context/AccountsContext';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
-import CouncilSummaryTeaser from 'layout/CouncilSummaryTeaser';
+import {CouncilSummaryTeaser} from 'layout/CouncilSummaryTeaser';
 import {ReferendaSummaryTeaser} from 'layout/ReferendaSummaryTeaser';
 import TipsSummaryTeaser from 'layout/tips/TipsSummaryTeaser';
 import TreasurySummaryTeaser from 'layout/TreasurySummaryTeaser';
