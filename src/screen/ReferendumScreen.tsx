@@ -82,7 +82,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
                 <Text category={'c1'}>{`${section}.${method}`}</Text>
                 <Text category={'c1'}>{`${formatCallMeta(meta)}`}</Text>
                 <Padder scale={1.5} />
-                <Text appearance={'hint'}>Has of the proposal</Text>
+                <Text appearance={'hint'}>Hash of the proposal</Text>
                 <Text category={'c1'} numberOfLines={1}>
                   {String(proposal?.hash)}
                 </Text>
