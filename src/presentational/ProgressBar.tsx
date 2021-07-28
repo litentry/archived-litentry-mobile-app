@@ -41,7 +41,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'green',
     height: '100%',
     borderRightColor: 'white',
-    borderRightWidth: 2,
   },
   requiredContainer: {
     position: 'absolute',

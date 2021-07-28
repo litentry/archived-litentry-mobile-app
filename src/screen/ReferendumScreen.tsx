@@ -57,11 +57,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
   const selectedConviction = state.conviction && convictions[state.conviction.row];
   const convictionDisplayValue = selectedConviction?.text;
 
-  if (!proposal) {
-    return null;
-  }
-
-  const {meta, method, section} = proposal.registry.findMetaCall(proposal.callIndex);
+  const {meta, method, section} = proposal?.registry.findMetaCall(proposal.callIndex) ?? {};
 
   const ayePercentage =
     referendum && !referendum.votedTotal.isZero()
@@ -80,14 +76,25 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
           <Padder scale={0.5} />
           <Divider />
           <View style={styles.paddedBox}>
-            <Text appearance={'hint'}>Proposal</Text>
-            <Text category={'c1'}>{`${section}.${method}`}</Text>
-            <Text category={'c1'}>{`${formatCallMeta(meta)}`}</Text>
-            <Padder scale={1.5} />
-            <Text appearance={'hint'}>Has of the proposal</Text>
-            <Text category={'c1'} numberOfLines={1}>
-              {proposal.hash.toString()}
-            </Text>
+            {proposal ? (
+              <>
+                <Text appearance={'hint'}>Proposal</Text>
+                <Text category={'c1'}>{`${section}.${method}`}</Text>
+                <Text category={'c1'}>{`${formatCallMeta(meta)}`}</Text>
+                <Padder scale={1.5} />
+                <Text appearance={'hint'}>Has of the proposal</Text>
+                <Text category={'c1'} numberOfLines={1}>
+                  {String(proposal?.hash)}
+                </Text>
+              </>
+            ) : (
+              <>
+                <Text appearance={'hint'}>Preimage</Text>
+                <Text category={'c1'} numberOfLines={1} ellipsizeMode="middle">
+                  {String(referendum?.imageHash)}
+                </Text>
+              </>
+            )}
             <Padder scale={1.5} />
 
             <View style={styles.row}>
