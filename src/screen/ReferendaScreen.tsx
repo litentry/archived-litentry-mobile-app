@@ -27,7 +27,7 @@ export function ReferendaScreen() {
           style={styles.flatList}
           data={data}
           renderItem={({item}) => {
-            return <Referenda item={item} />;
+            return <ReferendumItem item={item} />;
           }}
           ItemSeparatorComponent={Divider}
           keyExtractor={(item) => item.index.toString()}
@@ -40,18 +40,17 @@ export function ReferendaScreen() {
 
 const styles = StyleSheet.create({flatList: {padding: standardPadding * 2}});
 
-function Referenda({item}: {item: DeriveReferendumExt}) {
+function ReferendumItem({item}: {item: DeriveReferendumExt}) {
   const navigation = useNavigation<StackNavigationProp<DashboardStackParamList>>();
   const {image: {proposal} = {proposal: undefined}} = item;
   const bestNumber = useBestNumber();
 
   const remainBlock = bestNumber ? item.status.end.sub(bestNumber).isub(BN_ONE) : undefined;
   const {timeStringParts} = useBlockTime(remainBlock);
-  if (!proposal) {
-    return <Text>{item.imageHash.toString()}</Text>;
-  }
 
-  const {method, section} = proposal?.registry.findMetaCall(proposal.callIndex);
+  const {method, section} = proposal?.registry.findMetaCall(proposal.callIndex) ?? {};
+  const title = proposal ? `${method}.${section}` : `preimage`;
+
   const goToRefrenda = () => {
     navigation.navigate(referendumScreen, {index: item.index.toString()});
   };
@@ -60,7 +59,7 @@ function Referenda({item}: {item: DeriveReferendumExt}) {
     <Card style={referendumStyle.container} onPress={goToRefrenda}>
       <ListItem
         style={referendumStyle.item}
-        title={`${method}.${section}`}
+        title={title}
         accessoryLeft={() => <Text category={'h4'}>{item.index.toString()}</Text>}
         accessoryRight={() => (
           <View style={referendumStyle.row}>
@@ -71,7 +70,13 @@ function Referenda({item}: {item: DeriveReferendumExt}) {
           </View>
         )}
       />
-      <ProposalInfo proposal={proposal} />
+      {proposal ? (
+        <ProposalInfo proposal={proposal} />
+      ) : (
+        <Text numberOfLines={1} ellipsizeMode="middle">
+          {String(item.imageHash)}
+        </Text>
+      )}
     </Card>
   );
 }
