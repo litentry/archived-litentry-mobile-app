@@ -22,7 +22,7 @@ function CouncilSummaryTeaser(props: PropTypes & InjectedPropTypes) {
     <SeactionTeaserContainer onMorePress={props.onMorePress} title="Council">
       <View>
         <Layout style={styles.container}>
-          <Card style={[styles.item, styles.left]}>
+          <Card style={[styles.item, styles.left]} disabled>
             <View style={globalStyles.spaceBetweenRowContainer}>
               <StatInfoBlock title="Seats">{props.electionsInfo.data.seatDisplay}</StatInfoBlock>
               <StatInfoBlock title="Runners up">{props.electionsInfo.data.runnersupDisplay}</StatInfoBlock>

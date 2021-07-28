@@ -33,7 +33,7 @@ function TreasurySummaryTeaser(props: PropTypes & InjectedPropTypes) {
     <SeactionTeaserContainer onMorePress={props.onMorePress} title="Treasury">
       <View>
         <Layout style={styles.container}>
-          <Card style={[styles.item, styles.left]}>
+          <Card style={[styles.item, styles.left]} disabled>
             <View style={globalStyles.spaceBetweenRowContainer}>
               <StatInfoBlock title="Proposals">{String(treasuryInfo.info?.proposals.length)}</StatInfoBlock>
               <StatInfoBlock title="Totals">{formatNumber(treasuryInfo.totalProposals)}</StatInfoBlock>
@@ -50,7 +50,7 @@ function TreasurySummaryTeaser(props: PropTypes & InjectedPropTypes) {
           </Card>
         </Layout>
         <Padder scale={0.3} />
-        <Card>
+        <Card disabled>
           <View style={globalStyles.spaceBetweenRowContainer}>
             <StatInfoBlock title="Available">{formatBalance(treasuryInfo.treasuryBalance?.freeBalance)}</StatInfoBlock>
             <StatInfoBlock title="Next Burn">{formatBalance(treasuryInfo.burn || BN_ZERO)}</StatInfoBlock>

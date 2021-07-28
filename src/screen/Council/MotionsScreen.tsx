@@ -16,24 +16,29 @@ import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {ProposalInfo} from 'presentational/ProposalInfo';
 import {useMotions} from 'src/api/hooks/useMotions';
 import {standardPadding} from 'src/styles';
+import LoadingView from 'presentational/LoadingView';
 
 export function MotionsScreen() {
   const {data, refetch, isLoading} = useMotions();
 
   return (
     <SafeView edges={noTopEdges}>
-      <FlatList
-        refreshing={isLoading}
-        onRefresh={refetch}
-        style={styles.flatList}
-        data={data}
-        renderItem={({item}) => {
-          return <Motion item={item} />;
-        }}
-        ItemSeparatorComponent={Divider}
-        keyExtractor={(item) => item.hash.toHex()}
-        ListEmptyComponent={EmptyView}
-      />
+      {isLoading ? (
+        <LoadingView />
+      ) : (
+        <FlatList
+          refreshing={isLoading}
+          onRefresh={refetch}
+          style={styles.flatList}
+          data={data}
+          renderItem={({item}) => {
+            return <Motion item={item} />;
+          }}
+          ItemSeparatorComponent={Divider}
+          keyExtractor={(item) => item.hash.toHex()}
+          ListEmptyComponent={EmptyView}
+        />
+      )}
     </SafeView>
   );
 }
@@ -102,7 +107,7 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
   };
 
   return (
-    <Card style={motionStyle.container}>
+    <Card style={motionStyle.container} disabled>
       <ListItem
         accessoryLeft={() => {
           return <Text category={'h4'}>{formatNumber(votes?.index)}</Text>;
