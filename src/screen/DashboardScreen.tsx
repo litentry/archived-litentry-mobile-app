@@ -1,7 +1,7 @@
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {Divider, Icon, IconProps, Text, TopNavigationAction} from '@ui-kitten/components';
+import {Divider, Icon, Text, TopNavigationAction} from '@ui-kitten/components';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
 import CouncilSummaryTeaser from 'layout/CouncilSummaryTeaser';
@@ -24,8 +24,6 @@ type PropTypes = {
     DrawerNavigationProp<DrawerParamList>
   >;
 };
-
-const AddIcon = (props: IconProps) => <Icon {...props} name="person-add-outline" />;
 
 function DashboardScreen({navigation}: PropTypes) {
   const [networkSelectOpen, setNetworkSelectOpen] = useState(false);
