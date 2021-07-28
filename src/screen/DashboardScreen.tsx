@@ -8,7 +8,7 @@ import {NetworkContext} from 'context/NetworkContext';
 import {CouncilSummaryTeaser} from 'layout/CouncilSummaryTeaser';
 import {ReferendaSummaryTeaser} from 'layout/ReferendaSummaryTeaser';
 import TipsSummaryTeaser from 'layout/tips/TipsSummaryTeaser';
-import TreasurySummaryTeaser from 'layout/TreasurySummaryTeaser';
+import {TreasurySummaryTeaser} from 'layout/TreasurySummaryTeaser';
 import FadeInAnimatedView from 'presentational/FadeInAnimatedView';
 import NetworkItem from 'presentational/NetworkItem';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
