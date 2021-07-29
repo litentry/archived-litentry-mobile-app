@@ -16,6 +16,9 @@ import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {ProposalInfo} from 'presentational/ProposalInfo';
 import {useMotions} from 'src/api/hooks/useMotions';
 import {standardPadding} from 'src/styles';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {motionDetailScreen} from 'src/navigation/routeKeys';
+import {DashboardStackParamList} from 'src/navigation/navigation';
 
 export function MotionsScreen() {
   const {data, refetch, isLoading} = useMotions();
@@ -41,6 +44,7 @@ export function MotionsScreen() {
 const styles = StyleSheet.create({flatList: {padding: standardPadding * 2}});
 
 function Motion({item}: {item: DeriveCollectiveProposal}) {
+  const navigation = useNavigation<NavigationProp<DashboardStackParamList>>();
   const {api} = useContext(ChainApiContext);
   const {start} = useContext(TxContext);
   const {accounts} = useAccounts();
@@ -102,7 +106,11 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
   };
 
   return (
-    <Card style={motionStyle.container}>
+    <Card
+      style={motionStyle.container}
+      onPress={() => {
+        navigation.navigate(motionDetailScreen, {hash: String(hash), id: Number(votes?.index)});
+      }}>
       <ListItem
         accessoryLeft={() => {
           return <Text category={'h4'}>{formatNumber(votes?.index)}</Text>;

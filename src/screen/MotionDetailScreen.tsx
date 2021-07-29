@@ -1,10 +1,10 @@
-import React, {useEffect} from 'react';
-import withMotionDetail, {InjectedPropTypes as MotionDetailInjectedPropTypes} from 'src/hoc/withMotionDetail';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {RouteProp} from '@react-navigation/native';
 import MotionDetailPage from 'layout/MotionDetailPage';
 import LoadingView from 'presentational/LoadingView';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
+import React from 'react';
+import {useMotionDetail} from 'src/api/hooks/useMotionDetail';
 import {DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
 
 type PropTypes = {
@@ -12,20 +12,14 @@ type PropTypes = {
   route: RouteProp<DashboardStackParamList, 'Motion'>;
 };
 
-function MotionDetailScreen(props: PropTypes & MotionDetailInjectedPropTypes) {
+function MotionDetailScreen(props: PropTypes) {
   const {
-    motionDetail: {show, motion},
     route: {params},
   } = props;
 
-  const {hash, id} = params;
-
-  useEffect(() => {
-    show(hash, id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const {data: motion} = useMotionDetail(params);
 
   return <SafeView edges={noTopEdges}>{motion ? <MotionDetailPage motion={motion} /> : <LoadingView />}</SafeView>;
 }
 
-export default withMotionDetail(MotionDetailScreen);
+export default MotionDetailScreen;

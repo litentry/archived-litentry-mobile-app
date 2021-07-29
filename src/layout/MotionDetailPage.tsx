@@ -1,7 +1,7 @@
 import React, {useRef, useContext} from 'react';
 import _ from 'lodash';
 import {StyleSheet, View, TouchableOpacity, Dimensions} from 'react-native';
-import {mapMotionDetail} from 'src/hoc/withMotionDetail';
+import {mapMotionDetail} from 'src/api/hooks/useMotionDetail';
 import {Text, Layout, Card, Icon} from '@ui-kitten/components';
 import globalStyles, {standardPadding, monofontFamily, colorGreen, colorRed} from 'src/styles';
 import Padder from 'presentational/Padder';
