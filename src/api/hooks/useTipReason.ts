@@ -1,18 +1,17 @@
-import {useContext} from 'react';
-import {hexToString} from '@polkadot/util';
-import {Option, Bytes} from '@polkadot/types';
+import {Bytes, Option} from '@polkadot/types';
 import {Hash} from '@polkadot/types/interfaces';
-import {ChainApiContext} from 'context/ChainApiContext';
-import {useCall} from 'src/hook/useCall';
+import {hexToString} from '@polkadot/util';
+import useApiQuery from 'src/api/hooks/useApiQuery';
 
 const transformTip = {
   transform: (optBytes: Option<Bytes>) => (optBytes.isSome ? hexToString(optBytes.unwrap().toHex()) : null),
 };
 
 export function useTipReason(reasonHash: Hash) {
-  const {api} = useContext(ChainApiContext);
+  return useApiQuery(['tips_reason', reasonHash], async (api) => {
+    const reasonText = await api.query.tips.reasons(reasonHash);
+    const transformed = transformTip.transform(reasonText);
 
-  const reasonText = useCall<string | null>(api?.query.tips.reasons, [reasonHash], transformTip);
-
-  return reasonText || reasonHash.toHex();
+    return transformed || reasonHash.toHex();
+  });
 }

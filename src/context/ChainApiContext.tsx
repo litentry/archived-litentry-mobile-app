@@ -36,12 +36,12 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
       return;
     }
 
-    setApi(undefined);
     setInProgress(true);
     logger.debug('ChainApiContext: trying to connected to', wsAddress);
 
     const provider = new WsProvider(wsAddress);
     const apiPromise = new ApiPromise({provider});
+    setApi(apiPromise);
 
     function handleConnect() {
       logger.debug('ChainApiContext: Api connected');
@@ -53,14 +53,12 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
       setInProgress(false);
 
       setStatus('ready');
-      setApi(apiPromise);
       queryClient.clear();
     }
 
     function handleDisconnect() {
       logger.debug('ChainApiContext: Api disconnected', wsAddress);
 
-      setApi(undefined);
       setStatus('disconnected');
     }
 

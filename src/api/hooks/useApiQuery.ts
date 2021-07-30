@@ -21,7 +21,10 @@ function useApiQuery<TData>(
       }
       return queryFn(api);
     },
-    options,
+    {
+      ...options,
+      enabled: options?.enabled ? options.enabled && api?.isConnected : api?.isConnected,
+    },
   );
 }
 
