@@ -1,37 +1,37 @@
-import React, {useState, useContext, useCallback} from 'react';
-import BN from 'bn.js';
-import {View, Alert} from 'react-native';
+import Identicon from '@polkadot/reactnative-identicon';
+import {Registration} from '@polkadot/types/interfaces';
+import {u8aToString} from '@polkadot/util';
 import {
-  Text,
-  Layout,
-  Divider,
-  ListItem,
   Button,
-  IconProps,
+  Divider,
   Icon,
+  IconProps,
+  Layout,
+  ListItem,
   Menu,
   MenuGroup,
   MenuItem,
+  Text,
 } from '@ui-kitten/components';
-import globalStyles, {standardPadding} from 'src/styles';
-import InfoBanner from 'presentational/InfoBanner';
-import Padder from 'presentational/Padder';
-import Identicon from '@polkadot/reactnative-identicon';
-import {u8aToString} from '@polkadot/util';
-import {AddressDetailType} from 'src/types';
-import RegistrarSelectionModal from 'layout/RegistrarSelectionModal';
+import BN from 'bn.js';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {TxContext} from 'context/TxContext';
+import RegistrarSelectionModal from 'layout/RegistrarSelectionModal';
+import InfoBanner from 'presentational/InfoBanner';
+import Padder from 'presentational/Padder';
+import React, {useCallback, useContext, useState} from 'react';
+import {Alert, View} from 'react-native';
+import globalStyles, {standardPadding} from 'src/styles';
 
 type PropTypes = {
   address: string;
   display: string;
-  detail?: AddressDetailType;
+  registration?: Registration;
 };
 
 const MoreIcon = (props: IconProps) => <Icon {...props} pack="ionic" name="ios-apps-outline" />;
 
-function RequestJudgement({display, address, detail}: PropTypes) {
+function RequestJudgement({display, address, registration}: PropTypes) {
   const [visible, setVisible] = useState(false);
 
   const {api} = useContext(ChainApiContext);
@@ -113,7 +113,7 @@ function RequestJudgement({display, address, detail}: PropTypes) {
               accessoryLeft={(props) => <Icon {...props} name="award-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
-                  {u8aToString(detail?.data?.info.legal.asRaw) || 'Unset'}
+                  {u8aToString(registration?.info.legal.asRaw) || 'Unset'}
                 </Text>
               )}
             />
@@ -122,7 +122,7 @@ function RequestJudgement({display, address, detail}: PropTypes) {
               accessoryLeft={(props) => <Icon {...props} name="email-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
-                  {u8aToString(detail?.data?.info.email.asRaw) || 'Unset'}
+                  {u8aToString(registration?.info.email.asRaw) || 'Unset'}
                 </Text>
               )}
             />
@@ -131,7 +131,7 @@ function RequestJudgement({display, address, detail}: PropTypes) {
               accessoryLeft={(props) => <Icon {...props} name="twitter-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
-                  {u8aToString(detail?.data?.info.twitter.asRaw) || 'Unset'}
+                  {u8aToString(registration?.info.twitter.asRaw) || 'Unset'}
                 </Text>
               )}
             />
@@ -140,7 +140,7 @@ function RequestJudgement({display, address, detail}: PropTypes) {
               accessoryLeft={(props) => <Icon {...props} name="message-square-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
-                  {u8aToString(detail?.data?.info.riot.asRaw) || 'Unset'}
+                  {u8aToString(registration?.info.riot.asRaw) || 'Unset'}
                 </Text>
               )}
             />
@@ -149,7 +149,7 @@ function RequestJudgement({display, address, detail}: PropTypes) {
               accessoryLeft={(props) => <Icon {...props} name="browser-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
-                  {u8aToString(detail?.data?.info.web.asRaw) || 'Unset'}
+                  {u8aToString(registration?.info.web.asRaw) || 'Unset'}
                 </Text>
               )}
             />

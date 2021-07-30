@@ -8,7 +8,7 @@ import {AccountInfo} from '@polkadot/types/interfaces';
 import Identicon from '@polkadot/reactnative-identicon';
 import JudgmentStatus from 'presentational/JudgmentStatus';
 import {NetworkType} from 'src/types';
-import useAccountDetail from 'src/api/hooks/useAccountDetail';
+import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 
 const {height} = Dimensions.get('window');
 
@@ -28,8 +28,8 @@ function AddressInfoPreview(props: PropTypes) {
   const [account, setAccount] = useState<AccountInfo>();
   const [inProgress, setInProgress] = useState(false);
 
-  const {display, detail} = useAccountDetail(network?.key, address, api);
-  const identity = detail?.data;
+  const {data, isLoading} = useAccountIdentityInfo(address);
+  const identity = data?.registration;
 
   useEffect(() => {
     if (api) {
@@ -77,7 +77,7 @@ function AddressInfoPreview(props: PropTypes) {
                 numberOfLines={1}
                 style={{width: '50%', textAlign: 'right'}}
                 ellipsizeMode="middle">
-                {display || 'untitled account'}
+                {data?.display || 'untitled account'}
               </Text>
             )}
           />

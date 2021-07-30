@@ -1,19 +1,18 @@
-import React, {useState, useContext} from 'react';
-import {StyleSheet, TouchableOpacity, Dimensions} from 'react-native';
-import Clipboard from '@react-native-community/clipboard';
 import Identicon from '@polkadot/reactnative-identicon';
-import {Layout, Text, Icon, Tooltip, Modal, Card, Button} from '@ui-kitten/components';
-import globalStyles, {monofontFamily, getIconColorByTheme, standardPadding} from 'src/styles';
-import {useTheme} from 'context/ThemeContext';
-import QRCode from '../presentational/QRCode';
-import Padder from '../presentational/Padder';
-import AccountInfoInlineTeaser from '../presentational/AccountInfoInlineTeaser';
-import {NetworkContext} from 'context/NetworkContext';
-import {useAccounts} from 'src/context/AccountsContext';
-import {ChainApiContext} from 'context/ChainApiContext';
-import useAccountDetail from 'src/api/hooks/useAccountDetail';
+import {u8aToString} from '@polkadot/util';
+import Clipboard from '@react-native-community/clipboard';
 import {useNavigation} from '@react-navigation/native';
+import {Button, Card, Icon, Layout, Modal, Text, Tooltip} from '@ui-kitten/components';
+import {useTheme} from 'context/ThemeContext';
+import React, {useState} from 'react';
+import {Dimensions, StyleSheet, TouchableOpacity} from 'react-native';
+import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
+import {useAccounts} from 'src/context/AccountsContext';
 import {myIdentityScreen} from 'src/navigation/routeKeys';
+import globalStyles, {getIconColorByTheme, monofontFamily, standardPadding} from 'src/styles';
+import AccountInfoInlineTeaser from '../presentational/AccountInfoInlineTeaser';
+import Padder from '../presentational/Padder';
+import QRCode from '../presentational/QRCode';
 
 const {width} = Dimensions.get('window');
 
@@ -29,10 +28,9 @@ function AccountTeaser(props: PropTypes) {
   const [qrVisible, setQrVisible] = useState(false);
   const {theme} = useTheme();
   const {accounts} = useAccounts();
-  const {currentNetwork} = useContext(NetworkContext);
-  const {api} = useContext(ChainApiContext);
   const account = accounts[0]; // TODO: change this when adding multi account support
-  const {display, detail} = useAccountDetail(currentNetwork?.key || 'polkadot', account?.address, api);
+  const {data} = useAccountIdentityInfo(account?.address);
+  const display = u8aToString(data?.info?.display.asRaw);
 
   const handleIconPressed = (addr?: string) => {
     if (addr) {
@@ -56,7 +54,7 @@ function AccountTeaser(props: PropTypes) {
       <TouchableOpacity style={styles.identIconContainer} onPress={() => handleIconPressed(account?.address)}>
         <Identicon value={address} size={60} />
       </TouchableOpacity>
-      {display ? <AccountInfoInlineTeaser display={display} judgements={detail?.data?.judgements} /> : null}
+      {display ? <AccountInfoInlineTeaser display={display} judgements={data?.registration?.judgements} /> : null}
       <Layout level={props.level} style={styles.addressContainer}>
         <TouchableOpacity onPress={() => setQrVisible(true)}>
           <Icon style={[styles.icon, {color: getIconColorByTheme(theme)}]} pack="ionic" name="qr-code-sharp" />
