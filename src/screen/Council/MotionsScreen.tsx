@@ -19,7 +19,7 @@ import {standardPadding} from 'src/styles';
 import LoadingView from 'presentational/LoadingView';
 
 export function MotionsScreen() {
-  const {data, refetch, isLoading} = useMotions();
+  const {data, refetch, isLoading, isFetching} = useMotions();
 
   return (
     <SafeView edges={noTopEdges}>
@@ -27,7 +27,7 @@ export function MotionsScreen() {
         <LoadingView />
       ) : (
         <FlatList
-          refreshing={isLoading}
+          refreshing={isFetching}
           onRefresh={refetch}
           style={styles.flatList}
           data={data}
