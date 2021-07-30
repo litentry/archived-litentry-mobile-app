@@ -19,7 +19,7 @@ function CouncilSummaryTeaser(props: PropTypes & InjectedPropTypes) {
   const {timeStringParts: termLeft} = useBlockTime(props.electionsInfo.data.termLeft);
 
   return (
-    <SeactionTeaserContainer onMorePress={props.onPressMore} title="Council">
+    <SeactionTeaserContainer onPressMore={props.onPressMore} title="Council">
       <View>
         <Layout style={styles.container}>
           <Card style={[styles.item, styles.left]}>

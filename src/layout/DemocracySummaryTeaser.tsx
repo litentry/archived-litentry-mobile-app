@@ -34,7 +34,7 @@ export function DemocracySummaryTeaser(props: Props) {
   const timeLeftString = firstTwoNoneEmptyTimeParts.join('\n');
 
   return (
-    <SectionTeaserContainer onMorePress={props.onPressMore} title="Democracy">
+    <SectionTeaserContainer onPressMore={props.onPressMore} title="Democracy">
       <View style={styles.boxRow}>
         <Card style={styles.card}>
           <View style={styles.itemRow}>

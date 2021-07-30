@@ -30,7 +30,7 @@ function TreasurySummaryTeaser(props: PropTypes & InjectedPropTypes) {
   const {timeStringParts: termLeft} = useBlockTime(total.sub(value || BN_ONE));
 
   return (
-    <SeactionTeaserContainer onMorePress={props.onPressMore} title="Treasury">
+    <SeactionTeaserContainer onPressMore={props.onPressMore} title="Treasury">
       <View>
         <Layout style={styles.container}>
           <Card style={[styles.item, styles.left]}>
