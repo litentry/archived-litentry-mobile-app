@@ -12,7 +12,7 @@ import {useElectionsInfo} from 'src/api/hooks/useElectionsInfo';
 import LoadingView from 'presentational/LoadingView';
 
 type PropTypes = {
-  onMorePress: () => void;
+  onPressMore: () => void;
 };
 
 export function CouncilSummaryTeaser(props: PropTypes) {
@@ -29,10 +29,10 @@ export function CouncilSummaryTeaser(props: PropTypes) {
   }
 
   return (
-    <SeactionTeaserContainer onMorePress={props.onMorePress} title="Council">
+    <SeactionTeaserContainer onPressMore={props.onPressMore} title="Council">
       <View>
         <Layout style={styles.container}>
-          <Card style={[styles.item, styles.left]}>
+          <Card style={[styles.item, styles.left]} disabled>
             <View style={globalStyles.spaceBetweenRowContainer}>
               <StatInfoBlock title="Seats">{electionsInfo.data.seatDisplay}</StatInfoBlock>
               <StatInfoBlock title="Runners up">{electionsInfo.data.runnersupDisplay}</StatInfoBlock>

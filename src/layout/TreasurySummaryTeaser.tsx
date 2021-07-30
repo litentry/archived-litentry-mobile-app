@@ -9,10 +9,10 @@ import ProgressChartWidget from 'presentational/ProgressWidget';
 import StatInfoBlock from 'presentational/StatInfoBlock';
 import {formatNumber, BN_ONE, bnToBn, formatBalance, BN_ZERO} from '@polkadot/util';
 import {useTreasuryInfo} from 'src/api/hooks/useTreasuryInfo';
-import {useBestNumber} from 'src/api/hooks/useVotingStatus';
+import {useBestNumber} from 'src/api/hooks/useBestNumber';
 
 type PropTypes = {
-  onMorePress: () => void;
+  onPressMore: () => void;
 };
 
 export function TreasurySummaryTeaser(props: PropTypes) {
@@ -32,10 +32,10 @@ export function TreasurySummaryTeaser(props: PropTypes) {
   const {timeStringParts: termLeft} = useBlockTime(total.sub(value || BN_ONE));
 
   return (
-    <SeactionTeaserContainer onMorePress={props.onMorePress} title="Treasury">
+    <SeactionTeaserContainer onPressMore={props.onPressMore} title="Treasury">
       <View>
         <Layout style={styles.container}>
-          <Card style={[styles.item, styles.left]}>
+          <Card style={[styles.item, styles.left]} disabled>
             <View style={globalStyles.spaceBetweenRowContainer}>
               <StatInfoBlock title="Proposals">{String(treasuryInfo?.proposals.proposals.length)}</StatInfoBlock>
               <StatInfoBlock title="Totals">{formatNumber(treasuryInfo?.proposals.proposalCount)}</StatInfoBlock>
@@ -52,7 +52,7 @@ export function TreasurySummaryTeaser(props: PropTypes) {
           </Card>
         </Layout>
         <Padder scale={0.3} />
-        <Card>
+        <Card disabled>
           <View style={globalStyles.spaceBetweenRowContainer}>
             <StatInfoBlock title="Available">{formatBalance(treasuryInfo?.treasuryBalance?.freeBalance)}</StatInfoBlock>
             <StatInfoBlock title="Next Burn">{formatBalance(treasuryInfo?.burn || BN_ZERO)}</StatInfoBlock>

@@ -19,24 +19,29 @@ import {standardPadding} from 'src/styles';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {motionDetailScreen} from 'src/navigation/routeKeys';
 import {DashboardStackParamList} from 'src/navigation/navigation';
+import LoadingView from 'presentational/LoadingView';
 
 export function MotionsScreen() {
-  const {data, refetch, isLoading} = useMotions();
+  const {data, refetch, isLoading, isFetching} = useMotions();
 
   return (
     <SafeView edges={noTopEdges}>
-      <FlatList
-        refreshing={isLoading}
-        onRefresh={refetch}
-        style={styles.flatList}
-        data={data}
-        renderItem={({item}) => {
-          return <Motion item={item} />;
-        }}
-        ItemSeparatorComponent={Divider}
-        keyExtractor={(item) => item.hash.toHex()}
-        ListEmptyComponent={EmptyView}
-      />
+      {isLoading ? (
+        <LoadingView />
+      ) : (
+        <FlatList
+          refreshing={isFetching}
+          onRefresh={refetch}
+          style={styles.flatList}
+          data={data}
+          renderItem={({item}) => {
+            return <Motion item={item} />;
+          }}
+          ItemSeparatorComponent={Divider}
+          keyExtractor={(item) => item.hash.toHex()}
+          ListEmptyComponent={EmptyView}
+        />
+      )}
     </SafeView>
   );
 }
