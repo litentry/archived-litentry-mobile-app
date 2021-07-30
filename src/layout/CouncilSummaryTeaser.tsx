@@ -11,7 +11,7 @@ import ProgressChartWidget from 'presentational/ProgressWidget';
 import StatInfoBlock from 'presentational/StatInfoBlock';
 
 type PropTypes = {
-  onMorePress: () => void;
+  onPressMore: () => void;
 };
 
 function CouncilSummaryTeaser(props: PropTypes & InjectedPropTypes) {
@@ -19,7 +19,7 @@ function CouncilSummaryTeaser(props: PropTypes & InjectedPropTypes) {
   const {timeStringParts: termLeft} = useBlockTime(props.electionsInfo.data.termLeft);
 
   return (
-    <SeactionTeaserContainer onMorePress={props.onMorePress} title="Council">
+    <SeactionTeaserContainer onPressMore={props.onPressMore} title="Council">
       <View>
         <Layout style={styles.container}>
           <Card style={[styles.item, styles.left]}>

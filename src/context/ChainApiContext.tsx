@@ -1,5 +1,6 @@
 import {ApiPromise, WsProvider} from '@polkadot/api';
 import React, {createContext, useContext, useEffect, useMemo, useState} from 'react';
+import {useQueryClient} from 'react-query';
 import {createLogger} from 'src/utils';
 import {NetworkContext} from './NetworkContext';
 
@@ -27,6 +28,8 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
   const [api, setApi] = useState<ApiPromise>();
   const [wsConnectionIndex, setWsConnectionIndex] = useState(0);
 
+  const queryClient = useQueryClient();
+
   useEffect(() => {
     const wsAddress = currentNetwork.ws[wsConnectionIndex];
     if (!wsAddress) {
@@ -51,6 +54,7 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
 
       setStatus('ready');
       setApi(apiPromise);
+      queryClient.clear();
     }
 
     function handleDisconnect() {
@@ -94,7 +98,7 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
       apiPromise.off('error', handleError);
       clearInterval(retryInterval);
     };
-  }, [currentNetwork, wsConnectionIndex]);
+  }, [currentNetwork, wsConnectionIndex, queryClient]);
 
   const value = useMemo(() => {
     return {api, status, inProgress};

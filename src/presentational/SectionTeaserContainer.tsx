@@ -5,14 +5,14 @@ import globalStyles, {hitSlop, standardPadding} from 'src/styles';
 
 type PropTypes = {
   title: string;
-  onMorePress: () => void;
+  onPressMore: () => void;
   children: React.ReactNode;
 };
 
 const Header = (props?: ViewProps & Partial<PropTypes>) => (
   <View style={styles.headerContainer}>
     <Text category="h6">{props?.title}</Text>
-    <TouchableOpacity onPress={props?.onMorePress} hitSlop={hitSlop}>
+    <TouchableOpacity onPress={props?.onPressMore} hitSlop={hitSlop}>
       <Icon
         pack="ionic"
         name="chevron-forward-outline"
@@ -25,7 +25,7 @@ const Header = (props?: ViewProps & Partial<PropTypes>) => (
 function SeactionTeaserContainer(props: PropTypes) {
   return (
     <Card appearance="filled" activeOpacity={0.8} disabled>
-      <Header onMorePress={props.onMorePress} title={props.title} />
+      <Header onPressMore={props.onPressMore} title={props.title} />
       {props.children}
     </Card>
   );
