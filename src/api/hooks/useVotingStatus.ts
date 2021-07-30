@@ -8,7 +8,7 @@ import {useContext, useMemo} from 'react';
 import {ApiPromise} from '@polkadot/api';
 import {isFunction} from '@polkadot/util';
 import {ChainApiContext} from 'context/ChainApiContext';
-import {useQuery} from 'react-query';
+import {useBestNumber} from './useBestNumber';
 
 interface State {
   hasFailed: boolean;
@@ -76,14 +76,4 @@ export function useVotingStatus(
     () => (bestNumber && votes ? getStatus(api, bestNumber, votes, numMembers, section) : DEFAULT_STATUS),
     [api, bestNumber, numMembers, section, votes],
   );
-}
-
-export function useBestNumber(): BlockNumber | undefined {
-  const {api} = useContext(ChainApiContext);
-  if (!api) {
-    throw new Error('API is not defined');
-  }
-
-  const {data} = useQuery(['api_derive_chain_bestNumber'], () => api.derive.chain.bestNumber(), {staleTime: 1000 * 60});
-  return data;
 }

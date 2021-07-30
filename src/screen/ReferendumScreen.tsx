@@ -21,15 +21,15 @@ import {ProgressBar} from 'presentational/ProgressBar';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React, {useReducer} from 'react';
 import {StyleSheet, View} from 'react-native';
+import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import {useConvictions} from 'src/api/hooks/useConvictions';
+import {useDemocracy} from 'src/api/hooks/useDemocracy';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import {useReferendums} from 'src/api/hooks/useReferendums';
-import {useBestNumber} from 'src/api/hooks/useVotingStatus';
+import {getBalanceFromString} from 'src/api/utils/balance';
 import {DashboardStackParamList} from 'src/navigation/navigation';
 import {referendumScreen} from 'src/navigation/routeKeys';
 import {formatCallMeta} from 'src/packages/call_inspector/CallInspector';
-import {getBalanceFromString} from 'src/api/utils/balance';
 import globalStyles, {standardPadding} from 'src/styles';
 
 export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
@@ -39,8 +39,8 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const formatBalance = useFormatBalance();
-  const {data} = useReferendums();
-  const referendum = data?.find((r) => r.index.toString() === route.params.index);
+  const {data} = useDemocracy();
+  const referendum = data?.referendums.find((r) => r.index.toString() === route.params.index);
   const proposal = referendum?.image?.proposal;
 
   const bestNumber = useBestNumber();
