@@ -17,7 +17,7 @@ import {referendumScreen} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
 
 export function ReferendaScreen() {
-  const {data, isLoading, refetch} = useReferendums();
+  const {data, isLoading, refetch, isFetching} = useReferendums();
 
   return (
     <Layout style={globalStyles.flex}>
@@ -26,7 +26,7 @@ export function ReferendaScreen() {
           <LoadingView />
         ) : (
           <FlatList
-            refreshing={isLoading}
+            refreshing={isFetching}
             onRefresh={refetch}
             style={styles.flatList}
             data={data}
