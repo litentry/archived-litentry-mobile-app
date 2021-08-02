@@ -28,7 +28,7 @@ function AddressInfoPreview(props: PropTypes) {
   const [account, setAccount] = useState<AccountInfo>();
   const [inProgress, setInProgress] = useState(false);
 
-  const {data, isLoading} = useAccountIdentityInfo(address);
+  const {data} = useAccountIdentityInfo(address);
   const identity = data?.registration;
 
   useEffect(() => {
