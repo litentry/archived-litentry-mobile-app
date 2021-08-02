@@ -25,6 +25,7 @@ export function SubmitTipScreen({navigation}: {navigation: NavigationProp<Dashbo
       <View style={styles.container}>
         <View style={globalStyles.flex}>
           <Card
+            disabled
             header={(p) => (
               <View {...p}>
                 <Text>Sending from</Text>
