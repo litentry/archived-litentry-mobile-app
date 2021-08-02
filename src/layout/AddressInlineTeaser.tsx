@@ -1,11 +1,9 @@
 import Identicon from '@polkadot/reactnative-identicon';
-import {ChainApiContext} from 'context/ChainApiContext';
-import {NetworkContext} from 'context/NetworkContext';
 import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
 import Padder from 'presentational/Padder';
-import React, {useContext} from 'react';
+import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import useAccountDetail from 'src/api/hooks/useAccountDetail';
+import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 
 type PropTypes = {
   address: string;
@@ -13,15 +11,15 @@ type PropTypes = {
 
 function AddressInlineTeaser(props: PropTypes) {
   const {address} = props;
-  const {api} = useContext(ChainApiContext);
-  const {currentNetwork} = useContext(NetworkContext);
-  const {display, detail} = useAccountDetail(currentNetwork?.key, address, api);
+  const {data} = useAccountIdentityInfo(address);
+  const display = data?.hasIdentity ? data.display : address;
+  const judgements = data?.hasJudgements ? data.registration.judgements : undefined;
 
   return (
     <View style={styles.container}>
       <Identicon value={address} size={20} />
       <Padder scale={0.5} />
-      <AccountInfoInlineTeaser display={display} judgements={detail?.data?.judgements} />
+      <AccountInfoInlineTeaser display={display} judgements={judgements} />
     </View>
   );
 }
