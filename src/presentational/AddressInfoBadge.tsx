@@ -22,7 +22,7 @@ function AddressInfoBadge({address, network}: PropTypes) {
     modalRef.current?.open();
   }, []);
 
-  const registration = data?.registration;
+  const registration = data?.hasIdentity ? data?.registration : undefined;
   const identityInfo = registration?.info;
 
   return (
@@ -30,7 +30,7 @@ function AddressInfoBadge({address, network}: PropTypes) {
       <TouchableOpacity onPress={onOpen}>
         <View style={styles.container}>
           <Text category="c2" selectable numberOfLines={1} style={styles.display} ellipsizeMode="middle">
-            {data?.display}
+            {data?.hasIdentity ? data.display : data?.accountId}
           </Text>
           <Icon name="arrow-down" style={styles.icon} fill="#ccc" animation="pulse" />
           <View style={globalStyles.rowContainer}>
@@ -51,7 +51,7 @@ function AddressInfoBadge({address, network}: PropTypes) {
           panGestureEnabled>
           <Layout style={styles.detailContainer}>
             <Layout>
-              <ModalTitle title={data?.display ?? ''} subtitle={` (@${network?.name})`} />
+              <ModalTitle title={data?.hasIdentity ? data.display : address} subtitle={` (@${network?.name})`} />
             </Layout>
             <Divider />
             <ListItem
@@ -59,7 +59,7 @@ function AddressInfoBadge({address, network}: PropTypes) {
               accessoryLeft={(props) => <Icon {...props} name="person-outline" />}
               accessoryRight={() => (
                 <Text style={{maxWidth: '55%'}} selectable category="label" numberOfLines={1} ellipsizeMode="middle">
-                  {data?.display}
+                  {data?.hasIdentity ? data.display : address}
                 </Text>
               )}
             />

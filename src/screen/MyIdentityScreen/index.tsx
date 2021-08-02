@@ -20,19 +20,17 @@ function MyIdentity() {
       return <LoadingView />;
     }
 
-    if (data?.registration?.judgements.length) {
-      // there is already judgements to display
+    if (data?.hasJudgements) {
       return <DisplayJudgement display={data.display} registration={data.registration} address={address} />;
     }
 
-    if (address === data?.display) {
-      // there is not identity at all
+    if (!data?.hasIdentity) {
       return <SetInfo address={address} />;
     }
 
     // there is `setIdentity`, but no judgements are provided
     return <RequestJudgement display={data?.display ?? ''} registration={data?.registration} address={address} />;
-  }, [address, data?.display, data?.registration, isLoading]);
+  }, [address, data, isLoading]);
 
   return <SafeView edges={noTopEdges}>{content}</SafeView>;
 }

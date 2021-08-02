@@ -27,7 +27,7 @@ function AddressInfoPreview(props: PropTypes) {
   const {address, network} = props;
 
   const {data} = useAccountIdentityInfo(address);
-  const identity = data?.registration;
+  const identity = data?.hasIdentity ? data.registration : undefined;
   const {data: accountInfo, isLoading} = useAccountInfo(address);
 
   return (
@@ -65,7 +65,7 @@ function AddressInfoPreview(props: PropTypes) {
                 numberOfLines={1}
                 style={{width: '50%', textAlign: 'right'}}
                 ellipsizeMode="middle">
-                {data?.display || 'untitled account'}
+                {data?.hasIdentity ? data.display : 'untitled account'}
               </Text>
             )}
           />

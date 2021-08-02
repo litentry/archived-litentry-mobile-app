@@ -1,13 +1,33 @@
 import {ApiPromise} from '@polkadot/api';
 import {u8aToString} from '@polkadot/util';
-import {Registration} from '@polkadot/types/interfaces';
+import {Registration, AccountId} from '@polkadot/types/interfaces';
 
-export async function getAccountIdentityInfo(api: ApiPromise, accountId: string) {
+type Result =
+  | {
+      hasIdentity: true;
+      hasJudgements: boolean;
+      accountId: string | AccountId;
+      display: string;
+      registration: Registration;
+    }
+  | {
+      hasIdentity: false;
+      hasJudgements: false;
+      accountId: string;
+    };
+
+export async function getAccountIdentityInfo(api: ApiPromise, accountId: string): Promise<Result> {
   const registrationOption = await api.query.identity.identityOf(accountId);
   const registration = registrationOption.unwrapOr(undefined);
 
   if (registration) {
-    return {accountId, registration, display: getDisplay(registration, accountId)};
+    return {
+      hasIdentity: true,
+      hasJudgements: registration.judgements.length > 0,
+      accountId,
+      registration,
+      display: getDisplay(registration, accountId),
+    };
   }
 
   const superAccountDataOption = await api.query.identity.superOf(accountId);
@@ -19,15 +39,18 @@ export async function getAccountIdentityInfo(api: ApiPromise, accountId: string)
     const superRegistration = superAccountOption.unwrapOr(undefined);
 
     if (superRegistration) {
+      console.log('AAAA', u8aToString(superRegistration.info.display.asRaw));
       return {
+        hasIdentity: true,
+        hasJudgements: superRegistration.judgements.length > 0,
         accountId: superAccountId,
         registration: superRegistration,
         display: getDisplay(superRegistration, accountId),
       };
     }
-  } else {
-    return {accountId, display: accountId};
   }
+
+  return {hasIdentity: false, hasJudgements: false, accountId};
 }
 
 function getDisplay(registration: Registration, accountId: string) {
