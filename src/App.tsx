@@ -27,21 +27,21 @@ export default function App() {
       <QueryClientProvider client={queryClient}>
         <NetworkContextProvider>
           <ChainApiContextProvider>
-            <ThemeProvider>
-              <InAppNotificationContextProvider>
-                <SafeAreaProvider>
-                  <ErrorBoundary>
-                    <Host>
-                      <AccountsProvider>
+            <AccountsProvider>
+              <SafeAreaProvider>
+                <ThemeProvider>
+                  <InAppNotificationContextProvider>
+                    <ErrorBoundary>
+                      <Host>
                         <TxContextProvider>
                           <AppNavigator />
                         </TxContextProvider>
-                      </AccountsProvider>
-                    </Host>
-                  </ErrorBoundary>
-                </SafeAreaProvider>
-              </InAppNotificationContextProvider>
-            </ThemeProvider>
+                      </Host>
+                    </ErrorBoundary>
+                  </InAppNotificationContextProvider>
+                </ThemeProvider>
+              </SafeAreaProvider>
+            </AccountsProvider>
           </ChainApiContextProvider>
         </NetworkContextProvider>
       </QueryClientProvider>
