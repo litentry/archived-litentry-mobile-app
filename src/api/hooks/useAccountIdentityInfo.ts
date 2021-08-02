@@ -6,10 +6,9 @@ export function useAccountIdentityInfo(accountId?: string) {
   return useApiQuery(
     ['account_identity', accountId],
     (api: ApiPromise) => {
-      if (!accountId) {
-        throw new Error('accountId is required');
+      if (accountId) {
+        return getAccountIdentityInfo(api, accountId);
       }
-      return getAccountIdentityInfo(api, accountId);
     },
     {staleTime: 1000 * 60, enabled: Boolean(accountId)},
   );
