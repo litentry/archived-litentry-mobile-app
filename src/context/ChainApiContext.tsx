@@ -39,9 +39,10 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
     setInProgress(true);
     logger.debug('ChainApiContext: trying to connected to', wsAddress);
 
-    const provider = new WsProvider(wsAddress);
+    const provider = new WsProvider(wsAddress, false);
     const apiPromise = new ApiPromise({provider});
     setApi(apiPromise);
+    provider.connect();
 
     function handleConnect() {
       logger.debug('ChainApiContext: Api connected');
@@ -64,7 +65,7 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
 
     function handleError(error: unknown) {
       logger.debug('ChainApiContext: Api error at', wsAddress, error);
-      setApi(undefined);
+      setStatus('disconnected');
       setInProgress(false);
     }
 
@@ -73,28 +74,28 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
     apiPromise.on('disconnected', handleDisconnect);
     apiPromise.on('error', handleError);
 
-    const retryInterval = setInterval(() => {
-      if (!apiPromise.isConnected) {
-        const webSocketAddresses = currentNetwork.ws;
-        // pick the next ws api location
-        // rerun the effect by changing the wsConnectionIndex dependency
-        if (webSocketAddresses.length > 1) {
-          const nextWsConnectionIndex = (wsConnectionIndex + 1) % webSocketAddresses.length;
-          setWsConnectionIndex(nextWsConnectionIndex);
+    // const retryInterval = setInterval(() => {
+    //   if (!apiPromise.isConnected) {
+    //     const webSocketAddresses = currentNetwork.ws;
+    //     // pick the next ws api location
+    //     // rerun the effect by changing the wsConnectionIndex dependency
+    //     if (webSocketAddresses.length > 1) {
+    //       const nextWsConnectionIndex = (wsConnectionIndex + 1) % webSocketAddresses.length;
+    //       setWsConnectionIndex(nextWsConnectionIndex);
 
-          logger.debug(
-            `ChainApiContext: switching ws provider to (${wsConnectionIndex}) ${webSocketAddresses[nextWsConnectionIndex]}`,
-          );
-        }
-      }
-    }, 5000);
+    //       logger.debug(
+    //         `ChainApiContext: switching ws provider to (${wsConnectionIndex}) ${webSocketAddresses[nextWsConnectionIndex]}`,
+    //       );
+    //     }
+    //   }
+    // }, 5000);
 
     return () => {
       apiPromise.off('connected', handleConnect);
       apiPromise.off('ready', handleReady);
       apiPromise.off('disconnected', handleDisconnect);
       apiPromise.off('error', handleError);
-      clearInterval(retryInterval);
+      // clearInterval(retryInterval);
     };
   }, [currentNetwork, wsConnectionIndex, queryClient]);
 
