@@ -44,7 +44,7 @@ export function TreasuryScreen() {
                 : accountInfo?.accountId.toString() ?? 'unknown';
 
               return (
-                <Card style={styles.card}>
+                <Card style={styles.card} disabled>
                   <View style={styles.row}>
                     <Identicon value={item.proposal.proposer} size={30} />
                     <Text style={styles.name} category={'c1'} numberOfLines={1} ellipsizeMode="middle">
