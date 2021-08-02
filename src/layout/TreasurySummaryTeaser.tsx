@@ -17,7 +17,7 @@ type PropTypes = {
 
 export function TreasurySummaryTeaser(props: PropTypes) {
   const bestNumber = useBestNumber();
-  const {data: treasuryInfo} = useTreasuryInfo();
+  const {data: treasuryInfo, isLoading} = useTreasuryInfo();
   const total = treasuryInfo?.spendPeriod || BN_ONE;
   const value = bestNumber?.mod(treasuryInfo?.spendPeriod?.toBn() ?? BN_ONE);
   const angle = total.gtn(0)
@@ -31,8 +31,12 @@ export function TreasurySummaryTeaser(props: PropTypes) {
   const {timeStringParts} = useBlockTime(treasuryInfo?.spendPeriod);
   const {timeStringParts: termLeft} = useBlockTime(total.sub(value || BN_ONE));
 
-  if (!treasuryInfo) {
+  if (isLoading) {
     return <ActivityIndicator style={globalStyles.paddedContainer} />;
+  }
+
+  if (!treasuryInfo) {
+    return null;
   }
 
   return (
