@@ -39,7 +39,6 @@ export async function getAccountIdentityInfo(api: ApiPromise, accountId: string)
     const superRegistration = superAccountOption.unwrapOr(undefined);
 
     if (superRegistration) {
-      console.log('AAAA', u8aToString(superRegistration.info.display.asRaw));
       return {
         hasIdentity: true,
         hasJudgements: superRegistration.judgements.length > 0,
