@@ -1,27 +1,37 @@
-import React, {useCallback} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {Card, Text} from '@ui-kitten/components';
-import {flowRight as compose} from 'lodash';
-import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
-import withElectionInfo, {InjectedPropTypes as ElectionInjectedPropTypes} from 'src/hoc/withElectionInfo';
 import {useNavigation} from '@react-navigation/native';
+import {Card, Text} from '@ui-kitten/components';
+import LoadingView from 'presentational/LoadingView';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
+import {useElectionsInfo} from 'src/api/hooks/useElectionsInfo';
 import {motionDetailScreen} from 'src/navigation/routeKeys';
+import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 
 type PropTypes = {title: string};
 
-function MotionTeaser(props: PropTypes & ElectionInjectedPropTypes) {
+export function MotionTeaser(props: PropTypes) {
   const navigation = useNavigation();
   const {title} = props;
-  const latestMotion = props.electionsInfo.motions?.[0];
+  const {data: electionsInfo, isLoading} = useElectionsInfo();
 
-  const handleDetail = useCallback(() => {
+  if (isLoading) {
+    return <LoadingView />;
+  }
+
+  if (!electionsInfo) {
+    return <View />;
+  }
+
+  const latestMotion = electionsInfo.motions?.[0];
+
+  const handleDetail = () => {
     if (latestMotion && latestMotion.votes) {
       navigation.navigate(motionDetailScreen, {
         hash: latestMotion.hash.toString(),
         id: latestMotion.votes.index.toNumber(),
       });
     }
-  }, [latestMotion, navigation]);
+  };
 
   return (
     <Card style={styles.motionCard} onPress={handleDetail}>
@@ -64,5 +74,3 @@ const styles = StyleSheet.create({
     paddingVertical: standardPadding,
   },
 });
-
-export default compose(withElectionInfo)(MotionTeaser);

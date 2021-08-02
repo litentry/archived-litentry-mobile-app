@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import {Card, Layout} from '@ui-kitten/components';
 import globalStyles from 'src/styles';
 import Padder from 'presentational/Padder';
@@ -7,17 +7,19 @@ import SeactionTeaserContainer from 'presentational/SectionTeaserContainer';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import ProgressChartWidget from 'presentational/ProgressWidget';
 import StatInfoBlock from 'presentational/StatInfoBlock';
-import withTreasury, {InjectedPropTypes} from 'src/hoc/withTreasury';
 import {formatNumber, BN_ONE, bnToBn, formatBalance, BN_ZERO} from '@polkadot/util';
+import {useTreasuryInfo} from 'src/api/hooks/useTreasuryInfo';
+import {useBestNumber} from 'src/api/hooks/useBestNumber';
 
 type PropTypes = {
   onPressMore: () => void;
 };
 
-function TreasurySummaryTeaser(props: PropTypes & InjectedPropTypes) {
-  const {treasuryInfo} = props;
-  const total = treasuryInfo.spendPeriod || BN_ONE;
-  const value = treasuryInfo.bestNumber?.mod(treasuryInfo.spendPeriod?.toBn() ?? BN_ONE);
+export function TreasurySummaryTeaser(props: PropTypes) {
+  const bestNumber = useBestNumber();
+  const {data: treasuryInfo, isLoading} = useTreasuryInfo();
+  const total = treasuryInfo?.spendPeriod || BN_ONE;
+  const value = bestNumber?.mod(treasuryInfo?.spendPeriod?.toBn() ?? BN_ONE);
   const angle = total.gtn(0)
     ? bnToBn(value || 0)
         .muln(36000)
@@ -26,8 +28,16 @@ function TreasurySummaryTeaser(props: PropTypes & InjectedPropTypes) {
     : 0;
   const percentage = Math.floor((angle * 100) / 360);
 
-  const {timeStringParts} = useBlockTime(treasuryInfo.spendPeriod);
+  const {timeStringParts} = useBlockTime(treasuryInfo?.spendPeriod);
   const {timeStringParts: termLeft} = useBlockTime(total.sub(value || BN_ONE));
+
+  if (isLoading) {
+    return <ActivityIndicator style={globalStyles.paddedContainer} />;
+  }
+
+  if (!treasuryInfo) {
+    return null;
+  }
 
   return (
     <SeactionTeaserContainer onPressMore={props.onPressMore} title="Treasury">
@@ -35,11 +45,11 @@ function TreasurySummaryTeaser(props: PropTypes & InjectedPropTypes) {
         <Layout style={styles.container}>
           <Card style={[styles.item, styles.left]} disabled>
             <View style={globalStyles.spaceBetweenRowContainer}>
-              <StatInfoBlock title="Proposals">{String(treasuryInfo.info?.proposals.length)}</StatInfoBlock>
-              <StatInfoBlock title="Totals">{formatNumber(treasuryInfo.totalProposals)}</StatInfoBlock>
+              <StatInfoBlock title="Proposals">{String(treasuryInfo.proposals.proposals.length)}</StatInfoBlock>
+              <StatInfoBlock title="Totals">{formatNumber(treasuryInfo.proposals.proposalCount)}</StatInfoBlock>
             </View>
             <Padder scale={1} />
-            <StatInfoBlock title="Approved">{String(treasuryInfo.info?.approvals.length)}</StatInfoBlock>
+            <StatInfoBlock title="Approved">{String(treasuryInfo.proposals.approvals.length)}</StatInfoBlock>
           </Card>
           <Card style={[styles.item, styles.right, styles.center]} disabled>
             <ProgressChartWidget
@@ -79,5 +89,3 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
-export default withTreasury(TreasurySummaryTeaser);

@@ -1,31 +1,205 @@
-import React, {useEffect} from 'react';
-import withMotionDetail, {InjectedPropTypes as MotionDetailInjectedPropTypes} from 'src/hoc/withMotionDetail';
+import {AccountId} from '@polkadot/types/interfaces';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {RouteProp} from '@react-navigation/native';
-import MotionDetailPage from 'layout/MotionDetailPage';
+import {Card, Icon, Layout, Text} from '@ui-kitten/components';
+import {NetworkContext} from 'context/NetworkContext';
+import AddressInlineTeaser from 'layout/AddressInlineTeaser';
+import _ from 'lodash';
+import Badge from 'presentational/Badge';
 import LoadingView from 'presentational/LoadingView';
+import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
+import StatInfoBlock from 'presentational/StatInfoBlock';
+import {default as React, useContext, useRef} from 'react';
+import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
+import {Modalize} from 'react-native-modalize';
+import WebView from 'react-native-webview';
+import {useMotionDetail} from 'src/api/hooks/useMotionDetail';
 import {DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
+import {buildMotionDetailUrl} from 'src/service/Polkasembly';
+import globalStyles, {colorGreen, colorRed, monofontFamily, standardPadding} from 'src/styles';
+
+const {height} = Dimensions.get('window');
 
 type PropTypes = {
   navigation: DrawerNavigationProp<DrawerParamList>;
   route: RouteProp<DashboardStackParamList, 'Motion'>;
 };
 
-function MotionDetailScreen(props: PropTypes & MotionDetailInjectedPropTypes) {
+function VoteItem({vote, type = 'aye', emptyText}: {vote?: AccountId; type?: 'aye' | 'nay'; emptyText?: string}) {
+  return (
+    <View style={[globalStyles.rowContainer, globalStyles.rowAlignCenter]}>
+      <Icon
+        pack="ionic"
+        name={type === 'aye' ? 'thumbs-up-outline' : 'thumbs-down-outline'}
+        style={[globalStyles.icon, {color: type === 'aye' ? colorGreen : colorRed}]}
+      />
+      <Padder scale={1} />
+      {emptyText ? <Text>{emptyText}</Text> : vote && <AddressInlineTeaser address={vote.toString()} />}
+    </View>
+  );
+}
+
+export function MotionDetailScreen(props: PropTypes) {
+  const modalRef = useRef<Modalize>(null);
+  const {currentNetwork} = useContext(NetworkContext);
+
   const {
-    motionDetail: {show, motion},
     route: {params},
   } = props;
 
-  const {hash, id} = params;
+  const {data: motion} = useMotionDetail(params);
 
-  useEffect(() => {
-    show(hash, id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  if (!motion) {
+    return <LoadingView />;
+  }
 
-  return <SafeView edges={noTopEdges}>{motion ? <MotionDetailPage motion={motion} /> : <LoadingView />}</SafeView>;
+  return (
+    <SafeView edges={noTopEdges}>
+      <ScrollView style={[globalStyles.paddedContainer, styles.container]}>
+        <View>
+          <Layout style={styles.rowContainer}>
+            <Card style={[styles.item, styles.left]}>
+              <View style={globalStyles.spaceBetweenRowContainer}>
+                <StatInfoBlock title="#ID">{String(motion.proposalId)}</StatInfoBlock>
+                <StatInfoBlock title="#Detail">
+                  <TouchableOpacity onPress={() => modalRef.current?.open()}>
+                    <View style={[globalStyles.rowContainer, globalStyles.rowAlignCenter]}>
+                      <Text style={[styles.stats, styles.small, styles.hackPolkassemblyTextWidth]} numberOfLines={1}>
+                        on Polkassembly
+                      </Text>
+                      <Padder scale={0.3} />
+                      <Icon pack="ionic" name="share-outline" style={globalStyles.icon} />
+                    </View>
+                  </TouchableOpacity>
+                </StatInfoBlock>
+                <StatInfoBlock title="Status">
+                  <Padder scale={0.3} />
+                  <Badge text={motion.status.toUpperCase()} />
+                </StatInfoBlock>
+              </View>
+              <Padder scale={1} />
+              <StatInfoBlock title="Proposer">
+                <AddressInlineTeaser address={motion.proposerAddress} />
+              </StatInfoBlock>
+            </Card>
+          </Layout>
+        </View>
+        <Padder scale={0.3} />
+        <View>
+          <Layout style={styles.rowContainer}>
+            <Card style={[styles.item, styles.left]} disabled>
+              <StatInfoBlock title="#Section">{_.capitalize(motion.section)}</StatInfoBlock>
+              <Padder scale={0.5} />
+              <StatInfoBlock title="#Method">{motion.methodName}</StatInfoBlock>
+            </Card>
+            <Card style={[styles.item, styles.right]} disabled>
+              <View>
+                <Text category="c1">Votes</Text>
+                <Padder scale={0.5} />
+                <View>
+                  <Text style={globalStyles.aye}>
+                    {`Aye (${motion.votes?.ayes.length}/${motion.votes?.threshold.toNumber()})`}
+                  </Text>
+                  <Padder scale={0.5} />
+                  <Text style={globalStyles.nay}>
+                    {`Nay (${motion.votes?.nays.length}/${motion.votes?.threshold.toNumber()})`}
+                  </Text>
+                  <Padder scale={0.5} />
+                </View>
+              </View>
+            </Card>
+          </Layout>
+        </View>
+        {motion.votes ? (
+          <View style={styles.votesContainer}>
+            <Text category="h6">Votes</Text>
+            {motion.votes.ayes.length ? (
+              motion.votes.ayes.map((vote) => (
+                <View style={styles.voteContainer}>
+                  <VoteItem key={vote.toString()} vote={vote} type="aye" />
+                </View>
+              ))
+            ) : (
+              <>
+                <Padder scale={0.5} />
+                <VoteItem emptyText='No one voted "Aye" yet.' type="aye" />
+              </>
+            )}
+            {motion.votes.nays.length ? (
+              motion.votes.nays.map((vote) => (
+                <View style={styles.voteContainer}>
+                  <VoteItem key={vote.toString()} vote={vote} type="nay" />
+                </View>
+              ))
+            ) : (
+              <>
+                <Padder scale={0.5} />
+                <VoteItem emptyText='No one voted "Nay" yet.' type="nay" />
+              </>
+            )}
+          </View>
+        ) : null}
+      </ScrollView>
+      <Modalize
+        ref={modalRef}
+        threshold={250}
+        scrollViewProps={{showsVerticalScrollIndicator: false}}
+        adjustToContentHeight
+        handlePosition="outside"
+        closeOnOverlayTap
+        withReactModal
+        useNativeDriver
+        panGestureEnabled>
+        <WebView
+          injectedJavaScript={`(function() {
+                // remove some html element
+                document.getElementById('menubar').remove();
+                var footer = document.getElementsByTagName('footer');
+                Array.prototype.forEach.call(footer, el => el.remove());
+            })();`}
+          source={{
+            uri: buildMotionDetailUrl(motion.proposalId, currentNetwork?.key || 'polkadot'),
+          }}
+          style={{height: height * 0.6}}
+          onMessage={() => null}
+        />
+      </Modalize>
+    </SafeView>
+  );
 }
 
-export default withMotionDetail(MotionDetailScreen);
+const styles = StyleSheet.create({
+  container: {flex: 1},
+  rowContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  small: {fontSize: 10},
+  stats: {
+    textAlign: 'center',
+    paddingVertical: standardPadding,
+    fontSize: 16,
+    color: '#ccc',
+    fontFamily: monofontFamily,
+  },
+  item: {
+    flex: 1,
+  },
+  left: {
+    marginRight: 2,
+  },
+  right: {
+    marginLeft: 2,
+  },
+  votesContainer: {
+    marginTop: standardPadding * 2,
+  },
+  voteContainer: {
+    paddingVertical: standardPadding / 2,
+  },
+  hackPolkassemblyTextWidth: {
+    width: 70,
+  },
+});
