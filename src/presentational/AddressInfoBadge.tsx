@@ -22,6 +22,9 @@ function AddressInfoBadge({address, network}: PropTypes) {
     modalRef.current?.open();
   }, []);
 
+  const registration = data?.registration;
+  const identityInfo = registration?.info;
+
   return (
     <>
       <TouchableOpacity onPress={onOpen}>
@@ -31,7 +34,7 @@ function AddressInfoBadge({address, network}: PropTypes) {
           </Text>
           <Icon name="arrow-down" style={styles.icon} fill="#ccc" animation="pulse" />
           <View style={globalStyles.rowContainer}>
-            {data?.registration?.judgements.map((judgement) => (
+            {registration?.judgements.map((judgement) => (
               <JudgmentStatus key={String(judgement[0])} judgement={judgement} />
             ))}
           </View>
@@ -65,7 +68,7 @@ function AddressInfoBadge({address, network}: PropTypes) {
               accessoryLeft={(props) => <Icon {...props} name="award-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
-                  {u8aToString(data?.info?.legal.asRaw) || 'Unset'}
+                  {u8aToString(identityInfo?.legal.asRaw) || 'Unset'}
                 </Text>
               )}
             />
@@ -74,7 +77,7 @@ function AddressInfoBadge({address, network}: PropTypes) {
               accessoryLeft={(props) => <Icon {...props} name="email-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
-                  {u8aToString(data?.info?.email.asRaw) || 'Unset'}
+                  {u8aToString(identityInfo?.email.asRaw) || 'Unset'}
                 </Text>
               )}
             />
@@ -83,7 +86,7 @@ function AddressInfoBadge({address, network}: PropTypes) {
               accessoryLeft={(props) => <Icon {...props} name="twitter-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
-                  {u8aToString(data?.info?.twitter.asRaw) || 'Unset'}
+                  {u8aToString(identityInfo?.twitter.asRaw) || 'Unset'}
                 </Text>
               )}
             />
@@ -92,7 +95,7 @@ function AddressInfoBadge({address, network}: PropTypes) {
               accessoryLeft={(props) => <Icon {...props} name="message-square-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
-                  {u8aToString(data?.info?.riot.asRaw) || 'Unset'}
+                  {u8aToString(identityInfo?.riot.asRaw) || 'Unset'}
                 </Text>
               )}
             />
@@ -101,7 +104,7 @@ function AddressInfoBadge({address, network}: PropTypes) {
               accessoryLeft={(props) => <Icon {...props} name="browser-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
-                  {u8aToString(data?.info?.web.asRaw) || 'Unset'}
+                  {u8aToString(identityInfo?.web.asRaw) || 'Unset'}
                 </Text>
               )}
             />

@@ -1,5 +1,4 @@
 import Identicon from '@polkadot/reactnative-identicon';
-import {u8aToString} from '@polkadot/util';
 import Clipboard from '@react-native-community/clipboard';
 import {useNavigation} from '@react-navigation/native';
 import {Button, Card, Icon, Layout, Modal, Text, Tooltip} from '@ui-kitten/components';
@@ -30,7 +29,7 @@ function AccountTeaser(props: PropTypes) {
   const {accounts} = useAccounts();
   const account = accounts[0]; // TODO: change this when adding multi account support
   const {data} = useAccountIdentityInfo(account?.address);
-  const display = u8aToString(data?.info?.display.asRaw);
+  const display = data?.display;
 
   const handleIconPressed = (addr?: string) => {
     if (addr) {

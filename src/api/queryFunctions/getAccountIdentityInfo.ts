@@ -7,7 +7,7 @@ export async function getAccountIdentityInfo(api: ApiPromise, accountId: string)
   const registration = registrationOption.unwrapOr(undefined);
 
   if (registration) {
-    return {accountId, info: registration.info, registration, display: getDisplay(registration, accountId)};
+    return {accountId, registration, display: getDisplay(registration, accountId)};
   }
 
   const superAccountDataOption = await api.query.identity.superOf(accountId);
@@ -21,7 +21,6 @@ export async function getAccountIdentityInfo(api: ApiPromise, accountId: string)
     if (superRegistration) {
       return {
         accountId: superAccountId,
-        info: superRegistration.info,
         registration: superRegistration,
         display: getDisplay(superRegistration, accountId),
       };
