@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import {Card, Layout} from '@ui-kitten/components';
 import globalStyles from 'src/styles';
 import Padder from 'presentational/Padder';
@@ -31,17 +31,21 @@ export function TreasurySummaryTeaser(props: PropTypes) {
   const {timeStringParts} = useBlockTime(treasuryInfo?.spendPeriod);
   const {timeStringParts: termLeft} = useBlockTime(total.sub(value || BN_ONE));
 
+  if (!treasuryInfo) {
+    return <ActivityIndicator style={globalStyles.paddedContainer} />;
+  }
+
   return (
     <SeactionTeaserContainer onPressMore={props.onPressMore} title="Treasury">
       <View>
         <Layout style={styles.container}>
           <Card style={[styles.item, styles.left]} disabled>
             <View style={globalStyles.spaceBetweenRowContainer}>
-              <StatInfoBlock title="Proposals">{String(treasuryInfo?.proposals.proposals.length)}</StatInfoBlock>
-              <StatInfoBlock title="Totals">{formatNumber(treasuryInfo?.proposals.proposalCount)}</StatInfoBlock>
+              <StatInfoBlock title="Proposals">{String(treasuryInfo.proposals.proposals.length)}</StatInfoBlock>
+              <StatInfoBlock title="Totals">{formatNumber(treasuryInfo.proposals.proposalCount)}</StatInfoBlock>
             </View>
             <Padder scale={1} />
-            <StatInfoBlock title="Approved">{String(treasuryInfo?.proposals.approvals.length)}</StatInfoBlock>
+            <StatInfoBlock title="Approved">{String(treasuryInfo.proposals.approvals.length)}</StatInfoBlock>
           </Card>
           <Card style={[styles.item, styles.right, styles.center]} disabled>
             <ProgressChartWidget
@@ -54,8 +58,8 @@ export function TreasurySummaryTeaser(props: PropTypes) {
         <Padder scale={0.3} />
         <Card disabled>
           <View style={globalStyles.spaceBetweenRowContainer}>
-            <StatInfoBlock title="Available">{formatBalance(treasuryInfo?.treasuryBalance?.freeBalance)}</StatInfoBlock>
-            <StatInfoBlock title="Next Burn">{formatBalance(treasuryInfo?.burn || BN_ZERO)}</StatInfoBlock>
+            <StatInfoBlock title="Available">{formatBalance(treasuryInfo.treasuryBalance?.freeBalance)}</StatInfoBlock>
+            <StatInfoBlock title="Next Burn">{formatBalance(treasuryInfo.burn || BN_ZERO)}</StatInfoBlock>
           </View>
         </Card>
       </View>

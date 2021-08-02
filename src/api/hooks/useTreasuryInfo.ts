@@ -32,8 +32,8 @@ export function useTreasuryInfo() {
     const treasuryBalance = await api.derive.balances.account(treasuryAccount);
 
     const burn =
-      treasuryBalance?.freeBalance.gtn(0) && !api?.consts.treasury.burn.isZero()
-        ? api?.consts.treasury.burn.mul(treasuryBalance?.freeBalance).div(BN_MILLION)
+      treasuryBalance?.freeBalance.gtn(0) && !api.consts.treasury.burn.isZero()
+        ? api.consts.treasury.burn.mul(treasuryBalance?.freeBalance).div(BN_MILLION)
         : null;
 
     return {
