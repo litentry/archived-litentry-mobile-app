@@ -153,7 +153,7 @@ function AppNavigator() {
 
   return (
     <NavigationContainer linking={routeKeys.linking} theme={theme === 'dark' ? darkTheme : lightTheme}>
-      <AppStack.Navigator headerMode={'none'} screenOptions={{gestureEnabled: false}}>
+      <AppStack.Navigator headerMode={'none'} mode="modal" screenOptions={{gestureEnabled: false}}>
         {pushAuthorizationStatus && pushAuthorizationStatus === messaging.AuthorizationStatus.NOT_DETERMINED ? (
           <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen} component={PermissionGrantingPrompt} />
         ) : undefined}
