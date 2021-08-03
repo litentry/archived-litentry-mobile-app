@@ -14,7 +14,7 @@ import {useVotingStatus} from 'src/api/hooks/useVotingStatus';
 import {useCouncilMembers} from 'src/api/hooks/useCouncilMembers';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {ProposalInfo} from 'presentational/ProposalInfo';
-import {useMotions} from 'src/api/hooks/useMotions';
+import {useCouncilMotions} from 'src/api/hooks/useCouncilMotions';
 import {standardPadding} from 'src/styles';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {motionDetailScreen} from 'src/navigation/routeKeys';
@@ -22,7 +22,7 @@ import {DashboardStackParamList} from 'src/navigation/navigation';
 import LoadingView from 'presentational/LoadingView';
 
 export function MotionsScreen() {
-  const {data, refetch, isLoading, isFetching} = useMotions();
+  const {data, refetch, isLoading, isFetching} = useCouncilMotions();
 
   return (
     <SafeView edges={noTopEdges}>
