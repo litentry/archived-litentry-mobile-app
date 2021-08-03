@@ -32,12 +32,12 @@ function AddressInfoBadge({address, network}: PropTypes) {
           <Text category="c2" selectable numberOfLines={1} style={styles.display} ellipsizeMode="middle">
             {data?.hasIdentity ? data.display : data?.accountId}
           </Text>
-          <Icon name="arrow-down" style={styles.icon} fill="#ccc" animation="pulse" />
           <View style={globalStyles.rowContainer}>
             {registration?.judgements.map((judgement) => (
               <JudgmentStatus key={String(judgement[0])} judgement={judgement} />
             ))}
           </View>
+          <Icon name="arrow-down" style={styles.icon} fill="#ccc" animation="pulse" />
         </View>
       </TouchableOpacity>
       <Portal>
