@@ -4,16 +4,14 @@ import NetworkSelectionList from 'presentational/NetworkSelectionList';
 import React, {useContext, useEffect, useRef} from 'react';
 import {Modalize} from 'react-native-modalize';
 import globalStyles from 'src/styles';
-import {NetworkType} from 'src/types';
 
 type Props = {
   open: boolean;
   onClose: () => void;
-  onSelect: (item: NetworkType) => void;
 };
 
-export default function NetworkSelect({open, onClose, onSelect}: Props) {
-  const {currentNetwork, availableNetworks} = useContext(NetworkContext);
+export default function NetworkSelect({open, onClose}: Props) {
+  const {currentNetwork, availableNetworks, select} = useContext(NetworkContext);
   const modalRef = useRef<Modalize>(null);
 
   useEffect(() => {
@@ -37,7 +35,7 @@ export default function NetworkSelect({open, onClose, onSelect}: Props) {
       panGestureEnabled
       onClose={onClose}>
       <Layout level="1" style={globalStyles.paddedContainer}>
-        <NetworkSelectionList items={availableNetworks} selected={currentNetwork} onSelect={onSelect} />
+        <NetworkSelectionList items={availableNetworks} selected={currentNetwork} onSelect={select} />
         <Divider style={globalStyles.divider} />
         <Button appearance="ghost" onPress={onCloseModal}>
           Close

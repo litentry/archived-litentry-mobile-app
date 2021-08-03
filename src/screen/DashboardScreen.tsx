@@ -26,7 +26,6 @@ type PropTypes = {
 };
 
 function DashboardScreen({navigation}: PropTypes) {
-  const {select} = useContext(NetworkContext);
   const [networkSelectOpen, setNetworkSelectOpen] = useState(false);
 
   React.useLayoutEffect(() => {
@@ -50,7 +49,7 @@ function DashboardScreen({navigation}: PropTypes) {
           </ScrollView>
         </View>
       </FadeInAnimatedView>
-      <NetworkSelect open={networkSelectOpen} onSelect={select} onClose={() => setNetworkSelectOpen(false)} />
+      <NetworkSelect open={networkSelectOpen} onClose={() => setNetworkSelectOpen(false)} />
     </SafeView>
   );
 }
