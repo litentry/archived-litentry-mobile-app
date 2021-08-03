@@ -2,43 +2,51 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Card, Layout} from '@ui-kitten/components';
 import globalStyles from 'src/styles';
-import withElectionInfo, {InjectedPropTypes} from 'src/hoc/withElectionInfo';
 import Padder from 'presentational/Padder';
 import AddressInlineTeaser from './AddressInlineTeaser';
 import SeactionTeaserContainer from 'presentational/SectionTeaserContainer';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import ProgressChartWidget from 'presentational/ProgressWidget';
 import StatInfoBlock from 'presentational/StatInfoBlock';
+import {useElectionsInfo} from 'src/api/hooks/useElectionsInfo';
+import LoadingView from 'presentational/LoadingView';
 
 type PropTypes = {
-  onMorePress: () => void;
+  onPressMore: () => void;
 };
 
-function CouncilSummaryTeaser(props: PropTypes & InjectedPropTypes) {
-  const {timeStringParts} = useBlockTime(props.electionsInfo.data.termDuration);
-  const {timeStringParts: termLeft} = useBlockTime(props.electionsInfo.data.termLeft);
+export function CouncilSummaryTeaser(props: PropTypes) {
+  const {data: electionsInfo, isLoading} = useElectionsInfo();
+  const {timeStringParts} = useBlockTime(electionsInfo?.data.termDuration);
+  const {timeStringParts: termLeft} = useBlockTime(electionsInfo?.data.termLeft);
+
+  if (isLoading) {
+    return <LoadingView />;
+  }
+
+  if (!electionsInfo) {
+    return <View />;
+  }
 
   return (
-    <SeactionTeaserContainer onMorePress={props.onMorePress} title="Council">
+    <SeactionTeaserContainer onPressMore={props.onPressMore} title="Council">
       <View>
         <Layout style={styles.container}>
-          <Card style={[styles.item, styles.left]}>
+          <Card style={[styles.item, styles.left]} disabled>
             <View style={globalStyles.spaceBetweenRowContainer}>
-              <StatInfoBlock title="Seats">{props.electionsInfo.data.seatDisplay}</StatInfoBlock>
-              <StatInfoBlock title="Runners up">{props.electionsInfo.data.runnersupDisplay}</StatInfoBlock>
+              <StatInfoBlock title="Seats">{electionsInfo.data.seatDisplay}</StatInfoBlock>
+              <StatInfoBlock title="Runners up">{electionsInfo.data.runnersupDisplay}</StatInfoBlock>
             </View>
             <Padder scale={1} />
             <StatInfoBlock title="Prime Voter">
-              {props.electionsInfo.prime && <AddressInlineTeaser address={props.electionsInfo.prime?.toString()} />}
+              {electionsInfo.prime && <AddressInlineTeaser address={electionsInfo.prime?.toString()} />}
             </StatInfoBlock>
           </Card>
           <Card style={[styles.item, styles.right, styles.center]} disabled>
             <ProgressChartWidget
               title={`Term Progress (${timeStringParts[0]})`}
-              detail={`${props.electionsInfo.data.percentage}%\n${termLeft[0] || ''}${
-                termLeft[1] ? `\n${termLeft[1]}` : ''
-              }`}
-              data={[props.electionsInfo.data.percentage / 100]}
+              detail={`${electionsInfo.data.percentage}%\n${termLeft[0] || ''}${termLeft[1] ? `\n${termLeft[1]}` : ''}`}
+              data={[electionsInfo.data.percentage / 100]}
             />
           </Card>
         </Layout>
@@ -65,5 +73,3 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
-export default withElectionInfo(CouncilSummaryTeaser);

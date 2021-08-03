@@ -16,24 +16,32 @@ import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {ProposalInfo} from 'presentational/ProposalInfo';
 import {useMotions} from 'src/api/hooks/useMotions';
 import {standardPadding} from 'src/styles';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {motionDetailScreen} from 'src/navigation/routeKeys';
+import {DashboardStackParamList} from 'src/navigation/navigation';
+import LoadingView from 'presentational/LoadingView';
 
 export function MotionsScreen() {
-  const {data, refetch, isLoading} = useMotions();
+  const {data, refetch, isLoading, isFetching} = useMotions();
 
   return (
     <SafeView edges={noTopEdges}>
-      <FlatList
-        refreshing={isLoading}
-        onRefresh={refetch}
-        style={styles.flatList}
-        data={data}
-        renderItem={({item}) => {
-          return <Motion item={item} />;
-        }}
-        ItemSeparatorComponent={Divider}
-        keyExtractor={(item) => item.hash.toHex()}
-        ListEmptyComponent={EmptyView}
-      />
+      {isLoading ? (
+        <LoadingView />
+      ) : (
+        <FlatList
+          refreshing={isFetching}
+          onRefresh={refetch}
+          style={styles.flatList}
+          data={data}
+          renderItem={({item}) => {
+            return <Motion item={item} />;
+          }}
+          ItemSeparatorComponent={Divider}
+          keyExtractor={(item) => item.hash.toHex()}
+          ListEmptyComponent={EmptyView}
+        />
+      )}
     </SafeView>
   );
 }
@@ -41,6 +49,7 @@ export function MotionsScreen() {
 const styles = StyleSheet.create({flatList: {padding: standardPadding * 2}});
 
 function Motion({item}: {item: DeriveCollectiveProposal}) {
+  const navigation = useNavigation<NavigationProp<DashboardStackParamList>>();
   const {api} = useContext(ChainApiContext);
   const {start} = useContext(TxContext);
   const {accounts} = useAccounts();
@@ -102,7 +111,11 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
   };
 
   return (
-    <Card style={motionStyle.container}>
+    <Card
+      style={motionStyle.container}
+      onPress={() => {
+        navigation.navigate(motionDetailScreen, {hash: String(hash), id: Number(votes?.index)});
+      }}>
       <ListItem
         accessoryLeft={() => {
           return <Text category={'h4'}>{formatNumber(votes?.index)}</Text>;
@@ -110,7 +123,7 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
         accessoryRight={() => {
           return (
             <>
-              <Text category={'c1'}>{`Aye ${votes?.ayes.length}/${membersCount} `}</Text>
+              <Text category={'c1'}>{`Aye ${votes?.ayes.length}/${votes?.threshold} `}</Text>
               <Padder scale={0.5} />
               {(() => {
                 if (data?.isMember) {
