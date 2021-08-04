@@ -20,16 +20,13 @@ import globalStyles, {standardPadding} from 'src/styles';
 export function DemocracyScreen() {
   const {data, isLoading, refetch, isFetching} = useDemocracy();
 
-  const groupedData: {title: string; data: Array<DeriveReferendumExt | DeriveProposal>}[] = [
-    {
-      title: 'Referenda',
-      data: data?.referendums ?? [],
-    },
-    {
-      title: 'Proposals',
-      data: data?.activeProposals ?? [],
-    },
-  ];
+  const groupedData: {title: string; data: Array<DeriveReferendumExt | DeriveProposal>}[] = React.useMemo(
+    () => [
+      {title: 'Referenda', data: data?.referendums ?? []},
+      {title: 'Proposals', data: data?.activeProposals ?? []},
+    ],
+    [data],
+  );
 
   return (
     <Layout style={globalStyles.flex}>
