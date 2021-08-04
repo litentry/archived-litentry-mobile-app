@@ -1,29 +1,27 @@
-import React, {useRef, useContext} from 'react';
-import {View, StyleSheet, Dimensions, ScrollView} from 'react-native';
-import {u8aToString} from '@polkadot/util';
-import {Modalize} from 'react-native-modalize';
-import {Text, Layout, ListItem, Divider, Icon, IconProps, Menu, MenuGroup, MenuItem} from '@ui-kitten/components';
 import Identicon from '@polkadot/reactnative-identicon';
-import {AccountId} from '@polkadot/types/interfaces';
-import WebView from 'react-native-webview';
-
-import {AddressDetailType} from 'src/types';
-import globalStyles, {standardPadding} from 'src/styles';
-import SuccessDialog from 'presentational/SuccessDialog';
-import Padder from 'presentational/Padder';
-import JudgmentStatus from 'presentational/JudgmentStatus';
-import {buildAddressDetailUrl} from 'src/service/Polkasembly';
+import {AccountId, Registration} from '@polkadot/types/interfaces';
+import {u8aToString} from '@polkadot/util';
+import {Divider, Icon, IconProps, Layout, ListItem, Menu, MenuGroup, MenuItem, Text} from '@ui-kitten/components';
 import {NetworkContext} from 'context/NetworkContext';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
 import InfoBanner from 'presentational/InfoBanner';
+import JudgmentStatus from 'presentational/JudgmentStatus';
+import Padder from 'presentational/Padder';
+import SuccessDialog from 'presentational/SuccessDialog';
+import React, {useContext, useRef} from 'react';
+import {Dimensions, ScrollView, StyleSheet, View} from 'react-native';
+import {Modalize} from 'react-native-modalize';
+import WebView from 'react-native-webview';
 import {useSubAccounts} from 'src/api/hooks/useSubAccounts';
+import {buildAddressDetailUrl} from 'src/service/Polkasembly';
+import globalStyles, {standardPadding} from 'src/styles';
 
 const {height} = Dimensions.get('window');
 
 type PropTypes = {
   address?: string;
   display: string;
-  detail: AddressDetailType;
+  registration: Registration;
 };
 
 const SubAccountsIcon = (props: IconProps) => <Icon {...props} pack="ionic" name="ios-people" />;
@@ -31,21 +29,20 @@ const SubAccountsIcon = (props: IconProps) => <Icon {...props} pack="ionic" name
 const MoreIcon = (props: IconProps) => <Icon {...props} pack="ionic" name="ios-apps-outline" />;
 
 function DisplayJudgement(props: PropTypes) {
-  const {display, detail, address} = props;
-  const judgementCount = detail.data?.judgements.length || 0;
+  const {display, registration, address} = props;
+  const judgementCount = registration.judgements.length || 0;
   const {currentNetwork} = useContext(NetworkContext);
   const successMsg = `This address has ${judgementCount} judgement${
     judgementCount > 1 ? 's' : ''
-  } from Registrar ${detail.data?.judgements.map((judgement) => `#${judgement[0]}`).join(',')}. It's all set. 🎉`;
+  } from Registrar ${registration.judgements.map((judgement) => `#${judgement[0]}`).join(',')}. It's all set. 🎉`;
 
-  const pendingJudgement = detail.data?.judgements.find((judgement) => {
+  const pendingJudgement = registration.judgements.find((judgement) => {
     if (judgement[1].isFeePaid) {
       return true;
     }
     return false;
   });
 
-  const identity = detail?.data;
   const modalRef = useRef<Modalize>(null);
   const {data: subAccounts} = useSubAccounts(address);
   const subAccountsArray = subAccounts?.[1];
@@ -85,13 +82,13 @@ function DisplayJudgement(props: PropTypes) {
               </Text>
             )}
           />
-          {identity &&
-            identity.judgements[0] && ( // bug
+          {registration &&
+            registration.judgements[0] && ( // bug
               <ListItem
                 title="Judgment"
                 accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="ribbon-outline" pack="ionic" />}
                 accessoryRight={() =>
-                  identity?.judgements[0] ? <JudgmentStatus judgement={identity.judgements[0]} /> : <View />
+                  registration?.judgements[0] ? <JudgmentStatus judgement={registration.judgements[0]} /> : <View />
                 }
               />
             )}
@@ -102,7 +99,7 @@ function DisplayJudgement(props: PropTypes) {
                 accessoryLeft={(p) => <Icon {...p} name="award-outline" />}
                 accessoryRight={() => (
                   <Text selectable category="label">
-                    {u8aToString(detail?.data?.info.legal.asRaw) || 'Unset'}
+                    {u8aToString(registration.info.legal.asRaw) || 'Unset'}
                   </Text>
                 )}
               />
@@ -111,7 +108,7 @@ function DisplayJudgement(props: PropTypes) {
                 accessoryLeft={(p) => <Icon {...p} name="email-outline" />}
                 accessoryRight={() => (
                   <Text selectable category="label">
-                    {u8aToString(detail?.data?.info.email.asRaw) || 'Unset'}
+                    {u8aToString(registration.info.email.asRaw) || 'Unset'}
                   </Text>
                 )}
               />
@@ -120,7 +117,7 @@ function DisplayJudgement(props: PropTypes) {
                 accessoryLeft={(p) => <Icon {...p} name="twitter-outline" />}
                 accessoryRight={() => (
                   <Text selectable category="label">
-                    {u8aToString(detail?.data?.info.twitter.asRaw) || 'Unset'}
+                    {u8aToString(registration.info.twitter.asRaw) || 'Unset'}
                   </Text>
                 )}
               />
@@ -129,7 +126,7 @@ function DisplayJudgement(props: PropTypes) {
                 accessoryLeft={(p) => <Icon {...p} name="message-square-outline" />}
                 accessoryRight={() => (
                   <Text selectable category="label">
-                    {u8aToString(detail?.data?.info.riot.asRaw) || 'Unset'}
+                    {u8aToString(registration.info.riot.asRaw) || 'Unset'}
                   </Text>
                 )}
               />
@@ -138,7 +135,7 @@ function DisplayJudgement(props: PropTypes) {
                 accessoryLeft={(p) => <Icon {...p} name="browser-outline" />}
                 accessoryRight={() => (
                   <Text selectable category="label">
-                    {u8aToString(detail?.data?.info.web.asRaw) || 'Unset'}
+                    {u8aToString(registration.info.web.asRaw) || 'Unset'}
                   </Text>
                 )}
               />

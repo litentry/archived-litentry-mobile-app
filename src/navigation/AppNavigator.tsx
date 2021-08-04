@@ -14,7 +14,7 @@ import {MotionsScreen} from 'screen/Council/MotionsScreen';
 import DashboardScreen, {DashboardHeaderLeft} from 'screen/DashboardScreen';
 import DevScreen from 'screen/DevScreen';
 import DrawerScreen from 'screen/Drawer/DrawerScreen';
-import MotionDetailScreen from 'screen/MotionDetailScreen';
+import {MotionDetailScreen} from 'screen/MotionDetailScreen';
 import MyIdentityScreen from 'screen/MyIdentityScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
 import {PermissionGrantingPrompt} from 'screen/PermissionGrantingPrompt';

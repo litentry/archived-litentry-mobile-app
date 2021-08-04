@@ -1,12 +1,11 @@
 import Identicon from '@polkadot/reactnative-identicon';
 import {CompositeNavigationProp, NavigationProp, useNavigation} from '@react-navigation/native';
 import {Icon, Layout, ListItem, MenuItem, OverflowMenu} from '@ui-kitten/components';
-import {ChainApiContext} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
 import AddressInfoBadge from 'presentational/AddressInfoBadge';
 import React, {useContext, useState} from 'react';
 import {Alert, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
-import {useAccounts, Account} from 'src/context/AccountsContext';
+import {Account, useAccounts} from 'src/context/AccountsContext';
 import {ApiLoadedParamList, DashboardStackParamList} from 'src/navigation/navigation';
 import {addAccountScreen, balanceScreen, myIdentityScreen} from 'src/navigation/routeKeys';
 import globalStyles, {colorGray} from 'src/styles';
@@ -57,7 +56,6 @@ function AccountItem({
   account: Account;
   removeAccount: (network: SupportedNetworkType, acc: Account) => void;
 }) {
-  const {api} = useContext(ChainApiContext);
   const {currentNetwork} = useContext(NetworkContext);
   const [visible, setVisible] = useState(false);
   const navigation =
@@ -137,7 +135,7 @@ function AccountItem({
           />
         </OverflowMenu>
       )}
-      title={() => <AddressInfoBadge network={currentNetwork} address={account.address} api={api} />}
+      title={() => <AddressInfoBadge network={currentNetwork} address={account.address} />}
     />
   );
 }

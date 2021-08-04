@@ -24,27 +24,27 @@ export default function App() {
   return (
     <>
       <IconRegistry icons={[EvaIconsPack, IonicIconsPack]} />
-      <NetworkContextProvider>
-        <ChainApiContextProvider>
-          <QueryClientProvider client={queryClient}>
-            <ThemeProvider>
-              <InAppNotificationContextProvider>
-                <SafeAreaProvider>
-                  <ErrorBoundary>
-                    <Host>
-                      <AccountsProvider>
+      <QueryClientProvider client={queryClient}>
+        <NetworkContextProvider>
+          <ChainApiContextProvider>
+            <AccountsProvider>
+              <SafeAreaProvider>
+                <ThemeProvider>
+                  <InAppNotificationContextProvider>
+                    <ErrorBoundary>
+                      <Host>
                         <TxContextProvider>
                           <AppNavigator />
                         </TxContextProvider>
-                      </AccountsProvider>
-                    </Host>
-                  </ErrorBoundary>
-                </SafeAreaProvider>
-              </InAppNotificationContextProvider>
-            </ThemeProvider>
-          </QueryClientProvider>
-        </ChainApiContextProvider>
-      </NetworkContextProvider>
+                      </Host>
+                    </ErrorBoundary>
+                  </InAppNotificationContextProvider>
+                </ThemeProvider>
+              </SafeAreaProvider>
+            </AccountsProvider>
+          </ChainApiContextProvider>
+        </NetworkContextProvider>
+      </QueryClientProvider>
     </>
   );
 }

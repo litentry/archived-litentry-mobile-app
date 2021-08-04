@@ -26,11 +26,6 @@ export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppSt
   const {addAccount} = useAccounts();
   const {api} = useContext(ChainApiContext);
 
-  const handleScan = useCallback(({data}) => {
-    const parsed = parseAddress(data);
-    dispatch({type: 'SET_ADDRESS', payload: parsed.address});
-  }, []);
-
   const handleInputChange = (text: string) => {
     dispatch({type: 'SET_ADDRESS', payload: text});
   };
@@ -57,6 +52,17 @@ export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppSt
       return;
     }
   }, [addAccount, currentNetwork, navigation, state.address, state.step]);
+
+  const handleScan = useCallback(
+    ({data}) => {
+      const parsed = parseAddress(data);
+      if (isAddressValid(currentNetwork, parsed.address)) {
+        dispatch({type: 'SET_ADDRESS', payload: parsed.address});
+        dispatch({type: 'SET_STEP', payload: 'preview'});
+      }
+    },
+    [currentNetwork],
+  );
 
   const disabled = state.address.length === 0;
   const confirmBtnDisabled = useMemo(() => {

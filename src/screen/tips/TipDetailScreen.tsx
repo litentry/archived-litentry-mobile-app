@@ -102,7 +102,7 @@ function TipDetailContent({tip, bestNumber}: TipDetailContentProps) {
 
 function EmptyTippers() {
   return (
-    <Card style={styles.emptyTippersContainer}>
+    <Card style={styles.emptyTippersContainer} disabled>
       <Image source={NoDataImage} style={styles.emptyTippersImage} />
       <Text category="c2" style={styles.emptyTippersText}>
         There are no tippers yet.

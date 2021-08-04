@@ -1,14 +1,14 @@
-import React, {useState, useEffect} from 'react';
-import {StyleSheet, Dimensions, View} from 'react-native';
-import {Layout, Text, Icon, IconProps, ListItem} from '@ui-kitten/components';
-import {formatBalance} from '@polkadot/util';
-import LoadingView from 'presentational/LoadingView';
 import {ApiPromise} from '@polkadot/api';
-import {AccountInfo} from '@polkadot/types/interfaces';
 import Identicon from '@polkadot/reactnative-identicon';
+import {formatBalance} from '@polkadot/util';
+import {Icon, IconProps, Layout, ListItem, Text} from '@ui-kitten/components';
 import JudgmentStatus from 'presentational/JudgmentStatus';
+import LoadingView from 'presentational/LoadingView';
+import React from 'react';
+import {Dimensions, StyleSheet, View} from 'react-native';
+import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
+import {useAccountInfo} from 'src/api/hooks/useAccountInfo';
 import {NetworkType} from 'src/types';
-import useAccountDetail from 'src/api/hooks/useAccountDetail';
 
 const {height} = Dimensions.get('window');
 
@@ -24,27 +24,15 @@ const OnelineAddressStyle = {
 };
 
 function AddressInfoPreview(props: PropTypes) {
-  const {address, api, network} = props;
-  const [account, setAccount] = useState<AccountInfo>();
-  const [inProgress, setInProgress] = useState(false);
+  const {address, network} = props;
 
-  const {display, detail} = useAccountDetail(network?.key, address, api);
-  const identity = detail?.data;
-
-  useEffect(() => {
-    if (api) {
-      setInProgress(true);
-      api.query.system.account(address).then((acc) => {
-        setAccount(acc);
-
-        setInProgress(false);
-      });
-    }
-  }, [address, api]);
+  const {data} = useAccountIdentityInfo(address);
+  const identity = data?.hasIdentity ? data.registration : undefined;
+  const {data: accountInfo, isLoading} = useAccountInfo(address);
 
   return (
     <Layout style={styles.container}>
-      {inProgress ? (
+      {isLoading ? (
         <LoadingView text="Fetching Address Info" size="small" appearance="secondary" />
       ) : (
         <Layout>
@@ -77,17 +65,17 @@ function AddressInfoPreview(props: PropTypes) {
                 numberOfLines={1}
                 style={{width: '50%', textAlign: 'right'}}
                 ellipsizeMode="middle">
-                {display || 'untitled account'}
+                {data?.hasIdentity ? data.display : 'untitled account'}
               </Text>
             )}
           />
-          {account && (
+          {accountInfo?.data && (
             <ListItem
               title="Balance"
               accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="credit-card-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
-                  {formatBalance(account.data.free.add(account.data.reserved))}
+                  {formatBalance(accountInfo.data.free.add(accountInfo.data.reserved))}
                 </Text>
               )}
             />
