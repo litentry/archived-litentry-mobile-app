@@ -3,7 +3,7 @@ import {Card, Text} from '@ui-kitten/components';
 import LoadingView from 'presentational/LoadingView';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {useElectionsInfo} from 'src/api/hooks/useElectionsInfo';
+import {useCouncilMotions} from 'src/api/hooks/useCouncilMotions';
 import {motionDetailScreen} from 'src/navigation/routeKeys';
 import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 
@@ -12,17 +12,17 @@ type PropTypes = {title: string};
 export function MotionTeaser(props: PropTypes) {
   const navigation = useNavigation();
   const {title} = props;
-  const {data: electionsInfo, isLoading} = useElectionsInfo();
+  const {data: motions, isLoading} = useCouncilMotions();
 
   if (isLoading) {
     return <LoadingView />;
   }
 
-  if (!electionsInfo) {
-    return <View />;
+  if (!motions) {
+    return null;
   }
 
-  const latestMotion = electionsInfo.motions?.[0];
+  const latestMotion = motions[0];
 
   const handleDetail = () => {
     if (latestMotion && latestMotion.votes) {
