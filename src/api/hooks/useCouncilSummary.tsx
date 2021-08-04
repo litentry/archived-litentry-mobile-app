@@ -33,6 +33,7 @@ export function useCouncilSummary() {
     return {
       seats: `${electionsInfo.members.length}/${formatNumber(electionsInfo.desiredSeats)}`,
       runnersUp: `${electionsInfo.runnersUp.length}/${formatNumber(electionsInfo.desiredRunnersUp)}`,
+      candidatesCount: formatNumber(electionsInfo.candidateCount),
       prime: primeMember.unwrapOr(undefined)?.toString(),
       termProgress: {
         termDuration: electionsInfo.termDuration,
