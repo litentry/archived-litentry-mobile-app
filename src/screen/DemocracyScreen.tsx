@@ -16,7 +16,7 @@ import {DashboardStackParamList} from 'src/navigation/navigation';
 import {referendumScreen} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
 
-export function ReferendaScreen() {
+export function DemocracyScreen() {
   const {data, isLoading, refetch, isFetching} = useDemocracy();
 
   return (

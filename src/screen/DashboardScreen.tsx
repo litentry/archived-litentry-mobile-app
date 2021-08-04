@@ -15,7 +15,7 @@ import React, {useContext, useState} from 'react';
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import NetworkSelect from 'src/layout/NetworkSelect';
 import {ApiLoadedParamList, DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
-import {councilScreen, referendaScreen, tipsScreen, treasuryScreen} from 'src/navigation/routeKeys';
+import {councilScreen, democracyScreen, tipsScreen, treasuryScreen} from 'src/navigation/routeKeys';
 import globalStyles from 'src/styles';
 
 type PropTypes = {
@@ -42,7 +42,7 @@ function DashboardScreen({navigation}: PropTypes) {
       <FadeInAnimatedView>
         <View style={[globalStyles.flex, styles.main]}>
           <ScrollView style={styles.scrollView}>
-            <DemocracySummaryTeaser onPressMore={() => navigation.navigate(referendaScreen)} />
+            <DemocracySummaryTeaser onPressMore={() => navigation.navigate(democracyScreen)} />
             <CouncilSummaryTeaser onPressMore={() => navigation.navigate(councilScreen)} />
             <TreasurySummaryTeaser onPressMore={() => navigation.navigate(treasuryScreen)} />
             <TipsSummaryTeaser onPressMore={() => navigation.navigate(tipsScreen)} />
