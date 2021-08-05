@@ -44,7 +44,7 @@ export const linking: LinkingOptions = {
                 initialRouteName: dashboardScreen,
                 screens: {
                   [treasuryScreen]: 'treasury',
-                  [democracyScreen]: 'referenda',
+                  [democracyScreen]: 'democracy',
                   [tipsScreen]: 'tips',
                 },
               },
