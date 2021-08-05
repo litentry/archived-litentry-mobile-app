@@ -1,18 +1,32 @@
-import React from 'react';
+import React, {useMemo} from 'react';
+import {StyleSheet, View, SectionList} from 'react-native';
 import {Button, Divider, Icon, Layout, ListItem, Spinner, Text} from '@ui-kitten/components';
 import globalStyles, {standardPadding} from 'src/styles';
-import {FlatList, StyleSheet, View} from 'react-native';
-import {u8aToString} from '@polkadot/util';
 import {NavigationProp} from '@react-navigation/native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {EmptyView} from 'presentational/EmptyView';
-import {useCouncilMembers} from 'src/api/hooks/useCouncilMembers';
+import {useCouncil} from 'src/api/hooks/useCouncil';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {motionsScreen} from 'src/navigation/routeKeys';
 import {DashboardStackParamList} from 'src/navigation/navigation';
+import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
+import {useCouncilSummary} from 'src/api/hooks/useCouncilSummary';
 
 export function CouncilScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
-  const {data, isLoading} = useCouncilMembers();
+  const {data, isLoading} = useCouncil();
+  const {data: summary} = useCouncilSummary();
+
+  const sectionsData = useMemo(
+    () => [
+      {title: 'Members', data: data ? data.members : []},
+      {title: 'Runners Up', data: data ? data.runnersUp : []},
+      {
+        title: 'Candidates',
+        data: data ? data.candidates.map((candidate) => ({accountId: candidate, backing: undefined})) : [],
+      },
+    ],
+    [data],
+  );
 
   return (
     <Layout style={globalStyles.flex}>
@@ -30,27 +44,49 @@ export function CouncilScreen({navigation}: {navigation: NavigationProp<Dashboar
             <Spinner />
           </View>
         ) : (
-          <>
-            <View style={styles.listHeader}>
-              <Text category={'s1'}>Members</Text>
-              <Text category={'p2'}>{`seats ${data?.members.length}/${data?.members.length}`}</Text>
-            </View>
-            <FlatList
-              style={globalStyles.flex}
-              contentContainerStyle={styles.content}
-              data={data?.members}
-              renderItem={({item}) => {
-                const text = item.info ? u8aToString(item.info.display.asRaw) : item.accountId.toString();
-                return <ListItem title={text} accessoryLeft={() => <Identicon value={item.accountId} size={30} />} />;
-              }}
-              keyExtractor={(item, index) => item.accountId.toString() ?? index.toString()}
-              ItemSeparatorComponent={Divider}
-              ListEmptyComponent={EmptyView}
-            />
-          </>
+          <SectionList
+            style={globalStyles.flex}
+            contentContainerStyle={styles.content}
+            sections={sectionsData}
+            keyExtractor={(item) => item.accountId.toString()}
+            renderItem={({item}) => {
+              const votes = data?.getVoters(item.accountId.toString())?.length;
+              return <Item accountId={item.accountId.toString()} backing={item.backing} votes={votes} />;
+            }}
+            renderSectionHeader={({section: {title}}) => {
+              return (
+                <View style={styles.sectionHeader}>
+                  <Text category={'s1'}>{title}</Text>
+                  <Text category={'s2'}>
+                    {title === 'Members'
+                      ? `Seats ${summary?.seats}`
+                      : title === 'Runners Up'
+                      ? summary?.runnersUp
+                      : summary?.candidatesCount}
+                  </Text>
+                </View>
+              );
+            }}
+            ItemSeparatorComponent={Divider}
+            ListEmptyComponent={EmptyView}
+          />
         )}
       </SafeView>
     </Layout>
+  );
+}
+
+function Item({accountId, backing, votes}: {accountId: string; backing?: string; votes?: number}) {
+  const {data: identityInfo} = useAccountIdentityInfo(accountId);
+  const title = identityInfo && identityInfo.hasIdentity ? identityInfo.display : accountId;
+
+  return (
+    <ListItem
+      title={title}
+      accessoryLeft={() => <Identicon value={accountId} size={30} />}
+      accessoryRight={votes ? () => <Text category="p2">{votes} votes</Text> : undefined}
+      description={backing ? `Backing: ${backing?.toString()}` : ''}
+    />
   );
 }
 
@@ -60,6 +96,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
-  listHeader: {justifyContent: 'space-between', flexDirection: 'row', padding: standardPadding * 3},
+  sectionHeader: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    paddingVertical: standardPadding * 3,
+    paddingHorizontal: standardPadding,
+    backgroundColor: '#fff',
+  },
   content: {paddingVertical: standardPadding, paddingHorizontal: standardPadding * 2},
 });
