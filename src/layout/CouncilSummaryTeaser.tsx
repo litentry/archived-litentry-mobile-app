@@ -8,7 +8,7 @@ import SeactionTeaserContainer from 'presentational/SectionTeaserContainer';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import ProgressChartWidget from 'presentational/ProgressWidget';
 import StatInfoBlock from 'presentational/StatInfoBlock';
-import {useElectionsInfo} from 'src/api/hooks/useElectionsInfo';
+import {useCouncilSummary} from 'src/api/hooks/useCouncilSummary';
 import LoadingView from 'presentational/LoadingView';
 
 type PropTypes = {
@@ -16,15 +16,15 @@ type PropTypes = {
 };
 
 export function CouncilSummaryTeaser(props: PropTypes) {
-  const {data: electionsInfo, isLoading} = useElectionsInfo();
-  const {timeStringParts} = useBlockTime(electionsInfo?.data.termDuration);
-  const {timeStringParts: termLeft} = useBlockTime(electionsInfo?.data.termLeft);
+  const {data: summary, isLoading} = useCouncilSummary();
+  const {timeStringParts} = useBlockTime(summary?.termProgress.termDuration);
+  const {timeStringParts: termLeft} = useBlockTime(summary?.termProgress.termLeft);
 
   if (isLoading) {
     return <LoadingView />;
   }
 
-  if (!electionsInfo) {
+  if (!summary) {
     return <View />;
   }
 
@@ -34,19 +34,21 @@ export function CouncilSummaryTeaser(props: PropTypes) {
         <Layout style={styles.container}>
           <Card style={[styles.item, styles.left]} disabled>
             <View style={globalStyles.spaceBetweenRowContainer}>
-              <StatInfoBlock title="Seats">{electionsInfo.data.seatDisplay}</StatInfoBlock>
-              <StatInfoBlock title="Runners up">{electionsInfo.data.runnersupDisplay}</StatInfoBlock>
+              <StatInfoBlock title="Seats">{summary.seats}</StatInfoBlock>
+              <StatInfoBlock title="Runners up">{summary.runnersUp}</StatInfoBlock>
             </View>
             <Padder scale={1} />
             <StatInfoBlock title="Prime Voter">
-              {electionsInfo.prime && <AddressInlineTeaser address={electionsInfo.prime?.toString()} />}
+              {summary.prime && <AddressInlineTeaser address={summary.prime} />}
             </StatInfoBlock>
           </Card>
           <Card style={[styles.item, styles.right, styles.center]} disabled>
             <ProgressChartWidget
               title={`Term Progress (${timeStringParts[0]})`}
-              detail={`${electionsInfo.data.percentage}%\n${termLeft[0] || ''}${termLeft[1] ? `\n${termLeft[1]}` : ''}`}
-              data={[electionsInfo.data.percentage / 100]}
+              detail={`${summary.termProgress.percentage}%\n${termLeft[0] || ''}${
+                termLeft[1] ? `\n${termLeft[1]}` : ''
+              }`}
+              data={[summary.termProgress.percentage / 100]}
             />
           </Card>
         </Layout>
