@@ -1,5 +1,17 @@
 import {RouteProp} from '@react-navigation/native';
-import {Button, Card, Divider, IndexPath, Input, Layout, Modal, Select, SelectItem, Text} from '@ui-kitten/components';
+import {
+  Button,
+  Card,
+  Divider,
+  Icon,
+  IndexPath,
+  Input,
+  Layout,
+  Modal,
+  Select,
+  SelectItem,
+  Text,
+} from '@ui-kitten/components';
 import {useApi} from 'context/ChainApiContext';
 import {useTX} from 'context/TxContext';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
@@ -8,7 +20,8 @@ import Padder from 'presentational/Padder';
 import {ProposalInfo} from 'presentational/ProposalInfo';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {SelectAccount} from 'presentational/SelectAccount';
-import React, {useReducer} from 'react';
+import React, {useReducer, useState} from 'react';
+import {TouchableOpacity} from 'react-native';
 import {StyleSheet, View} from 'react-native';
 import {useConvictions} from 'src/api/hooks/useConvictions';
 import {useDemocracy} from 'src/api/hooks/useDemocracy';
@@ -22,6 +35,7 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
   const {start} = useTX();
   const {api} = useApi();
 
+  const [secondsOpen, setSecondsOpen] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const convictions = useConvictions();
@@ -89,6 +103,41 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
               </View>
             </View>
           ) : undefined}
+
+          <Padder scale={2} />
+
+          <View style={styles.row}>
+            <View style={styles.listLeft}>
+              <Text appearance={'hint'}>Seconds:</Text>
+            </View>
+            <View style={styles.listRight}>
+              <TouchableOpacity
+                style={[styles.row, globalStyles.rowAlignCenter]}
+                onPress={() => {
+                  setSecondsOpen(!secondsOpen);
+                }}>
+                <Text>{activeProposal.seconds.length}</Text>
+
+                <Icon
+                  name={secondsOpen ? 'chevron-up-outline' : 'chevron-down-outline'}
+                  style={globalStyles.icon25}
+                  fill="grey"
+                />
+              </TouchableOpacity>
+
+              {secondsOpen && (
+                <>
+                  <Padder scale={0.5} />
+                  {activeProposal.seconds.map((account) => (
+                    <View key={String(account)}>
+                      <AddressInlineTeaser address={String(account)} />
+                      <Padder scale={0.5} />
+                    </View>
+                  ))}
+                </>
+              )}
+            </View>
+          </View>
         </View>
 
         <Modal
