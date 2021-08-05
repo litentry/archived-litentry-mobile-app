@@ -2,6 +2,8 @@ import {RouteProp} from '@react-navigation/native';
 import {Button, Card, Divider, IndexPath, Input, Layout, Modal, Select, SelectItem, Text} from '@ui-kitten/components';
 import {useApi} from 'context/ChainApiContext';
 import {useTX} from 'context/TxContext';
+import AddressInlineTeaser from 'layout/AddressInlineTeaser';
+import LoadingView from 'presentational/LoadingView';
 import Padder from 'presentational/Padder';
 import {ProposalInfo} from 'presentational/ProposalInfo';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
@@ -29,8 +31,11 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
   const formatBalance = useFormatBalance();
   const {data} = useDemocracy();
   const activeProposal = data?.activeProposals.find((p) => String(p.index) === route.params.index);
-  const proposal = activeProposal?.image?.proposal;
+  if (!activeProposal) {
+    return <LoadingView />;
+  }
 
+  const proposal = activeProposal.image?.proposal;
   const {method, section} = proposal?.registry.findMetaCall(proposal.callIndex) ?? {};
 
   return (
@@ -61,6 +66,29 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
           <Padder scale={1} />
           <Text appearance={'hint'}>Proposal Hash:</Text>
           <Text category={'c1'}>{String(proposal?.hash)}</Text>
+
+          <Padder scale={2} />
+          <View style={styles.row}>
+            <View style={styles.listLeft}>
+              <Text appearance={'hint'}>Proposer:</Text>
+            </View>
+            <View style={styles.listRight}>
+              <AddressInlineTeaser address={activeProposal.proposer.toString()} />
+            </View>
+          </View>
+
+          <Padder scale={2} />
+
+          {activeProposal.balance ? (
+            <View style={styles.row}>
+              <View style={styles.listLeft}>
+                <Text appearance={'hint'}>Locked:</Text>
+              </View>
+              <View style={styles.listRight}>
+                <Text>{formatBalance(activeProposal.balance)}</Text>
+              </View>
+            </View>
+          ) : undefined}
         </View>
 
         <Modal
@@ -155,8 +183,8 @@ const styles = StyleSheet.create({
   container: {padding: standardPadding * 2},
   index: {paddingTop: standardPadding, paddingLeft: standardPadding},
   row: {flexDirection: 'row'},
-  center: {alignItems: 'center'},
-  paddedBox: {padding: standardPadding * 2},
+  listLeft: {width: '30%'},
+  listRight: {flex: 1},
   modalCard: {width: 300},
 });
 
