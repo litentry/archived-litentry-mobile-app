@@ -1,17 +1,5 @@
 import {RouteProp} from '@react-navigation/native';
-import {
-  Button,
-  Card,
-  Divider,
-  Icon,
-  IndexPath,
-  Input,
-  Layout,
-  Modal,
-  Select,
-  SelectItem,
-  Text,
-} from '@ui-kitten/components';
+import {Button, Card, Divider, Icon, Layout, Modal, Text} from '@ui-kitten/components';
 import {useApi} from 'context/ChainApiContext';
 import {useTX} from 'context/TxContext';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
@@ -21,12 +9,9 @@ import {ProposalInfo} from 'presentational/ProposalInfo';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {SelectAccount} from 'presentational/SelectAccount';
 import React, {useReducer, useState} from 'react';
-import {TouchableOpacity} from 'react-native';
-import {StyleSheet, View} from 'react-native';
-import {useConvictions} from 'src/api/hooks/useConvictions';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useDemocracy} from 'src/api/hooks/useDemocracy';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import {getBalanceFromString} from 'src/api/utils/balance';
 import {DashboardStackParamList} from 'src/navigation/navigation';
 import {referendumScreen} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
@@ -37,10 +22,6 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
 
   const [secondsOpen, setSecondsOpen] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
-
-  const convictions = useConvictions();
-  const selectedConviction = state.conviction && convictions[state.conviction.row];
-  const convictionDisplayValue = selectedConviction?.text;
 
   const formatBalance = useFormatBalance();
   const {data} = useDemocracy();
@@ -138,10 +119,28 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
               )}
             </View>
           </View>
+          <Padder scale={2} />
+          <Button status="basic" onPress={() => dispatch({type: 'OPEN'})}>
+            Second
+          </Button>
+          <Padder scale={2} />
+          <View style={styles.row}>
+            <View style={styles.infoIcon}>
+              <Icon fill="grey" name="info-outline" style={globalStyles.icon} />
+            </View>
+            <View style={globalStyles.flex}>
+              <Text category="c1">
+                The proposal is in the queue for future referendums. One proposal from this list will move forward to
+                voting.
+              </Text>
+              <Padder scale={0.5} />
+              <Text category="c1">Seconding a proposal that indicates your backing for the proposal.</Text>
+            </View>
+          </View>
         </View>
 
         <Modal
-          visible={state.voting !== undefined}
+          visible={state.open}
           backdropStyle={globalStyles.backdrop}
           onBackdropPress={() => dispatch({type: 'RESET'})}>
           <Card disabled={true} style={styles.modalCard}>
@@ -155,71 +154,39 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
             />
             <Padder scale={1.5} />
 
-            <Text>Vote Value</Text>
+            <Text>Deposit required:</Text>
             <Padder scale={0.5} />
-            <Input
-              placeholder="Place your Text"
-              keyboardType="decimal-pad"
-              value={state.voteValue}
-              onFocus={() => dispatch({type: 'SET_VOTE_VALUE', payload: ''})}
-              onChangeText={(nextValue) =>
-                dispatch({type: 'SET_VOTE_VALUE', payload: nextValue.replace(/[^(\d+).(\d+)]/g, '')})
-              }
-            />
-            <Text>{api && formatBalance(getBalanceFromString(api, state.voteValue))}</Text>
-            <Padder scale={1.5} />
-
-            <Text>Conviction</Text>
-            <Padder scale={0.5} />
-            <Select
-              selectedIndex={state.conviction}
-              value={convictionDisplayValue}
-              onSelect={(index) => {
-                if (!Array.isArray(index)) {
-                  dispatch({type: 'SELECT_CONVICTION', payload: index});
-                }
-              }}>
-              {convictions.map((conviction) => {
-                return <SelectItem key={conviction.value} title={conviction.text} />;
-              })}
-            </Select>
+            <Text>
+              {api &&
+                formatBalance(activeProposal.balance ? activeProposal.balance : api.consts.democracy.minimumDeposit)}
+            </Text>
             <Padder scale={0.5} />
 
-            <View style={styles.row}>
-              <Button
-                onPress={() => {
-                  dispatch({type: 'RESET'});
-                }}
-                appearance="ghost"
-                status="basic">
+            <View style={[styles.row, globalStyles.centeredContainer]}>
+              <Button onPress={() => dispatch({type: 'RESET'})} appearance="ghost" status="basic">
                 CANCEL
               </Button>
+              <Padder scale={1} />
               <Button
-                disabled={!state.account || !selectedConviction}
+                disabled={!state.account}
                 onPress={() => {
-                  if (api && state.account && selectedConviction) {
-                    const balance = getBalanceFromString(api, state.voteValue);
-
+                  if (api && state.account) {
                     start({
                       api,
                       address: state.account,
-                      txMethod: 'democracy.vote',
-                      params: [
-                        activeProposal?.index,
-                        {
-                          Standard: {
-                            balance,
-                            vote: {aye: state.voting === 'YES' ? true : false, conviction: selectedConviction.value},
-                          },
-                        },
-                      ],
-                      title: 'Sending transaction democracy.vote(ref_index, vote)',
-                      description:
-                        'Vote in a referendum. If vote.is_aye(), the vote is to enact the proposal; otherwise it is a vote to keep the status quo.',
+                      txMethod: 'democracy.second',
+                      params:
+                        api.tx.democracy.second.meta.args.length === 2
+                          ? [activeProposal.index, activeProposal.seconds.length]
+                          : [activeProposal.index],
+                      title: 'Sending transaction democracy.second(proposal, seconds_upper_bound)',
+                      description: 'Signals agreement with a particular proposal.',
                     });
                     dispatch({type: 'RESET'});
                   }
-                }}>{`VOTE ${state.voting}`}</Button>
+                }}>
+                Second
+              </Button>
             </View>
           </Card>
         </Modal>
@@ -235,40 +202,27 @@ const styles = StyleSheet.create({
   listLeft: {width: '30%'},
   listRight: {flex: 1},
   modalCard: {width: 300},
+  infoIcon: {paddingRight: standardPadding, paddingLeft: standardPadding},
 });
 
-const initialState: State = {voteValue: '0.0000'};
+const initialState: State = {open: false};
 
-type State = {
-  voting?: 'YES' | 'NO';
-  account?: string;
-  voteValue: string;
-  conviction?: IndexPath;
-};
-
-type Action =
-  | {type: 'RESET'}
-  | {type: 'CHANGE_VOTING'; payload: 'YES' | 'NO' | undefined}
-  | {type: 'SET_VOTE_VALUE'; payload: string}
-  | {type: 'SELECT_ACCOUNT'; payload: string}
-  | {type: 'SELECT_CONVICTION'; payload: IndexPath};
+type State = {open: boolean; account?: string};
+type Action = {type: 'RESET'} | {type: 'SELECT_ACCOUNT'; payload: string} | {type: 'OPEN'} | {type: 'CLOSE'};
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
     case 'RESET':
       return initialState;
 
-    case 'CHANGE_VOTING':
-      return {...state, voting: action.payload};
-
-    case 'SELECT_CONVICTION':
-      return {...state, conviction: action.payload};
-
     case 'SELECT_ACCOUNT':
       return {...state, account: action.payload};
 
-    case 'SET_VOTE_VALUE':
-      return {...state, voteValue: action.payload};
+    case 'OPEN':
+      return {...state, open: true};
+
+    case 'CLOSE':
+      return {...state, open: false};
 
     default:
       return state;
