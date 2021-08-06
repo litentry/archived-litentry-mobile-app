@@ -1,5 +1,4 @@
 import {useTheme} from '@ui-kitten/components';
-import Padder from 'presentational/Padder';
 import React, {useRef, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Animated} from 'react-native';
