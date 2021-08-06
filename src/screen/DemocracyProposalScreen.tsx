@@ -10,6 +10,7 @@ import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {SelectAccount} from 'presentational/SelectAccount';
 import React, {useReducer, useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
 import {useDemocracy} from 'src/api/hooks/useDemocracy';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {DashboardStackParamList} from 'src/navigation/navigation';
@@ -36,7 +37,7 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
   return (
     <Layout style={globalStyles.flex}>
       <SafeView edges={noTopEdges}>
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
           <Text category={'h5'}>Proposal</Text>
           <Padder scale={0.5} />
           <Divider />
@@ -137,7 +138,7 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
               <Text category="c1">Seconding a proposal that indicates your backing for the proposal.</Text>
             </View>
           </View>
-        </View>
+        </ScrollView>
 
         <Modal
           visible={state.open}
