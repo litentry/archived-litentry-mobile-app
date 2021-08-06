@@ -1,6 +1,6 @@
 import {
   addAccountScreen,
-  apiLoadingScreen,
+  deeplinkNavigatorScreen,
   apiLoadedNavigatorScreen,
   balanceScreen,
   councilScreen,
@@ -59,7 +59,7 @@ type ApiLoadedParamList = {
 
 type AppStackParamList = {
   [apiLoadedNavigatorScreen]: undefined;
-  [apiLoadingScreen]: {network: SupportedNetworkType; redirectTo: string | null} | undefined;
+  [deeplinkNavigatorScreen]: {network: SupportedNetworkType; redirectTo: string | null} | undefined;
   [permissionGrantingPromptScreen]: undefined;
 };
 

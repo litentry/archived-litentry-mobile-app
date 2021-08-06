@@ -1,73 +1,60 @@
 import {ApiPromise, WsProvider} from '@polkadot/api';
-import React, {createContext, useContext, useEffect, useMemo, useState} from 'react';
+import React, {createContext, useContext, useEffect, useReducer} from 'react';
 import {useQueryClient} from 'react-query';
 import {createLogger} from 'src/utils';
 import {NetworkContext} from './NetworkContext';
 
-type ApiChainStatusType = 'unknown' | 'connected' | 'disconnected' | 'ready';
-type ChainApiContextValueType = {
-  inProgress: boolean;
-  status: ApiChainStatusType;
-  api?: ApiPromise;
-};
-
-export const ChainApiContext = createContext<ChainApiContextValueType>({
-  api: undefined,
+const initialState: ChainApiContext = {
   status: 'unknown',
   inProgress: false,
-});
+  api: undefined,
+  wsConnectionIndex: 0,
+};
+
+export const ChainApiContext = createContext<ChainApiContext>(initialState);
 
 export const useApi = () => useContext(ChainApiContext);
 
 const logger = createLogger('ChainApiContext');
 
 export function ChainApiContextProvider({children}: {children: React.ReactNode}) {
-  const [inProgress, setInProgress] = useState(true);
-  const [status, setStatus] = useState<ApiChainStatusType>('unknown');
-  const {currentNetwork} = useContext(NetworkContext);
-  const [api, setApi] = useState<ApiPromise>();
-  const [wsConnectionIndex, setWsConnectionIndex] = useState(0);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
+  const {currentNetwork} = useContext(NetworkContext);
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    const wsAddress = currentNetwork.ws[wsConnectionIndex];
+    const wsAddress = currentNetwork.ws[state.wsConnectionIndex];
     if (!wsAddress) {
       return;
     }
 
-    setApi(undefined);
-    setInProgress(true);
     logger.debug('ChainApiContext: trying to connected to', wsAddress);
 
-    const provider = new WsProvider(wsAddress);
+    const provider = new WsProvider(wsAddress, false);
     const apiPromise = new ApiPromise({provider});
+    apiPromise.connect();
+    dispatch({type: 'CONNECT', payload: apiPromise});
 
     function handleConnect() {
       logger.debug('ChainApiContext: Api connected');
-      setStatus('connected');
+      dispatch({type: 'ON_CONNECT'});
+      queryClient.clear();
     }
 
     function handleReady() {
       logger.debug('ChainApiContext: Api ready at', wsAddress);
-      setInProgress(false);
-
-      setStatus('ready');
-      setApi(apiPromise);
-      queryClient.clear();
+      dispatch({type: 'ON_READY'});
     }
 
     function handleDisconnect() {
       logger.debug('ChainApiContext: Api disconnected', wsAddress);
-
-      setApi(undefined);
-      setStatus('disconnected');
+      dispatch({type: 'ON_DISCONNECT'});
     }
 
     function handleError(error: unknown) {
       logger.debug('ChainApiContext: Api error at', wsAddress, error);
-      setApi(undefined);
-      setInProgress(false);
+      dispatch({type: 'ON_ERROR'});
     }
 
     apiPromise.on('connected', handleConnect);
@@ -81,12 +68,14 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
         // pick the next ws api location
         // rerun the effect by changing the wsConnectionIndex dependency
         if (webSocketAddresses.length > 1) {
-          const nextWsConnectionIndex = (wsConnectionIndex + 1) % webSocketAddresses.length;
-          setWsConnectionIndex(nextWsConnectionIndex);
+          const nextWsConnectionIndex = (state.wsConnectionIndex + 1) % webSocketAddresses.length;
+          dispatch({type: 'SET_WS_CONNECTION_INDEX', payload: nextWsConnectionIndex});
 
           logger.debug(
-            `ChainApiContext: switching ws provider to (${wsConnectionIndex}) ${webSocketAddresses[nextWsConnectionIndex]}`,
+            `ChainApiContext: switching ws provider to (${nextWsConnectionIndex}) ${webSocketAddresses[nextWsConnectionIndex]}`,
           );
+        } else {
+          apiPromise.connect();
         }
       }
     }, 5000);
@@ -98,10 +87,44 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
       apiPromise.off('error', handleError);
       clearInterval(retryInterval);
     };
-  }, [currentNetwork, wsConnectionIndex, queryClient]);
+  }, [currentNetwork.ws, queryClient, state.wsConnectionIndex]);
 
-  const value = useMemo(() => {
-    return {api, status, inProgress};
-  }, [status, api, inProgress]);
-  return <ChainApiContext.Provider value={value}>{children}</ChainApiContext.Provider>;
+  return <ChainApiContext.Provider value={state}>{children}</ChainApiContext.Provider>;
+}
+
+type ApiChainStatusType = 'unknown' | 'connected' | 'disconnected' | 'ready';
+
+type ChainApiContext = {
+  status: ApiChainStatusType;
+  inProgress: boolean;
+  api?: ApiPromise;
+  wsConnectionIndex: number;
+};
+
+type Action =
+  | {type: 'ON_CONNECT'}
+  | {type: 'CONNECT'; payload: ApiPromise}
+  | {type: 'ON_READY'}
+  | {type: 'ON_DISCONNECT'}
+  | {type: 'ON_ERROR'}
+  | {type: 'SET_WS_CONNECTION_INDEX'; payload: number};
+
+function reducer(state: ChainApiContext = initialState, action: Action): ChainApiContext {
+  switch (action.type) {
+    case 'CONNECT':
+      return {...state, inProgress: true, status: 'unknown', api: action.payload};
+    case 'ON_CONNECT':
+      return {...state, status: 'connected'};
+    case 'ON_DISCONNECT':
+    case 'ON_ERROR':
+      return {...state, status: 'disconnected', inProgress: false};
+    case 'ON_READY':
+      return {...state, status: 'ready', inProgress: false};
+
+    case 'SET_WS_CONNECTION_INDEX':
+      return {...state, wsConnectionIndex: action.payload};
+
+    default:
+      return state;
+  }
 }

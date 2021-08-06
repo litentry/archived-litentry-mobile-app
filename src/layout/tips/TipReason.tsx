@@ -9,11 +9,11 @@ type Props = {
 };
 
 export function TipReason({reasonHash}: Props) {
-  const reasonText = useTipReason(reasonHash);
+  const {data} = useTipReason(reasonHash);
 
   return (
     <Text category="c1" style={styles.tipReasonText}>
-      {reasonText}
+      {data}
     </Text>
   );
 }
