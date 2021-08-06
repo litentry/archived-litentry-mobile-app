@@ -1,5 +1,5 @@
 import {NavigationProp, RouteProp, useLinkTo} from '@react-navigation/native';
-import {ChainApiContext} from 'context/ChainApiContext';
+import {useApi} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
 import LoadingView from 'presentational/LoadingView';
 import React, {useContext} from 'react';
@@ -15,7 +15,7 @@ export function DeeplinkNavigatorScreen({
 }) {
   const linkTo = useLinkTo();
   const {currentNetwork, select, availableNetworks} = useContext(NetworkContext);
-  const {api} = useContext(ChainApiContext);
+  const {api} = useApi();
 
   React.useEffect(() => {
     const selectedNetwork = availableNetworks.find((n) => n.key === route.params?.network) ?? currentNetwork;
