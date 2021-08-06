@@ -1,6 +1,6 @@
 import {bnToBn, BN_ONE, BN_ZERO, formatBalance, formatNumber} from '@polkadot/util';
 import {Card, Layout} from '@ui-kitten/components';
-import LoadingView from 'presentational/LoadingView';
+import {LoadingBox} from 'presentational/LoadingBox';
 import Padder from 'presentational/Padder';
 import ProgressChartWidget from 'presentational/ProgressWidget';
 import {SectionTeaserContainer} from 'presentational/SectionTeaserContainer';
@@ -35,7 +35,7 @@ export function TreasurySummaryTeaser(props: PropTypes) {
   return (
     <SectionTeaserContainer onPressMore={props.onPressMore} title="Treasury">
       {isLoading ? (
-        <LoadingView />
+        <LoadingBox />
       ) : treasuryInfo ? (
         <View>
           <Layout style={styles.container}>

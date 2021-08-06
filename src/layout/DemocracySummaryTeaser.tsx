@@ -10,7 +10,7 @@ import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import ProgressChartWidget from 'presentational/ProgressWidget';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import {standardPadding} from 'src/styles';
-import LoadingView from 'presentational/LoadingView';
+import {LoadingBox} from 'presentational/LoadingBox';
 
 type Props = {
   onPressMore: () => void;
@@ -36,7 +36,7 @@ export function DemocracySummaryTeaser(props: Props) {
   return (
     <SectionTeaserContainer onPressMore={props.onPressMore} title="Democracy">
       {isLoading ? (
-        <LoadingView />
+        <LoadingBox />
       ) : (
         <View style={styles.boxRow}>
           <Card style={styles.card}>

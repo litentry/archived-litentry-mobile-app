@@ -9,7 +9,7 @@ import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import ProgressChartWidget from 'presentational/ProgressWidget';
 import StatInfoBlock from 'presentational/StatInfoBlock';
 import {useCouncilSummary} from 'src/api/hooks/useCouncilSummary';
-import LoadingView from 'presentational/LoadingView';
+import {LoadingBox} from 'presentational/LoadingBox';
 
 type PropTypes = {
   onPressMore: () => void;
@@ -23,7 +23,7 @@ export function CouncilSummaryTeaser(props: PropTypes) {
   return (
     <SectionTeaserContainer onPressMore={props.onPressMore} title="Council">
       {isLoading ? (
-        <LoadingView />
+        <LoadingBox />
       ) : summary ? (
         <Layout style={styles.container}>
           <Card style={[styles.item, styles.left]} disabled>

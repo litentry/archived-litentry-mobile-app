@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Card} from '@ui-kitten/components';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
-import LoadingView from 'presentational/LoadingView';
+import {LoadingBox} from 'presentational/LoadingBox';
 import Padder from 'presentational/Padder';
 import {SectionTeaserContainer} from 'presentational/SectionTeaserContainer';
 import StatInfoBlock from 'presentational/StatInfoBlock';
@@ -27,7 +27,7 @@ function TipsSummaryTeaser({onPressMore}: TipsSummaryTeaserProps) {
   return (
     <SectionTeaserContainer title={`Tips ${tips?.length ? `(${tips.length})` : ''}`} onPressMore={onPressMore}>
       {isLoading ? (
-        <LoadingView />
+        <LoadingBox />
       ) : id && tip ? (
         <Card onPress={() => navigation.navigate(tipDetailScreen, {hash: String(id)})}>
           <View style={styles.row}>
