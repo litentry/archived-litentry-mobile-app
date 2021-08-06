@@ -3,6 +3,7 @@ import {Button, Card, Divider, Icon, Layout, Modal, Text} from '@ui-kitten/compo
 import {useApi} from 'context/ChainApiContext';
 import {useTX} from 'context/TxContext';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
+import {EmptyView} from 'presentational/EmptyView';
 import LoadingView from 'presentational/LoadingView';
 import Padder from 'presentational/Padder';
 import {ProposalInfo} from 'presentational/ProposalInfo';
@@ -25,10 +26,13 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const formatBalance = useFormatBalance();
-  const {data} = useDemocracy();
+  const {data, isLoading} = useDemocracy();
+  if (isLoading) {
+    return <LoadingView />;
+  }
   const activeProposal = data?.activeProposals.find((p) => String(p.index) === route.params.index);
   if (!activeProposal) {
-    return <LoadingView />;
+    return <EmptyView />;
   }
 
   const proposal = activeProposal.image?.proposal;
