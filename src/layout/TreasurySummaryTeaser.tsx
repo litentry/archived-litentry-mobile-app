@@ -3,7 +3,7 @@ import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import {Card, Layout} from '@ui-kitten/components';
 import globalStyles from 'src/styles';
 import Padder from 'presentational/Padder';
-import SeactionTeaserContainer from 'presentational/SectionTeaserContainer';
+import {SectionTeaserContainer} from 'presentational/SectionTeaserContainer';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import ProgressChartWidget from 'presentational/ProgressWidget';
 import StatInfoBlock from 'presentational/StatInfoBlock';
@@ -40,7 +40,7 @@ export function TreasurySummaryTeaser(props: PropTypes) {
   }
 
   return (
-    <SeactionTeaserContainer onPressMore={props.onPressMore} title="Treasury">
+    <SectionTeaserContainer onPressMore={props.onPressMore} title="Treasury">
       <View>
         <Layout style={styles.container}>
           <Card style={[styles.item, styles.left]} disabled>
@@ -67,7 +67,7 @@ export function TreasurySummaryTeaser(props: PropTypes) {
           </View>
         </Card>
       </View>
-    </SeactionTeaserContainer>
+    </SectionTeaserContainer>
   );
 }
 

@@ -4,7 +4,7 @@ import {Card, Layout} from '@ui-kitten/components';
 import globalStyles from 'src/styles';
 import Padder from 'presentational/Padder';
 import AddressInlineTeaser from './AddressInlineTeaser';
-import SeactionTeaserContainer from 'presentational/SectionTeaserContainer';
+import {SectionTeaserContainer} from 'presentational/SectionTeaserContainer';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import ProgressChartWidget from 'presentational/ProgressWidget';
 import StatInfoBlock from 'presentational/StatInfoBlock';
@@ -29,7 +29,7 @@ export function CouncilSummaryTeaser(props: PropTypes) {
   }
 
   return (
-    <SeactionTeaserContainer onPressMore={props.onPressMore} title="Council">
+    <SectionTeaserContainer onPressMore={props.onPressMore} title="Council">
       <View>
         <Layout style={styles.container}>
           <Card style={[styles.item, styles.left]} disabled>
@@ -53,7 +53,7 @@ export function CouncilSummaryTeaser(props: PropTypes) {
           </Card>
         </Layout>
       </View>
-    </SeactionTeaserContainer>
+    </SectionTeaserContainer>
   );
 }
 

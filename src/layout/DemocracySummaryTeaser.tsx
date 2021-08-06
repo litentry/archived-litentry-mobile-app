@@ -1,5 +1,5 @@
 import {Card} from '@ui-kitten/components/ui';
-import SectionTeaserContainer from 'presentational/SectionTeaserContainer';
+import {SectionTeaserContainer} from 'presentational/SectionTeaserContainer';
 import StatInfoBlock from 'presentational/StatInfoBlock';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';

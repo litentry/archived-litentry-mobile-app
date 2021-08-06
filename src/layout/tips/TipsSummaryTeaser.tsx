@@ -3,7 +3,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {Card} from '@ui-kitten/components';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
 import Padder from 'presentational/Padder';
-import SeactionTeaserContainer from 'presentational/SectionTeaserContainer';
+import {SectionTeaserContainer} from 'presentational/SectionTeaserContainer';
 import StatInfoBlock from 'presentational/StatInfoBlock';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -24,7 +24,7 @@ function TipsSummaryTeaser({onPressMore}: TipsSummaryTeaserProps) {
   const [id, tip] = latestTip ?? [];
 
   return (
-    <SeactionTeaserContainer title={`Tips ${tips?.length ? `(${tips.length})` : ''}`} onPressMore={onPressMore}>
+    <SectionTeaserContainer title={`Tips ${tips?.length ? `(${tips.length})` : ''}`} onPressMore={onPressMore}>
       {id && tip ? (
         <Card onPress={() => navigation.navigate(tipDetailScreen, {hash: String(id)})}>
           <View style={styles.row}>
@@ -44,7 +44,7 @@ function TipsSummaryTeaser({onPressMore}: TipsSummaryTeaserProps) {
           <StatInfoBlock title="Reason">{tip.reason && <TipReason reasonHash={tip.reason} />}</StatInfoBlock>
         </Card>
       ) : undefined}
-    </SeactionTeaserContainer>
+    </SectionTeaserContainer>
   );
 }
 
