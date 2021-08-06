@@ -16,7 +16,7 @@ import {MotionDetailScreen} from 'screen/MotionDetailScreen';
 import MyIdentityScreen from 'screen/MyIdentityScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
 import {PermissionGrantingPrompt} from 'screen/PermissionGrantingPrompt';
-import {ReferendaScreen} from 'screen/ReferendaScreen';
+import {DemocracyScreen} from 'screen/DemocracyScreen';
 import {ReferendumScreen} from 'screen/ReferendumScreen';
 import RegistrarListScreen from 'screen/RegistrarListScreen';
 import {SubmitTipScreen} from 'screen/SubmitTipScreen';
@@ -78,7 +78,7 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.submitTipScreen} component={SubmitTipScreen} />
       <DashboardStack.Screen name={routeKeys.motionsScreen} component={MotionsScreen} />
       <DashboardStack.Screen name={routeKeys.myIdentityScreen} component={MyIdentityScreen} />
-      <DashboardStack.Screen name={routeKeys.referendaScreen} component={ReferendaScreen} />
+      <DashboardStack.Screen name={routeKeys.democracyScreen} component={DemocracyScreen} />
       <DashboardStack.Screen name={routeKeys.referendumScreen} component={ReferendumScreen} />
     </DashboardStack.Navigator>
   );

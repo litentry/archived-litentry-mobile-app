@@ -12,7 +12,7 @@ import {
   motionsScreen,
   myIdentityScreen,
   notificationSettingsScreen,
-  referendaScreen,
+  democracyScreen,
   permissionGrantingPromptScreen,
   registrarListScreen,
   submitTipScreen,
@@ -39,7 +39,7 @@ type DashboardStackParamList = {
   [treasuryScreen]: undefined;
   [motionsScreen]: undefined;
   [myIdentityScreen]: {address: string};
-  [referendaScreen]: undefined;
+  [democracyScreen]: undefined;
   [referendumScreen]: {index: string};
 };
 
