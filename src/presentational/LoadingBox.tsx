@@ -1,21 +1,29 @@
 import {useTheme} from '@ui-kitten/components';
 import Padder from 'presentational/Padder';
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Animated} from 'react-native';
 
+// get random width between 15% and 85%
+function getRandomWidth() {
+  return `${Math.floor(Math.random() * (85 - 15 + 1)) + 15}%`;
+}
+
 export function LoadingBox() {
   const theme = useTheme();
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const fadeAnim = useRef(new Animated.Value(0.2)).current;
+  const [textWidths] = useState([getRandomWidth(), getRandomWidth(), getRandomWidth(), getRandomWidth()]);
 
   React.useEffect(() => {
     Animated.loop(
       Animated.sequence([
-        Animated.timing(fadeAnim, {toValue: 1, duration: 1500, useNativeDriver: true}),
-        Animated.timing(fadeAnim, {toValue: 0, duration: 1500, useNativeDriver: true}),
+        Animated.timing(fadeAnim, {toValue: 1, duration: 1200, useNativeDriver: true}),
+        Animated.timing(fadeAnim, {toValue: 0.2, duration: 1200, useNativeDriver: true}),
       ]),
     ).start();
   }, [fadeAnim]);
+
+  const textBackground = theme['text-basic-color'];
 
   return (
     <Animated.View
@@ -27,11 +35,9 @@ export function LoadingBox() {
           backgroundColor: theme['background-basic-color-2'],
         },
       ]}>
-      <View style={[styles.textSubstitue, {backgroundColor: theme['text-basic-color'], width: '90%'}]} />
-      <Padder scale={0.5} />
-      <View style={[styles.textSubstitue, {backgroundColor: theme['text-basic-color'], width: '30%'}]} />
-      <Padder scale={0.5} />
-      <View style={[styles.textSubstitue, {backgroundColor: theme['text-basic-color'], width: '50%'}]} />
+      {textWidths.map((textWidth, key) => (
+        <View key={key} style={[styles.textSubstitue, {backgroundColor: textBackground, width: textWidth}]} />
+      ))}
     </Animated.View>
   );
 }
@@ -39,16 +45,17 @@ export function LoadingBox() {
 const styles = StyleSheet.create({
   container: {
     minHeight: 100,
-    // backgroundColor: '#fff',
     opacity: 0.3,
-    marginBottom: 10,
     borderRadius: 5,
     borderColor: '#ccc',
     borderWidth: 1,
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
   },
   textSubstitue: {
     height: 20,
     opacity: 0.3,
+    marginTop: 5,
+    marginBottom: 5,
   },
 });
