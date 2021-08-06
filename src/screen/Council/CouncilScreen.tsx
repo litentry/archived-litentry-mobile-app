@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {StyleSheet, View, SectionList} from 'react-native';
-import {Button, Divider, Icon, Layout, ListItem, Spinner, Text} from '@ui-kitten/components';
+import {Button, Divider, Icon, Layout, ListItem, Spinner, Text, useTheme} from '@ui-kitten/components';
 import globalStyles, {standardPadding} from 'src/styles';
 import {NavigationProp} from '@react-navigation/native';
 import Identicon from '@polkadot/reactnative-identicon';
@@ -15,6 +15,7 @@ import {useCouncilSummary} from 'src/api/hooks/useCouncilSummary';
 export function CouncilScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {data, isLoading} = useCouncil();
   const {data: summary} = useCouncilSummary();
+  const theme = useTheme();
 
   const sectionsData = useMemo(
     () => [
@@ -55,7 +56,7 @@ export function CouncilScreen({navigation}: {navigation: NavigationProp<Dashboar
             }}
             renderSectionHeader={({section: {title}}) => {
               return (
-                <View style={styles.sectionHeader}>
+                <View style={[styles.sectionHeader, {backgroundColor: theme['background-basic-color-1']}]}>
                   <Text category={'s1'}>{title}</Text>
                   <Text category={'s2'}>
                     {title === 'Members'
@@ -101,7 +102,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingVertical: standardPadding * 3,
     paddingHorizontal: standardPadding,
-    backgroundColor: '#fff',
   },
   content: {paddingVertical: standardPadding, paddingHorizontal: standardPadding * 2},
 });
