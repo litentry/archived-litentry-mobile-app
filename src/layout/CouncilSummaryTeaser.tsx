@@ -20,17 +20,11 @@ export function CouncilSummaryTeaser(props: PropTypes) {
   const {timeStringParts} = useBlockTime(summary?.termProgress.termDuration);
   const {timeStringParts: termLeft} = useBlockTime(summary?.termProgress.termLeft);
 
-  if (isLoading) {
-    return <LoadingView />;
-  }
-
-  if (!summary) {
-    return <View />;
-  }
-
   return (
     <SectionTeaserContainer onPressMore={props.onPressMore} title="Council">
-      <View>
+      {isLoading ? (
+        <LoadingView />
+      ) : summary ? (
         <Layout style={styles.container}>
           <Card style={[styles.item, styles.left]} disabled>
             <View style={globalStyles.spaceBetweenRowContainer}>
@@ -52,7 +46,7 @@ export function CouncilSummaryTeaser(props: PropTypes) {
             />
           </Card>
         </Layout>
-      </View>
+      ) : null}
     </SectionTeaserContainer>
   );
 }

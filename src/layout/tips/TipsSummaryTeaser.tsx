@@ -2,6 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Card} from '@ui-kitten/components';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
+import LoadingView from 'presentational/LoadingView';
 import Padder from 'presentational/Padder';
 import {SectionTeaserContainer} from 'presentational/SectionTeaserContainer';
 import StatInfoBlock from 'presentational/StatInfoBlock';
@@ -18,14 +19,16 @@ type TipsSummaryTeaserProps = {
 
 function TipsSummaryTeaser({onPressMore}: TipsSummaryTeaserProps) {
   const navigation = useNavigation<StackNavigationProp<DashboardStackParamList>>();
-  const {data: tips} = useTips();
+  const {data: tips, isLoading} = useTips();
 
   const latestTip = tips ? tips[tips.length - 1] : undefined;
   const [id, tip] = latestTip ?? [];
 
   return (
     <SectionTeaserContainer title={`Tips ${tips?.length ? `(${tips.length})` : ''}`} onPressMore={onPressMore}>
-      {id && tip ? (
+      {isLoading ? (
+        <LoadingView />
+      ) : id && tip ? (
         <Card onPress={() => navigation.navigate(tipDetailScreen, {hash: String(id)})}>
           <View style={styles.row}>
             <View style={styles.rowItem}>
