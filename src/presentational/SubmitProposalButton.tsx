@@ -28,7 +28,6 @@ export function SubmitProposalButton() {
         backdropStyle={globalStyles.backdrop}
         onBackdropPress={() => dispatch({type: 'SET_OPEN', payload: false})}>
         <Card disabled={true} style={styles.modalCard}>
-          <Text>Send from account:</Text>
           <Padder scale={0.5} />
           <SelectAccount
             selected={state.account}
@@ -36,7 +35,7 @@ export function SubmitProposalButton() {
               dispatch({type: 'SELECT_ACCOUNT', payload: account});
             }}
           />
-          <Padder scale={1.5} />
+          <Padder scale={1} />
 
           <Text>Preimage hash:</Text>
           <Padder scale={0.5} />
@@ -46,7 +45,7 @@ export function SubmitProposalButton() {
             onFocus={() => dispatch({type: 'SET_HASH', payload: ''})}
             onChangeText={(payload) => dispatch({type: 'SET_HASH', payload})}
           />
-          <Padder scale={0.5} />
+          <Padder scale={1} />
 
           <Text>Locked balance:</Text>
           <Padder scale={0.5} />
@@ -60,7 +59,8 @@ export function SubmitProposalButton() {
             }
           />
           <Text>{state.balance && api && formatBalance(getBalanceFromString(api, state.balance))}</Text>
-          <Padder scale={0.5} />
+          <Padder scale={1} />
+
           <Text category="c1">{`Minimum deposit: ${api && formatBalance(api.consts.democracy.minimumDeposit)}`}</Text>
           <Padder scale={1} />
 

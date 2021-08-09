@@ -60,9 +60,13 @@ export function DemocracyScreen() {
             }}
             keyExtractor={(item) => item.index.toString()}
             ListEmptyComponent={EmptyView}
+            ListFooterComponent={() => (
+              <View style={styles.footer}>
+                <SubmitProposalButton />
+              </View>
+            )}
           />
         )}
-        <SubmitProposalButton />
       </SafeView>
     </Layout>
   );
@@ -71,6 +75,7 @@ export function DemocracyScreen() {
 const styles = StyleSheet.create({
   content: {paddingVertical: standardPadding, paddingHorizontal: standardPadding * 2},
   header: {padding: standardPadding},
+  footer: {paddingVertical: standardPadding},
 });
 
 function ReferendumListItem({item}: {item: DeriveReferendumExt}) {
