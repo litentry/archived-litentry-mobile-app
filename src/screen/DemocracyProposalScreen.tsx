@@ -42,9 +42,6 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
     <Layout style={globalStyles.flex}>
       <SafeView edges={noTopEdges}>
         <ScrollView style={styles.container}>
-          <Text category={'h5'}>Proposal</Text>
-          <Padder scale={0.5} />
-          <Divider />
           <View style={styles.row}>
             <Text category="h3" style={styles.index}>
               {route.params.index}
