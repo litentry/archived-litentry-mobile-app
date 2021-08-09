@@ -33,8 +33,6 @@ function SetInfo({address}: PropTypes): React.ReactElement {
           address,
           txMethod: 'identity.setIdentity',
           params: [info],
-          title: `Sending transaction identity.setIdentity(info)`,
-          description: "Set an account's identity information and reserve the appropriate deposit",
         });
       } else {
         Alert.alert('account/api is not ready');

@@ -14,6 +14,7 @@ import React, {createContext, useCallback, useContext, useMemo, useReducer, useR
 import {Dimensions, StyleSheet} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import QRCodeScanner from 'react-native-qrcode-scanner';
+import {formatCallMeta} from 'src/packages/call_inspector/CallInspector';
 import QrSigner from 'src/service/QrSigner';
 import globalStyles, {standardPadding} from 'src/styles';
 
@@ -39,8 +40,6 @@ type StartConfig = {
   address: string;
   txMethod: string;
   params: unknown[];
-  title: string;
-  description: string;
 };
 
 function TxContextProvider({children}: PropTypes): React.ReactElement {
@@ -49,7 +48,7 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const start = useCallback(async (config: StartConfig) => {
-    const {api, txMethod, params, description, address, title} = config;
+    const {api, txMethod, params, address} = config;
     const [section, method] = txMethod.split('.');
 
     if (!section || !method) {
@@ -64,16 +63,20 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
 
     modalRef.current?.open();
 
+    const {meta} = transaction.registry.findMetaCall(transaction.callIndex);
+    const args = meta?.args.map(({name}) => name).join(', ') || '';
+    const title = `Sending transaction ${section}.${method}(${args})`;
+    const description = formatCallMeta(meta);
+
     try {
       const f = await transaction.signAsync(address, {
         nonce: -1,
         tip: BN_ZERO,
-        signer: new QrSigner((txPayload) => {
-          transaction.paymentInfo(address).then((info) => {
-            dispatch({
-              type: 'PREVIEW',
-              payload: {txPayload: txPayload, params, title, description, partialFee: info.partialFee.toNumber()},
-            });
+        signer: new QrSigner(async (txPayload) => {
+          const info = await transaction.paymentInfo(address);
+          dispatch({
+            type: 'PREVIEW',
+            payload: {txPayload: txPayload, params, title, description, partialFee: info.partialFee.toNumber()},
           });
 
           return new Promise((resolve) => {
@@ -118,6 +121,7 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
         });
       });
     } catch (e) {
+      console.warn(e);
       dispatch({type: 'ERROR', payload: e});
     }
   }, []);
