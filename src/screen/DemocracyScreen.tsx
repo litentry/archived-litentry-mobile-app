@@ -8,6 +8,7 @@ import LoadingView from 'presentational/LoadingView';
 import Padder from 'presentational/Padder';
 import {ProposalInfo} from 'presentational/ProposalInfo';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
+import {SubmitProposalButton} from 'presentational/SubmitProposalButton';
 import * as React from 'react';
 import {SectionList, StyleSheet, View} from 'react-native';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
@@ -61,6 +62,7 @@ export function DemocracyScreen() {
             ListEmptyComponent={EmptyView}
           />
         )}
+        <SubmitProposalButton />
       </SafeView>
     </Layout>
   );
