@@ -81,7 +81,7 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.myIdentityScreen} component={MyIdentityScreen} />
       <DashboardStack.Screen name={routeKeys.democracyScreen} component={DemocracyScreen} />
       <DashboardStack.Screen name={routeKeys.referendumScreen} component={ReferendumScreen} />
-      <DashboardStack.Screen name={routeKeys.democracyProposalScreen} component={DemocracyProposalScreen} />
+      <DashboardStack.Screen name={routeKeys.democracyProposalScreen} component={DemocracyProposalScreen} options={{ title: 'Proposal' }} /> 
     </DashboardStack.Navigator>
   );
 }
