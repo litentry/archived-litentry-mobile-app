@@ -4,6 +4,7 @@ import {
   apiLoadedNavigatorScreen,
   balanceScreen,
   councilScreen,
+  candidateScreen,
   dashboardNavigator,
   dashboardScreen,
   devScreen,
@@ -35,6 +36,11 @@ type DashboardStackParamList = {
     hash: string;
   };
   [councilScreen]: undefined;
+  [candidateScreen]: {
+    accountId: string;
+    title: string;
+    backing?: string;
+  };
   [submitTipScreen]: undefined;
   [treasuryScreen]: undefined;
   [motionsScreen]: undefined;

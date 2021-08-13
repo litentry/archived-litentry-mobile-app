@@ -22,6 +22,7 @@ export const webviewScreen = 'Webview' as const;
 export const devScreen = 'Dev Kit' as const;
 export const myIdentityScreen = 'My Identity' as const;
 export const councilScreen = 'Council' as const;
+export const candidateScreen = 'Candidate' as const;
 export const treasuryScreen = 'Treasury' as const;
 export const motionsScreen = 'Motions' as const;
 export const democracyScreen = 'Democracy' as const;

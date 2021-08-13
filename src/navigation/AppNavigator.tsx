@@ -8,6 +8,7 @@ import {AddAccountScreen} from 'screen/AddAccountScreen/AddAccountScreen';
 import {DeeplinkNavigatorScreen} from 'screen/DeeplinkNavigatorScreen';
 import {BalanceScreen} from 'screen/BalanceScreen';
 import {CouncilScreen} from 'screen/Council/CouncilScreen';
+import {CandidateScreen} from 'screen/Council/CandidateScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
 import DashboardScreen, {DashboardHeaderLeft} from 'screen/DashboardScreen';
 import DevScreen from 'screen/DevScreen';
@@ -74,6 +75,7 @@ function DashboardStackNavigator() {
       />
       <DashboardStack.Screen name={routeKeys.tipDetailScreen} component={TipDetailScreen} />
       <DashboardStack.Screen name={routeKeys.councilScreen} component={CouncilScreen} />
+      <DashboardStack.Screen name={routeKeys.candidateScreen} component={CandidateScreen} />
       <DashboardStack.Screen name={routeKeys.treasuryScreen} component={TreasuryScreen} />
       <DashboardStack.Screen name={routeKeys.submitTipScreen} component={SubmitTipScreen} />
       <DashboardStack.Screen name={routeKeys.motionsScreen} component={MotionsScreen} />
