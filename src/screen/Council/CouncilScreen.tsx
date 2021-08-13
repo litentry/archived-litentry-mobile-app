@@ -2,12 +2,12 @@ import React, {useMemo} from 'react';
 import {StyleSheet, View, SectionList} from 'react-native';
 import {Button, Divider, Icon, Layout, ListItem, Spinner, Text, useTheme} from '@ui-kitten/components';
 import globalStyles, {standardPadding} from 'src/styles';
-import {NavigationProp} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {EmptyView} from 'presentational/EmptyView';
 import {useCouncil} from 'src/api/hooks/useCouncil';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
-import {motionsScreen} from 'src/navigation/routeKeys';
+import {candidateScreen, motionsScreen} from 'src/navigation/routeKeys';
 import {DashboardStackParamList} from 'src/navigation/navigation';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useCouncilSummary} from 'src/api/hooks/useCouncilSummary';
@@ -50,9 +50,18 @@ export function CouncilScreen({navigation}: {navigation: NavigationProp<Dashboar
             contentContainerStyle={styles.content}
             sections={sectionsData}
             keyExtractor={(item) => item.accountId.toString()}
-            renderItem={({item}) => {
+            renderItem={({item, section}) => {
               const votes = data?.getVoters(item.accountId.toString())?.length;
-              return <Item accountId={item.accountId.toString()} backing={item.backing} votes={votes} />;
+              return (
+                <Item
+                  accountId={item.accountId.toString()}
+                  backing={item.backing}
+                  votes={votes}
+                  sectionType={
+                    section.title === 'Members' ? 'Member' : section.title === 'Runners Up' ? 'Runner Up' : 'Candidate'
+                  }
+                />
+              );
             }}
             renderSectionHeader={({section: {title}}) => {
               return (
@@ -77,7 +86,18 @@ export function CouncilScreen({navigation}: {navigation: NavigationProp<Dashboar
   );
 }
 
-function Item({accountId, backing, votes}: {accountId: string; backing?: string; votes?: number}) {
+function Item({
+  accountId,
+  backing,
+  votes,
+  sectionType,
+}: {
+  accountId: string;
+  backing?: string;
+  votes?: number;
+  sectionType: string;
+}) {
+  const {navigate} = useNavigation();
   const {data: identityInfo} = useAccountIdentityInfo(accountId);
   const title = identityInfo && identityInfo.hasIdentity ? identityInfo.display : accountId;
 
@@ -87,6 +107,7 @@ function Item({accountId, backing, votes}: {accountId: string; backing?: string;
       accessoryLeft={() => <Identicon value={accountId} size={30} />}
       accessoryRight={votes ? () => <Text category="p2">{votes} votes</Text> : undefined}
       description={backing ? `Backing: ${backing?.toString()}` : ''}
+      onPress={() => navigate(candidateScreen, {accountId, backing, title: sectionType})}
     />
   );
 }
