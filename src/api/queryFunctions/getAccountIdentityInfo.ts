@@ -2,7 +2,7 @@ import {ApiPromise} from '@polkadot/api';
 import {u8aToString} from '@polkadot/util';
 import {Registration, AccountId} from '@polkadot/types/interfaces';
 
-type Result =
+type IdentityInfo =
   | {
       hasIdentity: true;
       hasJudgements: boolean;
@@ -16,7 +16,7 @@ type Result =
       accountId: string;
     };
 
-export async function getAccountIdentityInfo(api: ApiPromise, accountId: string): Promise<Result> {
+export async function getAccountIdentityInfo(api: ApiPromise, accountId: string): Promise<IdentityInfo> {
   const registrationOption = await api.query.identity.identityOf(accountId);
   const registration = registrationOption.unwrapOr(undefined);
 

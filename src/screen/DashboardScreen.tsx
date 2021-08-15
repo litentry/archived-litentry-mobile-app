@@ -2,7 +2,7 @@ import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Divider, Icon, Text, TopNavigationAction} from '@ui-kitten/components';
-import {ChainApiContext} from 'context/ChainApiContext';
+import {useApi} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
 import {CouncilSummaryTeaser} from 'layout/CouncilSummaryTeaser';
 import {DemocracySummaryTeaser} from 'layout/DemocracySummaryTeaser';
@@ -15,7 +15,7 @@ import React, {useContext, useState} from 'react';
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import NetworkSelect from 'src/layout/NetworkSelect';
 import {ApiLoadedParamList, DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
-import {councilScreen, referendaScreen, tipsScreen, treasuryScreen} from 'src/navigation/routeKeys';
+import {councilScreen, democracyScreen, tipsScreen, treasuryScreen} from 'src/navigation/routeKeys';
 import globalStyles from 'src/styles';
 
 type PropTypes = {
@@ -42,7 +42,7 @@ function DashboardScreen({navigation}: PropTypes) {
       <FadeInAnimatedView>
         <View style={[globalStyles.flex, styles.main]}>
           <ScrollView style={styles.scrollView}>
-            <DemocracySummaryTeaser onPressMore={() => navigation.navigate(referendaScreen)} />
+            <DemocracySummaryTeaser onPressMore={() => navigation.navigate(democracyScreen)} />
             <CouncilSummaryTeaser onPressMore={() => navigation.navigate(councilScreen)} />
             <TreasurySummaryTeaser onPressMore={() => navigation.navigate(treasuryScreen)} />
             <TipsSummaryTeaser onPressMore={() => navigation.navigate(tipsScreen)} />
@@ -77,12 +77,14 @@ export function DashboardHeaderLeft() {
 
 function DashboardTitle({setNetworkSelectOpen}: {setNetworkSelectOpen: (v: boolean) => void}) {
   const {currentNetwork} = useContext(NetworkContext);
-  const {status} = useContext(ChainApiContext);
+  const {status} = useApi();
 
   return (
     <TouchableOpacity style={styles.titleContainer} onPress={() => setNetworkSelectOpen(true)}>
       <Text category="s1">Litentry</Text>
-      {currentNetwork ? <NetworkItem item={currentNetwork} isConnected={status === 'ready'} /> : null}
+      {currentNetwork ? (
+        <NetworkItem item={currentNetwork} isConnected={status === 'connected' || status === 'ready'} />
+      ) : null}
     </TouchableOpacity>
   );
 }

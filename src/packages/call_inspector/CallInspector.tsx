@@ -12,7 +12,6 @@ import Padder from 'presentational/Padder';
 import {isU8a, u8aToString} from '@polkadot/util';
 import {Balance, Call, FunctionMetadataLatest, ProposalIndex} from '@polkadot/types/interfaces';
 import React, {useContext} from 'react';
-import {standardPadding} from 'src/styles';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {Compact, GenericCall, getTypeDef} from '@polkadot/types';
@@ -70,12 +69,7 @@ export function CallInspector({call}: {call: Call}) {
 }
 
 const styles = StyleSheet.create({
-  paramRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: standardPadding,
-    paddingVertical: standardPadding / 3,
-  },
+  paramRow: {flexDirection: 'row', alignItems: 'center'},
 });
 const METHOD_TREA = ['approveProposal', 'rejectProposal'];
 

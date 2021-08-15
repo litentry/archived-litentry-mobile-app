@@ -1,6 +1,6 @@
 import {
   addAccountScreen,
-  apiLoadingScreen,
+  deeplinkNavigatorScreen,
   apiLoadedNavigatorScreen,
   balanceScreen,
   councilScreen,
@@ -12,7 +12,7 @@ import {
   motionsScreen,
   myIdentityScreen,
   notificationSettingsScreen,
-  referendaScreen,
+  democracyScreen,
   permissionGrantingPromptScreen,
   registrarListScreen,
   submitTipScreen,
@@ -21,6 +21,7 @@ import {
   treasuryScreen,
   webviewScreen,
   referendumScreen,
+  democracyProposalScreen,
 } from 'src/navigation/routeKeys';
 import {SupportedNetworkType} from 'src/types';
 
@@ -39,8 +40,9 @@ type DashboardStackParamList = {
   [treasuryScreen]: undefined;
   [motionsScreen]: undefined;
   [myIdentityScreen]: {address: string};
-  [referendaScreen]: undefined;
+  [democracyScreen]: undefined;
   [referendumScreen]: {index: string};
+  [democracyProposalScreen]: {index: string};
 };
 
 type DrawerParamList = {
@@ -59,7 +61,7 @@ type ApiLoadedParamList = {
 
 type AppStackParamList = {
   [apiLoadedNavigatorScreen]: undefined;
-  [apiLoadingScreen]: {network: SupportedNetworkType; redirectTo: string | null} | undefined;
+  [deeplinkNavigatorScreen]: {network: SupportedNetworkType; redirectTo: string | null} | undefined;
   [permissionGrantingPromptScreen]: undefined;
 };
 
