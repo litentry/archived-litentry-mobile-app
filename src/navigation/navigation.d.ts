@@ -22,6 +22,7 @@ import {
   treasuryScreen,
   webviewScreen,
   referendumScreen,
+  democracyProposalScreen,
 } from 'src/navigation/routeKeys';
 import {SupportedNetworkType} from 'src/types';
 
@@ -47,6 +48,7 @@ type DashboardStackParamList = {
   [myIdentityScreen]: {address: string};
   [democracyScreen]: undefined;
   [referendumScreen]: {index: string};
+  [democracyProposalScreen]: {index: string};
 };
 
 type DrawerParamList = {
