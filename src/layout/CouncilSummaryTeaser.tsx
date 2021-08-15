@@ -4,12 +4,12 @@ import {Card, Layout} from '@ui-kitten/components';
 import globalStyles from 'src/styles';
 import Padder from 'presentational/Padder';
 import AddressInlineTeaser from './AddressInlineTeaser';
-import SeactionTeaserContainer from 'presentational/SectionTeaserContainer';
+import {SectionTeaserContainer} from 'presentational/SectionTeaserContainer';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import ProgressChartWidget from 'presentational/ProgressWidget';
 import StatInfoBlock from 'presentational/StatInfoBlock';
 import {useCouncilSummary} from 'src/api/hooks/useCouncilSummary';
-import LoadingView from 'presentational/LoadingView';
+import {LoadingBox} from 'presentational/LoadingBox';
 
 type PropTypes = {
   onPressMore: () => void;
@@ -20,17 +20,11 @@ export function CouncilSummaryTeaser(props: PropTypes) {
   const {timeStringParts} = useBlockTime(summary?.termProgress.termDuration);
   const {timeStringParts: termLeft} = useBlockTime(summary?.termProgress.termLeft);
 
-  if (isLoading) {
-    return <LoadingView />;
-  }
-
-  if (!summary) {
-    return <View />;
-  }
-
   return (
-    <SeactionTeaserContainer onPressMore={props.onPressMore} title="Council">
-      <View>
+    <SectionTeaserContainer onPressMore={props.onPressMore} title="Council">
+      {isLoading ? (
+        <LoadingBox />
+      ) : summary ? (
         <Layout style={styles.container}>
           <Card style={[styles.item, styles.left]} disabled>
             <View style={globalStyles.spaceBetweenRowContainer}>
@@ -52,8 +46,8 @@ export function CouncilSummaryTeaser(props: PropTypes) {
             />
           </Card>
         </Layout>
-      </View>
-    </SeactionTeaserContainer>
+      ) : null}
+    </SectionTeaserContainer>
   );
 }
 
