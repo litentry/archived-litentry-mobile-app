@@ -3,11 +3,9 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Icon, TopNavigationAction} from '@ui-kitten/components';
-import {ChainApiContext} from 'context/ChainApiContext';
-import LoadingView from 'presentational/LoadingView';
-import React, {useContext} from 'react';
+import React from 'react';
 import {AddAccountScreen} from 'screen/AddAccountScreen/AddAccountScreen';
-import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
+import {DeeplinkNavigatorScreen} from 'screen/DeeplinkNavigatorScreen';
 import {BalanceScreen} from 'screen/BalanceScreen';
 import {CouncilScreen} from 'screen/Council/CouncilScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
@@ -18,7 +16,8 @@ import {MotionDetailScreen} from 'screen/MotionDetailScreen';
 import MyIdentityScreen from 'screen/MyIdentityScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
 import {PermissionGrantingPrompt} from 'screen/PermissionGrantingPrompt';
-import {ReferendaScreen} from 'screen/ReferendaScreen';
+import {DemocracyScreen} from 'screen/DemocracyScreen';
+import {DemocracyProposalScreen} from 'screen/DemocracyProposalScreen';
 import {ReferendumScreen} from 'screen/ReferendumScreen';
 import RegistrarListScreen from 'screen/RegistrarListScreen';
 import {SubmitTipScreen} from 'screen/SubmitTipScreen';
@@ -80,8 +79,9 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.submitTipScreen} component={SubmitTipScreen} />
       <DashboardStack.Screen name={routeKeys.motionsScreen} component={MotionsScreen} />
       <DashboardStack.Screen name={routeKeys.myIdentityScreen} component={MyIdentityScreen} />
-      <DashboardStack.Screen name={routeKeys.referendaScreen} component={ReferendaScreen} />
+      <DashboardStack.Screen name={routeKeys.democracyScreen} component={DemocracyScreen} />
       <DashboardStack.Screen name={routeKeys.referendumScreen} component={ReferendumScreen} />
+      <DashboardStack.Screen name={routeKeys.democracyProposalScreen} component={DemocracyProposalScreen} options={{ title: 'Proposal' }} /> 
     </DashboardStack.Navigator>
   );
 }
@@ -138,27 +138,22 @@ function ApiLoadedNavigator() {
 const AppStack = createStackNavigator<AppStackParamList>();
 
 function AppNavigator() {
-  const {api} = useContext(ChainApiContext);
   const {theme} = useTheme();
 
   // Start: app start hooks
   useTurnOnAllNotificationsOnAppStartForAndroid();
   // End: app start hooks
 
-  const {pushAuthorizationStatus, isLoading} = usePushAuthorizationStatus();
-
-  if (isLoading) {
-    return <LoadingView />;
-  }
+  const {pushAuthorizationStatus} = usePushAuthorizationStatus();
 
   return (
     <NavigationContainer linking={routeKeys.linking} theme={theme === 'dark' ? darkTheme : lightTheme}>
-      <AppStack.Navigator headerMode={'none'} screenOptions={{gestureEnabled: false}}>
+      <AppStack.Navigator headerMode={'none'} mode="modal" screenOptions={{gestureEnabled: false}}>
         {pushAuthorizationStatus && pushAuthorizationStatus === messaging.AuthorizationStatus.NOT_DETERMINED ? (
           <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen} component={PermissionGrantingPrompt} />
         ) : undefined}
-        {api ? <AppStack.Screen name={routeKeys.apiLoadedNavigatorScreen} component={ApiLoadedNavigator} /> : undefined}
-        <AppStack.Screen name={routeKeys.apiLoadingScreen} component={ApiLoadingScreen} />
+        <AppStack.Screen name={routeKeys.apiLoadedNavigatorScreen} component={ApiLoadedNavigator} />
+        <AppStack.Screen name={routeKeys.deeplinkNavigatorScreen} component={DeeplinkNavigatorScreen} />
       </AppStack.Navigator>
     </NavigationContainer>
   );

@@ -9,7 +9,7 @@ import {useApi} from 'context/ChainApiContext';
 function useApiQuery<TData>(
   queryKey: QueryKey,
   queryFn: (api: ApiPromise) => TData | Promise<TData>,
-  options?: UseQueryOptions<TData>,
+  options: UseQueryOptions<TData> = {enabled: true},
 ) {
   const {api} = useApi();
 
@@ -21,7 +21,7 @@ function useApiQuery<TData>(
       }
       return queryFn(api);
     },
-    options,
+    {...options, enabled: options.enabled && Boolean(api?.isConnected)},
   );
 }
 
