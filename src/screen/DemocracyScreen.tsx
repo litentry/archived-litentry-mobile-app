@@ -15,7 +15,7 @@ import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import {useDemocracy} from 'src/api/hooks/useDemocracy';
 import {DashboardStackParamList} from 'src/navigation/navigation';
-import {referendumScreen} from 'src/navigation/routeKeys';
+import {democracyProposalScreen, referendumScreen} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
 
 export function DemocracyScreen() {
@@ -127,12 +127,15 @@ const referendumStyle = StyleSheet.create({
 });
 
 function ProposalListItem({item}: {item: DeriveProposal}) {
+  const navigation = useNavigation<StackNavigationProp<DashboardStackParamList>>();
   const {image: {proposal} = {proposal: undefined}} = item;
   const {method, section} = proposal?.registry.findMetaCall(proposal.callIndex) ?? {};
   const title = proposal ? `${method}.${section}` : `preimage`;
 
   return (
-    <Card style={proposalStyle.container}>
+    <Card
+      style={proposalStyle.container}
+      onPress={() => navigation.navigate(democracyProposalScreen, {index: String(item.index)})}>
       <View style={proposalStyle.item}>
         <Text category={'h4'} style={proposalStyle.index}>
           {item.index.toString()}
