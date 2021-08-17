@@ -14,13 +14,13 @@ import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React, {useContext, useState} from 'react';
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import NetworkSelect from 'src/layout/NetworkSelect';
-import {ApiLoadedParamList, DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
+import {AppStackParamList, DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
 import {councilScreen, democracyScreen, tipsScreen, treasuryScreen} from 'src/navigation/routeKeys';
 import globalStyles from 'src/styles';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
-    CompositeNavigationProp<StackNavigationProp<DashboardStackParamList>, StackNavigationProp<ApiLoadedParamList>>,
+    CompositeNavigationProp<StackNavigationProp<DashboardStackParamList>, StackNavigationProp<AppStackParamList>>,
     DrawerNavigationProp<DrawerParamList>
   >;
 };
