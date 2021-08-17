@@ -33,13 +33,17 @@ function TipsSummaryTeaser({onPressMore}: TipsSummaryTeaserProps) {
           <View style={styles.row}>
             <View style={styles.rowItem}>
               <StatInfoBlock title="Who">
-                <AddressInlineTeaser address={String(tip.who)} />
+                <View style={styles.addressContainer}>
+                  <AddressInlineTeaser address={String(tip.who)} />
+                </View>
               </StatInfoBlock>
             </View>
             <Padder scale={0.5} />
             <View style={styles.rowItem}>
               <StatInfoBlock title="Finder">
-                <AddressInlineTeaser address={String(tip.finder)} />
+                <View style={styles.addressContainer}>
+                  <AddressInlineTeaser address={String(tip.finder)} />
+                </View>
               </StatInfoBlock>
             </View>
           </View>
@@ -59,5 +63,8 @@ const styles = StyleSheet.create({
   },
   rowItem: {
     flex: 1,
+  },
+  addressContainer: {
+    paddingRight: 30,
   },
 });
