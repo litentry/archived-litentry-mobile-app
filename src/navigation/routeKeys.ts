@@ -1,7 +1,7 @@
 import {LinkingOptions} from '@react-navigation/native';
 
 export const drawerNavigatorScreen = 'Drawer' as const;
-export const apiLoadedNavigatorScreen = 'App' as const;
+export const appNavigator = 'App' as const;
 export const apiLoadingNavigatorScreen = 'ApiLoadingNavigator' as const;
 export const permissionGrantingPromptScreen = 'PermissionsGrantingPrompt' as const;
 export const dashboardNavigator = 'DashboardNavigator' as const;
@@ -33,23 +33,16 @@ export const linking: LinkingOptions = {
   prefixes: ['litentry://'],
 
   config: {
-    initialRouteName: apiLoadedNavigatorScreen,
+    initialRouteName: appNavigator,
     screens: {
-      [deeplinkNavigatorScreen]: 'api/:network/:redirectTo?',
-      [apiLoadedNavigatorScreen]: {
-        initialRouteName: dashboardNavigator,
-        path: '',
+      [drawerNavigatorScreen]: {
         screens: {
-          [drawerNavigatorScreen]: {
+          [dashboardNavigator]: {
+            initialRouteName: dashboardScreen,
             screens: {
-              [dashboardNavigator]: {
-                initialRouteName: dashboardScreen,
-                screens: {
-                  [treasuryScreen]: 'treasury',
-                  [democracyScreen]: 'democracy',
-                  [tipsScreen]: 'tips',
-                },
-              },
+              [treasuryScreen]: 'treasury',
+              [democracyScreen]: 'democracy',
+              [tipsScreen]: 'tips',
             },
           },
         },

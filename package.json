@@ -37,6 +37,7 @@
     "fast-text-encoding": "^1.0.3",
     "lodash": "^4.17.21",
     "patch-package": "^6.4.7",
+    "path-to-regexp": "^6.2.0",
     "process": "^0.11.10",
     "proxy-polyfill": "^0.3.2",
     "qrcode-generator": "^1.4.4",

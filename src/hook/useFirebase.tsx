@@ -1,9 +1,21 @@
 import messaging, {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
-import React from 'react';
+import React, {useContext} from 'react';
 import {useInAppNotification, InAppNotificationContent} from 'src/context/InAppNotificationContext';
 import {useLinkTo} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native';
 import {useCallback} from 'react';
+import {pathToRegexp} from 'path-to-regexp';
+import {NetworkContext} from 'context/NetworkContext';
+
+function getParamsFromDeeplink(deeplink: string) {
+  const path = deeplink.replace('litentry://', '/');
+  const re = pathToRegexp('/api/:network/:redirectTo?');
+  const match = re.exec(path);
+  if (match) {
+    const [, network, redirectTo] = match;
+    return {network, redirectTo};
+  }
+}
 
 async function requestUserPermission() {
   const authStatus = await messaging().requestPermission();
@@ -18,6 +30,7 @@ async function requestUserPermission() {
 export function useFirebase() {
   const linkTo = useLinkTo();
   const {trigger} = useInAppNotification();
+  const {currentNetwork, select, availableNetworks} = useContext(NetworkContext);
 
   if (!trigger) {
     throw new Error('InAppNotificationContext most be provided!');
@@ -25,11 +38,22 @@ export function useFirebase() {
 
   const handleNotifiction = useCallback(
     async (message: FirebaseMessagingTypes.RemoteMessage | null) => {
-      if (message?.data?.deeplink) {
-        linkTo(message.data.deeplink.replace('litentry://', '/'));
+      const deeplink = message?.data?.deeplink;
+      if (deeplink) {
+        const params = getParamsFromDeeplink(deeplink);
+        if (!params) {
+          linkTo('/');
+        } else {
+          if (params.network !== currentNetwork.key) {
+            const selectedNetwork = availableNetworks.find((n) => n.key === params.network) ?? currentNetwork;
+            select(selectedNetwork);
+          }
+
+          linkTo(`/${params.redirectTo ?? ''}`);
+        }
       }
     },
-    [linkTo],
+    [linkTo, currentNetwork, availableNetworks, select],
   );
 
   React.useEffect(() => {

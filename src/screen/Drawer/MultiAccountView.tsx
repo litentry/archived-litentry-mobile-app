@@ -6,7 +6,7 @@ import AddressInfoBadge from 'presentational/AddressInfoBadge';
 import React, {useContext, useState} from 'react';
 import {Alert, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
 import {Account, useAccounts} from 'src/context/AccountsContext';
-import {ApiLoadedParamList, DashboardStackParamList} from 'src/navigation/navigation';
+import {AppStackParamList, DashboardStackParamList} from 'src/navigation/navigation';
 import {addAccountScreen, balanceScreen, myIdentityScreen} from 'src/navigation/routeKeys';
 import globalStyles, {colorGray} from 'src/styles';
 import {SupportedNetworkType} from 'src/types';
@@ -60,7 +60,7 @@ function AccountItem({
   const [visible, setVisible] = useState(false);
   const navigation =
     useNavigation<
-      CompositeNavigationProp<NavigationProp<ApiLoadedParamList>, NavigationProp<DashboardStackParamList>>
+      CompositeNavigationProp<NavigationProp<AppStackParamList>, NavigationProp<DashboardStackParamList>>
     >();
 
   const handleMenuItemSelect = ({row}: {row: number}) => {
