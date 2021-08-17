@@ -5,7 +5,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {Icon, TopNavigationAction} from '@ui-kitten/components';
 import React from 'react';
 import {AddAccountScreen} from 'screen/AddAccountScreen/AddAccountScreen';
-import {DeeplinkNavigatorScreen} from 'screen/DeeplinkNavigatorScreen';
 import {BalanceScreen} from 'screen/BalanceScreen';
 import {CouncilScreen} from 'screen/Council/CouncilScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
@@ -29,12 +28,7 @@ import {useTheme} from 'src/context/ThemeContext';
 import {useFirebase} from 'src/hook/useFirebase';
 import {usePushAuthorizationStatus} from 'src/hook/usePushNotificationsPermissions';
 import {useTurnOnAllNotificationsOnAppStartForAndroid} from 'src/hook/useTurnOnAllNotificationsOnAppStartForAndroid';
-import {
-  ApiLoadedParamList,
-  AppStackParamList,
-  DashboardStackParamList,
-  DrawerParamList,
-} from 'src/navigation/navigation';
+import {AppStackParamList, DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
 import * as routeKeys from 'src/navigation/routeKeys';
 import {darkTheme, lightTheme} from 'src/navigation/theme';
 import globalStyles from 'src/styles';
@@ -113,28 +107,6 @@ function DrawerNavigator() {
   );
 }
 
-const LoadedAppStack = createStackNavigator<ApiLoadedParamList>();
-
-function ApiLoadedNavigator() {
-  return (
-    <LoadedAppStack.Navigator
-      headerMode="none"
-      screenOptions={{
-        animationEnabled: false,
-        cardStyle: {
-          backgroundColor: 'transparent',
-          opacity: 1,
-        },
-        gestureEnabled: false,
-      }}
-      mode="modal">
-      <LoadedAppStack.Screen name={routeKeys.drawerNavigatorScreen} component={DrawerNavigator} />
-      <LoadedAppStack.Screen name={routeKeys.addAccountScreen} component={AddAccountScreen} />
-      <LoadedAppStack.Screen name={routeKeys.balanceScreen} component={BalanceScreen} />
-    </LoadedAppStack.Navigator>
-  );
-}
-
 const AppStack = createStackNavigator<AppStackParamList>();
 
 function AppNavigator() {
@@ -148,12 +120,23 @@ function AppNavigator() {
 
   return (
     <NavigationContainer linking={routeKeys.linking} theme={theme === 'dark' ? darkTheme : lightTheme}>
-      <AppStack.Navigator headerMode={'none'} mode="modal" screenOptions={{gestureEnabled: false}}>
+      <AppStack.Navigator
+        headerMode={'none'}
+        mode="modal"
+        screenOptions={{
+          animationEnabled: false,
+          cardStyle: {
+            backgroundColor: 'transparent',
+            opacity: 1,
+          },
+          gestureEnabled: false,
+        }}>
         {pushAuthorizationStatus && pushAuthorizationStatus === messaging.AuthorizationStatus.NOT_DETERMINED ? (
           <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen} component={PermissionGrantingPrompt} />
         ) : undefined}
-        <AppStack.Screen name={routeKeys.apiLoadedNavigatorScreen} component={ApiLoadedNavigator} />
-        <AppStack.Screen name={routeKeys.deeplinkNavigatorScreen} component={DeeplinkNavigatorScreen} />
+        <AppStack.Screen name={routeKeys.drawerNavigatorScreen} component={DrawerNavigator} />
+        <AppStack.Screen name={routeKeys.addAccountScreen} component={AddAccountScreen} />
+        <AppStack.Screen name={routeKeys.balanceScreen} component={BalanceScreen} />
       </AppStack.Navigator>
     </NavigationContainer>
   );
