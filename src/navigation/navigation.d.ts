@@ -19,6 +19,7 @@ import {
   treasuryScreen,
   webviewScreen,
   referendumScreen,
+  democracyProposalScreen,
 } from 'src/navigation/routeKeys';
 
 type DashboardStackParamList = {
@@ -38,6 +39,7 @@ type DashboardStackParamList = {
   [myIdentityScreen]: {address: string};
   [democracyScreen]: undefined;
   [referendumScreen]: {index: string};
+  [democracyProposalScreen]: {index: string};
 };
 
 type DrawerParamList = {
