@@ -64,3 +64,12 @@ type AppStackParamList = {
 };
 
 type CompleteNavigatorParamList = AppStackParamList & DrawerParamList & RootParamList & DashboardStackParamList;
+
+declare global {
+  namespace ReactNavigation {
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface RootParamList extends CompleteNavigatorParamList {
+      // Specifying default types for useNavigation, Link, ref, etc
+    }
+  }
+}
