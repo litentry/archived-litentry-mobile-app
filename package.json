@@ -29,7 +29,7 @@
     "@react-native-firebase/messaging": "^12.1.0",
     "@react-navigation/drawer": "^5.11.4",
     "@react-navigation/native": "^5.9.4",
-    "@react-navigation/stack": "^5.14.3",
+    "@react-navigation/stack": "^5.14.9",
     "@ui-kitten/components": "^5.0.0",
     "@ui-kitten/eva-icons": "^5.0.0",
     "console-browserify": "^1.2.0",
