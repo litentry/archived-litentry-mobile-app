@@ -62,8 +62,6 @@ export function SubmitTipScreen({navigation}: {navigation: NavigationProp<Dashbo
                 address: state.account,
                 txMethod: 'tips.reportAwesome',
                 params: [state.reason, state.beneficiary],
-                title: 'Sending transaction tips.reportAwesome(reason, who)',
-                description: "Report something reason that deserves a tip and claim any eventual the finder's fee. ",
               })
                 .then(() => {
                   queryClient.invalidateQueries('tips');

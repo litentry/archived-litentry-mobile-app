@@ -226,9 +226,6 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
                           },
                         },
                       ],
-                      title: 'Sending transaction democracy.vote(ref_index, vote)',
-                      description:
-                        'Vote in a referendum. If vote.is_aye(), the vote is to enact the proposal; otherwise it is a vote to keep the status quo.',
                     });
                     dispatch({type: 'RESET'});
                   }

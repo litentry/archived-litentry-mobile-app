@@ -185,6 +185,8 @@ const styles = StyleSheet.create({
   },
   addressContainer: {
     flex: 4,
+    paddingRight: 20,
+    paddingVertical: 5,
   },
   finderContainer: {
     flexDirection: 'row',

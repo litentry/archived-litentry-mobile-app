@@ -2,6 +2,7 @@ import {
   addAccountScreen,
   balanceScreen,
   councilScreen,
+  candidateScreen,
   dashboardNavigator,
   dashboardScreen,
   devScreen,
@@ -33,6 +34,11 @@ type DashboardStackParamList = {
     hash: string;
   };
   [councilScreen]: undefined;
+  [candidateScreen]: {
+    accountId: string;
+    title: string;
+    backing?: string;
+  };
   [submitTipScreen]: undefined;
   [treasuryScreen]: undefined;
   [motionsScreen]: undefined;
@@ -58,3 +64,12 @@ type AppStackParamList = {
 };
 
 type CompleteNavigatorParamList = AppStackParamList & DrawerParamList & RootParamList & DashboardStackParamList;
+
+declare global {
+  namespace ReactNavigation {
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface RootParamList extends CompleteNavigatorParamList {
+      // Specifying default types for useNavigation, Link, ref, etc
+    }
+  }
+}

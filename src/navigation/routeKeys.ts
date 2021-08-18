@@ -1,4 +1,5 @@
 import {LinkingOptions} from '@react-navigation/native';
+import {CompleteNavigatorParamList} from './navigation';
 
 export const drawerNavigatorScreen = 'Drawer' as const;
 export const appNavigator = 'App' as const;
@@ -22,13 +23,14 @@ export const webviewScreen = 'Webview' as const;
 export const devScreen = 'Dev Kit' as const;
 export const myIdentityScreen = 'My Identity' as const;
 export const councilScreen = 'Council' as const;
+export const candidateScreen = 'Candidate' as const;
 export const treasuryScreen = 'Treasury' as const;
 export const motionsScreen = 'Motions' as const;
 export const democracyScreen = 'Democracy' as const;
 export const referendumScreen = 'Referendum' as const;
 export const democracyProposalScreen = 'DemocracyProposal' as const;
 
-export const linking: LinkingOptions = {
+export const linking: LinkingOptions<CompleteNavigatorParamList> = {
   prefixes: ['litentry://'],
 
   config: {

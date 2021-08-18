@@ -8,6 +8,7 @@ import LoadingView from 'presentational/LoadingView';
 import Padder from 'presentational/Padder';
 import {ProposalInfo} from 'presentational/ProposalInfo';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
+import {SubmitProposalButton} from 'presentational/SubmitProposalButton';
 import * as React from 'react';
 import {SectionList, StyleSheet, View} from 'react-native';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
@@ -59,6 +60,11 @@ export function DemocracyScreen() {
             }}
             keyExtractor={(item) => item.index.toString()}
             ListEmptyComponent={EmptyView}
+            ListFooterComponent={() => (
+              <View style={styles.footer}>
+                <SubmitProposalButton />
+              </View>
+            )}
           />
         )}
       </SafeView>
@@ -69,6 +75,7 @@ export function DemocracyScreen() {
 const styles = StyleSheet.create({
   content: {paddingVertical: standardPadding, paddingHorizontal: standardPadding * 2},
   header: {padding: standardPadding},
+  footer: {paddingVertical: standardPadding},
 });
 
 function ReferendumListItem({item}: {item: DeriveReferendumExt}) {

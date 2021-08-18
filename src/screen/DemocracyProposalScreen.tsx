@@ -1,5 +1,5 @@
 import {RouteProp} from '@react-navigation/native';
-import {Button, Card, Divider, Icon, Layout, Modal, Text} from '@ui-kitten/components';
+import {Button, Card, Icon, Layout, Modal, Text} from '@ui-kitten/components';
 import {useApi} from 'context/ChainApiContext';
 import {useTX} from 'context/TxContext';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
@@ -181,8 +181,6 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
                         api.tx.democracy.second.meta.args.length === 2
                           ? [activeProposal.index, activeProposal.seconds.length]
                           : [activeProposal.index],
-                      title: 'Sending transaction democracy.second(proposal, seconds_upper_bound)',
-                      description: 'Signals agreement with a particular proposal.',
                     });
                     dispatch({type: 'RESET'});
                   }

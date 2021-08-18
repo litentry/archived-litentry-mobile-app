@@ -14,6 +14,8 @@ type IdentityInfo =
       hasIdentity: false;
       hasJudgements: false;
       accountId: string;
+      display: undefined;
+      registration: undefined;
     };
 
 export async function getAccountIdentityInfo(api: ApiPromise, accountId: string): Promise<IdentityInfo> {
@@ -49,7 +51,7 @@ export async function getAccountIdentityInfo(api: ApiPromise, accountId: string)
     }
   }
 
-  return {hasIdentity: false, hasJudgements: false, accountId};
+  return {hasIdentity: false, hasJudgements: false, accountId, display: undefined, registration: undefined};
 }
 
 function getDisplay(registration: Registration, accountId: string) {

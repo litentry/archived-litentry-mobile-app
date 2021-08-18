@@ -67,9 +67,6 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
       start({
         api,
         address: account.address,
-        title: 'treasury.approveProposal',
-        description:
-          'Approve a proposal. At a later time, the proposal will be allocated to the beneficiary and the original deposit will be returned.',
         params: api.tx.council.close?.meta.args.length === 4 ? [hash, votes?.index, 0, 0] : [hash, votes?.index],
         txMethod: 'council.close',
       })
@@ -85,8 +82,6 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
       start({
         api,
         address: account.address,
-        title: 'council.vote(proposal, index, approve)',
-        description: 'Add a nay vote for the sender to the given proposal.',
         params: [hash, votes?.index, false],
         txMethod: 'council.vote',
       })
@@ -100,8 +95,6 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
       start({
         api,
         address: account.address,
-        title: 'council.vote(proposal, index, approve)',
-        description: 'Add an aye vote for the sender to the given proposal.',
         params: [hash, votes?.index, true],
         txMethod: 'council.vote',
       })
