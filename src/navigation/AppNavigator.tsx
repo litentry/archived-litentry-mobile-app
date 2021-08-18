@@ -77,7 +77,11 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.myIdentityScreen} component={MyIdentityScreen} />
       <DashboardStack.Screen name={routeKeys.democracyScreen} component={DemocracyScreen} />
       <DashboardStack.Screen name={routeKeys.referendumScreen} component={ReferendumScreen} />
-      <DashboardStack.Screen name={routeKeys.democracyProposalScreen} component={DemocracyProposalScreen} options={{ title: 'Proposal' }} /> 
+      <DashboardStack.Screen
+        name={routeKeys.democracyProposalScreen}
+        component={DemocracyProposalScreen}
+        options={{title: 'Proposal'}}
+      />
     </DashboardStack.Navigator>
   );
 }
@@ -123,9 +127,9 @@ function AppNavigator() {
   return (
     <NavigationContainer linking={routeKeys.linking} theme={theme === 'dark' ? darkTheme : lightTheme}>
       <AppStack.Navigator
-        headerMode={'none'}
-        mode="modal"
         screenOptions={{
+          presentation: 'modal',
+          headerShown: false,
           animationEnabled: false,
           cardStyle: {
             backgroundColor: 'transparent',
