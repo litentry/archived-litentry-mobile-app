@@ -18,7 +18,7 @@
     "assemble:android": "cd android/ && ./gradlew clean && ./gradlew assembleRelease"
   },
   "dependencies": {
-    "@eva-design/eva": "^2.1.0",
+    "@eva-design/eva": "^2.1.1",
     "@polkadot/api": "^5.4.1",
     "@polkadot/reactnative-identicon": "0.53.1",
     "@react-native-community/async-storage": "^1.12.1",
