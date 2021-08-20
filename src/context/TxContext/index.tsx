@@ -35,7 +35,7 @@ export const useTX = () => useContext(TxContext);
 
 const AlertIcon = (props: IconProps) => <Icon fill="#ccc" {...props} name="alert-triangle-outline" />;
 
-type StartConfig = {
+export type StartConfig = {
   api: ApiPromise;
   address: string;
   txMethod: string;
