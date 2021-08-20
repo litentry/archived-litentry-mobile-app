@@ -1,10 +1,10 @@
-import {Button, Card, Icon, Input, Modal, Text} from '@ui-kitten/components';
-import {useApi} from 'context/ChainApiContext';
-import {useTX} from 'context/TxContext';
-import Padder from 'presentational/Padder';
-import {SelectAccount} from 'presentational/SelectAccount';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import {Button, Card, Icon, Input, Modal, Text} from '@ui-kitten/components';
+import {useApi} from 'context/ChainApiContext';
+import Padder from 'presentational/Padder';
+import {SelectAccount} from 'presentational/SelectAccount';
+import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import globalStyles, {standardPadding} from 'src/styles';
@@ -13,7 +13,7 @@ export function SubmitProposalButton() {
   const {api} = useApi();
   const [state, dispatch] = React.useReducer(reducer, initialState);
   const formatBalance = useFormatBalance();
-  const {start} = useTX();
+  const startTx = useApiTx();
 
   return (
     <>
@@ -78,9 +78,7 @@ export function SubmitProposalButton() {
               onPress={() => {
                 if (api && state.balance && state.account) {
                   const balance = getBalanceFromString(api, state.balance);
-
-                  start({
-                    api,
+                  startTx({
                     address: state.account,
                     txMethod: 'democracy.propose',
                     params: [state.preimageHash, balance],

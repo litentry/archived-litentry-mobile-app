@@ -1,5 +1,5 @@
-import React, {useRef, useCallback, useContext} from 'react';
-import {Dimensions, View, Alert, StyleSheet} from 'react-native';
+import React, {useRef, useCallback} from 'react';
+import {Dimensions, View, StyleSheet, Alert} from 'react-native';
 import {Layout, Button, Divider, ListItem, Text} from '@ui-kitten/components';
 import Identicon from '@polkadot/reactnative-identicon';
 import {Modalize} from 'react-native-modalize';
@@ -7,8 +7,7 @@ import InfoBanner from 'presentational/InfoBanner';
 import globalStyles, {standardPadding} from 'src/styles';
 import Padder from 'presentational/Padder';
 import IdentityInfoForm, {IdentityPayload} from 'presentational/IdentityInfoForm';
-import {ChainApiContext} from 'context/ChainApiContext';
-import {TxContext} from 'context/TxContext';
+import {useApiTx} from 'src/api/hooks/useApiTx';
 
 const {height} = Dimensions.get('window');
 
@@ -16,29 +15,25 @@ type PropTypes = {address: string};
 
 function SetInfo({address}: PropTypes): React.ReactElement {
   const modalRef = useRef<Modalize>(null);
+  const startTx = useApiTx();
 
   const handleOpenForm = useCallback(() => {
     modalRef.current?.open();
   }, []);
 
-  const {api} = useContext(ChainApiContext);
-  const {start} = useContext(TxContext);
-
-  const startTx = useCallback(
+  const onSubmitIdentityInfo = useCallback(
     async (info: IdentityPayload) => {
-      if (api) {
-        modalRef.current?.close();
-        await start({
-          api,
-          address,
-          txMethod: 'identity.setIdentity',
-          params: [info],
-        });
-      } else {
+      modalRef.current?.close();
+      await startTx({
+        address,
+        txMethod: 'identity.setIdentity',
+        params: [info],
+      }).catch((e) => {
         Alert.alert('account/api is not ready');
-      }
+        console.error(e);
+      });
     },
-    [address, api, start],
+    [address, startTx],
   );
 
   return (
@@ -80,7 +75,7 @@ function SetInfo({address}: PropTypes): React.ReactElement {
         useNativeDriver
         panGestureEnabled>
         <View style={styles.formContainer}>
-          <IdentityInfoForm onSubmit={startTx} />
+          <IdentityInfoForm onSubmit={onSubmitIdentityInfo} />
         </View>
       </Modalize>
     </>

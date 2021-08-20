@@ -1,3 +1,5 @@
+import React, {useCallback, useState} from 'react';
+import {Alert, View, StyleSheet} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {Registration} from '@polkadot/types/interfaces';
 import {u8aToString} from '@polkadot/util';
@@ -14,13 +16,10 @@ import {
   Text,
 } from '@ui-kitten/components';
 import BN from 'bn.js';
-import {ChainApiContext} from 'context/ChainApiContext';
-import {TxContext} from 'context/TxContext';
 import RegistrarSelectionModal from 'layout/RegistrarSelectionModal';
 import InfoBanner from 'presentational/InfoBanner';
 import Padder from 'presentational/Padder';
-import React, {useCallback, useContext, useState} from 'react';
-import {Alert, View} from 'react-native';
+import {useApiTx} from 'src/api/hooks/useApiTx';
 import globalStyles, {standardPadding} from 'src/styles';
 
 type PropTypes = {
@@ -33,34 +32,23 @@ const MoreIcon = (props: IconProps) => <Icon {...props} pack="ionic" name="ios-a
 
 function RequestJudgement({display, address, registration}: PropTypes) {
   const [visible, setVisible] = useState(false);
-
-  const {api} = useContext(ChainApiContext);
-  const {start} = useContext(TxContext);
-
-  const startTx = useCallback(
-    async (index: number, fee: BN) => {
-      if (api) {
-        await start({
-          api,
-          address,
-          txMethod: 'identity.requestJudgement',
-          params: [index, fee],
-        });
-      } else {
-        Alert.alert('account/api is not ready');
-      }
-    },
-    [address, api, start],
-  );
+  const startTx = useApiTx();
 
   const handleRequestJudgement = useCallback(
     (index: number, fee?: BN) => {
       if (fee) {
         setVisible(false);
-        startTx(index, fee);
+        startTx({
+          address,
+          txMethod: 'identity.requestJudgement',
+          params: [index, fee],
+        }).catch((e) => {
+          Alert.alert('account/api is not ready');
+          console.error(e);
+        });
       }
     },
-    [startTx],
+    [startTx, address],
   );
 
   return (
@@ -74,7 +62,7 @@ function RequestJudgement({display, address, registration}: PropTypes) {
         <ListItem
           title="Address"
           accessoryLeft={() => (
-            <View style={{paddingHorizontal: 10}}>
+            <View style={styles.identiconContainer}>
               <Identicon value={address} size={20} />
             </View>
           )}
@@ -83,7 +71,7 @@ function RequestJudgement({display, address, registration}: PropTypes) {
               selectable
               category="label"
               numberOfLines={1}
-              style={{width: '50%', textAlign: 'right'}}
+              style={styles.accesoryRightLabel}
               ellipsizeMode="middle">
               {address}
             </Text>
@@ -97,14 +85,14 @@ function RequestJudgement({display, address, registration}: PropTypes) {
               selectable
               category="label"
               numberOfLines={1}
-              style={{width: '50%', textAlign: 'right'}}
+              style={styles.accesoryRightLabel}
               ellipsizeMode="middle">
               {display || 'untitled account'}
             </Text>
           )}
         />
 
-        <Menu style={{backgroundColor: 'transparent'}}>
+        <Menu style={styles.menu}>
           <MenuGroup title=" Identity detail" accessoryLeft={MoreIcon}>
             <MenuItem
               title="Legal"
@@ -164,5 +152,11 @@ function RequestJudgement({display, address, registration}: PropTypes) {
     </Layout>
   );
 }
+
+const styles = StyleSheet.create({
+  identiconContainer: {paddingHorizontal: 10},
+  accesoryRightLabel: {width: '50%', textAlign: 'right'},
+  menu: {backgroundColor: 'transparent'},
+});
 
 export default RequestJudgement;

@@ -1,3 +1,5 @@
+import React, {useReducer} from 'react';
+import {StyleSheet, View} from 'react-native';
 import {BN, BN_ONE} from '@polkadot/util';
 import {RouteProp} from '@react-navigation/native';
 import {
@@ -14,13 +16,11 @@ import {
   Text,
 } from '@ui-kitten/components';
 import {useApi} from 'context/ChainApiContext';
-import {useTX} from 'context/TxContext';
 import Padder from 'presentational/Padder';
 import {ProgressBar} from 'presentational/ProgressBar';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {SelectAccount} from 'presentational/SelectAccount';
-import React, {useReducer} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import {useConvictions} from 'src/api/hooks/useConvictions';
@@ -33,7 +33,7 @@ import {formatCallMeta} from 'src/packages/call_inspector/CallInspector';
 import globalStyles, {standardPadding} from 'src/styles';
 
 export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
-  const {start} = useTX();
+  const startTx = useApiTx();
   const {api} = useApi();
 
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -212,9 +212,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
                 onPress={() => {
                   if (api && state.account && selectedConviction) {
                     const balance = getBalanceFromString(api, state.voteValue);
-
-                    start({
-                      api,
+                    startTx({
                       address: state.account,
                       txMethod: 'democracy.vote',
                       params: [
