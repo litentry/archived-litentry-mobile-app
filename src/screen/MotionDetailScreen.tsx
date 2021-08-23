@@ -78,7 +78,7 @@ export function MotionDetailScreen(props: PropTypes) {
       <ScrollView style={[globalStyles.paddedContainer, styles.container]}>
         <View>
           <Layout style={styles.rowContainer}>
-            <Card style={[styles.item, styles.left]}>
+            <Card style={[styles.item, styles.left]} disabled>
               <View style={globalStyles.spaceBetweenRowContainer}>
                 <StatInfoBlock title="#ID">{String(motion.votes?.index)}</StatInfoBlock>
                 <StatInfoBlock title="#Detail">

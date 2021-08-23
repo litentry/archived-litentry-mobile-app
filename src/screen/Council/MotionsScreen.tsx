@@ -110,6 +110,8 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
         navigation.navigate(motionDetailScreen, {hash: String(hash)});
       }}>
       <ListItem
+        style={motionStyle.listItem}
+        disabled
         accessoryLeft={() => {
           return <Text category={'h4'}>{formatNumber(votes?.index)}</Text>;
         }}
@@ -155,4 +157,5 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
 const motionStyle = StyleSheet.create({
   container: {marginBottom: standardPadding},
   buttons: {display: 'flex', flexDirection: 'row'},
+  listItem: {backgroundColor: 'transparent'},
 });
