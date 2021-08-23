@@ -107,7 +107,7 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
     <Card
       style={motionStyle.container}
       onPress={() => {
-        navigation.navigate(motionDetailScreen, {hash: String(hash), id: Number(votes?.index)});
+        navigation.navigate(motionDetailScreen, {hash: String(hash)});
       }}>
       <ListItem
         accessoryLeft={() => {
