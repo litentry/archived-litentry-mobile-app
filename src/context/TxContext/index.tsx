@@ -10,7 +10,7 @@ import ErrorDialog from 'presentational/ErrorDialog';
 import LoadingView from 'presentational/LoadingView';
 import SuccessDialog from 'presentational/SuccessDialog';
 import TxPayloadQr from 'presentational/TxPayloadQr';
-import React, {createContext, useCallback, useContext, useMemo, useReducer, useRef} from 'react';
+import React, {createContext, useCallback, useMemo, useReducer, useRef} from 'react';
 import {Dimensions, StyleSheet} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import QRCodeScanner from 'react-native-qrcode-scanner';
@@ -31,11 +31,9 @@ export const TxContext = createContext<TxContextValueType>({
   start: () => Promise.resolve(),
 });
 
-export const useTX = () => useContext(TxContext);
-
 const AlertIcon = (props: IconProps) => <Icon fill="#ccc" {...props} name="alert-triangle-outline" />;
 
-type StartConfig = {
+export type StartConfig = {
   api: ApiPromise;
   address: string;
   txMethod: string;
