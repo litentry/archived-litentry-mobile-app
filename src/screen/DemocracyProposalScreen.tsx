@@ -1,7 +1,9 @@
+import React, {useReducer, useState} from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
 import {RouteProp} from '@react-navigation/native';
 import {Button, Card, Icon, Layout, Modal, Text} from '@ui-kitten/components';
 import {useApi} from 'context/ChainApiContext';
-import {useTX} from 'context/TxContext';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
 import {EmptyView} from 'presentational/EmptyView';
 import LoadingView from 'presentational/LoadingView';
@@ -9,9 +11,7 @@ import Padder from 'presentational/Padder';
 import {ProposalInfo} from 'presentational/ProposalInfo';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {SelectAccount} from 'presentational/SelectAccount';
-import React, {useReducer, useState} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useDemocracy} from 'src/api/hooks/useDemocracy';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {DashboardStackParamList} from 'src/navigation/navigation';
@@ -19,7 +19,7 @@ import {referendumScreen} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
 
 export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
-  const {start} = useTX();
+  const startTx = useApiTx();
   const {api} = useApi();
 
   const [secondsOpen, setSecondsOpen] = useState(false);
@@ -172,13 +172,12 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
               <Button
                 disabled={!state.account}
                 onPress={() => {
-                  if (api && state.account) {
-                    start({
-                      api,
+                  if (state.account) {
+                    startTx({
                       address: state.account,
                       txMethod: 'democracy.second',
                       params:
-                        api.tx.democracy.second.meta.args.length === 2
+                        api?.tx.democracy.second.meta.args.length === 2
                           ? [activeProposal.index, activeProposal.seconds.length]
                           : [activeProposal.index],
                     });

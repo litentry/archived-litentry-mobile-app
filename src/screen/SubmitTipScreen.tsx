@@ -1,24 +1,21 @@
+import React, {useReducer} from 'react';
+import {StyleSheet, View} from 'react-native';
+import {useQueryClient} from 'react-query';
 import {NavigationProp} from '@react-navigation/native';
 import {Button, Card, Input, Text} from '@ui-kitten/components';
-import {ChainApiContext} from 'context/ChainApiContext';
-import {TxContext} from 'context/TxContext';
 import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {SelectAccount} from 'presentational/SelectAccount';
-import * as React from 'react';
-import {useContext, useReducer} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {useQueryClient} from 'react-query';
 import {DashboardStackParamList} from 'src/navigation/navigation';
 import globalStyles, {standardPadding} from 'src/styles';
+import {useApiTx} from 'src/api/hooks/useApiTx';
 
 export function SubmitTipScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const {start} = useContext(TxContext);
-  const {api} = useContext(ChainApiContext);
+  const startTx = useApiTx();
   const queryClient = useQueryClient();
 
-  const valid = api && state.account && state.beneficiary && state.reason && state.reason.length > 4;
+  const valid = state.account && state.beneficiary && state.reason && state.reason.length > 4;
 
   return (
     <SafeView edges={noTopEdges}>
@@ -56,9 +53,8 @@ export function SubmitTipScreen({navigation}: {navigation: NavigationProp<Dashbo
         <Button
           disabled={!valid}
           onPress={() => {
-            if (api && state.account) {
-              start({
-                api,
+            if (state.account) {
+              startTx({
                 address: state.account,
                 txMethod: 'tips.reportAwesome',
                 params: [state.reason, state.beneficiary],
