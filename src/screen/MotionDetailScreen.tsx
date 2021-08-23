@@ -15,7 +15,9 @@ import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Modalize} from 'react-native-modalize';
 import WebView from 'react-native-webview';
+import {useCouncilMembers} from 'src/api/hooks/useCouncilMembers';
 import {useMotionDetail} from 'src/api/hooks/useMotionDetail';
+import {useVotingStatus} from 'src/api/hooks/useVotingStatus';
 import {DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
 import {buildMotionDetailUrl} from 'src/service/Polkasembly';
 import globalStyles, {colorGreen, colorRed, monofontFamily, standardPadding} from 'src/styles';
@@ -51,9 +53,25 @@ export function MotionDetailScreen(props: PropTypes) {
 
   const {data: motion} = useMotionDetail(params);
 
+  const {data} = useCouncilMembers();
+  const membersCount = data?.members.length ?? 0;
+  const {isCloseable, isVoteable, hasFailed, hasPassed} = useVotingStatus(motion?.votes, membersCount, 'council');
+
+  const status = isCloseable
+    ? 'Closable'
+    : isVoteable
+    ? 'Voteable'
+    : hasFailed
+    ? 'Closed'
+    : hasPassed
+    ? 'Passed'
+    : 'Open';
+
   if (!motion) {
     return <LoadingView />;
   }
+
+  const proposer = motion.votes?.ayes[0];
 
   return (
     <SafeView edges={noTopEdges}>
@@ -62,26 +80,28 @@ export function MotionDetailScreen(props: PropTypes) {
           <Layout style={styles.rowContainer}>
             <Card style={[styles.item, styles.left]}>
               <View style={globalStyles.spaceBetweenRowContainer}>
-                <StatInfoBlock title="#ID">{String(motion.proposalId)}</StatInfoBlock>
+                <StatInfoBlock title="#ID">{String(motion.votes?.index)}</StatInfoBlock>
                 <StatInfoBlock title="#Detail">
-                  <TouchableOpacity onPress={() => modalRef.current?.open()}>
-                    <View style={[globalStyles.rowContainer, globalStyles.rowAlignCenter]}>
-                      <Text style={[styles.stats, styles.small, styles.hackPolkassemblyTextWidth]} numberOfLines={1}>
-                        on Polkassembly
-                      </Text>
-                      <Padder scale={0.3} />
-                      <Icon pack="ionic" name="share-outline" style={globalStyles.icon} />
-                    </View>
-                  </TouchableOpacity>
+                  {['kusama', 'polkadot'].includes(currentNetwork.key) ? (
+                    <TouchableOpacity onPress={() => modalRef.current?.open()}>
+                      <View style={[globalStyles.rowContainer, globalStyles.rowAlignCenter]}>
+                        <Text style={[styles.stats, styles.small, styles.hackPolkassemblyTextWidth]} numberOfLines={1}>
+                          on Polkassembly
+                        </Text>
+                        <Padder scale={0.3} />
+                        <Icon pack="ionic" name="share-outline" style={globalStyles.icon} />
+                      </View>
+                    </TouchableOpacity>
+                  ) : null}
                 </StatInfoBlock>
                 <StatInfoBlock title="Status">
                   <Padder scale={0.3} />
-                  <Badge text={motion.status.toUpperCase()} />
+                  <Badge text={status} />
                 </StatInfoBlock>
               </View>
               <Padder scale={1} />
               <StatInfoBlock title="Proposer">
-                <AddressInlineTeaser address={motion.proposerAddress} />
+                {proposer && <AddressInlineTeaser address={proposer.toString()} />}
               </StatInfoBlock>
             </Card>
           </Layout>
@@ -90,9 +110,9 @@ export function MotionDetailScreen(props: PropTypes) {
         <View>
           <Layout style={styles.rowContainer}>
             <Card style={[styles.item, styles.left]} disabled>
-              <StatInfoBlock title="#Section">{_.capitalize(motion.section)}</StatInfoBlock>
+              <StatInfoBlock title="#Section">{_.capitalize(motion.proposal.section)}</StatInfoBlock>
               <Padder scale={0.5} />
-              <StatInfoBlock title="#Method">{motion.methodName}</StatInfoBlock>
+              <StatInfoBlock title="#Method">{motion.proposal.method}</StatInfoBlock>
             </Card>
             <Card style={[styles.item, styles.right]} disabled>
               <View>
@@ -117,7 +137,7 @@ export function MotionDetailScreen(props: PropTypes) {
             <Text category="h6">Votes</Text>
             {motion.votes.ayes.length ? (
               motion.votes.ayes.map((vote) => (
-                <View style={styles.voteContainer}>
+                <View style={styles.voteContainer} key={String(vote.hash)}>
                   <VoteItem key={vote.toString()} vote={vote} type="aye" />
                 </View>
               ))
@@ -129,7 +149,7 @@ export function MotionDetailScreen(props: PropTypes) {
             )}
             {motion.votes.nays.length ? (
               motion.votes.nays.map((vote) => (
-                <View style={styles.voteContainer}>
+                <View style={styles.voteContainer} key={String(vote.hash)}>
                   <VoteItem key={vote.toString()} vote={vote} type="nay" />
                 </View>
               ))
@@ -160,7 +180,7 @@ export function MotionDetailScreen(props: PropTypes) {
                 Array.prototype.forEach.call(footer, el => el.remove());
             })();`}
           source={{
-            uri: buildMotionDetailUrl(motion.proposalId, currentNetwork?.key || 'polkadot'),
+            uri: buildMotionDetailUrl(motion.votes?.index.toNumber() ?? 0, currentNetwork?.key || 'polkadot'),
           }}
           style={{height: height * 0.6}}
           onMessage={() => null}
