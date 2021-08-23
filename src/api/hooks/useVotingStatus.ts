@@ -16,6 +16,7 @@ interface State {
   isCloseable: boolean;
   isVoteable: boolean;
   remainingBlocks: BN | null;
+  status: string;
 }
 
 const DEFAULT_STATUS = {
@@ -24,6 +25,7 @@ const DEFAULT_STATUS = {
   isCloseable: false,
   isVoteable: false,
   remainingBlocks: null,
+  status: 'Open',
 };
 
 function getStatus(
@@ -40,23 +42,37 @@ function getStatus(
       isCloseable: false,
       isVoteable: true,
       remainingBlocks: null,
+      status: 'Voteable',
     };
   }
 
   const isEnd = bestNumber.gte(votes.end);
   const hasPassed = votes.threshold.lten(votes.ayes.length);
   const hasFailed = votes.threshold.gtn(Math.abs(numMembers - votes.nays.length));
+  const isCloseable = isFunction(api.tx[section].close)
+    ? api.tx[section].close.meta.args.length === 4 // current-generation
+      ? isEnd || hasPassed || hasFailed
+      : isEnd
+    : false;
+  const isVoteable = !isEnd;
+
+  const status = isCloseable
+    ? 'Closable'
+    : isVoteable
+    ? 'Voteable'
+    : hasFailed
+    ? 'Closed'
+    : hasPassed
+    ? 'Passed'
+    : 'Open';
 
   return {
     hasFailed,
     hasPassed,
-    isCloseable: isFunction(api.tx[section].close)
-      ? api.tx[section].close.meta.args.length === 4 // current-generation
-        ? isEnd || hasPassed || hasFailed
-        : isEnd
-      : false,
-    isVoteable: !isEnd,
+    isCloseable,
+    isVoteable,
     remainingBlocks: isEnd ? null : votes.end.sub(bestNumber),
+    status,
   };
 }
 

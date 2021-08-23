@@ -53,17 +53,7 @@ export function MotionDetailScreen(props: PropTypes) {
 
   const {data} = useCouncilMembers();
   const membersCount = data?.members.length ?? 0;
-  const {isCloseable, isVoteable, hasFailed, hasPassed} = useVotingStatus(motion?.votes, membersCount, 'council');
-
-  const status = isCloseable
-    ? 'Closable'
-    : isVoteable
-    ? 'Voteable'
-    : hasFailed
-    ? 'Closed'
-    : hasPassed
-    ? 'Passed'
-    : 'Open';
+  const {status} = useVotingStatus(motion?.votes, membersCount, 'council');
 
   if (!motion) {
     return <LoadingView />;
