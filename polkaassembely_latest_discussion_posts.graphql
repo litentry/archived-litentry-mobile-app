@@ -1,0 +1,49 @@
+query LatestDiscussionPosts($limit: Int! = 20) {
+  posts(
+    order_by: {last_update: {last_update: desc}}
+    limit: $limit
+    where: {type: {id: {_eq: 1}}}
+  ) {
+    ...postFields
+    __typename
+  }
+}
+
+fragment postFields on posts {
+  id
+  title
+  author {
+    ...authorFields
+    __typename
+  }
+  created_at
+  updated_at
+  comments_aggregate {
+    aggregate {
+      count
+      __typename
+    }
+    __typename
+  }
+  type {
+    name
+    id
+    __typename
+  }
+  last_update {
+    last_update
+    __typename
+  }
+  __typename
+}
+
+fragment authorFields on User {
+  id
+  kusama_default_address
+  polkadot_default_address
+  username
+  __typename
+}
+
+# POST BODY
+# {"operationName":"LatestDiscussionPosts","variables":{"limit":20},"query":"query LatestDiscussionPosts($limit: Int = 20) {\n  posts(\n    order_by: {last_update: {last_update: desc}}\n    limit: $limit\n    where: {type: {id: {_eq: 1}}}\n  ) {\n    ...postFields\n    __typename\n  }\n}\n\nfragment postFields on posts {\n  id\n  title\n  author {\n    ...authorFields\n    __typename\n  }\n  created_at\n  updated_at\n  comments_aggregate {\n    aggregate {\n      count\n      __typename\n    }\n    __typename\n  }\n  type {\n    name\n    id\n    __typename\n  }\n  last_update {\n    last_update\n    __typename\n  }\n  __typename\n}\n\nfragment authorFields on User {\n  id\n  kusama_default_address\n  polkadot_default_address\n  username\n  __typename\n}\n"}
