@@ -7,6 +7,7 @@ import {standardPadding} from 'src/styles';
 import Padder from 'presentational/Padder';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
 import moment from 'moment';
+import {Label} from 'presentational/Label';
 
 export function PolkadotDiscussions() {
   const {data} = usePolkadotDiscussions();
@@ -22,17 +23,18 @@ export function PolkadotDiscussions() {
             <Text category="s2">{item.title ?? 'unknown title'}</Text>
             <Padder scale={0.4} />
             <View style={styles.ownerRow}>
-              <Text>by</Text>
+              <Text category="c1">by</Text>
               <Padder scale={0.2} />
               <View style={styles.owner}>
                 {item.author?.polkadot_default_address ? (
                   <AddressInlineTeaser address={item.author.polkadot_default_address} />
                 ) : (
-                  <Text>{item.author?.username || ''}</Text>
+                  <Text category="c2">{item.author?.username || ''}</Text>
                 )}
               </View>
-              <Text category="c1">{formatDate(item.created_at)}</Text>
-              <Text category="c1">{item.topic.name}</Text>
+              <Text category="s2">{formatDate(item.created_at)}</Text>
+              <Padder scale={0.2} />
+              <Label text={item.topic.name} />
             </View>
           </Card>
         )}
