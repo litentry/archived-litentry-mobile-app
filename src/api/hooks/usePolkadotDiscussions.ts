@@ -6,7 +6,6 @@ export function usePolkadotDiscussions() {
       headers: {
         'content-type': 'application/json',
       },
-      // body: '{"operationName":"LatestDiscussionPosts","variables":{"limit":20},"query":"query LatestDiscussionPosts($limit: Int! = 20) {\\n  posts(\\n    order_by: {last_update: {last_update: desc}}\\n    limit: $limit\\n    where: {type: {id: {_eq: 1}}}\\n  ) {\\n    ...postFields\\n    __typename\\n  }\\n}\\n\\nfragment postFields on posts {\\n  id\\n  title\\n  author {\\n    ...authorFields\\n    __typename\\n  }\\n  created_at\\n  updated_at\\n  comments_aggregate {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n  type {\\n    name\\n    id\\n    __typename\\n  }\\n  last_update {\\n    last_update\\n    __typename\\n  }\\n  __typename\\n}\\n\\nfragment authorFields on User {\\n  id\\n  kusama_default_address\\n  polkadot_default_address\\n  username\\n  __typename\\n}\\n"}',
       body: JSON.stringify({
         operationName: 'LatestDiscussionPosts',
         variables: {limit: 20},
@@ -45,6 +44,11 @@ export function usePolkadotDiscussions() {
             }
             last_update {
               last_update
+              __typename
+            }
+            topic {
+              id
+              name
               __typename
             }
             __typename
@@ -104,9 +108,15 @@ export type Posts = {
   topic_id: Scalars['Int'];
   type_id: Scalars['Int'];
   updated_at: Scalars['timestamptz'];
+  topic: Topic;
 };
 
-export type User = {
+type Topic = {
+  id: Scalars['Int'];
+  name: Scalars['String'];
+};
+
+type User = {
   __typename?: 'User';
   email?: Maybe<Scalars['String']>;
   email_verified?: Maybe<Scalars['Boolean']>;
@@ -118,26 +128,26 @@ export type User = {
 };
 
 /** aggregated selection of "comments" */
-export type Comments_Aggregate = {
+type Comments_Aggregate = {
   __typename?: 'comments_aggregate';
   aggregate?: Maybe<Comments_Aggregate_Fields>;
 };
 
 /** aggregate fields of "comments" */
-export type Comments_Aggregate_Fields = {
+type Comments_Aggregate_Fields = {
   __typename?: 'comments_aggregate_fields';
   count?: Maybe<Scalars['Int']>;
 };
 
 /** columns and relationships of "post_types" */
-export type Post_Types = {
+type Post_Types = {
   __typename?: 'post_types';
   id: Scalars['Int'];
   name: Scalars['String'];
 };
 
 /** columns and relationships of "post_last_update" */
-export type Post_Last_Update = {
+type Post_Last_Update = {
   __typename?: 'post_last_update';
   comment_id?: Maybe<Scalars['uuid']>;
   last_update?: Maybe<Scalars['timestamptz']>;
