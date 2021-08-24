@@ -20,7 +20,9 @@ export function PolkadotDiscussions() {
         data={data}
         renderItem={({item}) => (
           <Card disabled>
-            <Text category="s2">{item.title ?? 'unknown title'}</Text>
+            <Text category="s2" numberOfLines={1}>
+              {item.title ?? 'unknown title'}
+            </Text>
             <Padder scale={0.4} />
             <View style={styles.ownerRow}>
               <Text category="c1">by</Text>
@@ -32,10 +34,12 @@ export function PolkadotDiscussions() {
                   <Text category="c2">{item.author?.username || ''}</Text>
                 )}
               </View>
-              <Text category="s2">{formatDate(item.created_at)}</Text>
+              <Text category="label">{formatDate(item.created_at)}</Text>
               <Padder scale={0.2} />
               <Label text={item.topic.name} />
             </View>
+            <Padder scale={0.4} />
+            {item.content ? <Text numberOfLines={1}>{item.content}</Text> : null}
           </Card>
         )}
         ItemSeparatorComponent={() => <Padder scale={0.5} />}

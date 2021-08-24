@@ -30,6 +30,7 @@ export function usePolkadotDiscussions() {
             }
             created_at
             updated_at
+            content
             comments_aggregate {
               aggregate {
                 count
