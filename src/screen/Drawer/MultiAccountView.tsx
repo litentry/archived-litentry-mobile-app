@@ -1,15 +1,17 @@
+import React, {useContext, useState} from 'react';
+import {Alert, FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {CompositeNavigationProp, NavigationProp, useNavigation} from '@react-navigation/native';
 import {Icon, Layout, ListItem, MenuItem, OverflowMenu} from '@ui-kitten/components';
 import {NetworkContext} from 'context/NetworkContext';
 import AddressInfoBadge from 'presentational/AddressInfoBadge';
-import React, {useContext, useState} from 'react';
-import {Alert, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
+import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {Account, useAccounts} from 'src/context/AccountsContext';
 import {AppStackParamList, DashboardStackParamList} from 'src/navigation/navigation';
 import {addAccountScreen, balanceScreen, myIdentityScreen} from 'src/navigation/routeKeys';
 import globalStyles, {colorGray} from 'src/styles';
 import {SupportedNetworkType} from 'src/types';
+import {useApiTx} from 'src/api/hooks/useApiTx';
 
 export function MultiAccountView() {
   const navigation = useNavigation();
@@ -49,6 +51,11 @@ const styles = StyleSheet.create({
   },
 });
 
+type NavigationProps = CompositeNavigationProp<
+  NavigationProp<AppStackParamList>,
+  NavigationProp<DashboardStackParamList>
+>;
+
 function AccountItem({
   account,
   removeAccount,
@@ -58,10 +65,11 @@ function AccountItem({
 }) {
   const {currentNetwork} = useContext(NetworkContext);
   const [visible, setVisible] = useState(false);
-  const navigation =
-    useNavigation<
-      CompositeNavigationProp<NavigationProp<AppStackParamList>, NavigationProp<DashboardStackParamList>>
-    >();
+  const {data: identityInfoData} = useAccountIdentityInfo(account.address);
+  const navigation = useNavigation<NavigationProps>();
+  const startTx = useApiTx();
+
+  const showClearIdentity = identityInfoData !== undefined && identityInfoData.hasIdentity;
 
   const handleMenuItemSelect = ({row}: {row: number}) => {
     setVisible(false);
@@ -94,6 +102,22 @@ function AccountItem({
     }
     if (row === 2) {
       navigation.navigate(myIdentityScreen, {address: account.address});
+    }
+    if (row === 3) {
+      Alert.alert('Clear Identity', `Clear identity of account: \n ${account.address}`, [
+        {
+          text: 'Yes',
+          onPress: () => {
+            startTx({
+              address: account.address,
+              txMethod: 'identity.clearIdentity',
+              params: [],
+            });
+          },
+          style: 'destructive',
+        },
+        {text: 'Cancel', style: 'cancel'},
+      ]);
     }
   };
 
@@ -133,6 +157,14 @@ function AccountItem({
             title="Set identity"
             accessoryLeft={(iconProps) => <Icon {...iconProps} name="person-add-outline" />}
           />
+          {showClearIdentity ? (
+            <MenuItem
+              title="Clear Identity"
+              accessoryLeft={(iconProps) => <Icon {...iconProps} name="person-remove-outline" />}
+            />
+          ) : (
+            <View />
+          )}
         </OverflowMenu>
       )}
       title={() => <AddressInfoBadge network={currentNetwork} address={account.address} />}
