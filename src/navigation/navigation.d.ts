@@ -26,7 +26,6 @@ import {
 type DashboardStackParamList = {
   [dashboardScreen]: undefined;
   [motionDetailScreen]: {
-    id: number;
     hash: string;
   };
   [tipsScreen]: undefined;
