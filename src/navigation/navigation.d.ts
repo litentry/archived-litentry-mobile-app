@@ -21,6 +21,7 @@ import {
   webviewScreen,
   referendumScreen,
   democracyProposalScreen,
+  registerSubIdentitiesScreen,
 } from 'src/navigation/routeKeys';
 
 type DashboardStackParamList = {
@@ -42,6 +43,7 @@ type DashboardStackParamList = {
   [treasuryScreen]: undefined;
   [motionsScreen]: undefined;
   [myIdentityScreen]: {address: string};
+  [registerSubIdentitiesScreen]: {address: string};
   [democracyScreen]: undefined;
   [referendumScreen]: {index: string};
   [democracyProposalScreen]: {index: string};
