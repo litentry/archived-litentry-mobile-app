@@ -8,10 +8,18 @@ const orderBYMap = {
   dateAddedOldest: '{id: asc}',
 };
 
+export const topicIdMap = {
+  Democracy: 1,
+  Council: 2,
+  'Tech Committee': 3,
+  Treasury: 4,
+  General: 5,
+};
+
 export type OrderByType = keyof typeof orderBYMap;
 
-export function usePolkadotDiscussions({orderBy = 'lastCommented'}: {orderBy: OrderByType}) {
-  return useQuery(['polkadot-discussions', orderBy], async () => {
+export function usePolkadotDiscussions({orderBy = 'lastCommented', topicId}: {orderBy: OrderByType; topicId?: number}) {
+  return useQuery(['polkadot-discussions', {orderBy, topicId}], async () => {
     const r = await fetch(endpoint, {
       headers: {
         'content-type': 'application/json',
@@ -24,7 +32,7 @@ export function usePolkadotDiscussions({orderBy = 'lastCommented'}: {orderBy: Or
             posts(
               order_by: ${orderBYMap[orderBy]}
               limit: $limit
-              where: {type: {id: {_eq: 1}}}
+              where: {topic_id: ${topicId ? `{_eq: ${topicId}}` : null}, type: {id: {_eq: 1}}}
             ) {
               ...postFields
               __typename
