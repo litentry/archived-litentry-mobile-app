@@ -23,6 +23,7 @@ import {
   democracyProposalScreen,
   registerSubIdentitiesScreen,
   polkadotDiscussions,
+  registerSubIdentitiesScreen,
 } from 'src/navigation/routeKeys';
 
 type DashboardStackParamList = {
