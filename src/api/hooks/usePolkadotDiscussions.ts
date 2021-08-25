@@ -1,4 +1,4 @@
-import {useQuery} from 'react-query';
+import {useInfiniteQuery} from 'react-query';
 
 const endpoint = 'https://polkadot.polkassembly.io/v1/graphql';
 
@@ -19,20 +19,23 @@ export const topicIdMap = {
 export type OrderByType = keyof typeof orderBYMap;
 
 export function usePolkadotDiscussions({orderBy = 'lastCommented', topicId}: {orderBy: OrderByType; topicId?: number}) {
-  return useQuery(['polkadot-discussions', {orderBy, topicId}], async () => {
-    const r = await fetch(endpoint, {
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        operationName: 'LatestDiscussionPosts',
-        variables: {limit: 20},
-        query: `
+  return useInfiniteQuery(
+    ['polkadot-discussions', {orderBy, topicId}],
+    async ({pageParam = 0}: {pageParam?: number}) => {
+      const response = await fetch(endpoint, {
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          operationName: 'LatestDiscussionPosts',
+          variables: {limit: 20},
+          query: `
           query LatestDiscussionPosts($limit: Int! = 20) {
             posts(
               order_by: ${orderBYMap[orderBy]}
               limit: $limit
               where: {topic_id: ${topicId ? `{_eq: ${topicId}}` : null}, type: {id: {_eq: 1}}}
+              offset: ${pageParam * 20}
             ) {
               ...postFields
               __typename
@@ -82,13 +85,17 @@ export function usePolkadotDiscussions({orderBy = 'lastCommented', topicId}: {or
             __typename
           }
       `,
-      }),
-      method: 'POST',
-    });
-    const posts: Posts[] = (await r.json()).data.posts;
+        }),
+        method: 'POST',
+      });
+      const posts: Posts[] = (await response.json()).data.posts;
 
-    return posts;
-  });
+      return posts;
+    },
+    {
+      getNextPageParam: (lastPage, pages) => (lastPage.length === 20 ? pages.length : undefined),
+    },
+  );
 }
 
 // generated via: https://www.graphql-code-generator.com/

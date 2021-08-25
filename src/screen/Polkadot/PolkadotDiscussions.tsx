@@ -1,18 +1,22 @@
 import * as React from 'react';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {OrderByType, usePolkadotDiscussions} from 'src/api/hooks/usePolkadotDiscussions';
-import {Text, Card, Icon, Divider, OverflowMenu, MenuItem} from '@ui-kitten/components';
-import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Button, Text, Card, Icon, Divider, OverflowMenu, MenuItem} from '@ui-kitten/components';
+import {ActivityIndicator, FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import globalStyles, {standardPadding} from 'src/styles';
 import Padder from 'presentational/Padder';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
 import moment from 'moment';
 import {Label} from 'presentational/Label';
+import {flatten} from 'lodash';
 
 export function PolkadotDiscussions() {
   const [orderBy, setOrderBy] = React.useState<OrderByType>('lastCommented');
   const [topicId, setTopicId] = React.useState<number>();
-  const {data} = usePolkadotDiscussions({orderBy, topicId});
+  const {data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage} = usePolkadotDiscussions({
+    orderBy,
+    topicId,
+  });
   const [sortVisible, setSortVisible] = React.useState(false);
   const [filterVisible, setFilterVisible] = React.useState(false);
 
@@ -21,7 +25,7 @@ export function PolkadotDiscussions() {
       <FlatList
         style={styles.container}
         contentContainerStyle={styles.content}
-        data={data}
+        data={flatten(data?.pages)}
         stickyHeaderIndices={[0]}
         ListHeaderComponent={() => (
           <View style={styles.header}>
@@ -104,6 +108,19 @@ export function PolkadotDiscussions() {
             </View>
             <Padder scale={0.6} />
             <Divider />
+          </View>
+        )}
+        ListFooterComponent={() => (
+          <View style={styles.footer}>
+            <Padder scale={0.5} />
+            {hasNextPage ? (
+              isFetching || isFetchingNextPage ? (
+                <ActivityIndicator />
+              ) : (
+                <Button onPress={() => fetchNextPage()}>Load more ...</Button>
+              )
+            ) : null}
+            <Padder scale={0.5} />
           </View>
         )}
         renderItem={({item}) => (
@@ -190,6 +207,11 @@ const styles = StyleSheet.create({
   },
   selectedItem: {
     backgroundColor: '#dde',
+  },
+  footer: {
+    paddingTop: standardPadding * 2,
+    backgroundColor: '#fff',
+    marginBottom: standardPadding * 2,
   },
 });
 
