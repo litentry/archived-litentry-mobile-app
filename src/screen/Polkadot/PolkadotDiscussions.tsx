@@ -22,6 +22,7 @@ export function PolkadotDiscussions() {
         style={styles.container}
         contentContainerStyle={styles.content}
         data={data}
+        stickyHeaderIndices={[0]}
         ListHeaderComponent={() => (
           <View style={styles.header}>
             <View style={globalStyles.rowAlignCenter}>
@@ -140,7 +141,7 @@ export function PolkadotDiscussions() {
                   <View style={globalStyles.rowAlignCenter}>
                     <Icon name="message-circle-outline" style={globalStyles.icon15} fill="#ccc" animation="pulse" />
                     <Padder scale={0.3} />
-                    <Text category="c1" appearance="hint">
+                    <Text category="label" appearance="hint">
                       {item.comments_aggregate.aggregate.count} comments
                     </Text>
                   </View>
@@ -152,8 +153,8 @@ export function PolkadotDiscussions() {
                 <View style={globalStyles.rowAlignCenter}>
                   <Icon name="undo-outline" style={globalStyles.icon15} fill="#ccc" animation="pulse" />
                   <Padder scale={0.3} />
-                  <Text category="c1" appearance="hint">
-                    {formatDate(item.last_update.last_update)}
+                  <Text category="label" appearance="hint">
+                    commented {formatDate(item.last_update.last_update)}
                   </Text>
                 </View>
               ) : null}
@@ -168,7 +169,11 @@ export function PolkadotDiscussions() {
 }
 
 const styles = StyleSheet.create({
-  header: {paddingVertical: standardPadding * 2},
+  header: {
+    paddingTop: standardPadding * 2,
+    backgroundColor: '#fff',
+    marginBottom: standardPadding * 2,
+  },
   container: {flex: 1},
   content: {paddingHorizontal: standardPadding * 2},
   ownerRow: {
