@@ -1,8 +1,8 @@
 import * as React from 'react';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
-import {usePolkadotDiscussions} from 'src/api/hooks/usePolkadotDiscussions';
-import {Text, Card, Icon} from '@ui-kitten/components';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {OrderByType, usePolkadotDiscussions} from 'src/api/hooks/usePolkadotDiscussions';
+import {Text, Card, Icon, Divider, OverflowMenu, MenuItem} from '@ui-kitten/components';
+import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import globalStyles, {standardPadding} from 'src/styles';
 import Padder from 'presentational/Padder';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
@@ -10,7 +10,24 @@ import moment from 'moment';
 import {Label} from 'presentational/Label';
 
 export function PolkadotDiscussions() {
-  const {data} = usePolkadotDiscussions();
+  const [orderBy, setOrderBy] = React.useState<OrderByType>('lastCommented');
+  const {data} = usePolkadotDiscussions({orderBy});
+  const [visible, setVisible] = React.useState(false);
+
+  const handleMenuItemSelect = ({row}: {row: number}) => {
+    setVisible(false);
+    switch (row) {
+      case 0:
+        setOrderBy('lastCommented');
+        break;
+      case 1:
+        setOrderBy('dateAddedNewest');
+        break;
+      case 2:
+        setOrderBy('dateAddedOldest');
+        break;
+    }
+  };
 
   return (
     <SafeView edges={noTopEdges}>
@@ -18,6 +35,37 @@ export function PolkadotDiscussions() {
         style={styles.container}
         contentContainerStyle={styles.content}
         data={data}
+        ListHeaderComponent={() => (
+          <View style={styles.header}>
+            <View style={globalStyles.rowAlignCenter}>
+              <Text>Sort by</Text>
+              <OverflowMenu
+                anchor={() => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      setVisible(true);
+                    }}>
+                    <Icon
+                      name="arrow-ios-downward-outline"
+                      style={globalStyles.icon}
+                      fill={globalStyles.iconColor.color}
+                    />
+                  </TouchableOpacity>
+                )}
+                placement="bottom end"
+                style={styles.overflowMenu}
+                visible={visible}
+                onSelect={handleMenuItemSelect}
+                onBackdropPress={() => setVisible(false)}>
+                <MenuItem title="Last Commented" />
+                <MenuItem title="Date Added (newest)" />
+                <MenuItem title="Date Added (oldest)" />
+              </OverflowMenu>
+            </View>
+            <Padder scale={0.4} />
+            <Divider />
+          </View>
+        )}
         renderItem={({item}) => (
           <Card disabled>
             <Text category="s2" numberOfLines={1}>
@@ -81,12 +129,9 @@ export function PolkadotDiscussions() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
-    paddingHorizontal: standardPadding * 2,
-  },
+  header: {paddingVertical: standardPadding},
+  container: {flex: 1},
+  content: {paddingHorizontal: standardPadding * 2},
   ownerRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -95,6 +140,9 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: standardPadding * 2,
     overflow: 'hidden',
+  },
+  overflowMenu: {
+    minWidth: 200,
   },
 });
 

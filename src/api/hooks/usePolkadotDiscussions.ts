@@ -1,8 +1,18 @@
-import useApiQuery from 'src/api/hooks/useApiQuery';
+import {useQuery} from 'react-query';
 
-export function usePolkadotDiscussions() {
-  return useApiQuery('polkadot-discussions', async () => {
-    const r = await fetch('https://polkadot.polkassembly.io/v1/graphql', {
+const endpoint = 'https://polkadot.polkassembly.io/v1/graphql';
+
+const orderBYMap = {
+  lastCommented: '{last_update: {last_update: desc}}',
+  dateAddedNewest: '{id: desc}',
+  dateAddedOldest: '{id: asc}',
+};
+
+export type OrderByType = keyof typeof orderBYMap;
+
+export function usePolkadotDiscussions({orderBy = 'lastCommented'}: {orderBy: OrderByType}) {
+  return useQuery(['polkadot-discussions', orderBy], async () => {
+    const r = await fetch(endpoint, {
       headers: {
         'content-type': 'application/json',
       },
@@ -12,7 +22,7 @@ export function usePolkadotDiscussions() {
         query: `
           query LatestDiscussionPosts($limit: Int! = 20) {
             posts(
-              order_by: {last_update: {last_update: desc}}
+              order_by: ${orderBYMap[orderBy]}
               limit: $limit
               where: {type: {id: {_eq: 1}}}
             ) {
