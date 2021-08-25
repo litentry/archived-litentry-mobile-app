@@ -44,6 +44,7 @@ export function usePolkadotDiscussions() {
               __typename
             }
             last_update {
+              comment_id
               last_update
               __typename
             }

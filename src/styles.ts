@@ -40,6 +40,7 @@ const globalStyles = StyleSheet.create({
     flexDirection: 'row',
   },
   rowAlignCenter: {
+    flexDirection: 'row',
     alignItems: 'center',
   },
   divider: {
@@ -53,6 +54,7 @@ const globalStyles = StyleSheet.create({
     flex: 1,
   },
   icon: {...inlineIconDimension, ...iconColor},
+  icon15: {width: 15, height: 15},
   icon25: {width: 25, height: 25},
   inlineIconDimension,
   iconColor,
