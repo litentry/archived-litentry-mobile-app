@@ -260,13 +260,13 @@ PODS:
     - React-jsi (= 0.64.2)
     - React-perflogger (= 0.64.2)
   - React-jsinspector (0.64.2)
-  - react-native-camera (4.0.3):
+  - react-native-camera (4.1.0):
     - React-Core
-    - react-native-camera/RCT (= 4.0.3)
-    - react-native-camera/RN (= 4.0.3)
-  - react-native-camera/RCT (4.0.3):
+    - react-native-camera/RCT (= 4.1.0)
+    - react-native-camera/RN (= 4.1.0)
+  - react-native-camera/RCT (4.1.0):
     - React-Core
-  - react-native-camera/RN (4.0.3):
+  - react-native-camera/RN (4.1.0):
     - React-Core
   - react-native-in-app-message (1.0.32):
     - React
@@ -394,7 +394,7 @@ PODS:
     - React-RCTVibration
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.5.0):
+  - RNScreens (3.6.0):
     - React-Core
     - React-RCTImage
   - RNSVG (12.1.1):
@@ -600,7 +600,7 @@ SPEC CHECKSUMS:
   React-jsi: 67747b9722f6dab2ffe15b011bcf6b3f2c3f1427
   React-jsiexecutor: 80c46bd381fd06e418e0d4f53672dc1d1945c4c3
   React-jsinspector: cc614ec18a9ca96fd275100c16d74d62ee11f0ae
-  react-native-camera: a6055b8538d741b5ac221fa73c866c526010c8c9
+  react-native-camera: 39e99f7222a7fa23c37409024338c5b44e3b1543
   react-native-in-app-message: 7a54e2fd7a490e5c33857bbbb260f855205433db
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 61c8c484a3a9e7d1fda19f7b1794b35bbfd2262a
@@ -629,7 +629,7 @@ SPEC CHECKSUMS:
   RNPermissions: 7043bacbf928eae25808275cfe73799b8f618911
   RNReactNativeHapticFeedback: 653a8c126a0f5e88ce15ffe280b3ff37e1fbb285
   RNReanimated: 9c13c86454bfd54dab7505c1a054470bfecd2563
-  RNScreens: 01ab149b5dd5c27f5ff26741b1d2bdf2cee1af35
+  RNScreens: eb0dfb2d6b21d2d7f980ad46b14eb306d2f1062e
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
