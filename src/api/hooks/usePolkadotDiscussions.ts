@@ -2,10 +2,10 @@ import {useInfiniteQuery} from 'react-query';
 
 const endpoint = 'https://polkadot.polkassembly.io/v1/graphql';
 
-const orderBYMap = {
-  lastCommented: '{last_update: {last_update: desc}}',
-  dateAddedNewest: '{id: desc}',
-  dateAddedOldest: '{id: asc}',
+const orderByMap = {
+  lastCommented: {last_update: {last_update: 'desc'}},
+  dateAddedNewest: {id: 'desc'},
+  dateAddedOldest: {id: 'asc'},
 };
 
 export const topicIdMap = {
@@ -16,26 +16,31 @@ export const topicIdMap = {
   General: 5,
 };
 
-export type OrderByType = keyof typeof orderBYMap;
+export type OrderByType = keyof typeof orderByMap;
 
 export function usePolkadotDiscussions({orderBy = 'lastCommented', topicId}: {orderBy: OrderByType; topicId?: number}) {
   return useInfiniteQuery(
     ['polkadot-discussions', {orderBy, topicId}],
     async ({pageParam = 0}: {pageParam?: number}) => {
+      const variables = {
+        limit: 20,
+        offset: pageParam * 20,
+        orderBy: orderByMap[orderBy],
+        topicId: topicId ? {_eq: topicId} : null,
+      };
+
       const response = await fetch(endpoint, {
-        headers: {
-          'content-type': 'application/json',
-        },
+        headers: {'content-type': 'application/json'},
         body: JSON.stringify({
           operationName: 'LatestDiscussionPosts',
-          variables: {limit: 20},
+          variables,
           query: `
-          query LatestDiscussionPosts($limit: Int! = 20) {
+          query LatestDiscussionPosts($limit: Int!, $orderBy: [posts_order_by!], $topicId: Int_comparison_exp, $offset: Int!) {
             posts(
-              order_by: ${orderBYMap[orderBy]}
+              order_by: $orderBy
               limit: $limit
-              where: {topic_id: ${topicId ? `{_eq: ${topicId}}` : null}, type: {id: {_eq: 1}}}
-              offset: ${pageParam * 20}
+              where: {topic_id: $topicId, type: {id: {_eq: 1}}}
+              offset: $offset
             ) {
               ...postFields
               __typename
