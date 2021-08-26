@@ -1,16 +1,22 @@
-import * as React from 'react';
-import SafeView, {noTopEdges} from 'presentational/SafeView';
-import {OrderByType, topicIdMap, usePolkadotDiscussions} from 'src/api/hooks/usePolkadotDiscussions';
-import {Button, Text, Card, Icon, Divider, OverflowMenu, MenuItem} from '@ui-kitten/components';
-import {ActivityIndicator, FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
-import globalStyles, {standardPadding} from 'src/styles';
-import Padder from 'presentational/Padder';
+import {NavigationProp} from '@react-navigation/native';
+import {Button, Card, Divider, Icon, MenuItem, OverflowMenu, Text} from '@ui-kitten/components';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
+import {flatten} from 'lodash';
 import moment from 'moment';
 import {Label} from 'presentational/Label';
-import {flatten} from 'lodash';
+import Padder from 'presentational/Padder';
+import SafeView, {noTopEdges} from 'presentational/SafeView';
+import * as React from 'react';
+import {ActivityIndicator, FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {OrderByType, topicIdMap, usePolkadotDiscussions} from 'src/api/hooks/usePolkadotDiscussions';
+import {PolkaassemblyDiscussionStackParamList} from 'src/navigation/navigation';
+import globalStyles, {standardPadding} from 'src/styles';
 
-export function PolkadotDiscussions() {
+export function PolkaassemblyDiscussions({
+  navigation,
+}: {
+  navigation: NavigationProp<PolkaassemblyDiscussionStackParamList>;
+}) {
   const [orderBy, setOrderBy] = React.useState<OrderByType>('lastCommented');
   const [topicId, setTopicId] = React.useState<number>();
   const [sortVisible, setSortVisible] = React.useState(false);
@@ -120,7 +126,7 @@ export function PolkadotDiscussions() {
           </View>
         )}
         renderItem={({item}) => (
-          <Card disabled>
+          <Card onPress={() => navigation.navigate('PolkaassemblyDiscussionDetail', {id: item.id})}>
             <Text category="s2" numberOfLines={1}>
               {item.title ?? 'unknown title'}
             </Text>

@@ -29,11 +29,17 @@ import {useTheme} from 'src/context/ThemeContext';
 import {useFirebase} from 'src/hook/useFirebase';
 import {usePushAuthorizationStatus} from 'src/hook/usePushNotificationsPermissions';
 import {useTurnOnAllNotificationsOnAppStartForAndroid} from 'src/hook/useTurnOnAllNotificationsOnAppStartForAndroid';
-import {AppStackParamList, DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
+import {
+  AppStackParamList,
+  DashboardStackParamList,
+  DrawerParamList,
+  PolkaassemblyDiscussionStackParamList,
+} from 'src/navigation/navigation';
 import * as routeKeys from 'src/navigation/routeKeys';
 import {darkTheme, lightTheme} from 'src/navigation/theme';
 import globalStyles from 'src/styles';
-import {PolkadotDiscussions} from 'screen/Polkadot/PolkadotDiscussions';
+import {PolkaassemblyDiscussions} from 'screen/Polkaassembly/PolkaassemblyDiscussions';
+import {PolkaassemblyDiscussionDetail} from 'screen/Polkaassembly/PolkaassemblyDiscussionDetail';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -87,6 +93,38 @@ function DashboardStackNavigator() {
   );
 }
 
+const DiscussionNavigator = createStackNavigator<PolkaassemblyDiscussionStackParamList>();
+
+function PolkaassemblyDiscussionsNavigator() {
+  return (
+    <DiscussionNavigator.Navigator
+      screenOptions={{
+        headerBackTitleVisible: false,
+        headerLeftContainerStyle: {paddingHorizontal: 10},
+        headerRightContainerStyle: {paddingHorizontal: 10},
+        headerBackImage: ({tintColor}) => (
+          <Icon
+            name={'arrow-back-outline'}
+            style={[globalStyles.icon25, {color: tintColor}]}
+            fill={tintColor}
+            pack={'ionic'}
+          />
+        ),
+      }}>
+      <DiscussionNavigator.Screen
+        name={routeKeys.polkaassemblyDiscussions}
+        component={PolkaassemblyDiscussions}
+        options={{title: 'Discussions', headerLeft: DashboardHeaderLeft}}
+      />
+      <DiscussionNavigator.Screen
+        name={routeKeys.polkaassemblyDiscussionDetail}
+        component={PolkaassemblyDiscussionDetail}
+        options={{title: 'Discussion'}}
+      />
+    </DiscussionNavigator.Navigator>
+  );
+}
+
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
 function DrawerNavigator() {
@@ -111,9 +149,9 @@ function DrawerNavigator() {
       <Drawer.Screen name={routeKeys.devScreen} component={DevScreen} />
       <Drawer.Screen name={routeKeys.notificationSettingsScreen} component={NotificationSettingsScreen} />
       <Drawer.Screen
-        name={routeKeys.polkadotDiscussions}
-        component={PolkadotDiscussions}
-        options={{title: 'Discussions'}}
+        name={routeKeys.polkaassemblyDiscussionsNavigator}
+        component={PolkaassemblyDiscussionsNavigator}
+        options={{headerShown: false}}
       />
     </Drawer.Navigator>
   );
