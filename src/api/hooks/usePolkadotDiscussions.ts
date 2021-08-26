@@ -1,4 +1,6 @@
 import {useInfiniteQuery} from 'react-query';
+import {gql} from 'graphql-tag';
+import {print} from 'graphql';
 
 const endpoint = 'https://polkadot.polkassembly.io/v1/graphql';
 
@@ -34,62 +36,7 @@ export function usePolkadotDiscussions({orderBy = 'lastCommented', topicId}: {or
         body: JSON.stringify({
           operationName: 'LatestDiscussionPosts',
           variables,
-          query: `
-          query LatestDiscussionPosts($limit: Int!, $orderBy: [posts_order_by!], $topicId: Int_comparison_exp, $offset: Int!) {
-            posts(
-              order_by: $orderBy
-              limit: $limit
-              where: {topic_id: $topicId, type: {id: {_eq: 1}}}
-              offset: $offset
-            ) {
-              ...postFields
-              __typename
-            }
-          }
-          
-          fragment postFields on posts {
-            id
-            title
-            author {
-              ...authorFields
-              __typename
-            }
-            created_at
-            updated_at
-            content
-            comments_aggregate {
-              aggregate {
-                count
-                __typename
-              }
-              __typename
-            }
-            type {
-              name
-              id
-              __typename
-            }
-            last_update {
-              comment_id
-              last_update
-              __typename
-            }
-            topic {
-              id
-              name
-              __typename
-            }
-            __typename
-          }
-          
-          fragment authorFields on User {
-            id
-            kusama_default_address
-            polkadot_default_address
-            username
-            __typename
-          }
-      `,
+          query: latestDiscussionPostsQuery,
         }),
         method: 'POST',
       });
@@ -102,6 +49,58 @@ export function usePolkadotDiscussions({orderBy = 'lastCommented', topicId}: {or
     },
   );
 }
+
+const latestDiscussionPostsQuery = print(gql`
+  query LatestDiscussionPosts($limit: Int!, $orderBy: [posts_order_by!], $topicId: Int_comparison_exp, $offset: Int!) {
+    posts(order_by: $orderBy, limit: $limit, where: {topic_id: $topicId, type: {id: {_eq: 1}}}, offset: $offset) {
+      ...postFields
+      __typename
+    }
+  }
+
+  fragment postFields on posts {
+    id
+    title
+    author {
+      ...authorFields
+      __typename
+    }
+    created_at
+    updated_at
+    content
+    comments_aggregate {
+      aggregate {
+        count
+        __typename
+      }
+      __typename
+    }
+    type {
+      name
+      id
+      __typename
+    }
+    last_update {
+      comment_id
+      last_update
+      __typename
+    }
+    topic {
+      id
+      name
+      __typename
+    }
+    __typename
+  }
+
+  fragment authorFields on User {
+    id
+    kusama_default_address
+    polkadot_default_address
+    username
+    __typename
+  }
+`);
 
 // generated via: https://www.graphql-code-generator.com/
 
