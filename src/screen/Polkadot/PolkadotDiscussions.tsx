@@ -1,6 +1,6 @@
 import * as React from 'react';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
-import {OrderByType, usePolkadotDiscussions} from 'src/api/hooks/usePolkadotDiscussions';
+import {OrderByType, topicIdMap, usePolkadotDiscussions} from 'src/api/hooks/usePolkadotDiscussions';
 import {Button, Text, Card, Icon, Divider, OverflowMenu, MenuItem} from '@ui-kitten/components';
 import {ActivityIndicator, FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import globalStyles, {standardPadding} from 'src/styles';
@@ -13,12 +13,12 @@ import {flatten} from 'lodash';
 export function PolkadotDiscussions() {
   const [orderBy, setOrderBy] = React.useState<OrderByType>('lastCommented');
   const [topicId, setTopicId] = React.useState<number>();
+  const [sortVisible, setSortVisible] = React.useState(false);
+  const [filterVisible, setFilterVisible] = React.useState(false);
   const {data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage} = usePolkadotDiscussions({
     orderBy,
     topicId,
   });
-  const [sortVisible, setSortVisible] = React.useState(false);
-  const [filterVisible, setFilterVisible] = React.useState(false);
 
   return (
     <SafeView edges={noTopEdges}>
@@ -98,11 +98,9 @@ export function PolkadotDiscussions() {
                     }
                   }}
                   onBackdropPress={() => setFilterVisible(false)}>
-                  <MenuItem title="Democracy" style={topicId === 1 && styles.selectedItem} />
-                  <MenuItem title="Council" style={topicId === 2 && styles.selectedItem} />
-                  <MenuItem title="Tech Committee" style={topicId === 3 && styles.selectedItem} />
-                  <MenuItem title="Treasury" style={topicId === 4 && styles.selectedItem} />
-                  <MenuItem title="General" style={topicId === 5 && styles.selectedItem} />
+                  {Object.entries(topicIdMap).map(([name, id]) => (
+                    <MenuItem key={name} title={name} style={topicId === id && styles.selectedItem} />
+                  ))}
                 </OverflowMenu>
               </View>
             </View>
@@ -112,7 +110,6 @@ export function PolkadotDiscussions() {
         )}
         ListFooterComponent={() => (
           <View style={styles.footer}>
-            <Padder scale={0.5} />
             {hasNextPage ? (
               isFetching || isFetchingNextPage ? (
                 <ActivityIndicator />
@@ -120,7 +117,6 @@ export function PolkadotDiscussions() {
                 <Button onPress={() => fetchNextPage()}>Load more ...</Button>
               )
             ) : null}
-            <Padder scale={0.5} />
           </View>
         )}
         renderItem={({item}) => (
@@ -216,7 +212,7 @@ const styles = StyleSheet.create({
 });
 
 // format date to days ago
-export function formatDate(date: string) {
+function formatDate(date: string) {
   const now = moment();
   const then = moment(date);
   const diff = now.diff(then, 'days');
