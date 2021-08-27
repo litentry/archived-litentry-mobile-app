@@ -13,8 +13,8 @@ import {flatten} from 'lodash';
 export function PolkadotDiscussions() {
   const [orderBy, setOrderBy] = React.useState<OrderByType>('lastCommented');
   const [topicId, setTopicId] = React.useState<number>();
-  const [sortVisible, setSortVisible] = React.useState(false);
-  const [filterVisible, setFilterVisible] = React.useState(false);
+  const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
+  const [filterMenuVisible, setFilterMenuVisible] = React.useState(false);
   const {data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage} = usePolkadotDiscussions({
     orderBy,
     topicId,
@@ -39,7 +39,7 @@ export function PolkadotDiscussions() {
                   anchor={() => (
                     <TouchableOpacity
                       onPress={() => {
-                        setSortVisible(true);
+                        setSortMenuVisible(true);
                       }}>
                       <Icon
                         name="arrow-ios-downward-outline"
@@ -50,9 +50,9 @@ export function PolkadotDiscussions() {
                   )}
                   placement="bottom end"
                   style={styles.overflowMenu}
-                  visible={sortVisible}
+                  visible={sortMenuVisible}
                   onSelect={({row}: {row: number}) => {
-                    setSortVisible(false);
+                    setSortMenuVisible(false);
                     switch (row) {
                       case 0:
                         setOrderBy('lastCommented');
@@ -65,7 +65,7 @@ export function PolkadotDiscussions() {
                         break;
                     }
                   }}
-                  onBackdropPress={() => setSortVisible(false)}>
+                  onBackdropPress={() => setSortMenuVisible(false)}>
                   <MenuItem title="Last Commented" style={orderBy === 'lastCommented' && styles.selectedItem} />
                   <MenuItem title="Date Added (newest)" style={orderBy === 'dateAddedNewest' && styles.selectedItem} />
                   <MenuItem title="Date Added (oldest)" style={orderBy === 'dateAddedOldest' && styles.selectedItem} />
@@ -79,7 +79,7 @@ export function PolkadotDiscussions() {
                   anchor={() => (
                     <TouchableOpacity
                       onPress={() => {
-                        setFilterVisible(true);
+                        setFilterMenuVisible(true);
                       }}>
                       <Icon
                         name="arrow-ios-downward-outline"
@@ -90,16 +90,16 @@ export function PolkadotDiscussions() {
                   )}
                   placement="bottom end"
                   style={styles.overflowMenu}
-                  visible={filterVisible}
+                  visible={filterMenuVisible}
                   onSelect={({row}: {row: number}) => {
-                    setFilterVisible(false);
+                    setFilterMenuVisible(false);
                     if (topicId && row === topicId - 1) {
                       setTopicId(undefined);
                     } else {
                       setTopicId(row + 1);
                     }
                   }}
-                  onBackdropPress={() => setFilterVisible(false)}>
+                  onBackdropPress={() => setFilterMenuVisible(false)}>
                   {Object.entries(topicIdMap).map(([name, id]) => (
                     <MenuItem key={name} title={name} style={topicId === id && styles.selectedItem} />
                   ))}
