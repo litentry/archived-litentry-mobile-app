@@ -37,7 +37,7 @@ export function PolkaassemblyDiscussionDetail({
         <View style={styles.content}>
           <Text style={styles.contentText}>{data.content ?? ''}</Text>
         </View>
-        <View>
+        <View style={styles.reactionRow}>
           {data.comments.length ? (
             <>
               <View style={globalStyles.rowAlignCenter}>
@@ -50,6 +50,13 @@ export function PolkaassemblyDiscussionDetail({
               <Padder scale={1} />
             </>
           ) : null}
+          <Text category="c1" appearance="hint">
+            👍 {data.likes.aggregate.count}{' '}
+          </Text>
+          <Text category="c1" appearance="hint">
+            {' '}
+            👎 {data.dislikes.aggregate.count}
+          </Text>
         </View>
       </ScrollView>
     </SafeView>
@@ -72,5 +79,9 @@ const styles = StyleSheet.create({
   },
   contentText: {
     opacity: 0.7,
+  },
+  reactionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });

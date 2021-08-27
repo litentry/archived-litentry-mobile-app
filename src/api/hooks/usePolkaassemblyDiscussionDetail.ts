@@ -64,6 +64,16 @@ const discussionPostAndCommnetsQuery = print(gql`
       name
       __typename
     }
+    likes: post_reactions_aggregate(where: {reaction: {_eq: "👍"}}) {
+      aggregate {
+        count
+      }
+    }
+    dislikes: post_reactions_aggregate(where: {reaction: {_eq: "👎"}}) {
+      aggregate {
+        count
+      }
+    }
     __typename
   }
 
@@ -132,10 +142,9 @@ type Posts = {
   type: Post_Types;
   type_id: Scalars['Int'];
   updated_at: Scalars['timestamptz'];
-};
 
-type PostsCommentsArgs = {
-  order_by?: Maybe<Array<Comments_Order_By>>;
+  likes: {aggregate: {count: Scalars['Int']}};
+  dislikes: {aggregate: {count: Scalars['Int']}};
 };
 
 type User = {
@@ -171,28 +180,8 @@ type Post_Topics = {
   name: Scalars['String'];
 };
 
-type Comments_Order_By = {
-  created_at?: Maybe<Order_By>;
-};
-
 type Post_Types = {
   __typename?: 'post_types';
   id: Scalars['Int'];
   name: Scalars['String'];
 };
-
-/** column ordering options */
-enum Order_By {
-  /** in the ascending order, nulls last */
-  Asc = 'asc',
-  /** in the ascending order, nulls first */
-  AscNullsFirst = 'asc_nulls_first',
-  /** in the ascending order, nulls last */
-  AscNullsLast = 'asc_nulls_last',
-  /** in the descending order, nulls first */
-  Desc = 'desc',
-  /** in the descending order, nulls first */
-  DescNullsFirst = 'desc_nulls_first',
-  /** in the descending order, nulls last */
-  DescNullsLast = 'desc_nulls_last',
-}
