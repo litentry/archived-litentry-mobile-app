@@ -33,6 +33,7 @@ import {AppStackParamList, DashboardStackParamList, DrawerParamList} from 'src/n
 import * as routeKeys from 'src/navigation/routeKeys';
 import {darkTheme, lightTheme} from 'src/navigation/theme';
 import globalStyles from 'src/styles';
+import {PolkadotDiscussions} from 'screen/Polkadot/PolkadotDiscussions';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -109,6 +110,11 @@ function DrawerNavigator() {
       />
       <Drawer.Screen name={routeKeys.devScreen} component={DevScreen} />
       <Drawer.Screen name={routeKeys.notificationSettingsScreen} component={NotificationSettingsScreen} />
+      <Drawer.Screen
+        name={routeKeys.polkadotDiscussions}
+        component={PolkadotDiscussions}
+        options={{title: 'Discussions'}}
+      />
     </Drawer.Navigator>
   );
 }

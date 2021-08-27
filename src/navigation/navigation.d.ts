@@ -21,6 +21,7 @@ import {
   webviewScreen,
   referendumScreen,
   democracyProposalScreen,
+  polkadotDiscussions,
 } from 'src/navigation/routeKeys';
 
 type DashboardStackParamList = {
@@ -53,6 +54,7 @@ type DrawerParamList = {
   [webviewScreen]: {uri: string; title: string};
   [devScreen]: undefined;
   [notificationSettingsScreen]: undefined;
+  [polkadotDiscussions]: undefined;
 };
 
 type AppStackParamList = {

@@ -9,6 +9,7 @@ import {
   dashboardScreen,
   devScreen,
   notificationSettingsScreen,
+  polkadotDiscussions,
   registrarListScreen,
   webviewScreen,
 } from 'src/navigation/routeKeys';
@@ -41,6 +42,12 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
             title="Registrars"
             accessoryLeft={(props) => <Icon {...props} name="award-outline" animation="zoom" />}
             onPress={() => navigation.navigate(registrarListScreen)}
+          />
+          <Divider />
+          <ListItem
+            title="Discussions"
+            accessoryLeft={(props) => <Icon {...props} name="message-square-outline" animation="zoom" />}
+            onPress={() => navigation.navigate(polkadotDiscussions)}
           />
           <Divider />
           <ListItem
