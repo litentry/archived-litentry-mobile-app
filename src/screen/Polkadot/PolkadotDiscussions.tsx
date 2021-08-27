@@ -1,7 +1,7 @@
 import * as React from 'react';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {OrderByType, topicIdMap, usePolkadotDiscussions} from 'src/api/hooks/usePolkadotDiscussions';
-import {Button, Text, Card, Icon, Divider, OverflowMenu, MenuItem} from '@ui-kitten/components';
+import {Button, Text, Card, Icon, Divider, OverflowMenu, MenuItem, useTheme} from '@ui-kitten/components';
 import {ActivityIndicator, FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import globalStyles, {standardPadding} from 'src/styles';
 import Padder from 'presentational/Padder';
@@ -20,6 +20,8 @@ export function PolkadotDiscussions() {
     topicId,
   });
 
+  const theme = useTheme();
+
   return (
     <SafeView edges={noTopEdges}>
       <FlatList
@@ -28,7 +30,7 @@ export function PolkadotDiscussions() {
         data={flatten(data?.pages)}
         stickyHeaderIndices={[0]}
         ListHeaderComponent={() => (
-          <View style={styles.header}>
+          <View style={[styles.header, {backgroundColor: theme['background-basic-color-1']}]}>
             <View style={globalStyles.rowAlignCenter}>
               <View style={globalStyles.rowAlignCenter}>
                 <Padder scale={0.5} />
@@ -184,7 +186,6 @@ export function PolkadotDiscussions() {
 const styles = StyleSheet.create({
   header: {
     paddingTop: standardPadding * 2,
-    backgroundColor: '#fff',
     marginBottom: standardPadding * 2,
   },
   container: {flex: 1},
@@ -206,7 +207,6 @@ const styles = StyleSheet.create({
   },
   footer: {
     paddingTop: standardPadding * 2,
-    backgroundColor: '#fff',
     marginBottom: standardPadding * 2,
   },
 });
