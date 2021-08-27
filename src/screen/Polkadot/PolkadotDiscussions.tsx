@@ -138,7 +138,7 @@ export function PolkadotDiscussions() {
                 )}
               </View>
               <Text category="label" appearance="hint">
-                {formatDate(item.created_at)}
+                {moment(item.created_at).fromNow()}
               </Text>
               <Padder scale={0.2} />
               <Label text={item.topic.name} />
@@ -169,7 +169,7 @@ export function PolkadotDiscussions() {
                   <Icon name="undo-outline" style={globalStyles.icon15} fill="#ccc" animation="pulse" />
                   <Padder scale={0.3} />
                   <Text category="label" appearance="hint">
-                    commented {formatDate(item.last_update.last_update)}
+                    commented {moment(item.last_update.last_update).fromNow()}
                   </Text>
                 </View>
               ) : null}
@@ -210,22 +210,3 @@ const styles = StyleSheet.create({
     marginBottom: standardPadding * 2,
   },
 });
-
-// format date to days ago
-function formatDate(date: string) {
-  const now = moment();
-  const then = moment(date);
-  const diff = now.diff(then, 'days');
-
-  if (diff === 0) {
-    const hoursDiff = now.diff(then, 'hours');
-    if (hoursDiff === 0) {
-      return now.diff(then, 'minutes') + ' minutes ago';
-    }
-    return `${hoursDiff} hours ago`;
-  }
-  if (diff === 1) {
-    return 'yesterday';
-  }
-  return `${diff} days ago`;
-}
