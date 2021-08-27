@@ -103,7 +103,7 @@ function AccountItem({
     if (row === 2) {
       navigation.navigate(myIdentityScreen, {address: account.address});
     }
-    if ((row = 3)) {
+    if (row === 3) {
       navigation.navigate(registerSubIdentitiesScreen, {address: account.address});
     }
     if (row === 4) {
