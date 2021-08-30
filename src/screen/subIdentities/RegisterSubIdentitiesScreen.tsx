@@ -53,7 +53,6 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
   };
 
   const onSetSubIdentitiesPress = async () => {
-    setSubmitSubsDisabled(true);
     startTx({
       address,
       txMethod: 'identity.setSubs',
@@ -61,6 +60,7 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
     })
       .then(() => {
         queryClient.invalidateQueries(['sub-identities', address]);
+        setSubmitSubsDisabled(true);
       })
       .catch((e: Error) => {
         console.warn(e);
