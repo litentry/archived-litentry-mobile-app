@@ -1,5 +1,5 @@
-import React, {useState, useContext, useCallback} from 'react';
-import {View, StyleSheet} from 'react-native';
+import React, {useState, useContext} from 'react';
+import {View, StyleSheet, Alert} from 'react-native';
 import {Button, Input, Layout, Tab, TabView, IconProps, Text, Icon} from '@ui-kitten/components';
 
 import type {SubIdentity} from 'src/api/hooks/useSubIdentities';
@@ -31,24 +31,26 @@ export function AddSubIdentity({onAddPress}: {onAddPress: (subIdentity: SubIdent
   const [subAddress, setSubAddress] = useState('');
   const [subName, setSubName] = useState('');
 
-  const handleScan = useCallback(
-    ({data}) => {
-      const parsed = parseAddress(data);
-      if (isAddressValid(currentNetwork, parsed.address)) {
-        setSubAddress(parsed.address);
-      }
-    },
-    [currentNetwork],
-  );
+  const handleScan = ({data}: {data: string}) => {
+    const parsed = parseAddress(data);
+    setSubAddress(parsed.address);
+  };
 
   const addSubIdentity = () => {
-    // TODO: is valid data??
-    onAddPress({accountId: subAddress, name: subName});
+    if (isAddressValid(currentNetwork, subAddress)) {
+      onAddPress({accountId: subAddress, name: subName});
+    } else {
+      Alert.alert('Validation Failed', 'The Address provided is invalid');
+    }
   };
 
   return (
     <View>
-      <Input placeholder="Sub account name" value={subName} onChangeText={(nextSubName) => setSubName(nextSubName)} />
+      <Input
+        placeholder="Sub account name (optional)"
+        value={subName}
+        onChangeText={(nextSubName) => setSubName(nextSubName)}
+      />
       <TabView
         shouldLoadComponent={(index) => {
           return tabIndex === index;
