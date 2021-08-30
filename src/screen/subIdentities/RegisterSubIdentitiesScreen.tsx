@@ -1,18 +1,19 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {View, FlatList, StyleSheet} from 'react-native';
-import {NavigationProp, RouteProp} from '@react-navigation/native';
+import React, {useEffect, useRef, useState} from 'react';
+import {Alert, FlatList, StyleSheet, View} from 'react-native';
 import {Modalize} from 'react-native-modalize';
+import {useQueryClient} from 'react-query';
 import Identicon from '@polkadot/reactnative-identicon';
-
+import {NavigationProp, RouteProp} from '@react-navigation/native';
+import {Button, Card, Divider, IconProps, Layout, ListItem, Text, TopNavigationAction} from '@ui-kitten/components';
+import Icon from 'presentational/Icon';
 import ModalTitle from 'presentational/ModalTitle';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
+import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
+import {useApiTx} from 'src/api/hooks/useApiTx';
+import {SubIdentity, useSubIdentities} from 'src/api/hooks/useSubIdentities';
 import {DashboardStackParamList} from 'src/navigation/navigation';
 import {registerSubIdentitiesScreen} from 'src/navigation/routeKeys';
-import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
-import {Button, Card, IconProps, Layout, ListItem, Text, TopNavigationAction} from '@ui-kitten/components';
 import globalStyles, {monofontFamily} from 'src/styles';
-import Icon from 'presentational/Icon';
-import {useSubIdentities, SubIdentity} from 'src/api/hooks/useSubIdentities';
 import {AddSubIdentity} from './AddSubIdentity';
 
 type ScreenProps = {
@@ -24,15 +25,17 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
   const address = route.params.address;
   const modalRef = useRef<Modalize>(null);
   const {data: identityInfo} = useAccountIdentityInfo(address);
-  const {data: subIdentities} = useSubIdentities(address);
-  const [infos, setInfos] = useState(subIdentities || []);
+  const {data: subIdentitiesData} = useSubIdentities(address);
+  const [subIdentities, setSubIdentities] = useState(subIdentitiesData || []);
   const [submitSubsDisabled, setSubmitSubsDisabled] = useState(true);
+  const queryClient = useQueryClient();
+  const startTx = useApiTx();
 
   useEffect(() => {
-    if (subIdentities) {
-      setInfos(subIdentities);
+    if (subIdentitiesData?.length) {
+      setSubIdentities(subIdentitiesData);
     }
-  }, [subIdentities, setInfos]);
+  }, [subIdentitiesData, setSubIdentities]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -49,22 +52,48 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
     modalRef.current?.open();
   };
 
-  const onSetSubIdentitiesPress = () => {
-    // TODO: make tx here (with await)
+  const onSetSubIdentitiesPress = async () => {
     setSubmitSubsDisabled(true);
+    startTx({
+      address,
+      txMethod: 'identity.setSubs',
+      params: [subIdentities.map((sub) => [sub.accountId, {raw: sub.name}])],
+    })
+      .then(() => {
+        queryClient.invalidateQueries(['sub-identities', address]);
+      })
+      .catch((e: Error) => {
+        console.warn(e);
+      });
   };
 
   const onAddPress = (subIdentity: SubIdentity) => {
-    setInfos((prevInfos) => [...prevInfos, subIdentity]);
+    setSubIdentities((prevInfos) => [...prevInfos, subIdentity]);
     setSubmitSubsDisabled(false);
     modalRef.current?.close();
   };
 
   const onRemovePress = (accountId: string) => {
-    setInfos((prevInfos) => {
-      return prevInfos.filter((info) => info.accountId !== accountId);
-    });
-    setSubmitSubsDisabled(false);
+    Alert.alert(
+      'Remove sub-identity',
+      `Do you want to remove account: \n ${accountId} ?`,
+      [
+        {
+          text: 'Yes',
+          onPress: () => {
+            setSubIdentities((prevInfos) => {
+              return prevInfos.filter((info) => info.accountId !== accountId);
+            });
+            setSubmitSubsDisabled(false);
+          },
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+      ],
+      {cancelable: false},
+    );
   };
 
   return (
@@ -73,18 +102,24 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
         <Button style={styles.setSubIdentitiesButton} onPress={onSetSubIdentitiesPress} disabled={submitSubsDisabled}>
           Set Sub-identities
         </Button>
+        <View style={styles.hintTextContainer}>
+          <Text category="c2" appearance="hint">
+            Set sub-identities after adding/removing your accounts.
+          </Text>
+        </View>
+        <Divider />
         <FlatList
           ListHeaderComponent={() => (
             <Text category="s1" style={styles.subIdentitiesListHeader}>
-              {`Sub-identities (${infos?.length || 0})`}
+              {`Sub-identities (${subIdentities?.length || 0})`}
             </Text>
           )}
-          data={infos}
+          data={subIdentities}
           keyExtractor={(item) => item.accountId}
           renderItem={({item}) => (
             <ListItem
               disabled={true}
-              title={`${identityInfo?.display}/${item.name}`.toUpperCase()}
+              title={`${identityInfo?.display}/${item.name || identityInfo?.display}`.toUpperCase()}
               description={item.accountId}
               accessoryLeft={() => <Identicon value={item.accountId} size={30} />}
               accessoryRight={() => (
@@ -112,7 +147,7 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
         panGestureEnabled>
         <Layout level="1" style={globalStyles.paddedContainer}>
           <ModalTitle title="Add sub-identity" />
-          <AddSubIdentity onAddPress={onAddPress} />
+          <AddSubIdentity onAddPress={onAddPress} subIdentities={subIdentities} />
         </Layout>
       </Modalize>
     </SafeView>
@@ -141,6 +176,7 @@ const styles = StyleSheet.create({
   emptySubIdentitiesText: {
     fontFamily: monofontFamily,
   },
-  setSubIdentitiesButton: {marginBottom: 20, marginHorizontal: 30},
+  setSubIdentitiesButton: {marginBottom: 10, marginHorizontal: 30},
   subIdentitiesListHeader: {paddingBottom: 10, marginTop: 10},
+  hintTextContainer: {alignItems: 'center', marginBottom: 20},
 });

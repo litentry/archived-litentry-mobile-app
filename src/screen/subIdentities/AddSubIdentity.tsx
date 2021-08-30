@@ -25,7 +25,13 @@ const InputIcon = (props: IconProps) => (
   </Layout>
 );
 
-export function AddSubIdentity({onAddPress}: {onAddPress: (subIdentity: SubIdentity) => void}) {
+export function AddSubIdentity({
+  onAddPress,
+  subIdentities,
+}: {
+  onAddPress: (subIdentity: SubIdentity) => void;
+  subIdentities: SubIdentity[];
+}) {
   const {currentNetwork} = useContext(NetworkContext);
   const [tabIndex, setTabIndex] = useState(0);
   const [subAddress, setSubAddress] = useState('');
@@ -38,9 +44,16 @@ export function AddSubIdentity({onAddPress}: {onAddPress: (subIdentity: SubIdent
 
   const addSubIdentity = () => {
     if (isAddressValid(currentNetwork, subAddress)) {
-      onAddPress({accountId: subAddress, name: subName});
+      if (subIdentities.some((sub) => sub.accountId === subAddress)) {
+        Alert.alert(
+          'Validation Failed',
+          'The account is already registered. Remove the account first if you want to change its name',
+        );
+      } else {
+        onAddPress({accountId: subAddress, name: subName});
+      }
     } else {
-      Alert.alert('Validation Failed', 'The Address provided is invalid');
+      Alert.alert('Validation Failed', 'The address provided is invalid');
     }
   };
 
