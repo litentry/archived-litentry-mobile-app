@@ -19,7 +19,7 @@ export function useSubIdentities(address?: string) {
   const subIds = subAccounts ? subAccounts[ACCOUNTS_INDEX].map((accountId) => accountId.toString()) : [];
 
   return useApiQuery(
-    ['sub-identities', address],
+    ['sub-identities', {address, subsCount: subAccounts?.length || 0}],
     async (api: ApiPromise): Promise<Array<SubIdentity>> => {
       const superAccountsOpt = await api.query.identity.superOf.multi<Option<ITuple<[AccountId, Data]>>>(subIds);
       const superAccounts = superAccountsOpt.reduce(
@@ -41,6 +41,6 @@ export function useSubIdentities(address?: string) {
       );
       return superAccounts;
     },
-    {enabled: Boolean(address)},
+    {enabled: Boolean(address) && Boolean(subAccounts)},
   );
 }
