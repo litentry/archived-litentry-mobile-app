@@ -46,7 +46,7 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
         />
       ),
     });
-  });
+  }, [navigation]);
 
   const onAddSubIdentityPress = () => {
     modalRef.current?.open();
@@ -59,7 +59,7 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
       params: [subIdentities.map((sub) => [sub.accountId, {raw: sub.name}])],
     })
       .then(() => {
-        queryClient.invalidateQueries(['sub-identities', address]);
+        queryClient.invalidateQueries(['sub-identities', {address}]);
         setSubmitSubsDisabled(true);
       })
       .catch((e: Error) => {
