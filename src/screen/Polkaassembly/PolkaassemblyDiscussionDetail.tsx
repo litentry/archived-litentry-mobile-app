@@ -7,7 +7,7 @@ import LoadingView from 'presentational/LoadingView';
 import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {usePolkaassemblyDiscussionDetail} from 'src/api/hooks/usePolkaassemblyDiscussionDetail';
 import {PolkaassemblyDiscussionStackParamList} from 'src/navigation/navigation';
 import globalStyles, {standardPadding} from 'src/styles';
@@ -21,46 +21,48 @@ export function PolkaassemblyDiscussionDetail({
   const id = route.params.id;
   const {data} = usePolkaassemblyDiscussionDetail(id);
 
-  if (!data) {
+  if (!data || !data.post) {
     return <LoadingView />;
   }
+
+  const {post, externalURL} = data;
 
   return (
     <SafeView edges={noTopEdges}>
       <ScrollView style={styles.container}>
-        <Text category="h6">{data.title ?? ''}</Text>
+        <Text category="h6">{post.title ?? ''}</Text>
         <View style={styles.postDetailRow}>
-          <Text category="c2">{data.author?.username ?? ''} </Text>
+          <Text category="c2">{post.author?.username ?? ''} </Text>
           <Text category="c1">posted in </Text>
-          <Label text={data.topic.name} />
-          <Text category="c1"> {moment(data.created_at).fromNow()}</Text>
+          <Label text={post.topic.name} />
+          <Text category="c1"> {moment(post.created_at).fromNow()}</Text>
         </View>
         <View style={styles.content}>
-          <Text style={styles.contentText}>{data.content ?? ''}</Text>
+          <Text style={styles.contentText}>{post.content ?? ''}</Text>
         </View>
         <View style={styles.reactionRow}>
-          {data.comments.length ? (
+          {post.comments.length ? (
             <>
               <View style={globalStyles.rowAlignCenter}>
                 <Icon name="message-circle-outline" style={globalStyles.icon15} fill="#ccc" animation="pulse" />
                 <Padder scale={0.3} />
                 <Text category="label" appearance="hint">
-                  {data.comments.length} comments
+                  {post.comments.length} comments
                 </Text>
               </View>
               <Padder scale={1} />
             </>
           ) : null}
           <Text category="c1" appearance="hint">
-            👍 {data.likes.aggregate.count}{' '}
+            👍 {post.likes.aggregate.count}{' '}
           </Text>
           <Text category="c1" appearance="hint">
             {' '}
-            👎 {data.dislikes.aggregate.count}
+            👎 {post.dislikes.aggregate.count}
           </Text>
         </View>
         <View style={styles.commentsContainer}>
-          {data.comments.map((comment) => (
+          {post.comments.map((comment) => (
             <View key={comment.id} style={styles.comment}>
               <View style={[styles.commentAuthorIcon, {backgroundColor: theme['text-basic-color']}]}>
                 <Text category="h6" appearance="alternative">
@@ -90,6 +92,15 @@ export function PolkaassemblyDiscussionDetail({
               </View>
             </View>
           ))}
+        </View>
+        <View style={globalStyles.rowAlignCenter}>
+          <Icon style={globalStyles.icon15} name="info-outline" fill={theme['text-hint-color']} />
+          <Text appearance="hint"> To comment, like or subscribe please </Text>
+          <TouchableOpacity onPress={() => Linking.openURL(externalURL)}>
+            <Text appearance="hint" category="s1">
+              login
+            </Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeView>

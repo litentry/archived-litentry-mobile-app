@@ -24,7 +24,7 @@ export function usePolkaassemblyDiscussionDetail(id: number) {
     });
     const posts: Posts[] = (await res.json()).data.posts;
 
-    return posts[0];
+    return {post: posts[0], externalURL: `https://${network}.polkassembly.io/post/${id}`};
   });
 }
 
