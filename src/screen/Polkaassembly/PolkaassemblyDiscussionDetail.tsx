@@ -1,5 +1,5 @@
 import {RouteProp} from '@react-navigation/native';
-import {Text} from '@ui-kitten/components';
+import {Text, useTheme} from '@ui-kitten/components';
 import moment from 'moment';
 import Icon from 'presentational/Icon';
 import {Label} from 'presentational/Label';
@@ -17,6 +17,7 @@ export function PolkaassemblyDiscussionDetail({
 }: {
   route: RouteProp<PolkaassemblyDiscussionStackParamList, 'PolkaassemblyDiscussionDetail'>;
 }) {
+  const theme = useTheme();
   const id = route.params.id;
   const {data} = usePolkaassemblyDiscussionDetail(id);
 
@@ -58,6 +59,25 @@ export function PolkaassemblyDiscussionDetail({
             👎 {data.dislikes.aggregate.count}
           </Text>
         </View>
+        <View style={styles.commentsContainer}>
+          {data.comments.map((comment) => (
+            <View key={comment.id} style={styles.comment}>
+              <View style={[styles.commentAuthorIcon, {backgroundColor: theme['text-basic-color']}]}>
+                <Text category="h6" appearance="alternative">
+                  {comment.author?.username?.substr(0, 1).toUpperCase()}
+                </Text>
+              </View>
+              <View style={styles.commentRightSide}>
+                <View style={globalStyles.rowAlignCenter}>
+                  <Text category="c2">{comment.author?.username ?? ''}</Text>
+                  <Text category="c1"> commented </Text>
+                  <Text category="c2">{moment(comment.created_at).fromNow()}</Text>
+                </View>
+                <Text category="c1">{comment.content.trim()}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
       </ScrollView>
     </SafeView>
   );
@@ -83,5 +103,29 @@ const styles = StyleSheet.create({
   reactionRow: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  comment: {
+    flexDirection: 'row',
+    marginTop: standardPadding,
+    marginBottom: standardPadding * 2,
+  },
+  commentAuthorIcon: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: standardPadding * 2,
+    marginRight: standardPadding,
+  },
+
+  commentRightSide: {
+    borderLeftWidth: 1,
+    borderLeftColor: '#ccc',
+    paddingLeft: standardPadding,
+    flex: 1,
+  },
+  commentsContainer: {
+    marginVertical: standardPadding * 3,
   },
 });
