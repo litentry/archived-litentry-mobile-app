@@ -73,7 +73,18 @@ export function PolkaassemblyDiscussionDetail({
                   <Text category="c1"> commented </Text>
                   <Text category="c2">{moment(comment.created_at).fromNow()}</Text>
                 </View>
+                <Padder scale={0.5} />
                 <Text category="c1">{comment.content.trim()}</Text>
+                <Padder scale={0.5} />
+                <View style={globalStyles.rowAlignCenter}>
+                  <Text category="c1" appearance="hint">
+                    👍 {comment.likes.aggregate.count}{' '}
+                  </Text>
+                  <Text category="c1" appearance="hint">
+                    {' '}
+                    👎 {comment.dislikes.aggregate.count}
+                  </Text>
+                </View>
               </View>
             </View>
           ))}

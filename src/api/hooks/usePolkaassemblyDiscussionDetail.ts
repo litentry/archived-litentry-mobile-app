@@ -91,6 +91,16 @@ const discussionPostAndCommnetsQuery = print(gql`
       ...authorFields
       __typename
     }
+    likes: comment_reactions_aggregate(where: {reaction: {_eq: "👍"}}) {
+      aggregate {
+        count
+      }
+    }
+    dislikes: comment_reactions_aggregate(where: {reaction: {_eq: "👎"}}) {
+      aggregate {
+        count
+      }
+    }
     content
     created_at
     updated_at
@@ -163,6 +173,8 @@ type Comments = {
   created_at: Scalars['timestamptz'];
   id: Scalars['uuid'];
   updated_at: Scalars['timestamptz'];
+  likes: {aggregate: {count: Scalars['Int']}};
+  dislikes: {aggregate: {count: Scalars['Int']}};
 };
 
 type Onchain_Links = {
