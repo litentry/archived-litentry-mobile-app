@@ -68,8 +68,10 @@ export function PolkaassemblyDiscussionDetail({
                 </Text>
               </View>
               <View style={styles.commentRightSide}>
-                <View style={globalStyles.rowAlignCenter}>
-                  <Text category="c2">{comment.author?.username ?? ''}</Text>
+                <View style={styles.commentHeader}>
+                  <Text category="c2" numberOfLines={1} style={styles.commentAuthor}>
+                    {comment.author?.username ?? ''}
+                  </Text>
                   <Text category="c1"> commented </Text>
                   <Text category="c2">{moment(comment.created_at).fromNow()}</Text>
                 </View>
@@ -138,5 +140,13 @@ const styles = StyleSheet.create({
   },
   commentsContainer: {
     marginVertical: standardPadding * 3,
+  },
+  commentHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+  },
+  commentAuthor: {
+    maxWidth: '50%',
   },
 });
