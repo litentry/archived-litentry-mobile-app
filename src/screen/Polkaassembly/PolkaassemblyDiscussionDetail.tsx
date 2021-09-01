@@ -38,7 +38,7 @@ export function PolkaassemblyDiscussionDetail({
           <Text category="c1"> {moment(post.created_at).fromNow()}</Text>
         </View>
         <View style={styles.content}>
-          <Text style={styles.contentText}>{post.content ?? ''}</Text>
+          <Text style={styles.contentText}>{post.content?.trim() ?? ''}</Text>
         </View>
         <View style={styles.reactionRow}>
           {post.comments.length ? (

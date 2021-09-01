@@ -8,7 +8,7 @@ import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import * as React from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {OrderByType, topicIdMap, usePolkadotDiscussions} from 'src/api/hooks/usePolkadotDiscussions';
+import {OrderByType, topicIdMap, usePolkaassemblyDiscussions} from 'src/api/hooks/usePolkaassemblyDiscussions';
 import {PolkaassemblyDiscussionStackParamList} from 'src/navigation/navigation';
 import globalStyles, {standardPadding} from 'src/styles';
 
@@ -21,7 +21,7 @@ export function PolkaassemblyDiscussions({
   const [topicId, setTopicId] = React.useState<number>();
   const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
   const [filterMenuVisible, setFilterMenuVisible] = React.useState(false);
-  const {data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage} = usePolkadotDiscussions({
+  const {data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage} = usePolkaassemblyDiscussions({
     orderBy,
     topicId,
   });

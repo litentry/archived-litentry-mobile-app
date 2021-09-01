@@ -1,8 +1,8 @@
 import {useInfiniteQuery} from 'react-query';
 import {gql} from 'graphql-tag';
 import {print} from 'graphql';
-
-const endpoint = 'https://polkadot.polkassembly.io/v1/graphql';
+import {NetworkContext} from 'context/NetworkContext';
+import {useContext} from 'react';
 
 const orderByMap = {
   lastCommented: {last_update: {last_update: 'desc'}},
@@ -20,10 +20,22 @@ export const topicIdMap = {
 
 export type OrderByType = keyof typeof orderByMap;
 
-export function usePolkadotDiscussions({orderBy = 'lastCommented', topicId}: {orderBy: OrderByType; topicId?: number}) {
+export function usePolkaassemblyDiscussions({
+  orderBy = 'lastCommented',
+  topicId,
+}: {
+  orderBy: OrderByType;
+  topicId?: number;
+}) {
+  const {currentNetwork} = useContext(NetworkContext);
+
   return useInfiniteQuery(
     ['polkadot-discussions', {orderBy, topicId}],
     async ({pageParam = 0}: {pageParam?: number}) => {
+      // Only polkadot & kusama are supported
+      const network = currentNetwork.key === 'kusama' ? 'kusama' : 'polkadot';
+      const endpoint = `https://${network}.polkassembly.io/v1/graphql`;
+
       const variables = {
         limit: 20,
         offset: pageParam * 20,
