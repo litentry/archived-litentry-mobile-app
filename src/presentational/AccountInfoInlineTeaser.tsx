@@ -24,7 +24,7 @@ function AccountInfoInlineTeaser({display, judgements}: PropTypes) {
 }
 
 const styles = StyleSheet.create({
-  text: {fontFamily: monofontFamily, fontWeight: 'bold'},
+  text: {fontFamily: monofontFamily, fontWeight: 'bold', flexShrink: 1},
   container: {
     flex: 1,
     flexDirection: 'row',
