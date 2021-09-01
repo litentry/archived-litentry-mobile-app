@@ -1,6 +1,7 @@
 import {ApiPromise} from '@polkadot/api';
 import {u8aToString} from '@polkadot/util';
 import {Registration, AccountId} from '@polkadot/types/interfaces';
+import {DeriveAccountRegistration} from '@polkadot/api-derive/accounts/types';
 
 type IdentityInfo =
   | {
@@ -8,7 +9,7 @@ type IdentityInfo =
       hasJudgements: boolean;
       accountId: string | AccountId;
       display: string;
-      registration: Registration;
+      registration: DeriveAccountRegistration;
     }
   | {
       hasIdentity: false;
@@ -19,41 +20,26 @@ type IdentityInfo =
     };
 
 export async function getAccountIdentityInfo(api: ApiPromise, accountId: string): Promise<IdentityInfo> {
-  const registrationOption = await api.query.identity.identityOf(accountId);
-  const registration = registrationOption.unwrapOr(undefined);
+  const info = await api.derive.accounts.info(accountId);
 
-  if (registration) {
+  if (info) {
+    let display = accountId;
+    if (info.identity.displayParent) {
+      if (info.identity.display) {
+        display = `${info.identity.displayParent}/${info.identity.display}`;
+      } else {
+        display = `${info.identity.displayParent}/${info.identity.displayParent}`;
+      }
+    }
+
     return {
       hasIdentity: true,
-      hasJudgements: registration.judgements.length > 0,
+      hasJudgements: info.identity.judgements.length > 0,
       accountId,
-      registration,
-      display: getDisplay(registration, accountId),
+      registration: info.identity,
+      display,
     };
   }
 
-  const superAccountDataOption = await api.query.identity.superOf(accountId);
-  const superAccountData = superAccountDataOption.unwrapOr(undefined);
-
-  if (superAccountData) {
-    const [superAccountId] = superAccountData;
-    const superAccountOption = await api.query.identity.identityOf(superAccountId);
-    const superRegistration = superAccountOption.unwrapOr(undefined);
-
-    if (superRegistration) {
-      return {
-        hasIdentity: true,
-        hasJudgements: superRegistration.judgements.length > 0,
-        accountId: superAccountId,
-        registration: superRegistration,
-        display: getDisplay(superRegistration, accountId),
-      };
-    }
-  }
-
   return {hasIdentity: false, hasJudgements: false, accountId, display: undefined, registration: undefined};
-}
-
-function getDisplay(registration: Registration, accountId: string) {
-  return u8aToString(registration.info.display.asRaw) || accountId;
 }

@@ -3,12 +3,11 @@ import {StyleSheet, View} from 'react-native';
 import {RegistrationJudgement} from '@polkadot/types/interfaces';
 import {Text} from '@ui-kitten/components';
 import {monofontFamily} from 'src/styles';
-import {Vec} from '@polkadot/types';
 import JudgmentStatus from './JudgmentStatus';
 
 type PropTypes = {
   display: string;
-  judgements?: Vec<RegistrationJudgement>;
+  judgements?: RegistrationJudgement[];
 };
 
 function AccountInfoInlineTeaser({display, judgements}: PropTypes) {

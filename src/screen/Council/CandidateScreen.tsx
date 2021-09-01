@@ -3,7 +3,6 @@ import {View, StyleSheet, FlatList} from 'react-native';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {ListItem, Text, Icon, Divider, useTheme} from '@ui-kitten/components';
 import IdentityIcon from '@polkadot/reactnative-identicon';
-import {u8aToString} from '@polkadot/util';
 import type {AccountId} from '@polkadot/types/interfaces';
 import SafeView, {noTopEdges} from 'src/presentational/SafeView';
 import {DashboardStackParamList} from 'src/navigation/navigation';
@@ -41,13 +40,11 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
 
   const judgements = identityInfoData?.hasJudgements ? identityInfoData.registration.judgements : undefined;
   const display = identityInfoData?.hasIdentity ? identityInfoData.display : accountId;
-  const legal = identityInfoData?.hasIdentity ? u8aToString(identityInfoData.registration.info.legal.asRaw) : undefined;
-  const email = identityInfoData?.hasIdentity ? u8aToString(identityInfoData.registration.info.email.asRaw) : undefined;
-  const twitter = identityInfoData?.hasIdentity
-    ? u8aToString(identityInfoData.registration.info.twitter.asRaw)
-    : undefined;
-  const riot = identityInfoData?.hasIdentity ? u8aToString(identityInfoData.registration.info.riot.asRaw) : undefined;
-  const web = identityInfoData?.hasIdentity ? u8aToString(identityInfoData.registration.info.web.asRaw) : undefined;
+  const legal = identityInfoData?.hasIdentity ? identityInfoData.registration.legal : undefined;
+  const email = identityInfoData?.hasIdentity ? identityInfoData.registration.email : undefined;
+  const twitter = identityInfoData?.hasIdentity ? identityInfoData.registration.twitter : undefined;
+  const riot = identityInfoData?.hasIdentity ? identityInfoData.registration.riot : undefined;
+  const web = identityInfoData?.hasIdentity ? identityInfoData.registration.web : undefined;
 
   return (
     <SafeView edges={noTopEdges}>
