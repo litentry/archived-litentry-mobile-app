@@ -29,7 +29,7 @@ export function PolkaassemblyDiscussionDetail({
 
   return (
     <SafeView edges={noTopEdges}>
-      <ScrollView style={styles.container}>
+      <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
         <Text category="h6">{post.title ?? ''}</Text>
         <View style={styles.postDetailRow}>
           <Text category="c2">{post.author?.username ?? ''} </Text>
@@ -93,11 +93,14 @@ export function PolkaassemblyDiscussionDetail({
             </View>
           ))}
         </View>
-        <View style={globalStyles.rowAlignCenter}>
+        <View style={styles.footer}>
           <Icon style={globalStyles.icon15} name="info-outline" fill={theme['text-hint-color']} />
-          <Text appearance="hint"> To comment, like or subscribe please </Text>
+          <Text appearance="hint" category="c1">
+            {' '}
+            To comment, like or subscribe please{' '}
+          </Text>
           <TouchableOpacity onPress={() => Linking.openURL(externalURL)}>
-            <Text appearance="hint" category="s1">
+            <Text appearance="hint" category="c2">
               login
             </Text>
           </TouchableOpacity>
@@ -110,6 +113,8 @@ export function PolkaassemblyDiscussionDetail({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  contentContainer: {
     padding: standardPadding * 2,
   },
   postDetailRow: {
@@ -159,5 +164,10 @@ const styles = StyleSheet.create({
   },
   commentAuthor: {
     maxWidth: '50%',
+  },
+  footer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
