@@ -30,7 +30,7 @@ export function usePolkaassemblyDiscussions({
   const {currentNetwork} = useContext(NetworkContext);
 
   return useInfiniteQuery(
-    ['polkadot-discussions', {orderBy, topicId}],
+    ['polkadot-discussions', {orderBy, topicId, network: currentNetwork.key}],
     async ({pageParam = 0}: {pageParam?: number}) => {
       // Only polkadot & kusama are supported
       const network = currentNetwork.key === 'kusama' ? 'kusama' : 'polkadot';
