@@ -1,7 +1,6 @@
 import {ApiPromise} from '@polkadot/api';
 import {SubmittableExtrinsic} from '@polkadot/api/submittable/types';
-import {DispatchError} from '@polkadot/types/interfaces';
-import {ITuple, SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
+import {SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
 import {BN_ZERO} from '@polkadot/util';
 import {Icon, IconProps, Layout, Text} from '@ui-kitten/components';
 import {PreviewStep} from 'context/TxContext/PreviewStep';
@@ -84,42 +83,28 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
       });
 
       await new Promise((resolve, reject) => {
-        f.send(({status, events}) => {
-          if (status.isInBlock || status.isFinalized) {
-            const errors = events
-              // find/filter for failed events
-              .filter(({event: {section, method}}) => section === 'system' && method === 'ExtrinsicFailed')
-              // we know that data for system.ExtrinsicFailed is
-              // (DispatchError, DispatchInfo)
-              .map((eventRecord) => {
-                const [dispatchError] = eventRecord.event.data as unknown as ITuple<[DispatchError]>;
-
-                if (dispatchError.isModule) {
-                  // for module errors, we have the section indexed, lookup
-                  const decoded = api.registry.findMetaError(dispatchError.asModule);
-                  const {docs} = decoded;
-
-                  return docs.join(' ').trim();
-                } else {
-                  // Other, CannotLookup, BadOrigin, no extra info
-                  return dispatchError?.toString();
-                }
-              });
-
-            if (errors.length === 0 && status.isFinalized) {
-              dispatch({type: 'NEXT_STEP'});
-              resolve(undefined);
+        f.send((result) => {
+          if (result.isFinalized && !result.isError) {
+            dispatch({type: 'NEXT_STEP'});
+            resolve(undefined);
+          }
+          if (result.isError && result.dispatchError) {
+            let error;
+            if (result.dispatchError.isModule) {
+              // for module errors, we have the section indexed, lookup
+              const decoded = api.registry.findMetaError(result.dispatchError.asModule);
+              const {docs} = decoded;
+              error = docs.join(' ').trim();
+            } else {
+              error = result.dispatchError.toString();
             }
-
-            if (errors[0]) {
-              dispatch({type: 'ERROR', payload: errors[0]});
-              reject();
-            }
+            dispatch({type: 'ERROR', payload: error});
+            reject();
           }
         });
       });
     } catch (e) {
-      console.warn(e);
+      console.warn('transaction error', e);
       dispatch({type: 'ERROR', payload: e});
     }
   }, []);
@@ -227,10 +212,10 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
     }
   }, [state]);
 
-  const value = useMemo(() => ({start}), [start]);
+  const contextValue: TxContextValueType = useMemo(() => ({start}), [start]);
 
   return (
-    <TxContext.Provider value={value}>
+    <TxContext.Provider value={contextValue}>
       {children}
       <Modalize
         ref={modalRef}
