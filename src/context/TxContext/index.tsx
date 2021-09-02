@@ -341,7 +341,6 @@ type Action =
   | {type: 'NEXT_STEP'}
   | {type: 'ERROR'; payload: string}
   | {type: 'WARNING'; payload: string}
-  | {type: 'WARNING'; payload: string}
   | {
       type: 'PREVIEW';
       payload: {
