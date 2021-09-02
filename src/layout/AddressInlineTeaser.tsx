@@ -12,14 +12,12 @@ type PropTypes = {
 function AddressInlineTeaser(props: PropTypes) {
   const {address} = props;
   const {data} = useAccountIdentityInfo(address);
-  const display = data?.hasIdentity ? data.display : address;
-  const judgements = data?.hasJudgements ? data.registration.judgements : undefined;
 
   return (
     <View style={styles.container}>
       <Identicon value={address} size={20} />
       <Padder scale={0.5} />
-      <AccountInfoInlineTeaser display={display} judgements={judgements} />
+      {data && <AccountInfoInlineTeaser identity={data} />}
     </View>
   );
 }

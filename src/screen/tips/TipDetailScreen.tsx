@@ -135,15 +135,8 @@ function TipDetailScreen({route}: ScreenProps) {
               title={() => {
                 return (
                   <Account id={tipper.toString()}>
-                    {({info, registration, accountId}) => {
-                      const display = u8aToString(info?.display.asRaw);
-                      return display ? (
-                        <AccountInfoInlineTeaser display={display} judgements={registration?.judgements} />
-                      ) : (
-                        <Text numberOfLines={1} ellipsizeMode="middle" category={'c2'}>
-                          {String(accountId)}
-                        </Text>
-                      );
+                    {(identity) => {
+                      return identity ? <AccountInfoInlineTeaser identity={identity} /> : <Text>{tipper}</Text>;
                     }}
                   </Account>
                 );

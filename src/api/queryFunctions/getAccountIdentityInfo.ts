@@ -2,7 +2,7 @@ import {ApiPromise} from '@polkadot/api';
 import {DeriveAccountRegistration} from '@polkadot/api-derive/accounts/types';
 import {AccountId} from '@polkadot/types/interfaces';
 
-type IdentityInfo =
+export type IdentityInfo =
   | {
       hasIdentity: true;
       hasJudgements: boolean;

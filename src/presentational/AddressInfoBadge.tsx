@@ -32,7 +32,11 @@ function AddressInfoBadge({address, network}: PropTypes) {
           </Text>
           <View style={globalStyles.rowContainer}>
             {registration?.judgements.map((judgement) => (
-              <JudgmentStatus key={String(judgement[0])} judgement={judgement} />
+              <JudgmentStatus
+                key={String(judgement[0])}
+                judgement={judgement}
+                hasParent={Boolean(registration.parent)}
+              />
             ))}
           </View>
           <Icon name="arrow-down" style={styles.icon} fill="#ccc" animation="pulse" />
