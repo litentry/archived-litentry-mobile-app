@@ -51,7 +51,7 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
     if (!apiPromise?.isConnected && state.step === 'submitting') {
       dispatch({
         type: 'WARNING',
-        payload: 'The transaction was sent but you got disconnected from the chain. Please verify later',
+        payload: 'The transaction was sent but you got disconnected from the chain. Please verify later.',
       });
     }
   }, [apiPromise?.isConnected, state.step]);
