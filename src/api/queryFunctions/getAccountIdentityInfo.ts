@@ -1,7 +1,6 @@
 import {ApiPromise} from '@polkadot/api';
-import {u8aToString} from '@polkadot/util';
-import {Registration, AccountId} from '@polkadot/types/interfaces';
 import {DeriveAccountRegistration} from '@polkadot/api-derive/accounts/types';
+import {AccountId} from '@polkadot/types/interfaces';
 
 type IdentityInfo =
   | {
@@ -15,7 +14,7 @@ type IdentityInfo =
       hasIdentity: false;
       hasJudgements: false;
       accountId: string;
-      display: undefined;
+      display: string;
       registration: undefined;
     };
 
@@ -41,5 +40,5 @@ export async function getAccountIdentityInfo(api: ApiPromise, accountId: string)
     };
   }
 
-  return {hasIdentity: false, hasJudgements: false, accountId, display: undefined, registration: undefined};
+  return {hasIdentity: false, hasJudgements: false, accountId, display: accountId, registration: undefined};
 }
