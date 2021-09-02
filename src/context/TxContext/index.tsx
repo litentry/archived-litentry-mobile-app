@@ -1,21 +1,23 @@
+import React, {createContext, useCallback, useEffect, useMemo, useReducer, useRef} from 'react';
+import {Dimensions, StyleSheet} from 'react-native';
+import {Modalize} from 'react-native-modalize';
+import QRCodeScanner from 'react-native-qrcode-scanner';
 import {ApiPromise} from '@polkadot/api';
 import {SubmittableExtrinsic} from '@polkadot/api/submittable/types';
 import {SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
 import {BN_ZERO} from '@polkadot/util';
 import {Icon, IconProps, Layout, Text} from '@ui-kitten/components';
+import {useApi} from 'context/ChainApiContext';
 import {PreviewStep} from 'context/TxContext/PreviewStep';
 import {get} from 'lodash';
 import ErrorDialog from 'presentational/ErrorDialog';
 import LoadingView from 'presentational/LoadingView';
 import SuccessDialog from 'presentational/SuccessDialog';
 import TxPayloadQr from 'presentational/TxPayloadQr';
-import React, {createContext, useCallback, useMemo, useReducer, useRef} from 'react';
-import {Dimensions, StyleSheet} from 'react-native';
-import {Modalize} from 'react-native-modalize';
-import QRCodeScanner from 'react-native-qrcode-scanner';
 import {formatCallMeta} from 'src/packages/call_inspector/CallInspector';
 import QrSigner from 'src/service/QrSigner';
 import globalStyles, {standardPadding} from 'src/styles';
+import WarningDialog from 'presentational/WarningDialog';
 
 let id = 0;
 
@@ -43,6 +45,16 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
   const modalRef = useRef<Modalize>(null);
   const signatureRef = useRef<(value: SignerResult) => void>();
   const [state, dispatch] = useReducer(reducer, initialState);
+  const {api: apiPromise} = useApi();
+
+  useEffect(() => {
+    if (!apiPromise?.isConnected && state.step === 'submitting') {
+      dispatch({
+        type: 'WARNING',
+        payload: 'The transaction was sent but you got disconnected from the chain. Please verify later',
+      });
+    }
+  }, [apiPromise?.isConnected, state.step]);
 
   const start = useCallback(async (config: StartConfig) => {
     const {api, txMethod, params, address} = config;
@@ -207,6 +219,14 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
             <ErrorDialog text="Tx Failed" msg={state.error} />
           </Layout>
         );
+
+      case 'warning':
+        return (
+          <Layout style={styles.infoContainer}>
+            <WarningDialog text="Tx Sent" msg={state.warning} />
+          </Layout>
+        );
+
       default:
         return null;
     }
@@ -311,7 +331,8 @@ type State =
       partialFee: number;
     }
   | {step: 'payload'; txPayload: SignerPayloadJSON}
-  | {step: 'error'; error: string};
+  | {step: 'error'; error: string}
+  | {step: 'warning'; warning: string};
 
 const initialState: State = {step: 'none'};
 
@@ -319,6 +340,8 @@ type Action =
   | {type: 'RESET'}
   | {type: 'NEXT_STEP'}
   | {type: 'ERROR'; payload: string}
+  | {type: 'WARNING'; payload: string}
+  | {type: 'WARNING'; payload: string}
   | {
       type: 'PREVIEW';
       payload: {
@@ -337,6 +360,9 @@ function reducer(state: State, action: Action): State {
 
     case 'ERROR':
       return {step: 'error', error: action.payload};
+
+    case 'WARNING':
+      return {step: 'warning', warning: action.payload};
 
     case 'PREVIEW':
       return {step: 'preview', ...action.payload};
