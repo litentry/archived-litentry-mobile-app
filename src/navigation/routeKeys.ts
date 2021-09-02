@@ -22,6 +22,7 @@ export const notificationSettingsScreen = 'Notification' as const;
 export const webviewScreen = 'Webview' as const;
 export const devScreen = 'Dev Kit' as const;
 export const myIdentityScreen = 'My Identity' as const;
+export const registerSubIdentitiesScreen = 'Register Sub-Identities' as const;
 export const councilScreen = 'Council' as const;
 export const candidateScreen = 'Candidate' as const;
 export const treasuryScreen = 'Treasury' as const;

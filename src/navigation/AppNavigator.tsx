@@ -23,6 +23,7 @@ import RegistrarListScreen from 'screen/RegistrarListScreen';
 import {SubmitTipScreen} from 'screen/SubmitTipScreen';
 import TipDetailScreen from 'screen/tips/TipDetailScreen';
 import TipsScreen from 'screen/tips/TipsScreen';
+import {RegisterSubIdentitiesScreen} from 'screen/subIdentities/RegisterSubIdentitiesScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
 import WebviewScreen from 'screen/WebviewScreen';
 import {useTheme} from 'src/context/ThemeContext';
@@ -76,6 +77,7 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.submitTipScreen} component={SubmitTipScreen} />
       <DashboardStack.Screen name={routeKeys.motionsScreen} component={MotionsScreen} />
       <DashboardStack.Screen name={routeKeys.myIdentityScreen} component={MyIdentityScreen} />
+      <DashboardStack.Screen name={routeKeys.registerSubIdentitiesScreen} component={RegisterSubIdentitiesScreen} />
       <DashboardStack.Screen name={routeKeys.democracyScreen} component={DemocracyScreen} />
       <DashboardStack.Screen name={routeKeys.referendumScreen} component={ReferendumScreen} />
       <DashboardStack.Screen
