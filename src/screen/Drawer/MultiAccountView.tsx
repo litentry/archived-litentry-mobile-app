@@ -12,6 +12,7 @@ import {addAccountScreen, balanceScreen, myIdentityScreen, registerSubIdentities
 import globalStyles, {colorGray} from 'src/styles';
 import {SupportedNetworkType} from 'src/types';
 import {useApiTx} from 'src/api/hooks/useApiTx';
+import {useQueryClient} from 'react-query';
 
 export function MultiAccountView() {
   const navigation = useNavigation();
@@ -68,6 +69,7 @@ function AccountItem({
   const {data: identityInfoData} = useAccountIdentityInfo(account.address);
   const navigation = useNavigation<NavigationProps>();
   const startTx = useApiTx();
+  const queryClient = useQueryClient();
 
   const hasIdentity = identityInfoData !== undefined && identityInfoData.hasIdentity;
 
@@ -115,6 +117,8 @@ function AccountItem({
               address: account.address,
               txMethod: 'identity.clearIdentity',
               params: [],
+            }).then(() => {
+              queryClient.invalidateQueries(['account_identity', account.address]);
             });
           },
           style: 'destructive',
