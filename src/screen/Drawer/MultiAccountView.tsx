@@ -8,7 +8,7 @@ import AddressInfoBadge from 'presentational/AddressInfoBadge';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {Account, useAccounts} from 'src/context/AccountsContext';
 import {AppStackParamList, DashboardStackParamList} from 'src/navigation/navigation';
-import {addAccountScreen, balanceScreen, myIdentityScreen} from 'src/navigation/routeKeys';
+import {addAccountScreen, balanceScreen, myIdentityScreen, registerSubIdentitiesScreen} from 'src/navigation/routeKeys';
 import globalStyles, {colorGray} from 'src/styles';
 import {SupportedNetworkType} from 'src/types';
 import {useApiTx} from 'src/api/hooks/useApiTx';
@@ -69,7 +69,7 @@ function AccountItem({
   const navigation = useNavigation<NavigationProps>();
   const startTx = useApiTx();
 
-  const showClearIdentity = identityInfoData !== undefined && identityInfoData.hasIdentity;
+  const hasIdentity = identityInfoData !== undefined && identityInfoData.hasIdentity;
 
   const handleMenuItemSelect = ({row}: {row: number}) => {
     setVisible(false);
@@ -104,6 +104,9 @@ function AccountItem({
       navigation.navigate(myIdentityScreen, {address: account.address});
     }
     if (row === 3) {
+      navigation.navigate(registerSubIdentitiesScreen, {address: account.address});
+    }
+    if (row === 4) {
       Alert.alert('Clear Identity', `Clear identity of account: \n ${account.address}`, [
         {
           text: 'Yes',
@@ -157,7 +160,15 @@ function AccountItem({
             title="Set identity"
             accessoryLeft={(iconProps) => <Icon {...iconProps} name="person-add-outline" />}
           />
-          {showClearIdentity ? (
+          {hasIdentity ? (
+            <MenuItem
+              title="Set Sub-identities"
+              accessoryLeft={(iconProps) => <Icon {...iconProps} name="people-outline" />}
+            />
+          ) : (
+            <View />
+          )}
+          {hasIdentity ? (
             <MenuItem
               title="Clear Identity"
               accessoryLeft={(iconProps) => <Icon {...iconProps} name="person-remove-outline" />}
