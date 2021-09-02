@@ -23,7 +23,7 @@ export async function getAccountIdentityInfo(api: ApiPromise, accountId: string)
   const info = await api.derive.accounts.info(accountId);
 
   if (info) {
-    let display = accountId;
+    let display = info.identity.display ?? accountId;
     if (info.identity.displayParent) {
       if (info.identity.display) {
         display = `${info.identity.displayParent}/${info.identity.display}`;
