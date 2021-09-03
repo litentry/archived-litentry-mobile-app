@@ -21,7 +21,7 @@ function MyIdentity() {
     }
 
     if (data?.hasJudgements) {
-      return <DisplayJudgement display={data.display} registration={data.registration} address={address} />;
+      return <DisplayJudgement identity={data} />;
     }
 
     if (!data?.hasIdentity) {

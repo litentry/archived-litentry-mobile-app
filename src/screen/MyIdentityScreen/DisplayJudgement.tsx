@@ -1,6 +1,5 @@
 import Identicon from '@polkadot/reactnative-identicon';
-import {AccountId, Registration} from '@polkadot/types/interfaces';
-import {u8aToString} from '@polkadot/util';
+import {AccountId} from '@polkadot/types/interfaces';
 import {Divider, Icon, IconProps, Layout, ListItem, Menu, MenuGroup, MenuItem, Text} from '@ui-kitten/components';
 import {NetworkContext} from 'context/NetworkContext';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
@@ -15,13 +14,12 @@ import WebView from 'react-native-webview';
 import {useSubAccounts} from 'src/api/hooks/useSubAccounts';
 import {buildAddressDetailUrl} from 'src/service/Polkasembly';
 import globalStyles, {standardPadding} from 'src/styles';
+import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 
 const {height} = Dimensions.get('window');
 
 type PropTypes = {
-  address?: string;
-  display: string;
-  registration: Registration;
+  identity: IdentityInfo;
 };
 
 const SubAccountsIcon = (props: IconProps) => <Icon {...props} pack="ionic" name="ios-people" />;
@@ -29,22 +27,31 @@ const SubAccountsIcon = (props: IconProps) => <Icon {...props} pack="ionic" name
 const MoreIcon = (props: IconProps) => <Icon {...props} pack="ionic" name="ios-apps-outline" />;
 
 function DisplayJudgement(props: PropTypes) {
-  const {display, registration, address} = props;
-  const judgementCount = registration.judgements.length || 0;
+  const {identity} = props;
+  const {display, accountId, registration} = identity;
+  const address = accountId.toString();
+
   const {currentNetwork} = useContext(NetworkContext);
+  const modalRef = useRef<Modalize>(null);
+  const {data: subAccounts} = useSubAccounts(address);
+
+  if (!registration) {
+    return null;
+  }
+
+  const judgements = registration.judgements;
+  const judgementCount = judgements?.length || 0;
   const successMsg = `This address has ${judgementCount} judgement${
     judgementCount > 1 ? 's' : ''
-  } from Registrar ${registration.judgements.map((judgement) => `#${judgement[0]}`).join(',')}. It's all set. 🎉`;
+  } from Registrar ${judgements?.map((judgement) => `#${judgement[0]}`).join(',')}. It's all set. 🎉`;
 
-  const pendingJudgement = registration.judgements.find((judgement) => {
+  const pendingJudgement = judgements.find((judgement) => {
     if (judgement[1].isFeePaid) {
       return true;
     }
     return false;
   });
 
-  const modalRef = useRef<Modalize>(null);
-  const {data: subAccounts} = useSubAccounts(address);
   const subAccountsArray = subAccounts?.[1];
 
   return (
@@ -82,16 +89,19 @@ function DisplayJudgement(props: PropTypes) {
               </Text>
             )}
           />
-          {registration &&
-            registration.judgements[0] && ( // bug
-              <ListItem
-                title="Judgment"
-                accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="ribbon-outline" pack="ionic" />}
-                accessoryRight={() =>
-                  registration?.judgements[0] ? <JudgmentStatus judgement={registration.judgements[0]} /> : <View />
-                }
-              />
-            )}
+          {judgements[0] && ( // bug
+            <ListItem
+              title="Judgment"
+              accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="ribbon-outline" pack="ionic" />}
+              accessoryRight={() =>
+                judgements[0] ? (
+                  <JudgmentStatus judgement={judgements[0]} hasParent={Boolean(registration.parent)} />
+                ) : (
+                  <View />
+                )
+              }
+            />
+          )}
           <Menu style={styles.menu}>
             <MenuGroup title=" Identity detail" accessoryLeft={MoreIcon}>
               <MenuItem
@@ -99,7 +109,7 @@ function DisplayJudgement(props: PropTypes) {
                 accessoryLeft={(p) => <Icon {...p} name="award-outline" />}
                 accessoryRight={() => (
                   <Text selectable category="label">
-                    {u8aToString(registration.info.legal.asRaw) || 'Unset'}
+                    {registration.legal || 'Unset'}
                   </Text>
                 )}
               />
@@ -108,7 +118,7 @@ function DisplayJudgement(props: PropTypes) {
                 accessoryLeft={(p) => <Icon {...p} name="email-outline" />}
                 accessoryRight={() => (
                   <Text selectable category="label">
-                    {u8aToString(registration.info.email.asRaw) || 'Unset'}
+                    {registration.email || 'Unset'}
                   </Text>
                 )}
               />
@@ -117,7 +127,7 @@ function DisplayJudgement(props: PropTypes) {
                 accessoryLeft={(p) => <Icon {...p} name="twitter-outline" />}
                 accessoryRight={() => (
                   <Text selectable category="label">
-                    {u8aToString(registration.info.twitter.asRaw) || 'Unset'}
+                    {registration.twitter || 'Unset'}
                   </Text>
                 )}
               />
@@ -126,7 +136,7 @@ function DisplayJudgement(props: PropTypes) {
                 accessoryLeft={(p) => <Icon {...p} name="message-square-outline" />}
                 accessoryRight={() => (
                   <Text selectable category="label">
-                    {u8aToString(registration.info.riot.asRaw) || 'Unset'}
+                    {registration.riot || 'Unset'}
                   </Text>
                 )}
               />
@@ -135,7 +145,7 @@ function DisplayJudgement(props: PropTypes) {
                 accessoryLeft={(p) => <Icon {...p} name="browser-outline" />}
                 accessoryRight={() => (
                   <Text selectable category="label">
-                    {u8aToString(registration.info.web.asRaw) || 'Unset'}
+                    {registration.web || 'Unset'}
                   </Text>
                 )}
               />

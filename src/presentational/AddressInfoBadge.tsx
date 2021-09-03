@@ -1,4 +1,3 @@
-import {u8aToString} from '@polkadot/util';
 import {Button, Divider, Icon, Layout, ListItem, Text} from '@ui-kitten/components';
 import React, {useCallback, useRef} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
@@ -23,7 +22,6 @@ function AddressInfoBadge({address, network}: PropTypes) {
   }, []);
 
   const registration = data?.hasIdentity ? data?.registration : undefined;
-  const identityInfo = registration?.info;
 
   return (
     <>
@@ -34,7 +32,11 @@ function AddressInfoBadge({address, network}: PropTypes) {
           </Text>
           <View style={globalStyles.rowContainer}>
             {registration?.judgements.map((judgement) => (
-              <JudgmentStatus key={String(judgement[0])} judgement={judgement} />
+              <JudgmentStatus
+                key={String(judgement[0])}
+                judgement={judgement}
+                hasParent={Boolean(registration.parent)}
+              />
             ))}
           </View>
           <Icon name="arrow-down" style={styles.icon} fill="#ccc" animation="pulse" />
@@ -68,7 +70,7 @@ function AddressInfoBadge({address, network}: PropTypes) {
               accessoryLeft={(props) => <Icon {...props} name="award-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
-                  {u8aToString(identityInfo?.legal.asRaw) || 'Unset'}
+                  {registration?.legal || 'Unset'}
                 </Text>
               )}
             />
@@ -77,7 +79,7 @@ function AddressInfoBadge({address, network}: PropTypes) {
               accessoryLeft={(props) => <Icon {...props} name="email-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
-                  {u8aToString(identityInfo?.email.asRaw) || 'Unset'}
+                  {registration?.email || 'Unset'}
                 </Text>
               )}
             />
@@ -86,7 +88,7 @@ function AddressInfoBadge({address, network}: PropTypes) {
               accessoryLeft={(props) => <Icon {...props} name="twitter-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
-                  {u8aToString(identityInfo?.twitter.asRaw) || 'Unset'}
+                  {registration?.twitter || 'Unset'}
                 </Text>
               )}
             />
@@ -95,7 +97,7 @@ function AddressInfoBadge({address, network}: PropTypes) {
               accessoryLeft={(props) => <Icon {...props} name="message-square-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
-                  {u8aToString(identityInfo?.riot.asRaw) || 'Unset'}
+                  {registration?.riot || 'Unset'}
                 </Text>
               )}
             />
@@ -104,7 +106,7 @@ function AddressInfoBadge({address, network}: PropTypes) {
               accessoryLeft={(props) => <Icon {...props} name="browser-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
-                  {u8aToString(identityInfo?.web.asRaw) || 'Unset'}
+                  {registration?.web || 'Unset'}
                 </Text>
               )}
             />
