@@ -272,7 +272,7 @@ PODS:
     - React
   - react-native-randombytes (3.6.1):
     - React-Core
-  - react-native-safe-area-context (3.3.0):
+  - react-native-safe-area-context (3.3.2):
     - React-Core
   - react-native-sensitive-info (5.5.8):
     - React
@@ -603,7 +603,7 @@ SPEC CHECKSUMS:
   react-native-camera: 85210eb59b028e9430d29fa33b0252c56113beff
   react-native-in-app-message: 7a54e2fd7a490e5c33857bbbb260f855205433db
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
-  react-native-safe-area-context: 61c8c484a3a9e7d1fda19f7b1794b35bbfd2262a
+  react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
   react-native-sensitive-info: 400c6e3d27945e15c8cddb5b4b92233c85ee06f8
   react-native-substrate-sign: 77515bc7fe68e2f8bd23f1aba8ecc40ef27bb50e
   react-native-webview: 133a6a5149f963259646e710b4545c67ef35d7c9
