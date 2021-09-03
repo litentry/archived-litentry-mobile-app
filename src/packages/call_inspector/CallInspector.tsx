@@ -30,16 +30,18 @@ export function CallInspector({call}: {call: Call}) {
               if (p.type.type === 'AccountId' && p.value) {
                 return (
                   <Account id={p.value.toString()} key={key}>
-                    {({info, accountId}) => {
-                      return (
+                    {(identity) => {
+                      return identity ? (
                         <>
                           <Text>{p.name}: </Text>
-                          <Identicon value={accountId} size={20} />
+                          <Identicon value={identity.accountId} size={20} />
                           <Padder scale={0.3} />
                           <Text numberOfLines={1} category={'c1'} style={{flex: 1}}>
-                            {info ? u8aToString(info.display.asRaw) : accountId.toString()}
+                            {identity.display}
                           </Text>
                         </>
+                      ) : (
+                        <Text>{p.value?.toString()}</Text>
                       );
                     }}
                   </Account>

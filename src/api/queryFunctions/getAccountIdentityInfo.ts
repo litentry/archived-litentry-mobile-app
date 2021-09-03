@@ -2,7 +2,7 @@ import {ApiPromise} from '@polkadot/api';
 import {DeriveAccountRegistration} from '@polkadot/api-derive/accounts/types';
 import {AccountId} from '@polkadot/types/interfaces';
 
-type IdentityInfo =
+export type IdentityInfo =
   | {
       hasIdentity: true;
       hasJudgements: boolean;
@@ -22,14 +22,9 @@ export async function getAccountIdentityInfo(api: ApiPromise, accountId: string)
   const info = await api.derive.accounts.info(accountId);
 
   if (info) {
-    let display = info.identity.display ?? accountId;
-    if (info.identity.displayParent) {
-      if (info.identity.display) {
-        display = `${info.identity.displayParent}/${info.identity.display}`;
-      } else {
-        display = `${info.identity.displayParent}/${info.identity.displayParent}`;
-      }
-    }
+    const display = info.identity.displayParent
+      ? `${info.identity.displayParent}/${info.identity.display || info.identity.displayParent}`
+      : info.identity.display ?? accountId;
 
     return {
       hasIdentity: true,

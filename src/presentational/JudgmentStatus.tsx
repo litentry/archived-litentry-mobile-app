@@ -1,17 +1,18 @@
-import React, {useState} from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
 import {RegistrationJudgement} from '@polkadot/types/interfaces';
 import {Icon, Tooltip} from '@ui-kitten/components';
-import {standardPadding, colorGreen} from 'src/styles';
+import React, {useState} from 'react';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 import {mapStatusText} from 'src/identityUtils';
+import {colorGreen} from 'src/styles';
 
 type PropTypes = {
   judgement: RegistrationJudgement;
+  hasParent: boolean;
 };
 
 function JudgmentStatus(props: PropTypes) {
-  const {judgement} = props;
-  const status = mapStatusText(judgement[1]);
+  const {judgement, hasParent} = props;
+  const status = mapStatusText(judgement[1], hasParent);
   const [visible, setVisible] = useState(false);
 
   const renderIcon = () => (
