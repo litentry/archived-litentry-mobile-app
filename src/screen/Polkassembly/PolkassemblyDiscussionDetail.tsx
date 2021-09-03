@@ -55,11 +55,10 @@ export function PolkassemblyDiscussionDetail({
             </>
           ) : null}
           <Text category="c1" appearance="hint">
-            👍 {post.likes.aggregate.count}{' '}
+            {`👍 ${post.likes.aggregate.count} `}
           </Text>
           <Text category="c1" appearance="hint">
-            {' '}
-            👎 {post.dislikes.aggregate.count}
+            {` 👎 ${post.dislikes.aggregate.count}`}
           </Text>
         </View>
         <View style={styles.commentsContainer}>
@@ -83,11 +82,10 @@ export function PolkassemblyDiscussionDetail({
                 <Padder scale={0.5} />
                 <View style={globalStyles.rowAlignCenter}>
                   <Text category="c1" appearance="hint">
-                    👍 {comment.likes.aggregate.count}{' '}
+                    {`👍 ${comment.likes.aggregate.count} `}
                   </Text>
                   <Text category="c1" appearance="hint">
-                    {' '}
-                    👎 {comment.dislikes.aggregate.count}
+                    {` 👎 ${comment.dislikes.aggregate.count}`}
                   </Text>
                 </View>
               </View>
@@ -97,8 +95,7 @@ export function PolkassemblyDiscussionDetail({
         <View style={styles.footer}>
           <Icon style={globalStyles.icon15} name="info-outline" fill={theme['text-hint-color']} />
           <Text appearance="hint" category="c1">
-            {' '}
-            To comment, like or subscribe please{' '}
+            {` To comment, like or subscribe please `}
           </Text>
           <TouchableOpacity onPress={() => Linking.openURL(externalURL)}>
             <Text appearance="hint" category="c2">
