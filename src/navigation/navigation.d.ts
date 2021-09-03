@@ -21,8 +21,9 @@ import {
   webviewScreen,
   referendumScreen,
   democracyProposalScreen,
-  registerSubIdentitiesScreen,
-  polkadotDiscussions,
+  polkassemblyDiscussions,
+  polkassemblyDiscussionDetail,
+  polkassemblyDiscussionsNavigator,
   registerSubIdentitiesScreen,
 } from 'src/navigation/routeKeys';
 
@@ -57,7 +58,12 @@ type DrawerParamList = {
   [webviewScreen]: {uri: string; title: string};
   [devScreen]: undefined;
   [notificationSettingsScreen]: undefined;
-  [polkadotDiscussions]: undefined;
+  [polkassemblyDiscussionsNavigator]: undefined;
+};
+
+type PolkassemblyDiscussionStackParamList = {
+  [polkassemblyDiscussions]: undefined;
+  [polkassemblyDiscussionDetail]: {id: number};
 };
 
 type AppStackParamList = {
@@ -67,7 +73,11 @@ type AppStackParamList = {
   [balanceScreen]: {address: string};
 };
 
-type CompleteNavigatorParamList = AppStackParamList & DrawerParamList & RootParamList & DashboardStackParamList;
+type CompleteNavigatorParamList = AppStackParamList &
+  DrawerParamList &
+  RootParamList &
+  DashboardStackParamList &
+  PolkassemblyDiscussionStackParamList;
 
 declare global {
   namespace ReactNavigation {
