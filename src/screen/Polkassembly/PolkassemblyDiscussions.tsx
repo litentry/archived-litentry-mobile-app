@@ -8,20 +8,21 @@ import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import * as React from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {OrderByType, topicIdMap, usePolkaassemblyDiscussions} from 'src/api/hooks/usePolkaassemblyDiscussions';
-import {PolkaassemblyDiscussionStackParamList} from 'src/navigation/navigation';
+import {OrderByType, topicIdMap, usePolkassemblyDiscussions} from 'src/api/hooks/usePolkassemblyDiscussions';
+import {PolkassemblyDiscussionStackParamList} from 'src/navigation/navigation';
+import {polkassemblyDiscussionDetail} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
 
-export function PolkaassemblyDiscussions({
+export function PolkassemblyDiscussions({
   navigation,
 }: {
-  navigation: NavigationProp<PolkaassemblyDiscussionStackParamList>;
+  navigation: NavigationProp<PolkassemblyDiscussionStackParamList>;
 }) {
   const [orderBy, setOrderBy] = React.useState<OrderByType>('lastCommented');
   const [topicId, setTopicId] = React.useState<number>();
   const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
   const [filterMenuVisible, setFilterMenuVisible] = React.useState(false);
-  const {data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage} = usePolkaassemblyDiscussions({
+  const {data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage} = usePolkassemblyDiscussions({
     orderBy,
     topicId,
   });
@@ -128,7 +129,7 @@ export function PolkaassemblyDiscussions({
           </View>
         )}
         renderItem={({item}) => (
-          <Card onPress={() => navigation.navigate('PolkaassemblyDiscussionDetail', {id: item.id})}>
+          <Card onPress={() => navigation.navigate(polkassemblyDiscussionDetail, {id: item.id})}>
             <Text category="s2" numberOfLines={1}>
               {item.title ?? 'unknown title'}
             </Text>

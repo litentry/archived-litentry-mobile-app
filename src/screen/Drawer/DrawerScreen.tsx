@@ -9,7 +9,7 @@ import {
   dashboardScreen,
   devScreen,
   notificationSettingsScreen,
-  polkaassemblyDiscussionsNavigator,
+  polkassemblyDiscussionsNavigator,
   registrarListScreen,
   webviewScreen,
 } from 'src/navigation/routeKeys';
@@ -47,7 +47,7 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
           <ListItem
             title="Discussions"
             accessoryLeft={(props) => <Icon {...props} name="message-square-outline" animation="zoom" />}
-            onPress={() => navigation.navigate(polkaassemblyDiscussionsNavigator)}
+            onPress={() => navigation.navigate(polkassemblyDiscussionsNavigator)}
           />
           <Divider />
           <ListItem

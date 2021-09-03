@@ -31,9 +31,9 @@ export const democracyScreen = 'Democracy' as const;
 export const referendumScreen = 'Referendum' as const;
 export const democracyProposalScreen = 'DemocracyProposal' as const;
 
-export const polkaassemblyDiscussionsNavigator = 'PolkaAssemblyDiscussionsNavigator' as const;
-export const polkaassemblyDiscussions = 'PolkaassemblyDiscussions' as const;
-export const polkaassemblyDiscussionDetail = 'PolkaassemblyDiscussionDetail' as const;
+export const polkassemblyDiscussionsNavigator = 'PolkassemblyDiscussionsNavigator' as const;
+export const polkassemblyDiscussions = 'PolkassemblyDiscussions' as const;
+export const polkassemblyDiscussionDetail = 'PolkassemblyDiscussionDetail' as const;
 
 export const linking: LinkingOptions<CompleteNavigatorParamList> = {
   prefixes: ['litentry://'],

@@ -20,7 +20,7 @@ export const topicIdMap = {
 
 export type OrderByType = keyof typeof orderByMap;
 
-export function usePolkaassemblyDiscussions({
+export function usePolkassemblyDiscussions({
   orderBy = 'lastCommented',
   topicId,
 }: {
@@ -30,7 +30,7 @@ export function usePolkaassemblyDiscussions({
   const {currentNetwork} = useContext(NetworkContext);
 
   return useInfiniteQuery(
-    ['polkadot-discussions', {orderBy, topicId, network: currentNetwork.key}],
+    ['polkassemblyDiscussions', {orderBy, topicId, network: currentNetwork.key}],
     async ({pageParam = 0}: {pageParam?: number}) => {
       // Only polkadot & kusama are supported
       const network = currentNetwork.key === 'kusama' ? 'kusama' : 'polkadot';

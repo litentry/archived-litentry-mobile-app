@@ -34,13 +34,13 @@ import {
   AppStackParamList,
   DashboardStackParamList,
   DrawerParamList,
-  PolkaassemblyDiscussionStackParamList,
+  PolkassemblyDiscussionStackParamList,
 } from 'src/navigation/navigation';
 import * as routeKeys from 'src/navigation/routeKeys';
 import {darkTheme, lightTheme} from 'src/navigation/theme';
 import globalStyles from 'src/styles';
-import {PolkaassemblyDiscussions} from 'screen/Polkaassembly/PolkaassemblyDiscussions';
-import {PolkaassemblyDiscussionDetail} from 'screen/Polkaassembly/PolkaassemblyDiscussionDetail';
+import {PolkassemblyDiscussions} from 'screen/Polkassembly/PolkassemblyDiscussions';
+import {PolkassemblyDiscussionDetail} from 'screen/Polkassembly/PolkassemblyDiscussionDetail';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -95,9 +95,9 @@ function DashboardStackNavigator() {
   );
 }
 
-const DiscussionNavigator = createStackNavigator<PolkaassemblyDiscussionStackParamList>();
+const DiscussionNavigator = createStackNavigator<PolkassemblyDiscussionStackParamList>();
 
-function PolkaassemblyDiscussionsNavigator() {
+function PolkassemblyDiscussionsNavigator() {
   return (
     <DiscussionNavigator.Navigator
       screenOptions={{
@@ -114,13 +114,13 @@ function PolkaassemblyDiscussionsNavigator() {
         ),
       }}>
       <DiscussionNavigator.Screen
-        name={routeKeys.polkaassemblyDiscussions}
-        component={PolkaassemblyDiscussions}
+        name={routeKeys.polkassemblyDiscussions}
+        component={PolkassemblyDiscussions}
         options={{title: 'Discussions', headerLeft: DashboardHeaderLeft}}
       />
       <DiscussionNavigator.Screen
-        name={routeKeys.polkaassemblyDiscussionDetail}
-        component={PolkaassemblyDiscussionDetail}
+        name={routeKeys.polkassemblyDiscussionDetail}
+        component={PolkassemblyDiscussionDetail}
         options={{title: 'Discussion'}}
       />
     </DiscussionNavigator.Navigator>
@@ -151,8 +151,8 @@ function DrawerNavigator() {
       <Drawer.Screen name={routeKeys.devScreen} component={DevScreen} />
       <Drawer.Screen name={routeKeys.notificationSettingsScreen} component={NotificationSettingsScreen} />
       <Drawer.Screen
-        name={routeKeys.polkaassemblyDiscussionsNavigator}
-        component={PolkaassemblyDiscussionsNavigator}
+        name={routeKeys.polkassemblyDiscussionsNavigator}
+        component={PolkassemblyDiscussionsNavigator}
         options={{headerShown: false}}
       />
     </Drawer.Navigator>

@@ -8,18 +8,19 @@ import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React from 'react';
 import {Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {usePolkaassemblyDiscussionDetail} from 'src/api/hooks/usePolkaassemblyDiscussionDetail';
-import {PolkaassemblyDiscussionStackParamList} from 'src/navigation/navigation';
+import {usePolkassemblyDiscussionDetail} from 'src/api/hooks/usePolkassemblyDiscussionDetail';
+import {PolkassemblyDiscussionStackParamList} from 'src/navigation/navigation';
+import {polkassemblyDiscussionDetail} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
 
-export function PolkaassemblyDiscussionDetail({
+export function PolkassemblyDiscussionDetail({
   route,
 }: {
-  route: RouteProp<PolkaassemblyDiscussionStackParamList, 'PolkaassemblyDiscussionDetail'>;
+  route: RouteProp<PolkassemblyDiscussionStackParamList, typeof polkassemblyDiscussionDetail>;
 }) {
   const theme = useTheme();
   const id = route.params.id;
-  const {data} = usePolkaassemblyDiscussionDetail(id);
+  const {data} = usePolkassemblyDiscussionDetail(id);
 
   if (!data || !data.post) {
     return <LoadingView />;

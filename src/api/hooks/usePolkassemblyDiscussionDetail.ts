@@ -4,10 +4,10 @@ import {print} from 'graphql/language/printer';
 import {useContext} from 'react';
 import {useQuery} from 'react-query';
 
-export function usePolkaassemblyDiscussionDetail(id: number) {
+export function usePolkassemblyDiscussionDetail(id: number) {
   const {currentNetwork} = useContext(NetworkContext);
 
-  return useQuery(['polkaassemblyDiscussionDetail', {network: currentNetwork.key, id}], async () => {
+  return useQuery(['polkassemblyDiscussionDetail', {network: currentNetwork.key, id}], async () => {
     // Only polkadot & kusama are supported
     const network = currentNetwork.key === 'kusama' ? 'kusama' : 'polkadot';
     const endpoint = `https://${network}.polkassembly.io/v1/graphql`;
