@@ -1,8 +1,6 @@
 import React, {useCallback, useState} from 'react';
 import {Alert, View, StyleSheet} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
-import {Registration} from '@polkadot/types/interfaces';
-import {u8aToString} from '@polkadot/util';
 import {
   Button,
   Divider,
@@ -21,11 +19,12 @@ import InfoBanner from 'presentational/InfoBanner';
 import Padder from 'presentational/Padder';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import globalStyles, {standardPadding} from 'src/styles';
+import {DeriveAccountRegistration} from '@polkadot/api-derive/accounts/types';
 
 type PropTypes = {
   address: string;
   display: string;
-  registration?: Registration;
+  registration?: DeriveAccountRegistration;
 };
 
 const MoreIcon = (props: IconProps) => <Icon {...props} pack="ionic" name="ios-apps-outline" />;
@@ -99,7 +98,7 @@ function RequestJudgement({display, address, registration}: PropTypes) {
               accessoryLeft={(props) => <Icon {...props} name="award-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
-                  {u8aToString(registration?.info.legal.asRaw) || 'Unset'}
+                  {registration?.legal || 'Unset'}
                 </Text>
               )}
             />
@@ -108,7 +107,7 @@ function RequestJudgement({display, address, registration}: PropTypes) {
               accessoryLeft={(props) => <Icon {...props} name="email-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
-                  {u8aToString(registration?.info.email.asRaw) || 'Unset'}
+                  {registration?.email || 'Unset'}
                 </Text>
               )}
             />
@@ -117,7 +116,7 @@ function RequestJudgement({display, address, registration}: PropTypes) {
               accessoryLeft={(props) => <Icon {...props} name="twitter-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
-                  {u8aToString(registration?.info.twitter.asRaw) || 'Unset'}
+                  {registration?.twitter || 'Unset'}
                 </Text>
               )}
             />
@@ -126,7 +125,7 @@ function RequestJudgement({display, address, registration}: PropTypes) {
               accessoryLeft={(props) => <Icon {...props} name="message-square-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
-                  {u8aToString(registration?.info.riot.asRaw) || 'Unset'}
+                  {registration?.riot || 'Unset'}
                 </Text>
               )}
             />
@@ -135,7 +134,7 @@ function RequestJudgement({display, address, registration}: PropTypes) {
               accessoryLeft={(props) => <Icon {...props} name="browser-outline" />}
               accessoryRight={() => (
                 <Text selectable category="label">
-                  {u8aToString(registration?.info.web.asRaw) || 'Unset'}
+                  {registration?.web || 'Unset'}
                 </Text>
               )}
             />
