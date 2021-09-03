@@ -62,7 +62,7 @@
     "react-native-qrcode-scanner": "^1.5.4",
     "react-native-randombytes": "^3.6.0",
     "react-native-reanimated": "^2.2.0",
-    "react-native-safe-area-context": "^3.3.0",
+    "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.6.0",
     "react-native-sensitive-info": "^5.5.8",
     "react-native-substrate-sign": "^1.1.1",
@@ -78,7 +78,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",
-    "@babel/runtime": "^7.15.3",
+    "@babel/runtime": "^7.15.4",
     "@react-native-community/eslint-config": "^3.0.0",
     "@types/jest": "^27.0.1",
     "@types/lodash": "^4.14.172",
