@@ -30,7 +30,10 @@ export const motionsScreen = 'Motions' as const;
 export const democracyScreen = 'Democracy' as const;
 export const referendumScreen = 'Referendum' as const;
 export const democracyProposalScreen = 'DemocracyProposal' as const;
-export const polkadotDiscussions = 'PolkadotDiscussion' as const;
+
+export const polkassemblyDiscussionsNavigator = 'PolkassemblyDiscussionsNavigator' as const;
+export const polkassemblyDiscussions = 'PolkassemblyDiscussions' as const;
+export const polkassemblyDiscussionDetail = 'PolkassemblyDiscussionDetail' as const;
 
 export const linking: LinkingOptions<CompleteNavigatorParamList> = {
   prefixes: ['litentry://'],

@@ -1,5 +1,8 @@
 {
   "strict": {
+    "text-heading-6-font-size": 14,
+    "text-heading-6-font-weight": "800",
+
     "text-label-font-size": 10,
     "text-label-font-weight": "400"
   }
