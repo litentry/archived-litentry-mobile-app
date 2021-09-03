@@ -8,6 +8,6 @@ export function useAccountIdentityInfo(accountId: string) {
     (api: ApiPromise) => {
       return getAccountIdentityInfo(api, accountId);
     },
-    {staleTime: 1000 * 60, enabled: Boolean(accountId)},
+    {staleTime: 1000 * 60},
   );
 }
