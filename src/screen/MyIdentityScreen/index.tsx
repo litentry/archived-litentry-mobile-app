@@ -28,54 +28,45 @@ function MyIdentity() {
   const {
     params: {address},
   } = useRoute<RouteProp<DashboardStackParamList, typeof myIdentityScreen>>();
-  const {data} = useAccountIdentityInfo(address);
+  const startTx = useApiTx();
+  const queryClient = useQueryClient();
+  const {data: identity} = useAccountIdentityInfo(address);
+  const {data: subAccounts} = useSubIdentities(address);
+
   const {currentNetwork} = useContext(NetworkContext);
+  const [registrarSelectionOpen, setRegistrarSelectionOpen] = useState(false);
+
+  const judgements = identity?.registration?.judgements;
+  const judgementCount = judgements?.length || 0;
 
   const modalRef = useRef<Modalize>(null);
   const polkascanViewRef = useRef<Modalize>(null);
-  const startTx = useApiTx();
-  const queryClient = useQueryClient();
-
-  const handleOpenForm = useCallback(() => {
-    modalRef.current?.open();
-  }, []);
 
   const onSubmitIdentityInfo = useCallback(
     async (info: IdentityPayload) => {
       modalRef.current?.close();
-      await startTx({
-        address,
-        txMethod: 'identity.setIdentity',
-        params: [info],
-      })
+      await startTx({address, txMethod: 'identity.setIdentity', params: [info]})
         .then(() => {
           queryClient.invalidateQueries(['account_identity', address]);
         })
         .catch((e) => {
-          Alert.alert('account/api is not ready');
+          Alert.alert('Something went wrong!');
           console.error(e);
         });
     },
     [address, queryClient, startTx],
   );
 
-  const [visible, setVisible] = useState(false);
-  const {data: subAccounts} = useSubIdentities(address);
-
   const handleRequestJudgement = useCallback(
     (index: number, fee?: BN) => {
       if (fee) {
-        setVisible(false);
-        startTx({
-          address,
-          txMethod: 'identity.requestJudgement',
-          params: [index, fee],
-        })
+        setRegistrarSelectionOpen(false);
+        startTx({address, txMethod: 'identity.requestJudgement', params: [index, fee]})
           .then(() => {
             queryClient.invalidateQueries(['account_identity', address]);
           })
           .catch((e) => {
-            Alert.alert('account/api is not ready');
+            Alert.alert('Something went wrong!');
             console.error(e);
           });
       }
@@ -83,15 +74,12 @@ function MyIdentity() {
     [startTx, address, queryClient],
   );
 
-  const judgements = data?.registration?.judgements;
-  const judgementCount = judgements?.length || 0;
-
   return (
     <SafeView edges={noTopEdges}>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={{paddingHorizontal: standardPadding * 2}}>
-          {data?.hasIdentity ? (
-            data.hasJudgements ? (
+          {identity?.hasIdentity ? (
+            identity.hasJudgements ? (
               <SuccessDialog
                 inline
                 text={`This address has ${judgementCount} judgement${
@@ -121,7 +109,7 @@ function MyIdentity() {
               </Text>
             )}
           />
-          {data?.hasIdentity ? (
+          {identity?.hasIdentity ? (
             <>
               <ListItem
                 title="Display"
@@ -133,7 +121,7 @@ function MyIdentity() {
                     numberOfLines={1}
                     style={styles.accesoryRightLabel}
                     ellipsizeMode="middle">
-                    {data?.display}
+                    {identity?.display}
                   </Text>
                 )}
               />
@@ -143,7 +131,7 @@ function MyIdentity() {
                   accessoryLeft={(props) => <Icon {...props} name="award-outline" />}
                   accessoryRight={() => (
                     <Text selectable category="label">
-                      {data.registration?.legal || 'Unset'}
+                      {identity.registration?.legal || 'Unset'}
                     </Text>
                   )}
                 />
@@ -152,7 +140,7 @@ function MyIdentity() {
                   accessoryLeft={(props) => <Icon {...props} name="email-outline" />}
                   accessoryRight={() => (
                     <Text selectable category="label">
-                      {data.registration?.email || 'Unset'}
+                      {identity.registration?.email || 'Unset'}
                     </Text>
                   )}
                 />
@@ -161,7 +149,7 @@ function MyIdentity() {
                   accessoryLeft={(props) => <Icon {...props} name="twitter-outline" />}
                   accessoryRight={() => (
                     <Text selectable category="label">
-                      {data.registration?.twitter || 'Unset'}
+                      {identity.registration?.twitter || 'Unset'}
                     </Text>
                   )}
                 />
@@ -170,7 +158,7 @@ function MyIdentity() {
                   accessoryLeft={(props) => <Icon {...props} name="message-square-outline" />}
                   accessoryRight={() => (
                     <Text selectable category="label">
-                      {data.registration?.riot || 'Unset'}
+                      {identity.registration?.riot || 'Unset'}
                     </Text>
                   )}
                 />
@@ -179,7 +167,7 @@ function MyIdentity() {
                   accessoryLeft={(props) => <Icon {...props} name="browser-outline" />}
                   accessoryRight={() => (
                     <Text selectable category="label">
-                      {data.registration?.web || 'Unset'}
+                      {identity.registration?.web || 'Unset'}
                     </Text>
                   )}
                 />
@@ -188,13 +176,13 @@ function MyIdentity() {
           ) : null}
 
           <Padder scale={1} />
-          <Button onPress={handleOpenForm} status="basic">
-            {data?.hasIdentity ? 'Complete Identity' : 'Set Identity'}
+          <Button onPress={() => modalRef.current?.open()} status="basic">
+            {identity?.hasIdentity ? 'Complete Identity' : 'Set Identity'}
           </Button>
-          {data?.hasIdentity ? (
+          {identity?.hasIdentity ? (
             <>
               <Padder scale={1} />
-              <Button onPress={() => setVisible(true)} status="basic">
+              <Button onPress={() => setRegistrarSelectionOpen(true)} status="basic">
                 Request Judgement
               </Button>
             </>
@@ -221,9 +209,9 @@ function MyIdentity() {
         </View>
 
         <RegistrarSelectionModal
-          onClose={() => setVisible(false)}
+          onClose={() => setRegistrarSelectionOpen(false)}
           onSelect={handleRequestJudgement}
-          visible={visible}
+          visible={registrarSelectionOpen}
         />
         <Modalize
           ref={modalRef}
@@ -236,7 +224,7 @@ function MyIdentity() {
           useNativeDriver
           panGestureEnabled>
           <View>
-            <IdentityInfoForm onSubmit={onSubmitIdentityInfo} identity={data} />
+            <IdentityInfoForm onSubmit={onSubmitIdentityInfo} identity={identity} />
           </View>
         </Modalize>
 
