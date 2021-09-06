@@ -77,7 +77,7 @@ function MyIdentity() {
   return (
     <SafeView edges={noTopEdges}>
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={{paddingHorizontal: standardPadding * 2}}>
+        <View style={styles.header}>
           {identity?.hasIdentity ? (
             identity.hasJudgements ? (
               <SuccessDialog
@@ -93,13 +93,14 @@ function MyIdentity() {
             <InfoBanner text="This address doesn't have any identity connected to it." inline />
           )}
         </View>
-        <Padder scale={0.5} />
         <Divider />
         <View>
+          <Padder scale={1} />
           <ListItem
+            disabled
             title="Address"
-            accessoryLeft={() => (
-              <View style={styles.identiconContainer}>
+            accessoryLeft={(p) => (
+              <View {...p}>
                 <Identicon value={address} size={20} />
               </View>
             )}
@@ -112,15 +113,11 @@ function MyIdentity() {
           {identity?.hasIdentity ? (
             <>
               <ListItem
+                disabled
                 title="Display"
                 accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="person-outline" />}
                 accessoryRight={() => (
-                  <Text
-                    selectable
-                    category="label"
-                    numberOfLines={1}
-                    style={styles.accesoryRightLabel}
-                    ellipsizeMode="middle">
+                  <Text selectable category="label" numberOfLines={1} ellipsizeMode="middle">
                     {identity?.display}
                   </Text>
                 )}
@@ -199,6 +196,7 @@ function MyIdentity() {
               </Text>
             )}
           />
+
           {subAccounts?.length ? (
             <MenuGroup title={`Sub accounts (${subAccounts.length})`} accessoryLeft={SubAccountsIcon}>
               {subAccounts?.map((item) => (
@@ -243,9 +241,7 @@ function MyIdentity() {
                 // remove some html element
                 document.querySelectorAll('.navbar')[1].remove()
             })();`}
-            source={{
-              uri: buildAddressDetailUrl(address || '', currentNetwork?.key || 'polkadot'),
-            }}
+            source={{uri: buildAddressDetailUrl(address || '', currentNetwork?.key || 'polkadot')}}
             style={styles.polkascanWebView}
             onMessage={() => null}
           />
@@ -259,9 +255,8 @@ export default MyIdentity;
 
 const styles = StyleSheet.create({
   content: {padding: standardPadding * 2},
-  identiconContainer: {paddingHorizontal: 10},
-  accesoryRightLabel: {width: '50%', textAlign: 'right'},
-  address: {width: '50%', textAlign: 'right'},
+  header: {paddingHorizontal: standardPadding * 2},
+  address: {flex: 2},
   polkascanWebView: {height: 500},
 });
 
