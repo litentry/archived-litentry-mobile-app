@@ -20,6 +20,7 @@ import Padder from 'presentational/Padder';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import globalStyles, {standardPadding} from 'src/styles';
 import {DeriveAccountRegistration} from '@polkadot/api-derive/accounts/types';
+import {useQueryClient} from 'react-query';
 
 type PropTypes = {
   address: string;
@@ -32,6 +33,7 @@ const MoreIcon = (props: IconProps) => <Icon {...props} pack="ionic" name="ios-a
 function RequestJudgement({display, address, registration}: PropTypes) {
   const [visible, setVisible] = useState(false);
   const startTx = useApiTx();
+  const queryClient = useQueryClient();
 
   const handleRequestJudgement = useCallback(
     (index: number, fee?: BN) => {
@@ -41,13 +43,17 @@ function RequestJudgement({display, address, registration}: PropTypes) {
           address,
           txMethod: 'identity.requestJudgement',
           params: [index, fee],
-        }).catch((e) => {
-          Alert.alert('account/api is not ready');
-          console.error(e);
-        });
+        })
+          .then(() => {
+            queryClient.invalidateQueries(['account_identity', address]);
+          })
+          .catch((e) => {
+            Alert.alert('account/api is not ready');
+            console.error(e);
+          });
       }
     },
-    [startTx, address],
+    [startTx, address, queryClient],
   );
 
   return (
