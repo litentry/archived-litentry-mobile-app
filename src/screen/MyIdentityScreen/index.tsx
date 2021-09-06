@@ -209,14 +209,7 @@ function MyIdentity() {
           {subAccounts?.length ? (
             <MenuGroup title={`Sub accounts (${subAccounts.length})`} accessoryLeft={SubAccountsIcon}>
               {subAccounts?.map((item) => (
-                <MenuItem
-                  key={String(item.accountId)}
-                  accessoryRight={() => (
-                    <View style={{paddingLeft: standardPadding}}>
-                      <AddressInlineTeaser address={item.accountId} />
-                    </View>
-                  )}
-                />
+                <MenuItem key={String(item.accountId)} title={() => <AddressInlineTeaser address={item.accountId} />} />
               ))}
             </MenuGroup>
           ) : null}
