@@ -8,6 +8,7 @@ import globalStyles, {standardPadding} from 'src/styles';
 import Padder from 'presentational/Padder';
 import IdentityInfoForm, {IdentityPayload} from 'presentational/IdentityInfoForm';
 import {useApiTx} from 'src/api/hooks/useApiTx';
+import {useQueryClient} from 'react-query';
 
 const {height} = Dimensions.get('window');
 
@@ -16,6 +17,7 @@ type PropTypes = {address: string};
 function SetInfo({address}: PropTypes): React.ReactElement {
   const modalRef = useRef<Modalize>(null);
   const startTx = useApiTx();
+  const queryClient = useQueryClient();
 
   const handleOpenForm = useCallback(() => {
     modalRef.current?.open();
@@ -28,12 +30,16 @@ function SetInfo({address}: PropTypes): React.ReactElement {
         address,
         txMethod: 'identity.setIdentity',
         params: [info],
-      }).catch((e) => {
-        Alert.alert('account/api is not ready');
-        console.error(e);
-      });
+      })
+        .then(() => {
+          queryClient.invalidateQueries(['account_identity', address]);
+        })
+        .catch((e) => {
+          Alert.alert('account/api is not ready');
+          console.error(e);
+        });
     },
-    [address, startTx],
+    [address, queryClient, startTx],
   );
 
   return (
