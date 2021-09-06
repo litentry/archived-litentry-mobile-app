@@ -191,10 +191,15 @@ function MyIdentity() {
           <Button onPress={handleOpenForm} status="basic">
             {data?.hasIdentity ? 'Complete Identity' : 'Set Identity'}
           </Button>
-          <Padder scale={1} />
-          <Button onPress={() => setVisible(true)} status="basic">
-            Request Judgement
-          </Button>
+          {data?.hasIdentity ? (
+            <>
+              <Padder scale={1} />
+              <Button onPress={() => setVisible(true)} status="basic">
+                Request Judgement
+              </Button>
+            </>
+          ) : null}
+
           <Padder scale={1} />
           <ListItem
             title="View externally"
