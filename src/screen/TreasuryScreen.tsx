@@ -57,15 +57,19 @@ export function TreasuryScreen() {
                   <View style={styles.row}>
                     <Text category="c1">beneficiary: </Text>
                     <Account id={item.proposal.beneficiary.toString()}>
-                      {({info, accountId}) => (
-                        <View style={[styles.row, styles.accountsRow]}>
-                          <Identicon value={accountId} size={20} />
-                          <Padder scale={0.3} />
-                          <Text numberOfLines={1} category={'c1'} ellipsizeMode="middle">
-                            {info ? u8aToString(info.display.asRaw) : accountId.toString()}
-                          </Text>
-                        </View>
-                      )}
+                      {(identity) =>
+                        identity ? (
+                          <View style={[styles.row, styles.accountsRow]}>
+                            <Identicon value={identity.accountId} size={20} />
+                            <Padder scale={0.3} />
+                            <Text numberOfLines={1} category={'c1'} ellipsizeMode="middle">
+                              {identity.display}
+                            </Text>
+                          </View>
+                        ) : (
+                          <Text>{item.proposal.beneficiary.toString()}</Text>
+                        )
+                      }
                     </Account>
                   </View>
                   <View style={styles.row}>

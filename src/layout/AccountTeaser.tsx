@@ -28,8 +28,7 @@ function AccountTeaser(props: PropTypes) {
   const {theme} = useTheme();
   const {accounts} = useAccounts();
   const account = accounts[0]; // TODO: change this when adding multi account support
-  const {data} = useAccountIdentityInfo(account?.address);
-  const display = data?.hasIdentity ? data.display : address;
+  const {data} = useAccountIdentityInfo(account?.address ?? '');
 
   const handleIconPressed = (addr?: string) => {
     if (addr) {
@@ -53,12 +52,7 @@ function AccountTeaser(props: PropTypes) {
       <TouchableOpacity style={styles.identIconContainer} onPress={() => handleIconPressed(account?.address)}>
         <Identicon value={address} size={60} />
       </TouchableOpacity>
-      {display ? (
-        <AccountInfoInlineTeaser
-          display={display}
-          judgements={data?.hasJudgements ? data?.registration?.judgements : undefined}
-        />
-      ) : null}
+      {data ? <AccountInfoInlineTeaser identity={data} /> : null}
       <Layout level={props.level} style={styles.addressContainer}>
         <TouchableOpacity onPress={() => setQrVisible(true)}>
           <Icon style={[styles.icon, {color: getIconColorByTheme(theme)}]} pack="ionic" name="qr-code-sharp" />
