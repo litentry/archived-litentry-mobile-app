@@ -31,7 +31,7 @@ export async function getAccountIdentityInfo(api: ApiPromise, accountId: string)
       hasJudgements: info.identity.judgements.length > 0,
       accountId,
       registration: info.identity,
-      display,
+      display: display.toUpperCase(),
     };
   }
 

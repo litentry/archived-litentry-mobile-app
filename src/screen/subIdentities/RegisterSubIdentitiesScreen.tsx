@@ -8,13 +8,15 @@ import {Button, Card, Divider, IconProps, Layout, ListItem, Text, TopNavigationA
 import Icon from 'presentational/Icon';
 import ModalTitle from 'presentational/ModalTitle';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
-import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useApiTx} from 'src/api/hooks/useApiTx';
-import {SubIdentity, useSubIdentities} from 'src/api/hooks/useSubIdentities';
+import {useSubIdentities} from 'src/api/hooks/useSubIdentities';
 import {DashboardStackParamList} from 'src/navigation/navigation';
 import {registerSubIdentitiesScreen} from 'src/navigation/routeKeys';
 import globalStyles, {monofontFamily} from 'src/styles';
 import {AddSubIdentity} from './AddSubIdentity';
+import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
+import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
+import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 
 type ScreenProps = {
   navigation: NavigationProp<DashboardStackParamList>;
@@ -24,7 +26,7 @@ type ScreenProps = {
 export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
   const address = route.params.address;
   const modalRef = useRef<Modalize>(null);
-  const {data: identityInfo} = useAccountIdentityInfo(address);
+  const {data: parentIdentityInfo} = useAccountIdentityInfo(address);
   const {data: subIdentitiesData} = useSubIdentities(address);
   const [subIdentities, setSubIdentities] = useState(subIdentitiesData || []);
   const [submitSubsDisabled, setSubmitSubsDisabled] = useState(true);
@@ -56,9 +58,10 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
     startTx({
       address,
       txMethod: 'identity.setSubs',
-      params: [subIdentities.map((sub) => [sub.accountId, {raw: sub.name}])],
+      params: [subIdentities.map((sub) => [sub.accountId, {raw: sub.registration?.display}])],
     })
       .then(() => {
+        queryClient.invalidateQueries(['sub_accounts', {address}]);
         queryClient.invalidateQueries(['sub-identities', {address}]);
         setSubmitSubsDisabled(true);
       })
@@ -67,8 +70,11 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
       });
   };
 
-  const onAddPress = (subIdentity: SubIdentity) => {
-    setSubIdentities((prevInfos) => [...prevInfos, subIdentity]);
+  const onAddPress = (subIdentity: IdentityInfo) => {
+    setSubIdentities((prevInfos) => [
+      ...prevInfos,
+      {...subIdentity, display: `${parentIdentityInfo?.registration?.display}/${subIdentity.registration?.display}`},
+    ]);
     setSubmitSubsDisabled(false);
     modalRef.current?.close();
   };
@@ -115,16 +121,20 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
             </Text>
           )}
           data={subIdentities}
-          keyExtractor={(item) => item.accountId}
+          keyExtractor={(item) => String(item.accountId)}
           renderItem={({item}) => (
             <ListItem
               disabled={true}
-              title={`${identityInfo?.display}/${item.name || identityInfo?.display}`.toUpperCase()}
-              description={item.accountId}
+              title={(p) => (
+                <View {...p}>
+                  <AccountInfoInlineTeaser identity={item} />
+                </View>
+              )}
+              description={String(item.accountId)}
               accessoryLeft={() => <Identicon value={item.accountId} size={30} />}
               accessoryRight={() => (
                 <Button
-                  onPress={() => onRemovePress(item.accountId)}
+                  onPress={() => onRemovePress(String(item.accountId))}
                   accessoryLeft={RemoveIcon}
                   status="danger"
                   appearance="ghost"
