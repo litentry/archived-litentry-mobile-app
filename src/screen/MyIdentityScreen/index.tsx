@@ -5,6 +5,7 @@ import BN from 'bn.js';
 import {NetworkContext} from 'context/NetworkContext';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
 import RegistrarSelectionModal from 'layout/RegistrarSelectionModal';
+import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
 import IdentityInfoForm, {IdentityPayload} from 'presentational/IdentityInfoForm';
 import InfoBanner from 'presentational/InfoBanner';
 import Padder from 'presentational/Padder';
@@ -200,7 +201,19 @@ function MyIdentity() {
           {subAccounts?.length ? (
             <MenuGroup title={`Sub accounts (${subAccounts.length})`} accessoryLeft={SubAccountsIcon}>
               {subAccounts?.map((item) => (
-                <MenuItem key={String(item.accountId)} title={() => <AddressInlineTeaser address={item.accountId} />} />
+                <MenuItem
+                  key={String(item.accountId)}
+                  title={(p) => (
+                    <View {...p}>
+                      <AccountInfoInlineTeaser identity={item} />
+                    </View>
+                  )}
+                  accessoryLeft={(p) => (
+                    <View {...p}>
+                      <Identicon value={item.accountId} size={20} />
+                    </View>
+                  )}
+                />
               ))}
             </MenuGroup>
           ) : null}
