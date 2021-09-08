@@ -19,7 +19,7 @@ type AccountPayload = {network: SupportedNetworkType; account: Account};
 type Action =
   | {type: 'ADD_ACCOUNT'; payload: AccountPayload}
   | {type: 'REMOVE_ACCOUNT'; payload: AccountPayload}
-  | {type: 'TOGGLE_FAVORITE'; payload: AccountPayload}
+  | {type: 'TOGGLE_FAVORITE'; payload: {network: SupportedNetworkType; accountId: string}}
   | {type: 'INIT_STATE'; payload: State};
 
 function reducer(state: State, action: Action): State {
@@ -48,7 +48,7 @@ function reducer(state: State, action: Action): State {
 
     case 'TOGGLE_FAVORITE': {
       const networkAccounts = state[action.payload.network] ?? [];
-      const account = networkAccounts?.find((a) => a.address === action.payload.account.address);
+      const account = networkAccounts?.find((a) => a.address === action.payload.accountId);
       if (!account) {
         return state;
       }
@@ -56,7 +56,7 @@ function reducer(state: State, action: Action): State {
       return {
         ...state,
         [action.payload.network]: networkAccounts.map((acc) =>
-          acc.address === action.payload.account.address ? {...acc, isFavorite: !account.isFavorite} : acc,
+          acc.address === action.payload.accountId ? {...acc, isFavorite: !account.isFavorite} : acc,
         ),
       };
     }
@@ -71,7 +71,7 @@ type AccountsContextValue = {
   accounts: Account[];
   addAccount: (network: SupportedNetworkType, account: Account) => void;
   removeAccount: (network: SupportedNetworkType, account: Account) => void;
-  toggleFavorite: (account: Account) => void;
+  toggleFavorite: (accountId: string) => void;
 };
 
 const initialState: State = {
@@ -118,8 +118,8 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
       removeAccount: (network: SupportedNetworkType, account: Account) => {
         dispatch({type: 'REMOVE_ACCOUNT', payload: {network, account}});
       },
-      toggleFavorite: (account: Account) => {
-        dispatch({type: 'TOGGLE_FAVORITE', payload: {network: currentNetwork, account}});
+      toggleFavorite: (accountId: string) => {
+        dispatch({type: 'TOGGLE_FAVORITE', payload: {network: currentNetwork, accountId}});
       },
     };
   }, [currentNetwork, state, isLoading]);

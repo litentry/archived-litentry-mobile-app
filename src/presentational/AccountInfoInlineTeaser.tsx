@@ -1,4 +1,5 @@
 import {Text} from '@ui-kitten/components';
+import Padder from 'presentational/Padder';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
@@ -10,13 +11,16 @@ type PropTypes = {
 };
 
 function AccountInfoInlineTeaser({identity}: PropTypes) {
+  const judgements = identity.registration?.judgements;
+
   return (
     <View style={styles.container}>
       <Text category="c1" style={styles.text} ellipsizeMode="middle" numberOfLines={1}>
         {identity.display}
       </Text>
-      {identity.registration?.judgements.map((judgement, i) => (
-        <JudgmentStatus key={i} judgement={judgement} hasParent={Boolean(identity.registration.parent)} />
+      {judgements?.length ? <Padder scale={0.5} /> : null}
+      {judgements?.map((judgement, i) => (
+        <JudgmentStatus key={i} judgement={judgement} hasParent={Boolean(identity.registration?.parent)} />
       ))}
     </View>
   );
