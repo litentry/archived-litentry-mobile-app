@@ -27,13 +27,7 @@ export function AccountsScreen({navigation}: {navigation: NavigationProp<Complet
     if (!account) {
       return acc;
     }
-    return [
-      ...acc,
-      {
-        identity: current,
-        account,
-      },
-    ];
+    return [...acc, {identity: current, account}];
   }, []);
 
   const [sortBy, setSortBy] = React.useState<'name' | 'favorites'>('name');
