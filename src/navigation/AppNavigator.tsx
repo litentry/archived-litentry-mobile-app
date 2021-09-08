@@ -2,7 +2,7 @@ import messaging from '@react-native-firebase/messaging';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {Icon, TopNavigationAction} from '@ui-kitten/components';
+import {Icon, Text, TopNavigationAction} from '@ui-kitten/components';
 import React from 'react';
 import {AddAccountScreen} from 'screen/AddAccountScreen/AddAccountScreen';
 import {BalanceScreen} from 'screen/BalanceScreen';
@@ -41,6 +41,7 @@ import {darkTheme, lightTheme} from 'src/navigation/theme';
 import globalStyles from 'src/styles';
 import {PolkassemblyDiscussions} from 'screen/Polkassembly/PolkassemblyDiscussions';
 import {PolkassemblyDiscussionDetail} from 'screen/Polkassembly/PolkassemblyDiscussionDetail';
+import {IdentityGuideScreen} from 'screen/MyIdentityScreen/IdentityGuideScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -83,6 +84,7 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.submitTipScreen} component={SubmitTipScreen} />
       <DashboardStack.Screen name={routeKeys.motionsScreen} component={MotionsScreen} />
       <DashboardStack.Screen name={routeKeys.myIdentityScreen} component={MyIdentityScreen} />
+
       <DashboardStack.Screen name={routeKeys.registerSubIdentitiesScreen} component={RegisterSubIdentitiesScreen} />
       <DashboardStack.Screen name={routeKeys.democracyScreen} component={DemocracyScreen} />
       <DashboardStack.Screen name={routeKeys.referendumScreen} component={ReferendumScreen} />
@@ -174,7 +176,7 @@ function AppNavigator() {
     <NavigationContainer linking={routeKeys.linking} theme={theme === 'dark' ? darkTheme : lightTheme}>
       <AppStack.Navigator
         screenOptions={{
-          presentation: 'modal',
+          presentation: 'transparentModal',
           headerShown: false,
           animationEnabled: false,
           cardStyle: {
@@ -189,6 +191,7 @@ function AppNavigator() {
         <AppStack.Screen name={routeKeys.drawerNavigatorScreen} component={DrawerNavigator} />
         <AppStack.Screen name={routeKeys.addAccountScreen} component={AddAccountScreen} />
         <AppStack.Screen name={routeKeys.balanceScreen} component={BalanceScreen} />
+        <AppStack.Screen name={routeKeys.identityGuideScreen} component={IdentityGuideScreen} />
       </AppStack.Navigator>
     </NavigationContainer>
   );
