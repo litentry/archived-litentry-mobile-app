@@ -41,6 +41,7 @@ import {darkTheme, lightTheme} from 'src/navigation/theme';
 import globalStyles from 'src/styles';
 import {PolkassemblyDiscussions} from 'screen/Polkassembly/PolkassemblyDiscussions';
 import {PolkassemblyDiscussionDetail} from 'screen/Polkassembly/PolkassemblyDiscussionDetail';
+import {AccountsScreen} from 'screen/AccountsScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -143,6 +144,7 @@ function DrawerNavigator() {
         options={{headerShown: false}}
       />
       <Drawer.Screen name={routeKeys.registrarListScreen} component={RegistrarListScreen} />
+      <Drawer.Screen name={routeKeys.accountsScreen} component={AccountsScreen} />
       <Drawer.Screen
         name={routeKeys.webviewScreen}
         component={WebviewScreen}

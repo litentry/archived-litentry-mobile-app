@@ -25,6 +25,7 @@ import {
   polkassemblyDiscussionDetail,
   polkassemblyDiscussionsNavigator,
   registerSubIdentitiesScreen,
+  accountsScreen,
 } from 'src/navigation/routeKeys';
 
 type DashboardStackParamList = {
@@ -59,6 +60,7 @@ type DrawerParamList = {
   [devScreen]: undefined;
   [notificationSettingsScreen]: undefined;
   [polkassemblyDiscussionsNavigator]: undefined;
+  [accountsScreen]: undefined;
 };
 
 type PolkassemblyDiscussionStackParamList = {
