@@ -3,10 +3,11 @@ import {NavigationProp} from '@react-navigation/native';
 import {Button, Divider, Icon, ListItem, MenuItem, OverflowMenu, Text, useTheme} from '@ui-kitten/components';
 import {Account, useAccounts} from 'context/AccountsContext';
 import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
+import LoadingView from 'presentational/LoadingView';
 import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React from 'react';
-import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {FlatList, Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useAccountsIdentityInfo} from 'src/api/hooks/useAccountsIdentityInfo';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 import {CompleteNavigatorParamList} from 'src/navigation/navigation';
@@ -20,7 +21,7 @@ type CombinedData = {
 
 export function AccountsScreen({navigation}: {navigation: NavigationProp<CompleteNavigatorParamList>}) {
   const {accounts, toggleFavorite} = useAccounts();
-  const {data} = useAccountsIdentityInfo(accounts.map(({address}) => address));
+  const {data, isLoading} = useAccountsIdentityInfo(accounts.map(({address}) => address));
   const combinedData = data?.reduce<CombinedData[]>((acc, current) => {
     const account = accounts.find((a) => a.address === String(current.accountId));
     if (!account) {
@@ -41,69 +42,84 @@ export function AccountsScreen({navigation}: {navigation: NavigationProp<Complet
 
   return (
     <SafeView edges={noTopEdges}>
-      <FlatList
-        style={styles.container}
-        contentContainerStyle={styles.content}
-        data={combinedData?.sort(sortByFunction)}
-        showsVerticalScrollIndicator
-        keyExtractor={(item) => item.account.address}
-        renderItem={({item}) => (
-          <AccountItem
-            identity={item.identity}
-            isFavorite={item.account.isFavorite}
-            toggleFavorite={() => toggleFavorite(item.account.address)}
-          />
-        )}
-        ItemSeparatorComponent={() => <Divider />}
-        ListHeaderComponent={() => (
-          <View style={styles.header}>
-            <OverflowMenu
-              anchor={() => (
-                <TouchableOpacity
-                  onPress={() => {
-                    setSortMenuVisible(true);
-                  }}
-                  style={globalStyles.rowAlignCenter}>
-                  <Text category="c1">Sort by</Text>
-                  <Padder scale={0.5} />
-                  <Icon
-                    name="arrow-ios-downward-outline"
-                    style={globalStyles.icon}
-                    fill={globalStyles.iconColor.color}
-                  />
-                </TouchableOpacity>
-              )}
-              placement="bottom end"
-              style={styles.overflowMenu}
-              visible={sortMenuVisible}
-              onSelect={({row}: {row: number}) => {
-                setSortMenuVisible(false);
-                switch (row) {
-                  case 0:
-                    setSortBy('name');
-                    break;
-                  case 1:
-                    setSortBy('favorites');
-                    break;
-                }
-              }}
-              onBackdropPress={() => setSortMenuVisible(false)}>
-              <MenuItem title="Name" style={sortBy === 'name' && styles.selectedItem} />
-              <MenuItem title="Favorite" style={sortBy === 'favorites' && styles.selectedItem} />
-            </OverflowMenu>
-          </View>
-        )}
-        ListFooterComponent={() => (
-          <View style={styles.footer}>
-            <Button
-              status="basic"
-              accessoryLeft={(p) => <Icon {...p} name="plus-circle-outline" />}
-              onPress={() => navigation.navigate(addAccountScreen)}>
-              Add Account
-            </Button>
-          </View>
-        )}
-      />
+      {isLoading ? (
+        <LoadingView />
+      ) : (
+        <FlatList
+          style={styles.container}
+          contentContainerStyle={styles.content}
+          data={combinedData?.sort(sortByFunction)}
+          showsVerticalScrollIndicator
+          keyExtractor={(item) => item.account.address}
+          renderItem={({item}) => (
+            <AccountItem
+              identity={item.identity}
+              isFavorite={item.account.isFavorite}
+              toggleFavorite={() => toggleFavorite(item.account.address)}
+            />
+          )}
+          ItemSeparatorComponent={() => <Divider />}
+          ListEmptyComponent={() => (
+            <View style={styles.emptyContainer}>
+              <Image source={require('src/image/no_accounts.png')} style={styles.emptyImage} />
+              <Padder scale={1} />
+              <Text style={styles.emptyText} status="basic" category="h4">
+                No accounts added
+              </Text>
+              <Padder scale={1.5} />
+              <Text category="c1">Please add an account to take further actions</Text>
+            </View>
+          )}
+          ListHeaderComponent={() => (
+            <View style={styles.header}>
+              <OverflowMenu
+                anchor={() => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      setSortMenuVisible(true);
+                    }}
+                    style={globalStyles.rowAlignCenter}>
+                    <Text category="c1">Sort by</Text>
+                    <Padder scale={0.5} />
+                    <Icon
+                      name="arrow-ios-downward-outline"
+                      style={globalStyles.icon}
+                      fill={globalStyles.iconColor.color}
+                    />
+                  </TouchableOpacity>
+                )}
+                placement="bottom end"
+                style={styles.overflowMenu}
+                visible={sortMenuVisible}
+                onSelect={({row}: {row: number}) => {
+                  setSortMenuVisible(false);
+                  switch (row) {
+                    case 0:
+                      setSortBy('name');
+                      break;
+                    case 1:
+                      setSortBy('favorites');
+                      break;
+                  }
+                }}
+                onBackdropPress={() => setSortMenuVisible(false)}>
+                <MenuItem title="Name" style={sortBy === 'name' && styles.selectedItem} />
+                <MenuItem title="Favorite" style={sortBy === 'favorites' && styles.selectedItem} />
+              </OverflowMenu>
+            </View>
+          )}
+          ListFooterComponent={() => (
+            <View style={styles.footer}>
+              <Button
+                status="basic"
+                accessoryLeft={(p) => <Icon {...p} name="plus-circle-outline" />}
+                onPress={() => navigation.navigate(addAccountScreen)}>
+                Add Account
+              </Button>
+            </View>
+          )}
+        />
+      )}
     </SafeView>
   );
 }
@@ -129,6 +145,9 @@ const styles = StyleSheet.create({
   overflowMenu: {
     minWidth: 200,
   },
+  emptyContainer: {alignItems: 'center', justifyContent: 'center', padding: standardPadding * 2},
+  emptyText: {fontWeight: 'normal'},
+  emptyImage: {width: 200, height: 200},
 });
 
 function sortByDisplayName(a: CombinedData, b: CombinedData) {
