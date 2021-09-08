@@ -108,10 +108,10 @@ const styles = StyleSheet.create({
     marginTop: standardPadding * 2,
   },
   indicator: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    marginHorizontal: 5,
+    width: 11,
+    height: 11,
+    borderRadius: 10,
+    marginHorizontal: standardPadding,
   },
 });
 
