@@ -175,7 +175,7 @@ function MyIdentity() {
 
           <Padder scale={1} />
           <Button onPress={() => modalRef.current?.open()} status="basic">
-            {identity?.hasIdentity ? 'Complete Identity' : 'Set Identity'}
+            {identity?.hasIdentity ? 'Update Identity' : 'Set Identity'}
           </Button>
           {identity?.hasIdentity ? (
             <>
