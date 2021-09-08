@@ -51,6 +51,12 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
           />
           <Divider />
           <ListItem
+            title="Tips (test)"
+            accessoryLeft={(props) => <Icon {...props} name="message-square-outline" animation="zoom" />}
+            onPress={() => navigation.navigate('tips_test')}
+          />
+          <Divider />
+          <ListItem
             title="About Litentry"
             description="Read more about us."
             accessoryLeft={(props) => <Icon {...props} name="hash-outline" animation="zoom" />}

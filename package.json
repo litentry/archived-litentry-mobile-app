@@ -36,6 +36,7 @@
     "events": "^3.3.0",
     "fast-text-encoding": "^1.0.3",
     "graphql": "^15.5.3",
+    "graphql-request": "^3.5.0",
     "graphql-tag": "^2.12.5",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",

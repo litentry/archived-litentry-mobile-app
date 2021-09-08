@@ -41,6 +41,7 @@ import {darkTheme, lightTheme} from 'src/navigation/theme';
 import globalStyles from 'src/styles';
 import {PolkassemblyDiscussions} from 'screen/Polkassembly/PolkassemblyDiscussions';
 import {PolkassemblyDiscussionDetail} from 'screen/Polkassembly/PolkassemblyDiscussionDetail';
+import TipsTest from 'screen/tips/TipsTest';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -76,6 +77,7 @@ function DashboardStackNavigator() {
           ),
         })}
       />
+      <DashboardStack.Screen name={'tips_test'} component={TipsTest} />
       <DashboardStack.Screen name={routeKeys.tipDetailScreen} component={TipDetailScreen} />
       <DashboardStack.Screen name={routeKeys.councilScreen} component={CouncilScreen} />
       <DashboardStack.Screen name={routeKeys.candidateScreen} component={CandidateScreen} />

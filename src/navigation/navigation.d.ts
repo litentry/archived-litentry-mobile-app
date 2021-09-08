@@ -33,6 +33,7 @@ type DashboardStackParamList = {
     hash: string;
   };
   [tipsScreen]: undefined;
+  ['tips_test']: undefined;
   [tipDetailScreen]: {
     hash: string;
   };
