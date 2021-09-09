@@ -27,6 +27,7 @@ import {
   registerSubIdentitiesScreen,
   accountsScreen,
   accountsNavigator,
+  identityGuideScreen,
 } from 'src/navigation/routeKeys';
 
 type DashboardStackParamList = {
@@ -73,6 +74,7 @@ type AppStackParamList = {
   [drawerNavigatorScreen]: undefined;
   [addAccountScreen]: undefined;
   [balanceScreen]: {address: string};
+  [identityGuideScreen]: undefined;
 };
 
 type AccountsStackParamList = {
