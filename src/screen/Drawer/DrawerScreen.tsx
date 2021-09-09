@@ -6,6 +6,7 @@ import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {MultiAccountView} from 'screen/Drawer/MultiAccountView';
 import {
+  accountsNavigator,
   accountsScreen,
   dashboardScreen,
   devScreen,
@@ -35,7 +36,7 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
           <ListItem
             title="Accounts"
             accessoryLeft={(props) => <Icon {...props} name="person-outline" animation="zoom" />}
-            onPress={() => navigation.navigate(accountsScreen)}
+            onPress={() => navigation.navigate(accountsNavigator)}
           />
           <Divider />
           <ListItem

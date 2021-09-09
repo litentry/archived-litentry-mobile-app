@@ -31,6 +31,7 @@ import {useFirebase} from 'src/hook/useFirebase';
 import {usePushAuthorizationStatus} from 'src/hook/usePushNotificationsPermissions';
 import {useTurnOnAllNotificationsOnAppStartForAndroid} from 'src/hook/useTurnOnAllNotificationsOnAppStartForAndroid';
 import {
+  AccountsStackParamList,
   AppStackParamList,
   DashboardStackParamList,
   DrawerParamList,
@@ -83,7 +84,6 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.treasuryScreen} component={TreasuryScreen} />
       <DashboardStack.Screen name={routeKeys.submitTipScreen} component={SubmitTipScreen} />
       <DashboardStack.Screen name={routeKeys.motionsScreen} component={MotionsScreen} />
-      <DashboardStack.Screen name={routeKeys.myIdentityScreen} component={MyIdentityScreen} />
       <DashboardStack.Screen name={routeKeys.registerSubIdentitiesScreen} component={RegisterSubIdentitiesScreen} />
       <DashboardStack.Screen name={routeKeys.democracyScreen} component={DemocracyScreen} />
       <DashboardStack.Screen name={routeKeys.referendumScreen} component={ReferendumScreen} />
@@ -93,6 +93,34 @@ function DashboardStackNavigator() {
         options={{title: 'Proposal'}}
       />
     </DashboardStack.Navigator>
+  );
+}
+
+const AccountsStack = createStackNavigator<AccountsStackParamList>();
+
+function AccountsNavigator() {
+  return (
+    <AccountsStack.Navigator
+      screenOptions={{
+        headerBackTitleVisible: false,
+        headerLeftContainerStyle: {paddingHorizontal: 10},
+        headerRightContainerStyle: {paddingHorizontal: 10},
+        headerBackImage: ({tintColor}) => (
+          <Icon
+            name={'arrow-back-outline'}
+            style={[globalStyles.icon25, {color: tintColor}]}
+            fill={tintColor}
+            pack={'ionic'}
+          />
+        ),
+      }}>
+      <AccountsStack.Screen
+        name={routeKeys.accountsScreen}
+        component={AccountsScreen}
+        options={{headerLeft: DashboardHeaderLeft}}
+      />
+      <AccountsStack.Screen name={routeKeys.myIdentityScreen} component={MyIdentityScreen} />
+    </AccountsStack.Navigator>
   );
 }
 
@@ -144,7 +172,6 @@ function DrawerNavigator() {
         options={{headerShown: false}}
       />
       <Drawer.Screen name={routeKeys.registrarListScreen} component={RegistrarListScreen} />
-      <Drawer.Screen name={routeKeys.accountsScreen} component={AccountsScreen} />
       <Drawer.Screen
         name={routeKeys.webviewScreen}
         component={WebviewScreen}
@@ -157,6 +184,7 @@ function DrawerNavigator() {
         component={PolkassemblyDiscussionsNavigator}
         options={{headerShown: false}}
       />
+      <Drawer.Screen name={routeKeys.accountsNavigator} component={AccountsNavigator} options={{headerShown: false}} />
     </Drawer.Navigator>
   );
 }

@@ -3,7 +3,7 @@ import LoadingView from 'presentational/LoadingView';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React, {useMemo} from 'react';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
-import {DashboardStackParamList} from 'src/navigation/navigation';
+import {AccountsStackParamList} from 'src/navigation/navigation';
 import {myIdentityScreen} from 'src/navigation/routeKeys';
 import DisplayJudgement from './DisplayJudgement';
 import RequestJudgement from './RequestJudgement';
@@ -12,7 +12,7 @@ import SetInfo from './SetInfo';
 function MyIdentity() {
   const {
     params: {address},
-  } = useRoute<RouteProp<DashboardStackParamList, typeof myIdentityScreen>>();
+  } = useRoute<RouteProp<AccountsStackParamList, typeof myIdentityScreen>>();
   const {data, isLoading} = useAccountIdentityInfo(address);
 
   const content = useMemo(() => {
