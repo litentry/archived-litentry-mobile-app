@@ -10,6 +10,7 @@ export const dashboardNavigator = 'DashboardNavigator' as const;
 export const deeplinkNavigatorScreen = 'DeeplinkNavigatorScreen' as const;
 export const addAccountScreen = 'AddAccountScreen' as const;
 export const balanceScreen = 'BalanceScreen' as const;
+export const identityGuideScreen = 'IdentityGuideScreen' as const;
 
 export const dashboardScreen = 'Dashboard' as const;
 export const tipsScreen = 'Tips' as const;

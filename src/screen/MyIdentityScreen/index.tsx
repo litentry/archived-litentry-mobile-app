@@ -3,7 +3,6 @@ import {RouteProp, useRoute} from '@react-navigation/native';
 import {Button, Divider, Icon, IconProps, ListItem, MenuGroup, MenuItem, Text} from '@ui-kitten/components';
 import BN from 'bn.js';
 import {NetworkContext} from 'context/NetworkContext';
-import AddressInlineTeaser from 'layout/AddressInlineTeaser';
 import RegistrarSelectionModal from 'layout/RegistrarSelectionModal';
 import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
 import IdentityInfoForm, {IdentityPayload} from 'presentational/IdentityInfoForm';

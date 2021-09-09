@@ -8,7 +8,14 @@ import AddressInfoBadge from 'presentational/AddressInfoBadge';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {Account, useAccounts} from 'src/context/AccountsContext';
 import {AppStackParamList, DashboardStackParamList} from 'src/navigation/navigation';
-import {addAccountScreen, balanceScreen, myIdentityScreen, registerSubIdentitiesScreen} from 'src/navigation/routeKeys';
+import {
+  addAccountScreen,
+  balanceScreen,
+  dashboardNavigator,
+  identityGuideScreen,
+  myIdentityScreen,
+  registerSubIdentitiesScreen,
+} from 'src/navigation/routeKeys';
 import globalStyles, {colorGray} from 'src/styles';
 import {SupportedNetworkType} from 'src/types';
 import {useApiTx} from 'src/api/hooks/useApiTx';
@@ -104,6 +111,7 @@ function AccountItem({
     }
     if (row === 2) {
       navigation.navigate(myIdentityScreen, {address: account.address});
+      navigation.navigate(identityGuideScreen);
     }
     if (row === 3) {
       navigation.navigate(registerSubIdentitiesScreen, {address: account.address});
