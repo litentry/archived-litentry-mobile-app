@@ -11,7 +11,7 @@ import {FlatList, Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useAccountsIdentityInfo} from 'src/api/hooks/useAccountsIdentityInfo';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 import {CompleteNavigatorParamList} from 'src/navigation/navigation';
-import {addAccountScreen, myIdentityScreen} from 'src/navigation/routeKeys';
+import {addAccountScreen, identityGuideScreen, myIdentityScreen} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
 
 type CombinedData = {
@@ -50,7 +50,10 @@ export function AccountsScreen({navigation}: {navigation: NavigationProp<Complet
               identity={item.identity}
               isFavorite={item.account.isFavorite}
               toggleFavorite={() => toggleFavorite(item.account.address)}
-              onPress={() => navigation.navigate(myIdentityScreen, {address: item.account.address})}
+              onPress={() => {
+                navigation.navigate(myIdentityScreen, {address: item.account.address});
+                navigation.navigate(identityGuideScreen);
+              }}
             />
           )}
           ItemSeparatorComponent={() => <Divider />}
