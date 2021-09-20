@@ -1,15 +1,14 @@
-import {AccountInfo} from '@polkadot/types/interfaces';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Button, Divider, Layout} from '@ui-kitten/components';
 import Balances from 'presentational/Balances';
 import ModalTitle from 'presentational/ModalTitle';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef} from 'react';
 import {Modalize} from 'react-native-modalize';
+import {useBalance} from 'src/api/hooks/useBalance';
 import {useAccounts} from 'src/context/AccountsContext';
 import {AppStackParamList} from 'src/navigation/navigation';
 import {balanceScreen} from 'src/navigation/routeKeys';
 import globalStyles from 'src/styles';
-import {ChainApiContext} from '../context/ChainApiContext';
 import {NetworkContext} from '../context/NetworkContext';
 
 export function BalanceScreen({
@@ -19,10 +18,8 @@ export function BalanceScreen({
   navigation: NavigationProp<AppStackParamList>;
   route: RouteProp<AppStackParamList, typeof balanceScreen>;
 }) {
-  const {api} = useContext(ChainApiContext);
   const {currentNetwork} = useContext(NetworkContext);
   const {accounts} = useAccounts();
-  const [balance, setBalance] = useState<AccountInfo | null>(null);
 
   const modalRef = useRef<Modalize>(null);
   useEffect(() => {
@@ -34,22 +31,7 @@ export function BalanceScreen({
     throw new Error("Couldn't find the account ");
   }
 
-  useEffect(() => {
-    let localUnsub: () => void | null;
-    if (api && currentAccount) {
-      api?.query.system
-        .account(currentAccount.address, (accountInfo) => {
-          setBalance(accountInfo);
-        })
-        .then((unsub) => {
-          localUnsub = unsub;
-        });
-    }
-
-    return () => {
-      localUnsub && localUnsub();
-    };
-  }, [api, currentAccount]);
+  const balance = useBalance({address: currentAccount.address});
 
   return (
     <Modalize

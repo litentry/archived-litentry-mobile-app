@@ -28,6 +28,7 @@ import {
   accountsScreen,
   accountsNavigator,
   identityGuideScreen,
+  myAcountScreen,
 } from 'src/navigation/routeKeys';
 
 type DashboardStackParamList = {
@@ -80,6 +81,7 @@ type AppStackParamList = {
 type AccountsStackParamList = {
   [accountsScreen]: undefined;
   [myIdentityScreen]: {address: string};
+  [myAcountScreen]: {address: string};
 };
 
 type CompleteNavigatorParamList = AppStackParamList &

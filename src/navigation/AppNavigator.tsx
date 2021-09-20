@@ -14,6 +14,7 @@ import DashboardScreen, {DashboardHeaderLeft} from 'screen/DashboardScreen';
 import DevScreen from 'screen/DevScreen';
 import DrawerScreen from 'screen/Drawer/DrawerScreen';
 import {MotionDetailScreen} from 'screen/MotionDetailScreen';
+import {MyAccountScreen} from 'screen/MyAccountScreen';
 import MyIdentityScreen from 'screen/MyIdentityScreen';
 import {IdentityGuideScreen} from 'screen/MyIdentityScreen/IdentityGuideScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
@@ -109,6 +110,7 @@ function AccountsNavigator() {
         options={{headerLeft: DashboardHeaderLeft}}
       />
       <AccountsStack.Screen name={routeKeys.myIdentityScreen} component={MyIdentityScreen} />
+      <AccountsStack.Screen name={routeKeys.myAcountScreen} component={MyAccountScreen} />
     </AccountsStack.Navigator>
   );
 }
