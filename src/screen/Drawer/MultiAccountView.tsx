@@ -18,7 +18,6 @@ import {
   registerSubIdentitiesScreen,
 } from 'src/navigation/routeKeys';
 import globalStyles, {colorGray} from 'src/styles';
-import {SupportedNetworkType} from 'src/types';
 
 export function MultiAccountView() {
   const navigation = useNavigation();
@@ -60,13 +59,7 @@ const styles = StyleSheet.create({
 
 type NavigationProps = CompleteNavigatorParamList;
 
-function AccountItem({
-  account,
-  removeAccount,
-}: {
-  account: Account;
-  removeAccount: (network: SupportedNetworkType, acc: Account) => void;
-}) {
+function AccountItem({account, removeAccount}: {account: Account; removeAccount: (accountId: string) => void}) {
   const {currentNetwork} = useContext(NetworkContext);
   const [visible, setVisible] = useState(false);
   const {data: identityInfoData} = useAccountIdentityInfo(account.address);
@@ -88,7 +81,7 @@ function AccountItem({
             onPress: () => {
               setVisible(false);
               if (account) {
-                removeAccount(currentNetwork.key, account);
+                removeAccount(account.address);
               }
             },
           },

@@ -94,7 +94,7 @@ function DevScreen() {
                     <Button
                       size="small"
                       onPress={() => {
-                        removeAccount(currentNetwork.key, account);
+                        removeAccount(account.address);
                         Alert.alert('Info', 'Account is reset');
                       }}>
                       Trigger

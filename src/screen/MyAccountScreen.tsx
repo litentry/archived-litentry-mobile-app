@@ -1,6 +1,7 @@
 import {BN_ZERO} from '@polkadot/util';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Text, useTheme} from '@ui-kitten/components';
+import {useAccounts} from 'context/AccountsContext';
 import Icon from 'presentational/Icon';
 import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
@@ -10,7 +11,7 @@ import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useBalance} from 'src/api/hooks/useBalance';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {AccountsStackParamList, CompleteNavigatorParamList} from 'src/navigation/navigation';
-import {identityGuideScreen, myIdentityScreen} from 'src/navigation/routeKeys';
+import {accountsScreen, balanceScreen, identityGuideScreen, myIdentityScreen} from 'src/navigation/routeKeys';
 import {standardPadding} from 'src/styles';
 
 export function MyAccountScreen({
@@ -22,6 +23,7 @@ export function MyAccountScreen({
   navigation: NavigationProp<CompleteNavigatorParamList>;
   route: RouteProp<AccountsStackParamList, typeof myIdentityScreen>;
 }) {
+  const {removeAccount} = useAccounts();
   const {data} = useAccountIdentityInfo(address);
   const formatBalance = useFormatBalance();
   const balance = useBalance({address});
@@ -52,6 +54,17 @@ export function MyAccountScreen({
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
+            navigation.navigate(balanceScreen, {address});
+          }}>
+          <View style={[styles.iconContainer, {backgroundColor: theme['color-basic-500']}]}>
+            <Icon style={styles.icon} fill={theme['text-basic-color']} name="settings-2" />
+          </View>
+          <Padder scale={2} />
+          <Text category="h6">Show Balance details</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
             navigation.navigate(myIdentityScreen, {address});
             navigation.navigate(identityGuideScreen);
           }}>
@@ -60,6 +73,18 @@ export function MyAccountScreen({
           </View>
           <Padder scale={2} />
           <Text category="h6">Manage Identity</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            removeAccount(address);
+            navigation.navigate(accountsScreen);
+          }}>
+          <View style={[styles.iconContainer, {backgroundColor: theme['color-basic-500']}]}>
+            <Icon style={styles.icon} fill={theme['text-basic-color']} name="settings-2" />
+          </View>
+          <Padder scale={2} />
+          <Text category="h6">Remove Account</Text>
         </TouchableOpacity>
       </View>
     </SafeView>
@@ -87,7 +112,7 @@ const styles = StyleSheet.create({
     padding: standardPadding * 2,
   },
   box: {
-    padding: standardPadding * 2,
+    padding: standardPadding * 4,
   },
   button: {
     flexDirection: 'row',
