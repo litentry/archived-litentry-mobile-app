@@ -1,17 +1,24 @@
-import React, {useContext, useState} from 'react';
-import {Alert, FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
-import {CompositeNavigationProp, NavigationProp, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {Icon, Layout, ListItem, MenuItem, OverflowMenu} from '@ui-kitten/components';
 import {NetworkContext} from 'context/NetworkContext';
 import AddressInfoBadge from 'presentational/AddressInfoBadge';
+import React, {useContext, useState} from 'react';
+import {Alert, FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {useQueryClient} from 'react-query';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
+import {useApiTx} from 'src/api/hooks/useApiTx';
 import {Account, useAccounts} from 'src/context/AccountsContext';
-import {AppStackParamList, DashboardStackParamList} from 'src/navigation/navigation';
-import {addAccountScreen, balanceScreen, myIdentityScreen, registerSubIdentitiesScreen} from 'src/navigation/routeKeys';
+import {CompleteNavigatorParamList} from 'src/navigation/navigation';
+import {
+  addAccountScreen,
+  balanceScreen,
+  identityGuideScreen,
+  myIdentityScreen,
+  registerSubIdentitiesScreen,
+} from 'src/navigation/routeKeys';
 import globalStyles, {colorGray} from 'src/styles';
 import {SupportedNetworkType} from 'src/types';
-import {useApiTx} from 'src/api/hooks/useApiTx';
 
 export function MultiAccountView() {
   const navigation = useNavigation();
@@ -51,10 +58,7 @@ const styles = StyleSheet.create({
   },
 });
 
-type NavigationProps = CompositeNavigationProp<
-  NavigationProp<AppStackParamList>,
-  NavigationProp<DashboardStackParamList>
->;
+type NavigationProps = CompleteNavigatorParamList;
 
 function AccountItem({
   account,
@@ -68,6 +72,7 @@ function AccountItem({
   const {data: identityInfoData} = useAccountIdentityInfo(account.address);
   const navigation = useNavigation<NavigationProps>();
   const startTx = useApiTx();
+  const queryClient = useQueryClient();
 
   const hasIdentity = identityInfoData !== undefined && identityInfoData.hasIdentity;
 
@@ -102,6 +107,7 @@ function AccountItem({
     }
     if (row === 2) {
       navigation.navigate(myIdentityScreen, {address: account.address});
+      navigation.navigate(identityGuideScreen);
     }
     if (row === 3) {
       navigation.navigate(registerSubIdentitiesScreen, {address: account.address});
@@ -115,6 +121,8 @@ function AccountItem({
               address: account.address,
               txMethod: 'identity.clearIdentity',
               params: [],
+            }).then(() => {
+              queryClient.invalidateQueries(['account_identity', account.address]);
             });
           },
           style: 'destructive',

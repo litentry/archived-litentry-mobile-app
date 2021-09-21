@@ -28,7 +28,7 @@ function AddressInfoBadge({address, network}: PropTypes) {
       <TouchableOpacity onPress={onOpen}>
         <View style={styles.container}>
           <Text category="c2" selectable numberOfLines={1} style={styles.display} ellipsizeMode="middle">
-            {data?.hasIdentity ? data.display : data?.accountId}
+            {data?.display}
           </Text>
           <View style={globalStyles.rowContainer}>
             {registration?.judgements.map((judgement) => (

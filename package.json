@@ -35,7 +35,7 @@
     "console-browserify": "^1.2.0",
     "events": "^3.3.0",
     "fast-text-encoding": "^1.0.3",
-    "graphql": "^15.5.1",
+    "graphql": "^15.5.3",
     "graphql-tag": "^2.12.5",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
@@ -78,7 +78,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",
-    "@babel/runtime": "^7.15.3",
+    "@babel/runtime": "^7.15.4",
     "@react-native-community/eslint-config": "^3.0.0",
     "@types/jest": "^27.0.1",
     "@types/lodash": "^4.14.172",

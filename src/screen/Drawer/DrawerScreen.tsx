@@ -6,10 +6,12 @@ import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {MultiAccountView} from 'screen/Drawer/MultiAccountView';
 import {
+  accountsNavigator,
+  accountsScreen,
   dashboardScreen,
   devScreen,
   notificationSettingsScreen,
-  polkadotDiscussions,
+  polkassemblyDiscussionsNavigator,
   registrarListScreen,
   webviewScreen,
 } from 'src/navigation/routeKeys';
@@ -31,6 +33,11 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
           <MultiAccountView />
         </View>
         <Layout style={styles.rest}>
+          <ListItem
+            title="Accounts"
+            accessoryLeft={(props) => <Icon {...props} name="person-outline" animation="zoom" />}
+            onPress={() => navigation.navigate(accountsNavigator)}
+          />
           <Divider />
           <ListItem
             title="Dashboard"
@@ -47,7 +54,7 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
           <ListItem
             title="Discussions"
             accessoryLeft={(props) => <Icon {...props} name="message-square-outline" animation="zoom" />}
-            onPress={() => navigation.navigate(polkadotDiscussions)}
+            onPress={() => navigation.navigate(polkassemblyDiscussionsNavigator)}
           />
           <Divider />
           <ListItem

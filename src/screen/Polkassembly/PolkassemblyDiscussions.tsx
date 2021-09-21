@@ -1,21 +1,28 @@
-import * as React from 'react';
-import SafeView, {noTopEdges} from 'presentational/SafeView';
-import {OrderByType, topicIdMap, usePolkadotDiscussions} from 'src/api/hooks/usePolkadotDiscussions';
-import {Button, Text, Card, Icon, Divider, OverflowMenu, MenuItem, useTheme} from '@ui-kitten/components';
-import {ActivityIndicator, FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
-import globalStyles, {standardPadding} from 'src/styles';
-import Padder from 'presentational/Padder';
+import {NavigationProp} from '@react-navigation/native';
+import {Button, Card, Divider, Icon, MenuItem, OverflowMenu, Text, useTheme} from '@ui-kitten/components';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
+import {flatten} from 'lodash';
 import moment from 'moment';
 import {Label} from 'presentational/Label';
-import {flatten} from 'lodash';
+import Padder from 'presentational/Padder';
+import SafeView, {noTopEdges} from 'presentational/SafeView';
+import * as React from 'react';
+import {ActivityIndicator, FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {OrderByType, topicIdMap, usePolkassemblyDiscussions} from 'src/api/hooks/usePolkassemblyDiscussions';
+import {PolkassemblyDiscussionStackParamList} from 'src/navigation/navigation';
+import {polkassemblyDiscussionDetail} from 'src/navigation/routeKeys';
+import globalStyles, {standardPadding} from 'src/styles';
 
-export function PolkadotDiscussions() {
+export function PolkassemblyDiscussions({
+  navigation,
+}: {
+  navigation: NavigationProp<PolkassemblyDiscussionStackParamList>;
+}) {
   const [orderBy, setOrderBy] = React.useState<OrderByType>('lastCommented');
   const [topicId, setTopicId] = React.useState<number>();
   const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
   const [filterMenuVisible, setFilterMenuVisible] = React.useState(false);
-  const {data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage} = usePolkadotDiscussions({
+  const {data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage} = usePolkassemblyDiscussions({
     orderBy,
     topicId,
   });
@@ -122,7 +129,7 @@ export function PolkadotDiscussions() {
           </View>
         )}
         renderItem={({item}) => (
-          <Card disabled>
+          <Card onPress={() => navigation.navigate(polkassemblyDiscussionDetail, {id: item.id})}>
             <Text category="s2" numberOfLines={1}>
               {item.title ?? 'unknown title'}
             </Text>

@@ -1,13 +1,12 @@
-import React, {useState, useContext} from 'react';
-import {View, StyleSheet, Alert} from 'react-native';
-import {Button, Input, Layout, Tab, TabView, IconProps, Text, Icon} from '@ui-kitten/components';
-
-import type {SubIdentity} from 'src/api/hooks/useSubIdentities';
+import {Button, Icon, IconProps, Input, Layout, Tab, TabView, Text} from '@ui-kitten/components';
 import {NetworkContext} from 'context/NetworkContext';
-import {isAddressValid, parseAddress} from 'src/utils';
-import {monofontFamily, standardPadding} from 'src/styles';
-import QRCamera from 'presentational/QRCamera';
 import Padder from 'presentational/Padder';
+import QRCamera from 'presentational/QRCamera';
+import React, {useContext, useState} from 'react';
+import {Alert, StyleSheet, View} from 'react-native';
+import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
+import {monofontFamily, standardPadding} from 'src/styles';
+import {isAddressValid, parseAddress} from 'src/utils';
 
 const QrIcon = (props: IconProps) => (
   <Layout style={styles.tabTitle}>
@@ -29,8 +28,8 @@ export function AddSubIdentity({
   onAddPress,
   subIdentities,
 }: {
-  onAddPress: (subIdentity: SubIdentity) => void;
-  subIdentities: SubIdentity[];
+  onAddPress: (subIdentity: IdentityInfo) => void;
+  subIdentities: IdentityInfo[];
 }) {
   const {currentNetwork} = useContext(NetworkContext);
   const [tabIndex, setTabIndex] = useState(0);
@@ -50,7 +49,13 @@ export function AddSubIdentity({
           'The account is already registered. Remove the account first if you want to change its name',
         );
       } else {
-        onAddPress({accountId: subAddress, name: subName});
+        onAddPress({
+          accountId: subAddress,
+          display: subAddress,
+          registration: {display: subName, judgements: []},
+          hasJudgements: false,
+          hasIdentity: true,
+        });
       }
     } else {
       Alert.alert('Validation Failed', 'The address provided is invalid');
