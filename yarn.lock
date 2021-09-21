@@ -7053,10 +7053,10 @@ react-native-animatable@^1.3.3:
   dependencies:
     prop-types "^15.7.2"
 
-react-native-camera@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-camera/-/react-native-camera-4.1.1.tgz#294a7c9818b571a06d304c7736fc57ec8876ed1a"
-  integrity sha512-ENlQ3NXxhyL/zNJNB3RYrxsES3TYF+ouOMxlp0E4aUVwwc9KY7cK7FT3ZjAwl7NGJ13etaGqZc4vaKWqrgn8Eg==
+react-native-camera@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-camera/-/react-native-camera-4.2.0.tgz#53529a780385214403697c6ff289069d43795fc1"
+  integrity sha512-AhBEtkCLXENrjQke42FwiZL3CStugLaxXsJIqx7xYDnSEHnSwM9/dFen6BdNVoh9LiPgAw6X3CjOvvJNoGchhQ==
   dependencies:
     prop-types "^15.6.2"
 
