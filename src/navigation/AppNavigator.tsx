@@ -110,7 +110,7 @@ function AccountsNavigator() {
         options={{headerLeft: DashboardHeaderLeft}}
       />
       <AccountsStack.Screen name={routeKeys.myIdentityScreen} component={MyIdentityScreen} />
-      <AccountsStack.Screen name={routeKeys.myAcountScreen} component={MyAccountScreen} />
+      <AccountsStack.Screen name={routeKeys.myAccountScreen} component={MyAccountScreen} />
     </AccountsStack.Navigator>
   );
 }
