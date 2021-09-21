@@ -19,7 +19,7 @@ import {useQueryClient} from 'react-query';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useSubIdentities} from 'src/api/hooks/useSubIdentities';
-import {DashboardStackParamList} from 'src/navigation/navigation';
+import {AccountsStackParamList} from 'src/navigation/navigation';
 import {myIdentityScreen} from 'src/navigation/routeKeys';
 import {buildAddressDetailUrl} from 'src/service/Polkasembly';
 import {standardPadding} from 'src/styles';
@@ -27,7 +27,7 @@ import {standardPadding} from 'src/styles';
 function MyIdentity() {
   const {
     params: {address},
-  } = useRoute<RouteProp<DashboardStackParamList, typeof myIdentityScreen>>();
+  } = useRoute<RouteProp<AccountsStackParamList, typeof myIdentityScreen>>();
   const startTx = useApiTx();
   const queryClient = useQueryClient();
   const {data: identity} = useAccountIdentityInfo(address);
