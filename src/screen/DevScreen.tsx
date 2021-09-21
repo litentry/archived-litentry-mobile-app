@@ -138,6 +138,7 @@ function DevScreen() {
                     addAccount(currentNetwork.key, {
                       name: 'Manu. set Acct',
                       address: '167rjWHghVwBJ52mz8sNkqr5bKu5vpchbc9CBoieBhVX714h',
+                      isFavorite: false,
                     });
                     Alert.alert('Done');
                   }}>

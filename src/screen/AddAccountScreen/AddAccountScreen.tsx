@@ -41,7 +41,7 @@ export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppSt
     }
 
     if (state.step === 'preview') {
-      addAccount(currentNetwork.key, {address: state.address, name: ''});
+      addAccount(currentNetwork.key, {address: state.address, name: '', isFavorite: false});
       dispatch({type: 'SET_STEP', payload: 'success'});
       return;
     }

@@ -25,6 +25,8 @@ import {
   polkassemblyDiscussionDetail,
   polkassemblyDiscussionsNavigator,
   registerSubIdentitiesScreen,
+  accountsScreen,
+  accountsNavigator,
   identityGuideScreen,
 } from 'src/navigation/routeKeys';
 
@@ -46,7 +48,6 @@ type DashboardStackParamList = {
   [submitTipScreen]: undefined;
   [treasuryScreen]: undefined;
   [motionsScreen]: undefined;
-  [myIdentityScreen]: {address: string};
   [registerSubIdentitiesScreen]: {address: string};
   [democracyScreen]: undefined;
   [referendumScreen]: {index: string};
@@ -60,6 +61,7 @@ type DrawerParamList = {
   [devScreen]: undefined;
   [notificationSettingsScreen]: undefined;
   [polkassemblyDiscussionsNavigator]: undefined;
+  [accountsNavigator]: undefined;
 };
 
 type PolkassemblyDiscussionStackParamList = {
@@ -75,10 +77,16 @@ type AppStackParamList = {
   [identityGuideScreen]: undefined;
 };
 
+type AccountsStackParamList = {
+  [accountsScreen]: undefined;
+  [myIdentityScreen]: {address: string};
+};
+
 type CompleteNavigatorParamList = AppStackParamList &
   DrawerParamList &
   RootParamList &
   DashboardStackParamList &
+  AccountsStackParamList &
   PolkassemblyDiscussionStackParamList;
 
 declare global {
