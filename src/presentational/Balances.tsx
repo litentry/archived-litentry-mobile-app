@@ -2,12 +2,13 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {Layout, ListItem, Text} from '@ui-kitten/components';
 import {monofontFamily} from 'src/styles';
-import {formatBalance} from '@polkadot/util';
 import {AccountInfo} from '@polkadot/types/interfaces';
+import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 
 type PropTypes = {balance?: AccountInfo};
 
 function Balances(props: PropTypes) {
+  const formatBalance = useFormatBalance();
   const {balance} = props;
 
   if (!balance) {
