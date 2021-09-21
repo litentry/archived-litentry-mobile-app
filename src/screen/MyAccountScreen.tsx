@@ -6,7 +6,7 @@ import Icon from 'presentational/Icon';
 import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useBalance} from 'src/api/hooks/useBalance';
@@ -79,8 +79,17 @@ export function MyAccountScreen({
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            removeAccount(address);
-            navigation.navigate(accountsScreen);
+            Alert.alert('Delete Account!', 'Are you sure you want to delete this account?', [
+              {text: 'Cancel', style: 'cancel'},
+              {
+                text: 'Delete',
+                onPress: () => {
+                  removeAccount(address);
+                  navigation.navigate(accountsScreen);
+                },
+                style: 'destructive',
+              },
+            ]);
           }}>
           <View style={[styles.iconContainer, {backgroundColor: theme['background-basic-color-2']}]}>
             <Icon style={styles.icon} fill={theme['text-basic-color']} name="close-circle" />
