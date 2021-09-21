@@ -6,10 +6,12 @@ export const appNavigator = 'App' as const;
 export const apiLoadingNavigatorScreen = 'ApiLoadingNavigator' as const;
 export const permissionGrantingPromptScreen = 'PermissionsGrantingPrompt' as const;
 export const dashboardNavigator = 'DashboardNavigator' as const;
+export const accountsNavigator = 'AccountsNavigator' as const;
 
 export const deeplinkNavigatorScreen = 'DeeplinkNavigatorScreen' as const;
 export const addAccountScreen = 'AddAccountScreen' as const;
 export const balanceScreen = 'BalanceScreen' as const;
+export const identityGuideScreen = 'IdentityGuideScreen' as const;
 
 export const dashboardScreen = 'Dashboard' as const;
 export const tipsScreen = 'Tips' as const;
@@ -18,6 +20,7 @@ export const submitTipScreen = 'Submit Tip' as const;
 export const registrarListScreen = 'Registrars' as const;
 export const motionDetailScreen = 'Motion' as const;
 export const notificationSettingsScreen = 'Notification' as const;
+export const accountsScreen = 'My Accounts' as const;
 
 export const webviewScreen = 'Webview' as const;
 export const devScreen = 'Dev Kit' as const;

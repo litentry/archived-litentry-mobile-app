@@ -3,6 +3,7 @@ import {View, StyleSheet, ScrollView} from 'react-native';
 import {Input, Button, Icon, IconProps} from '@ui-kitten/components';
 import {WHITESPACE, validateFormField} from 'src/utils';
 import FormLabel from 'presentational/FormLabel';
+import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 
 export type IdentityPayload = {
   display: {raw: string} | {none: null};
@@ -14,6 +15,7 @@ export type IdentityPayload = {
 };
 
 type IdentityInfoFormProps = {
+  identity?: IdentityInfo;
   onSubmit: (identityPayload: IdentityPayload) => void;
 };
 
@@ -22,53 +24,17 @@ type FormStatus = Record<
   boolean
 >;
 
-function IdentityInfoForm({onSubmit}: IdentityInfoFormProps): React.ReactElement {
-  const [display, setDisplay] = React.useState<string>('');
-  const [email, setEmail] = React.useState<string>('');
-  const [legal, setLegal] = React.useState<string>('');
-  const [riot, setRiot] = React.useState<string>('');
-  const [twitter, setTwitter] = React.useState<string>('');
-  const [web, setWeb] = React.useState<string>('');
-  const [formStatus, setFormStatus] = React.useState<FormStatus>({
-    isDisplayValid: false,
-    isLegalValid: false,
-    isEmailValid: false,
-    isRiotValid: false,
-    isTwitterValid: false,
-    isWebValid: false,
-    isFormValid: false,
+function IdentityInfoForm({onSubmit, identity}: IdentityInfoFormProps): React.ReactElement {
+  const [state, dispatch] = React.useReducer(reducer, {
+    display: identity?.registration?.display ?? '',
+    legal: identity?.registration?.legal ?? '',
+    email: identity?.registration?.email ?? '',
+    riot: identity?.registration?.riot ?? '',
+    twitter: identity?.registration?.twitter ?? '',
+    web: identity?.registration?.web ?? '',
   });
-
-  React.useEffect(
-    function validateForm() {
-      const isDisplayValid = validateFormField(!!display, display, 1, [], [], []);
-      const isLegalValid = validateFormField(!!legal, legal, 1, [], [], []);
-      const isEmailValid = validateFormField(!!email, email, 3, ['@'], WHITESPACE, []);
-      const isRiotValid = validateFormField(!!riot, riot, 6, [':'], WHITESPACE, ['@', '~']);
-      const isTwitterValid = validateFormField(!!twitter, twitter, 3, [], WHITESPACE, ['@']);
-      const isWebValid = validateFormField(!!web, web, 8, ['.'], WHITESPACE, ['https://', 'http://']);
-      const hasOneOrMoreValues = !!display || !!legal || !!email || !!riot || !!twitter || !!web;
-
-      const status: FormStatus = {
-        isDisplayValid,
-        isLegalValid,
-        isEmailValid,
-        isRiotValid,
-        isTwitterValid,
-        isWebValid,
-        isFormValid:
-          hasOneOrMoreValues &&
-          isDisplayValid &&
-          isLegalValid &&
-          isEmailValid &&
-          isRiotValid &&
-          isTwitterValid &&
-          isWebValid,
-      };
-      setFormStatus(status);
-    },
-    [display, legal, email, riot, twitter, web],
-  );
+  const {display, legal, email, riot, twitter, web} = state;
+  const formStatus = validateForm(state);
 
   const onSubmitPress = () => {
     onSubmit({
@@ -89,7 +55,7 @@ function IdentityInfoForm({onSubmit}: IdentityInfoFormProps): React.ReactElement
           placeholder="My On-Chain Name"
           value={display}
           status={formStatus.isDisplayValid ? 'basic' : 'danger'}
-          onChangeText={setDisplay}
+          onChangeText={(value) => dispatch({type: 'set_prop', value: {key: 'display', value}})}
           accessoryLeft={(props: IconProps) => <Icon {...props} name="person-outline" />}
         />
       </View>
@@ -99,7 +65,7 @@ function IdentityInfoForm({onSubmit}: IdentityInfoFormProps): React.ReactElement
           placeholder="Full Legal Name"
           value={legal}
           status={formStatus.isLegalValid ? 'basic' : 'danger'}
-          onChangeText={setLegal}
+          onChangeText={(value) => dispatch({type: 'set_prop', value: {key: 'legal', value}})}
           accessoryLeft={(props: IconProps) => <Icon {...props} name="credit-card-outline" />}
         />
       </View>
@@ -110,7 +76,7 @@ function IdentityInfoForm({onSubmit}: IdentityInfoFormProps): React.ReactElement
           autoCapitalize="none"
           value={email}
           status={formStatus.isEmailValid ? 'basic' : 'danger'}
-          onChangeText={setEmail}
+          onChangeText={(value) => dispatch({type: 'set_prop', value: {key: 'email', value}})}
           accessoryLeft={(props: IconProps) => <Icon {...props} name="email-outline" />}
         />
       </View>
@@ -121,7 +87,7 @@ function IdentityInfoForm({onSubmit}: IdentityInfoFormProps): React.ReactElement
           value={web}
           autoCapitalize="none"
           status={formStatus.isWebValid ? 'basic' : 'danger'}
-          onChangeText={setWeb}
+          onChangeText={(value) => dispatch({type: 'set_prop', value: {key: 'web', value}})}
           accessoryLeft={(props: IconProps) => <Icon {...props} name="browser-outline" />}
         />
       </View>
@@ -132,7 +98,7 @@ function IdentityInfoForm({onSubmit}: IdentityInfoFormProps): React.ReactElement
           value={twitter}
           autoCapitalize="none"
           status={formStatus.isTwitterValid ? 'basic' : 'danger'}
-          onChangeText={setTwitter}
+          onChangeText={(value) => dispatch({type: 'set_prop', value: {key: 'twitter', value}})}
           accessoryLeft={(props: IconProps) => <Icon {...props} name="twitter-outline" />}
         />
       </View>
@@ -143,7 +109,7 @@ function IdentityInfoForm({onSubmit}: IdentityInfoFormProps): React.ReactElement
           value={riot}
           autoCapitalize="none"
           status={formStatus.isRiotValid ? 'basic' : 'danger'}
-          onChangeText={setRiot}
+          onChangeText={(value) => dispatch({type: 'set_prop', value: {key: 'riot', value}})}
           accessoryLeft={(props: IconProps) => <Icon {...props} name="message-square-outline" />}
         />
       </View>
@@ -171,3 +137,52 @@ const styles = StyleSheet.create({
     marginVertical: 25,
   },
 });
+
+type State = {
+  display: string;
+  legal: string;
+  email: string;
+  riot: string;
+  twitter: string;
+  web: string;
+};
+
+function reducer(state: State, action: {type: 'set_prop'; value: {key: keyof State; value: string}}) {
+  switch (action.type) {
+    case 'set_prop':
+      return {
+        ...state,
+        [action.value.key]: action.value.value,
+      };
+    default:
+      return state;
+  }
+}
+
+function validateForm({display, legal, email, riot, twitter, web}: State) {
+  const isDisplayValid = validateFormField(!!display, display, 1, [], [], []);
+  const isLegalValid = validateFormField(!!legal, legal, 1, [], [], []);
+  const isEmailValid = validateFormField(!!email, email, 3, ['@'], WHITESPACE, []);
+  const isRiotValid = validateFormField(!!riot, riot, 6, [':'], WHITESPACE, ['@', '~']);
+  const isTwitterValid = validateFormField(!!twitter, twitter, 3, [], WHITESPACE, ['@']);
+  const isWebValid = validateFormField(!!web, web, 8, ['.'], WHITESPACE, ['https://', 'http://']);
+  const hasOneOrMoreValues = !!display || !!legal || !!email || !!riot || !!twitter || !!web;
+
+  const status: FormStatus = {
+    isDisplayValid,
+    isLegalValid,
+    isEmailValid,
+    isRiotValid,
+    isTwitterValid,
+    isWebValid,
+    isFormValid:
+      hasOneOrMoreValues &&
+      isDisplayValid &&
+      isLegalValid &&
+      isEmailValid &&
+      isRiotValid &&
+      isTwitterValid &&
+      isWebValid,
+  };
+  return status;
+}

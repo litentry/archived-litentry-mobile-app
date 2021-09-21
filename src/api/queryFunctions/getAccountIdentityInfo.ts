@@ -4,7 +4,7 @@ import {AccountId} from '@polkadot/types/interfaces';
 
 export type IdentityInfo =
   | {
-      hasIdentity: true;
+      hasIdentity: boolean;
       hasJudgements: boolean;
       accountId: string | AccountId;
       display: string;
@@ -27,11 +27,11 @@ export async function getAccountIdentityInfo(api: ApiPromise, accountId: string)
       : info.identity.display ?? accountId;
 
     return {
-      hasIdentity: true,
+      hasIdentity: Boolean(info.identity.display),
       hasJudgements: info.identity.judgements.length > 0,
       accountId,
       registration: info.identity,
-      display,
+      display: display.toUpperCase(),
     };
   }
 

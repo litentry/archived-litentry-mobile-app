@@ -117,7 +117,7 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
       });
     } catch (e) {
       console.warn('transaction error', e);
-      dispatch({type: 'ERROR', payload: e});
+      dispatch({type: 'ERROR', payload: String(e)});
     }
   }, []);
 
