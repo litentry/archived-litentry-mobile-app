@@ -25,7 +25,7 @@
     "@react-native-community/clipboard": "^1.5.1",
     "@react-native-community/hooks": "^2.6.0",
     "@react-native-community/masked-view": "^0.1.11",
-    "@react-native-firebase/app": "^12.1.0",
+    "@react-native-firebase/app": "^12.8.0",
     "@react-native-firebase/messaging": "^12.1.0",
     "@react-navigation/drawer": "^6.1.4",
     "@react-navigation/native": "^6.0.2",
