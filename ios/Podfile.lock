@@ -260,13 +260,13 @@ PODS:
     - React-jsi (= 0.64.2)
     - React-perflogger (= 0.64.2)
   - React-jsinspector (0.64.2)
-  - react-native-camera (4.2.0):
+  - react-native-camera (4.2.1):
     - React-Core
-    - react-native-camera/RCT (= 4.2.0)
-    - react-native-camera/RN (= 4.2.0)
-  - react-native-camera/RCT (4.2.0):
+    - react-native-camera/RCT (= 4.2.1)
+    - react-native-camera/RN (= 4.2.1)
+  - react-native-camera/RCT (4.2.1):
     - React-Core
-  - react-native-camera/RN (4.2.0):
+  - react-native-camera/RN (4.2.1):
     - React-Core
   - react-native-in-app-message (1.0.32):
     - React
@@ -600,7 +600,7 @@ SPEC CHECKSUMS:
   React-jsi: 67747b9722f6dab2ffe15b011bcf6b3f2c3f1427
   React-jsiexecutor: 80c46bd381fd06e418e0d4f53672dc1d1945c4c3
   React-jsinspector: cc614ec18a9ca96fd275100c16d74d62ee11f0ae
-  react-native-camera: fdfefd4139bbbb53f69e8b6fde1ee549b524eb88
+  react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-in-app-message: 7a54e2fd7a490e5c33857bbbb260f855205433db
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
