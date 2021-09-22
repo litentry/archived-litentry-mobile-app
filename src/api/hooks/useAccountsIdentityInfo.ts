@@ -1,12 +1,9 @@
 import {ApiPromise} from '@polkadot/api';
-import {AccountId} from '@polkadot/types/interfaces';
 import useApiQuery from 'src/api/hooks/useApiQuery';
-import {getAccountsIdentityInfo} from 'src/api/queryFunctions/getAccountsIdentityInfo';
+import {getAccountIdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 
-function useAccountsIdentityInfo(accountIds: AccountId[] | string[] | Uint8Array[]) {
-  return useApiQuery(['accounts_detail', accountIds], (api: ApiPromise) => {
-    return getAccountsIdentityInfo(api, accountIds);
+export function useAccountsIdentityInfo(accountIds: string[]) {
+  return useApiQuery(['accounts_identity', {accountIds}], (api: ApiPromise) => {
+    return Promise.all(accountIds.map((id) => getAccountIdentityInfo(api, id)));
   });
 }
-
-export default useAccountsIdentityInfo;

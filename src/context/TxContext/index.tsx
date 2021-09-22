@@ -1,22 +1,23 @@
+import React, {createContext, useCallback, useEffect, useMemo, useReducer, useRef} from 'react';
+import {Dimensions, StyleSheet} from 'react-native';
+import {Modalize} from 'react-native-modalize';
+import QRCodeScanner from 'react-native-qrcode-scanner';
 import {ApiPromise} from '@polkadot/api';
 import {SubmittableExtrinsic} from '@polkadot/api/submittable/types';
-import {DispatchError} from '@polkadot/types/interfaces';
-import {ITuple, SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
+import {SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
 import {BN_ZERO} from '@polkadot/util';
 import {Icon, IconProps, Layout, Text} from '@ui-kitten/components';
+import {useApi} from 'context/ChainApiContext';
 import {PreviewStep} from 'context/TxContext/PreviewStep';
 import {get} from 'lodash';
 import ErrorDialog from 'presentational/ErrorDialog';
 import LoadingView from 'presentational/LoadingView';
 import SuccessDialog from 'presentational/SuccessDialog';
 import TxPayloadQr from 'presentational/TxPayloadQr';
-import React, {createContext, useCallback, useContext, useMemo, useReducer, useRef} from 'react';
-import {Dimensions, StyleSheet} from 'react-native';
-import {Modalize} from 'react-native-modalize';
-import QRCodeScanner from 'react-native-qrcode-scanner';
 import {formatCallMeta} from 'src/packages/call_inspector/CallInspector';
 import QrSigner from 'src/service/QrSigner';
 import globalStyles, {standardPadding} from 'src/styles';
+import WarningDialog from 'presentational/WarningDialog';
 
 let id = 0;
 
@@ -31,11 +32,9 @@ export const TxContext = createContext<TxContextValueType>({
   start: () => Promise.resolve(),
 });
 
-export const useTX = () => useContext(TxContext);
-
 const AlertIcon = (props: IconProps) => <Icon fill="#ccc" {...props} name="alert-triangle-outline" />;
 
-type StartConfig = {
+export type StartConfig = {
   api: ApiPromise;
   address: string;
   txMethod: string;
@@ -46,6 +45,16 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
   const modalRef = useRef<Modalize>(null);
   const signatureRef = useRef<(value: SignerResult) => void>();
   const [state, dispatch] = useReducer(reducer, initialState);
+  const {api: apiPromise} = useApi();
+
+  useEffect(() => {
+    if (!apiPromise?.isConnected && state.step === 'submitting') {
+      dispatch({
+        type: 'WARNING',
+        payload: 'The transaction was sent but you got disconnected from the chain. Please verify later.',
+      });
+    }
+  }, [apiPromise?.isConnected, state.step]);
 
   const start = useCallback(async (config: StartConfig) => {
     const {api, txMethod, params, address} = config;
@@ -86,43 +95,29 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
       });
 
       await new Promise((resolve, reject) => {
-        f.send(({status, events}) => {
-          if (status.isInBlock || status.isFinalized) {
-            const errors = events
-              // find/filter for failed events
-              .filter(({event: {section, method}}) => section === 'system' && method === 'ExtrinsicFailed')
-              // we know that data for system.ExtrinsicFailed is
-              // (DispatchError, DispatchInfo)
-              .map((eventRecord) => {
-                const [dispatchError] = eventRecord.event.data as unknown as ITuple<[DispatchError]>;
-
-                if (dispatchError.isModule) {
-                  // for module errors, we have the section indexed, lookup
-                  const decoded = api.registry.findMetaError(dispatchError.asModule);
-                  const {docs} = decoded;
-
-                  return docs.join(' ').trim();
-                } else {
-                  // Other, CannotLookup, BadOrigin, no extra info
-                  return dispatchError?.toString();
-                }
-              });
-
-            if (errors.length === 0 && status.isFinalized) {
-              dispatch({type: 'NEXT_STEP'});
-              resolve(undefined);
+        f.send((result) => {
+          if (result.isFinalized && !result.isError) {
+            dispatch({type: 'NEXT_STEP'});
+            resolve(undefined);
+          }
+          if (result.isError && result.dispatchError) {
+            let error;
+            if (result.dispatchError.isModule) {
+              // for module errors, we have the section indexed, lookup
+              const decoded = api.registry.findMetaError(result.dispatchError.asModule);
+              const {docs} = decoded;
+              error = docs.join(' ').trim();
+            } else {
+              error = result.dispatchError.toString();
             }
-
-            if (errors[0]) {
-              dispatch({type: 'ERROR', payload: errors[0]});
-              reject();
-            }
+            dispatch({type: 'ERROR', payload: error});
+            reject();
           }
         });
       });
     } catch (e) {
-      console.warn(e);
-      dispatch({type: 'ERROR', payload: e});
+      console.warn('transaction error', e);
+      dispatch({type: 'ERROR', payload: String(e)});
     }
   }, []);
 
@@ -224,15 +219,23 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
             <ErrorDialog text="Tx Failed" msg={state.error} />
           </Layout>
         );
+
+      case 'warning':
+        return (
+          <Layout style={styles.infoContainer}>
+            <WarningDialog text="Tx Sent" msg={state.warning} />
+          </Layout>
+        );
+
       default:
         return null;
     }
   }, [state]);
 
-  const value = useMemo(() => ({start}), [start]);
+  const contextValue: TxContextValueType = useMemo(() => ({start}), [start]);
 
   return (
-    <TxContext.Provider value={value}>
+    <TxContext.Provider value={contextValue}>
       {children}
       <Modalize
         ref={modalRef}
@@ -328,7 +331,8 @@ type State =
       partialFee: number;
     }
   | {step: 'payload'; txPayload: SignerPayloadJSON}
-  | {step: 'error'; error: string};
+  | {step: 'error'; error: string}
+  | {step: 'warning'; warning: string};
 
 const initialState: State = {step: 'none'};
 
@@ -336,6 +340,7 @@ type Action =
   | {type: 'RESET'}
   | {type: 'NEXT_STEP'}
   | {type: 'ERROR'; payload: string}
+  | {type: 'WARNING'; payload: string}
   | {
       type: 'PREVIEW';
       payload: {
@@ -354,6 +359,9 @@ function reducer(state: State, action: Action): State {
 
     case 'ERROR':
       return {step: 'error', error: action.payload};
+
+    case 'WARNING':
+      return {step: 'warning', warning: action.payload};
 
     case 'PREVIEW':
       return {step: 'preview', ...action.payload};

@@ -86,7 +86,14 @@ function AddressInfoPreview(props: PropTypes) {
                 title="Judgment"
                 accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="ribbon-outline" pack="ionic" />}
                 accessoryRight={() =>
-                  identity?.judgements[0] ? <JudgmentStatus judgement={identity.judgements[0]} /> : <View />
+                  identity?.judgements[0] ? (
+                    <JudgmentStatus
+                      judgement={identity.judgements[0]}
+                      hasParent={Boolean(data?.registration?.parent)}
+                    />
+                  ) : (
+                    <View />
+                  )
                 }
               />
             )}

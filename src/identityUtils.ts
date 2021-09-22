@@ -1,6 +1,6 @@
 import {IdentityJudgement} from '@polkadot/types/interfaces';
 
-export const mapStatusText = (judgement: IdentityJudgement) => {
+export const mapStatusText = (judgement: IdentityJudgement, hasParent: boolean) => {
   if (judgement.isErroneous) {
     return {text: 'Erroneous', category: 'bad', icon: 'md-alert-circle'};
   }
@@ -14,11 +14,11 @@ export const mapStatusText = (judgement: IdentityJudgement) => {
   // }
 
   if (judgement.isReasonable) {
-    return {text: 'Reasonable', category: 'good', icon: 'md-checkmark-circle'};
+    return {text: 'Reasonable', category: 'good', icon: hasParent ? 'md-link-outline' : 'md-checkmark-circle'};
   }
 
   if (judgement.isKnownGood) {
-    return {text: 'Known Good', category: 'good', icon: 'md-checkmark-circle'};
+    return {text: 'Known Good', category: 'good', icon: hasParent ? 'md-link-outline' : 'md-checkmark-circle'};
   }
 
   if (judgement.isOutOfDate) {

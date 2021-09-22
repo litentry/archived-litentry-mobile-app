@@ -3,6 +3,7 @@ import {ApplicationProvider} from '@ui-kitten/components';
 import * as eva from '@eva-design/eva';
 
 import {usePersistedState} from 'src/hook/usePersistedState';
+import mapping from 'src/mapping.json';
 
 type Theme = 'light' | 'dark';
 
@@ -34,7 +35,7 @@ export default function ThemeProvider({children}: PropTypes) {
 
   return (
     <ThemeContext.Provider value={value}>
-      <ApplicationProvider {...eva} theme={eva[theme]}>
+      <ApplicationProvider {...eva} theme={eva[theme]} customMapping={mapping as any}>
         {children}
       </ApplicationProvider>
     </ThemeContext.Provider>

@@ -1,6 +1,6 @@
 import Identicon from '@polkadot/reactnative-identicon';
 import {BlockNumber, OpenTip} from '@polkadot/types/interfaces';
-import {formatBalance, formatNumber, u8aToString} from '@polkadot/util';
+import {formatBalance, formatNumber} from '@polkadot/util';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Card, Divider, List, ListItem, Text} from '@ui-kitten/components';
@@ -128,22 +128,15 @@ function TipDetailScreen({route}: ScreenProps) {
         data={tip.tips}
         style={[globalStyles.paddedContainer, styles.container]}
         ItemSeparatorComponent={Divider}
-        renderItem={({item}) => {
+        renderItem={({item}: {item: any[]}) => {
           const [tipper, balance] = item;
           return (
             <ListItem
               title={() => {
                 return (
                   <Account id={tipper.toString()}>
-                    {({info, registration, accountId}) => {
-                      const display = u8aToString(info?.display.asRaw);
-                      return display ? (
-                        <AccountInfoInlineTeaser display={display} judgements={registration?.judgements} />
-                      ) : (
-                        <Text numberOfLines={1} ellipsizeMode="middle" category={'c2'}>
-                          {String(accountId)}
-                        </Text>
-                      );
+                    {(identity) => {
+                      return identity ? <AccountInfoInlineTeaser identity={identity} /> : <Text>{tipper}</Text>;
                     }}
                   </Account>
                 );

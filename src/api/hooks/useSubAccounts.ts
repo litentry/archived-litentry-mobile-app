@@ -8,7 +8,7 @@ type SubAccounts = ITuple<[BalanceOf, Vec<AccountId>]>;
 
 export function useSubAccounts(address?: string) {
   return useApiQuery(
-    ['sub_accounts', address],
+    ['sub_accounts', {address}],
     (api: ApiPromise): Promise<SubAccounts> => api.query.identity.subsOf(address || ''),
     {enabled: Boolean(address)},
   );

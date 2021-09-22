@@ -1,12 +1,11 @@
 import React, {useContext} from 'react';
+import {FlatList, StyleSheet, View} from 'react-native';
 import {useQueryClient} from 'react-query';
 import {Button, Card, Divider, ListItem, Text} from '@ui-kitten/components';
-import {FlatList, StyleSheet, View} from 'react-native';
 import {formatNumber} from '@polkadot/util';
 import type {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
 
 import {ChainApiContext} from 'context/ChainApiContext';
-import {TxContext} from 'context/TxContext';
 import {EmptyView} from 'presentational/EmptyView';
 import Padder from 'presentational/Padder';
 import {useAccounts} from 'context/AccountsContext';
@@ -20,6 +19,7 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {motionDetailScreen} from 'src/navigation/routeKeys';
 import {DashboardStackParamList} from 'src/navigation/navigation';
 import LoadingView from 'presentational/LoadingView';
+import {useApiTx} from 'src/api/hooks/useApiTx';
 
 export function MotionsScreen() {
   const {data, refetch, isLoading, isFetching} = useCouncilMotions();
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({flatList: {padding: standardPadding * 2}});
 function Motion({item}: {item: DeriveCollectiveProposal}) {
   const navigation = useNavigation<NavigationProp<DashboardStackParamList>>();
   const {api} = useContext(ChainApiContext);
-  const {start} = useContext(TxContext);
+  const startTx = useApiTx();
   const {accounts} = useAccounts();
   const account = accounts?.[0];
 
@@ -63,11 +63,10 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
   const queryClient = useQueryClient();
 
   const onPressClose = () => {
-    if (api && account) {
-      start({
-        api,
+    if (account) {
+      startTx({
         address: account.address,
-        params: api.tx.council.close?.meta.args.length === 4 ? [hash, votes?.index, 0, 0] : [hash, votes?.index],
+        params: api?.tx.council.close?.meta.args.length === 4 ? [hash, votes?.index, 0, 0] : [hash, votes?.index],
         txMethod: 'council.close',
       })
         .then(() => {
@@ -78,9 +77,8 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
   };
 
   const onPressNay = () => {
-    if (api && account) {
-      start({
-        api,
+    if (account) {
+      startTx({
         address: account.address,
         params: [hash, votes?.index, false],
         txMethod: 'council.vote',
@@ -91,9 +89,8 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
   };
 
   const onPressAye = () => {
-    if (api && account) {
-      start({
-        api,
+    if (account) {
+      startTx({
         address: account.address,
         params: [hash, votes?.index, true],
         txMethod: 'council.vote',
@@ -107,9 +104,11 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
     <Card
       style={motionStyle.container}
       onPress={() => {
-        navigation.navigate(motionDetailScreen, {hash: String(hash), id: Number(votes?.index)});
+        navigation.navigate(motionDetailScreen, {hash: String(hash)});
       }}>
       <ListItem
+        style={motionStyle.listItem}
+        disabled
         accessoryLeft={() => {
           return <Text category={'h4'}>{formatNumber(votes?.index)}</Text>;
         }}
@@ -155,4 +154,5 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
 const motionStyle = StyleSheet.create({
   container: {marginBottom: standardPadding},
   buttons: {display: 'flex', flexDirection: 'row'},
+  listItem: {backgroundColor: 'transparent'},
 });

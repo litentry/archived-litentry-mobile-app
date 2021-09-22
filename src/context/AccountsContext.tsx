@@ -7,6 +7,7 @@ import {usePersistedState} from 'src/hook/usePersistedState';
 export type Account = {
   address: string;
   name: string;
+  isFavorite: boolean;
 };
 
 type State = {
@@ -16,22 +17,14 @@ type State = {
 type AccountPayload = {network: SupportedNetworkType; account: Account};
 
 type Action =
-  | {
-      type: 'ADD_ACCOUNT';
-      payload: AccountPayload;
-    }
-  | {
-      type: 'REMOVE_ACCOUNT';
-      payload: AccountPayload;
-    }
-  | {
-      type: 'INIT_STATE';
-      payload: State;
-    };
+  | {type: 'ADD_ACCOUNT'; payload: AccountPayload}
+  | {type: 'REMOVE_ACCOUNT'; payload: AccountPayload}
+  | {type: 'TOGGLE_FAVORITE'; payload: {network: SupportedNetworkType; accountId: string}}
+  | {type: 'INIT_STATE'; payload: State};
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
-    case 'ADD_ACCOUNT':
+    case 'ADD_ACCOUNT': {
       const networkAccounts = state[action.payload.network];
       return {
         ...state,
@@ -39,6 +32,8 @@ function reducer(state: State, action: Action): State {
           ? [...networkAccounts, action.payload.account]
           : [action.payload.account],
       };
+    }
+
     case 'REMOVE_ACCOUNT': {
       return {
         ...state,
@@ -50,6 +45,22 @@ function reducer(state: State, action: Action): State {
     case 'INIT_STATE': {
       return action.payload;
     }
+
+    case 'TOGGLE_FAVORITE': {
+      const networkAccounts = state[action.payload.network] ?? [];
+      const account = networkAccounts?.find((a) => a.address === action.payload.accountId);
+      if (!account) {
+        return state;
+      }
+
+      return {
+        ...state,
+        [action.payload.network]: networkAccounts.map((acc) =>
+          acc.address === action.payload.accountId ? {...acc, isFavorite: !account.isFavorite} : acc,
+        ),
+      };
+    }
+
     default:
       throw new Error(`Action not supported`);
   }
@@ -60,6 +71,7 @@ type AccountsContextValue = {
   accounts: Account[];
   addAccount: (network: SupportedNetworkType, account: Account) => void;
   removeAccount: (network: SupportedNetworkType, account: Account) => void;
+  toggleFavorite: (accountId: string) => void;
 };
 
 const initialState: State = {
@@ -73,6 +85,7 @@ const AccountsContext = createContext<AccountsContextValue>({
   isLoading: true,
   addAccount: () => undefined,
   removeAccount: () => undefined,
+  toggleFavorite: () => undefined,
 });
 
 function AccountsProvider({children}: {children: React.ReactNode}) {
@@ -104,6 +117,9 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
       },
       removeAccount: (network: SupportedNetworkType, account: Account) => {
         dispatch({type: 'REMOVE_ACCOUNT', payload: {network, account}});
+      },
+      toggleFavorite: (accountId: string) => {
+        dispatch({type: 'TOGGLE_FAVORITE', payload: {network: currentNetwork, accountId}});
       },
     };
   }, [currentNetwork, state, isLoading]);
