@@ -69,7 +69,7 @@
     "react-native-svg": "^12.1.1",
     "react-native-vector-icons": "^8.1.0",
     "react-native-webview": "^11.13.0",
-    "react-query": "^3.21.1",
+    "react-query": "^3.24.3",
     "readable-stream": "^3.6.0",
     "rn-nodeify": "^10.3.0",
     "stream-browserify": "^3.0.0",
