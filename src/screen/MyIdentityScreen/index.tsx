@@ -1,5 +1,5 @@
 import Identicon from '@polkadot/reactnative-identicon';
-import {RouteProp, useRoute} from '@react-navigation/native';
+import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Button, Divider, Icon, IconProps, ListItem, MenuGroup, MenuItem, Text} from '@ui-kitten/components';
 import BN from 'bn.js';
 import {NetworkContext} from 'context/NetworkContext';
@@ -20,14 +20,19 @@ import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useSubIdentities} from 'src/api/hooks/useSubIdentities';
 import {AccountsStackParamList} from 'src/navigation/navigation';
-import {myIdentityScreen} from 'src/navigation/routeKeys';
+import {myIdentityScreen, registerSubIdentitiesScreen} from 'src/navigation/routeKeys';
 import {buildAddressDetailUrl} from 'src/service/Polkasembly';
 import {standardPadding} from 'src/styles';
 
-function MyIdentity() {
-  const {
+function MyIdentity({
+  navigation,
+  route: {
     params: {address},
-  } = useRoute<RouteProp<AccountsStackParamList, typeof myIdentityScreen>>();
+  },
+}: {
+  navigation: NavigationProp<AccountsStackParamList>;
+  route: RouteProp<AccountsStackParamList, typeof myIdentityScreen>;
+}) {
   const startTx = useApiTx();
   const queryClient = useQueryClient();
   const {data: identity} = useAccountIdentityInfo(address);
@@ -182,20 +187,41 @@ function MyIdentity() {
               <Button onPress={() => setRegistrarSelectionOpen(true)} status="basic">
                 Request Judgement
               </Button>
+              <Padder scale={1} />
+              <Button
+                onPress={() => {
+                  navigation.navigate(registerSubIdentitiesScreen, {address});
+                }}
+                status="basic">
+                Set Sub-identities
+              </Button>
+              <Padder scale={1} />
+              <Button
+                onPress={() => {
+                  Alert.alert('Clear Identity', `Clear identity of account: \n ${address}`, [
+                    {
+                      text: 'Yes',
+                      onPress: () => {
+                        startTx({
+                          address,
+                          txMethod: 'identity.clearIdentity',
+                          params: [],
+                        }).then(() => {
+                          queryClient.invalidateQueries(['account_identity', address]);
+                        });
+                      },
+                      style: 'destructive',
+                    },
+                    {text: 'Cancel', style: 'cancel'},
+                  ]);
+                }}
+                status="basic">
+                Clear Identity
+              </Button>
             </>
           ) : null}
 
           <Padder scale={1} />
-          <ListItem
-            title="View externally"
-            onPress={() => polkascanViewRef.current?.open()}
-            accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="md-share" pack="ionic" />}
-            accessoryRight={() => (
-              <Text selectable category="label" numberOfLines={1} ellipsizeMode="middle">
-                Polkascan
-              </Text>
-            )}
-          />
 
           {subAccounts?.length ? (
             <MenuGroup title={`Sub accounts (${subAccounts.length})`} accessoryLeft={SubAccountsIcon}>
@@ -216,6 +242,17 @@ function MyIdentity() {
               ))}
             </MenuGroup>
           ) : null}
+
+          <ListItem
+            title="View externally"
+            onPress={() => polkascanViewRef.current?.open()}
+            accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="md-share" pack="ionic" />}
+            accessoryRight={() => (
+              <Text selectable category="label" numberOfLines={1} ellipsizeMode="middle">
+                Polkascan
+              </Text>
+            )}
+          />
         </View>
 
         <RegistrarSelectionModal
