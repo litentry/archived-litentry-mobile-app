@@ -9,7 +9,7 @@ import React from 'react';
 import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
-import {useBalance} from 'src/api/hooks/useBalance';
+import {useAccountInfo} from 'src/api/hooks/useAccountInfo';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {AccountsStackParamList, CompleteNavigatorParamList} from 'src/navigation/navigation';
 import {accountsScreen, balanceScreen, identityGuideScreen, myIdentityScreen} from 'src/navigation/routeKeys';
@@ -27,7 +27,7 @@ export function MyAccountScreen({
   const {removeAccount} = useAccounts();
   const {data} = useAccountIdentityInfo(address);
   const formatBalance = useFormatBalance();
-  const balance = useBalance({address});
+  const {data: accountInfo} = useAccountInfo(address);
   const theme = useTheme();
 
   return (
@@ -38,7 +38,7 @@ export function MyAccountScreen({
           <Padder scale={1} />
           <Row title="Address" value={address} />
           <Padder scale={1} />
-          <Row title="Balance" value={formatBalance(balance?.data.free ?? BN_ZERO)} />
+          <Row title="Balance" value={formatBalance(accountInfo?.data.free ?? BN_ZERO)} />
           <Padder scale={1} />
           <Row
             title="identity"

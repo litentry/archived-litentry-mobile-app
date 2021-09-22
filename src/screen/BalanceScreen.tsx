@@ -4,7 +4,7 @@ import Balances from 'presentational/Balances';
 import ModalTitle from 'presentational/ModalTitle';
 import React, {useContext, useEffect, useRef} from 'react';
 import {Modalize} from 'react-native-modalize';
-import {useBalance} from 'src/api/hooks/useBalance';
+import {useAccountInfo} from 'src/api/hooks/useAccountInfo';
 import {useAccounts} from 'src/context/AccountsContext';
 import {AppStackParamList} from 'src/navigation/navigation';
 import {balanceScreen} from 'src/navigation/routeKeys';
@@ -31,7 +31,7 @@ export function BalanceScreen({
     throw new Error("Couldn't find the account ");
   }
 
-  const balance = useBalance({address: currentAccount.address});
+  const {data: accountInfo} = useAccountInfo(currentAccount.address);
 
   return (
     <Modalize
@@ -43,11 +43,11 @@ export function BalanceScreen({
       onClose={navigation.goBack}
       closeOnOverlayTap
       panGestureEnabled>
-      {balance && (
+      {accountInfo && (
         <Layout level="1" style={globalStyles.paddedContainer}>
           <ModalTitle title={currentAccount.name} subtitle={` (@${currentNetwork.name})`} />
           <Divider />
-          <Balances balance={balance} />
+          <Balances balance={accountInfo} />
           <Divider style={globalStyles.divider} />
           <Button appearance="ghost" onPress={() => modalRef.current?.close()}>
             Close
