@@ -128,7 +128,7 @@ function TipDetailScreen({route}: ScreenProps) {
         data={tip.tips}
         style={[globalStyles.paddedContainer, styles.container]}
         ItemSeparatorComponent={Divider}
-        renderItem={({item}) => {
+        renderItem={({item}: {item: any[]}) => {
           const [tipper, balance] = item;
           return (
             <ListItem

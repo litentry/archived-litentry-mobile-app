@@ -105,7 +105,7 @@ export function PolkassemblyDiscussionDetail({
               {` To comment, like or subscribe please `}
             </Text>
             <TouchableOpacity onPress={() => Linking.openURL(externalURL)}>
-              <Text appearance="hint" category="c2">
+              <Text status="primary" category="c2" style={styles.textUnderline}>
                 login
               </Text>
             </TouchableOpacity>
@@ -177,5 +177,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  textUnderline: {
+    textDecorationLine: 'underline',
   },
 });
