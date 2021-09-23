@@ -11,6 +11,6 @@ export function useRegistrars(): RegistrarInfoWithIndex[] {
 
   return (registrarsInfo || [])
     .map((r) => r.unwrapOr(undefined))
-    .filter((r): r is RegistrarInfo => !!r?.fee.gt(BN_ZERO))
+    .filter((r) => !!r?.fee.gt(BN_ZERO))
     .map((r, index) => Object.assign({}, r, {index}));
 }
