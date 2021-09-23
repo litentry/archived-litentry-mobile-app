@@ -1,9 +1,9 @@
 import Identicon from '@polkadot/reactnative-identicon';
 import {BlockNumber, OpenTip} from '@polkadot/types/interfaces';
-import {formatBalance, formatNumber, u8aToString} from '@polkadot/util';
+import {formatBalance, formatNumber} from '@polkadot/util';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {Card, Divider, List, ListItem, Text} from '@ui-kitten/components';
+import {Card, Divider, ListItem, Text} from '@ui-kitten/components';
 import {useAccounts} from 'context/AccountsContext';
 import {ChainApiContext} from 'context/ChainApiContext';
 import NoDataImage from 'image/no_data.png';
@@ -14,7 +14,7 @@ import {extractTipState} from 'layout/tips/utils';
 import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React, {useContext, useMemo} from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {FlatList, Image, StyleSheet, View} from 'react-native';
 import {useTip} from 'src/api/hooks/useTip';
 import {useCall} from 'src/hook/useCall';
 import {Account} from 'src/layout/Account';
@@ -123,20 +123,21 @@ function TipDetailScreen({route}: ScreenProps) {
 
   return (
     <SafeView edges={noTopEdges}>
-      <List
+      <FlatList
         ListHeaderComponent={<TipDetailContent tip={tip} bestNumber={bestNumber} />}
-        data={tip.tips}
+        data={tip.tips.toArray()}
         style={[globalStyles.paddedContainer, styles.container]}
         ItemSeparatorComponent={Divider}
         renderItem={({item}: {item: any[]}) => {
           const [tipper, balance] = item;
+
           return (
             <ListItem
               title={() => {
                 return (
                   <Account id={tipper.toString()}>
                     {(identity) => {
-                      return identity ? <AccountInfoInlineTeaser identity={identity} /> : <Text>{tipper}</Text>;
+                      return identity ? <AccountInfoInlineTeaser identity={identity} /> : <Text>{String(tipper)}</Text>;
                     }}
                   </Account>
                 );
