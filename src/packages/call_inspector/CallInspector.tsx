@@ -103,13 +103,14 @@ export function useParams(proposal: Call): Param[] {
 }
 
 function extractParams(value: IExtrinsic | IMethod): Param[] {
-  return GenericCall.filterOrigin(value.meta).map(
-    ({name, type}, k): Param => ({
+  const params = value.meta.args.map(
+    ({name, type}, index): Param => ({
       name: name.toString(),
       type: getTypeDef(type.toString()),
-      value: value.args[k],
+      value: value.args[index],
     }),
   );
+  return params;
 }
 
 /**
