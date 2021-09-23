@@ -7,6 +7,7 @@ import {NetworkContext} from 'context/NetworkContext';
 import {CouncilSummaryTeaser} from 'layout/CouncilSummaryTeaser';
 import {DemocracySummaryTeaser} from 'layout/DemocracySummaryTeaser';
 import TipsSummaryTeaser from 'layout/tips/TipsSummaryTeaser';
+import {BountySummaryTeaser} from 'layout/BountySummaryTeaser';
 import {TreasurySummaryTeaser} from 'layout/TreasurySummaryTeaser';
 import FadeInAnimatedView from 'presentational/FadeInAnimatedView';
 import NetworkItem from 'presentational/NetworkItem';
@@ -46,6 +47,7 @@ function DashboardScreen({navigation}: PropTypes) {
             <CouncilSummaryTeaser onPressMore={() => navigation.navigate(councilScreen)} />
             <TreasurySummaryTeaser onPressMore={() => navigation.navigate(treasuryScreen)} />
             <TipsSummaryTeaser onPressMore={() => navigation.navigate(tipsScreen)} />
+            <BountySummaryTeaser onPressMore={() => ({})} />
           </ScrollView>
         </View>
       </FadeInAnimatedView>
