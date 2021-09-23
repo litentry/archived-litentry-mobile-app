@@ -18,7 +18,7 @@ type AccountPayload = {network: SupportedNetworkType; account: Account};
 
 type Action =
   | {type: 'ADD_ACCOUNT'; payload: AccountPayload}
-  | {type: 'REMOVE_ACCOUNT'; payload: AccountPayload}
+  | {type: 'REMOVE_ACCOUNT'; payload: {network: SupportedNetworkType; accountId: string}}
   | {type: 'TOGGLE_FAVORITE'; payload: {network: SupportedNetworkType; accountId: string}}
   | {type: 'INIT_STATE'; payload: State};
 
@@ -38,7 +38,7 @@ function reducer(state: State, action: Action): State {
       return {
         ...state,
         [action.payload.network]: state[action.payload.network]?.filter(
-          (account) => account.address !== action.payload.account.address,
+          (account) => account.address !== action.payload.accountId,
         ),
       };
     }
@@ -70,7 +70,7 @@ type AccountsContextValue = {
   isLoading: boolean;
   accounts: Account[];
   addAccount: (network: SupportedNetworkType, account: Account) => void;
-  removeAccount: (network: SupportedNetworkType, account: Account) => void;
+  removeAccount: (accountId: string) => void;
   toggleFavorite: (accountId: string) => void;
 };
 
@@ -115,8 +115,8 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
       addAccount: (network: SupportedNetworkType, account: Account) => {
         dispatch({type: 'ADD_ACCOUNT', payload: {network, account}});
       },
-      removeAccount: (network: SupportedNetworkType, account: Account) => {
-        dispatch({type: 'REMOVE_ACCOUNT', payload: {network, account}});
+      removeAccount: (accountId: string) => {
+        dispatch({type: 'REMOVE_ACCOUNT', payload: {network: currentNetwork, accountId}});
       },
       toggleFavorite: (accountId: string) => {
         dispatch({type: 'TOGGLE_FAVORITE', payload: {network: currentNetwork, accountId}});

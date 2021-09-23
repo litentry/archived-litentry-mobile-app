@@ -11,16 +11,21 @@ import {CandidateScreen} from 'screen/Council/CandidateScreen';
 import {CouncilScreen} from 'screen/Council/CouncilScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
 import DashboardScreen, {DashboardHeaderLeft} from 'screen/DashboardScreen';
+import {DemocracyProposalScreen} from 'screen/DemocracyProposalScreen';
+import {DemocracyScreen} from 'screen/DemocracyScreen';
 import DevScreen from 'screen/DevScreen';
 import DrawerScreen from 'screen/Drawer/DrawerScreen';
 import {MotionDetailScreen} from 'screen/MotionDetailScreen';
+import {MyAccountScreen} from 'screen/MyAccountScreen';
 import MyIdentityScreen from 'screen/MyIdentityScreen';
 import {IdentityGuideScreen} from 'screen/MyIdentityScreen/IdentityGuideScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
 import {PermissionGrantingPrompt} from 'screen/PermissionGrantingPrompt';
 import {PolkassemblyDiscussionDetail} from 'screen/Polkassembly/PolkassemblyDiscussionDetail';
 import {PolkassemblyDiscussions} from 'screen/Polkassembly/PolkassemblyDiscussions';
+import {ReferendumScreen} from 'screen/ReferendumScreen';
 import RegistrarListScreen from 'screen/RegistrarListScreen';
+import {RegisterSubIdentitiesScreen} from 'screen/subIdentities/RegisterSubIdentitiesScreen';
 import {SubmitTipScreen} from 'screen/SubmitTipScreen';
 import TipDetailScreen from 'screen/tips/TipDetailScreen';
 import TipsScreen from 'screen/tips/TipsScreen';
@@ -81,6 +86,14 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.treasuryScreen} component={TreasuryScreen} />
       <DashboardStack.Screen name={routeKeys.submitTipScreen} component={SubmitTipScreen} />
       <DashboardStack.Screen name={routeKeys.motionsScreen} component={MotionsScreen} />
+      <DashboardStack.Screen name={routeKeys.registerSubIdentitiesScreen} component={RegisterSubIdentitiesScreen} />
+      <DashboardStack.Screen name={routeKeys.democracyScreen} component={DemocracyScreen} />
+      <DashboardStack.Screen name={routeKeys.referendumScreen} component={ReferendumScreen} />
+      <DashboardStack.Screen
+        name={routeKeys.democracyProposalScreen}
+        component={DemocracyProposalScreen}
+        options={{title: 'Proposal'}}
+      />
     </DashboardStack.Navigator>
   );
 }
@@ -109,6 +122,7 @@ function AccountsNavigator() {
         options={{headerLeft: DashboardHeaderLeft}}
       />
       <AccountsStack.Screen name={routeKeys.myIdentityScreen} component={MyIdentityScreen} />
+      <AccountsStack.Screen name={routeKeys.myAccountScreen} component={MyAccountScreen} />
     </AccountsStack.Navigator>
   );
 }
