@@ -18,6 +18,11 @@ module.exports = {
             name: '@react-native-community/async-storage',
             message: 'Please use src/service/AsyncStorage instead.',
           },
+          {
+            name: '@polkadot/util',
+            importNames: ['formatBalance'],
+            message: 'Please use useFormatBalance hook instead.',
+          },
         ],
       },
     ],

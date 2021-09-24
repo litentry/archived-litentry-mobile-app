@@ -2,8 +2,9 @@ import {useContext} from 'react';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {Registry} from '@polkadot/types/types';
 import {Compact} from '@polkadot/types';
-import {formatBalance} from '@polkadot/util';
 import type BN from 'bn.js';
+// eslint-disable-next-line no-restricted-imports
+import {formatBalance} from '@polkadot/util';
 
 /**
  * Everything here is a loose copy of
