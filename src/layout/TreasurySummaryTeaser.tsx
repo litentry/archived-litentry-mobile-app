@@ -1,4 +1,4 @@
-import {bnToBn, BN_ONE, BN_ZERO, formatBalance, formatNumber} from '@polkadot/util';
+import {bnToBn, BN_ONE, BN_ZERO, formatNumber} from '@polkadot/util';
 import {Card, Layout} from '@ui-kitten/components';
 import {LoadingBox} from 'presentational/LoadingBox';
 import Padder from 'presentational/Padder';
@@ -9,6 +9,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
+import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useTreasuryInfo} from 'src/api/hooks/useTreasuryInfo';
 import globalStyles from 'src/styles';
 
@@ -31,6 +32,7 @@ export function TreasurySummaryTeaser(props: PropTypes) {
 
   const {timeStringParts} = useBlockTime(treasuryInfo?.spendPeriod);
   const {timeStringParts: termLeft} = useBlockTime(total.sub(value || BN_ONE));
+  const formatBalance = useFormatBalance();
 
   return (
     <SectionTeaserContainer onPressMore={props.onPressMore} title="Treasury">
@@ -61,7 +63,9 @@ export function TreasurySummaryTeaser(props: PropTypes) {
               <StatInfoBlock title="Available">
                 {formatBalance(treasuryInfo.treasuryBalance?.freeBalance)}
               </StatInfoBlock>
-              <StatInfoBlock title="Next Burn">{formatBalance(treasuryInfo.burn || BN_ZERO)}</StatInfoBlock>
+              <StatInfoBlock title="Next Burn">
+                {formatBalance(treasuryInfo.burn || BN_ZERO, {isShort: true})}
+              </StatInfoBlock>
             </View>
           </Card>
         </View>
