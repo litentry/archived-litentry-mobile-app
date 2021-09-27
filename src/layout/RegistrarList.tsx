@@ -1,16 +1,17 @@
 import React, {useMemo} from 'react';
 import {StyleSheet, View, FlatList} from 'react-native';
-import {formatBalance} from '@polkadot/util';
 import {Text, Divider} from '@ui-kitten/components';
 import {useRegistrars} from 'src/api/hooks/useRegistrars';
 import globalStyles, {standardPadding, monofontFamily} from 'src/styles';
 import StatInfoBlock from 'presentational/StatInfoBlock';
 import Padder from 'presentational/Padder';
 import RegistrarTeaser from './RegistrarTeaser';
+import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 
 function RegistrarList() {
   const registrars = useRegistrars();
   const registrarsCount = registrars.length;
+  const formatBalance = useFormatBalance();
 
   const sortedRegistrars = useMemo(
     () => [...registrars].sort((a, b) => (a.fee.toNumber() > b.fee.toNumber() ? 1 : -1)),
@@ -25,8 +26,8 @@ function RegistrarList() {
     );
   }
 
-  const lowestFee = formatBalance(sortedRegistrars[0]?.fee);
-  const highestFee = formatBalance(sortedRegistrars[sortedRegistrars.length - 1]?.fee);
+  const lowestFee = formatBalance(sortedRegistrars[0]?.fee ?? '');
+  const highestFee = formatBalance(sortedRegistrars[sortedRegistrars.length - 1]?.fee ?? '');
 
   return (
     <View style={globalStyles.paddedContainer}>

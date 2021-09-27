@@ -3,9 +3,9 @@ import BN from 'bn.js';
 import {StyleSheet, View} from 'react-native';
 import AddressInlineTeaser from './AddressInlineTeaser';
 import {Text} from '@ui-kitten/components';
-import {formatBalance} from '@polkadot/util';
 import {Balance} from '@polkadot/types/interfaces';
 import {standardPadding} from 'src/styles';
+import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 
 type PropTypes = {
   address: string;
@@ -14,6 +14,7 @@ type PropTypes = {
 };
 
 function RegistrarTeaser(props: PropTypes) {
+  const formatBalance = useFormatBalance();
   const {address, fee, index} = props;
 
   return (

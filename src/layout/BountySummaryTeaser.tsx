@@ -12,12 +12,15 @@ import ProgressChartWidget from 'presentational/ProgressWidget';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import {BN_ONE, BN_ZERO, BN_HUNDRED} from '@polkadot/util';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
+import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
+import {formatNumber} from '@polkadot/util';
 
 type Props = {
   onPressMore: () => void;
 };
 
 export function BountySummaryTeaser(props: Props) {
+  const formatBalance = useFormatBalance();
   const bestNumber = useBestNumber();
   const {data: bounties, isLoading} = useBounties();
   const {data: treasuryInfo} = useTreasuryInfo();
@@ -44,11 +47,13 @@ export function BountySummaryTeaser(props: Props) {
         <View style={styles.boxRow}>
           <Card style={styles.card}>
             <View style={styles.itemRow}>
-              <StatInfoBlock title="Active">{bounties?.activeBounties}</StatInfoBlock>
-              <StatInfoBlock title="Past">{bounties?.pastBounties}</StatInfoBlock>
+              <StatInfoBlock title="Active">{formatNumber(bounties?.activeBounties)}</StatInfoBlock>
+              <StatInfoBlock title="Past">{formatNumber(bounties?.pastBounties)}</StatInfoBlock>
             </View>
             <View style={styles.itemRow}>
-              <StatInfoBlock title="Active total">{bounties?.totalValue}</StatInfoBlock>
+              <StatInfoBlock title="Active total">
+                {bounties?.totalValue ? formatBalance(bounties.totalValue) : null}
+              </StatInfoBlock>
             </View>
           </Card>
           <Padder scale={0.2} />
