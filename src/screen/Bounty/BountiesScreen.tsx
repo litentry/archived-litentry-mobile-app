@@ -52,7 +52,6 @@ export function BountiesScreen() {
                 bountyStatus={item.bountyStatus}
               />
             )}
-            // ListHeaderComponent={StatusIndicatorReference}
             ItemSeparatorComponent={Divider}
             ListEmptyComponent={EmptyView}
           />
