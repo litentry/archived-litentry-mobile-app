@@ -101,9 +101,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: standardPadding * 2,
   },
   container: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
   },
 });
