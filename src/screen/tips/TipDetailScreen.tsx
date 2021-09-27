@@ -1,6 +1,6 @@
 import Identicon from '@polkadot/reactnative-identicon';
 import {BlockNumber, OpenTip} from '@polkadot/types/interfaces';
-import {formatBalance, formatNumber} from '@polkadot/util';
+import {formatNumber} from '@polkadot/util';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Card, Divider, ListItem, Text} from '@ui-kitten/components';
@@ -15,6 +15,7 @@ import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React, {useContext, useMemo} from 'react';
 import {FlatList, Image, StyleSheet, View} from 'react-native';
+import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useTip} from 'src/api/hooks/useTip';
 import {useCall} from 'src/hook/useCall';
 import {Account} from 'src/layout/Account';
@@ -32,6 +33,7 @@ type TipDetailContentProps = {
 };
 
 function TipDetailContent({tip, bestNumber}: TipDetailContentProps) {
+  const formatBalance = useFormatBalance();
   const {accounts} = useAccounts();
   const tipState = useMemo(() => {
     if (tip) {
@@ -94,7 +96,7 @@ function TipDetailContent({tip, bestNumber}: TipDetailContentProps) {
         <Text category="s1" style={styles.sectionText}>
           Tippers {tippersCount > 0 ? `(${tippersCount})` : ''}
         </Text>
-        {Number(median) > 0 ? <Text>{formatBalance(median)}</Text> : null}
+        {Number(median) > 0 ? <Text>{formatBalance(median ?? '')}</Text> : null}
       </View>
     </View>
   );
@@ -112,6 +114,7 @@ function EmptyTippers() {
 }
 
 function TipDetailScreen({route}: ScreenProps) {
+  const formatBalance = useFormatBalance();
   const {api} = useContext(ChainApiContext);
   const hash = route.params?.hash;
   const tip = useTip(hash);
