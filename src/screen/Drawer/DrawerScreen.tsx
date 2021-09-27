@@ -1,5 +1,5 @@
 import {DrawerContentComponentProps} from '@react-navigation/drawer';
-import {Divider, Icon, Layout, ListItem, Text, Toggle} from '@ui-kitten/components';
+import {Divider, Icon, Layout, ListItem, Text, Toggle, MenuGroup, MenuItem} from '@ui-kitten/components';
 import {useTheme} from 'context/ThemeContext';
 import logo from 'image/logo.png';
 import SafeView from 'presentational/SafeView';
@@ -34,6 +34,14 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
             accessoryLeft={(props) => <Icon {...props} name="browser-outline" animation="zoom" />}
             onPress={() => navigation.navigate(dashboardScreen)}
           />
+          <Divider />
+          <MenuGroup
+            title="Parachains"
+            accessoryLeft={(props) => <Icon {...props} name="link-2-outline" animation="zoom" />}
+            style={styles.menuGroup}>
+            <MenuItem title="Overview" onPress={() => ({})} />
+            <MenuItem title="Crowdloan" onPress={() => ({})} />
+          </MenuGroup>
           <Divider />
           <ListItem
             title="Accounts"
@@ -118,6 +126,9 @@ const styles = StyleSheet.create({
   },
   overflowMenu: {
     minWidth: 200,
+  },
+  menuGroup: {
+    paddingLeft: 12,
   },
 });
 
