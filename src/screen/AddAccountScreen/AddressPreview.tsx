@@ -1,6 +1,5 @@
 import {ApiPromise} from '@polkadot/api';
 import Identicon from '@polkadot/reactnative-identicon';
-import {formatBalance} from '@polkadot/util';
 import {Icon, IconProps, Layout, ListItem, Text} from '@ui-kitten/components';
 import JudgmentStatus from 'presentational/JudgmentStatus';
 import LoadingView from 'presentational/LoadingView';
@@ -8,6 +7,7 @@ import React from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useAccountInfo} from 'src/api/hooks/useAccountInfo';
+import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {NetworkType} from 'src/types';
 
 const {height} = Dimensions.get('window');
@@ -25,7 +25,7 @@ const OnelineAddressStyle = {
 
 function AddressInfoPreview(props: PropTypes) {
   const {address, network} = props;
-
+  const formatBalance = useFormatBalance();
   const {data} = useAccountIdentityInfo(address);
   const identity = data?.hasIdentity ? data.registration : undefined;
   const {data: accountInfo, isLoading} = useAccountInfo(address);
