@@ -82,21 +82,23 @@ function BountyItem({bounty, description, index, bountyStatus}: BountyItemProps)
         </View>
       </View>
       <View style={styles.row}>
-        <Text category="c1">curator: </Text>
         {bountyStatus.curator && (
-          <Account id={bountyStatus.curator.toString()}>
-            {(identity) => (
-              <View style={[styles.row, styles.accountsRow]}>
-                {identity?.accountId && <Identicon value={identity.accountId} size={20} />}
-                <Padder scale={0.3} />
-                {identity?.display && (
-                  <Text numberOfLines={1} category={'c1'} ellipsizeMode="middle">
-                    {identity.display}
-                  </Text>
-                )}
-              </View>
-            )}
-          </Account>
+          <>
+            <Text category="c1">curator: </Text>
+            <Account id={bountyStatus.curator.toString()}>
+              {(identity) => (
+                <View style={[styles.row, styles.accountsRow]}>
+                  {identity?.accountId && <Identicon value={identity.accountId} size={20} />}
+                  <Padder scale={0.3} />
+                  {identity?.display && (
+                    <Text numberOfLines={1} category={'c1'} ellipsizeMode="middle">
+                      {identity.display}
+                    </Text>
+                  )}
+                </View>
+              )}
+            </Account>
+          </>
         )}
       </View>
       <View style={styles.row}>
