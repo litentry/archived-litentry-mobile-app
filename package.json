@@ -27,7 +27,7 @@
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-firebase/app": "^12.1.0",
     "@react-native-firebase/messaging": "^12.1.0",
-    "@react-navigation/drawer": "^6.1.4",
+    "@react-navigation/drawer": "^6.1.6",
     "@react-navigation/native": "^6.0.4",
     "@react-navigation/stack": "^6.0.9",
     "@ui-kitten/components": "^5.0.0",
