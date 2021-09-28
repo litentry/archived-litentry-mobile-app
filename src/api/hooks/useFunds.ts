@@ -2,17 +2,16 @@ import type {Option, StorageKey} from '@polkadot/types';
 import type {
   AccountId,
   BalanceOf,
+  BlockNumber,
   FundInfo,
   HrmpChannel,
   HrmpChannelId,
-  BlockNumber,
   ParaId,
 } from '@polkadot/types/interfaces';
 import type {ITuple} from '@polkadot/types/types';
-import {BN_ZERO, BN, stringToU8a, u8aConcat} from '@polkadot/util';
+import {BN, stringToU8a, u8aConcat} from '@polkadot/util';
 import {encodeAddress} from '@polkadot/util-crypto';
 import {useApi} from 'context/ChainApiContext';
-import {useEffect, useState} from 'react';
 import useApiQuery from 'src/api/hooks/useApiQuery';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import {useEventTrigger} from 'src/api/hooks/useEventTrigger';
@@ -22,50 +21,37 @@ export const CROWD_PREFIX = stringToU8a('modlpy/cfund');
 
 export type ChannelMap = Record<string, [HrmpChannelId, HrmpChannel][]>;
 
-const EMPTY: Campaigns = {
-  activeCap: BN_ZERO,
-  activeRaised: BN_ZERO,
-  funds: null,
-  totalCap: BN_ZERO,
-  totalRaised: BN_ZERO,
-};
-
-export default function useFunds(): Campaigns {
-  const {api} = useApi();
+export default function useFunds() {
+  // const {api} = useApi();
   const bestNumber = useBestNumber();
-  const trigger = useEventTrigger([api?.events.crowdloan?.Created]);
-  const paraIds = useMapKeys(api?.query.crowdloan?.funds, {at: trigger.blockHash, transform: extractFundIds}) ?? [];
+  // const trigger = useEventTrigger([api?.events.crowdloan?.Created]);
+  // const paraIds = useMapKeys(api?.query.crowdloan?.funds, {at: trigger.blockHash, transform: extractFundIds}) ?? [];
 
-  const {data: campaigns} = useApiQuery('campaings', async (api) => {
-    const r: [[ParaId[]], Option<FundInfo>[]] | undefined = (await api.query.crowdloan?.funds?.multi(paraIds)) as any;
-    if (r) {
-      return optFundMulti.transform(r);
-    }
-    return [];
-  });
+  return useApiQuery(
+    ['funds'],
+    async (api) => {
+      const paraIdKeys = await api.query.crowdloan?.funds?.keys<[ParaId]>();
+      const paraIds = paraIdKeys ? extractFundIds(paraIdKeys) : [];
 
-  const {data: leases} = useApiQuery('leases', async (api) => {
-    const r: [[ParaId[]], Option<ITuple<[AccountId, BalanceOf]>>[][]] = (await api.query.slots?.leases?.multi(
-      paraIds,
-    )) as any;
+      const [rawFunds, rawLeases]: [
+        Option<FundInfo>[] | undefined,
+        Array<Option<ITuple<[AccountId, BalanceOf]>>>[] | undefined,
+      ] = await Promise.all([
+        api.query.crowdloan?.funds?.multi<Option<FundInfo>>(paraIds),
+        api.query.slots?.leases?.multi<any>(paraIds),
+      ]);
 
-    if (r) {
-      return optLeaseMulti.transform(r);
-    }
-  });
-  const [result, setResult] = useState<Campaigns>(EMPTY);
+      const funds = rawFunds ? optFundMulti.transform(paraIds, rawFunds) : [];
+      const leases = optLeaseMulti.transform(paraIds, rawLeases ?? []);
 
-  //here we manually add the actual ending status and calculate the totals
-  useEffect((): void => {
-    bestNumber &&
-      campaigns &&
-      leases &&
-      setResult((prev) =>
-        createResult(bestNumber, api?.consts.crowdloan?.minContribution as BlockNumber, campaigns, leases, prev),
-      );
-  }, [api, bestNumber, campaigns, leases]);
+      const minContribution = api?.consts.crowdloan?.minContribution as BlockNumber;
 
-  return result;
+      if (bestNumber && funds && leases) {
+        return createResult(bestNumber, minContribution, funds, leases);
+      }
+    },
+    {enabled: !!bestNumber},
+  );
 }
 
 function extractFundIds(keys: StorageKey<[ParaId]>[]): ParaId[] {
@@ -77,7 +63,7 @@ function createAddress(paraId: ParaId): Uint8Array {
 }
 
 const optFundMulti = {
-  transform: ([[paraIds], optFunds]: [[ParaId[]], Option<FundInfo>[]]): Campaign[] =>
+  transform: (paraIds: ParaId[], optFunds: Option<FundInfo>[]): Campaign[] =>
     paraIds
       .map((paraId, i): [ParaId, FundInfo | null] => [paraId, optFunds?.[i]?.unwrapOr(null) ?? null])
       .filter((v): v is [ParaId, FundInfo] => !!v[1])
@@ -108,7 +94,7 @@ function isCrowdloadAccount(paraId: ParaId, accountId: AccountId): boolean {
 }
 
 const optLeaseMulti = {
-  transform: ([[paraIds], leases]: [[ParaId[]], Option<ITuple<[AccountId, BalanceOf]>>[][]]): ParaId[] =>
+  transform: (paraIds: ParaId[], leases: Option<ITuple<[AccountId, BalanceOf]>>[][]): ParaId[] =>
     paraIds.filter(
       (paraId, i) =>
         (leases[i] ?? [])
@@ -120,13 +106,7 @@ const optLeaseMulti = {
 };
 
 // compare the current campaigns against the previous, manually adding ending and calculating the new totals
-function createResult(
-  bestNumber: BlockNumber,
-  minContribution: BN,
-  funds: Campaign[],
-  leased: ParaId[],
-  prev: Campaigns,
-): Campaigns {
+function createResult(bestNumber: BlockNumber, minContribution: BN, funds: Campaign[], leased: ParaId[]): Campaigns {
   const [activeRaised, activeCap, totalRaised, totalCap] = funds.reduce(
     ([ar, ac, tr, tc], {info: {cap, end, raised}, isWinner}) => [
       bestNumber.gt(end) || isWinner ? ar : ar.iadd(raised),
@@ -136,47 +116,14 @@ function createResult(
     ],
     [new BN(0), new BN(0), new BN(0), new BN(0)],
   );
-  const hasNewActiveCap = !prev.activeCap.eq(activeCap);
-  const hasNewActiveRaised = !prev.activeRaised.eq(activeRaised);
-  const hasNewTotalCap = !prev.totalCap.eq(totalCap);
-  const hasNewTotalRaised = !prev.totalRaised.eq(totalRaised);
-  const hasChanged =
-    !prev.funds ||
-    prev.funds.length !== funds.length ||
-    hasNewActiveCap ||
-    hasNewActiveRaised ||
-    hasNewTotalCap ||
-    hasNewTotalRaised ||
-    funds.some((c) => isFundUpdated(bestNumber, minContribution, c, leased, prev));
-
-  if (!hasChanged) {
-    return prev;
-  }
 
   return {
-    activeCap: hasNewActiveCap ? activeCap : prev.activeCap,
-    activeRaised: hasNewActiveRaised ? activeRaised : prev.activeRaised,
+    activeCap,
+    activeRaised,
     funds: funds.map((c) => updateFund(bestNumber, minContribution, c, leased)).sort(sortCampaigns),
-    totalCap: hasNewTotalCap ? totalCap : prev.totalCap,
-    totalRaised: hasNewTotalRaised ? totalRaised : prev.totalRaised,
+    totalCap,
+    totalRaised,
   };
-}
-
-function isFundUpdated(
-  bestNumber: BlockNumber,
-  minContribution: BN,
-  {info: {cap, end, raised}, paraId}: Campaign,
-  leased: ParaId[],
-  allPrev: Campaigns,
-): boolean {
-  const prev = allPrev.funds?.find((p) => p.paraId.eq(paraId));
-
-  return (
-    !prev ||
-    (!prev.isEnded && bestNumber.gt(end)) ||
-    (!prev.isCapped && cap.sub(raised).lt(minContribution)) ||
-    (!prev.isWinner && hasLease(paraId, leased))
-  );
 }
 
 function hasLease(paraId: ParaId, leased: ParaId[]): boolean {
