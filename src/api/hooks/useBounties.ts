@@ -1,12 +1,8 @@
 import {ApiPromise} from '@polkadot/api';
 import useApiQuery from 'src/api/hooks/useApiQuery';
 import {BN} from '@polkadot/util';
-import {useFormatBalance} from './useFormatBalance';
-import {formatNumber} from '@polkadot/util';
 
 export function useBounties() {
-  const formatBalance = useFormatBalance();
-
   return useApiQuery('bounties', async (api: ApiPromise) => {
     const bounties = await api.derive.bounties.bounties();
     const bountyIndex = await (api.query.bounties || api.query.treasury).bountyCount();
@@ -18,9 +14,9 @@ export function useBounties() {
     return {
       bounties,
       bountyIndex,
-      activeBounties: formatNumber(activeBounties),
-      pastBounties: formatNumber(pastBounties),
-      totalValue: formatBalance(totalValue),
+      activeBounties,
+      pastBounties,
+      totalValue,
     };
   });
 }
