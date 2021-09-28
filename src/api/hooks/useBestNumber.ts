@@ -1,8 +1,8 @@
+import {useEffect} from 'react';
+import {useQueryClient} from 'react-query';
 import {VoidFn} from '@polkadot/api/types';
 import {BlockNumber} from '@polkadot/types/interfaces';
 import {useApi} from 'context/ChainApiContext';
-import {useEffect} from 'react';
-import {useQueryClient} from 'react-query';
 import useApiQuery from 'src/api/hooks/useApiQuery';
 
 export function useBestNumber(): BlockNumber | undefined {
