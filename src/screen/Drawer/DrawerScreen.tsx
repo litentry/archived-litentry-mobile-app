@@ -1,13 +1,12 @@
 import {DrawerContentComponentProps} from '@react-navigation/drawer';
 import {Divider, Icon, Layout, ListItem, Text, Toggle, MenuGroup, MenuItem} from '@ui-kitten/components';
 import {useTheme} from 'context/ThemeContext';
+import logo from 'image/logo.png';
 import SafeView from 'presentational/SafeView';
 import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {MultiAccountView} from 'screen/Drawer/MultiAccountView';
 import {
   accountsNavigator,
-  accountsScreen,
   dashboardScreen,
   devScreen,
   notificationSettingsScreen,
@@ -16,7 +15,6 @@ import {
   webviewScreen,
 } from 'src/navigation/routeKeys';
 import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
-import logo from 'image/logo.png';
 
 function DrawerScreen({navigation}: DrawerContentComponentProps) {
   const {theme, toggleTheme} = useTheme();
@@ -29,16 +27,8 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
             <Image source={logo} style={styles.logoImage} />
             <Text style={styles.slogan}>Decentralized Identity</Text>
           </TouchableOpacity>
-          <Divider />
-          <MultiAccountView />
         </View>
         <Layout style={styles.rest}>
-          <ListItem
-            title="Accounts"
-            accessoryLeft={(props) => <Icon {...props} name="person-outline" animation="zoom" />}
-            onPress={() => navigation.navigate(accountsNavigator)}
-          />
-          <Divider />
           <ListItem
             title="Dashboard"
             accessoryLeft={(props) => <Icon {...props} name="browser-outline" animation="zoom" />}
@@ -52,6 +42,12 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
             <MenuItem title="Overview" onPress={() => ({})} />
             <MenuItem title="Crowdloan" onPress={() => ({})} />
           </MenuGroup>
+          <Divider />
+          <ListItem
+            title="Accounts"
+            accessoryLeft={(props) => <Icon {...props} name="person-outline" animation="zoom" />}
+            onPress={() => navigation.navigate(accountsNavigator)}
+          />
           <Divider />
           <ListItem
             title="Registrars"
@@ -123,7 +119,7 @@ const styles = StyleSheet.create({
     fontFamily: monofontFamily,
     fontSize: 12,
   },
-  main: {maxHeight: 288, flex: 1},
+  main: {},
   rest: {flex: 1},
   backdrop: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
