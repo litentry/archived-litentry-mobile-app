@@ -20,6 +20,7 @@ import {MyAccountScreen} from 'screen/MyAccountScreen';
 import MyIdentityScreen from 'screen/MyIdentityScreen';
 import {IdentityGuideScreen} from 'screen/MyIdentityScreen/IdentityGuideScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
+import {CrowdLoanScreen} from 'screen/Parachain/CrowdLoanScreen';
 import {PermissionGrantingPrompt} from 'screen/PermissionGrantingPrompt';
 import {PolkassemblyDiscussionDetail} from 'screen/Polkassembly/PolkassemblyDiscussionDetail';
 import {PolkassemblyDiscussions} from 'screen/Polkassembly/PolkassemblyDiscussions';
@@ -93,6 +94,7 @@ function DashboardStackNavigator() {
         component={DemocracyProposalScreen}
         options={{title: 'Proposal'}}
       />
+      <DashboardStack.Screen name={routeKeys.crowdloanScreen} component={CrowdLoanScreen} />
     </DashboardStack.Navigator>
   );
 }
