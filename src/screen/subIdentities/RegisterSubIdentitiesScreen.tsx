@@ -10,7 +10,7 @@ import ModalTitle from 'presentational/ModalTitle';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useSubIdentities} from 'src/api/hooks/useSubIdentities';
-import {DashboardStackParamList} from 'src/navigation/navigation';
+import {AccountsStackParamList} from 'src/navigation/navigation';
 import {registerSubIdentitiesScreen} from 'src/navigation/routeKeys';
 import globalStyles, {monofontFamily} from 'src/styles';
 import {AddSubIdentity} from './AddSubIdentity';
@@ -19,8 +19,8 @@ import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 
 type ScreenProps = {
-  navigation: NavigationProp<DashboardStackParamList>;
-  route: RouteProp<DashboardStackParamList, typeof registerSubIdentitiesScreen>;
+  navigation: NavigationProp<AccountsStackParamList>;
+  route: RouteProp<AccountsStackParamList, typeof registerSubIdentitiesScreen>;
 };
 
 export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {

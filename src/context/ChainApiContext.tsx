@@ -36,7 +36,7 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
     const provider = new WsProvider(wsAddress, false);
     const apiPromise = new ApiPromise({provider});
     apiPromise.connect();
-    dispatch({type: 'CONNECT', payload: apiPromise});
+    dispatch({type: 'CONNECT'});
 
     function handleConnect() {
       logger.debug('ChainApiContext: Api connected');
@@ -45,7 +45,7 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
 
     function handleReady() {
       logger.debug('ChainApiContext: Api ready at', wsAddress);
-      dispatch({type: 'ON_READY'});
+      dispatch({type: 'ON_READY', payload: apiPromise});
     }
 
     function handleDisconnect() {
@@ -104,8 +104,8 @@ type ChainApiContext = {
 
 type Action =
   | {type: 'ON_CONNECT'}
-  | {type: 'CONNECT'; payload: ApiPromise}
-  | {type: 'ON_READY'}
+  | {type: 'CONNECT'}
+  | {type: 'ON_READY'; payload: ApiPromise}
   | {type: 'ON_DISCONNECT'}
   | {type: 'ON_ERROR'}
   | {type: 'SET_WS_CONNECTION_INDEX'; payload: number};
@@ -113,14 +113,14 @@ type Action =
 function reducer(state: ChainApiContext = initialState, action: Action): ChainApiContext {
   switch (action.type) {
     case 'CONNECT':
-      return {...state, inProgress: true, status: 'unknown', api: action.payload};
+      return {...state, inProgress: true, status: 'unknown'};
     case 'ON_CONNECT':
       return {...state, status: 'connected'};
     case 'ON_DISCONNECT':
     case 'ON_ERROR':
       return {...state, status: 'disconnected', inProgress: false};
     case 'ON_READY':
-      return {...state, status: 'ready', inProgress: false};
+      return {...state, status: 'ready', inProgress: false, api: action.payload};
 
     case 'SET_WS_CONNECTION_INDEX':
       return {...state, wsConnectionIndex: action.payload};

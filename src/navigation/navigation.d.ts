@@ -50,7 +50,6 @@ type DashboardStackParamList = {
   [submitTipScreen]: undefined;
   [treasuryScreen]: undefined;
   [motionsScreen]: undefined;
-  [registerSubIdentitiesScreen]: {address: string};
   [democracyScreen]: undefined;
   [referendumScreen]: {index: string};
   [democracyProposalScreen]: {index: string};
@@ -84,6 +83,7 @@ type AccountsStackParamList = {
   [accountsScreen]: undefined;
   [myIdentityScreen]: {address: string};
   [myAccountScreen]: {address: string};
+  [registerSubIdentitiesScreen]: {address: string};
 };
 
 type CompleteNavigatorParamList = AppStackParamList &

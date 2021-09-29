@@ -87,7 +87,6 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.treasuryScreen} component={TreasuryScreen} />
       <DashboardStack.Screen name={routeKeys.submitTipScreen} component={SubmitTipScreen} />
       <DashboardStack.Screen name={routeKeys.motionsScreen} component={MotionsScreen} />
-      <DashboardStack.Screen name={routeKeys.registerSubIdentitiesScreen} component={RegisterSubIdentitiesScreen} />
       <DashboardStack.Screen name={routeKeys.democracyScreen} component={DemocracyScreen} />
       <DashboardStack.Screen name={routeKeys.referendumScreen} component={ReferendumScreen} />
       <DashboardStack.Screen
@@ -125,6 +124,7 @@ function AccountsNavigator() {
       />
       <AccountsStack.Screen name={routeKeys.myIdentityScreen} component={MyIdentityScreen} />
       <AccountsStack.Screen name={routeKeys.myAccountScreen} component={MyAccountScreen} />
+      <AccountsStack.Screen name={routeKeys.registerSubIdentitiesScreen} component={RegisterSubIdentitiesScreen} />
     </AccountsStack.Navigator>
   );
 }

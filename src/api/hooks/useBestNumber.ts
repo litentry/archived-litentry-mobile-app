@@ -1,9 +1,28 @@
+import {useEffect} from 'react';
+import {useQueryClient} from 'react-query';
+import {VoidFn} from '@polkadot/api/types';
 import {BlockNumber} from '@polkadot/types/interfaces';
+import {useApi} from 'context/ChainApiContext';
 import useApiQuery from 'src/api/hooks/useApiQuery';
 
 export function useBestNumber(): BlockNumber | undefined {
-  const {data} = useApiQuery(['api_derive_chain_bestNumber'], (api) => api.derive.chain.bestNumber(), {
-    staleTime: 1000 * 60,
-  });
+  const {api} = useApi();
+  const queryClient = useQueryClient();
+  const {data} = useApiQuery('api_derive_chain_bestNumber', (apiPromise) => apiPromise.derive.chain.bestNumber());
+
+  useEffect(() => {
+    let unsub: VoidFn | undefined;
+
+    (async () => {
+      unsub = await api?.derive.chain.bestNumber((blockNumber) => {
+        queryClient.setQueryData('api_derive_chain_bestNumber', blockNumber);
+      });
+    })();
+
+    return () => {
+      unsub && unsub();
+    };
+  }, [queryClient, api]);
+
   return data;
 }
