@@ -1331,7 +1331,7 @@
     "@polkadot/types" "6.1.1"
     "@polkadot/util" "^7.4.1"
 
-"@polkadot/types@4.0.4-5", "@polkadot/types@6.1.1", "@polkadot/types@^4.13.1", "@polkadot/types@^5.3.2", "@polkadot/types@^5.4.1", "@polkadot/types@^5.7.1", "@polkadot/types@^5.9.1", "@polkadot/types@^6.0.5":
+"@polkadot/types@4.0.4-5", "@polkadot/types@6.1.1", "@polkadot/types@^4.13.1", "@polkadot/types@^5.3.2", "@polkadot/types@^5.4.1", "@polkadot/types@^5.7.1", "@polkadot/types@^5.9.1", "@polkadot/types@^6.1.1":
   version "6.1.2"
   resolved "https://registry.yarnpkg.com/@polkadot/types/-/types-6.1.2.tgz#6b7a8d7532814964a5b74ef99d8493d1b9c5c073"
   integrity sha512-2GJVpzw9vlTVdXotOH32gF4v9JFG5BdixiU/xQY5iY8e4bFEJmRWmPNanKYWW7v/t45+yqBZwPYGfsSMEWEqcw==
