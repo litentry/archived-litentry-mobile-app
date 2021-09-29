@@ -17,6 +17,10 @@
     "bundle:android": "cd android/ && ./gradlew bundleRelease",
     "assemble:android": "cd android/ && ./gradlew clean && ./gradlew assembleRelease"
   },
+  "resolutions": {
+    "@polkadot/types": "^6.1.2",
+    "@polkadot/util": "^7.4.1"
+  },
   "dependencies": {
     "@eva-design/eva": "^2.1.1",
     "@polkadot/api": "^6.1.2",
