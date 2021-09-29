@@ -11,11 +11,8 @@ import type {
 import type {ITuple} from '@polkadot/types/types';
 import {BN, stringToU8a, u8aConcat} from '@polkadot/util';
 import {encodeAddress} from '@polkadot/util-crypto';
-import {useApi} from 'context/ChainApiContext';
 import useApiQuery from 'src/api/hooks/useApiQuery';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
-import {useEventTrigger} from 'src/api/hooks/useEventTrigger';
-import {useMapKeys} from 'src/api/hooks/useMapKeys';
 
 export const CROWD_PREFIX = stringToU8a('modlpy/cfund');
 
@@ -107,19 +104,12 @@ const optLeaseMulti = {
 
 // compare the current campaigns against the previous, manually adding ending and calculating the new totals
 function createResult(bestNumber: BlockNumber, minContribution: BN, funds: Campaign[], leased: ParaId[]): Campaigns {
-  const [activeRaised, activeCap, totalRaised, totalCap] = funds.reduce(
-    ([ar, ac, tr, tc], {info: {cap, end, raised}, isWinner}) => [
-      bestNumber.gt(end) || isWinner ? ar : ar.iadd(raised),
-      bestNumber.gt(end) || isWinner ? ac : ac.iadd(cap),
-      tr.iadd(raised),
-      tc.iadd(cap),
-    ],
-    [new BN(0), new BN(0), new BN(0), new BN(0)],
+  const [totalRaised, totalCap] = funds.reduce(
+    ([tr, tc], {info: {cap, raised}}) => [tr.iadd(raised), tc.iadd(cap)],
+    [new BN(0), new BN(0)],
   );
 
   return {
-    activeCap,
-    activeRaised,
     funds: funds.map((c) => updateFund(bestNumber, minContribution, c, leased)).sort(sortCampaigns),
     totalCap,
     totalRaised,
@@ -157,8 +147,6 @@ function sortCampaigns(a: Campaign, b: Campaign): number {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 interface Campaigns {
-  activeCap: BN;
-  activeRaised: BN;
   funds: Campaign[] | null;
   totalCap: BN;
   totalRaised: BN;

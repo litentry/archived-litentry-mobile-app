@@ -1,6 +1,6 @@
 import {LinkOption} from '@polkadot/apps-config/endpoints/types';
 import type {ParaId} from '@polkadot/types/interfaces';
-import {formatNumber} from '@polkadot/util';
+import {formatNumber, BN_ZERO, BN} from '@polkadot/util';
 import {Card, Text} from '@ui-kitten/components';
 import {BlockTime} from 'layout/BlockTime';
 import LoadingView from 'presentational/LoadingView';
@@ -31,6 +31,16 @@ export function CrowdLoanScreen() {
 
   const [active, ended] = extractLists(data.funds, leasePeriod);
 
+  const [activeRaised, activeCap] = active.reduce(
+    ([par, pac], current) => {
+      return [
+        par.iadd(current.info.raised.gte(BN_ZERO) ? current.info.raised : BN_ZERO),
+        pac.iadd(current.info.cap.gte(BN_ZERO) ? current.info.cap : BN_ZERO),
+      ];
+    },
+    [new BN(0), new BN(0)],
+  );
+
   return (
     <SafeView edges={noTopEdges}>
       <SectionList
@@ -50,9 +60,9 @@ export function CrowdLoanScreen() {
                   <Text category="h6" appearance="hint">
                     active raised / cap
                   </Text>
-                  <Text numberOfLines={1} adjustsFontSizeToFit>{`${formatBalance(data.activeRaised)} / ${formatBalance(
-                    data.activeCap,
-                  )}`}</Text>
+                  <Text numberOfLines={1} adjustsFontSizeToFit>{`${formatBalance(activeRaised, {
+                    isShort: true,
+                  })} / ${formatBalance(activeCap)}`}</Text>
                 </View>
                 <View style={styles.headerTileContainer}>
                   <Text category="h6" appearance="hint">
