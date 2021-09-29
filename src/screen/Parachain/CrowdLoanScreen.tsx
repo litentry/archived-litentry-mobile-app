@@ -1,26 +1,20 @@
+import {LinkOption} from '@polkadot/apps-config/endpoints/types';
+import type {ParaId} from '@polkadot/types/interfaces';
+import {formatNumber} from '@polkadot/util';
 import {Card, Text} from '@ui-kitten/components';
+import {BlockTime} from 'layout/BlockTime';
+import LoadingView from 'presentational/LoadingView';
+import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React, {useMemo} from 'react';
-import {FlatList, SectionList, StyleSheet, View} from 'react-native';
-import type BN from 'bn.js';
-import useFunds, {Campaign} from 'src/api/hooks/useFunds';
-import LoadingView from 'presentational/LoadingView';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import {formatNumber} from '@polkadot/util';
-import type {ParaId} from '@polkadot/types/interfaces';
-import {LeasePeriod, useParachainsLeasePeriod} from 'src/api/hooks/useParachainsLeasePeriod';
-import globalStyles, {standardPadding} from 'src/styles';
-import Padder from 'presentational/Padder';
+import {SectionList, StyleSheet, View} from 'react-native';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
-
-interface Props {
-  activeCap: BN;
-  activeRaised: BN;
-  className?: string;
-  fundCount: number;
-  totalCap: BN;
-  totalRaised: BN;
-}
+import {useContributions} from 'src/api/hooks/useContributions';
+import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
+import useFunds, {Campaign} from 'src/api/hooks/useFunds';
+import {LeasePeriod, useParachainsLeasePeriod} from 'src/api/hooks/useParachainsLeasePeriod';
+import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
+import globalStyles, {standardPadding} from 'src/styles';
 
 export function CrowdLoanScreen() {
   const formatBalance = useFormatBalance();
@@ -35,7 +29,7 @@ export function CrowdLoanScreen() {
     return <LoadingView />;
   }
 
-  const [active, ended, allIds] = extractLists(data.funds, leasePeriod);
+  const [active, ended] = extractLists(data.funds, leasePeriod);
 
   return (
     <SafeView edges={noTopEdges}>
@@ -91,16 +85,61 @@ export function CrowdLoanScreen() {
 }
 
 function Fund({item, isOngoing}: {item: Campaign; isOngoing: boolean}) {
+  const formatBalance = useFormatBalance();
   const bestNumber = useBestNumber();
-  const end = item.info.end;
+  const {end, firstPeriod, lastPeriod, cap, raised} = item.info;
   const blocksLeft = useMemo(() => (bestNumber && end.gt(bestNumber) ? end.sub(bestNumber) : null), [bestNumber, end]);
+  const endpoints = useParaEndpoints(item.paraId);
+  const {data: contributions} = useContributions(item.paraId);
+
+  if (!endpoints?.length) {
+    return null;
+  }
+
+  const {text} = endpoints[endpoints.length - 1] as LinkOption;
 
   return (
-    <Card style={styles.fund}>
-      <Text>{formatNumber(item.paraId)}</Text>
-      <Text>
-        {item.isWinner ? 'Winner' : blocksLeft ? (item.isCapped ? 'Capped' : isOngoing ? 'Active' : 'Past') : 'Ended'}
-      </Text>
+    <Card style={styles.fund} disabled>
+      <View style={globalStyles.rowContainer}>
+        <Text category="h5" numberOfLines={1} adjustsFontSizeToFit style={styles.title}>
+          {String(text)}
+        </Text>
+        <View style={styles.spacer} />
+        <Text category="h6">{formatNumber(item.paraId)}</Text>
+      </View>
+      <Padder scale={0.5} />
+      <View style={globalStyles.rowContainer}>
+        <View>
+          {blocksLeft ? <BlockTime blockNumber={blocksLeft} /> : null}
+          <Text>
+            {item.isWinner
+              ? 'Winner'
+              : blocksLeft
+              ? item.isCapped
+                ? 'Capped'
+                : isOngoing
+                ? 'Active'
+                : 'Past'
+              : 'Ended'}
+          </Text>
+          <Text>
+            {'leases: '}
+            {firstPeriod.eq(lastPeriod)
+              ? formatNumber(firstPeriod)
+              : `${formatNumber(firstPeriod)} - ${formatNumber(lastPeriod)}`}
+          </Text>
+        </View>
+        <View style={styles.spacer} />
+        <View style={styles.alignEnd}>
+          <Text numberOfLines={1} adjustsFontSizeToFit>{`${formatBalance(raised, {isShort: true})} / ${formatBalance(
+            cap,
+            {
+              isShort: true,
+            },
+          )}`}</Text>
+          <Text>count: {formatNumber(contributions?.contributorsHex.length)}</Text>
+        </View>
+      </View>
     </Card>
   );
 }
@@ -117,12 +156,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   listContent: {
-    padding: standardPadding,
+    padding: standardPadding * 2,
   },
   sectionHeader: {
     padding: standardPadding * 2,
   },
+  title: {flexShrink: 1},
   fund: {marginBottom: standardPadding},
+  spacer: {flex: 1, minWidth: standardPadding * 3},
+  alignEnd: {
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+    flexShrink: 1,
+  },
 });
 
 function extractLists(value: Campaign[] | null, leasePeriod?: LeasePeriod): [Campaign[], Campaign[], ParaId[] | null] {
