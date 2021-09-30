@@ -19,10 +19,7 @@ export const CROWD_PREFIX = stringToU8a('modlpy/cfund');
 export type ChannelMap = Record<string, [HrmpChannelId, HrmpChannel][]>;
 
 export default function useFunds() {
-  // const {api} = useApi();
   const bestNumber = useBestNumber();
-  // const trigger = useEventTrigger([api?.events.crowdloan?.Created]);
-  // const paraIds = useMapKeys(api?.query.crowdloan?.funds, {at: trigger.blockHash, transform: extractFundIds}) ?? [];
 
   return useApiQuery(
     ['funds'],

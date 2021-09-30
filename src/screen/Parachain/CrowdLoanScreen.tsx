@@ -142,11 +142,8 @@ function Chart({percent}: {percent: number}) {
 
 function Fund({item}: {item: Campaign}) {
   const formatBalance = useFormatBalance();
-  // const bestNumber = useBestNumber();
   const {cap, raised} = item.info;
-  // const blocksLeft = useMemo(() => (bestNumber && end.gt(bestNumber) ? end.sub(bestNumber) : null), [bestNumber, end]);
   const endpoints = useParaEndpoints(item.paraId);
-  // const {data: contributions} = useContributions(item.paraId);
 
   if (!endpoints?.length) {
     return null;
@@ -172,28 +169,6 @@ function Fund({item}: {item: Campaign}) {
     </Card>
   );
 }
-
-//     {{blocksLeft ? <BlockTime blockNumber={blocksLeft} /> : null}
-//      <Text>
-//           {item.isWinner
-//             ? 'Winner'
-//             : blocksLeft
-//             ? item.isCapped
-//               ? 'Capped'
-//               : isOngoing
-//               ? 'Active'
-//               : 'Past'
-//             : 'Ended'}
-//         </Text> */}
-//        <Text>
-//           {'leases: '}
-//           {firstPeriod.eq(lastPeriod)
-//             ? formatNumber(firstPeriod)
-//             : `${formatNumber(firstPeriod)} - ${formatNumber(lastPeriod)}`}
-//         </Text>
-//       <View style={styles.alignEnd}>
-//         <Text>count: {formatNumber(contributions?.contributorsHex.length)}</Text>
-//       </View>
 
 const styles = StyleSheet.create({
   container: {flex: 1},
@@ -250,3 +225,29 @@ function extractLists(value: Campaign[] | null, leasePeriod?: LeasePeriod): [Cam
 
   return [active, ended, allIds];
 }
+
+// TODO: USE FOR DETAIL PAGE
+// const bestNumber = useBestNumber();
+// const blocksLeft = useMemo(() => (bestNumber && end.gt(bestNumber) ? end.sub(bestNumber) : null), [bestNumber, end]);
+// const {data: contributions} = useContributions(item.paraId);
+//     {{blocksLeft ? <BlockTime blockNumber={blocksLeft} /> : null}
+//      <Text>
+//           {item.isWinner
+//             ? 'Winner'
+//             : blocksLeft
+//             ? item.isCapped
+//               ? 'Capped'
+//               : isOngoing
+//               ? 'Active'
+//               : 'Past'
+//             : 'Ended'}
+//         </Text> */}
+//        <Text>
+//           {'leases: '}
+//           {firstPeriod.eq(lastPeriod)
+//             ? formatNumber(firstPeriod)
+//             : `${formatNumber(firstPeriod)} - ${formatNumber(lastPeriod)}`}
+//         </Text>
+//       <View style={styles.alignEnd}>
+//         <Text>count: {formatNumber(contributions?.contributorsHex.length)}</Text>
+//       </View>

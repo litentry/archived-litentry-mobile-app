@@ -6,15 +6,11 @@ import useApiQuery from 'src/api/hooks/useApiQuery';
 export function useAuctionInfo() {
   return useApiQuery('auction_info', async (api) => {
     const [numAuctions, optInfo] = await Promise.all([
-      api.query.auctions?.auctionCounter?.() as Promise<AuctionIndex> | undefined,
-      api.query.auctions?.auctionInfo?.() as Promise<Option<ITuple<[LeasePeriodOf, BlockNumber]>>> | undefined,
+      api.query.auctions?.auctionCounter?.<AuctionIndex>(),
+      api.query.auctions?.auctionInfo?.<Option<ITuple<[LeasePeriodOf, BlockNumber]>>>(),
     ]);
     const [leasePeriod, endBlock] = optInfo?.unwrapOr([null, null]) ?? [null, null];
 
-    return {
-      endBlock,
-      leasePeriod,
-      numAuctions,
-    };
+    return {endBlock, leasePeriod, numAuctions};
   });
 }
