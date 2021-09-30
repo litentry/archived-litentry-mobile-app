@@ -6,8 +6,10 @@ import useApiQuery from 'src/api/hooks/useApiQuery';
 
 export function useParachainLeases(id: ParaId) {
   return useApiQuery(['parachain_leases', id], async (api: ApiPromise) => {
-    const leases = (await api.query.slots?.leases?.(id)) as unknown as Option<ITuple<[AccountId, BalanceOf]>>[];
+    const leases = (await api.query.slots?.leases?.(id)) as Option<ITuple<[AccountId, BalanceOf]>>[] | undefined;
 
-    return leases.map((opt, index) => (opt.isSome ? index : -1)).filter((period) => period !== -1);
+    if (leases) {
+      return leases.map((opt, index) => (opt.isSome ? index : -1)).filter((period) => period !== -1);
+    }
   });
 }
