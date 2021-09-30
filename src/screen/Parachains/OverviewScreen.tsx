@@ -8,6 +8,7 @@ import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {useUpcomingParaIds} from 'src/api/hooks/useUpcomingParaIds';
 import {useParachainIds} from 'src/api/hooks/useParachainIds';
 import {LeasePeriod, useParachainsLeasePeriod} from 'src/api/hooks/useParachainsLeasePeriod';
+import {useParachainProposalIds} from 'src/api/hooks/useParachainProposalIds';
 import {useParachainLeases} from 'src/api/hooks/useParachainLeases';
 import ProgressChartWidget from 'presentational/ProgressWidget';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
@@ -23,6 +24,7 @@ export function ParachainsOverviewScreen() {
   const {data: leasePeriod, isLoading: isLeasePeriodLoading} = useParachainsLeasePeriod();
   const {data: parathreadIds} = useUpcomingParaIds();
   const {data: parachains, isLoading: isLoadingParachains} = useParachainIds();
+  const {data: proposalIds} = useParachainProposalIds();
   const {timeStringParts: periodRemainderTimeParts} = useBlockTime(leasePeriod?.remainder);
   const periodRemainder = periodRemainderTimeParts.filter(Boolean).slice(0, 2).join(' ');
   const {timeStringParts: totalPeriodTimeParts} = useBlockTime(leasePeriod?.length);
@@ -46,6 +48,7 @@ export function ParachainsOverviewScreen() {
           totalPeriod={totalPeriod}
           periodRemainder={periodRemainder}
           progressPercent={progressPercent || 0}
+          proposalsCount={proposalIds?.length || 0}
         />
       </View>
     </SafeView>
@@ -55,6 +58,7 @@ export function ParachainsOverviewScreen() {
 type OverviewProps = {
   parachains: ParaId[];
   parathreadsCount: number;
+  proposalsCount: number;
   leasePeriod: LeasePeriod | undefined;
   totalPeriod: string;
   periodRemainder: string;
@@ -68,6 +72,7 @@ const Overview = React.memo(function Overview({
   parathreadsCount,
   totalPeriod,
   periodRemainder,
+  proposalsCount,
 }: OverviewProps) {
   return (
     <FlatList
@@ -79,14 +84,14 @@ const Overview = React.memo(function Overview({
                 <StatInfoBlock title="Parachains">{formatNumber(parachains?.length)}</StatInfoBlock>
                 <StatInfoBlock title="Parathreads">{formatNumber(parathreadsCount)}</StatInfoBlock>
               </View>
-              {false && (
+              {proposalsCount ? (
                 <View style={styles.itemRow}>
-                  <StatInfoBlock title="Proposals">{formatNumber(0)}</StatInfoBlock>
+                  <StatInfoBlock title="Proposals">{formatNumber(proposalsCount)}</StatInfoBlock>
                 </View>
-              )}
+              ) : null}
               <Divider />
               <Padder scale={1} />
-              {leasePeriod && (
+              {leasePeriod ? (
                 <View style={styles.itemRow}>
                   <View style={styles.leasePeriodContainer}>
                     <ProgressChartWidget
@@ -101,7 +106,7 @@ const Overview = React.memo(function Overview({
                     </View>
                   </View>
                 </View>
-              )}
+              ) : null}
             </Card>
             <Padder scale={1} />
             <View style={styles.parachainsHeaderContainer}>
