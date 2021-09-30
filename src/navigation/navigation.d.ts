@@ -30,6 +30,7 @@ import {
   identityGuideScreen,
   myAccountScreen,
   crowdloanScreen,
+  bountiesScreen,
 } from 'src/navigation/routeKeys';
 
 type DashboardStackParamList = {
@@ -54,6 +55,7 @@ type DashboardStackParamList = {
   [referendumScreen]: {index: string};
   [democracyProposalScreen]: {index: string};
   [crowdloanScreen]: undefined;
+  [bountiesScreen]: undefined;
 };
 
 type DrawerParamList = {

@@ -9,6 +9,7 @@ import {AddAccountScreen} from 'screen/AddAccountScreen/AddAccountScreen';
 import {BalanceScreen} from 'screen/BalanceScreen';
 import {CandidateScreen} from 'screen/Council/CandidateScreen';
 import {CouncilScreen} from 'screen/Council/CouncilScreen';
+import {BountiesScreen} from 'screen/Bounty/BountiesScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
 import DashboardScreen, {DashboardHeaderLeft} from 'screen/DashboardScreen';
 import {DemocracyProposalScreen} from 'screen/DemocracyProposalScreen';
@@ -95,6 +96,7 @@ function DashboardStackNavigator() {
         options={{title: 'Proposal'}}
       />
       <DashboardStack.Screen name={routeKeys.crowdloanScreen} component={CrowdLoanScreen} />
+      <DashboardStack.Screen name={routeKeys.bountiesScreen} component={BountiesScreen} />
     </DashboardStack.Navigator>
   );
 }

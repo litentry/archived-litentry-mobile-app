@@ -18,11 +18,12 @@
     "assemble:android": "cd android/ && ./gradlew clean && ./gradlew assembleRelease"
   },
   "resolutions": {
-    "@polkadot/types": "^6.1.1"
+    "@polkadot/types": "^6.1.2",
+    "@polkadot/util": "^7.4.1"
   },
   "dependencies": {
     "@eva-design/eva": "^2.1.1",
-    "@polkadot/api": "^6.1.1",
+    "@polkadot/api": "^6.1.2",
     "@polkadot/apps-config": "^0.96.1",
     "@polkadot/reactnative-identicon": "0.53.1",
     "@react-native-community/async-storage": "^1.12.1",
