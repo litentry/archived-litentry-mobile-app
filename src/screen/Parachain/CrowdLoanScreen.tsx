@@ -108,7 +108,6 @@ export function CrowdLoanScreen() {
 
 function Chart({percent}: {percent: number}) {
   const theme = useTheme();
-  console.log(percent);
   return (
     <ProgressChart
       data={[percent]}
