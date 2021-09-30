@@ -1,13 +1,14 @@
 import {LinkOption} from '@polkadot/apps-config/endpoints/types';
 import type {ParaId} from '@polkadot/types/interfaces';
 import {formatNumber, BN_ZERO, BN} from '@polkadot/util';
-import {Card, Text} from '@ui-kitten/components';
+import {Card, Text, useTheme} from '@ui-kitten/components';
 import {BlockTime} from 'layout/BlockTime';
 import LoadingView from 'presentational/LoadingView';
 import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React, {useMemo} from 'react';
 import {SectionList, StyleSheet, View} from 'react-native';
+import {ProgressChart} from 'react-native-chart-kit';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import {useContributions} from 'src/api/hooks/useContributions';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
@@ -41,6 +42,15 @@ export function CrowdLoanScreen() {
     [new BN(0), new BN(0)],
   );
 
+  let activeProgress = 0,
+    totalProgress = 0;
+  try {
+    activeProgress = activeRaised.muln(100).div(activeCap).toNumber() / 100;
+    totalProgress = data.totalRaised.muln(100).div(data.totalCap).toNumber() / 100;
+  } catch {
+    console.error('Error calculating progress');
+  }
+
   return (
     <SafeView edges={noTopEdges}>
       <SectionList
@@ -57,6 +67,7 @@ export function CrowdLoanScreen() {
               </View>
               <View style={styles.headerRow}>
                 <View style={styles.headerTileContainer}>
+                  <Chart percent={activeProgress} />
                   <Text category="h6" appearance="hint">
                     active raised / cap
                   </Text>
@@ -65,6 +76,7 @@ export function CrowdLoanScreen() {
                   })} / ${formatBalance(activeCap)}`}</Text>
                 </View>
                 <View style={styles.headerTileContainer}>
+                  <Chart percent={totalProgress} />
                   <Text category="h6" appearance="hint">
                     total raised / cap
                   </Text>
@@ -91,6 +103,31 @@ export function CrowdLoanScreen() {
         stickySectionHeadersEnabled={false}
       />
     </SafeView>
+  );
+}
+
+function Chart({percent}: {percent: number}) {
+  const theme = useTheme();
+  console.log(percent);
+  return (
+    <ProgressChart
+      data={[percent]}
+      width={50}
+      height={50}
+      strokeWidth={5}
+      radius={15}
+      chartConfig={{
+        backgroundGradientFromOpacity: 0.5,
+        backgroundGradientFrom: theme['background-basic-color-1'],
+        backgroundGradientTo: theme['background-basic-color-1'],
+        backgroundGradientToOpacity: 1,
+        color: (opacity = 1) => `rgba(27, 197, 117, ${opacity})`,
+        strokeWidth: 2, // optional, default 3
+        barPercentage: 0.5,
+        useShadowColorFromDataset: false, // optional
+      }}
+      hideLegend
+    />
   );
 }
 
