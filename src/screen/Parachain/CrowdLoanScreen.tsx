@@ -1,16 +1,13 @@
 import {LinkOption} from '@polkadot/apps-config/endpoints/types';
 import type {ParaId} from '@polkadot/types/interfaces';
-import {formatNumber, BN_ZERO, BN} from '@polkadot/util';
+import {BN, BN_ZERO} from '@polkadot/util';
 import {Card, Text, useTheme} from '@ui-kitten/components';
-import {BlockTime} from 'layout/BlockTime';
 import LoadingView from 'presentational/LoadingView';
 import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
-import React, {useMemo} from 'react';
+import React from 'react';
 import {SectionList, StyleSheet, View} from 'react-native';
 import {ProgressChart} from 'react-native-chart-kit';
-import {useBestNumber} from 'src/api/hooks/useBestNumber';
-import {useContributions} from 'src/api/hooks/useContributions';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import useFunds, {Campaign} from 'src/api/hooks/useFunds';
 import {LeasePeriod, useParachainsLeasePeriod} from 'src/api/hooks/useParachainsLeasePeriod';
@@ -58,31 +55,39 @@ export function CrowdLoanScreen() {
           return (
             <View>
               <View style={styles.headerRow}>
-                <View style={styles.headerTileContainer}>
+                <View style={globalStyles.flex}>
+                  <View style={styles.headerTileContainer}>
+                    <Chart percent={activeProgress} />
+                    <Padder scale={0.5} />
+                    <View style={globalStyles.alignCenter}>
+                      <Text category="c2" appearance="hint">
+                        Active Raised / Cap
+                      </Text>
+                      <Padder scale={0.1} />
+                      <Text numberOfLines={1} adjustsFontSizeToFit>{`${formatBalance(activeRaised, {
+                        isShort: true,
+                      })} / ${formatBalance(activeCap)}`}</Text>
+                    </View>
+                  </View>
+                  <View style={styles.headerTileContainer}>
+                    <Chart percent={totalProgress} />
+                    <Padder scale={0.5} />
+                    <View style={globalStyles.alignCenter}>
+                      <Text category="c2" appearance="hint">
+                        Total Raised / Cap
+                      </Text>
+                      <Padder scale={0.1} />
+                      <Text numberOfLines={1} adjustsFontSizeToFit>{`${formatBalance(
+                        data.totalRaised,
+                      )} / ${formatBalance(data.totalCap)}`}</Text>
+                    </View>
+                  </View>
+                </View>
+                <View style={globalStyles.centeredContainer}>
                   <Text category="h6" appearance="hint">
-                    funds
+                    Funds
                   </Text>
                   <Text category="h5">{data.funds?.length}</Text>
-                </View>
-              </View>
-              <View style={styles.headerRow}>
-                <View style={styles.headerTileContainer}>
-                  <Chart percent={activeProgress} />
-                  <Text category="h6" appearance="hint">
-                    active raised / cap
-                  </Text>
-                  <Text numberOfLines={1} adjustsFontSizeToFit>{`${formatBalance(activeRaised, {
-                    isShort: true,
-                  })} / ${formatBalance(activeCap)}`}</Text>
-                </View>
-                <View style={styles.headerTileContainer}>
-                  <Chart percent={totalProgress} />
-                  <Text category="h6" appearance="hint">
-                    total raised / cap
-                  </Text>
-                  <Text numberOfLines={1} adjustsFontSizeToFit>{`${formatBalance(data.totalRaised)} / ${formatBalance(
-                    data.totalCap,
-                  )}`}</Text>
                 </View>
               </View>
             </View>
@@ -91,13 +96,13 @@ export function CrowdLoanScreen() {
         style={styles.container}
         contentContainerStyle={styles.listContent}
         sections={[
-          {key: 'ongoing', data: active},
-          {key: 'completed', data: ended},
+          {key: 'Ongoing', data: active},
+          {key: 'Completed', data: ended},
         ]}
         SectionSeparatorComponent={() => <Padder scale={1} />}
-        renderSectionHeader={({section}) => <Text category="h4">{section.key}</Text>}
+        renderSectionHeader={({section}) => <Text category="h5">{section.key}</Text>}
         renderItem={({item}) => {
-          return <Fund item={item} isOngoing={active.includes(item)} />;
+          return <Fund item={item} />;
         }}
         keyExtractor={(item) => item.key}
         stickySectionHeadersEnabled={false}
@@ -109,34 +114,39 @@ export function CrowdLoanScreen() {
 function Chart({percent}: {percent: number}) {
   const theme = useTheme();
   return (
-    <ProgressChart
-      data={[percent]}
-      width={50}
-      height={50}
-      strokeWidth={5}
-      radius={15}
-      chartConfig={{
-        backgroundGradientFromOpacity: 0.5,
-        backgroundGradientFrom: theme['background-basic-color-1'],
-        backgroundGradientTo: theme['background-basic-color-1'],
-        backgroundGradientToOpacity: 1,
-        color: (opacity = 1) => `rgba(27, 197, 117, ${opacity})`,
-        strokeWidth: 2, // optional, default 3
-        barPercentage: 0.5,
-        useShadowColorFromDataset: false, // optional
-      }}
-      hideLegend
-    />
+    <View>
+      <ProgressChart
+        data={[percent]}
+        width={50}
+        height={50}
+        strokeWidth={5}
+        radius={21}
+        chartConfig={{
+          backgroundGradientFromOpacity: 0.5,
+          backgroundGradientFrom: theme['background-basic-color-1'],
+          backgroundGradientTo: theme['background-basic-color-1'],
+          backgroundGradientToOpacity: 1,
+          color: (opacity = 1) => `rgba(27, 197, 117, ${opacity})`,
+          strokeWidth: 2, // optional, default 3
+          barPercentage: 0.5,
+          useShadowColorFromDataset: false, // optional
+        }}
+        hideLegend
+      />
+      <View style={styles.chartOverlay}>
+        <Text category="label">{percent * 100}%</Text>
+      </View>
+    </View>
   );
 }
 
-function Fund({item, isOngoing}: {item: Campaign; isOngoing: boolean}) {
+function Fund({item}: {item: Campaign}) {
   const formatBalance = useFormatBalance();
-  const bestNumber = useBestNumber();
-  const {end, firstPeriod, lastPeriod, cap, raised} = item.info;
-  const blocksLeft = useMemo(() => (bestNumber && end.gt(bestNumber) ? end.sub(bestNumber) : null), [bestNumber, end]);
+  // const bestNumber = useBestNumber();
+  const {cap, raised} = item.info;
+  // const blocksLeft = useMemo(() => (bestNumber && end.gt(bestNumber) ? end.sub(bestNumber) : null), [bestNumber, end]);
   const endpoints = useParaEndpoints(item.paraId);
-  const {data: contributions} = useContributions(item.paraId);
+  // const {data: contributions} = useContributions(item.paraId);
 
   if (!endpoints?.length) {
     return null;
@@ -146,58 +156,54 @@ function Fund({item, isOngoing}: {item: Campaign; isOngoing: boolean}) {
 
   return (
     <Card style={styles.fund} disabled>
-      <View style={globalStyles.rowContainer}>
-        <Text category="h5" numberOfLines={1} adjustsFontSizeToFit style={styles.title}>
-          {String(text)}
-        </Text>
-        <View style={styles.spacer} />
-        <Text category="h6">{formatNumber(item.paraId)}</Text>
-      </View>
-      <Padder scale={0.5} />
-      <View style={globalStyles.rowContainer}>
-        <View>
-          {blocksLeft ? <BlockTime blockNumber={blocksLeft} /> : null}
-          <Text>
-            {item.isWinner
-              ? 'Winner'
-              : blocksLeft
-              ? item.isCapped
-                ? 'Capped'
-                : isOngoing
-                ? 'Active'
-                : 'Past'
-              : 'Ended'}
+      <View style={[globalStyles.rowAlignCenter]}>
+        <View style={styles.shrink}>
+          <Text category="h6" numberOfLines={1} adjustsFontSizeToFit style={styles.shrink}>
+            {String(text)}
           </Text>
-          <Text>
-            {'leases: '}
-            {firstPeriod.eq(lastPeriod)
-              ? formatNumber(firstPeriod)
-              : `${formatNumber(firstPeriod)} - ${formatNumber(lastPeriod)}`}
-          </Text>
+          <Padder scale={0.5} />
+          <Text numberOfLines={1} adjustsFontSizeToFit category="c1">{`${formatBalance(raised, {
+            isShort: true,
+          })} / ${formatBalance(cap, {isShort: true})}`}</Text>
         </View>
         <View style={styles.spacer} />
-        <View style={styles.alignEnd}>
-          <Text numberOfLines={1} adjustsFontSizeToFit>{`${formatBalance(raised, {isShort: true})} / ${formatBalance(
-            cap,
-            {
-              isShort: true,
-            },
-          )}`}</Text>
-          <Text>count: {formatNumber(contributions?.contributorsHex.length)}</Text>
-        </View>
+        <Chart percent={raised.muln(100).div(cap).toNumber() / 100} />
       </View>
     </Card>
   );
 }
 
+//     {{blocksLeft ? <BlockTime blockNumber={blocksLeft} /> : null}
+//      <Text>
+//           {item.isWinner
+//             ? 'Winner'
+//             : blocksLeft
+//             ? item.isCapped
+//               ? 'Capped'
+//               : isOngoing
+//               ? 'Active'
+//               : 'Past'
+//             : 'Ended'}
+//         </Text> */}
+//        <Text>
+//           {'leases: '}
+//           {firstPeriod.eq(lastPeriod)
+//             ? formatNumber(firstPeriod)
+//             : `${formatNumber(firstPeriod)} - ${formatNumber(lastPeriod)}`}
+//         </Text>
+//       <View style={styles.alignEnd}>
+//         <Text>count: {formatNumber(contributions?.contributorsHex.length)}</Text>
+//       </View>
+
 const styles = StyleSheet.create({
   container: {flex: 1},
   headerRow: {
     flexDirection: 'row',
+    paddingHorizontal: standardPadding * 3,
   },
   headerTileContainer: {
     padding: standardPadding * 2,
-    flex: 1,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -207,13 +213,22 @@ const styles = StyleSheet.create({
   sectionHeader: {
     padding: standardPadding * 2,
   },
-  title: {flexShrink: 1},
+  shrink: {flexShrink: 1},
   fund: {marginBottom: standardPadding},
   spacer: {flex: 1, minWidth: standardPadding * 3},
   alignEnd: {
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
     flexShrink: 1,
+  },
+  chartOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

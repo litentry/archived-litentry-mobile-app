@@ -43,6 +43,9 @@ const globalStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  alignCenter: {
+    alignItems: 'center',
+  },
   divider: {
     marginVertical: standardPadding,
     ...dividerPlain,
