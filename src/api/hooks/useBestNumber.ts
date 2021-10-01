@@ -10,7 +10,7 @@ const BEST_NUMBER_QUERY_KEY = 'api_derive_chain_bestNumber';
 export function useBestNumber(): BlockNumber | undefined {
   const {api} = useApi();
   const queryClient = useQueryClient();
-  const {data} = useApiQuery(BEST_NUMBER_QUERY_KEY, (apiPromise) => apiPromise.derive.chain.bestNumber());
+  const {data} = useApiQuery<BlockNumber>(BEST_NUMBER_QUERY_KEY, (apiPromise) => apiPromise.derive.chain.bestNumber());
 
   useEffect(() => {
     let unsub: VoidFn | undefined;

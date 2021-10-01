@@ -141,7 +141,6 @@ function sortCampaigns(a: Campaign, b: Campaign): number {
       : -1
     : 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////
 
 interface Campaigns {
   funds: Campaign[] | null;
