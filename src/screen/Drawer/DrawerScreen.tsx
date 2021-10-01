@@ -11,6 +11,7 @@ import {
   dashboardScreen,
   devScreen,
   notificationSettingsScreen,
+  parachainsOverviewScreen,
   polkassemblyDiscussionsNavigator,
   registrarListScreen,
   webviewScreen,
@@ -40,7 +41,7 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
             title="Parachains"
             accessoryLeft={(props) => <Icon {...props} name="link-2-outline" animation="zoom" />}
             style={styles.menuGroup}>
-            <MenuItem title="Overview" onPress={() => ({})} />
+            <MenuItem title="Overview" onPress={() => navigation.navigate(parachainsOverviewScreen)} />
             <MenuItem
               title="Crowdloan"
               onPress={() => {
