@@ -2,6 +2,7 @@ import {LinkOption} from '@polkadot/apps-config/endpoints/types';
 import type {ParaId} from '@polkadot/types/interfaces';
 import {BN, BN_ZERO} from '@polkadot/util';
 import {Card, Text, useTheme} from '@ui-kitten/components';
+import {EmptyView} from 'presentational/EmptyView';
 import LoadingView from 'presentational/LoadingView';
 import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
@@ -25,6 +26,10 @@ export function CrowdLoanScreen() {
 
   if (!data) {
     return <LoadingView />;
+  }
+
+  if (!data.funds?.length) {
+    return <EmptyView />;
   }
 
   const [active, ended] = extractLists(data.funds, leasePeriod);
