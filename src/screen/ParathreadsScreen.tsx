@@ -2,7 +2,7 @@ import React from 'react';
 import {View, FlatList, StyleSheet, Linking} from 'react-native';
 import globalStyles, {standardPadding} from 'src/styles';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
-import {useParathreads} from 'src/api/hooks/useParaThreads';
+import {LeaseInfo, useParathreads} from 'src/api/hooks/useParaThreads';
 import {useParachainsLeasePeriod} from 'src/api/hooks/useParachainsLeasePeriod';
 import {Spinner, Card, Text, Divider} from '@ui-kitten/components';
 import type {ParaId} from '@polkadot/types/interfaces';
@@ -42,7 +42,7 @@ export function ParathreadsScreen() {
             contentContainerStyle={styles.content}
             keyExtractor={([id, _]) => id.toString()}
             data={parathreads}
-            renderItem={({item}) => <ParathreadItem id={item[0]} toHomepage={toHomepage} />}
+            renderItem={({item}) => <ParathreadItem id={item[0]} leases={item[1]} toHomepage={toHomepage} />}
             ItemSeparatorComponent={Divider}
             ListEmptyComponent={EmptyView}
           />
@@ -54,6 +54,7 @@ export function ParathreadsScreen() {
 
 type ParathreadItemProps = {
   id: ParaId;
+  leases: LeaseInfo[];
   toHomepage: (url?: string) => void;
 };
 
@@ -103,6 +104,7 @@ function ParathreadItem({id, toHomepage}: ParathreadItemProps) {
           </Account>
         </View>
       )}
+      {/* @TODO: Add leases information */}
     </Card>
   );
 }
