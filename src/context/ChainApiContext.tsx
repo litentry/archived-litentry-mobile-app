@@ -29,7 +29,6 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
       return;
     }
 
-    // queryClient.clear();
     logger.debug('ChainApiContext: trying to connect to', wsAddress);
 
     const provider = new WsProvider(wsAddress, false);
