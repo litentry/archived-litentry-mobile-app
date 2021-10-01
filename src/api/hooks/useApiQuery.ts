@@ -12,17 +12,22 @@ function useApiQuery<TData>(
   options: UseQueryOptions<TData> = {enabled: true},
 ) {
   const {api} = useApi();
-  const network = api?.runtimeChain != null ? api.runtimeChain.toString() : '';
+  const network = api?.runtimeChain != null ? api.runtimeChain.toString() : undefined;
+  const isNetworkReady = network != undefined;
+
+  const queryKeyWithNetwork = isNetworkReady
+    ? [...(typeof queryKey === 'string' ? [queryKey] : queryKey), network]
+    : queryKey;
 
   return useQuery(
-    `${queryKey}-${network}`,
+    queryKeyWithNetwork,
     () => {
       if (!api) {
         throw new Error('Api not defined');
       }
       return queryFn(api);
     },
-    {...options, enabled: options.enabled && Boolean(api?.isConnected)},
+    {...options, enabled: options.enabled && Boolean(api?.isConnected) && isNetworkReady},
   );
 }
 
