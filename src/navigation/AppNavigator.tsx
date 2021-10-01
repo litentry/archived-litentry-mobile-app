@@ -32,6 +32,7 @@ import TipDetailScreen from 'screen/tips/TipDetailScreen';
 import TipsScreen from 'screen/tips/TipsScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
 import WebviewScreen from 'screen/WebviewScreen';
+import {ParachainsOverviewScreen} from 'screen/Parachains/OverviewScreen';
 import {useTheme} from 'src/context/ThemeContext';
 import {useFirebase} from 'src/hook/useFirebase';
 import {usePushAuthorizationStatus} from 'src/hook/usePushNotificationsPermissions';
@@ -177,6 +178,11 @@ function DrawerNavigator() {
         options={{headerShown: false}}
       />
       <Drawer.Screen name={routeKeys.registrarListScreen} component={RegistrarListScreen} />
+      <Drawer.Screen
+        name={routeKeys.parachainsOverviewScreen}
+        component={ParachainsOverviewScreen}
+        options={{title: 'Overview'}}
+      />
       <Drawer.Screen
         name={routeKeys.webviewScreen}
         component={WebviewScreen}
