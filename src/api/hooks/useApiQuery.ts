@@ -12,9 +12,10 @@ function useApiQuery<TData>(
   options: UseQueryOptions<TData> = {enabled: true},
 ) {
   const {api} = useApi();
+  const network = api?.runtimeChain != null ? api.runtimeChain.toString() : '';
 
   return useQuery(
-    queryKey,
+    `${queryKey}-${network}`,
     () => {
       if (!api) {
         throw new Error('Api not defined');

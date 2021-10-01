@@ -3,7 +3,6 @@ import React, {createContext, useContext, useEffect, useReducer} from 'react';
 import {useQueryClient} from 'react-query';
 import {createLogger} from 'src/utils';
 import {NetworkContext} from './NetworkContext';
-import {TypeRegistry} from '@polkadot/types/create';
 
 const initialState: ChainApiContext = {
   status: 'unknown',
@@ -30,7 +29,7 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
       return;
     }
 
-    queryClient.clear();
+    // queryClient.clear();
     logger.debug('ChainApiContext: trying to connect to', wsAddress);
 
     const provider = new WsProvider(wsAddress, false);
