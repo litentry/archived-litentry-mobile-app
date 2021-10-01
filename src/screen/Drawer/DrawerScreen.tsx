@@ -30,16 +30,17 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
           </TouchableOpacity>
         </View>
         <Layout style={styles.rest}>
-          <ListItem
-            title="Accounts"
-            accessoryLeft={(props) => <Icon {...props} name="person-outline" animation="zoom" />}
-            onPress={() => navigation.navigate(accountsNavigator)}
-          />
           <Divider />
           <ListItem
             title="Dashboard"
             accessoryLeft={(props) => <Icon {...props} name="browser-outline" animation="zoom" />}
             onPress={() => navigation.navigate(dashboardScreen)}
+          />
+          <Divider />
+          <ListItem
+            title="Accounts"
+            accessoryLeft={(props) => <Icon {...props} name="person-outline" animation="zoom" />}
+            onPress={() => navigation.navigate(accountsNavigator)}
           />
           <Divider />
           <MenuGroup
