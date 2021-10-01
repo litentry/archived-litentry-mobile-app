@@ -1,6 +1,5 @@
 import {ApiPromise, WsProvider} from '@polkadot/api';
 import React, {createContext, useContext, useEffect, useReducer} from 'react';
-import {useQueryClient} from 'react-query';
 import {createLogger} from 'src/utils';
 import {NetworkContext} from './NetworkContext';
 
@@ -21,7 +20,6 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const {currentNetwork} = useContext(NetworkContext);
-  const queryClient = useQueryClient();
 
   useEffect(() => {
     const wsAddress = currentNetwork.ws[state.wsConnectionIndex];
@@ -86,7 +84,7 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
       apiPromise.off('error', handleError);
       clearInterval(retryInterval);
     };
-  }, [currentNetwork.ws, queryClient, state.wsConnectionIndex]);
+  }, [currentNetwork.ws, state.wsConnectionIndex]);
 
   return <ChainApiContext.Provider value={state}>{children}</ChainApiContext.Provider>;
 }
