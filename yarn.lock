@@ -1287,14 +1287,16 @@
   dependencies:
     "@babel/runtime" "^7.15.4"
 
-"@polkadot/reactnative-identicon@0.53.1":
-  version "0.53.1"
-  resolved "https://registry.yarnpkg.com/@polkadot/reactnative-identicon/-/reactnative-identicon-0.53.1.tgz#889f95987ac46a77775dd90ca2c07fc198e1c911"
-  integrity sha512-uZ1/gGi1GaHbpkE/RA9EAfCVM+gmKS1wKz1+KUULtQUTS12sjEsU+orQDUzXLsdSWiVWzuycqBTD1H2oEHnnHw==
+"@polkadot/reactnative-identicon@0.85.4":
+  version "0.85.4"
+  resolved "https://registry.yarnpkg.com/@polkadot/reactnative-identicon/-/reactnative-identicon-0.85.4.tgz#44b0d64bfd8e37ee3f7df9326616574d3587e3b7"
+  integrity sha512-/+67NHoLFIdnu9J6sZq++7z9db7+lrh3ZvAthQ4mnRX7u2ESKzGF6FwO+mm3myvnz1k72fbv1ai5TqBmaw6KJQ==
   dependencies:
-    "@babel/runtime" "^7.9.6"
-    "@polkadot/ui-shared" "0.53.1"
-    react-native-svg "^12.1.0"
+    "@babel/runtime" "^7.15.4"
+    "@polkadot/ui-shared" "0.85.4"
+    "@polkadot/util" "^7.4.1"
+    "@polkadot/util-crypto" "^7.4.1"
+    react-native-svg "^12.2.0"
 
 "@polkadot/rpc-core@6.1.2":
   version "6.1.2"
@@ -1341,13 +1343,13 @@
     "@polkadot/util-crypto" "^7.4.1"
     rxjs "^7.3.0"
 
-"@polkadot/ui-shared@0.53.1":
-  version "0.53.1"
-  resolved "https://registry.yarnpkg.com/@polkadot/ui-shared/-/ui-shared-0.53.1.tgz#e3f4685545e4757fa5192a9def74055d0555f7c1"
-  integrity sha512-5sKjuWm22lNha22l7xi41Au5OAWkzBHY3ysPh5XPzBDxQtkcfG3xmg8hzPLhMVB/5z7HxDQeWY0DiHMvrE+iUw==
+"@polkadot/ui-shared@0.85.4":
+  version "0.85.4"
+  resolved "https://registry.yarnpkg.com/@polkadot/ui-shared/-/ui-shared-0.85.4.tgz#f815b1d8b4ab8206d1fa97bf834a96069c9e7735"
+  integrity sha512-Wpwj2P0/Ibrq4Dt6B6FiAKgvZaugE36Yj7k1TzKNVbzczCMmH9lVE6Q1Y+K239mtqljvKGdz3e8IJ/E6z/G/OQ==
   dependencies:
-    "@babel/runtime" "^7.9.6"
-    color "^3.1.2"
+    "@babel/runtime" "^7.15.4"
+    color "^3.2.1"
 
 "@polkadot/util-crypto@6.11.1":
   version "6.11.1"
@@ -1990,10 +1992,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^17.0.24":
-  version "17.0.24"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.24.tgz#7e1b3f78d0fc53782543f9bce6d949959a5880bd"
-  integrity sha512-eIpyco99gTH+FTI3J7Oi/OH8MZoFMJuztNRimDOJwH4iGIsKV2qkGnk4M9VzlaVWeEEWLWSQRy0FEA0Kz218cg==
+"@types/react@*", "@types/react@^17.0.26":
+  version "17.0.26"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.26.tgz#960ea4b3518cc154ed7df3b35656c508df653331"
+  integrity sha512-MXxuXrH2xOcv5cp/su4oz69dNQnSA90JjFw5HBd5wifw6Ihi94j7dRJm7qNsB30tnruXSCPc9qmlhGop4nh9Hw==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -3128,7 +3130,7 @@ color-string@^1.6.0:
     color-name "^1.0.0"
     simple-swizzle "^0.2.2"
 
-color@^3.1.2, color@^3.1.3:
+color@^3.1.3, color@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/color/-/color-3.2.1.tgz#3544dc198caf4490c3ecc9a790b54fe9ff45e164"
   integrity sha512-aBl7dZI9ENN6fUGC7mWpMTPNHmWUSNan9tuWN6ahh5ZLNk9baLJOnSMlrQkHcrfFgz2/RigjUVAjdx36VcemKA==
@@ -7944,10 +7946,10 @@ react-native-substrate-sign@^1.1.1:
   resolved "https://registry.yarnpkg.com/react-native-substrate-sign/-/react-native-substrate-sign-1.1.1.tgz#dc723cadc26a689d6871f238cae8c9933578adc6"
   integrity sha512-UUAkl2Dba1cjnYse5Qrjg9FFrdiNzCgIE/57E/68d+XVh1eiMl6842HJEtWfkTGb23yf/R2V93nSc49jR7gBUQ==
 
-react-native-svg@^12.1.0, react-native-svg@^12.1.1:
-  version "12.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-12.1.1.tgz#5f292410b8bcc07bbc52b2da7ceb22caf5bcaaee"
-  integrity sha512-NIAJ8jCnXGCqGWXkkJ1GTzO4a3Md5at5sagYV8Vh4MXYnL4z5Rh428Wahjhh+LIjx40EE5xM5YtwyJBqOIba2Q==
+react-native-svg@^12.1.1, react-native-svg@^12.2.0:
+  version "12.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-12.2.0.tgz#42273c7a1af804224b8ef97d936fab7df6a5e949"
+  integrity sha512-gtmdnH0XwCJk6x8lD6VvqQQI5B/fS2qG/GTpAZzSGZqEYLnY9NzWpPbzD4lJGCacVUDUxkZgwiiqqSE3JTi7WQ==
   dependencies:
     css-select "^2.1.0"
     css-tree "^1.0.0-alpha.39"
