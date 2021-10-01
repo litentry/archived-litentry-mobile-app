@@ -24,7 +24,7 @@ export function ParathreadsScreen() {
   const {data: parathreads, isLoading} = useParathreads();
 
   const toHomepage = (url?: string) => {
-    if (url) {
+    if (url && Linking.canOpenURL(url)) {
       Linking.openURL(url);
     }
   };
