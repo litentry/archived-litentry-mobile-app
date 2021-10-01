@@ -6,7 +6,7 @@ import type BN from 'bn.js';
 import useApiQuery from 'src/api/hooks/useApiQuery';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
 
-interface LeasePeriod {
+export interface LeasePeriod {
   currentPeriod: BN;
   length: BN;
   progress: BN;
