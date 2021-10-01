@@ -30,6 +30,7 @@ import {
   identityGuideScreen,
   myAccountScreen,
   bountiesScreen,
+  parathreadsScreen,
 } from 'src/navigation/routeKeys';
 
 type DashboardStackParamList = {
@@ -64,6 +65,7 @@ type DrawerParamList = {
   [notificationSettingsScreen]: undefined;
   [polkassemblyDiscussionsNavigator]: undefined;
   [accountsNavigator]: undefined;
+  [parathreadsScreen]: undefined;
 };
 
 type PolkassemblyDiscussionStackParamList = {

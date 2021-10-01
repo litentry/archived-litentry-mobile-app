@@ -13,6 +13,7 @@ import {
   polkassemblyDiscussionsNavigator,
   registrarListScreen,
   webviewScreen,
+  parathreadsScreen,
 } from 'src/navigation/routeKeys';
 import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 
@@ -30,6 +31,12 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
         </View>
         <Layout style={styles.rest}>
           <ListItem
+            title="Accounts"
+            accessoryLeft={(props) => <Icon {...props} name="person-outline" animation="zoom" />}
+            onPress={() => navigation.navigate(accountsNavigator)}
+          />
+          <Divider />
+          <ListItem
             title="Dashboard"
             accessoryLeft={(props) => <Icon {...props} name="browser-outline" animation="zoom" />}
             onPress={() => navigation.navigate(dashboardScreen)}
@@ -41,13 +48,8 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
             style={styles.menuGroup}>
             <MenuItem title="Overview" onPress={() => ({})} />
             <MenuItem title="Crowdloan" onPress={() => ({})} />
+            <MenuItem title="Parathreads" onPress={() => navigation.navigate(parathreadsScreen)} />
           </MenuGroup>
-          <Divider />
-          <ListItem
-            title="Accounts"
-            accessoryLeft={(props) => <Icon {...props} name="person-outline" animation="zoom" />}
-            onPress={() => navigation.navigate(accountsNavigator)}
-          />
           <Divider />
           <ListItem
             title="Registrars"
