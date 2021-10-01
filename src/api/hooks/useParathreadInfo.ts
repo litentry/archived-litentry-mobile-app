@@ -11,10 +11,12 @@ export function sliceHex(value: Codec, max = 6): string {
 
 export function useParathreadInfo(id: ParaId) {
   return useApiQuery(['parathreadInfo', id], async (api: ApiPromise) => {
-    const paraInfo = await api.query.registrar?.paras?.<Option<ParaInfo>>(id);
-    const lifecycleInfo = await api.query.paras?.paraLifecycles?.<Option<ParaLifecycle>>(id);
-    const headInfo = await api.query.paras?.heads?.<Option<HeadData>>(id);
-    const genesisInfo = await api.query.paras?.upcomingParasGenesis?.<Option<ParaGenesisArgs>>(id);
+    const [paraInfo, lifecycleInfo, headInfo, genesisInfo] = await Promise.all([
+      api.query.registrar?.paras?.<Option<ParaInfo>>(id),
+      api.query.paras?.paraLifecycles?.<Option<ParaLifecycle>>(id),
+      api.query.paras?.heads?.<Option<HeadData>>(id),
+      api.query.paras?.upcomingParasGenesis?.<Option<ParaGenesisArgs>>(id),
+    ]);
 
     return {
       headHex: headInfo?.isSome
