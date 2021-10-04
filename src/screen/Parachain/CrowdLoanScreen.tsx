@@ -1,6 +1,7 @@
 import {LinkOption} from '@polkadot/apps-config/endpoints/types';
 import type {ParaId} from '@polkadot/types/interfaces';
 import {BN, BN_ZERO} from '@polkadot/util';
+import {useNavigation} from '@react-navigation/core';
 import {Card, Text, useTheme} from '@ui-kitten/components';
 import {EmptyView} from 'presentational/EmptyView';
 import LoadingView from 'presentational/LoadingView';
@@ -13,6 +14,7 @@ import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import useFunds, {Campaign} from 'src/api/hooks/useFunds';
 import {LeasePeriod, useParachainsLeasePeriod} from 'src/api/hooks/useParachainsLeasePeriod';
 import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
+import {crowdloanDetailScreen} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
 
 export function CrowdLoanScreen() {
@@ -149,6 +151,7 @@ function Fund({item}: {item: Campaign}) {
   const formatBalance = useFormatBalance();
   const {cap, raised} = item.info;
   const endpoints = useParaEndpoints(item.paraId);
+  const navigation = useNavigation();
 
   if (!endpoints?.length) {
     return null;
@@ -157,7 +160,11 @@ function Fund({item}: {item: Campaign}) {
   const {text} = endpoints[endpoints.length - 1] as LinkOption;
 
   return (
-    <Card style={styles.fund} disabled>
+    <Card
+      style={styles.fund}
+      onPress={() => {
+        navigation.navigate(crowdloanDetailScreen, {title: text, id: item.key});
+      }}>
       <View style={[globalStyles.rowAlignCenter]}>
         <View style={styles.shrink}>
           <Text category="h6" numberOfLines={1} adjustsFontSizeToFit style={styles.shrink}>
