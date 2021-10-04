@@ -15,7 +15,7 @@ import {Campaign, useFunds} from 'src/api/hooks/useFunds';
 import {LeasePeriod, useParachainsLeasePeriod} from 'src/api/hooks/useParachainsLeasePeriod';
 import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
 import {DashboardStackParamList} from 'src/navigation/navigation';
-import {crowdloanDetailScreen} from 'src/navigation/routeKeys';
+import {crowdloanFundDetailScreen} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
 
 export function CrowdLoanScreen() {
@@ -164,7 +164,7 @@ function Fund({item}: {item: Campaign}) {
     <Card
       style={styles.fund}
       onPress={() => {
-        navigation.navigate(crowdloanDetailScreen, {title: String(text), paraId: item.paraId});
+        navigation.navigate(crowdloanFundDetailScreen, {title: String(text), paraId: item.paraId});
       }}>
       <View style={[globalStyles.rowAlignCenter]}>
         <View style={styles.shrink}>

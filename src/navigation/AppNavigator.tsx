@@ -48,7 +48,7 @@ import {
 import * as routeKeys from 'src/navigation/routeKeys';
 import {darkTheme, lightTheme} from 'src/navigation/theme';
 import globalStyles from 'src/styles';
-import {CrowdLoanDetailScreen} from 'screen/Parachain/CrowdLoanDetailScreen';
+import {CrowdLoanFundDetailScreen as CrowdLoanFundDetailScreen} from 'screen/Parachain/CrowdLoanFundDetailScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -99,11 +99,9 @@ function DashboardStackNavigator() {
       />
       <DashboardStack.Screen name={routeKeys.crowdloanScreen} component={CrowdLoanScreen} />
       <DashboardStack.Screen
-        name={routeKeys.crowdloanDetailScreen}
-        component={CrowdLoanDetailScreen}
-        options={({route}) => {
-          return {title: route.params.title};
-        }}
+        name={routeKeys.crowdloanFundDetailScreen}
+        component={CrowdLoanFundDetailScreen}
+        options={{title: 'Fund Details'}}
       />
       <DashboardStack.Screen name={routeKeys.bountiesScreen} component={BountiesScreen} />
     </DashboardStack.Navigator>
