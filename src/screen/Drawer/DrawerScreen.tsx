@@ -7,6 +7,7 @@ import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   accountsNavigator,
+  crowdloanScreen,
   dashboardScreen,
   devScreen,
   notificationSettingsScreen,
@@ -49,7 +50,12 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
             accessoryLeft={(props) => <Icon {...props} name="link-2-outline" animation="zoom" />}
             style={styles.menuGroup}>
             <MenuItem title="Overview" onPress={() => navigation.navigate(parachainsOverviewScreen)} />
-            <MenuItem title="Crowdloan" onPress={() => ({})} />
+            <MenuItem
+              title="Crowdloan"
+              onPress={() => {
+                navigation.navigate(crowdloanScreen);
+              }}
+            />
             <MenuItem title="Parathreads" onPress={() => navigation.navigate(parathreadsScreen)} />
           </MenuGroup>
           <Divider />
