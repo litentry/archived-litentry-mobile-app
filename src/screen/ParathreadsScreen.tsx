@@ -4,7 +4,7 @@ import globalStyles, {standardPadding} from 'src/styles';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {LeaseInfo, useParathreads} from 'src/api/hooks/useParaThreads';
 import {useParachainsLeasePeriod} from 'src/api/hooks/useParachainsLeasePeriod';
-import {Spinner, Card, Text, Divider} from '@ui-kitten/components';
+import {Card, Text, Divider} from '@ui-kitten/components';
 import type {ParaId} from '@polkadot/types/interfaces';
 import {formatNumber} from '@polkadot/util';
 import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
@@ -13,40 +13,41 @@ import Identicon from '@polkadot/reactnative-identicon';
 import Padder from 'presentational/Padder';
 import {Account} from 'layout/Account';
 import {EmptyView} from 'presentational/EmptyView';
+import LoadingView from 'presentational/LoadingView';
 
 type ParathreadData = {
   name?: string;
   homepage?: string;
 };
 
+const toParathreadHomepage = (url?: string) => {
+  if (url && Linking.canOpenURL(url)) {
+    Linking.openURL(url);
+  }
+};
+
 export function ParathreadsScreen() {
   const {data: leasePeriod} = useParachainsLeasePeriod();
   const {data: parathreads, isLoading} = useParathreads();
 
-  const toHomepage = (url?: string) => {
-    if (url && Linking.canOpenURL(url)) {
-      Linking.openURL(url);
-    }
-  };
+  if (isLoading) {
+    return <LoadingView />;
+  }
 
   return (
     <SafeView edges={noTopEdges}>
-      {isLoading ? (
-        <View style={globalStyles.centeredContainer}>
-          <Spinner />
-        </View>
+      {leasePeriod ? (
+        <FlatList
+          style={globalStyles.flex}
+          contentContainerStyle={styles.content}
+          keyExtractor={(item) => item.id.toString()}
+          data={parathreads}
+          renderItem={({item}) => <ParathreadItem id={item.id} leases={item.leases} />}
+          ItemSeparatorComponent={Divider}
+          ListEmptyComponent={EmptyView}
+        />
       ) : (
-        leasePeriod && (
-          <FlatList
-            style={globalStyles.flex}
-            contentContainerStyle={styles.content}
-            keyExtractor={([id, _]) => id.toString()}
-            data={parathreads}
-            renderItem={({item}) => <ParathreadItem id={item[0]} leases={item[1]} toHomepage={toHomepage} />}
-            ItemSeparatorComponent={Divider}
-            ListEmptyComponent={EmptyView}
-          />
-        )
+        <EmptyView />
       )}
     </SafeView>
   );
@@ -55,15 +56,14 @@ export function ParathreadsScreen() {
 type ParathreadItemProps = {
   id: ParaId;
   leases: LeaseInfo[];
-  toHomepage: (url?: string) => void;
 };
 
-function ParathreadItem({id, toHomepage}: ParathreadItemProps) {
+function ParathreadItem({id}: ParathreadItemProps) {
   const {data: parathreadInfo} = useParathreadInfo(id);
   const parathreadData = useParathreadData(id);
 
   return (
-    <Card style={styles.card} onPress={() => toHomepage(parathreadData.homepage)}>
+    <Card style={styles.card} onPress={() => toParathreadHomepage(parathreadData.homepage)}>
       <View style={[styles.row, {justifyContent: 'space-between'}]}>
         <View style={styles.row}>
           {parathreadInfo?.manager && (

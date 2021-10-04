@@ -6,41 +6,43 @@ import useApiQuery from 'src/api/hooks/useApiQuery';
 import {useUpcomingParaIds} from 'src/api/hooks/useUpcomingParaIds';
 import {useIsParasLinked} from './useIsParaLinked';
 
-export interface LeaseInfo {
+export type LeaseInfo = {
   accountId: AccountId;
   balance: BalanceOf;
   period: number;
-}
+} | null;
 
-type ParaMap = [ParaId, LeaseInfo[]][];
+type ParaMap = {
+  id: ParaId;
+  leases: LeaseInfo[];
+};
 type LeaseOptions = Option<ITuple<[AccountId, BalanceOf]>>[];
 
-function extractParaMap(hasLinksMap: Record<string, boolean>, paraIds: ParaId[], leases: LeaseOptions[]): ParaMap {
+function extractParaMap(hasLinksMap: Record<string, boolean>, paraIds: ParaId[], leases: LeaseOptions[]): ParaMap[] {
   return paraIds
-    .reduce((all: ParaMap, id, index): ParaMap => {
+    .reduce((all: ParaMap[], id, index) => {
       const lease = leases[index];
+
       if (lease != null) {
-        all.push([
+        all.push({
           id,
-          lease
-            .map((optLease, period): LeaseInfo | null => {
-              if (optLease.isNone) {
-                return null;
-              }
-              const [accountId, balance] = optLease.unwrap();
-              return {
-                accountId,
-                balance,
-                period,
-              };
-            })
-            .filter((item): item is LeaseInfo => !!item),
-        ]);
+          leases: lease.map((optLease, period): LeaseInfo | null => {
+            if (optLease.isNone) {
+              return null;
+            }
+            const [accountId, balance] = optLease.unwrap();
+            return {
+              accountId,
+              balance,
+              period,
+            };
+          }),
+        });
       }
 
       return all;
     }, [])
-    .sort(([aId, aLeases], [bId, bLeases]): number => {
+    .sort(({id: aId, leases: aLeases}, {id: bId, leases: bLeases}): number => {
       const aKnown = hasLinksMap[aId.toString()] || false;
       const bKnown = hasLinksMap[bId.toString()] || false;
 
