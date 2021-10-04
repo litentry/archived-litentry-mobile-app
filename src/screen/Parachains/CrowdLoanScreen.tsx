@@ -50,8 +50,8 @@ export function CrowdLoanScreen() {
   let activeProgress = 0,
     totalProgress = 0;
   try {
-    activeProgress = activeRaised.muln(100).div(activeCap).toNumber() / 100;
-    totalProgress = data.totalRaised.muln(100).div(data.totalCap).toNumber() / 100;
+    activeProgress = activeRaised.muln(10000).div(activeCap).toNumber() / 10000;
+    totalProgress = data.totalRaised.muln(10000).div(data.totalCap).toNumber() / 10000;
   } catch {
     console.error('Error calculating progress');
   }
@@ -142,7 +142,9 @@ function Chart({percent}: {percent: number}) {
         hideLegend
       />
       <View style={styles.chartOverlay}>
-        <Text category="label">{percent * 100}%</Text>
+        <Text category="label" adjustsFontSizeToFit numberOfLines={1}>
+          {(percent * 100).toFixed(2)}%
+        </Text>
       </View>
     </View>
   );
@@ -159,6 +161,7 @@ function Fund({item}: {item: Campaign}) {
   }
 
   const {text} = endpoints[endpoints.length - 1] as LinkOption;
+  const percentage = cap.isZero() ? 100 : raised.muln(10000).div(cap).toNumber() / 10000;
 
   return (
     <Card
@@ -177,7 +180,7 @@ function Fund({item}: {item: Campaign}) {
           })} / ${formatBalance(cap, {isShort: true})}`}</Text>
         </View>
         <View style={styles.spacer} />
-        <Chart percent={raised.muln(100).div(cap).toNumber() / 100} />
+        <Chart percent={percentage} />
       </View>
     </Card>
   );
@@ -217,6 +220,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 10,
   },
 });
 
