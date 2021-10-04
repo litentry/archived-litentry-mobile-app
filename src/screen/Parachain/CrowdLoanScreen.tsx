@@ -1,7 +1,7 @@
 import {LinkOption} from '@polkadot/apps-config/endpoints/types';
 import type {ParaId} from '@polkadot/types/interfaces';
 import {BN, BN_ZERO} from '@polkadot/util';
-import {useNavigation} from '@react-navigation/core';
+import {NavigationProp, useNavigation} from '@react-navigation/core';
 import {Card, Text, useTheme} from '@ui-kitten/components';
 import {EmptyView} from 'presentational/EmptyView';
 import LoadingView from 'presentational/LoadingView';
@@ -11,9 +11,10 @@ import React from 'react';
 import {SectionList, StyleSheet, View} from 'react-native';
 import {ProgressChart} from 'react-native-chart-kit';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import useFunds, {Campaign} from 'src/api/hooks/useFunds';
+import {Campaign, useFunds} from 'src/api/hooks/useFunds';
 import {LeasePeriod, useParachainsLeasePeriod} from 'src/api/hooks/useParachainsLeasePeriod';
 import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
+import {DashboardStackParamList} from 'src/navigation/navigation';
 import {crowdloanDetailScreen} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
 
@@ -151,7 +152,7 @@ function Fund({item}: {item: Campaign}) {
   const formatBalance = useFormatBalance();
   const {cap, raised} = item.info;
   const endpoints = useParaEndpoints(item.paraId);
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<DashboardStackParamList>>();
 
   if (!endpoints?.length) {
     return null;
@@ -163,7 +164,7 @@ function Fund({item}: {item: Campaign}) {
     <Card
       style={styles.fund}
       onPress={() => {
-        navigation.navigate(crowdloanDetailScreen, {title: text, id: item.key});
+        navigation.navigate(crowdloanDetailScreen, {title: String(text), paraId: item.paraId});
       }}>
       <View style={[globalStyles.rowAlignCenter]}>
         <View style={styles.shrink}>
@@ -237,29 +238,3 @@ function extractLists(value: Campaign[] | null, leasePeriod?: LeasePeriod): [Cam
 
   return [active, ended, allIds];
 }
-
-// TODO: USE FOR DETAIL PAGE
-// const bestNumber = useBestNumber();
-// const blocksLeft = useMemo(() => (bestNumber && end.gt(bestNumber) ? end.sub(bestNumber) : null), [bestNumber, end]);
-// const {data: contributions} = useContributions(item.paraId);
-//     {{blocksLeft ? <BlockTime blockNumber={blocksLeft} /> : null}
-//      <Text>
-//           {item.isWinner
-//             ? 'Winner'
-//             : blocksLeft
-//             ? item.isCapped
-//               ? 'Capped'
-//               : isOngoing
-//               ? 'Active'
-//               : 'Past'
-//             : 'Ended'}
-//         </Text> */}
-//        <Text>
-//           {'leases: '}
-//           {firstPeriod.eq(lastPeriod)
-//             ? formatNumber(firstPeriod)
-//             : `${formatNumber(firstPeriod)} - ${formatNumber(lastPeriod)}`}
-//         </Text>
-//       <View style={styles.alignEnd}>
-//         <Text>count: {formatNumber(contributions?.contributorsHex.length)}</Text>
-//       </View>
