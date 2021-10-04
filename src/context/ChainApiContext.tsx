@@ -3,7 +3,6 @@ import React, {createContext, useContext, useEffect, useReducer} from 'react';
 import {useQueryClient} from 'react-query';
 import {createLogger} from 'src/utils';
 import {NetworkContext} from './NetworkContext';
-import {TypeRegistry} from '@polkadot/types/create';
 
 const initialState: ChainApiContext = {
   status: 'unknown',
