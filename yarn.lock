@@ -1225,31 +1225,31 @@
   dependencies:
     "@polkadot/types" "^5.7.1"
 
-"@polkadot/api-derive@6.1.2":
-  version "6.1.2"
-  resolved "https://registry.yarnpkg.com/@polkadot/api-derive/-/api-derive-6.1.2.tgz#a370b5fa227fd97516cb5eaa8612b6dd5f229d74"
-  integrity sha512-xvDUQ4nuf8zuVBwofKVD2YthAR3f5KiceK8hD5X3unq+wzWnviSfBio7dcE2WMtKKZ76pa3Z4ABeP7mbeZfsSQ==
+"@polkadot/api-derive@6.2.1":
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/@polkadot/api-derive/-/api-derive-6.2.1.tgz#e3537dd87dda76675de43bd4fcaf66a57f516c0a"
+  integrity sha512-KlSXE8OQarepxzd1VXKSyZJ2O55W1HG6DUAeReRMgHWT0xMhS0l6TpMkgsEkRE24RTvy/8yaHMIO5kHxSQwtHg==
   dependencies:
     "@babel/runtime" "^7.15.4"
-    "@polkadot/api" "6.1.2"
-    "@polkadot/rpc-core" "6.1.2"
-    "@polkadot/types" "6.1.2"
+    "@polkadot/api" "6.2.1"
+    "@polkadot/rpc-core" "6.2.1"
+    "@polkadot/types" "6.2.1"
     "@polkadot/util" "^7.4.1"
     "@polkadot/util-crypto" "^7.4.1"
     rxjs "^7.3.0"
 
-"@polkadot/api@6.1.2", "@polkadot/api@^6.1.2":
-  version "6.1.2"
-  resolved "https://registry.yarnpkg.com/@polkadot/api/-/api-6.1.2.tgz#a6209eb6e9367e0fe4c59eaff7a94d403999c2c2"
-  integrity sha512-4pRD5AbJtyFHz5fMcZnm7EPAScXWtbhZGfegC7+X/2q5VgmV3hZZI2uNUV5jbdB0g9sy9IhLY3Le+OG5YN7Ghw==
+"@polkadot/api@6.2.1", "@polkadot/api@^6.2.1":
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/@polkadot/api/-/api-6.2.1.tgz#ec7093610035441d1022929f9396062300a3c8b3"
+  integrity sha512-b3Sbq+XORY4BwNdARDQYRsertjaKb/yoNlWJxSF0sApbjfxGUUudYb3P0CWtkGNPKLgjQo/ZD21OQnyIC0vwug==
   dependencies:
     "@babel/runtime" "^7.15.4"
-    "@polkadot/api-derive" "6.1.2"
+    "@polkadot/api-derive" "6.2.1"
     "@polkadot/keyring" "^7.4.1"
-    "@polkadot/rpc-core" "6.1.2"
-    "@polkadot/rpc-provider" "6.1.2"
-    "@polkadot/types" "6.1.2"
-    "@polkadot/types-known" "6.1.2"
+    "@polkadot/rpc-core" "6.2.1"
+    "@polkadot/rpc-provider" "6.2.1"
+    "@polkadot/types" "6.2.1"
+    "@polkadot/types-known" "6.2.1"
     "@polkadot/util" "^7.4.1"
     "@polkadot/util-crypto" "^7.4.1"
     eventemitter3 "^4.0.7"
@@ -1329,24 +1329,24 @@
     "@polkadot/util-crypto" "^7.4.1"
     react-native-svg "^12.2.0"
 
-"@polkadot/rpc-core@6.1.2":
-  version "6.1.2"
-  resolved "https://registry.yarnpkg.com/@polkadot/rpc-core/-/rpc-core-6.1.2.tgz#be76a1ad3b1e4be09147e7b63cfaf100da9a2398"
-  integrity sha512-7erZvDc/aQipCHBsT4heYlw5ObkWleUJqgCmO9DQ30VSB1i08wHv4Nkxc30Ws9zM3fMwM+tbw+gRgQW0Aup2UA==
+"@polkadot/rpc-core@6.2.1":
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/@polkadot/rpc-core/-/rpc-core-6.2.1.tgz#8490d44f42511dcbc9c71d2dfe47439eb0d13e94"
+  integrity sha512-vHRbEeAEN3KGsx+uEMQXzx7+PY4sycex/YcOtiFXlXvvJqxQFViunP7wX2pJatYcPHmdMsgVZewqWrY1xRvU7A==
   dependencies:
     "@babel/runtime" "^7.15.4"
-    "@polkadot/rpc-provider" "6.1.2"
-    "@polkadot/types" "6.1.2"
+    "@polkadot/rpc-provider" "6.2.1"
+    "@polkadot/types" "6.2.1"
     "@polkadot/util" "^7.4.1"
     rxjs "^7.3.0"
 
-"@polkadot/rpc-provider@6.1.2":
-  version "6.1.2"
-  resolved "https://registry.yarnpkg.com/@polkadot/rpc-provider/-/rpc-provider-6.1.2.tgz#0f37bda14e92044ce13ad6cfbb4d22b1b6b644ba"
-  integrity sha512-AT5kmcVpUv/3bX+tsNmQIvKF23Dr2/cOCx8imDDZ3bF5ZYK1+cuKwrJhHCK73uM4wNbEfvtiffTgN4W0itT/IA==
+"@polkadot/rpc-provider@6.2.1":
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/@polkadot/rpc-provider/-/rpc-provider-6.2.1.tgz#1221d3458e0081cbbf6270045e760faaf605bf59"
+  integrity sha512-iyXkVOHHH1+iE1qJ456E30ri4hmUZu5p81RrbtPtnMSU5a+Oj8WS/qNfEQzaRLRuod9IreBwbRV/MtePcs9V6A==
   dependencies:
     "@babel/runtime" "^7.15.4"
-    "@polkadot/types" "6.1.2"
+    "@polkadot/types" "6.2.1"
     "@polkadot/util" "^7.4.1"
     "@polkadot/util-crypto" "^7.4.1"
     "@polkadot/x-fetch" "^7.4.1"
@@ -1354,17 +1354,17 @@
     "@polkadot/x-ws" "^7.4.1"
     eventemitter3 "^4.0.7"
 
-"@polkadot/types-known@6.1.2":
-  version "6.1.2"
-  resolved "https://registry.yarnpkg.com/@polkadot/types-known/-/types-known-6.1.2.tgz#6028149a312e1c2fd398160c093834a2d601a84e"
-  integrity sha512-thaoAaZFLjKhnIAKgg03F7x/XncEPle5SA3akpC0YLxYcEdIhI3z0naSG5soqdr4MD7PobgOyq9e/9mzSIpsQA==
+"@polkadot/types-known@6.2.1":
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/@polkadot/types-known/-/types-known-6.2.1.tgz#e0dbed54084e71ffdf44856b33f11b6fe07d3452"
+  integrity sha512-brivItlSjwte/5DcHKgEeW8C0cR0rK/UGZMnqG7SJ7uvWTiD9rXnre8oxNS5bm4p8K9VWsYdr9/GkGXyM7Ciqw==
   dependencies:
     "@babel/runtime" "^7.15.4"
     "@polkadot/networks" "^7.4.1"
-    "@polkadot/types" "6.1.2"
+    "@polkadot/types" "6.2.1"
     "@polkadot/util" "^7.4.1"
 
-"@polkadot/types@4.0.4-5", "@polkadot/types@6.1.2", "@polkadot/types@^4.13.1", "@polkadot/types@^5.3.2", "@polkadot/types@^5.4.1", "@polkadot/types@^5.7.1", "@polkadot/types@^5.9.1", "@polkadot/types@^6.1.2":
+"@polkadot/types@4.0.4-5", "@polkadot/types@6.2.1", "@polkadot/types@^4.13.1", "@polkadot/types@^5.3.2", "@polkadot/types@^5.4.1", "@polkadot/types@^5.7.1", "@polkadot/types@^5.9.1", "@polkadot/types@^6.1.2":
   version "6.1.2"
   resolved "https://registry.yarnpkg.com/@polkadot/types/-/types-6.1.2.tgz#6b7a8d7532814964a5b74ef99d8493d1b9c5c073"
   integrity sha512-2GJVpzw9vlTVdXotOH32gF4v9JFG5BdixiU/xQY5iY8e4bFEJmRWmPNanKYWW7v/t45+yqBZwPYGfsSMEWEqcw==
@@ -8093,10 +8093,10 @@ react-native@0.65.1:
     whatwg-fetch "^3.0.0"
     ws "^6.1.4"
 
-react-query@^3.25.0:
-  version "3.25.0"
-  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.25.0.tgz#4f67f8061e054c5c971cb6e36ec3d5703e780210"
-  integrity sha512-zu8HAJL/TGz/v0UVAb+Beb4IQgXW0jYNHuwUguIUgsV2EzjhYLBYeipBnJBMQ1RO4bgqbF05+e7HtSoaDijJrg==
+react-query@^3.25.1:
+  version "3.25.1"
+  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.25.1.tgz#221ff17406518a7689378dcbbdc986b0ba2c3919"
+  integrity sha512-tGZkap921d9dJD2F8+NpEu3djLRP+tpZKHKhQvqUMYMfWT5R18iRtGAG5ZeUMlRKuhzNaZx3cHiYj3DsyZ1SWw==
   dependencies:
     "@babel/runtime" "^7.5.5"
     broadcast-channel "^3.4.1"
