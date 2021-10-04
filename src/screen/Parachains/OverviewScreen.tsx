@@ -19,6 +19,8 @@ import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
 import {BlockTime} from 'layout/BlockTime';
 import LoadingView from 'presentational/LoadingView';
 import {monofontFamily} from 'src/styles';
+import {useNavigation} from '@react-navigation/core';
+import {parachainDetailsScreen} from 'src/navigation/routeKeys';
 
 export function ParachainsOverviewScreen() {
   const {data: leasePeriod, isLoading: isLeasePeriodLoading} = useParachainsLeasePeriod();
@@ -111,9 +113,7 @@ const Overview = React.memo(function Overview({
             <Padder scale={1} />
             <View style={styles.parachainsHeaderContainer}>
               <Text category="s1">Parachains</Text>
-              <Text category="s1" style={styles.parachainLeasesText}>
-                Leases
-              </Text>
+              <Text category="s1">Leases</Text>
             </View>
             <Padder scale={1} />
           </>
@@ -127,6 +127,7 @@ const Overview = React.memo(function Overview({
 });
 
 function Parachain({id, leasePeriod}: {id: ParaId; leasePeriod?: LeasePeriod}) {
+  const {navigate} = useNavigation();
   const {data: leases} = useParachainLeases(id);
   const endpoints = useParaEndpoints(id);
   const endpoint = endpoints ? endpoints[endpoints.length - 1] : null;
@@ -169,6 +170,9 @@ function Parachain({id, leasePeriod}: {id: ParaId; leasePeriod?: LeasePeriod}) {
   return (
     <>
       <ListItem
+        onPress={() => {
+          navigate(parachainDetailsScreen, {id: id.toString()});
+        }}
         title={() => {
           return (
             <Text style={styles.parachainName} category="s1">
@@ -227,8 +231,5 @@ const styles = StyleSheet.create({
   parachainsHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-  },
-  parachainLeasesText: {
-    alignSelf: 'flex-end',
   },
 });

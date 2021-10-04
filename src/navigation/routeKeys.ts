@@ -7,6 +7,7 @@ export const apiLoadingNavigatorScreen = 'ApiLoadingNavigator' as const;
 export const permissionGrantingPromptScreen = 'PermissionsGrantingPrompt' as const;
 export const dashboardNavigator = 'DashboardNavigator' as const;
 export const accountsNavigator = 'AccountsNavigator' as const;
+export const parachainsNavigator = 'ParachainsNavigator' as const;
 
 export const deeplinkNavigatorScreen = 'DeeplinkNavigatorScreen' as const;
 export const addAccountScreen = 'AddAccountScreen' as const;
@@ -23,7 +24,8 @@ export const notificationSettingsScreen = 'Notification' as const;
 export const accountsScreen = 'My Accounts' as const;
 export const myAccountScreen = 'My Account' as const;
 export const bountiesScreen = 'Bounties' as const;
-export const parachainsOverviewScreen = 'ParachainsOverviewScreen' as const;
+export const parachainsOverviewScreen = 'parachainsOverview' as const;
+export const parachainDetailsScreen = 'parachainDetails' as const;
 
 export const webviewScreen = 'Webview' as const;
 export const devScreen = 'Dev Kit' as const;
