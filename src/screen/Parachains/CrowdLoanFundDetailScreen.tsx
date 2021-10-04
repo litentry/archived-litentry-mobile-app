@@ -17,6 +17,7 @@ import AddressInlineTeaser from 'layout/AddressInlineTeaser';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {standardPadding} from 'src/styles';
 import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
+import Icon from 'presentational/Icon';
 
 export function CrowdLoanFundDetailScreen({
   route,
@@ -88,6 +89,7 @@ export function CrowdLoanFundDetailScreen({
         {homepage ? (
           <Button
             style={styles.button}
+            accessoryLeft={(p) => <Icon {...p} name="home-outline" />}
             onPress={() => {
               Linking.canOpenURL(homepage).then((supported) => {
                 if (supported) {
@@ -96,7 +98,7 @@ export function CrowdLoanFundDetailScreen({
               });
             }}
             appearance="ghost">
-            <Text>homepage</Text>
+            Homepage
           </Button>
         ) : null}
       </View>
