@@ -355,7 +355,7 @@ PODS:
     - React-Core
   - RNCMaskedView (0.1.11):
     - React
-  - RNDeviceInfo (8.3.3):
+  - RNDeviceInfo (8.4.0):
     - React-Core
   - RNFBApp (12.8.0):
     - Firebase/CoreOnly (= 8.7.0)
@@ -581,7 +581,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
-  DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
+  DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
   FBLazyVector: 33c82491102f20ecddb6c6a2c273696ace3191e0
   FBReactNativeSpec: df8f81d2a7541ee6755a047b398a5cb5a72acd0e
   Firebase: bc9325d5ee2041524bac78a5213d0e530c651309
@@ -590,7 +590,7 @@ SPEC CHECKSUMS:
   FirebaseInstallations: ede6fb72bb6337914e5888b399271259d0c4910c
   FirebaseMessaging: 93227dd71d7888e200baef65043f81acb2b6596e
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
+  glog: 5337263514dd6f09803962437687240c5dc39aa4
   GoogleDataTransport: 85fd18ff3019bb85d3f2c551d04c481dedf71fc9
   GoogleUtilities: 8de2a97a17e15b6b98e38e8770e2d129a57c0040
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
@@ -629,7 +629,7 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
   RNCClipboard: 41d8d918092ae8e676f18adada19104fa3e68495
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
-  RNDeviceInfo: cc7de0772378f85d8f36ae439df20f05c590a651
+  RNDeviceInfo: 8a06046616c6b5c03787b04f265fa3b52b37c80b
   RNFBApp: b97d6654509a5852d49f0abf93be76b300fd2e2c
   RNFBMessaging: c1de144b096aaeec85e9fa3f0def62cc7a39b271
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211

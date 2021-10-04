@@ -29,6 +29,7 @@ import {
   accountsNavigator,
   identityGuideScreen,
   myAccountScreen,
+  crowdloanScreen,
   bountiesScreen,
   parachainsOverviewScreen,
 } from 'src/navigation/routeKeys';
@@ -54,6 +55,7 @@ type DashboardStackParamList = {
   [democracyScreen]: undefined;
   [referendumScreen]: {index: string};
   [democracyProposalScreen]: {index: string};
+  [crowdloanScreen]: undefined;
   [bountiesScreen]: undefined;
 };
 
