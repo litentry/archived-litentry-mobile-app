@@ -31,6 +31,7 @@ import {
   myAccountScreen,
   crowdloanScreen,
   bountiesScreen,
+  parathreadsScreen,
   parachainsOverviewScreen,
 } from 'src/navigation/routeKeys';
 
@@ -67,6 +68,7 @@ type DrawerParamList = {
   [notificationSettingsScreen]: undefined;
   [polkassemblyDiscussionsNavigator]: undefined;
   [accountsNavigator]: undefined;
+  [parathreadsScreen]: undefined;
   [parachainsOverviewScreen]: undefined;
 };
 
