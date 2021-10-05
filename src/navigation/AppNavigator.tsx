@@ -21,7 +21,7 @@ import {MyAccountScreen} from 'screen/MyAccountScreen';
 import MyIdentityScreen from 'screen/MyIdentityScreen';
 import {IdentityGuideScreen} from 'screen/MyIdentityScreen/IdentityGuideScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
-import {CrowdLoanScreen} from 'screen/Parachain/CrowdLoanScreen';
+import {CrowdLoanScreen} from 'screen/Parachains/CrowdLoanScreen';
 import {PermissionGrantingPrompt} from 'screen/PermissionGrantingPrompt';
 import {PolkassemblyDiscussionDetail} from 'screen/Polkassembly/PolkassemblyDiscussionDetail';
 import {PolkassemblyDiscussions} from 'screen/Polkassembly/PolkassemblyDiscussions';
@@ -49,6 +49,7 @@ import {
 import * as routeKeys from 'src/navigation/routeKeys';
 import {darkTheme, lightTheme} from 'src/navigation/theme';
 import globalStyles from 'src/styles';
+import {CrowdLoanFundDetailScreen as CrowdLoanFundDetailScreen} from 'screen/Parachains/CrowdLoanFundDetailScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -98,6 +99,11 @@ function DashboardStackNavigator() {
         options={{title: 'Proposal'}}
       />
       <DashboardStack.Screen name={routeKeys.crowdloanScreen} component={CrowdLoanScreen} />
+      <DashboardStack.Screen
+        name={routeKeys.crowdloanFundDetailScreen}
+        component={CrowdLoanFundDetailScreen}
+        options={{title: 'Fund Details'}}
+      />
       <DashboardStack.Screen name={routeKeys.bountiesScreen} component={BountiesScreen} />
     </DashboardStack.Navigator>
   );

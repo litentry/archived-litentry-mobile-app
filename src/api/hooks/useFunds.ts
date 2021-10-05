@@ -1,3 +1,4 @@
+import {ApiPromise} from '@polkadot/api';
 import type {Option, StorageKey} from '@polkadot/types';
 import type {
   AccountId,
@@ -18,39 +19,61 @@ export const CROWD_PREFIX = stringToU8a('modlpy/cfund');
 
 export type ChannelMap = Record<string, [HrmpChannelId, HrmpChannel][]>;
 
-export default function useFunds() {
+export function useFunds() {
   const bestNumber = useBestNumber();
 
   return useApiQuery(
-    ['funds'],
+    ['parachain_crowdloan_funds'],
     async (api) => {
       const paraIdKeys = await api.query.crowdloan?.funds?.keys<[ParaId]>();
       const paraIds = paraIdKeys ? extractFundIds(paraIdKeys) : [];
 
-      const [rawFunds, rawLeases]: [
-        Option<FundInfo>[] | undefined,
-        Array<Option<ITuple<[AccountId, BalanceOf]>>>[] | undefined,
-      ] = await Promise.all([
-        api.query.crowdloan?.funds?.multi<Option<FundInfo>>(paraIds),
-        api.query.slots?.leases?.multi<any>(paraIds),
-      ]);
-
-      const funds = rawFunds ? optFundMulti.transform(paraIds, rawFunds) : [];
-      const leases = optLeaseMulti.transform(paraIds, rawLeases ?? []);
-
-      const minContribution = api?.consts.crowdloan?.minContribution as BlockNumber;
-
-      if (bestNumber && funds && leases) {
-        return createResult(bestNumber, minContribution, funds, leases);
+      if (bestNumber) {
+        return await getFunds(paraIds, bestNumber, api);
       }
     },
     {enabled: !!bestNumber},
   );
 }
 
+export function useCrowdloanFundByParaId(key: ParaId) {
+  const bestNumber = useBestNumber();
+
+  return useApiQuery(
+    ['parachain_crowdloan_funds', key],
+    async (api) => {
+      if (bestNumber) {
+        const campaigns = await getFunds([key], bestNumber, api);
+        return campaigns?.funds?.[0];
+      }
+    },
+    {enabled: !!bestNumber},
+  );
+}
+
+async function getFunds(paraIds: ParaId[], bestNumber: BlockNumber, api: ApiPromise): Promise<Campaigns | undefined> {
+  const [rawFunds, rawLeases]: [
+    Option<FundInfo>[] | undefined,
+    Array<Option<ITuple<[AccountId, BalanceOf]>>>[] | undefined,
+  ] = await Promise.all([
+    api.query.crowdloan?.funds?.multi<Option<FundInfo>>(paraIds),
+    api.query.slots?.leases?.multi<any>(paraIds),
+  ]);
+
+  const funds = rawFunds ? optFundMulti.transform(paraIds, rawFunds) : [];
+  const leases = optLeaseMulti.transform(paraIds, rawLeases ?? []);
+
+  const minContribution = api?.consts.crowdloan?.minContribution as BlockNumber;
+
+  if (bestNumber && funds && leases) {
+    return createResult(bestNumber, minContribution, funds, leases);
+  }
+}
+
 function extractFundIds(keys: StorageKey<[ParaId]>[]): ParaId[] {
   return keys.map(({args: [paraId]}) => paraId);
 }
+
 const EMPTY_U8A = new Uint8Array(32);
 function createAddress(paraId: ParaId): Uint8Array {
   return u8aConcat(CROWD_PREFIX, paraId.toU8a(), EMPTY_U8A).subarray(0, 32);

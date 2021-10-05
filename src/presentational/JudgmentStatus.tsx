@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
   icon: {
     width: 20,
     height: 20,
+    marginTop: -2,
   },
   good: {color: colorGreen},
   bad: {color: 'red'},
