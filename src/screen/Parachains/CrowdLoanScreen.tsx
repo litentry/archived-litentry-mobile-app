@@ -1,6 +1,7 @@
 import {LinkOption} from '@polkadot/apps-config/endpoints/types';
 import type {ParaId} from '@polkadot/types/interfaces';
 import {BN, BN_ZERO} from '@polkadot/util';
+import {NavigationProp, useNavigation} from '@react-navigation/core';
 import {Card, Text, useTheme} from '@ui-kitten/components';
 import {EmptyView} from 'presentational/EmptyView';
 import LoadingView from 'presentational/LoadingView';
@@ -10,9 +11,11 @@ import React from 'react';
 import {SectionList, StyleSheet, View} from 'react-native';
 import {ProgressChart} from 'react-native-chart-kit';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import useFunds, {Campaign} from 'src/api/hooks/useFunds';
+import {Campaign, useFunds} from 'src/api/hooks/useFunds';
 import {LeasePeriod, useParachainsLeasePeriod} from 'src/api/hooks/useParachainsLeasePeriod';
 import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
+import {DashboardStackParamList} from 'src/navigation/navigation';
+import {crowdloanFundDetailScreen} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
 
 export function CrowdLoanScreen() {
@@ -47,8 +50,8 @@ export function CrowdLoanScreen() {
   let activeProgress = 0,
     totalProgress = 0;
   try {
-    activeProgress = activeRaised.muln(100).div(activeCap).toNumber() / 100;
-    totalProgress = data.totalRaised.muln(100).div(data.totalCap).toNumber() / 100;
+    activeProgress = activeRaised.muln(10000).div(activeCap).toNumber() / 10000;
+    totalProgress = data.totalRaised.muln(10000).div(data.totalCap).toNumber() / 10000;
   } catch {
     console.error('Error calculating progress');
   }
@@ -139,7 +142,9 @@ function Chart({percent}: {percent: number}) {
         hideLegend
       />
       <View style={styles.chartOverlay}>
-        <Text category="label">{percent * 100}%</Text>
+        <Text category="label" adjustsFontSizeToFit numberOfLines={1}>
+          {(percent * 100).toFixed(2)}%
+        </Text>
       </View>
     </View>
   );
@@ -149,15 +154,21 @@ function Fund({item}: {item: Campaign}) {
   const formatBalance = useFormatBalance();
   const {cap, raised} = item.info;
   const endpoints = useParaEndpoints(item.paraId);
+  const navigation = useNavigation<NavigationProp<DashboardStackParamList>>();
 
   if (!endpoints?.length) {
     return null;
   }
 
   const {text} = endpoints[endpoints.length - 1] as LinkOption;
+  const percentage = cap.isZero() ? 100 : raised.muln(10000).div(cap).toNumber() / 10000;
 
   return (
-    <Card style={styles.fund} disabled>
+    <Card
+      style={styles.fund}
+      onPress={() => {
+        navigation.navigate(crowdloanFundDetailScreen, {title: String(text), paraId: item.paraId});
+      }}>
       <View style={[globalStyles.rowAlignCenter]}>
         <View style={styles.shrink}>
           <Text category="h6" numberOfLines={1} adjustsFontSizeToFit style={styles.shrink}>
@@ -169,7 +180,7 @@ function Fund({item}: {item: Campaign}) {
           })} / ${formatBalance(cap, {isShort: true})}`}</Text>
         </View>
         <View style={styles.spacer} />
-        <Chart percent={raised.muln(100).div(cap).toNumber() / 100} />
+        <Chart percent={percentage} />
       </View>
     </Card>
   );
@@ -209,6 +220,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 10,
   },
 });
 
@@ -230,29 +242,3 @@ function extractLists(value: Campaign[] | null, leasePeriod?: LeasePeriod): [Cam
 
   return [active, ended, allIds];
 }
-
-// TODO: USE FOR DETAIL PAGE
-// const bestNumber = useBestNumber();
-// const blocksLeft = useMemo(() => (bestNumber && end.gt(bestNumber) ? end.sub(bestNumber) : null), [bestNumber, end]);
-// const {data: contributions} = useContributions(item.paraId);
-//     {{blocksLeft ? <BlockTime blockNumber={blocksLeft} /> : null}
-//      <Text>
-//           {item.isWinner
-//             ? 'Winner'
-//             : blocksLeft
-//             ? item.isCapped
-//               ? 'Capped'
-//               : isOngoing
-//               ? 'Active'
-//               : 'Past'
-//             : 'Ended'}
-//         </Text> */}
-//        <Text>
-//           {'leases: '}
-//           {firstPeriod.eq(lastPeriod)
-//             ? formatNumber(firstPeriod)
-//             : `${formatNumber(firstPeriod)} - ${formatNumber(lastPeriod)}`}
-//         </Text>
-//       <View style={styles.alignEnd}>
-//         <Text>count: {formatNumber(contributions?.contributorsHex.length)}</Text>
-//       </View>

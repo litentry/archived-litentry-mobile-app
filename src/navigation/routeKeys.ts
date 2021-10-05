@@ -37,7 +37,9 @@ export const democracyScreen = 'Democracy' as const;
 export const referendumScreen = 'Referendum' as const;
 export const democracyProposalScreen = 'DemocracyProposal' as const;
 
+export const parathreadsScreen = 'Parathreads' as const;
 export const crowdloanScreen = 'Crowdloan' as const;
+export const crowdloanFundDetailScreen = 'CrowdLoanDetailScreen' as const;
 
 export const polkassemblyDiscussionsNavigator = 'PolkassemblyDiscussionsNavigator' as const;
 export const polkassemblyDiscussions = 'PolkassemblyDiscussions' as const;
