@@ -7,7 +7,6 @@ import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   accountsNavigator,
-  crowdloanScreen,
   dashboardScreen,
   devScreen,
   notificationSettingsScreen,
@@ -16,6 +15,7 @@ import {
   registrarListScreen,
   webviewScreen,
   parathreadsScreen,
+  crowdloansNavigator,
 } from 'src/navigation/routeKeys';
 import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 
@@ -53,7 +53,7 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
             <MenuItem
               title="Crowdloan"
               onPress={() => {
-                navigation.navigate(crowdloanScreen);
+                navigation.navigate(crowdloansNavigator);
               }}
             />
             <MenuItem title="Parathreads" onPress={() => navigation.navigate(parathreadsScreen)} />

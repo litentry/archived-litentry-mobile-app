@@ -10,21 +10,22 @@ import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import {useContributions} from 'src/api/hooks/useContributions';
 import {useCrowdloanFundByParaId} from 'src/api/hooks/useFunds';
 import {useParachainsLeasePeriod} from 'src/api/hooks/useParachainsLeasePeriod';
-import {DashboardStackParamList} from 'src/navigation/navigation';
-import {crowdloanFundDetailScreen} from 'src/navigation/routeKeys';
+import {CrowdloanStackParamList} from 'src/navigation/navigation';
 import {formatNumber} from '@polkadot/util';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {standardPadding} from 'src/styles';
 import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
 import Icon from 'presentational/Icon';
+import type {ParaId} from '@polkadot/types/interfaces';
 
-export function CrowdLoanFundDetailScreen({
-  route,
-}: {
-  route: RouteProp<DashboardStackParamList, typeof crowdloanFundDetailScreen>;
-}) {
+type ScreenProps = {
+  route: RouteProp<CrowdloanStackParamList, 'CrowdLoanDetailScreen'>;
+};
+
+export function CrowdLoanFundDetailScreen({route}: ScreenProps) {
   const {paraId, title} = route.params;
+  // const paraIdWithType = paraId as unknown as ParaId;
   const bestNumber = useBestNumber();
   const formatBalance = useFormatBalance();
   const {data: fund, isError, isLoading} = useCrowdloanFundByParaId(paraId);
@@ -33,7 +34,7 @@ export function CrowdLoanFundDetailScreen({
   const endpoints = useParaEndpoints(paraId);
 
   if (isError) {
-    return <Text>Something bad happend!</Text>;
+    return <Text>Something bad happened!</Text>;
   }
 
   if (isLoading) {
