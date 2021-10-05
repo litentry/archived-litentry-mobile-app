@@ -39,12 +39,16 @@ export function useFunds() {
 export function useCrowdloanFundByParaId(key: ParaId) {
   const bestNumber = useBestNumber();
 
-  return useApiQuery(['parachain_crowdloan_funds', key], async (api) => {
-    if (bestNumber) {
-      const campaigns = await getFunds([key], bestNumber, api);
-      return campaigns?.funds?.[0];
-    }
-  });
+  return useApiQuery(
+    ['parachain_crowdloan_funds', key],
+    async (api) => {
+      if (bestNumber) {
+        const campaigns = await getFunds([key], bestNumber, api);
+        return campaigns?.funds?.[0];
+      }
+    },
+    {enabled: !!bestNumber},
+  );
 }
 
 async function getFunds(paraIds: ParaId[], bestNumber: BlockNumber, api: ApiPromise): Promise<Campaigns | undefined> {
