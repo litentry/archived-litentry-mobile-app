@@ -1,4 +1,4 @@
-import {LinkOption} from '@polkadot/apps-config/settings/types';
+import type {LinkOption} from '@polkadot/apps-config/endpoints/types';
 import type BN from 'bn.js';
 import {useRelayEndpoints} from './useRelayEndpoints';
 import {bnToBn} from '@polkadot/util';

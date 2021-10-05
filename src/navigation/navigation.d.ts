@@ -1,3 +1,5 @@
+import {ParaId} from '@polkadot/types/interfaces';
+
 import {
   addAccountScreen,
   balanceScreen,
@@ -29,12 +31,13 @@ import {
   accountsNavigator,
   identityGuideScreen,
   myAccountScreen,
-  crowdloanScreen,
   bountiesScreen,
   parathreadsScreen,
   parachainsOverviewScreen,
   parachainDetailsScreen,
   parachainsNavigator,
+  crowdloanScreen,
+  crowdloanFundDetailScreen,
 } from 'src/navigation/routeKeys';
 
 type DashboardStackParamList = {
@@ -58,6 +61,10 @@ type DashboardStackParamList = {
   [democracyScreen]: undefined;
   [referendumScreen]: {index: string};
   [democracyProposalScreen]: {index: string};
+
+  [crowdloanScreen]: undefined;
+  [crowdloanFundDetailScreen]: {title: string; paraId: ParaId};
+
   [bountiesScreen]: undefined;
 };
 
