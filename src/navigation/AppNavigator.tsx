@@ -232,7 +232,7 @@ function ParachainsNavigator() {
       <ParachainsStack.Screen
         name={routeKeys.parachainDetailsScreen}
         component={ParachainDetailsScreen}
-        options={{title: 'Details'}}
+        options={{title: 'Parachain'}}
       />
     </ParachainsStack.Navigator>
   );

@@ -76,7 +76,7 @@ type DrawerParamList = {
 
 type ParachainsStackParamList = {
   [parachainsOverviewScreen]: undefined;
-  [parachainDetailsScreen]: {id: string};
+  [parachainDetailsScreen]: {id: string; name: string; period?: string; blocks?: string};
 };
 
 type PolkassemblyDiscussionStackParamList = {

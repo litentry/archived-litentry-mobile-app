@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
 import {Card, Divider, ListItem, Text} from '@ui-kitten/components';
-import {formatNumber, BN_ONE, BN_HUNDRED, bnToBn} from '@polkadot/util';
+import {formatNumber, BN_ONE, BN_HUNDRED, bnToBn, bnToHex} from '@polkadot/util';
 import BN from 'bn.js';
 import type {ParaId} from '@polkadot/types/interfaces';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
@@ -171,7 +171,12 @@ function Parachain({id, leasePeriod}: {id: ParaId; leasePeriod?: LeasePeriod}) {
     <>
       <ListItem
         onPress={() => {
-          navigate(parachainDetailsScreen, {id: id.toString()});
+          navigate(parachainDetailsScreen, {
+            id: id.toString(),
+            name: parachainName,
+            period,
+            blocks: bnToHex(blocks),
+          });
         }}
         title={() => {
           return (
