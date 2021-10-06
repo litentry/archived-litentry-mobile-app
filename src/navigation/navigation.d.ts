@@ -31,10 +31,13 @@ import {
   accountsNavigator,
   identityGuideScreen,
   myAccountScreen,
-  crowdloanScreen,
   bountiesScreen,
   parathreadsScreen,
   parachainsOverviewScreen,
+  parachainDetailScreen,
+  parachainsNavigator,
+  crowdloansNavigator,
+  crowdloanScreen,
   crowdloanFundDetailScreen,
 } from 'src/navigation/routeKeys';
 
@@ -59,8 +62,6 @@ type DashboardStackParamList = {
   [democracyScreen]: undefined;
   [referendumScreen]: {index: string};
   [democracyProposalScreen]: {index: string};
-  [crowdloanScreen]: undefined;
-  [crowdloanFundDetailScreen]: {title: string; paraId: ParaId};
   [bountiesScreen]: undefined;
 };
 
@@ -72,8 +73,15 @@ type DrawerParamList = {
   [notificationSettingsScreen]: undefined;
   [polkassemblyDiscussionsNavigator]: undefined;
   [accountsNavigator]: undefined;
-  [parathreadsScreen]: undefined;
+  [parachainsNavigator]: undefined;
+};
+
+type ParachainsStackParamList = {
   [parachainsOverviewScreen]: undefined;
+  [parachainDetailScreen]: {id: string; name: string; period?: string; blocks?: string};
+  [crowdloanScreen]: undefined;
+  [crowdloanFundDetailScreen]: {title: string; paraId: ParaId};
+  [parathreadsScreen]: undefined;
 };
 
 type PolkassemblyDiscussionStackParamList = {
