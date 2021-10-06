@@ -10,17 +10,16 @@ import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import {useContributions} from 'src/api/hooks/useContributions';
 import {useCrowdloanFundByParaId} from 'src/api/hooks/useFunds';
 import {useParachainsLeasePeriod} from 'src/api/hooks/useParachainsLeasePeriod';
-import {CrowdloanStackParamList} from 'src/navigation/navigation';
+import {ParachainsStackParamList} from 'src/navigation/navigation';
 import {formatNumber} from '@polkadot/util';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {standardPadding} from 'src/styles';
 import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
 import Icon from 'presentational/Icon';
-import type {ParaId} from '@polkadot/types/interfaces';
 
 type ScreenProps = {
-  route: RouteProp<CrowdloanStackParamList, 'CrowdLoanDetailScreen'>;
+  route: RouteProp<ParachainsStackParamList, 'CrowdLoanDetailScreen'>;
 };
 
 export function CrowdLoanFundDetailScreen({route}: ScreenProps) {
