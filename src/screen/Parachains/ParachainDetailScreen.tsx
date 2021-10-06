@@ -11,10 +11,10 @@ import {formatNumber, hexToBn} from '@polkadot/util';
 import {monofontFamily} from 'src/styles';
 
 type ScreenProps = {
-  route: RouteProp<ParachainsStackParamList, 'parachainDetails'>;
+  route: RouteProp<ParachainsStackParamList, 'parachainDetail'>;
 };
 
-export function ParachainDetailsScreen({route}: ScreenProps) {
+export function ParachainDetailScreen({route}: ScreenProps) {
   const {id, name, period, blocks} = route.params;
   const theme = useTheme();
 

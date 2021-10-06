@@ -20,7 +20,7 @@ import {BlockTime} from 'layout/BlockTime';
 import LoadingView from 'presentational/LoadingView';
 import {monofontFamily} from 'src/styles';
 import {useNavigation} from '@react-navigation/core';
-import {parachainDetailsScreen} from 'src/navigation/routeKeys';
+import {parachainDetailScreen} from 'src/navigation/routeKeys';
 
 export function ParachainsOverviewScreen() {
   const {data: leasePeriod, isLoading: isLeasePeriodLoading} = useParachainsLeasePeriod();
@@ -171,7 +171,7 @@ function Parachain({id, leasePeriod}: {id: ParaId; leasePeriod?: LeasePeriod}) {
     <>
       <ListItem
         onPress={() => {
-          navigate(parachainDetailsScreen, {
+          navigate(parachainDetailScreen, {
             id: id.toString(),
             name: parachainName,
             period,

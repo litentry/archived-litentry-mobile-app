@@ -25,7 +25,7 @@ export const accountsScreen = 'My Accounts' as const;
 export const myAccountScreen = 'My Account' as const;
 export const bountiesScreen = 'Bounties' as const;
 export const parachainsOverviewScreen = 'parachainsOverview' as const;
-export const parachainDetailsScreen = 'parachainDetails' as const;
+export const parachainDetailScreen = 'parachainDetail' as const;
 
 export const webviewScreen = 'Webview' as const;
 export const devScreen = 'Dev Kit' as const;

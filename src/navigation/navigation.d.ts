@@ -34,7 +34,7 @@ import {
   bountiesScreen,
   parathreadsScreen,
   parachainsOverviewScreen,
-  parachainDetailsScreen,
+  parachainDetailScreen,
   parachainsNavigator,
   crowdloansNavigator,
   crowdloanScreen,
@@ -74,12 +74,11 @@ type DrawerParamList = {
   [polkassemblyDiscussionsNavigator]: undefined;
   [accountsNavigator]: undefined;
   [parachainsNavigator]: undefined;
-  [crowdloansNavigator]: undefined;
 };
 
 type ParachainsStackParamList = {
   [parachainsOverviewScreen]: undefined;
-  [parachainDetailsScreen]: {id: string; name: string; period?: string; blocks?: string};
+  [parachainDetailScreen]: {id: string; name: string; period?: string; blocks?: string};
   [crowdloanScreen]: undefined;
   [crowdloanFundDetailScreen]: {title: string; paraId: ParaId};
   [parathreadsScreen]: undefined;

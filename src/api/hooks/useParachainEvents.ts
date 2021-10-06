@@ -60,9 +60,9 @@ export function useParachainEvents() {
 
     setLastEvents((prev) => {
       return {
-        lastBacked: {...backed, ...prev.lastBacked},
-        lastIncluded: {...included, ...prev.lastIncluded},
-        lastTimeout: {...timeout, ...prev.lastTimeout},
+        lastBacked: {...prev.lastBacked, ...backed},
+        lastIncluded: {...prev.lastIncluded, ...included},
+        lastTimeout: {...prev.lastTimeout, ...timeout},
       };
     });
   }, [api, lastBlock]);

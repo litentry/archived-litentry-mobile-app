@@ -50,7 +50,7 @@ import {
 import * as routeKeys from 'src/navigation/routeKeys';
 import {darkTheme, lightTheme} from 'src/navigation/theme';
 import globalStyles from 'src/styles';
-import {ParachainDetailsScreen} from 'screen/Parachains/DetailsScreen';
+import {ParachainDetailScreen} from 'screen/Parachains/ParachainDetailScreen';
 import {CrowdLoanFundDetailScreen} from 'screen/Parachains/CrowdLoanFundDetailScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
@@ -229,8 +229,8 @@ function ParachainsNavigator() {
         options={{headerLeft: DashboardHeaderLeft, title: 'Overview'}}
       />
       <ParachainsStack.Screen
-        name={routeKeys.parachainDetailsScreen}
-        component={ParachainDetailsScreen}
+        name={routeKeys.parachainDetailScreen}
+        component={ParachainDetailScreen}
         options={{title: 'Parachain'}}
       />
       <ParachainsStack.Screen
