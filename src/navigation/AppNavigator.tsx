@@ -46,7 +46,6 @@ import {
   DrawerParamList,
   PolkassemblyDiscussionStackParamList,
   ParachainsStackParamList,
-  CrowdloanStackParamList,
 } from 'src/navigation/navigation';
 import * as routeKeys from 'src/navigation/routeKeys';
 import {darkTheme, lightTheme} from 'src/navigation/theme';
@@ -201,11 +200,6 @@ function DrawerNavigator() {
         component={ParachainsNavigator}
         options={{headerShown: false}}
       />
-      <Drawer.Screen
-        name={routeKeys.crowdloansNavigator}
-        component={CrowdloansNavigator}
-        options={{headerShown: false}}
-      />
 
       <Drawer.Screen name={routeKeys.parathreadsScreen} component={ParathreadsScreen} />
       <Drawer.Screen name={routeKeys.accountsNavigator} component={AccountsNavigator} options={{headerShown: false}} />
@@ -241,39 +235,17 @@ function ParachainsNavigator() {
         component={ParachainDetailsScreen}
         options={{title: 'Parachain'}}
       />
-    </ParachainsStack.Navigator>
-  );
-}
-
-const CrowdloansStack = createStackNavigator<CrowdloanStackParamList>();
-
-function CrowdloansNavigator() {
-  return (
-    <CrowdloansStack.Navigator
-      screenOptions={{
-        headerBackTitleVisible: false,
-        headerLeftContainerStyle: {paddingHorizontal: 10},
-        headerRightContainerStyle: {paddingHorizontal: 10},
-        headerBackImage: ({tintColor}) => (
-          <Icon
-            name={'arrow-back-outline'}
-            style={[globalStyles.icon25, {color: tintColor}]}
-            fill={tintColor}
-            pack={'ionic'}
-          />
-        ),
-      }}>
-      <CrowdloansStack.Screen
+      <ParachainsStack.Screen
         name={routeKeys.crowdloanScreen}
         component={CrowdLoanScreen}
         options={{headerLeft: DashboardHeaderLeft, title: 'Crowdloan'}}
       />
-      <CrowdloansStack.Screen
+      <ParachainsStack.Screen
         name={routeKeys.crowdloanFundDetailScreen}
         component={CrowdLoanFundDetailScreen}
         options={{title: 'Fund details'}}
       />
-    </CrowdloansStack.Navigator>
+    </ParachainsStack.Navigator>
   );
 }
 

@@ -15,7 +15,7 @@ import {
   registrarListScreen,
   webviewScreen,
   parathreadsScreen,
-  crowdloansNavigator,
+  crowdloanScreen,
 } from 'src/navigation/routeKeys';
 import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 
@@ -53,7 +53,7 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
             <MenuItem
               title="Crowdloan"
               onPress={() => {
-                navigation.navigate(crowdloansNavigator);
+                navigation.navigate(crowdloanScreen);
               }}
             />
             <MenuItem title="Parathreads" onPress={() => navigation.navigate(parathreadsScreen)} />

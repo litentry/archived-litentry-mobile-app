@@ -14,7 +14,7 @@ import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {Campaign, useFunds} from 'src/api/hooks/useFunds';
 import {LeasePeriod, useParachainsLeasePeriod} from 'src/api/hooks/useParachainsLeasePeriod';
 import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
-import {CrowdloanStackParamList} from 'src/navigation/navigation';
+import {ParachainsStackParamList} from 'src/navigation/navigation';
 import {crowdloanFundDetailScreen} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
 
@@ -154,7 +154,7 @@ function Fund({item}: {item: Campaign}) {
   const formatBalance = useFormatBalance();
   const {cap, raised} = item.info;
   const endpoints = useParaEndpoints(item.paraId);
-  const navigation = useNavigation<NavigationProp<CrowdloanStackParamList>>();
+  const navigation = useNavigation<NavigationProp<ParachainsStackParamList>>();
 
   if (!endpoints?.length) {
     return null;
