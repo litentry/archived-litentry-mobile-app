@@ -73,7 +73,6 @@ type DrawerParamList = {
   [notificationSettingsScreen]: undefined;
   [polkassemblyDiscussionsNavigator]: undefined;
   [accountsNavigator]: undefined;
-  [parathreadsScreen]: undefined;
   [parachainsNavigator]: undefined;
   [crowdloansNavigator]: undefined;
 };
@@ -83,6 +82,7 @@ type ParachainsStackParamList = {
   [parachainDetailsScreen]: {id: string; name: string; period?: string; blocks?: string};
   [crowdloanScreen]: undefined;
   [crowdloanFundDetailScreen]: {title: string; paraId: ParaId};
+  [parathreadsScreen]: undefined;
 };
 
 type PolkassemblyDiscussionStackParamList = {

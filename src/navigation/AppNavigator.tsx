@@ -200,8 +200,6 @@ function DrawerNavigator() {
         component={ParachainsNavigator}
         options={{headerShown: false}}
       />
-
-      <Drawer.Screen name={routeKeys.parathreadsScreen} component={ParathreadsScreen} />
       <Drawer.Screen name={routeKeys.accountsNavigator} component={AccountsNavigator} options={{headerShown: false}} />
     </Drawer.Navigator>
   );
@@ -238,12 +236,17 @@ function ParachainsNavigator() {
       <ParachainsStack.Screen
         name={routeKeys.crowdloanScreen}
         component={CrowdLoanScreen}
-        options={{headerLeft: DashboardHeaderLeft, title: 'Crowdloan'}}
+        options={{headerLeft: DashboardHeaderLeft}}
       />
       <ParachainsStack.Screen
         name={routeKeys.crowdloanFundDetailScreen}
         component={CrowdLoanFundDetailScreen}
         options={{title: 'Fund details'}}
+      />
+      <ParachainsStack.Screen
+        options={{headerLeft: DashboardHeaderLeft}}
+        name={routeKeys.parathreadsScreen}
+        component={ParathreadsScreen}
       />
     </ParachainsStack.Navigator>
   );
