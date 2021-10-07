@@ -29,9 +29,9 @@ type ScreenProps = {
 
 type ParachainValidators = {
   validators: AccountId[];
-  assignments: CoreAssignment[] | undefined;
+  assignments?: CoreAssignment[];
   validatorGroups: ParaValidatorIndex[][];
-  validatorIndices: ParaValidatorIndex[] | undefined;
+  validatorIndices?: ParaValidatorIndex[];
 };
 
 function getValidatorInfo(id: string, parachainValidators?: ParachainValidators) {
