@@ -10,11 +10,18 @@ import {useParachainEvents} from 'src/api/hooks/useParachainEvents';
 import {formatNumber, hexToBn} from '@polkadot/util';
 import {monofontFamily, standardPadding} from 'src/styles';
 import {useParachainValidators} from 'src/api/hooks/useParachainValidators';
-import type {AccountId, CoreAssignment, ParaValidatorIndex, GroupIndex} from '@polkadot/types/interfaces';
+import type {
+  AccountId,
+  CoreAssignment,
+  ParaValidatorIndex,
+  ParaId,
+  CandidatePendingAvailability,
+} from '@polkadot/types/interfaces';
 import {EmptyView} from 'presentational/EmptyView';
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
+import {useParachainInfo} from 'src/api/hooks/useParachainInfo';
 
 type ScreenProps = {
   route: RouteProp<ParachainsStackParamList, 'parachainDetail'>;
@@ -29,12 +36,6 @@ type ParachainValidators =
     }
   | undefined;
 
-export interface ValidatorInfo {
-  indexActive: ParaValidatorIndex;
-  indexValidator: ParaValidatorIndex;
-  validatorId: AccountId;
-}
-
 function getValidatorInfo(id: string, parachainValidators: ParachainValidators) {
   const assignment = parachainValidators?.assignments?.find(({paraId}) => paraId.eq(id));
 
@@ -47,12 +48,26 @@ function getValidatorInfo(id: string, parachainValidators: ParachainValidators) 
     validators: parachainValidators?.validatorGroups[assignment.groupIdx.toNumber()]
       ?.map((indexActive) => [indexActive, parachainValidators?.validatorIndices?.[indexActive.toNumber()]])
       .filter(([, a]) => a)
-      .map(([indexActive, indexValidator]) => ({
-        indexActive,
-        indexValidator,
-        validatorId: indexValidator ? parachainValidators.validators[indexValidator?.toNumber()] : undefined,
-      })),
+      .map(([, indexValidator]) =>
+        indexValidator ? parachainValidators.validators[indexValidator?.toNumber()] : undefined,
+      ),
   };
+}
+
+function getNonVoters(validators?: AccountId[], pendingAvail?: CandidatePendingAvailability) {
+  let list: AccountId[] = [];
+
+  if (validators && pendingAvail) {
+    list = pendingAvail.availabilityVotes
+      .toHuman()
+      .slice(2)
+      .replace(/_/g, '')
+      .split('')
+      .map((c, index) => (c === '0' ? validators[index] : null))
+      .filter((v, index): v is AccountId => !!v && index < validators.length);
+  }
+
+  return list;
 }
 
 export function ParachainDetailScreen({route}: ScreenProps) {
@@ -61,13 +76,19 @@ export function ParachainDetailScreen({route}: ScreenProps) {
 
   const events = useParachainEvents();
   const {data: parachainValidators} = useParachainValidators();
+  const {data: parachainInfo} = useParachainInfo(id as unknown as ParaId);
 
   const validatorInfo = getValidatorInfo(id, parachainValidators);
+  const nonVoters = getNonVoters(parachainValidators?.validators, parachainInfo?.pendingAvail);
 
   const sections = [
     {
       title: `Val. Group ${validatorInfo?.groupIndex.toNumber() || ''} (${validatorInfo?.validators?.length || ''})`,
       data: validatorInfo?.validators || [],
+    },
+    {
+      title: `Non-Voters (${nonVoters.length})`,
+      data: nonVoters,
     },
   ];
 
@@ -121,7 +142,7 @@ export function ParachainDetailScreen({route}: ScreenProps) {
                   accessoryLeft={() => <Icon name="sync-outline" fill={theme['color-basic-600']} style={styles.icon} />}
                   accessoryRight={() => (
                     <View style={styles.accessoryRight}>
-                      <Text style={styles.text}>{`Parachain`}</Text>
+                      <Text style={styles.text}>{parachainInfo?.lifecycle?.toString()}</Text>
                     </View>
                   )}
                 />
@@ -133,13 +154,13 @@ export function ParachainDetailScreen({route}: ScreenProps) {
         contentContainerStyle={styles.content}
         stickySectionHeadersEnabled={false}
         sections={sections}
-        renderItem={({item}) => <>{item.validatorId && <Validator accountId={item.validatorId} />}</>}
+        renderItem={({item}) => <>{item && <Validator accountId={item} />}</>}
         renderSectionHeader={({section: {title}}) => (
           <Text category={'s1'} style={styles.header}>
             {title}
           </Text>
         )}
-        keyExtractor={(item) => String(item.validatorId?.toString())}
+        keyExtractor={(item) => (item ? item?.toString() : '')}
         ListEmptyComponent={EmptyView}
         ItemSeparatorComponent={Divider}
       />
