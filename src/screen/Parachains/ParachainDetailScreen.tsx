@@ -27,16 +27,14 @@ type ScreenProps = {
   route: RouteProp<ParachainsStackParamList, 'parachainDetail'>;
 };
 
-type ParachainValidators =
-  | {
-      validators: AccountId[];
-      assignments: CoreAssignment[] | undefined;
-      validatorGroups: ParaValidatorIndex[][];
-      validatorIndices: ParaValidatorIndex[] | undefined;
-    }
-  | undefined;
+type ParachainValidators = {
+  validators: AccountId[];
+  assignments: CoreAssignment[] | undefined;
+  validatorGroups: ParaValidatorIndex[][];
+  validatorIndices: ParaValidatorIndex[] | undefined;
+};
 
-function getValidatorInfo(id: string, parachainValidators: ParachainValidators) {
+function getValidatorInfo(id: string, parachainValidators?: ParachainValidators) {
   const assignment = parachainValidators?.assignments?.find(({paraId}) => paraId.eq(id));
 
   if (!assignment) {
