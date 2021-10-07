@@ -7,15 +7,16 @@ import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   accountsNavigator,
-  crowdloanScreen,
   dashboardScreen,
   devScreen,
   notificationSettingsScreen,
-  parachainsOverviewScreen,
+  parachainsNavigator,
   polkassemblyDiscussionsNavigator,
   registrarListScreen,
   webviewScreen,
   parathreadsScreen,
+  crowdloanScreen,
+  parachainsOverviewScreen,
 } from 'src/navigation/routeKeys';
 import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 
@@ -49,14 +50,20 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
             title="Parachains"
             accessoryLeft={(props) => <Icon {...props} name="link-2-outline" animation="zoom" />}
             style={styles.menuGroup}>
-            <MenuItem title="Overview" onPress={() => navigation.navigate(parachainsOverviewScreen)} />
+            <MenuItem
+              title="Overview"
+              onPress={() => navigation.navigate(parachainsNavigator, {screen: parachainsOverviewScreen})}
+            />
             <MenuItem
               title="Crowdloan"
               onPress={() => {
-                navigation.navigate(crowdloanScreen);
+                navigation.navigate(parachainsNavigator, {screen: crowdloanScreen});
               }}
             />
-            <MenuItem title="Parathreads" onPress={() => navigation.navigate(parathreadsScreen)} />
+            <MenuItem
+              title="Parathreads"
+              onPress={() => navigation.navigate(parachainsNavigator, {screen: parathreadsScreen})}
+            />
           </MenuGroup>
           <Divider />
           <ListItem

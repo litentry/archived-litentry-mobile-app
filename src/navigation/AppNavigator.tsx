@@ -21,7 +21,7 @@ import {MyAccountScreen} from 'screen/MyAccountScreen';
 import MyIdentityScreen from 'screen/MyIdentityScreen';
 import {IdentityGuideScreen} from 'screen/MyIdentityScreen/IdentityGuideScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
-import {CrowdLoanScreen} from 'screen/Parachain/CrowdLoanScreen';
+import {CrowdLoanScreen} from 'screen/Parachains/CrowdLoanScreen';
 import {PermissionGrantingPrompt} from 'screen/PermissionGrantingPrompt';
 import {PolkassemblyDiscussionDetail} from 'screen/Polkassembly/PolkassemblyDiscussionDetail';
 import {PolkassemblyDiscussions} from 'screen/Polkassembly/PolkassemblyDiscussions';
@@ -45,10 +45,13 @@ import {
   DashboardStackParamList,
   DrawerParamList,
   PolkassemblyDiscussionStackParamList,
+  ParachainsStackParamList,
 } from 'src/navigation/navigation';
 import * as routeKeys from 'src/navigation/routeKeys';
 import {darkTheme, lightTheme} from 'src/navigation/theme';
 import globalStyles from 'src/styles';
+import {ParachainDetailScreen} from 'screen/Parachains/ParachainDetailScreen';
+import {CrowdLoanFundDetailScreen} from 'screen/Parachains/CrowdLoanFundDetailScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -97,7 +100,6 @@ function DashboardStackNavigator() {
         component={DemocracyProposalScreen}
         options={{title: 'Proposal'}}
       />
-      <DashboardStack.Screen name={routeKeys.crowdloanScreen} component={CrowdLoanScreen} />
       <DashboardStack.Screen name={routeKeys.bountiesScreen} component={BountiesScreen} />
     </DashboardStack.Navigator>
   );
@@ -182,11 +184,6 @@ function DrawerNavigator() {
       />
       <Drawer.Screen name={routeKeys.registrarListScreen} component={RegistrarListScreen} />
       <Drawer.Screen
-        name={routeKeys.parachainsOverviewScreen}
-        component={ParachainsOverviewScreen}
-        options={{title: 'Overview'}}
-      />
-      <Drawer.Screen
         name={routeKeys.webviewScreen}
         component={WebviewScreen}
         options={({route}) => ({title: route?.params?.title})}
@@ -198,9 +195,60 @@ function DrawerNavigator() {
         component={PolkassemblyDiscussionsNavigator}
         options={{headerShown: false}}
       />
+      <Drawer.Screen
+        name={routeKeys.parachainsNavigator}
+        component={ParachainsNavigator}
+        options={{headerShown: false}}
+      />
       <Drawer.Screen name={routeKeys.accountsNavigator} component={AccountsNavigator} options={{headerShown: false}} />
-      <Drawer.Screen name={routeKeys.parathreadsScreen} component={ParathreadsScreen} />
     </Drawer.Navigator>
+  );
+}
+
+const ParachainsStack = createStackNavigator<ParachainsStackParamList>();
+
+function ParachainsNavigator() {
+  return (
+    <ParachainsStack.Navigator
+      screenOptions={{
+        headerBackTitleVisible: false,
+        headerLeftContainerStyle: {paddingHorizontal: 10},
+        headerRightContainerStyle: {paddingHorizontal: 10},
+        headerBackImage: ({tintColor}) => (
+          <Icon
+            name={'arrow-back-outline'}
+            style={[globalStyles.icon25, {color: tintColor}]}
+            fill={tintColor}
+            pack={'ionic'}
+          />
+        ),
+      }}>
+      <ParachainsStack.Screen
+        name={routeKeys.parachainsOverviewScreen}
+        component={ParachainsOverviewScreen}
+        options={{headerLeft: DashboardHeaderLeft, title: 'Overview'}}
+      />
+      <ParachainsStack.Screen
+        name={routeKeys.parachainDetailScreen}
+        component={ParachainDetailScreen}
+        options={{title: 'Parachain'}}
+      />
+      <ParachainsStack.Screen
+        name={routeKeys.crowdloanScreen}
+        component={CrowdLoanScreen}
+        options={{headerLeft: DashboardHeaderLeft}}
+      />
+      <ParachainsStack.Screen
+        name={routeKeys.crowdloanFundDetailScreen}
+        component={CrowdLoanFundDetailScreen}
+        options={{title: 'Fund details'}}
+      />
+      <ParachainsStack.Screen
+        options={{headerLeft: DashboardHeaderLeft}}
+        name={routeKeys.parathreadsScreen}
+        component={ParathreadsScreen}
+      />
+    </ParachainsStack.Navigator>
   );
 }
 
