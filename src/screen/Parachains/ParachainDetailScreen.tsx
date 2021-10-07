@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {View, StyleSheet, SectionList} from 'react-native';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {RouteProp} from '@react-navigation/native';
@@ -78,8 +78,11 @@ export function ParachainDetailScreen({route}: ScreenProps) {
   const {data: parachainValidators} = useParachainValidators();
   const {data: parachainInfo} = useParachainInfo(id as unknown as ParaId);
 
-  const validatorInfo = getValidatorInfo(id, parachainValidators);
-  const nonVoters = getNonVoters(parachainValidators?.validators, parachainInfo?.pendingAvail);
+  const validatorInfo = useMemo(() => getValidatorInfo(id, parachainValidators), [id, parachainValidators]);
+  const nonVoters = useMemo(
+    () => getNonVoters(parachainValidators?.validators, parachainInfo?.pendingAvail),
+    [parachainValidators, parachainInfo],
+  );
 
   const sections = [
     {
