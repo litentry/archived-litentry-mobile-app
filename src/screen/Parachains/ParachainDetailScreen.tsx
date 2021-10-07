@@ -83,7 +83,7 @@ export function ParachainDetailScreen({route}: ScreenProps) {
 
   const sections = [
     {
-      title: `Val. Group ${validatorInfo?.groupIndex.toNumber() || ''} (${validatorInfo?.validators?.length || ''})`,
+      title: `Val. Group ${validatorInfo?.groupIndex.toNumber() || ''} (${validatorInfo?.validators?.length || 0})`,
       data: validatorInfo?.validators || [],
     },
     {
