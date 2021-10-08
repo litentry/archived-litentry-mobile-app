@@ -69,15 +69,6 @@ function getNonVoters(validators?: AccountId[], pendingAvail?: CandidatePendingA
   return list;
 }
 
-// function useParachainHomepage(id: ParaId) {
-//   const endpoints = useParaEndpoints(id);
-//   if (endpoints != null && endpoints.length > 0) {
-//     const endpoint = endpoints[endpoints.length - 1];
-//     const homepage = endpoint != null && 'homepage' in endpoint ? (endpoint as any).homepage : undefined;
-//     return homepage
-//   }
-// }
-
 export function ParachainDetailScreen({route}: ScreenProps) {
   const {id, name, period, blocks} = route.params;
   const theme = useTheme();
