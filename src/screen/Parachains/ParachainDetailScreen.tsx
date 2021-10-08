@@ -1,9 +1,9 @@
 import React, {useMemo} from 'react';
-import {View, StyleSheet, SectionList} from 'react-native';
+import {View, StyleSheet, SectionList, Linking} from 'react-native';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {RouteProp} from '@react-navigation/native';
 import {ParachainsStackParamList} from 'src/navigation/navigation';
-import {Text, Divider, useTheme, ListItem, Icon} from '@ui-kitten/components';
+import {Text, Divider, useTheme, ListItem, Icon, Button} from '@ui-kitten/components';
 import Padder from 'presentational/Padder';
 import {BlockTime} from 'layout/BlockTime';
 import {useParachainEvents} from 'src/api/hooks/useParachainEvents';
@@ -22,6 +22,7 @@ import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
 import {useParachainInfo} from 'src/api/hooks/useParachainInfo';
+import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
 
 type ScreenProps = {
   route: RouteProp<ParachainsStackParamList, 'parachainDetail'>;
@@ -68,6 +69,15 @@ function getNonVoters(validators?: AccountId[], pendingAvail?: CandidatePendingA
   return list;
 }
 
+// function useParachainHomepage(id: ParaId) {
+//   const endpoints = useParaEndpoints(id);
+//   if (endpoints != null && endpoints.length > 0) {
+//     const endpoint = endpoints[endpoints.length - 1];
+//     const homepage = endpoint != null && 'homepage' in endpoint ? (endpoint as any).homepage : undefined;
+//     return homepage
+//   }
+// }
+
 export function ParachainDetailScreen({route}: ScreenProps) {
   const {id, name, period, blocks} = route.params;
   const theme = useTheme();
@@ -81,6 +91,9 @@ export function ParachainDetailScreen({route}: ScreenProps) {
     () => getNonVoters(parachainValidators?.validators, parachainInfo?.pendingAvail),
     [parachainValidators, parachainInfo],
   );
+
+  const endpoints = useParaEndpoints(id as unknown as ParaId);
+  const homepage = endpoints?.length ? endpoints[0]?.homepage : undefined;
 
   const sections = [
     {
@@ -147,7 +160,20 @@ export function ParachainDetailScreen({route}: ScreenProps) {
                     </View>
                   )}
                 />
-                <Padder scale={1} />
+                {homepage ? (
+                  <Button
+                    accessoryLeft={(p) => <Icon {...p} name="home-outline" />}
+                    onPress={() => {
+                      Linking.canOpenURL(homepage).then((supported) => {
+                        if (supported) {
+                          Linking.openURL(homepage);
+                        }
+                      });
+                    }}
+                    appearance="ghost">
+                    {`Homepage`}
+                  </Button>
+                ) : null}
               </View>
             </View>
           </>
@@ -223,4 +249,5 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: monofontFamily,
   },
+  button: {},
 });
