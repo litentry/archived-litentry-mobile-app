@@ -39,6 +39,7 @@ import {
   crowdloansNavigator,
   crowdloanScreen,
   crowdloanFundDetailScreen,
+  createAccountScreen,
 } from 'src/navigation/routeKeys';
 
 type DashboardStackParamList = {
@@ -99,6 +100,7 @@ type AppStackParamList = {
 
 type AccountsStackParamList = {
   [accountsScreen]: undefined;
+  [createAccountScreen]: undefined;
   [myIdentityScreen]: {address: string};
   [myAccountScreen]: {address: string};
   [registerSubIdentitiesScreen]: {address: string};
