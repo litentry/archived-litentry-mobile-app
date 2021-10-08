@@ -25,7 +25,7 @@ export function CreateAccountScreen() {
   const [confirmPassword, setConfirmPassword] = React.useState('');
   const [isMnemonicCopied, setIsMnemonicCopied] = React.useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
-  const [isPasswordStrong, setIsPasswordStrong] = React.useState(false);
+  const [passwordStrength, setPasswordStrength] = React.useState(0);
   const pair = keyring.addFromUri(mnemonic, {name: account.title});
 
   const isDisabled = !(
@@ -33,10 +33,12 @@ export function CreateAccountScreen() {
     account.password &&
     account.password === confirmPassword &&
     account.title &&
-    isPasswordStrong
+    passwordStrength >= 3
   );
 
-  const score = zxcvbn(account.password).score * 25;
+  React.useEffect(() => {
+    setPasswordStrength(zxcvbn(account.password).score);
+  }, [account.password]);
 
   return (
     <SafeView edges={noTopEdges}>
@@ -92,7 +94,6 @@ export function CreateAccountScreen() {
           style={styles.input}
           value={account.password}
           onChangeText={(text) => {
-            setIsPasswordStrong(score >= 75);
             setAccount({...account, password: text});
           }}
           accessoryRight={() => (
@@ -106,7 +107,7 @@ export function CreateAccountScreen() {
           )}
         />
         <View style={styles.progressBar}>
-          <ProgressBar percentage={score} noSpacing />
+          <ProgressBar percentage={passwordStrength * 25} noSpacing />
         </View>
         <Padder scale={1} />
         <Input
