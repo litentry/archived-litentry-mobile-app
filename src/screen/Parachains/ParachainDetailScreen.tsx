@@ -23,6 +23,7 @@ import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
 import {useParachainInfo} from 'src/api/hooks/useParachainInfo';
 import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
+import {notEmpty} from 'src/utils';
 
 type ScreenProps = {
   route: RouteProp<ParachainsStackParamList, 'parachainDetail'>;
@@ -49,7 +50,8 @@ function getValidatorInfo(id: string, parachainValidators?: ParachainValidators)
       .filter(([, a]) => a)
       .map(([, indexValidator]) =>
         indexValidator ? parachainValidators.validators[indexValidator?.toNumber()] : undefined,
-      ),
+      )
+      .filter(notEmpty),
   };
 }
 
@@ -178,7 +180,7 @@ export function ParachainDetailScreen({route}: ScreenProps) {
             {title}
           </Text>
         )}
-        keyExtractor={(item) => (item ? item?.toString() : '')}
+        keyExtractor={(item) => item.toString()}
         ListEmptyComponent={EmptyView}
         ItemSeparatorComponent={Divider}
       />
