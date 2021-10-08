@@ -25,9 +25,7 @@
     "@eva-design/eva": "^2.1.1",
     "@polkadot/api": "^6.1.2",
     "@polkadot/apps-config": "^0.96.1",
-    "@polkadot/keyring": "^7.4.1",
     "@polkadot/reactnative-identicon": "0.85.4",
-    "@polkadot/util-crypto": "^7.4.1",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/clipboard": "^1.5.1",
     "@react-native-community/hooks": "^2.6.0",
@@ -37,6 +35,7 @@
     "@react-navigation/drawer": "^6.1.6",
     "@react-navigation/native": "^6.0.4",
     "@react-navigation/stack": "^6.0.9",
+    "@types/zxcvbn": "^4.4.1",
     "@ui-kitten/components": "^5.0.0",
     "@ui-kitten/eva-icons": "^5.0.0",
     "console-browserify": "^1.2.0",
@@ -81,7 +80,8 @@
     "rn-nodeify": "^10.3.0",
     "stream-browserify": "^3.0.0",
     "url": "^0.11.0",
-    "util": "^0.10.4"
+    "util": "^0.10.4",
+    "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.15.5",

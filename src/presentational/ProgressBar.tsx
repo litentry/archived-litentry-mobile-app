@@ -5,32 +5,43 @@ import {StyleSheet, View} from 'react-native';
 
 interface Props {
   percentage: number;
-  requiredAmount: number;
+  requiredAmount?: number;
+  noSpacing?: boolean;
 }
 
 export function ProgressBar(props: Props) {
   const [barW, setBarW] = useState<number>();
   const [requiredTextW, setRequiredTextW] = useState<number>();
 
-  const {percentage, requiredAmount} = props;
+  const {percentage, requiredAmount, noSpacing} = props;
 
-  const left = barW && requiredTextW ? (requiredAmount * barW) / 100 - requiredTextW / 2 : 0;
+  let left = 0;
+  if (requiredAmount) {
+    left = barW && requiredTextW ? (requiredAmount * barW) / 100 - requiredTextW / 2 : 0;
+  }
 
   return (
-    <View style={styles.container}>
+    <View style={noSpacing ? null : styles.container}>
       <View style={styles.barBG} onLayout={(e) => setBarW(e.nativeEvent.layout.width)}>
         <View style={[styles.progressed, {width: `${percentage}%`}]} />
       </View>
       <View style={[styles.requiredContainer, {left}]} onLayout={(e) => setRequiredTextW(e.nativeEvent.layout.width)}>
-        <Text status="primary">{`${requiredAmount}% required`}</Text>
-        <View style={styles.requiredLine} />
+        {requiredAmount && (
+          <>
+            <Text status="primary">{`${requiredAmount}% required`}</Text>
+            <View style={styles.requiredLine} />
+          </>
+        )}
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {marginHorizontal: 30, paddingTop: 23},
+  container: {
+    marginHorizontal: 30,
+    paddingTop: 23,
+  },
   barBG: {
     height: 10,
     backgroundColor: 'gray',

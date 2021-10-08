@@ -9,6 +9,8 @@ import FormLabel from 'presentational/FormLabel';
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import Padder from 'presentational/Padder';
 import Clipboard from '@react-native-community/clipboard';
+import {ProgressBar} from 'presentational/ProgressBar';
+import zxcvbn from 'zxcvbn';
 
 type Account = {
   title: string;
@@ -22,15 +24,29 @@ export function CreateAccountScreen() {
   const [account, setAccount] = React.useState<Account>({title: '', password: ''});
   const [confirmPassword, setConfirmPassword] = React.useState('');
   const [isMnemonicCopied, setIsMnemonicCopied] = React.useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
+  const [isPasswordStrong, setIsPasswordStrong] = React.useState(false);
   const pair = keyring.addFromUri(mnemonic, {name: account.title});
 
-  const isDisabled = !(isMnemonicCopied && account.password && account.password === confirmPassword && account.title);
+  const isDisabled = !(
+    isMnemonicCopied &&
+    account.password &&
+    account.password === confirmPassword &&
+    account.title &&
+    isPasswordStrong
+  );
+
+  const score = zxcvbn(account.password).score * 25;
 
   return (
     <SafeView edges={noTopEdges}>
       <View style={globalStyles.paddedContainer}>
         <ListItem
-          title={account.title}
+          title={() => (
+            <View style={styles.accountName}>
+              <Text>{account.title}</Text>
+            </View>
+          )}
           accessoryLeft={() => <IdentityIcon value={pair.address} size={40} />}
           description={pair.address}
         />
@@ -71,15 +87,30 @@ export function CreateAccountScreen() {
         />
         <Padder scale={1} />
         <Input
-          secureTextEntry
+          secureTextEntry={!isPasswordVisible}
           label={() => <FormLabel text="New password for the account" />}
           style={styles.input}
           value={account.password}
-          onChangeText={(text) => setAccount({...account, password: text})}
+          onChangeText={(text) => {
+            setIsPasswordStrong(score >= 75);
+            setAccount({...account, password: text});
+          }}
+          accessoryRight={() => (
+            <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+              <Icon
+                name={`${isPasswordVisible ? 'eye' : 'eye-off'}-outline`}
+                fill={theme['color-basic-600']}
+                style={styles.icon}
+              />
+            </TouchableOpacity>
+          )}
         />
+        <View style={styles.progressBar}>
+          <ProgressBar percentage={score} noSpacing />
+        </View>
         <Padder scale={1} />
         <Input
-          secureTextEntry
+          secureTextEntry={!isPasswordVisible}
           label={() => <FormLabel text="Confirm password" />}
           style={styles.input}
           value={confirmPassword}
@@ -97,6 +128,13 @@ export function CreateAccountScreen() {
 const styles = StyleSheet.create({
   caption: {
     marginTop: standardPadding,
+  },
+  accountName: {
+    height: 20,
+    marginLeft: standardPadding,
+  },
+  progressBar: {
+    marginTop: 5,
   },
   input: {
     fontSize: 16,
