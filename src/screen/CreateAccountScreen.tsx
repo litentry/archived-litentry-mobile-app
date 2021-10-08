@@ -11,6 +11,7 @@ import Padder from 'presentational/Padder';
 import Clipboard from '@react-native-community/clipboard';
 import {ProgressBar} from 'presentational/ProgressBar';
 import zxcvbn from 'zxcvbn';
+import {NetworkContext} from 'context/NetworkContext';
 
 type Account = {
   title: string;
@@ -19,7 +20,8 @@ type Account = {
 
 export function CreateAccountScreen() {
   const theme = useTheme();
-  const keyring = new Keyring();
+  const {currentNetwork} = React.useContext(NetworkContext);
+  const keyring = new Keyring({ss58Format: currentNetwork.ss58Format});
   const [mnemonic] = React.useState(mnemonicGenerate());
   const [account, setAccount] = React.useState<Account>({title: '', password: ''});
   const [confirmPassword, setConfirmPassword] = React.useState('');

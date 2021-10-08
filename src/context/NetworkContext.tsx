@@ -8,6 +8,7 @@ const PolkadotNetwork: NetworkType = {
   key: 'polkadot',
   ws: ['wss://rpc.polkadot.io'],
   color: '#800000',
+  ss58Format: 0,
 };
 
 const KusamaNetwork: NetworkType = {
@@ -15,6 +16,7 @@ const KusamaNetwork: NetworkType = {
   key: 'kusama',
   ws: ['wss://kusama.api.onfinality.io/public-ws'],
   color: '#e6194B',
+  ss58Format: 2,
 };
 
 // const EthereumNetwork: NetworkType = {
@@ -30,6 +32,7 @@ const LitentryNetworkTest: NetworkType = {
   ws: ['wss://staging.registrar.litentry.io'],
   isTestnet: true,
   color: '#006400',
+  ss58Format: 9999, // don't know yet
 };
 
 const availableNetworks = [
