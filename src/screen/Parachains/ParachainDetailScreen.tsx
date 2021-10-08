@@ -174,7 +174,7 @@ export function ParachainDetailScreen({route}: ScreenProps) {
         contentContainerStyle={styles.content}
         stickySectionHeadersEnabled={false}
         sections={sections}
-        renderItem={({item}) => <>{item && <Validator accountId={item} />}</>}
+        renderItem={({item}) => <Validator accountId={item} />}
         renderSectionHeader={({section: {title}}) => (
           <Text category={'s1'} style={styles.header}>
             {title}
