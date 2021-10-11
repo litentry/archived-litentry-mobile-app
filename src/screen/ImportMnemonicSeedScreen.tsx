@@ -1,7 +1,7 @@
 import {Button, Icon, Input, ListItem, useTheme} from '@ui-kitten/components';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React, {useContext} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View, ScrollView} from 'react-native';
 import {monofontFamily, standardPadding} from 'src/styles';
 import {mnemonicValidate} from '@polkadot/util-crypto';
 import {createTestKeyring} from '@polkadot/keyring';
@@ -12,7 +12,7 @@ import FormLabel from 'presentational/FormLabel';
 import zxcvbn from 'zxcvbn';
 import {NetworkContext} from 'context/NetworkContext';
 
-export function ImportMnemonicSeedScreen() {
+export function ImportAccountScreen() {
   const theme = useTheme();
   const [account, setAccount] = React.useState({title: '', password: '', confirmPassword: ''});
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
@@ -30,14 +30,7 @@ export function ImportMnemonicSeedScreen() {
 
   return (
     <SafeView edges={noTopEdges}>
-      <View style={styles.container}>
-        {address && (
-          <ListItem
-            title={account.title}
-            accessoryLeft={() => <IdentityIcon value={address} size={40} />}
-            description={address}
-          />
-        )}
+      <ScrollView style={styles.container}>
         <Input
           label={() => <FormLabel text="EXISTING 12 OR 24-WORD MNEMONIC SEED" />}
           numberOfLines={4}
@@ -92,10 +85,24 @@ export function ImportMnemonicSeedScreen() {
           }
         />
         <Padder scale={2} />
-        <Button disabled={isDisabled} status="basic" onPress={() => ({})}>
-          Submit
+        {address && (
+          <>
+            <ListItem
+              title={account.title}
+              accessoryLeft={() => <IdentityIcon value={address} size={40} />}
+              description={address}
+            />
+            <Padder scale={1} />
+          </>
+        )}
+        <Button
+          disabled={isDisabled}
+          status="basic"
+          accessoryLeft={(p) => <Icon {...p} name="download-outline" />}
+          onPress={() => ({})}>
+          Import account
         </Button>
-      </View>
+      </ScrollView>
     </SafeView>
   );
 }
