@@ -25,7 +25,6 @@ export function ImportMnemonicSeedScreen() {
     address &&
     account.password &&
     account.password === account.confirmPassword &&
-    account.title &&
     passwordStrength >= 3
   );
 
@@ -49,6 +48,7 @@ export function ImportMnemonicSeedScreen() {
           style={styles.textInput}
           size="large"
           textStyle={styles.textInputText}
+          status={seed.length ? (isSeedValid ? 'success' : 'danger') : 'basic'}
         />
         <Padder scale={1} />
         <Input
@@ -75,6 +75,7 @@ export function ImportMnemonicSeedScreen() {
               />
             </TouchableOpacity>
           )}
+          status={account.password ? (passwordStrength >= 3 ? 'success' : 'danger') : 'basic'}
         />
         <View style={styles.progressBar}>
           <ProgressBar percentage={passwordStrength * 25} requiredAmount={75} />
@@ -86,6 +87,9 @@ export function ImportMnemonicSeedScreen() {
           style={styles.input}
           value={account.confirmPassword}
           onChangeText={(text) => setAccount({...account, confirmPassword: text})}
+          status={
+            account.confirmPassword ? (account.password === account.confirmPassword ? 'success' : 'danger') : 'basic'
+          }
         />
         <Padder scale={2} />
         <Button disabled={isDisabled} status="basic" onPress={() => ({})}>
@@ -102,10 +106,7 @@ const styles = StyleSheet.create({
 
     padding: standardPadding * 2,
   },
-  textInput: {
-    borderWidth: 1,
-    borderColor: 'black',
-  },
+  textInput: {},
   textInputText: {
     minHeight: 70,
   },
