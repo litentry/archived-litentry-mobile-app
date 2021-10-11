@@ -52,7 +52,7 @@ import {darkTheme, lightTheme} from 'src/navigation/theme';
 import globalStyles from 'src/styles';
 import {ParachainDetailScreen} from 'screen/Parachains/ParachainDetailScreen';
 import {CrowdLoanFundDetailScreen} from 'screen/Parachains/CrowdLoanFundDetailScreen';
-import {ImportAccountScreen} from 'screen/ImportMnemonicSeedScreen';
+import {ImportAccountScreen} from 'screen/ImportAccountScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 

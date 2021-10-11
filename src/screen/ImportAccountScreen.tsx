@@ -16,7 +16,7 @@ export function ImportAccountScreen() {
   const theme = useTheme();
   const [account, setAccount] = React.useState({title: '', password: '', confirmPassword: ''});
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
-  const {seed, setSeed, address, isSeedValid} = useImportAccount();
+  const {seed, setSeed, address, isSeedValid} = useParseSeed();
 
   const passwordStrength = zxcvbn(account.password).score;
 
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function useImportAccount() {
+function useParseSeed() {
   const network = useContext(NetworkContext);
   const [seed, setSeed] = React.useState('');
   const ss58Format = network.currentNetwork.ss58Format;
@@ -142,6 +142,7 @@ function useImportAccount() {
     try {
       address = keyring.createFromUri(seed, {}, 'sr25519').address;
     } catch (error) {
+      address = null;
       console.error(error);
     }
   }
