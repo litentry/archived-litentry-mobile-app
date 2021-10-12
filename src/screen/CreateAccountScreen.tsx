@@ -3,6 +3,7 @@ import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {Text, Input, ListItem, Icon, useTheme, Button} from '@ui-kitten/components';
 import {Keyring} from '@polkadot/keyring';
+import type {KeyringPair$Json} from '@polkadot/keyring/types';
 import {mnemonicGenerate} from '@polkadot/util-crypto';
 import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 import FormLabel from 'presentational/FormLabel';
@@ -12,10 +13,13 @@ import Clipboard from '@react-native-community/clipboard';
 import {ProgressBar} from 'presentational/ProgressBar';
 import zxcvbn from 'zxcvbn';
 import {NetworkContext} from 'context/NetworkContext';
+import {encrypt, decrypt} from 'service/Encryptor';
+import {ScrollView} from 'react-native-gesture-handler';
 
 type Account = {
   title: string;
   password: string;
+  confirmPassword: string;
 };
 
 export function CreateAccountScreen() {
@@ -23,8 +27,7 @@ export function CreateAccountScreen() {
   const {currentNetwork} = React.useContext(NetworkContext);
   const keyring = new Keyring({ss58Format: currentNetwork.ss58Format});
   const [mnemonic] = React.useState(mnemonicGenerate());
-  const [account, setAccount] = React.useState<Account>({title: '', password: ''});
-  const [confirmPassword, setConfirmPassword] = React.useState('');
+  const [account, setAccount] = React.useState<Account>({title: '', password: '', confirmPassword: ''});
   const [isMnemonicCopied, setIsMnemonicCopied] = React.useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
   const [passwordStrength, setPasswordStrength] = React.useState(0);
@@ -33,7 +36,7 @@ export function CreateAccountScreen() {
   const isDisabled = !(
     isMnemonicCopied &&
     account.password &&
-    account.password === confirmPassword &&
+    account.password === account.confirmPassword &&
     account.title &&
     passwordStrength >= 3
   );
@@ -42,9 +45,32 @@ export function CreateAccountScreen() {
     setPasswordStrength(zxcvbn(account.password).score);
   }, [account.password]);
 
+  const onSubmit = async () => {
+    // const json = pair.toJson(account.password)
+    // console.log(json)
+    keyring.pairs;
+
+    // const pairs = keyring.getPairs()
+    // console.log('Pairs ::: ', pairs)
+    // const dataToEncrypt: KeyringPair$Json[] = []
+    // pairs.forEach((pair) => {
+    //   dataToEncrypt.push(pair.toJson())
+    // })
+
+    // const encryptedData = await encrypt(account.password, {data: dataToEncrypt})
+    // const {data} = await decrypt(account.password, encryptedData)
+
+    // const newKeyring = new Keyring({ss58Format: currentNetwork.ss58Format})
+    // data.forEach((pair) => {
+    //   newKeyring.addFromJson(pair)
+    // })
+    // const newPairs = newKeyring.getPairs()
+    // console.log('New pairs ::: ', newPairs)
+  };
+
   return (
     <SafeView edges={noTopEdges}>
-      <View style={globalStyles.paddedContainer}>
+      <ScrollView style={globalStyles.paddedContainer}>
         <ListItem
           title={() => (
             <View style={styles.accountName}>
@@ -107,23 +133,27 @@ export function CreateAccountScreen() {
               />
             </TouchableOpacity>
           )}
+          status={account.password ? (passwordStrength >= 3 ? 'success' : 'danger') : 'basic'}
         />
-        <View style={styles.progressBar}>
-          <ProgressBar percentage={passwordStrength * 25} noSpacing />
+        <View style={styles.passwordMeter}>
+          <ProgressBar percentage={passwordStrength * 25} requiredAmount={75} />
         </View>
         <Padder scale={1} />
         <Input
           secureTextEntry={!isPasswordVisible}
           label={() => <FormLabel text="Confirm password" />}
           style={styles.input}
-          value={confirmPassword}
-          onChangeText={(text) => setConfirmPassword(text)}
+          value={account.confirmPassword}
+          onChangeText={(text) => setAccount({...account, confirmPassword: text})}
+          status={
+            account.confirmPassword ? (account.password === account.confirmPassword ? 'success' : 'danger') : 'basic'
+          }
         />
         <Padder scale={2} />
-        <Button disabled={isDisabled} status="basic" onPress={() => ({})}>
+        <Button disabled={isDisabled} status="basic" onPress={onSubmit}>
           Submit
         </Button>
-      </View>
+      </ScrollView>
     </SafeView>
   );
 }
@@ -136,12 +166,12 @@ const styles = StyleSheet.create({
     height: 20,
     marginLeft: standardPadding,
   },
-  progressBar: {
-    marginTop: 5,
-  },
   input: {
     fontSize: 16,
     fontFamily: monofontFamily,
+  },
+  passwordMeter: {
+    marginTop: 5,
   },
   icon: {
     width: 20,
