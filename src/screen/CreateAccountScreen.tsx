@@ -25,8 +25,9 @@ export function CreateAccountScreen() {
   }>({title: '', password: '', confirmPassword: ''});
   const [isMnemonicCopied, setIsMnemonicCopied] = React.useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
-  const [passwordStrength, setPasswordStrength] = React.useState(0);
-  const pair = keyring.createFromUri(mnemonic);
+  const {address} = keyring.createFromUri(mnemonic);
+
+  const passwordStrength = zxcvbn(account.password).score;
 
   const isDisabled = !(
     isMnemonicCopied &&
@@ -35,10 +36,6 @@ export function CreateAccountScreen() {
     account.title &&
     passwordStrength >= 3
   );
-
-  React.useEffect(() => {
-    setPasswordStrength(zxcvbn(account.password).score);
-  }, [account.password]);
 
   const onSubmit = () => {
     const {pair, json} = keyring.addUri(mnemonic, account.password, {name: account.title});
@@ -72,8 +69,8 @@ export function CreateAccountScreen() {
               <Text>{account.title}</Text>
             </View>
           )}
-          accessoryLeft={() => <IdentityIcon value={pair.address} size={40} />}
-          description={pair.address}
+          accessoryLeft={() => <IdentityIcon value={address} size={40} />}
+          description={address}
         />
         <Padder scale={1} />
         <Input
