@@ -2,8 +2,6 @@ import React from 'react';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {Text, Input, ListItem, Icon, useTheme, Button} from '@ui-kitten/components';
-import {Keyring} from '@polkadot/keyring';
-import type {KeyringPair$Json} from '@polkadot/keyring/types';
 import {mnemonicGenerate} from '@polkadot/util-crypto';
 import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 import FormLabel from 'presentational/FormLabel';
@@ -12,26 +10,23 @@ import Padder from 'presentational/Padder';
 import Clipboard from '@react-native-community/clipboard';
 import {ProgressBar} from 'presentational/ProgressBar';
 import zxcvbn from 'zxcvbn';
-import {NetworkContext} from 'context/NetworkContext';
-import {encrypt, decrypt} from 'service/Encryptor';
 import {ScrollView} from 'react-native-gesture-handler';
+import {keyring} from '@polkadot/ui-keyring';
 
-type Account = {
-  title: string;
-  password: string;
-  confirmPassword: string;
-};
+keyring.loadAll({ss58Format: 0});
 
 export function CreateAccountScreen() {
   const theme = useTheme();
-  const {currentNetwork} = React.useContext(NetworkContext);
-  const keyring = new Keyring({ss58Format: currentNetwork.ss58Format});
   const [mnemonic] = React.useState(mnemonicGenerate());
-  const [account, setAccount] = React.useState<Account>({title: '', password: '', confirmPassword: ''});
+  const [account, setAccount] = React.useState<{
+    title: string;
+    password: string;
+    confirmPassword: string;
+  }>({title: '', password: '', confirmPassword: ''});
   const [isMnemonicCopied, setIsMnemonicCopied] = React.useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
   const [passwordStrength, setPasswordStrength] = React.useState(0);
-  const pair = keyring.addFromUri(mnemonic, {name: account.title});
+  const pair = keyring.createFromUri(mnemonic);
 
   const isDisabled = !(
     isMnemonicCopied &&
@@ -45,27 +40,27 @@ export function CreateAccountScreen() {
     setPasswordStrength(zxcvbn(account.password).score);
   }, [account.password]);
 
-  const onSubmit = async () => {
-    // const json = pair.toJson(account.password)
-    // console.log(json)
-    keyring.pairs;
+  const onSubmit = () => {
+    const {pair, json} = keyring.addUri(mnemonic, account.password, {name: account.title});
 
-    // const pairs = keyring.getPairs()
-    // console.log('Pairs ::: ', pairs)
-    // const dataToEncrypt: KeyringPair$Json[] = []
-    // pairs.forEach((pair) => {
-    //   dataToEncrypt.push(pair.toJson())
-    // })
+    // this don't need password to get the json
+    console.log(pair.toJson());
 
-    // const encryptedData = await encrypt(account.password, {data: dataToEncrypt})
-    // const {data} = await decrypt(account.password, encryptedData)
+    const address = json.address;
+    const keypair = keyring.getPair(address);
 
-    // const newKeyring = new Keyring({ss58Format: currentNetwork.ss58Format})
-    // data.forEach((pair) => {
-    //   newKeyring.addFromJson(pair)
-    // })
-    // const newPairs = newKeyring.getPairs()
-    // console.log('New pairs ::: ', newPairs)
+    // this needs password to get the json
+    console.log(keypair.toJson(account.password));
+
+    // const accounts = keyring.getAccounts();
+    // const address = accounts[0]?.address;
+    // console.log(address)
+    // if (address) {
+    //   const pair = keyring.getPair(address);
+
+    //   // this needs password to get the json
+    //   console.log(pair.toJson(account.password));
+    // }
   };
 
   return (
