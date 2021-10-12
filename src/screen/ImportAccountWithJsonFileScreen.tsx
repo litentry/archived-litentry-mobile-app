@@ -8,6 +8,26 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import DocumentPicker, {DocumentPickerResponse} from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
 import {monofontFamily, standardPadding} from 'src/styles';
+import type {KeyringPair$Json} from '@polkadot/keyring/types';
+import {keyring} from '@polkadot/ui-keyring';
+import {KeyringJson} from '@polkadot/ui-keyring/types';
+
+keyring.loadAll({
+  store: {
+    all: (cb: (key: string, value: KeyringJson) => void) => {
+      console.log('loadAll');
+    },
+    get: (key: string, cb: (value: KeyringJson) => void) => {
+      console.log('get');
+    },
+    remove: (key: string, cb?: () => void) => {
+      console.log('remove');
+    },
+    set: (key: string, value: KeyringJson, cb?: () => void) => {
+      console.log('set');
+    },
+  },
+});
 
 export function ImportAccountWithJsonFileScreen() {
   const theme = useTheme();
@@ -19,6 +39,8 @@ export function ImportAccountWithJsonFileScreen() {
 
   function restoreAccount() {
     if (parsedJson && password) {
+      const pair = keyring.restoreAccount(parsedJson, password);
+      console.log('restored account', pair);
     }
   }
 
@@ -32,7 +54,7 @@ export function ImportAccountWithJsonFileScreen() {
         <Padder scale={0.5} />
         {parsedJson ? (
           <ListItem
-            title={parsedJson.meta.name}
+            title={parsedJson.meta.name as string}
             accessoryLeft={() => <IdentityIcon value={parsedJson.address} size={40} />}
             description={parsedJson.address}
           />
@@ -126,7 +148,7 @@ async function pickFile() {
   }
 }
 
-function tryParseJson(json: string) {
+function tryParseJson(json: string): KeyringPair$Json | undefined {
   try {
     return JSON.parse(json);
   } catch (e) {
