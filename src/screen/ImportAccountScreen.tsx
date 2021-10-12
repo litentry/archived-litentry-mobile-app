@@ -1,4 +1,4 @@
-import {Button, Icon, Input, ListItem, useTheme} from '@ui-kitten/components';
+import {Button, Icon, Input, ListItem, TopNavigationAction, useTheme} from '@ui-kitten/components';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React, {useContext} from 'react';
 import {StyleSheet, TouchableOpacity, View, ScrollView} from 'react-native';
@@ -11,6 +11,8 @@ import Padder from 'presentational/Padder';
 import FormLabel from 'presentational/FormLabel';
 import zxcvbn from 'zxcvbn';
 import {NetworkContext} from 'context/NetworkContext';
+import {useNavigation} from '@react-navigation/native';
+import {importAccountWithJsonFileScreen} from 'src/navigation/routeKeys';
 
 export function ImportAccountScreen() {
   const theme = useTheme();
@@ -148,4 +150,14 @@ function useParseSeed() {
   }
 
   return {seed, setSeed, address, isSeedValid};
+}
+
+export function ImportScreenHeaderRight() {
+  const navigation = useNavigation();
+  return (
+    <TopNavigationAction
+      onPress={() => navigation.navigate(importAccountWithJsonFileScreen)}
+      icon={(p) => <Icon {...p} name={'flip-2-outline'} />}
+    />
+  );
 }

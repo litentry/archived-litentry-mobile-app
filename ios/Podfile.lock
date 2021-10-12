@@ -275,6 +275,8 @@ PODS:
     - React-Core
   - react-native-camera/RN (4.2.1):
     - React-Core
+  - react-native-document-picker (7.1.0):
+    - React-Core
   - react-native-in-app-message (1.0.32):
     - React
   - react-native-randombytes (3.6.1):
@@ -366,6 +368,8 @@ PODS:
     - Firebase/Messaging (= 8.7.0)
     - React-Core
     - RNFBApp
+  - RNFS (2.18.0):
+    - React
   - RNGestureHandler (1.10.3):
     - React-Core
   - RNPermissions (3.0.5):
@@ -432,6 +436,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-aes (from `../node_modules/react-native-aes-crypto`)
   - react-native-camera (from `../node_modules/react-native-camera`)
+  - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-in-app-message (from `../node_modules/react-native-in-app-message`)
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -456,6 +461,7 @@ DEPENDENCIES:
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
+  - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReactNativeHapticFeedback (from `../node_modules/react-native-haptic-feedback`)
@@ -518,6 +524,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-aes-crypto"
   react-native-camera:
     :path: "../node_modules/react-native-camera"
+  react-native-document-picker:
+    :path: "../node_modules/react-native-document-picker"
   react-native-in-app-message:
     :path: "../node_modules/react-native-in-app-message"
   react-native-randombytes:
@@ -566,6 +574,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBMessaging:
     :path: "../node_modules/@react-native-firebase/messaging"
+  RNFS:
+    :path: "../node_modules/react-native-fs"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNPermissions:
@@ -614,6 +624,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 41e58e5b8e3e0bf061fdf725b03f2144014a8fb0
   react-native-aes: c6e4e3ffcff410535e31e161fca95d50e608d4ee
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
+  react-native-document-picker: bf12b9ca87790f9b723106ffde0eff239928e515
   react-native-in-app-message: 7a54e2fd7a490e5c33857bbbb260f855205433db
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
@@ -638,6 +649,7 @@ SPEC CHECKSUMS:
   RNDeviceInfo: 8a06046616c6b5c03787b04f265fa3b52b37c80b
   RNFBApp: b97d6654509a5852d49f0abf93be76b300fd2e2c
   RNFBMessaging: c1de144b096aaeec85e9fa3f0def62cc7a39b271
+  RNFS: 3ab21fa6c56d65566d1fb26c2228e2b6132e5e32
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNPermissions: 7043bacbf928eae25808275cfe73799b8f618911
   RNReactNativeHapticFeedback: 653a8c126a0f5e88ce15ffe280b3ff37e1fbb285

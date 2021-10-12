@@ -52,7 +52,8 @@ import {darkTheme, lightTheme} from 'src/navigation/theme';
 import globalStyles from 'src/styles';
 import {ParachainDetailScreen} from 'screen/Parachains/ParachainDetailScreen';
 import {CrowdLoanFundDetailScreen} from 'screen/Parachains/CrowdLoanFundDetailScreen';
-import {ImportAccountScreen} from 'screen/ImportAccountScreen';
+import {ImportAccountScreen, ImportScreenHeaderRight} from 'screen/ImportAccountScreen';
+import {ImportAccountWithJsonFileScreen} from 'screen/ImportAccountWithJsonFileScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -132,7 +133,15 @@ function AccountsNavigator() {
       <AccountsStack.Screen name={routeKeys.myIdentityScreen} component={MyIdentityScreen} />
       <AccountsStack.Screen name={routeKeys.myAccountScreen} component={MyAccountScreen} />
       <AccountsStack.Screen name={routeKeys.registerSubIdentitiesScreen} component={RegisterSubIdentitiesScreen} />
-      <AccountsStack.Screen name={routeKeys.importAccountScreen} component={ImportAccountScreen} />
+      <AccountsStack.Screen
+        name={routeKeys.importAccountScreen}
+        component={ImportAccountScreen}
+        options={{headerRight: ImportScreenHeaderRight}}
+      />
+      <AccountsStack.Screen
+        name={routeKeys.importAccountWithJsonFileScreen}
+        component={ImportAccountWithJsonFileScreen}
+      />
     </AccountsStack.Navigator>
   );
 }
