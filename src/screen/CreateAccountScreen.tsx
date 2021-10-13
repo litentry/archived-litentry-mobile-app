@@ -12,8 +12,9 @@ import {ProgressBar} from 'presentational/ProgressBar';
 import zxcvbn from 'zxcvbn';
 import {ScrollView} from 'react-native-gesture-handler';
 import {keyring} from '@polkadot/ui-keyring';
+import {keyringStore} from 'service/KeyringStore';
 
-keyring.loadAll({ss58Format: 0});
+keyring.loadAll({ss58Format: 0, store: keyringStore});
 
 export function CreateAccountScreen() {
   const theme = useTheme();
@@ -38,16 +39,17 @@ export function CreateAccountScreen() {
   );
 
   const onSubmit = () => {
-    const {pair, json} = keyring.addUri(mnemonic, account.password, {name: account.title});
+    keyring.addUri(mnemonic, account.password, {name: account.title});
+    console.log(keyring.getPairs());
 
     // this don't need password to get the json
-    console.log(pair.toJson());
+    // console.log(pair.toJson());
 
-    const address = json.address;
-    const keypair = keyring.getPair(address);
+    // const address = json.address;
+    // const keypair = keyring.getPair(address);
 
     // this needs password to get the json
-    console.log(keypair.toJson(account.password));
+    // console.log(keypair.toJson(account.password));
 
     // const accounts = keyring.getAccounts();
     // const address = accounts[0]?.address;
