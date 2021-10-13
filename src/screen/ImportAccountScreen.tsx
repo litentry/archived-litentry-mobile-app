@@ -1,18 +1,17 @@
-import {Button, Icon, Input, ListItem, TopNavigationAction, useTheme} from '@ui-kitten/components';
-import SafeView, {noTopEdges} from 'presentational/SafeView';
-import React, {useContext} from 'react';
-import {StyleSheet, TouchableOpacity, View, ScrollView} from 'react-native';
-import {monofontFamily, standardPadding} from 'src/styles';
-import {mnemonicValidate} from '@polkadot/util-crypto';
-import {createTestKeyring} from '@polkadot/keyring';
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
-import {ProgressBar} from 'presentational/ProgressBar';
-import Padder from 'presentational/Padder';
-import FormLabel from 'presentational/FormLabel';
-import zxcvbn from 'zxcvbn';
-import {NetworkContext} from 'context/NetworkContext';
+import {keyring} from '@polkadot/ui-keyring';
+import {mnemonicValidate} from '@polkadot/util-crypto';
 import {useNavigation} from '@react-navigation/native';
+import {Button, Icon, Input, ListItem, TopNavigationAction, useTheme} from '@ui-kitten/components';
+import FormLabel from 'presentational/FormLabel';
+import Padder from 'presentational/Padder';
+import {ProgressBar} from 'presentational/ProgressBar';
+import SafeView, {noTopEdges} from 'presentational/SafeView';
+import React from 'react';
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {importAccountWithJsonFileScreen} from 'src/navigation/routeKeys';
+import {monofontFamily, standardPadding} from 'src/styles';
+import zxcvbn from 'zxcvbn';
 
 export function ImportAccountScreen() {
   const theme = useTheme();
@@ -101,7 +100,14 @@ export function ImportAccountScreen() {
           disabled={isDisabled}
           status="basic"
           accessoryLeft={(p) => <Icon {...p} name="download-outline" />}
-          onPress={() => ({})}>
+          onPress={() => {
+            keyring.addUri(seed, account.password, {name: account.title}, 'sr25519');
+            keyring.getAccounts().forEach((account) => {
+              console.log(account);
+              console.log(account.address);
+              console.log(account.meta.name);
+            });
+          }}>
           Import account
         </Button>
       </ScrollView>
@@ -133,10 +139,7 @@ const styles = StyleSheet.create({
 });
 
 function useParseSeed() {
-  const network = useContext(NetworkContext);
   const [seed, setSeed] = React.useState('');
-  const ss58Format = network.currentNetwork.ss58Format;
-  const keyring = createTestKeyring({type: 'sr25519', ss58Format}, true);
 
   let address: string | null = null;
   const isSeedValid = mnemonicValidate(seed);

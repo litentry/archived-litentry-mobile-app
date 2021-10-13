@@ -10,24 +10,6 @@ import RNFS from 'react-native-fs';
 import {monofontFamily, standardPadding} from 'src/styles';
 import type {KeyringPair$Json} from '@polkadot/keyring/types';
 import {keyring} from '@polkadot/ui-keyring';
-import {KeyringJson} from '@polkadot/ui-keyring/types';
-
-keyring.loadAll({
-  store: {
-    all: (cb: (key: string, value: KeyringJson) => void) => {
-      console.log('loadAll');
-    },
-    get: (key: string, cb: (value: KeyringJson) => void) => {
-      console.log('get');
-    },
-    remove: (key: string, cb?: () => void) => {
-      console.log('remove');
-    },
-    set: (key: string, value: KeyringJson, cb?: () => void) => {
-      console.log('set');
-    },
-  },
-});
 
 export function ImportAccountWithJsonFileScreen() {
   const theme = useTheme();
