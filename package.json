@@ -44,7 +44,6 @@
     "fast-text-encoding": "^1.0.3",
     "graphql": "^15.6.0",
     "graphql-tag": "^2.12.5",
-    "install": "^0.13.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "patch-package": "^6.4.7",
