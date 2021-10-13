@@ -12,11 +12,11 @@ import {ProgressBar} from 'presentational/ProgressBar';
 import zxcvbn from 'zxcvbn';
 import {ScrollView} from 'react-native-gesture-handler';
 import {keyring} from '@polkadot/ui-keyring';
-import {keyringStore} from 'service/KeyringStore';
+import {NavigationProp} from '@react-navigation/native';
+import {AccountsStackParamList} from 'src/navigation/navigation';
+import {accountsScreen} from 'src/navigation/routeKeys';
 
-keyring.loadAll({ss58Format: 0, store: keyringStore});
-
-export function CreateAccountScreen() {
+export function CreateAccountScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const theme = useTheme();
   const [mnemonic] = React.useState(mnemonicGenerate());
   const [account, setAccount] = React.useState<{
@@ -40,26 +40,7 @@ export function CreateAccountScreen() {
 
   const onSubmit = () => {
     keyring.addUri(mnemonic, account.password, {name: account.title});
-    console.log(keyring.getPairs());
-
-    // this don't need password to get the json
-    // console.log(pair.toJson());
-
-    // const address = json.address;
-    // const keypair = keyring.getPair(address);
-
-    // this needs password to get the json
-    // console.log(keypair.toJson(account.password));
-
-    // const accounts = keyring.getAccounts();
-    // const address = accounts[0]?.address;
-    // console.log(address)
-    // if (address) {
-    //   const pair = keyring.getPair(address);
-
-    //   // this needs password to get the json
-    //   console.log(pair.toJson(account.password));
-    // }
+    navigation.navigate(accountsScreen, {reload: true});
   };
 
   return (
