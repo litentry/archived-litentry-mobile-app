@@ -39,6 +39,7 @@ import {
   crowdloanScreen,
   crowdloanFundDetailScreen,
   importAccountScreen,
+  importAccountWithJsonFileScreen,
 } from 'src/navigation/routeKeys';
 
 type DashboardStackParamList = {
@@ -98,11 +99,12 @@ type AppStackParamList = {
 };
 
 type AccountsStackParamList = {
-  [accountsScreen]: undefined;
+  [accountsScreen]: {reload?: boolean};
   [myIdentityScreen]: {address: string};
   [myAccountScreen]: {address: string};
   [registerSubIdentitiesScreen]: {address: string};
   [importAccountScreen]: undefined;
+  [importAccountWithJsonFileScreen]: undefined;
 };
 
 type CompleteNavigatorParamList = AppStackParamList &

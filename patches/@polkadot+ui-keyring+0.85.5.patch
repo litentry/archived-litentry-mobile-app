@@ -1,0 +1,22 @@
+diff --git a/node_modules/@polkadot/ui-keyring/Base.js b/node_modules/@polkadot/ui-keyring/Base.js
+index a350990..adef0ff 100644
+--- a/node_modules/@polkadot/ui-keyring/Base.js
++++ b/node_modules/@polkadot/ui-keyring/Base.js
+@@ -8,7 +8,7 @@ import { accounts } from "./observable/accounts.js";
+ import { addresses } from "./observable/addresses.js";
+ import { contracts } from "./observable/contracts.js";
+ import { env } from "./observable/env.js";
+-import { BrowserStore } from "./stores/Browser.js"; // direct import (skip index with all)
++// import { BrowserStore } from "./stores/Browser.js"; // direct import (skip index with all)
+ 
+ var _accounts = /*#__PURE__*/_classPrivateFieldLooseKey("accounts");
+ 
+@@ -50,7 +50,7 @@ export class Base {
+     _classPrivateFieldLooseBase(this, _accounts)[_accounts] = accounts;
+     _classPrivateFieldLooseBase(this, _addresses)[_addresses] = addresses;
+     _classPrivateFieldLooseBase(this, _contracts)[_contracts] = contracts;
+-    this._store = new BrowserStore();
++    // this._store = new BrowserStore();
+   }
+ 
+   get accounts() {
