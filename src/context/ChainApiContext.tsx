@@ -3,7 +3,7 @@ import React, {createContext, useContext, useEffect, useReducer} from 'react';
 import {createLogger} from 'src/utils';
 import {NetworkContext} from './NetworkContext';
 import {keyring} from '@polkadot/ui-keyring';
-import {KeyringJson} from '@polkadot/ui-keyring/types';
+import {keyringStore} from 'src/service/KeyringStore';
 
 const initialState: ChainApiContext = {
   status: 'unknown',
@@ -45,20 +45,7 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
       logger.debug('ChainApiContext: Api ready at', wsAddress);
       keyring.loadAll({
         ss58Format: currentNetwork.ss58Format,
-        store: {
-          all: (cb: (key: string, value: KeyringJson) => void) => {
-            console.log('loadAll');
-          },
-          get: (key: string, cb: (value: KeyringJson) => void) => {
-            console.log('get');
-          },
-          remove: (key: string, cb?: () => void) => {
-            console.log('remove');
-          },
-          set: (key: string, value: KeyringJson, cb?: () => void) => {
-            console.log('set');
-          },
-        },
+        store: keyringStore,
       });
       dispatch({type: 'ON_READY', payload: apiPromise});
     }
