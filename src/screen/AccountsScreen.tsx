@@ -11,7 +11,7 @@ import {FlatList, Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useAccountsIdentityInfo} from 'src/api/hooks/useAccountsIdentityInfo';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 import {CompleteNavigatorParamList} from 'src/navigation/navigation';
-import {addAccountScreen, importAccountScreen as importAccountScreen, myAccountScreen} from 'src/navigation/routeKeys';
+import {addAccountScreen, importAccountScreen, myAccountScreen} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
 
 type CombinedData = {
