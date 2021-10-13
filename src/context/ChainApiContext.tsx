@@ -90,7 +90,7 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
       apiPromise.off('error', handleError);
       clearInterval(retryInterval);
     };
-  }, [currentNetwork.ss58Format, currentNetwork.ws, state.wsConnectionIndex]);
+  }, [currentNetwork, state.wsConnectionIndex]);
 
   return <ChainApiContext.Provider value={state}>{children}</ChainApiContext.Provider>;
 }
