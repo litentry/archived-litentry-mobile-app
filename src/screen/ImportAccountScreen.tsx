@@ -1,7 +1,7 @@
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {keyring} from '@polkadot/ui-keyring';
 import {mnemonicValidate} from '@polkadot/util-crypto';
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {Button, Icon, Input, ListItem, TopNavigationAction, useTheme} from '@ui-kitten/components';
 import FormLabel from 'presentational/FormLabel';
 import Padder from 'presentational/Padder';
@@ -9,11 +9,12 @@ import {ProgressBar} from 'presentational/ProgressBar';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React from 'react';
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {importAccountWithJsonFileScreen} from 'src/navigation/routeKeys';
+import {AccountsStackParamList} from 'src/navigation/navigation';
+import {accountsScreen, importAccountWithJsonFileScreen} from 'src/navigation/routeKeys';
 import {monofontFamily, standardPadding} from 'src/styles';
 import zxcvbn from 'zxcvbn';
 
-export function ImportAccountScreen() {
+export function ImportAccountScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const theme = useTheme();
   const [account, setAccount] = React.useState({title: '', password: '', confirmPassword: ''});
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
@@ -102,11 +103,7 @@ export function ImportAccountScreen() {
           accessoryLeft={(p) => <Icon {...p} name="download-outline" />}
           onPress={() => {
             keyring.addUri(seed, account.password, {name: account.title}, 'sr25519');
-            keyring.getAccounts().forEach((account) => {
-              console.log(account);
-              console.log(account.address);
-              console.log(account.meta.name);
-            });
+            navigation.navigate(accountsScreen, {reload: true});
           }}>
           Import account
         </Button>

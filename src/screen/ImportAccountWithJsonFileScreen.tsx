@@ -10,8 +10,11 @@ import RNFS from 'react-native-fs';
 import {monofontFamily, standardPadding} from 'src/styles';
 import type {KeyringPair$Json} from '@polkadot/keyring/types';
 import {keyring} from '@polkadot/ui-keyring';
+import {NavigationProp} from '@react-navigation/core';
+import {AccountsStackParamList} from 'src/navigation/navigation';
+import {accountsScreen} from 'src/navigation/routeKeys';
 
-export function ImportAccountWithJsonFileScreen() {
+export function ImportAccountWithJsonFileScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const theme = useTheme();
   const [jsonContent, setJsonContent] = React.useState<string>();
   const [error, setError] = React.useState<string | undefined>(undefined);
@@ -21,8 +24,8 @@ export function ImportAccountWithJsonFileScreen() {
 
   function restoreAccount() {
     if (parsedJson && password) {
-      const pair = keyring.restoreAccount(parsedJson, password);
-      console.log('restored account', pair);
+      keyring.restoreAccount(parsedJson, password);
+      navigation.navigate(accountsScreen, {reload: true});
     }
   }
 

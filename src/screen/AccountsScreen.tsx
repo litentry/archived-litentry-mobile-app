@@ -1,4 +1,5 @@
 import Identicon from '@polkadot/reactnative-identicon';
+import {keyring} from '@polkadot/ui-keyring';
 import {NavigationProp} from '@react-navigation/native';
 import {Button, Divider, Icon, ListItem, MenuItem, OverflowMenu, Text, useTheme} from '@ui-kitten/components';
 import {Account, useAccounts} from 'context/AccountsContext';
@@ -33,6 +34,8 @@ export function AccountsScreen({navigation}: {navigation: NavigationProp<Complet
   const [sortBy, setSortBy] = React.useState<'name' | 'favorites'>('name');
   const sortByFunction = sortBy === 'name' ? sortByDisplayName : sortByIsFavorite;
   const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
+
+  const internalAccounts = keyring.getAccounts();
 
   return (
     <SafeView edges={noTopEdges}>
@@ -120,6 +123,14 @@ export function AccountsScreen({navigation}: {navigation: NavigationProp<Complet
                 accessoryLeft={(p) => <Icon {...p} name="download-outline" />}>
                 Import account
               </Button>
+              <View>
+                <Text>{internalAccounts.length} internal accounts</Text>
+                {internalAccounts.map((account) => (
+                  <Text key={account.address} category="c1">
+                    {account.address}
+                  </Text>
+                ))}
+              </View>
             </View>
           )}
         />

@@ -99,7 +99,7 @@ type AppStackParamList = {
 };
 
 type AccountsStackParamList = {
-  [accountsScreen]: undefined;
+  [accountsScreen]: {reload?: boolean};
   [myIdentityScreen]: {address: string};
   [myAccountScreen]: {address: string};
   [registerSubIdentitiesScreen]: {address: string};
