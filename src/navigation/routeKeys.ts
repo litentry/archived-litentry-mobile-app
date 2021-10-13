@@ -25,6 +25,7 @@ export const notificationSettingsScreen = 'Notification' as const;
 export const accountsScreen = 'My Accounts' as const;
 export const myAccountScreen = 'My Account' as const;
 export const importAccountScreen = 'Import account' as const;
+export const importAccountWithJsonFileScreen = 'Import json' as const;
 export const bountiesScreen = 'Bounties' as const;
 export const parachainsOverviewScreen = 'parachainsOverview' as const;
 export const parachainDetailScreen = 'parachainDetail' as const;
