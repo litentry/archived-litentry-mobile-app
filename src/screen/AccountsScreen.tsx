@@ -11,7 +11,7 @@ import {FlatList, Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useAccountsIdentityInfo} from 'src/api/hooks/useAccountsIdentityInfo';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 import {CompleteNavigatorParamList} from 'src/navigation/navigation';
-import {addAccountScreen, createAccountScreen, myAccountScreen} from 'src/navigation/routeKeys';
+import {createAccountScreen, addAccountScreen, importAccountScreen, myAccountScreen} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
 
 type CombinedData = {
@@ -119,6 +119,13 @@ export function AccountsScreen({navigation}: {navigation: NavigationProp<Complet
                 accessoryLeft={(p) => <Icon {...p} name="plus-circle-outline" />}
                 onPress={() => navigation.navigate(createAccountScreen)}>
                 Create Account
+              </Button>
+              <Padder scale={1} />
+              <Button
+                status="basic"
+                onPress={() => navigation.navigate(importAccountScreen)}
+                accessoryLeft={(p) => <Icon {...p} name="download-outline" />}>
+                Import account
               </Button>
             </View>
           )}

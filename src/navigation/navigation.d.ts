@@ -36,10 +36,10 @@ import {
   parachainsOverviewScreen,
   parachainDetailScreen,
   parachainsNavigator,
-  crowdloansNavigator,
   crowdloanScreen,
   crowdloanFundDetailScreen,
   createAccountScreen,
+  importAccountScreen,
 } from 'src/navigation/routeKeys';
 
 type DashboardStackParamList = {
@@ -104,6 +104,7 @@ type AccountsStackParamList = {
   [myIdentityScreen]: {address: string};
   [myAccountScreen]: {address: string};
   [registerSubIdentitiesScreen]: {address: string};
+  [importAccountScreen]: undefined;
 };
 
 type CompleteNavigatorParamList = AppStackParamList &

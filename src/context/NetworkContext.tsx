@@ -32,7 +32,7 @@ const LitentryNetworkTest: NetworkType = {
   ws: ['wss://staging.registrar.litentry.io'],
   isTestnet: true,
   color: '#006400',
-  ss58Format: 9999, // don't know yet
+  ss58Format: 31,
 };
 
 const availableNetworks = [

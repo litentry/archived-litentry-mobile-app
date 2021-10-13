@@ -53,6 +53,7 @@ import {darkTheme, lightTheme} from 'src/navigation/theme';
 import globalStyles from 'src/styles';
 import {ParachainDetailScreen} from 'screen/Parachains/ParachainDetailScreen';
 import {CrowdLoanFundDetailScreen} from 'screen/Parachains/CrowdLoanFundDetailScreen';
+import {ImportAccountScreen} from 'screen/ImportAccountScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -133,6 +134,7 @@ function AccountsNavigator() {
       <AccountsStack.Screen name={routeKeys.myAccountScreen} component={MyAccountScreen} />
       <AccountsStack.Screen name={routeKeys.registerSubIdentitiesScreen} component={RegisterSubIdentitiesScreen} />
       <AccountsStack.Screen name={routeKeys.createAccountScreen} component={CreateAccountScreen} />
+      <AccountsStack.Screen name={routeKeys.importAccountScreen} component={ImportAccountScreen} />
     </AccountsStack.Navigator>
   );
 }
