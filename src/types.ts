@@ -22,6 +22,7 @@ export type NetworkType = {
   ws: string[];
   isTestnet?: boolean;
   color?: string;
+  ss58Format: number;
 };
 
 export type NetworkContextValueType = {
