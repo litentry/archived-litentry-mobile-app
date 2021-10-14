@@ -1,5 +1,4 @@
 import Identicon from '@polkadot/reactnative-identicon';
-import {keyring} from '@polkadot/ui-keyring';
 import {NavigationProp} from '@react-navigation/native';
 import {Button, Divider, Icon, ListItem, MenuItem, OverflowMenu, Text, useTheme} from '@ui-kitten/components';
 import {Account, useAccounts} from 'context/AccountsContext';
@@ -35,8 +34,6 @@ export function AccountsScreen({navigation}: {navigation: NavigationProp<Complet
   const sortByFunction = sortBy === 'name' ? sortByDisplayName : sortByIsFavorite;
   const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
 
-  const internalAccounts = keyring.getAccounts();
-
   return (
     <SafeView edges={noTopEdges}>
       {isLoading ? (
@@ -50,6 +47,7 @@ export function AccountsScreen({navigation}: {navigation: NavigationProp<Complet
           keyExtractor={(item) => item.account.address}
           renderItem={({item}) => (
             <AccountItem
+              isInternal={item.account.isInternal}
               identity={item.identity}
               isFavorite={item.account.isFavorite}
               toggleFavorite={() => toggleFavorite(item.account.address)}
@@ -130,14 +128,6 @@ export function AccountsScreen({navigation}: {navigation: NavigationProp<Complet
                 accessoryLeft={(p) => <Icon {...p} name="download-outline" />}>
                 Import account
               </Button>
-              <View>
-                <Text>{internalAccounts.length} internal accounts</Text>
-                {internalAccounts.map((account) => (
-                  <Text key={account.address} category="c1">
-                    {account.address}
-                  </Text>
-                ))}
-              </View>
             </View>
           )}
         />
@@ -181,6 +171,7 @@ function sortByIsFavorite(a: CombinedData, b: CombinedData) {
 }
 
 function AccountItem({
+  isInternal,
   identity,
   isFavorite,
   toggleFavorite,
@@ -188,10 +179,13 @@ function AccountItem({
 }: {
   identity: IdentityInfo;
   isFavorite: boolean;
+  isInternal: boolean;
   toggleFavorite: () => void;
   onPress: () => void;
 }) {
   const theme = useTheme();
+
+  console.log(isInternal);
 
   return (
     <ListItem
@@ -201,6 +195,7 @@ function AccountItem({
           <Identicon value={String(identity.accountId)} size={25} />
         </View>
       )}
+      description={`${isInternal ? 'Internal' : ''}`}
       title={(p) => (
         <View {...p}>
           <AccountInfoInlineTeaser identity={identity} />

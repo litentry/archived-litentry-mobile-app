@@ -46,6 +46,7 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
       keyring.loadAll({
         ss58Format: currentNetwork.ss58Format,
         store: keyringStore,
+        type: 'sr25519',
       });
       dispatch({type: 'ON_READY', payload: apiPromise});
     }

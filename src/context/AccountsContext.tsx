@@ -8,6 +8,7 @@ export type Account = {
   address: string;
   name: string;
   isFavorite: boolean;
+  isInternal: boolean;
 };
 
 type State = {
