@@ -17,7 +17,7 @@ type PropTypes = {
   onCancel: () => void;
 };
 
-export function PreviewStep(props: PropTypes): React.ReactElement {
+export function TxPreview(props: PropTypes): React.ReactElement {
   const [open, setOpen] = useState(false);
   const theme = useTheme();
   const {transactionTitle, transactionInfo, partialFee, txPayload, params, onConfirm, onCancel} = props;
