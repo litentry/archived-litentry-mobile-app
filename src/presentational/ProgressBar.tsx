@@ -30,7 +30,10 @@ export function ProgressBar(props: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {marginHorizontal: 30, paddingTop: 23},
+  container: {
+    marginHorizontal: 30,
+    paddingTop: 23,
+  },
   barBG: {
     height: 10,
     backgroundColor: 'gray',

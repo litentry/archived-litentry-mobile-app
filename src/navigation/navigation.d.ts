@@ -38,6 +38,7 @@ import {
   parachainsNavigator,
   crowdloanScreen,
   crowdloanFundDetailScreen,
+  createAccountScreen,
   importAccountScreen,
   importAccountWithJsonFileScreen,
 } from 'src/navigation/routeKeys';
@@ -99,6 +100,7 @@ type AppStackParamList = {
 };
 
 type AccountsStackParamList = {
+  [createAccountScreen]: undefined;
   [accountsScreen]: {reload?: boolean};
   [myIdentityScreen]: {address: string};
   [myAccountScreen]: {address: string};

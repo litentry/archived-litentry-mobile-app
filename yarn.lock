@@ -1452,7 +1452,7 @@
     rxjs "^7.4.0"
     store "^2.0.12"
 
-"@polkadot/ui-settings@0.85.5":
+"@polkadot/ui-settings@0.85.5", "@polkadot/ui-settings@^0.85.5":
   version "0.85.5"
   resolved "https://registry.yarnpkg.com/@polkadot/ui-settings/-/ui-settings-0.85.5.tgz#8f089b6027d824048e412d5dce500b5fadfe92de"
   integrity sha512-p1nx0ziqgkVUchNGp+I+xCx+ehTXDvhBNZ1D2zt2BO+0vRd9PDGBJ/wM8VzQD0BvFvmDvs5pLvyLqjA4Iuraqg==
