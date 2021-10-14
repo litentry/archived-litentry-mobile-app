@@ -12,7 +12,13 @@ import {FlatList, Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useAccountsIdentityInfo} from 'src/api/hooks/useAccountsIdentityInfo';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 import {CompleteNavigatorParamList} from 'src/navigation/navigation';
-import {createAccountScreen, addAccountScreen, importAccountScreen, myAccountScreen} from 'src/navigation/routeKeys';
+import {
+  createAccountScreen,
+  addAccountScreen,
+  importAccountScreen,
+  myAccountScreen,
+  exportAccountWithJsonFileScreen,
+} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
 
 type CombinedData = {
@@ -133,9 +139,11 @@ export function AccountsScreen({navigation}: {navigation: NavigationProp<Complet
               <View>
                 <Text>{internalAccounts.length} internal accounts</Text>
                 {internalAccounts.map((account) => (
-                  <Text key={account.address} category="c1">
-                    {account.address}
-                  </Text>
+                  <Button
+                    key={account.address}
+                    onPress={() => navigation.navigate(exportAccountWithJsonFileScreen, {address: account.address})}>
+                    <Text category="c1">{account.address}</Text>
+                  </Button>
                 ))}
               </View>
             </View>
