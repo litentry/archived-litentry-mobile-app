@@ -3,12 +3,10 @@ import * as Keychain from 'react-native-keychain';
 import {encrypt, decrypt} from 'src/service/Encryptor';
 import {mmkvStorage} from 'src/service/MMKVStorage';
 
-const SALT = 'secret_phrase';
-const BIOMETRY_CHOICE = 'biometry_choice';
-const BIOMETRY_CHOICE_DISABLED = 'biometry_choice_disabled';
-const PASSCODE_CHOICE = 'passcode_choice';
-const PASSCODE_DISABLED = 'passcode_choice_disabled';
-const TYPES = {
+const SALT = '878adee00edb0a46c2ba33a7c8feaa2a40389f1c';
+const SELECTED_ACCESS_CONTROL = 'selected_access_control';
+
+const accessControlTypes = {
   BIOMETRICS: 'BIOMETRICS',
   PASSCODE: 'PASSCODE',
   REMEMBER_ME: 'REMEMBER_ME',
@@ -37,8 +35,7 @@ async function getSupportedBiometryType() {
 }
 
 async function resetGenericPassword() {
-  mmkvStorage.delete(BIOMETRY_CHOICE);
-  mmkvStorage.delete(PASSCODE_CHOICE);
+  mmkvStorage.delete(SELECTED_ACCESS_CONTROL);
 
   return Keychain.resetGenericPassword({service: defaultOptions.service});
 }
@@ -56,16 +53,16 @@ async function getGenericPassword() {
   return userCredentials;
 }
 
-async function setGenericPassword(password: string, type: keyof typeof TYPES) {
+async function setGenericPassword(password: string, type: keyof typeof accessControlTypes) {
   const authOptions: Keychain.Options = {
     accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
   };
 
-  if (type === TYPES.BIOMETRICS) {
+  if (type === accessControlTypes.BIOMETRICS) {
     authOptions.accessControl = Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET;
-  } else if (type === TYPES.PASSCODE) {
+  } else if (type === accessControlTypes.PASSCODE) {
     authOptions.accessControl = Keychain.ACCESS_CONTROL.DEVICE_PASSCODE;
-  } else if (type === TYPES.REMEMBER_ME) {
+  } else if (type === accessControlTypes.REMEMBER_ME) {
     //Don't need to add any parameter
   } else {
     // Setting a password without a type does not save it
@@ -75,27 +72,17 @@ async function setGenericPassword(password: string, type: keyof typeof TYPES) {
   const encryptedPassword = await encryptPassword(password);
   await Keychain.setGenericPassword('litentry-user', encryptedPassword, {...defaultOptions, ...authOptions});
 
-  if (type === TYPES.BIOMETRICS) {
-    mmkvStorage.set(BIOMETRY_CHOICE, true);
-    mmkvStorage.set(PASSCODE_DISABLED, true);
-    mmkvStorage.delete(PASSCODE_CHOICE);
-    mmkvStorage.delete(BIOMETRY_CHOICE_DISABLED);
-
+  if (type === accessControlTypes.BIOMETRICS) {
+    mmkvStorage.set(SELECTED_ACCESS_CONTROL, accessControlTypes.BIOMETRICS);
     // If the user enables biometrics, we're trying to read the password
     // immediately so we get the permission prompt
     if (Platform.OS === 'ios') {
       await getGenericPassword();
     }
-  } else if (type === TYPES.PASSCODE) {
-    mmkvStorage.delete(BIOMETRY_CHOICE);
-    mmkvStorage.delete(PASSCODE_DISABLED);
-    mmkvStorage.set(PASSCODE_CHOICE, true);
-    mmkvStorage.set(BIOMETRY_CHOICE_DISABLED, true);
-  } else if (type === TYPES.REMEMBER_ME) {
-    mmkvStorage.delete(BIOMETRY_CHOICE);
-    mmkvStorage.delete(PASSCODE_CHOICE);
-    mmkvStorage.set(PASSCODE_DISABLED, true);
-    mmkvStorage.set(BIOMETRY_CHOICE_DISABLED, true);
+  } else if (type === accessControlTypes.PASSCODE) {
+    mmkvStorage.set(SELECTED_ACCESS_CONTROL, accessControlTypes.PASSCODE);
+  } else if (type === accessControlTypes.REMEMBER_ME) {
+    mmkvStorage.set(SELECTED_ACCESS_CONTROL, accessControlTypes.REMEMBER_ME);
   }
 }
 
