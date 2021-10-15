@@ -1,131 +1,62 @@
-import React, {useContext, useReducer, createContext, useState, useMemo, useEffect} from 'react';
+import React, {useContext, createContext, useState, useEffect} from 'react';
 
 import {SupportedNetworkType} from 'src/types';
 import {NetworkContext} from 'src/context/NetworkContext';
-import {usePersistedState} from 'src/hook/usePersistedState';
+import {keyring} from '@polkadot/ui-keyring';
+import {useApi} from './ChainApiContext';
+import {VoidFn} from '@polkadot/api/types';
 
 export type Account = {
   address: string;
   name: string;
   isFavorite: boolean;
-  isInternal: boolean;
+  isExternal: boolean;
+  network: SupportedNetworkType;
 };
 
-type State = {
-  [key in SupportedNetworkType]?: Array<Account>;
-};
+type Accounts = Record<string, Account>;
 
-type AccountPayload = {network: SupportedNetworkType; account: Account};
-
-type Action =
-  | {type: 'ADD_ACCOUNT'; payload: AccountPayload}
-  | {type: 'REMOVE_ACCOUNT'; payload: {network: SupportedNetworkType; accountId: string}}
-  | {type: 'TOGGLE_FAVORITE'; payload: {network: SupportedNetworkType; accountId: string}}
-  | {type: 'INIT_STATE'; payload: State};
-
-function reducer(state: State, action: Action): State {
-  switch (action.type) {
-    case 'ADD_ACCOUNT': {
-      const networkAccounts = state[action.payload.network];
-      return {
-        ...state,
-        [action.payload.network]: networkAccounts
-          ? [...networkAccounts, action.payload.account]
-          : [action.payload.account],
-      };
-    }
-
-    case 'REMOVE_ACCOUNT': {
-      return {
-        ...state,
-        [action.payload.network]: state[action.payload.network]?.filter(
-          (account) => account.address !== action.payload.accountId,
-        ),
-      };
-    }
-    case 'INIT_STATE': {
-      return action.payload;
-    }
-
-    case 'TOGGLE_FAVORITE': {
-      const networkAccounts = state[action.payload.network] ?? [];
-      const account = networkAccounts?.find((a) => a.address === action.payload.accountId);
-      if (!account) {
-        return state;
-      }
-
-      return {
-        ...state,
-        [action.payload.network]: networkAccounts.map((acc) =>
-          acc.address === action.payload.accountId ? {...acc, isFavorite: !account.isFavorite} : acc,
-        ),
-      };
-    }
-
-    default:
-      throw new Error(`Action not supported`);
-  }
-}
-
-type AccountsContextValue = {
-  isLoading: boolean;
-  accounts: Account[];
-  addAccount: (network: SupportedNetworkType, account: Account) => void;
-  removeAccount: (accountId: string) => void;
-  toggleFavorite: (accountId: string) => void;
-};
-
-const initialState: State = {
-  polkadot: [],
-  kusama: [],
-  litentry_test: [],
-};
-
-const AccountsContext = createContext<AccountsContextValue>({
-  accounts: [],
-  isLoading: true,
-  addAccount: () => undefined,
-  removeAccount: () => undefined,
-  toggleFavorite: () => undefined,
-});
+const AccountsContext = createContext<Accounts>({});
 
 function AccountsProvider({children}: {children: React.ReactNode}) {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const [isLoading, setIsLoading] = useState(true);
-  const networkState = useContext(NetworkContext);
-  const currentNetwork = networkState.currentNetwork.key;
-  const [persistedState, persistState] = usePersistedState<State>('accounts');
+  const {currentNetwork} = useContext(NetworkContext);
+  const [accounts, setAccounts] = useState<Accounts>({});
+  const {api} = useApi();
 
   useEffect(() => {
-    if (persistedState) {
-      dispatch({type: 'INIT_STATE', payload: persistedState});
-    }
-    setIsLoading(false);
-  }, [persistedState]);
+    let unsubscribe: VoidFn | undefined;
 
-  useEffect(() => {
-    if (state) {
-      persistState(state);
-    }
-  }, [state, persistState]);
+    if (api) {
+      const subscription = keyring.accounts.subject.subscribe((accounts) => {
+        const keyringAccounts = Object.values(accounts).reduce((map, {json}) => {
+          if (json.meta.network === currentNetwork.key) {
+            const pair = keyring.getPair(json.address);
+            map = {
+              ...map,
+              [pair.address]: {
+                address: pair.address,
+                name: json.meta.name,
+                isFavorite: Boolean(json.meta.isFavorite),
+                isExternal: Boolean(json.meta.isExternal),
+                network: json.meta.network as SupportedNetworkType,
+              },
+            };
+          }
+          return map;
+        }, {});
 
-  const accountsContextValue = useMemo(() => {
-    return {
-      accounts: state[currentNetwork] || [],
-      isLoading,
-      addAccount: (network: SupportedNetworkType, account: Account) => {
-        dispatch({type: 'ADD_ACCOUNT', payload: {network, account}});
-      },
-      removeAccount: (accountId: string) => {
-        dispatch({type: 'REMOVE_ACCOUNT', payload: {network: currentNetwork, accountId}});
-      },
-      toggleFavorite: (accountId: string) => {
-        dispatch({type: 'TOGGLE_FAVORITE', payload: {network: currentNetwork, accountId}});
-      },
+        setAccounts(keyringAccounts);
+      });
+
+      unsubscribe = subscription.unsubscribe;
+    }
+
+    return () => {
+      unsubscribe && unsubscribe();
     };
-  }, [currentNetwork, state, isLoading]);
+  }, [currentNetwork, api]);
 
-  return <AccountsContext.Provider value={accountsContextValue}>{children}</AccountsContext.Provider>;
+  return <AccountsContext.Provider value={accounts}>{children}</AccountsContext.Provider>;
 }
 
 function useAccounts() {
@@ -135,7 +66,7 @@ function useAccounts() {
     throw new Error('useAccounts must be used within a AccountsProvider');
   }
 
-  return context;
+  return {accounts: Object.values(context)};
 }
 
 function getAccountDisplayValue(account: Account) {
