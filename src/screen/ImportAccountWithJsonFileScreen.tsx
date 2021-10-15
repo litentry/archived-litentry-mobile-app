@@ -14,14 +14,10 @@ import {NavigationProp} from '@react-navigation/core';
 import {AccountsStackParamList} from 'src/navigation/navigation';
 import {accountsScreen} from 'src/navigation/routeKeys';
 import {NetworkContext} from 'context/NetworkContext';
-import {useAccounts} from 'context/AccountsContext';
 
 export function ImportAccountWithJsonFileScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const theme = useTheme();
-
   const {currentNetwork} = React.useContext(NetworkContext);
-  const {addAccount} = useAccounts();
-
   const [jsonContent, setJsonContent] = React.useState<string>();
   const [error, setError] = React.useState<string | undefined>(undefined);
   const parsedJson = jsonContent ? tryParseJson(jsonContent) : undefined;
@@ -31,13 +27,7 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
   function restoreAccount() {
     if (parsedJson && password) {
       const pair = keyring.restoreAccount(parsedJson, password);
-      const pairJson = pair.toJson(password);
-      addAccount(currentNetwork.key, {
-        address: pairJson.address,
-        name: pairJson.meta.name as string,
-        isFavorite: false,
-        isInternal: true,
-      });
+      keyring.saveAccountMeta(pair, {network: currentNetwork.key});
       navigation.navigate(accountsScreen, {reload: true});
     }
   }
