@@ -3,7 +3,6 @@ import {keyring} from '@polkadot/ui-keyring';
 import {mnemonicValidate} from '@polkadot/util-crypto';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {Button, Icon, Input, ListItem, TopNavigationAction, useTheme} from '@ui-kitten/components';
-import {useAccounts} from 'context/AccountsContext';
 import {NetworkContext} from 'context/NetworkContext';
 import FormLabel from 'presentational/FormLabel';
 import Padder from 'presentational/Padder';
@@ -18,10 +17,7 @@ import zxcvbn from 'zxcvbn';
 
 export function ImportAccountScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const theme = useTheme();
-
   const {currentNetwork} = React.useContext(NetworkContext);
-  const {addAccount} = useAccounts();
-
   const [account, setAccount] = React.useState({title: '', password: '', confirmPassword: ''});
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
   const {seed, setSeed, address, isSeedValid} = useParseSeed();
@@ -37,13 +33,7 @@ export function ImportAccountScreen({navigation}: {navigation: NavigationProp<Ac
   );
 
   const onSubmit = () => {
-    const {json: key} = keyring.addUri(seed, account.password, {name: account.title});
-    addAccount(currentNetwork.key, {
-      address: key.address,
-      name: key.meta.name as string,
-      isFavorite: false,
-      isInternal: true,
-    });
+    keyring.addUri(seed, account.password, {name: account.title, network: currentNetwork.key});
     navigation.navigate(accountsScreen, {reload: true});
   };
 
