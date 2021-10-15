@@ -8331,6 +8331,11 @@ react-native-in-app-message@^1.0.32:
   resolved "https://registry.yarnpkg.com/react-native-in-app-message/-/react-native-in-app-message-1.0.32.tgz#58c6e5ef19b6666d326803a3592b39528ff9a703"
   integrity sha512-azlPYZka0kNtJwvtxFTNHeggXuT72UBDcGooJyiVBX/cKx88tv47Wct5/VgLnO1jOIpcxhICR/ZLVnsN/jWioA==
 
+react-native-keychain@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-keychain/-/react-native-keychain-8.0.0.tgz#ff708e4dc2a5440df717179bf9b7cd50f78b61d7"
+  integrity sha512-c7Cs+YQN26UaQsRG1dmlXL7VL2ctnXwH/dl0IOMEQ7ZaL2NdN313YSAI8ZEZZjrVhNmPsyWEuvTFqWrdpItqQg==
+
 react-native-linear-gradient@^2.5.6:
   version "2.5.6"
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.6.tgz#96215cbc5ec7a01247a20890888aa75b834d44a0"
