@@ -1,30 +1,28 @@
-import {MMKV} from 'react-native-mmkv';
 import {KeyringStore} from '@polkadot/ui-keyring/types';
-
-const storage = new MMKV();
+import {mmkvStorage} from 'src/service/MMKVStorage';
 
 export const keyringStore: KeyringStore = {
   all: (cb) => {
-    const allKeys = storage.getAllKeys();
+    const allKeys = mmkvStorage.getAllKeys();
     allKeys.forEach((key) => {
-      const storedValue = storage.getString(key);
+      const storedValue = mmkvStorage.getString(key);
       if (storedValue) {
         cb(key, JSON.parse(storedValue));
       }
     });
   },
   get: (key, cb) => {
-    const storedValue = storage.getString(key);
+    const storedValue = mmkvStorage.getString(key);
     if (storedValue) {
       cb(JSON.parse(storedValue));
     }
   },
   remove: (key, cb) => {
-    storage.delete(key);
+    mmkvStorage.delete(key);
     cb && cb();
   },
   set: (key, value, cb) => {
-    storage.set(key, JSON.stringify(value));
+    mmkvStorage.set(key, JSON.stringify(value));
     cb && cb();
   },
 };
