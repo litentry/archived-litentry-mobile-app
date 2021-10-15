@@ -15,7 +15,7 @@ function DevScreen() {
   const [visible, setVisible] = useState(false);
 
   const {currentNetwork} = useContext(NetworkContext);
-  const {accounts, addAccount, removeAccount} = useAccounts();
+  const {accounts} = useAccounts();
   const {trigger} = useContext(InAppNotificationContext);
   const {status, api} = useContext(ChainApiContext);
   const [debugInfo, setDebugInfo] = useState('');
@@ -87,7 +87,7 @@ function DevScreen() {
             <Divider />
             {accounts.map((account) => (
               <View key={account.address}>
-                <ListItem
+                {/* <ListItem
                   title={`Remove account ${account.address}`}
                   description="Reset current stored accounts"
                   accessoryRight={() => (
@@ -100,7 +100,7 @@ function DevScreen() {
                       Trigger
                     </Button>
                   )}
-                />
+                /> */}
                 <Divider />
               </View>
             ))}
@@ -128,7 +128,7 @@ function DevScreen() {
                 <Divider />
               </View>
             ))}
-            <ListItem
+            {/* <ListItem
               title="Set Address"
               description="Manually set address"
               accessoryRight={() => (
@@ -146,7 +146,7 @@ function DevScreen() {
                   Trigger
                 </Button>
               )}
-            />
+            /> */}
             <Divider />
           </ScrollView>
         </Layout>
