@@ -29,8 +29,8 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
     if (api) {
       const subscription = keyring.accounts.subject.subscribe((accounts) => {
         const keyringAccounts = Object.values(accounts).reduce((map, {json}) => {
-          if (json.meta.network === currentNetwork.key) {
-            const pair = keyring.getPair(json.address);
+          const pair = tryGetPair(json.address);
+          if (json.meta.network === currentNetwork.key && pair) {
             map = {
               ...map,
               [pair.address]: {
@@ -57,6 +57,14 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
   }, [currentNetwork, api]);
 
   return <AccountsContext.Provider value={accounts}>{children}</AccountsContext.Provider>;
+}
+
+function tryGetPair(address: string) {
+  try {
+    return keyring.getPair(address);
+  } catch (e) {
+    return undefined;
+  }
 }
 
 function useAccounts() {
