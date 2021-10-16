@@ -48,7 +48,7 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
         setAccounts(keyringAccounts);
       });
 
-      unsubscribe = subscription.unsubscribe;
+      unsubscribe = subscription.unsubscribe.bind(subscription);
     }
 
     return () => {
