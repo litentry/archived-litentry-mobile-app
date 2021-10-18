@@ -15,9 +15,11 @@ import {keyring} from '@polkadot/ui-keyring';
 import {NavigationProp} from '@react-navigation/native';
 import {AccountsStackParamList} from 'src/navigation/navigation';
 import {accountsScreen} from 'src/navigation/routeKeys';
+import {NetworkContext} from 'context/NetworkContext';
 
 export function CreateAccountScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const theme = useTheme();
+  const {currentNetwork} = React.useContext(NetworkContext);
   const [mnemonic] = React.useState(mnemonicGenerate());
   const [account, setAccount] = React.useState<{
     title: string;
@@ -39,7 +41,7 @@ export function CreateAccountScreen({navigation}: {navigation: NavigationProp<Ac
   );
 
   const onSubmit = () => {
-    keyring.addUri(mnemonic, account.password, {name: account.title});
+    keyring.addUri(mnemonic, account.password, {name: account.title, network: currentNetwork.key});
     navigation.navigate(accountsScreen, {reload: true});
   };
 

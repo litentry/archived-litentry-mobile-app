@@ -13,9 +13,11 @@ import {keyring} from '@polkadot/ui-keyring';
 import {NavigationProp} from '@react-navigation/core';
 import {AccountsStackParamList} from 'src/navigation/navigation';
 import {accountsScreen} from 'src/navigation/routeKeys';
+import {NetworkContext} from 'context/NetworkContext';
 
 export function ImportAccountWithJsonFileScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const theme = useTheme();
+  const {currentNetwork} = React.useContext(NetworkContext);
   const [jsonContent, setJsonContent] = React.useState<string>();
   const [error, setError] = React.useState<string | undefined>(undefined);
   const parsedJson = jsonContent ? tryParseJson(jsonContent) : undefined;
@@ -24,7 +26,8 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
 
   function restoreAccount() {
     if (parsedJson && password) {
-      keyring.restoreAccount(parsedJson, password);
+      const pair = keyring.restoreAccount(parsedJson, password);
+      keyring.saveAccountMeta(pair, {network: currentNetwork.key});
       navigation.navigate(accountsScreen, {reload: true});
     }
   }
