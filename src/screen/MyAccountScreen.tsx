@@ -1,7 +1,7 @@
+import {keyring} from '@polkadot/ui-keyring';
 import {BN_ZERO} from '@polkadot/util';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Text, useTheme} from '@ui-kitten/components';
-import {useAccounts} from 'context/AccountsContext';
 import Icon from 'presentational/Icon';
 import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
@@ -24,7 +24,6 @@ export function MyAccountScreen({
   navigation: NavigationProp<CompleteNavigatorParamList>;
   route: RouteProp<AccountsStackParamList, typeof myIdentityScreen>;
 }) {
-  const {removeAccount} = useAccounts();
   const {data} = useAccountIdentityInfo(address);
   const formatBalance = useFormatBalance();
   const {data: accountInfo} = useAccountInfo(address);
@@ -84,7 +83,7 @@ export function MyAccountScreen({
               {
                 text: 'Delete',
                 onPress: () => {
-                  removeAccount(address);
+                  keyring.forgetAccount(address);
                   navigation.navigate(accountsScreen);
                 },
                 style: 'destructive',
