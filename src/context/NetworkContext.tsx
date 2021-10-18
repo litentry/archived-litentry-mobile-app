@@ -55,21 +55,15 @@ type PropTypes = {
 export default function NetworkContextProvider({children}: PropTypes) {
   const [currentNetwork, setCurrentNetwork] = usePersistedState<NetworkType>('network', PolkadotNetwork);
 
-  const select = useCallback(
-    (network: NetworkType) => {
-      setCurrentNetwork(network);
-    },
-    [setCurrentNetwork],
+  const value = useMemo(
+    () => (currentNetwork ? {currentNetwork, availableNetworks, select: setCurrentNetwork} : undefined),
+    [currentNetwork, setCurrentNetwork],
   );
 
-  const value = useMemo(
-    () => ({
-      currentNetwork,
-      availableNetworks,
-      select,
-    }),
-    [currentNetwork, select],
-  );
+  // Wait for async storage response
+  if (!value) {
+    return null;
+  }
 
   return <NetworkContext.Provider value={value}>{children}</NetworkContext.Provider>;
 }

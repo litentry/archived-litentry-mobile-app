@@ -6,14 +6,11 @@ const logger = createLogger('usePersistedState');
 
 export type PersistedStateKey = 'network' | 'accounts' | 'theme' | 'selected_push_topics';
 
-export function usePersistedState<T>(key: PersistedStateKey): [state: T | undefined, setState: (data: T) => void];
-export function usePersistedState<T>(key: PersistedStateKey, initialState: T): [state: T, setState: (data: T) => void];
-
 export function usePersistedState<T>(
   key: PersistedStateKey,
-  initialState?: T,
+  fallback?: T,
 ): [state: T | undefined, setState: (data: T) => void] {
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useState<T>();
   const persistState = useCallback(
     (newState: T) => {
       try {
@@ -32,13 +29,15 @@ export function usePersistedState<T>(
         const persistedState = await getItem<T>(key);
         if (persistedState) {
           setState(persistedState);
+        } else if (fallback) {
+          setState(fallback);
         }
       } catch (e) {
         logger.error(`Error getting ${key} from AsyncStorage`, e);
       }
     };
     getPersistedState();
-  }, [key]);
+  }, [key, fallback]);
 
   return [state, persistState];
 }
