@@ -41,6 +41,7 @@ import {
   createAccountScreen,
   importAccountScreen,
   importAccountWithJsonFileScreen,
+  exportAccountWithJsonFileScreen,
 } from 'src/navigation/routeKeys';
 
 type DashboardStackParamList = {
@@ -107,6 +108,7 @@ type AccountsStackParamList = {
   [registerSubIdentitiesScreen]: {address: string};
   [importAccountScreen]: undefined;
   [importAccountWithJsonFileScreen]: undefined;
+  [exportAccountWithJsonFileScreen]: {address: string};
 };
 
 type CompleteNavigatorParamList = AppStackParamList &
