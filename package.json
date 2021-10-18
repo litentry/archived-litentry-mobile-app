@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@eva-design/eva": "^2.1.1",
-    "@polkadot/api": "^6.1.2",
+    "@polkadot/api": "^6.4.1",
     "@polkadot/apps-config": "^0.96.1",
     "@polkadot/reactnative-identicon": "0.85.4",
     "@polkadot/ui-keyring": "^0.85.5",
