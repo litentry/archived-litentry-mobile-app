@@ -15,9 +15,10 @@ import LoadingView from 'presentational/LoadingView';
 import SuccessDialog from 'presentational/SuccessDialog';
 import TxPayloadQr from 'presentational/TxPayloadQr';
 import {formatCallMeta} from 'src/packages/call_inspector/CallInspector';
-import QrSigner from 'src/service/QrSigner';
+import AsyncSigner from 'src/service/AsyncSigner';
 import globalStyles, {standardPadding} from 'src/styles';
 import WarningDialog from 'presentational/WarningDialog';
+import {getPair} from 'src/utils';
 
 let id = 0;
 
@@ -41,9 +42,14 @@ export type StartConfig = {
   params: unknown[];
 };
 
+type SignatureRef = {
+  signExternal?: (value: SignerResult) => void;
+  signInternal?: () => void;
+};
+
 function TxContextProvider({children}: PropTypes): React.ReactElement {
   const modalRef = useRef<Modalize>(null);
-  const signatureRef = useRef<(value: SignerResult) => void>();
+  const signatureRef = useRef<SignatureRef>();
   const [state, dispatch] = useReducer(reducer, initialState);
   const {api: apiPromise} = useApi();
 
@@ -76,22 +82,55 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
     const args = meta?.args.map(({name}) => name).join(', ') || '';
     const title = `Sending transaction ${section}.${method}(${args})`;
     const description = formatCallMeta(meta);
+    const keyringPair = getPair(address);
+    let signerFn;
+
+    const showPreview = async (txPayload: SignerPayloadJSON) => {
+      const info = await transaction.paymentInfo(address);
+      dispatch({
+        type: 'SHOW_TX_PREVIEW',
+        payload: {
+          txPayload: txPayload,
+          params,
+          title,
+          description,
+          partialFee: info.partialFee.toNumber(),
+          isExternalAccount: keyringPair === undefined,
+        },
+      });
+    };
+
+    if (!keyringPair) {
+      signerFn = async (txPayload: SignerPayloadJSON) => {
+        await showPreview(txPayload);
+        return new Promise((resolve: (value: SignerResult | PromiseLike<SignerResult>) => void) => {
+          signatureRef.current = {
+            signExternal: resolve,
+          };
+        });
+      };
+    } else {
+      signerFn = async (txPayload: SignerPayloadJSON) => {
+        await showPreview(txPayload);
+        const signed = transaction.registry
+          .createType('ExtrinsicPayload', txPayload, {version: txPayload.version})
+          .sign(keyringPair);
+
+        return new Promise((resolve: (value: SignerResult | PromiseLike<SignerResult>) => void) => {
+          signatureRef.current = {
+            signInternal: () => {
+              resolve({id: ++id, ...signed});
+            },
+          };
+        });
+      };
+    }
 
     try {
       const f = await transaction.signAsync(address, {
         nonce: -1,
         tip: BN_ZERO,
-        signer: new QrSigner(async (txPayload) => {
-          const info = await transaction.paymentInfo(address);
-          dispatch({
-            type: 'SHOW_TX_PREVIEW',
-            payload: {txPayload: txPayload, params, title, description, partialFee: info.partialFee.toNumber()},
-          });
-
-          return new Promise((resolve) => {
-            signatureRef.current = resolve;
-          });
-        }),
+        signer: new AsyncSigner(signerFn),
       });
 
       await new Promise((resolve, reject) => {
@@ -142,7 +181,15 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
               modalRef.current?.close();
               dispatch({type: 'RESET'});
             }}
-            onConfirm={() => dispatch({type: 'SHOW_QR_CODE_TX_PAYLOAD_VIEW', payload: {txPayload: state.txPayload}})}
+            isExternalAccount={state.isExternalAccount}
+            onConfirm={() => {
+              if (state.isExternalAccount) {
+                dispatch({type: 'SHOW_QR_CODE_TX_PAYLOAD_VIEW', payload: {txPayload: state.txPayload}});
+              } else {
+                dispatch({type: 'SHOW_SUBMITTING_VIEW'});
+                signatureRef.current?.signInternal?.();
+              }
+            }}
           />
         );
 
@@ -160,12 +207,11 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
 
       case 'scan_signature_view':
         return (
-          // TODO: extract
           <Layout style={globalStyles.paddedContainer}>
             <QRCodeScanner
               onRead={(data) => {
                 dispatch({type: 'SHOW_SUBMITTING_VIEW'});
-                signatureRef.current?.({
+                signatureRef.current?.signExternal?.({
                   id: id++,
                   signature: `0x${data.data}`,
                 });
@@ -329,9 +375,10 @@ type State =
       title: string;
       description: string;
       partialFee: number;
+      isExternalAccount: boolean;
     }
-  | {view: 'scan_signature_view'}
   | {view: 'qr_code_tx_payload_view'; txPayload: SignerPayloadJSON}
+  | {view: 'scan_signature_view'}
   | {view: 'error_view'; error: string}
   | {view: 'warning_view'; warning: string};
 
@@ -347,6 +394,7 @@ type Action =
         params: unknown[];
         title: string;
         description: string;
+        isExternalAccount: boolean;
       };
     }
   | {
@@ -357,13 +405,6 @@ type Action =
     }
   | {
       type: 'SHOW_SCAN_SIGNATURE_VIEW';
-    }
-  | {
-      type: 'SHOW_CONFIRMATION_VIEW';
-      payload: {
-        txPayload: SignerPayloadJSON;
-        isExternal: boolean;
-      };
     }
   | {type: 'SHOW_SUBMITTING_VIEW'}
   | {type: 'SHOW_ERROR'; payload: string}
@@ -395,6 +436,8 @@ function reducer(state: State, action: Action): State {
 
     case 'SHOW_WARNING':
       return {view: 'warning_view', warning: action.payload};
+
+    default:
+      return state;
   }
-  return state;
 }
