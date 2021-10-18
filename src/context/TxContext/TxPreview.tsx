@@ -15,12 +15,14 @@ type PropTypes = {
   partialFee: number;
   onConfirm: () => void;
   onCancel: () => void;
+  isExternalAccount: boolean;
 };
 
 export function TxPreview(props: PropTypes): React.ReactElement {
   const [open, setOpen] = useState(false);
   const theme = useTheme();
-  const {transactionTitle, transactionInfo, partialFee, txPayload, params, onConfirm, onCancel} = props;
+  const {transactionTitle, transactionInfo, partialFee, txPayload, params, onConfirm, onCancel, isExternalAccount} =
+    props;
 
   return (
     <Layout style={styles.container} level="1">
@@ -62,7 +64,7 @@ export function TxPreview(props: PropTypes): React.ReactElement {
             style={styles.submit}
             appearance="outline"
             onPress={onConfirm}
-            accessoryRight={(p) => <Icon {...p} name="video-outline" />}>
+            accessoryRight={isExternalAccount ? (p) => <Icon {...p} name="video-outline" /> : undefined}>
             Continue
           </Button>
         </Layout>
