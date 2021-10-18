@@ -17,6 +17,7 @@ import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
 import {ParachainsStackParamList} from 'src/navigation/navigation';
 import {crowdloanFundDetailScreen} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
+import {notEmpty} from 'src/utils';
 
 export function CrowdLoanScreen() {
   const formatBalance = useFormatBalance();
@@ -49,10 +50,11 @@ export function CrowdLoanScreen() {
 
   let activeProgress = 0,
     totalProgress = 0;
+
   try {
-    activeProgress = activeRaised.muln(10000).div(activeCap).toNumber() / 10000;
-    totalProgress = data.totalRaised.muln(10000).div(data.totalCap).toNumber() / 10000;
-  } catch {
+    activeProgress = activeCap.isZero() ? 0 : activeRaised.muln(10000).div(activeCap).toNumber() / 10000;
+    totalProgress = data.totalCap.isZero() ? 0 : data.totalRaised.muln(10000).div(data.totalCap).toNumber() / 10000;
+  } catch (e) {
     console.error('Error calculating progress');
   }
 
@@ -104,9 +106,9 @@ export function CrowdLoanScreen() {
         style={styles.container}
         contentContainerStyle={styles.listContent}
         sections={[
-          {key: 'Ongoing', data: active},
-          {key: 'Completed', data: ended},
-        ]}
+          active.length ? {key: 'Ongoing', data: active} : null,
+          ended.length ? {key: 'Completed', data: ended} : null,
+        ].filter(notEmpty)}
         SectionSeparatorComponent={() => <Padder scale={1} />}
         renderSectionHeader={({section}) => <Text category="h5">{section.key}</Text>}
         renderItem={({item}) => {
