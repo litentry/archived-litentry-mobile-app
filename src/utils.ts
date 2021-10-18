@@ -15,7 +15,6 @@ import {
 import {blake2AsU8a, checkAddress, decodeAddress, isEthereumChecksum} from '@polkadot/util-crypto';
 import {SignerPayloadJSON} from '@polkadot/types/types';
 import {ExtrinsicPayload} from '@polkadot/types/interfaces';
-import {keyring} from '@polkadot/ui-keyring';
 import registry from 'src/typeRegistry';
 import {AccountAddressType, NetworkType} from './types';
 import {trim} from 'lodash';
@@ -206,12 +205,4 @@ export function validateFormField(
 // the types after the filter would not include the empty values
 export function notEmpty<TValue>(value: TValue | null | undefined | ''): value is TValue {
   return value !== null && value !== undefined && value !== '';
-}
-
-export function getPair(address: string) {
-  try {
-    return keyring.getPair(address);
-  } catch (e) {
-    return undefined;
-  }
 }
