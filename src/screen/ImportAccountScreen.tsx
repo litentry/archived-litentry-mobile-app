@@ -3,6 +3,7 @@ import {keyring} from '@polkadot/ui-keyring';
 import {mnemonicValidate} from '@polkadot/util-crypto';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {Button, Icon, Input, ListItem, TopNavigationAction, useTheme} from '@ui-kitten/components';
+import {NetworkContext} from 'context/NetworkContext';
 import FormLabel from 'presentational/FormLabel';
 import Padder from 'presentational/Padder';
 import {ProgressBar} from 'presentational/ProgressBar';
@@ -16,6 +17,7 @@ import zxcvbn from 'zxcvbn';
 
 export function ImportAccountScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const theme = useTheme();
+  const {currentNetwork} = React.useContext(NetworkContext);
   const [account, setAccount] = React.useState({title: '', password: '', confirmPassword: ''});
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
   const {seed, setSeed, address, isSeedValid} = useParseSeed();
@@ -29,6 +31,11 @@ export function ImportAccountScreen({navigation}: {navigation: NavigationProp<Ac
     account.password === account.confirmPassword &&
     passwordStrength >= 3
   );
+
+  const onSubmit = () => {
+    keyring.addUri(seed, account.password, {name: account.title, network: currentNetwork.key});
+    navigation.navigate(accountsScreen, {reload: true});
+  };
 
   return (
     <SafeView edges={noTopEdges}>
@@ -101,10 +108,7 @@ export function ImportAccountScreen({navigation}: {navigation: NavigationProp<Ac
           disabled={isDisabled}
           status="basic"
           accessoryLeft={(p) => <Icon {...p} name="download-outline" />}
-          onPress={() => {
-            keyring.addUri(seed, account.password, {name: account.title}, 'sr25519');
-            navigation.navigate(accountsScreen, {reload: true});
-          }}>
+          onPress={onSubmit}>
           Import account
         </Button>
       </ScrollView>
