@@ -3,6 +3,7 @@ import {Dimensions, StyleSheet} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {ApiPromise} from '@polkadot/api';
+import {keyring} from '@polkadot/ui-keyring';
 import {SubmittableExtrinsic} from '@polkadot/api/submittable/types';
 import {SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
 import {BN_ZERO} from '@polkadot/util';
@@ -18,7 +19,6 @@ import {formatCallMeta} from 'src/packages/call_inspector/CallInspector';
 import AsyncSigner from 'src/service/AsyncSigner';
 import globalStyles, {standardPadding} from 'src/styles';
 import WarningDialog from 'presentational/WarningDialog';
-import {getPair} from 'src/utils';
 
 let id = 0;
 
@@ -82,8 +82,8 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
     const args = meta?.args.map(({name}) => name).join(', ') || '';
     const title = `Sending transaction ${section}.${method}(${args})`;
     const description = formatCallMeta(meta);
-    const keyringPair = getPair(address);
-    let signerFn;
+    const keyringPair = keyring.getPair(address);
+    const isExternal = Boolean(keyringPair.meta.isExternal);
 
     const showPreview = async (txPayload: SignerPayloadJSON) => {
       const info = await transaction.paymentInfo(address);
@@ -95,12 +95,14 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
           title,
           description,
           partialFee: info.partialFee.toNumber(),
-          isExternalAccount: keyringPair === undefined,
+          isExternalAccount: isExternal,
         },
       });
     };
 
-    if (!keyringPair) {
+    let signerFn;
+
+    if (isExternal) {
       signerFn = async (txPayload: SignerPayloadJSON) => {
         await showPreview(txPayload);
         return new Promise((resolve: (value: SignerResult | PromiseLike<SignerResult>) => void) => {
@@ -111,6 +113,9 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
       };
     } else {
       signerFn = async (txPayload: SignerPayloadJSON) => {
+        // TODO unlock the keyringPair (https://github.com/litentry/litentry-app/issues/493)
+        // get the password from the keychain
+        // keyringPair.unlock(password);
         await showPreview(txPayload);
         const signed = transaction.registry
           .createType('ExtrinsicPayload', txPayload, {version: txPayload.version})
