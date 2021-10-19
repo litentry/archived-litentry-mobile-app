@@ -28,11 +28,7 @@ export default function ThemeProvider({children}: PropTypes) {
     setTheme(theme === 'dark' ? 'light' : 'dark');
   }, [theme, setTheme]);
 
-  const value = useMemo(() => (theme ? {theme, toggleTheme} : undefined), [theme, toggleTheme]);
-
-  if (!value) {
-    return null;
-  }
+  const value = useMemo(() => ({theme, toggleTheme}), [theme, toggleTheme]);
 
   return (
     <ThemeContext.Provider value={value}>

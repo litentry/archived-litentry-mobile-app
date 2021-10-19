@@ -1,5 +1,5 @@
 import {useQuery} from 'react-query';
-import * as AsyncStorage from 'src/service/AsyncStorage';
+import * as AsyncStorage from 'src/service/PersistedObjectStorage';
 
 // Check if it's the first time the app is launched
 export function useIsFirstAppStart() {

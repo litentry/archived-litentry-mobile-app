@@ -1,5 +1,5 @@
 import {useQueryClient, useQuery, useMutation} from 'react-query';
-import * as AsyncStorage from 'src/service/AsyncStorage';
+import * as AsyncStorage from 'src/service/PersistedObjectStorage';
 import messaging from '@react-native-firebase/messaging';
 import {useCallback, useMemo} from 'react';
 
