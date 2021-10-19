@@ -55,6 +55,7 @@ import {ParachainDetailScreen} from 'screen/Parachains/ParachainDetailScreen';
 import {CrowdLoanFundDetailScreen} from 'screen/Parachains/CrowdLoanFundDetailScreen';
 import {ImportAccountScreen, ImportScreenHeaderRight} from 'screen/ImportAccountScreen';
 import {ImportAccountWithJsonFileScreen} from 'screen/ImportAccountWithJsonFileScreen';
+import {ExportAccountWithJsonFileScreen} from 'screen/ExportAccountWithJsonFileScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -143,6 +144,10 @@ function AccountsNavigator() {
       <AccountsStack.Screen
         name={routeKeys.importAccountWithJsonFileScreen}
         component={ImportAccountWithJsonFileScreen}
+      />
+      <AccountsStack.Screen
+        name={routeKeys.exportAccountWithJsonFileScreen}
+        component={ExportAccountWithJsonFileScreen}
       />
     </AccountsStack.Navigator>
   );
