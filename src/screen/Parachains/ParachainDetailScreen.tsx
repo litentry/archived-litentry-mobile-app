@@ -174,7 +174,7 @@ export function ParachainDetailScreen({route}: ScreenProps) {
         contentContainerStyle={styles.content}
         stickySectionHeadersEnabled={false}
         sections={sections}
-        renderItem={({item}) => <Validator accountId={item} />}
+        renderItem={({item}) => <MemoizedValidator accountId={item.toString()} />}
         renderSectionHeader={({section: {title}}) => (
           <Text category={'s1'} style={styles.header}>
             {title}
@@ -183,12 +183,15 @@ export function ParachainDetailScreen({route}: ScreenProps) {
         keyExtractor={(item) => item.toString()}
         ListEmptyComponent={EmptyView}
         ItemSeparatorComponent={Divider}
+        removeClippedSubviews={true}
       />
     </SafeView>
   );
 }
 
-function Validator({accountId}: {accountId: AccountId}) {
+const MemoizedValidator = React.memo(Validator);
+
+function Validator({accountId}: {accountId: string}) {
   const {data} = useAccountIdentityInfo(accountId.toString());
 
   return (
