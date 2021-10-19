@@ -1,7 +1,7 @@
 import type {Signer, SignerResult} from '@polkadot/api/types';
 import type {SignerPayloadJSON} from '@polkadot/types/types';
 
-export default class QrSigner implements Signer {
+export default class AsyncSigner implements Signer {
   readonly promise: (payload: SignerPayloadJSON) => Promise<SignerResult>;
 
   constructor(createPromise: (payload: SignerPayloadJSON) => Promise<SignerResult>) {

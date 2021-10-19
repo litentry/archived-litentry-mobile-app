@@ -1,10 +1,10 @@
 import React, {useContext, createContext, useState, useEffect} from 'react';
 
+import {keyring} from '@polkadot/ui-keyring';
+import {VoidFn} from '@polkadot/api/types';
 import {SupportedNetworkType} from 'src/types';
 import {NetworkContext} from 'src/context/NetworkContext';
-import {keyring} from '@polkadot/ui-keyring';
-import {useApi} from './ChainApiContext';
-import {VoidFn} from '@polkadot/api/types';
+import {useApi} from 'src/context/ChainApiContext';
 
 export type Account = {
   address: string;
