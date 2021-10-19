@@ -10,7 +10,6 @@ import {formatNumber} from '@polkadot/util';
 import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
 import {useParathreadInfo} from 'src/api/hooks/useParathreadInfo';
 import Identicon from '@polkadot/reactnative-identicon';
-import {Account} from 'layout/Account';
 import {EmptyView} from 'presentational/EmptyView';
 import LoadingView from 'presentational/LoadingView';
 import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
