@@ -197,7 +197,7 @@ function Validator({accountId}: {accountId: string}) {
   return (
     <ListItem
       disabled
-      accessoryLeft={() => <IdentityIcon value={accountId.toString()} size={40} />}
+      accessoryLeft={() => <IdentityIcon value={accountId.toString()} size={30} />}
       title={() => (
         <View style={styles.validatorAccountContainer}>{data && <AccountInfoInlineTeaser identity={data} />}</View>
       )}

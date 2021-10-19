@@ -13,6 +13,8 @@ import Identicon from '@polkadot/reactnative-identicon';
 import {Account} from 'layout/Account';
 import {EmptyView} from 'presentational/EmptyView';
 import LoadingView from 'presentational/LoadingView';
+import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
+import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 
 type ParathreadData = {
   name?: string;
@@ -60,6 +62,7 @@ type ParathreadItemProps = {
 function ParathreadItem({id}: ParathreadItemProps) {
   const {data: parathreadInfo} = useParathreadInfo(id);
   const parathreadData = useParathreadData(id);
+  const {data: manager} = useAccountIdentityInfo(parathreadInfo?.manager?.toString());
 
   return (
     <ListItem
@@ -69,20 +72,16 @@ function ParathreadItem({id}: ParathreadItemProps) {
           {parathreadInfo?.manager && <Identicon value={parathreadInfo.manager.toString()} size={30} />}
         </View>
       )}
+      title={() => <View style={styles.manager}>{manager && <AccountInfoInlineTeaser identity={manager} />}</View>}
       description={() => (
         <>
-          {parathreadInfo?.manager && (
-            <Account id={parathreadInfo?.manager?.toString()}>
-              {(identity) => (
-                <Text category="c1" numberOfLines={1} appearance="hint">
-                  {identity?.display}
-                </Text>
-              )}
-            </Account>
+          {parathreadData.name && (
+            <Text category="c1" appearance="hint">
+              {parathreadData.name}
+            </Text>
           )}
         </>
       )}
-      title={() => <Text>{parathreadData.name}</Text>}
       accessoryRight={() => <Text>{formatNumber(id)}</Text>}
     />
   );
@@ -106,5 +105,8 @@ const styles = StyleSheet.create({
   },
   chainImage: {
     marginRight: standardPadding,
+  },
+  manager: {
+    marginRight: 20,
   },
 });
