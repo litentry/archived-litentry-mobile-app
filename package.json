@@ -74,7 +74,7 @@
     "react-native-portalize": "^1.0.7",
     "react-native-qrcode-scanner": "^1.5.4",
     "react-native-randombytes": "^3.6.0",
-    "react-native-reanimated": "^2.2.2",
+    "react-native-reanimated": "^2.2.3",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.8.0",
     "react-native-sensitive-info": "^5.5.8",
