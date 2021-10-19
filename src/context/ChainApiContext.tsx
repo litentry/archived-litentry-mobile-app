@@ -87,7 +87,6 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
       apiPromise.off('ready', handleReady);
       apiPromise.off('disconnected', handleDisconnect);
       apiPromise.off('error', handleError);
-      apiPromise.disconnect();
       // clearInterval(retryInterval);
     };
   }, [currentNetwork.ss58Format, wsAddress]);
