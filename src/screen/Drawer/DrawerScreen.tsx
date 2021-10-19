@@ -5,6 +5,7 @@ import logo from 'image/logo.png';
 import SafeView from 'presentational/SafeView';
 import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {useIsParachainAvailable} from 'src/api/hooks/useIsParachainAvailable';
 import {
   accountsNavigator,
   dashboardScreen,
@@ -22,6 +23,7 @@ import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 
 function DrawerScreen({navigation}: DrawerContentComponentProps) {
   const {theme, toggleTheme} = useTheme();
+  const isParachainAvailable = useIsParachainAvailable();
 
   return (
     <SafeView>
@@ -46,25 +48,27 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
             onPress={() => navigation.navigate(accountsNavigator)}
           />
           <Divider />
-          <MenuGroup
-            title="Parachains"
-            accessoryLeft={(props) => <Icon {...props} name="link-2-outline" animation="zoom" />}
-            style={styles.menuGroup}>
-            <MenuItem
-              title="Overview"
-              onPress={() => navigation.navigate(parachainsNavigator, {screen: parachainsOverviewScreen})}
-            />
-            <MenuItem
-              title="Crowdloan"
-              onPress={() => {
-                navigation.navigate(parachainsNavigator, {screen: crowdloanScreen});
-              }}
-            />
-            <MenuItem
-              title="Parathreads"
-              onPress={() => navigation.navigate(parachainsNavigator, {screen: parathreadsScreen})}
-            />
-          </MenuGroup>
+          {isParachainAvailable ? (
+            <MenuGroup
+              title="Parachains"
+              accessoryLeft={(props) => <Icon {...props} name="link-2-outline" animation="zoom" />}
+              style={styles.menuGroup}>
+              <MenuItem
+                title="Overview"
+                onPress={() => navigation.navigate(parachainsNavigator, {screen: parachainsOverviewScreen})}
+              />
+              <MenuItem
+                title="Crowdloan"
+                onPress={() => {
+                  navigation.navigate(parachainsNavigator, {screen: crowdloanScreen});
+                }}
+              />
+              <MenuItem
+                title="Parathreads"
+                onPress={() => navigation.navigate(parachainsNavigator, {screen: parathreadsScreen})}
+              />
+            </MenuGroup>
+          ) : null}
           <Divider />
           <ListItem
             title="Registrars"
