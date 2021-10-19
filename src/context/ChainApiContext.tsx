@@ -4,7 +4,6 @@ import {createLogger} from 'src/utils';
 import {NetworkContext} from './NetworkContext';
 import {keyring} from '@polkadot/ui-keyring';
 import {keyringStore} from 'src/service/KeyringStore';
-import {NetworkType} from 'src/types';
 
 const initialState: ChainApiContext = {
   status: 'unknown',
