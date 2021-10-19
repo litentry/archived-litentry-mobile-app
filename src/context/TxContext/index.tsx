@@ -10,6 +10,7 @@ import {BN_ZERO} from '@polkadot/util';
 import {Icon, IconProps, Layout, Text} from '@ui-kitten/components';
 import {useApi} from 'context/ChainApiContext';
 import {TxPreview} from 'context/TxContext/TxPreview';
+import {AuthenticateView} from 'context/TxContext/AuthenticateView';
 import {get} from 'lodash';
 import ErrorDialog from 'presentational/ErrorDialog';
 import LoadingView from 'presentational/LoadingView';
@@ -19,6 +20,7 @@ import {formatCallMeta} from 'src/packages/call_inspector/CallInspector';
 import AsyncSigner from 'src/service/AsyncSigner';
 import globalStyles, {standardPadding} from 'src/styles';
 import WarningDialog from 'presentational/WarningDialog';
+import type {KeyringPair} from 'src/types';
 
 let id = 0;
 
@@ -42,14 +44,10 @@ export type StartConfig = {
   params: unknown[];
 };
 
-type SignatureRef = {
-  signExternal?: (value: SignerResult) => void;
-  signInternal?: () => void;
-};
-
 function TxContextProvider({children}: PropTypes): React.ReactElement {
   const modalRef = useRef<Modalize>(null);
-  const signatureRef = useRef<SignatureRef>();
+  const signTransactionRef = useRef<(value: SignerResult) => void>();
+  const showPreviewRef = useRef<(txPayload: SignerPayloadJSON) => Promise<void>>();
   const [state, dispatch] = useReducer(reducer, initialState);
   const {api: apiPromise} = useApi();
 
@@ -85,57 +83,54 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
     const keyringPair = keyring.getPair(address);
     const isExternal = Boolean(keyringPair.meta.isExternal);
 
-    const showPreview = async (txPayload: SignerPayloadJSON) => {
+    showPreviewRef.current = async (txPayload: SignerPayloadJSON) => {
       const info = await transaction.paymentInfo(address);
-      dispatch({
-        type: 'SHOW_TX_PREVIEW',
-        payload: {
-          txPayload: txPayload,
-          params,
-          title,
-          description,
-          partialFee: info.partialFee.toNumber(),
-          isExternalAccount: isExternal,
-        },
-      });
-    };
-
-    let signerFn;
-
-    if (isExternal) {
-      signerFn = async (txPayload: SignerPayloadJSON) => {
-        await showPreview(txPayload);
-        return new Promise((resolve: (value: SignerResult | PromiseLike<SignerResult>) => void) => {
-          signatureRef.current = {
-            signExternal: resolve,
-          };
+      if (isExternal) {
+        dispatch({
+          type: 'SHOW_TX_PREVIEW',
+          payload: {
+            txPayload: txPayload,
+            params,
+            title,
+            description,
+            partialFee: info.partialFee.toNumber(),
+            isExternalAccount: true,
+          },
         });
-      };
-    } else {
-      signerFn = async (txPayload: SignerPayloadJSON) => {
-        // TODO unlock the keyringPair (https://github.com/litentry/litentry-app/issues/493)
-        // get the password from the keychain
-        // keyringPair.unlock(password);
-        await showPreview(txPayload);
+      } else {
         const signed = transaction.registry
           .createType('ExtrinsicPayload', txPayload, {version: txPayload.version})
           .sign(keyringPair);
 
-        return new Promise((resolve: (value: SignerResult | PromiseLike<SignerResult>) => void) => {
-          signatureRef.current = {
-            signInternal: () => {
-              resolve({id: ++id, ...signed});
-            },
-          };
+        dispatch({
+          type: 'SHOW_TX_PREVIEW',
+          payload: {
+            txPayload: txPayload,
+            params,
+            title,
+            description,
+            partialFee: info.partialFee.toNumber(),
+            isExternalAccount: false,
+            signature: {id: ++id, ...signed},
+          },
         });
-      };
-    }
+      }
+    };
 
     try {
       const f = await transaction.signAsync(address, {
         nonce: -1,
         tip: BN_ZERO,
-        signer: new AsyncSigner(signerFn),
+        signer: new AsyncSigner(async (txPayload) => {
+          if (!isExternal && keyringPair.isLocked) {
+            dispatch({type: 'SHOW_AUTHENTICATE_VIEW', payload: {txPayload, keyringPair}});
+          } else {
+            showPreviewRef.current?.(txPayload);
+          }
+          return new Promise((resolve) => {
+            signTransactionRef.current = resolve;
+          });
+        }),
       });
 
       await new Promise((resolve, reject) => {
@@ -174,6 +169,16 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
           </Layout>
         );
 
+      case 'authenticate_view':
+        return (
+          <AuthenticateView
+            keyringPair={state.keyringPair}
+            onAuthenticate={() => {
+              showPreviewRef.current?.(state.txPayload);
+            }}
+          />
+        );
+
       case 'tx_preview':
         return (
           <TxPreview
@@ -192,7 +197,7 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
                 dispatch({type: 'SHOW_QR_CODE_TX_PAYLOAD_VIEW', payload: {txPayload: state.txPayload}});
               } else {
                 dispatch({type: 'SHOW_SUBMITTING_VIEW'});
-                signatureRef.current?.signInternal?.();
+                signTransactionRef.current?.(state.signature);
               }
             }}
           />
@@ -216,7 +221,7 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
             <QRCodeScanner
               onRead={(data) => {
                 dispatch({type: 'SHOW_SUBMITTING_VIEW'});
-                signatureRef.current?.signExternal?.({
+                signTransactionRef.current?.({
                   id: id++,
                   signature: `0x${data.data}`,
                 });
@@ -296,7 +301,7 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
         handlePosition="outside"
         onClosed={() => {
           dispatch({type: 'RESET'});
-          signatureRef.current = undefined;
+          signTransactionRef.current = undefined;
         }}
         closeOnOverlayTap
         panGestureEnabled>
@@ -373,6 +378,7 @@ export default TxContextProvider;
 
 type State =
   | {view: 'initial_view' | 'submitting_view' | 'success_view'}
+  | {view: 'authenticate_view'; txPayload: SignerPayloadJSON; keyringPair: KeyringPair}
   | {
       view: 'tx_preview';
       txPayload: SignerPayloadJSON;
@@ -380,7 +386,17 @@ type State =
       title: string;
       description: string;
       partialFee: number;
-      isExternalAccount: boolean;
+      isExternalAccount: true;
+    }
+  | {
+      view: 'tx_preview';
+      txPayload: SignerPayloadJSON;
+      params: unknown[];
+      title: string;
+      description: string;
+      partialFee: number;
+      isExternalAccount: false;
+      signature: Signature;
     }
   | {view: 'qr_code_tx_payload_view'; txPayload: SignerPayloadJSON}
   | {view: 'scan_signature_view'}
@@ -389,18 +405,40 @@ type State =
 
 const initialState: State = {view: 'initial_view'};
 
+type Signature = {
+  id: number;
+  signature: string;
+};
+
 type Action =
   | {type: 'RESET'}
   | {
-      type: 'SHOW_TX_PREVIEW';
+      type: 'SHOW_AUTHENTICATE_VIEW';
       payload: {
         txPayload: SignerPayloadJSON;
-        partialFee: number;
-        params: unknown[];
-        title: string;
-        description: string;
-        isExternalAccount: boolean;
+        keyringPair: KeyringPair;
       };
+    }
+  | {
+      type: 'SHOW_TX_PREVIEW';
+      payload:
+        | {
+            txPayload: SignerPayloadJSON;
+            partialFee: number;
+            params: unknown[];
+            title: string;
+            description: string;
+            isExternalAccount: true;
+          }
+        | {
+            txPayload: SignerPayloadJSON;
+            partialFee: number;
+            params: unknown[];
+            title: string;
+            description: string;
+            isExternalAccount: false;
+            signature: Signature;
+          };
     }
   | {
       type: 'SHOW_QR_CODE_TX_PAYLOAD_VIEW';
@@ -420,6 +458,9 @@ function reducer(state: State, action: Action): State {
   switch (action.type) {
     case 'RESET':
       return initialState;
+
+    case 'SHOW_AUTHENTICATE_VIEW':
+      return {view: 'authenticate_view', txPayload: action.payload.txPayload, keyringPair: action.payload.keyringPair};
 
     case 'SHOW_TX_PREVIEW':
       return {view: 'tx_preview', ...action.payload};
