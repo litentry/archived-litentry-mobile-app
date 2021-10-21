@@ -11,7 +11,7 @@ import {FlatList, Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useAccountsIdentityInfo} from 'src/api/hooks/useAccountsIdentityInfo';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 import {CompleteNavigatorParamList} from 'src/navigation/navigation';
-import {createAccountScreen, addAccountScreen, importAccountScreen, myAccountScreen} from 'src/navigation/routeKeys';
+import {addAccountScreen, importAccountScreen, myAccountScreen, mnemonicScreen} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
 import {keyring} from '@polkadot/ui-keyring';
 import {NetworkContext} from 'context/NetworkContext';
@@ -126,7 +126,7 @@ export function AccountsScreen({navigation}: {navigation: NavigationProp<Complet
               <Button
                 status="basic"
                 accessoryLeft={(p) => <Icon {...p} name="plus-circle-outline" />}
-                onPress={() => navigation.navigate(createAccountScreen)}>
+                onPress={() => navigation.navigate(mnemonicScreen)}>
                 Create Account
               </Button>
               <Padder scale={1} />
