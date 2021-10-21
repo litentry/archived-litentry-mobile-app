@@ -8,7 +8,7 @@ import {AccountsStackParamList} from 'src/navigation/navigation';
 import FormLabel from 'presentational/FormLabel';
 import Padder from 'presentational/Padder';
 import {verifyMnemonicScreen, createAccountScreen} from 'src/navigation/routeKeys';
-import {shuffleArray} from 'src/utils';
+import {shuffle} from 'lodash';
 
 type Word = {
   text: string;
@@ -26,15 +26,13 @@ export function VerifyMnemonicScreen({
 
   const [isMnemonicVerified, setIsMnemonicVerified] = React.useState(false);
   const [selectedMnemonic, setSelectedMnemonic] = React.useState('');
-  const [words, setWords] = React.useState<Word[]>([]);
 
-  React.useEffect(() => {
-    const words = shuffleArray(mnemonic.split(' ')).map((word) => ({
+  const [words, setWords] = React.useState<Word[]>(() => {
+    return shuffle(mnemonic.split(' ')).map((word) => ({
       text: word,
       isSelected: false,
     }));
-    setWords(words);
-  }, [mnemonic]);
+  });
 
   React.useEffect(() => {
     const isMnemonicVerified = mnemonic === selectedMnemonic;
@@ -100,7 +98,7 @@ type WordSelectorProps = {
 
 function WordSelector({words, onSelect}: WordSelectorProps) {
   return (
-    <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+    <View style={styles.words}>
       {words.map((word) => (
         <View style={styles.wordButton} key={word.text}>
           <Button
@@ -124,6 +122,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: monofontFamily,
     height: 70,
+  },
+  words: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
   },
   wordButton: {
     margin: 5,

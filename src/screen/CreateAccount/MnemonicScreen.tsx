@@ -11,12 +11,9 @@ import Padder from 'presentational/Padder';
 import {verifyMnemonicScreen} from 'src/navigation/routeKeys';
 
 export function MnemonicScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
-  const [mnemonic, setMnemonic] = React.useState('');
-
-  React.useEffect(() => {
-    const mnemonic = mnemonicGenerate();
-    setMnemonic(mnemonic);
-  }, []);
+  const [mnemonic] = React.useState(() => {
+    return mnemonicGenerate();
+  });
 
   return (
     <SafeView edges={noTopEdges}>
