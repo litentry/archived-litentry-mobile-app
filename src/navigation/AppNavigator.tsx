@@ -28,7 +28,7 @@ import {PolkassemblyDiscussionDetail} from 'screen/Polkassembly/PolkassemblyDisc
 import {PolkassemblyDiscussions} from 'screen/Polkassembly/PolkassemblyDiscussions';
 import {ReferendumScreen} from 'screen/ReferendumScreen';
 import RegistrarListScreen from 'screen/RegistrarListScreen';
-import {ParathreadsScreen} from 'screen/ParathreadsScreen';
+import {ParathreadsScreen} from 'screen/Parachains/ParathreadsScreen';
 import {RegisterSubIdentitiesScreen} from 'screen/subIdentities/RegisterSubIdentitiesScreen';
 import {SubmitTipScreen} from 'screen/SubmitTipScreen';
 import TipDetailScreen from 'screen/tips/TipDetailScreen';
