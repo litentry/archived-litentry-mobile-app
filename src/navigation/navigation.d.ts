@@ -38,6 +38,8 @@ import {
   parachainsNavigator,
   crowdloanScreen,
   crowdloanFundDetailScreen,
+  mnemonicScreen,
+  verifyMnemonicScreen,
   createAccountScreen,
   importAccountScreen,
   importAccountWithJsonFileScreen,
@@ -101,7 +103,9 @@ type AppStackParamList = {
 };
 
 type AccountsStackParamList = {
-  [createAccountScreen]: undefined;
+  [mnemonicScreen]: undefined;
+  [verifyMnemonicScreen]: {mnemonic: string};
+  [createAccountScreen]: {mnemonic: string};
   [accountsScreen]: {reload?: boolean};
   [myIdentityScreen]: {address: string};
   [myAccountScreen]: {address: string};

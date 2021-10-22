@@ -6,7 +6,9 @@ import {Icon, TopNavigationAction} from '@ui-kitten/components';
 import React from 'react';
 import {AccountsScreen} from 'screen/AccountsScreen';
 import {AddAccountScreen} from 'screen/AddAccountScreen/AddAccountScreen';
-import {CreateAccountScreen} from 'screen/CreateAccountScreen';
+import {MnemonicScreen} from 'screen/CreateAccount/MnemonicScreen';
+import {VerifyMnemonicScreen} from 'screen/CreateAccount/VerifyMnemonic';
+import {CreateAccountScreen} from 'screen/CreateAccount/CreateAccountScreen';
 import {BalanceScreen} from 'screen/BalanceScreen';
 import {CandidateScreen} from 'screen/Council/CandidateScreen';
 import {CouncilScreen} from 'screen/Council/CouncilScreen';
@@ -28,7 +30,7 @@ import {PolkassemblyDiscussionDetail} from 'screen/Polkassembly/PolkassemblyDisc
 import {PolkassemblyDiscussions} from 'screen/Polkassembly/PolkassemblyDiscussions';
 import {ReferendumScreen} from 'screen/ReferendumScreen';
 import RegistrarListScreen from 'screen/RegistrarListScreen';
-import {ParathreadsScreen} from 'screen/ParathreadsScreen';
+import {ParathreadsScreen} from 'screen/Parachains/ParathreadsScreen';
 import {RegisterSubIdentitiesScreen} from 'screen/subIdentities/RegisterSubIdentitiesScreen';
 import {SubmitTipScreen} from 'screen/SubmitTipScreen';
 import TipDetailScreen from 'screen/tips/TipDetailScreen';
@@ -135,6 +137,8 @@ function AccountsNavigator() {
       <AccountsStack.Screen name={routeKeys.myIdentityScreen} component={MyIdentityScreen} />
       <AccountsStack.Screen name={routeKeys.myAccountScreen} component={MyAccountScreen} />
       <AccountsStack.Screen name={routeKeys.registerSubIdentitiesScreen} component={RegisterSubIdentitiesScreen} />
+      <AccountsStack.Screen name={routeKeys.mnemonicScreen} component={MnemonicScreen} />
+      <AccountsStack.Screen name={routeKeys.verifyMnemonicScreen} component={VerifyMnemonicScreen} />
       <AccountsStack.Screen name={routeKeys.createAccountScreen} component={CreateAccountScreen} />
       <AccountsStack.Screen
         name={routeKeys.importAccountScreen}

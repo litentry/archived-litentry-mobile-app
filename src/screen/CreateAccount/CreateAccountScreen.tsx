@@ -2,38 +2,48 @@ import React from 'react';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {Text, Input, ListItem, Icon, useTheme, Button} from '@ui-kitten/components';
-import {mnemonicGenerate} from '@polkadot/util-crypto';
 import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 import FormLabel from 'presentational/FormLabel';
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import Padder from 'presentational/Padder';
-import Clipboard from '@react-native-community/clipboard';
 import {ProgressBar} from 'presentational/ProgressBar';
 import zxcvbn from 'zxcvbn';
 import {ScrollView} from 'react-native-gesture-handler';
 import {keyring} from '@polkadot/ui-keyring';
-import {NavigationProp} from '@react-navigation/native';
+import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {AccountsStackParamList} from 'src/navigation/navigation';
-import {accountsScreen} from 'src/navigation/routeKeys';
+import {accountsScreen, createAccountScreen} from 'src/navigation/routeKeys';
 import {NetworkContext} from 'context/NetworkContext';
 
-export function CreateAccountScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
+export function CreateAccountScreen({
+  navigation,
+  route,
+}: {
+  navigation: NavigationProp<AccountsStackParamList>;
+  route: RouteProp<AccountsStackParamList, typeof createAccountScreen>;
+}) {
+  const {mnemonic} = route.params;
+
   const theme = useTheme();
   const {currentNetwork} = React.useContext(NetworkContext);
-  const [mnemonic] = React.useState(mnemonicGenerate());
+
   const [account, setAccount] = React.useState<{
     title: string;
     password: string;
     confirmPassword: string;
   }>({title: '', password: '', confirmPassword: ''});
-  const [isMnemonicCopied, setIsMnemonicCopied] = React.useState(false);
+
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
-  const {address} = keyring.createFromUri(mnemonic);
+  const [address, setAddress] = React.useState('');
+
+  React.useEffect(() => {
+    const {address} = keyring.createFromUri(mnemonic);
+    setAddress(address);
+  }, [mnemonic]);
 
   const passwordStrength = zxcvbn(account.password).score;
 
   const isDisabled = !(
-    isMnemonicCopied &&
     account.password &&
     account.password === account.confirmPassword &&
     account.title &&
@@ -59,7 +69,7 @@ export function CreateAccountScreen({navigation}: {navigation: NavigationProp<Ac
         />
         <Padder scale={1} />
         <Input
-          label={() => <FormLabel text="Generated mnemonic seed" />}
+          label={() => <FormLabel text="Mnemonic seed" />}
           style={styles.input}
           value={mnemonic}
           disabled
@@ -70,19 +80,6 @@ export function CreateAccountScreen({navigation}: {navigation: NavigationProp<Ac
                 {`Please write down the mnemonic seed and keep it in a safe place. The mnemonic can be used to restore your account. keep it carefully to not lose your assets.`}
               </Text>
             </View>
-          )}
-          accessoryRight={() => (
-            <TouchableOpacity
-              onPress={() => {
-                Clipboard.setString(mnemonic);
-                setIsMnemonicCopied(true);
-              }}>
-              <Icon
-                name={`${isMnemonicCopied ? 'checkmark' : 'copy'}-outline`}
-                fill={theme['color-basic-600']}
-                style={styles.icon}
-              />
-            </TouchableOpacity>
           )}
         />
         <Padder scale={2} />

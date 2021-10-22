@@ -4,16 +4,16 @@ import globalStyles, {standardPadding} from 'src/styles';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {LeaseInfo, useParathreads} from 'src/api/hooks/useParaThreads';
 import {useParachainsLeasePeriod} from 'src/api/hooks/useParachainsLeasePeriod';
-import {Card, Text, Divider} from '@ui-kitten/components';
+import {Text, Divider, ListItem} from '@ui-kitten/components';
 import type {ParaId} from '@polkadot/types/interfaces';
 import {formatNumber} from '@polkadot/util';
 import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
 import {useParathreadInfo} from 'src/api/hooks/useParathreadInfo';
 import Identicon from '@polkadot/reactnative-identicon';
-import Padder from 'presentational/Padder';
-import {Account} from 'layout/Account';
 import {EmptyView} from 'presentational/EmptyView';
 import LoadingView from 'presentational/LoadingView';
+import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
+import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 
 type ParathreadData = {
   name?: string;
@@ -61,51 +61,28 @@ type ParathreadItemProps = {
 function ParathreadItem({id}: ParathreadItemProps) {
   const {data: parathreadInfo} = useParathreadInfo(id);
   const parathreadData = useParathreadData(id);
+  const {data: manager} = useAccountIdentityInfo(parathreadInfo?.manager?.toString());
 
   return (
-    <Card style={styles.card} onPress={() => toParathreadHomepage(parathreadData.homepage)}>
-      <View style={[styles.row, {justifyContent: 'space-between'}]}>
-        <View style={styles.row}>
-          {parathreadInfo?.manager && (
-            <View style={styles.chainImage}>
-              <Identicon value={parathreadInfo.manager} size={30} />
-            </View>
-          )}
+    <ListItem
+      onPress={() => toParathreadHomepage(parathreadData.homepage)}
+      accessoryLeft={() => (
+        <View style={styles.chainImage}>
+          {parathreadInfo?.manager && <Identicon value={parathreadInfo.manager.toString()} size={30} />}
+        </View>
+      )}
+      title={() => <View style={styles.manager}>{manager && <AccountInfoInlineTeaser identity={manager} />}</View>}
+      description={() => (
+        <>
           {parathreadData.name && (
-            <Text category="s1" numberOfLines={1} status="info">
+            <Text category="c1" appearance="hint">
               {parathreadData.name}
             </Text>
           )}
-        </View>
-        <Text category={'c1'} numberOfLines={1} ellipsizeMode="middle" appearance="hint">
-          {formatNumber(id)}
-        </Text>
-      </View>
-
-      {parathreadInfo?.manager && (
-        <View style={[styles.row, styles.marginTop]}>
-          <Text category="c1" appearance="hint">
-            manager:{' '}
-          </Text>
-          <Account id={parathreadInfo.manager.toString()}>
-            {(identity) => (
-              <View style={styles.accountsRow}>
-                {identity?.accountId && <Identicon value={identity.accountId} size={20} />}
-                <Padder scale={0.3} />
-                {identity?.display && (
-                  <View style={styles.row}>
-                    <Text numberOfLines={1} category={'c1'}>
-                      {identity.display}
-                    </Text>
-                  </View>
-                )}
-              </View>
-            )}
-          </Account>
-        </View>
+        </>
       )}
-      {/* @TODO: Add leases information */}
-    </Card>
+      accessoryRight={() => <Text>{formatNumber(id)}</Text>}
+    />
   );
 }
 
@@ -125,22 +102,10 @@ const styles = StyleSheet.create({
     paddingVertical: standardPadding * 2,
     paddingHorizontal: standardPadding * 2,
   },
-  card: {
-    marginBottom: standardPadding,
-  },
-  marginTop: {
-    marginTop: standardPadding,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   chainImage: {
-    marginRight: 5,
+    marginRight: standardPadding,
   },
-  accountsRow: {
-    flex: 1,
-    flexDirection: 'row',
+  manager: {
     marginRight: 20,
   },
 });
