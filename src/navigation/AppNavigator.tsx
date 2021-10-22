@@ -6,7 +6,9 @@ import {Icon, TopNavigationAction} from '@ui-kitten/components';
 import React from 'react';
 import {AccountsScreen} from 'screen/AccountsScreen';
 import {AddAccountScreen} from 'screen/AddAccountScreen/AddAccountScreen';
-import {CreateAccountScreen} from 'screen/CreateAccountScreen';
+import {MnemonicScreen} from 'screen/CreateAccount/MnemonicScreen';
+import {VerifyMnemonicScreen} from 'screen/CreateAccount/VerifyMnemonic';
+import {CreateAccountScreen} from 'screen/CreateAccount/CreateAccountScreen';
 import {BalanceScreen} from 'screen/BalanceScreen';
 import {CandidateScreen} from 'screen/Council/CandidateScreen';
 import {CouncilScreen} from 'screen/Council/CouncilScreen';
@@ -135,6 +137,8 @@ function AccountsNavigator() {
       <AccountsStack.Screen name={routeKeys.myIdentityScreen} component={MyIdentityScreen} />
       <AccountsStack.Screen name={routeKeys.myAccountScreen} component={MyAccountScreen} />
       <AccountsStack.Screen name={routeKeys.registerSubIdentitiesScreen} component={RegisterSubIdentitiesScreen} />
+      <AccountsStack.Screen name={routeKeys.mnemonicScreen} component={MnemonicScreen} />
+      <AccountsStack.Screen name={routeKeys.verifyMnemonicScreen} component={VerifyMnemonicScreen} />
       <AccountsStack.Screen name={routeKeys.createAccountScreen} component={CreateAccountScreen} />
       <AccountsStack.Screen
         name={routeKeys.importAccountScreen}
