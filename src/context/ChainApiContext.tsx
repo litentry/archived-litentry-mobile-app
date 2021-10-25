@@ -2,6 +2,8 @@ import {ApiPromise, WsProvider} from '@polkadot/api';
 import React, {createContext, useContext, useEffect, useReducer} from 'react';
 import {createLogger} from 'src/utils';
 import {NetworkContext} from './NetworkContext';
+import {keyring} from '@polkadot/ui-keyring';
+import {keyringStore} from 'src/service/KeyringStore';
 
 const initialState: ChainApiContext = {
   status: 'unknown',
@@ -9,6 +11,8 @@ const initialState: ChainApiContext = {
   api: undefined,
   wsConnectionIndex: 0,
 };
+
+keyring.loadAll({store: keyringStore, type: 'sr25519'});
 
 export const ChainApiContext = createContext<ChainApiContext>(initialState);
 
@@ -41,6 +45,7 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
 
     function handleReady() {
       logger.debug('ChainApiContext: Api ready at', wsAddress);
+      keyring.setSS58Format(currentNetwork.ss58Format);
       dispatch({type: 'ON_READY', payload: apiPromise});
     }
 
@@ -84,7 +89,7 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
       apiPromise.off('error', handleError);
       clearInterval(retryInterval);
     };
-  }, [currentNetwork.ws, state.wsConnectionIndex]);
+  }, [currentNetwork, state.wsConnectionIndex]);
 
   return <ChainApiContext.Provider value={state}>{children}</ChainApiContext.Provider>;
 }

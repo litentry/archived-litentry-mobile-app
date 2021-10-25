@@ -11,8 +11,10 @@ import {FlatList, Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useAccountsIdentityInfo} from 'src/api/hooks/useAccountsIdentityInfo';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 import {CompleteNavigatorParamList} from 'src/navigation/navigation';
-import {addAccountScreen, myAccountScreen} from 'src/navigation/routeKeys';
+import {addAccountScreen, importAccountScreen, myAccountScreen, mnemonicScreen} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
+import {keyring} from '@polkadot/ui-keyring';
+import {NetworkContext} from 'context/NetworkContext';
 
 type CombinedData = {
   identity: IdentityInfo;
@@ -20,7 +22,8 @@ type CombinedData = {
 };
 
 export function AccountsScreen({navigation}: {navigation: NavigationProp<CompleteNavigatorParamList>}) {
-  const {accounts, toggleFavorite} = useAccounts();
+  const {accounts} = useAccounts();
+  const {currentNetwork} = React.useContext(NetworkContext);
   const {data, isLoading} = useAccountsIdentityInfo(accounts.map(({address}) => address));
   const combinedData = data?.reduce<CombinedData[]>((acc, current) => {
     const account = accounts.find((a) => a.address === String(current.accountId));
@@ -33,6 +36,11 @@ export function AccountsScreen({navigation}: {navigation: NavigationProp<Complet
   const [sortBy, setSortBy] = React.useState<'name' | 'favorites'>('name');
   const sortByFunction = sortBy === 'name' ? sortByDisplayName : sortByIsFavorite;
   const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
+
+  const onToggleFavorite = (address: string) => {
+    const pair = keyring.getPair(address);
+    keyring.saveAccountMeta(pair, {isFavorite: !pair.meta.isFavorite, network: currentNetwork.key});
+  };
 
   return (
     <SafeView edges={noTopEdges}>
@@ -47,9 +55,10 @@ export function AccountsScreen({navigation}: {navigation: NavigationProp<Complet
           keyExtractor={(item) => item.account.address}
           renderItem={({item}) => (
             <AccountItem
+              isExternal={item.account.isExternal}
               identity={item.identity}
               isFavorite={item.account.isFavorite}
-              toggleFavorite={() => toggleFavorite(item.account.address)}
+              toggleFavorite={() => onToggleFavorite(item.account.address)}
               onPress={() => {
                 navigation.navigate(myAccountScreen, {address: item.account.address});
               }}
@@ -113,6 +122,20 @@ export function AccountsScreen({navigation}: {navigation: NavigationProp<Complet
                 onPress={() => navigation.navigate(addAccountScreen)}>
                 Add Account
               </Button>
+              <Padder scale={1} />
+              <Button
+                status="basic"
+                accessoryLeft={(p) => <Icon {...p} name="plus-circle-outline" />}
+                onPress={() => navigation.navigate(mnemonicScreen)}>
+                Create Account
+              </Button>
+              <Padder scale={1} />
+              <Button
+                status="basic"
+                onPress={() => navigation.navigate(importAccountScreen)}
+                accessoryLeft={(p) => <Icon {...p} name="download-outline" />}>
+                Import account
+              </Button>
             </View>
           )}
         />
@@ -156,6 +179,7 @@ function sortByIsFavorite(a: CombinedData, b: CombinedData) {
 }
 
 function AccountItem({
+  isExternal,
   identity,
   isFavorite,
   toggleFavorite,
@@ -163,6 +187,7 @@ function AccountItem({
 }: {
   identity: IdentityInfo;
   isFavorite: boolean;
+  isExternal: boolean;
   toggleFavorite: () => void;
   onPress: () => void;
 }) {
@@ -176,6 +201,7 @@ function AccountItem({
           <Identicon value={String(identity.accountId)} size={25} />
         </View>
       )}
+      description={`${isExternal ? 'External' : ''}`}
       title={(p) => (
         <View {...p}>
           <AccountInfoInlineTeaser identity={identity} />

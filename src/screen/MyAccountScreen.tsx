@@ -1,7 +1,7 @@
+import {keyring} from '@polkadot/ui-keyring';
 import {BN_ZERO} from '@polkadot/util';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Text, useTheme} from '@ui-kitten/components';
-import {useAccounts} from 'context/AccountsContext';
 import Icon from 'presentational/Icon';
 import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
@@ -12,7 +12,13 @@ import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useAccountInfo} from 'src/api/hooks/useAccountInfo';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {AccountsStackParamList, CompleteNavigatorParamList} from 'src/navigation/navigation';
-import {accountsScreen, balanceScreen, identityGuideScreen, myIdentityScreen} from 'src/navigation/routeKeys';
+import {
+  accountsScreen,
+  balanceScreen,
+  exportAccountWithJsonFileScreen,
+  identityGuideScreen,
+  myIdentityScreen,
+} from 'src/navigation/routeKeys';
 import {standardPadding} from 'src/styles';
 
 export function MyAccountScreen({
@@ -24,11 +30,11 @@ export function MyAccountScreen({
   navigation: NavigationProp<CompleteNavigatorParamList>;
   route: RouteProp<AccountsStackParamList, typeof myIdentityScreen>;
 }) {
-  const {removeAccount} = useAccounts();
   const {data} = useAccountIdentityInfo(address);
   const formatBalance = useFormatBalance();
   const {data: accountInfo} = useAccountInfo(address);
   const theme = useTheme();
+  const pair = keyring.getPair(address);
 
   return (
     <SafeView edges={noTopEdges}>
@@ -84,7 +90,7 @@ export function MyAccountScreen({
               {
                 text: 'Delete',
                 onPress: () => {
-                  removeAccount(address);
+                  keyring.forgetAccount(address);
                   navigation.navigate(accountsScreen);
                 },
                 style: 'destructive',
@@ -97,6 +103,17 @@ export function MyAccountScreen({
           <Padder scale={2} />
           <Text category="h6">Remove Account</Text>
         </TouchableOpacity>
+        {!pair.meta.isExternal ? (
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate(exportAccountWithJsonFileScreen, {address})}>
+            <View style={[styles.iconContainer, {backgroundColor: theme['background-basic-color-2']}]}>
+              <Icon style={styles.icon} fill={theme['text-basic-color']} name="close-circle" />
+            </View>
+            <Padder scale={2} />
+            <Text category="h6">Export Account</Text>
+          </TouchableOpacity>
+        ) : null}
       </ScrollView>
     </SafeView>
   );

@@ -36,9 +36,14 @@ import {
   parachainsOverviewScreen,
   parachainDetailScreen,
   parachainsNavigator,
-  crowdloansNavigator,
   crowdloanScreen,
   crowdloanFundDetailScreen,
+  mnemonicScreen,
+  verifyMnemonicScreen,
+  createAccountScreen,
+  importAccountScreen,
+  importAccountWithJsonFileScreen,
+  exportAccountWithJsonFileScreen,
 } from 'src/navigation/routeKeys';
 
 type DashboardStackParamList = {
@@ -98,10 +103,16 @@ type AppStackParamList = {
 };
 
 type AccountsStackParamList = {
-  [accountsScreen]: undefined;
+  [mnemonicScreen]: undefined;
+  [verifyMnemonicScreen]: {mnemonic: string};
+  [createAccountScreen]: {mnemonic: string};
+  [accountsScreen]: {reload?: boolean};
   [myIdentityScreen]: {address: string};
   [myAccountScreen]: {address: string};
   [registerSubIdentitiesScreen]: {address: string};
+  [importAccountScreen]: undefined;
+  [importAccountWithJsonFileScreen]: undefined;
+  [exportAccountWithJsonFileScreen]: {address: string};
 };
 
 type CompleteNavigatorParamList = AppStackParamList &

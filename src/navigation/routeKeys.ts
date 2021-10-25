@@ -11,6 +11,9 @@ export const parachainsNavigator = 'ParachainsNavigator' as const;
 
 export const deeplinkNavigatorScreen = 'DeeplinkNavigatorScreen' as const;
 export const addAccountScreen = 'AddAccountScreen' as const;
+export const mnemonicScreen = 'Mnemonic' as const;
+export const verifyMnemonicScreen = 'Verify Mnemonic' as const;
+export const createAccountScreen = 'Create Account' as const;
 export const balanceScreen = 'BalanceScreen' as const;
 export const identityGuideScreen = 'IdentityGuideScreen' as const;
 
@@ -23,6 +26,9 @@ export const motionDetailScreen = 'Motion' as const;
 export const notificationSettingsScreen = 'Notification' as const;
 export const accountsScreen = 'My Accounts' as const;
 export const myAccountScreen = 'My Account' as const;
+export const importAccountScreen = 'Import account' as const;
+export const importAccountWithJsonFileScreen = 'Import json' as const;
+export const exportAccountWithJsonFileScreen = 'Export json' as const;
 export const bountiesScreen = 'Bounties' as const;
 export const parachainsOverviewScreen = 'parachainsOverview' as const;
 export const parachainDetailScreen = 'parachainDetail' as const;

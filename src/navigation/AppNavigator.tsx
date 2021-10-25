@@ -6,6 +6,9 @@ import {Icon, TopNavigationAction} from '@ui-kitten/components';
 import React from 'react';
 import {AccountsScreen} from 'screen/AccountsScreen';
 import {AddAccountScreen} from 'screen/AddAccountScreen/AddAccountScreen';
+import {MnemonicScreen} from 'screen/CreateAccount/MnemonicScreen';
+import {VerifyMnemonicScreen} from 'screen/CreateAccount/VerifyMnemonic';
+import {CreateAccountScreen} from 'screen/CreateAccount/CreateAccountScreen';
 import {BalanceScreen} from 'screen/BalanceScreen';
 import {CandidateScreen} from 'screen/Council/CandidateScreen';
 import {CouncilScreen} from 'screen/Council/CouncilScreen';
@@ -27,7 +30,7 @@ import {PolkassemblyDiscussionDetail} from 'screen/Polkassembly/PolkassemblyDisc
 import {PolkassemblyDiscussions} from 'screen/Polkassembly/PolkassemblyDiscussions';
 import {ReferendumScreen} from 'screen/ReferendumScreen';
 import RegistrarListScreen from 'screen/RegistrarListScreen';
-import {ParathreadsScreen} from 'screen/ParathreadsScreen';
+import {ParathreadsScreen} from 'screen/Parachains/ParathreadsScreen';
 import {RegisterSubIdentitiesScreen} from 'screen/subIdentities/RegisterSubIdentitiesScreen';
 import {SubmitTipScreen} from 'screen/SubmitTipScreen';
 import TipDetailScreen from 'screen/tips/TipDetailScreen';
@@ -52,6 +55,9 @@ import {darkTheme, lightTheme} from 'src/navigation/theme';
 import globalStyles from 'src/styles';
 import {ParachainDetailScreen} from 'screen/Parachains/ParachainDetailScreen';
 import {CrowdLoanFundDetailScreen} from 'screen/Parachains/CrowdLoanFundDetailScreen';
+import {ImportAccountScreen, ImportScreenHeaderRight} from 'screen/ImportAccountScreen';
+import {ImportAccountWithJsonFileScreen} from 'screen/ImportAccountWithJsonFileScreen';
+import {ExportAccountWithJsonFileScreen} from 'screen/ExportAccountWithJsonFileScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -131,6 +137,22 @@ function AccountsNavigator() {
       <AccountsStack.Screen name={routeKeys.myIdentityScreen} component={MyIdentityScreen} />
       <AccountsStack.Screen name={routeKeys.myAccountScreen} component={MyAccountScreen} />
       <AccountsStack.Screen name={routeKeys.registerSubIdentitiesScreen} component={RegisterSubIdentitiesScreen} />
+      <AccountsStack.Screen name={routeKeys.mnemonicScreen} component={MnemonicScreen} />
+      <AccountsStack.Screen name={routeKeys.verifyMnemonicScreen} component={VerifyMnemonicScreen} />
+      <AccountsStack.Screen name={routeKeys.createAccountScreen} component={CreateAccountScreen} />
+      <AccountsStack.Screen
+        name={routeKeys.importAccountScreen}
+        component={ImportAccountScreen}
+        options={{headerRight: ImportScreenHeaderRight}}
+      />
+      <AccountsStack.Screen
+        name={routeKeys.importAccountWithJsonFileScreen}
+        component={ImportAccountWithJsonFileScreen}
+      />
+      <AccountsStack.Screen
+        name={routeKeys.exportAccountWithJsonFileScreen}
+        component={ExportAccountWithJsonFileScreen}
+      />
     </AccountsStack.Navigator>
   );
 }
