@@ -44,6 +44,10 @@ import {
   importAccountScreen,
   importAccountWithJsonFileScreen,
   exportAccountWithJsonFileScreen,
+  apiLoadingScreen,
+  networkSelectionScreen,
+  appStack,
+  apiLoadingStack,
 } from 'src/navigation/routeKeys';
 
 type DashboardStackParamList = {
@@ -113,6 +117,16 @@ type AccountsStackParamList = {
   [importAccountScreen]: undefined;
   [importAccountWithJsonFileScreen]: undefined;
   [exportAccountWithJsonFileScreen]: {address: string};
+};
+
+type ApiLoadingStackParamList = {
+  [apiLoadingScreen]: undefined;
+  [networkSelectionScreen]: undefined;
+};
+
+type RootStackParamList = {
+  [appStack]: undefined;
+  [apiLoadingStack]: undefined;
 };
 
 type CompleteNavigatorParamList = AppStackParamList &

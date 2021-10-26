@@ -49,6 +49,8 @@ import {
   DrawerParamList,
   PolkassemblyDiscussionStackParamList,
   ParachainsStackParamList,
+  ApiLoadingStackParamList,
+  RootStackParamList,
 } from 'src/navigation/navigation';
 import * as routeKeys from 'src/navigation/routeKeys';
 import {darkTheme, lightTheme} from 'src/navigation/theme';
@@ -58,6 +60,9 @@ import {CrowdLoanFundDetailScreen} from 'screen/Parachains/CrowdLoanFundDetailSc
 import {ImportAccountScreen, ImportScreenHeaderRight} from 'screen/ImportAccountScreen';
 import {ImportAccountWithJsonFileScreen} from 'screen/ImportAccountWithJsonFileScreen';
 import {ExportAccountWithJsonFileScreen} from 'screen/ExportAccountWithJsonFileScreen';
+import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
+import {NetworkSelectionScreen} from 'screen/NetworkSelectionScreen';
+import {ChainApiContext} from 'context/ChainApiContext';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -274,20 +279,59 @@ function ParachainsNavigator() {
   );
 }
 
+const ApiLoadingStack = createStackNavigator<ApiLoadingStackParamList>();
+
+function ApiLoadingNavigator() {
+  return (
+    <ApiLoadingStack.Navigator
+      screenOptions={{
+        gestureEnabled: false,
+        headerShown: false,
+        presentation: 'transparentModal',
+      }}>
+      <ApiLoadingStack.Screen name={routeKeys.apiLoadingScreen} component={ApiLoadingScreen} />
+      <ApiLoadingStack.Screen name={routeKeys.networkSelectionScreen} component={NetworkSelectionScreen} />
+    </ApiLoadingStack.Navigator>
+  );
+}
+
 const AppStack = createStackNavigator<AppStackParamList>();
 
 function AppNavigator() {
-  const {theme} = useTheme();
-
-  // Start: app start hooks
-  useTurnOnAllNotificationsOnAppStartForAndroid();
-  // End: app start hooks
-
   const {pushAuthorizationStatus} = usePushAuthorizationStatus();
+  return (
+    <AppStack.Navigator
+      screenOptions={{
+        presentation: 'transparentModal',
+        headerShown: false,
+        animationEnabled: false,
+        cardStyle: {
+          backgroundColor: 'transparent',
+          opacity: 1,
+        },
+        gestureEnabled: false,
+      }}>
+      {pushAuthorizationStatus && pushAuthorizationStatus === messaging.AuthorizationStatus.NOT_DETERMINED ? (
+        <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen} component={PermissionGrantingPrompt} />
+      ) : undefined}
+      <AppStack.Screen name={routeKeys.drawerNavigatorScreen} component={DrawerNavigator} />
+      <AppStack.Screen name={routeKeys.addAccountScreen} component={AddAccountScreen} />
+      <AppStack.Screen name={routeKeys.balanceScreen} component={BalanceScreen} />
+      <AppStack.Screen name={routeKeys.identityGuideScreen} component={IdentityGuideScreen} />
+    </AppStack.Navigator>
+  );
+}
+
+const RootStack = createStackNavigator<RootStackParamList>();
+
+function RootNavigator() {
+  const {theme} = useTheme();
+  useTurnOnAllNotificationsOnAppStartForAndroid();
+  const {api} = React.useContext(ChainApiContext);
 
   return (
     <NavigationContainer linking={routeKeys.linking} theme={theme === 'dark' ? darkTheme : lightTheme}>
-      <AppStack.Navigator
+      <RootStack.Navigator
         screenOptions={{
           presentation: 'transparentModal',
           headerShown: false,
@@ -298,16 +342,11 @@ function AppNavigator() {
           },
           gestureEnabled: false,
         }}>
-        {pushAuthorizationStatus && pushAuthorizationStatus === messaging.AuthorizationStatus.NOT_DETERMINED ? (
-          <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen} component={PermissionGrantingPrompt} />
-        ) : undefined}
-        <AppStack.Screen name={routeKeys.drawerNavigatorScreen} component={DrawerNavigator} />
-        <AppStack.Screen name={routeKeys.addAccountScreen} component={AddAccountScreen} />
-        <AppStack.Screen name={routeKeys.balanceScreen} component={BalanceScreen} />
-        <AppStack.Screen name={routeKeys.identityGuideScreen} component={IdentityGuideScreen} />
-      </AppStack.Navigator>
+        {api ? <RootStack.Screen name={routeKeys.appStack} component={AppNavigator} /> : undefined}
+        <RootStack.Screen name={routeKeys.apiLoadingStack} component={ApiLoadingNavigator} />
+      </RootStack.Navigator>
     </NavigationContainer>
   );
 }
 
-export default AppNavigator;
+export default RootNavigator;
