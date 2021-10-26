@@ -11,15 +11,13 @@ import {appStack, networkSelectionScreen} from 'src/navigation/routeKeys';
 
 export function ApiLoadingScreen({navigation}: {navigation: NavigationProp<any>}) {
   const {currentNetwork} = useContext(NetworkContext);
-  const {api} = useContext(ChainApiContext);
+  const {status} = useContext(ChainApiContext);
 
-  // navigate to app in case of successfully connecting
-  const prevApi = React.useRef(!!api);
   React.useEffect(() => {
-    if (api && !prevApi.current) {
+    if (status === 'ready') {
       navigation.navigate(appStack);
     }
-  }, [navigation, api]);
+  }, [navigation, status]);
 
   return (
     <Layout style={styles.container}>

@@ -327,7 +327,7 @@ const RootStack = createStackNavigator<RootStackParamList>();
 function RootNavigator() {
   const {theme} = useTheme();
   useTurnOnAllNotificationsOnAppStartForAndroid();
-  const {api} = React.useContext(ChainApiContext);
+  const {status} = React.useContext(ChainApiContext);
 
   return (
     <NavigationContainer linking={routeKeys.linking} theme={theme === 'dark' ? darkTheme : lightTheme}>
@@ -342,7 +342,7 @@ function RootNavigator() {
           },
           gestureEnabled: false,
         }}>
-        {api ? <RootStack.Screen name={routeKeys.appStack} component={AppNavigator} /> : undefined}
+        {status === 'ready' ? <RootStack.Screen name={routeKeys.appStack} component={AppNavigator} /> : undefined}
         <RootStack.Screen name={routeKeys.apiLoadingStack} component={ApiLoadingNavigator} />
       </RootStack.Navigator>
     </NavigationContainer>

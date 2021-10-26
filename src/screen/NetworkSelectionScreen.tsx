@@ -23,10 +23,12 @@ export function NetworkSelectionScreen({navigation}: {navigation: NavigationProp
     modalRef.current?.open();
   }, []);
 
-  const {api, status} = useContext(ChainApiContext);
+  const {status} = useContext(ChainApiContext);
+  const isApiReady = status === 'ready';
+
   function onClose() {
     navigation.navigate(apiLoadingScreen);
-    if (api) {
+    if (isApiReady) {
       navigation.navigate(appStack);
     }
   }
@@ -52,7 +54,7 @@ export function NetworkSelectionScreen({navigation}: {navigation: NavigationProp
           }}
         />
         <Divider style={globalStyles.divider} />
-        <Button appearance="ghost" onPress={onClose} disabled={status !== 'ready'}>
+        <Button appearance="ghost" onPress={onClose} disabled={!isApiReady}>
           Close
         </Button>
       </View>
