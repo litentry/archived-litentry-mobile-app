@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import {ActivityIndicator, View, TouchableOpacity, StyleSheet} from 'react-native';
 import {Icon, Layout, Text} from '@ui-kitten/components';
-import globalStyles, {monofontFamily, colorGreen} from 'src/styles';
+import globalStyles, {monofontFamily, colorGreen, standardPadding} from 'src/styles';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import NetworkItem from 'presentational/NetworkItem';
 import {NetworkContext} from 'context/NetworkContext';
@@ -54,5 +54,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: monofontFamily,
+    marginLeft: standardPadding,
   },
 });

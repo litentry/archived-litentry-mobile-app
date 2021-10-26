@@ -23,7 +23,7 @@ export function NetworkSelectionScreen({navigation}: {navigation: NavigationProp
     modalRef.current?.open();
   }, []);
 
-  const {api} = useContext(ChainApiContext);
+  const {api, status} = useContext(ChainApiContext);
   function onClose() {
     navigation.navigate(apiLoadingScreen);
     if (api) {
@@ -39,8 +39,9 @@ export function NetworkSelectionScreen({navigation}: {navigation: NavigationProp
       threshold={250}
       handlePosition="outside"
       adjustToContentHeight
-      closeOnOverlayTap
-      panGestureEnabled
+      closeOnOverlayTap={false}
+      panGestureEnabled={false}
+      tapGestureEnabled={false}
       onClose={onClose}>
       <View style={styles.networkModal}>
         <NetworkSelectionList
@@ -51,7 +52,7 @@ export function NetworkSelectionScreen({navigation}: {navigation: NavigationProp
           }}
         />
         <Divider style={globalStyles.divider} />
-        <Button appearance="ghost" onPress={onClose}>
+        <Button appearance="ghost" onPress={onClose} disabled={status !== 'ready'}>
           Close
         </Button>
       </View>
