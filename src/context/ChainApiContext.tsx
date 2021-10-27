@@ -4,6 +4,8 @@ import {createLogger} from 'src/utils';
 import {NetworkContext} from './NetworkContext';
 import {keyring} from '@polkadot/ui-keyring';
 import {keyringStore} from 'src/service/KeyringStore';
+import {useNavigation} from '@react-navigation/core';
+import {connectionRetryScreen} from 'src/navigation/routeKeys';
 
 const initialState: ChainApiContext = {
   status: 'unknown',
@@ -24,9 +26,11 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const {currentNetwork} = useContext(NetworkContext);
+  const navigation = useNavigation();
 
-  const wsAddress = currentNetwork.ws[state.wsConnectionIndex];
   useEffect(() => {
+    const wsAddress = currentNetwork.ws[state.wsConnectionIndex];
+
     if (!wsAddress) {
       return;
     }
@@ -36,6 +40,7 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
     const provider = new WsProvider(wsAddress, false);
     const apiPromise = new ApiPromise({provider});
     apiPromise.connect();
+
     dispatch({type: 'CONNECT'});
 
     function handleConnect() {
@@ -56,7 +61,8 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
 
     function handleError(error: unknown) {
       logger.debug('ChainApiContext: Api error at', wsAddress, error);
-      dispatch({type: 'ON_ERROR'});
+      // dispatch({type: 'ON_ERROR'});
+      navigation.navigate(connectionRetryScreen);
     }
 
     apiPromise.on('connected', handleConnect);
@@ -89,7 +95,7 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
       apiPromise.off('error', handleError);
       // clearInterval(retryInterval);
     };
-  }, [currentNetwork.ss58Format, wsAddress]);
+  }, [currentNetwork, state.wsConnectionIndex, navigation]);
 
   return <ChainApiContext.Provider value={state}>{children}</ChainApiContext.Provider>;
 }

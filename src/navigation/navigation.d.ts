@@ -46,6 +46,7 @@ import {
   exportAccountWithJsonFileScreen,
   apiLoadingScreen,
   networkSelectionScreen,
+  connectionRetryScreen,
   appStack,
   apiLoadingStack,
 } from 'src/navigation/routeKeys';
@@ -122,6 +123,7 @@ type AccountsStackParamList = {
 type ApiLoadingStackParamList = {
   [apiLoadingScreen]: undefined;
   [networkSelectionScreen]: undefined;
+  [connectionRetryScreen]: undefined;
 };
 
 type RootStackParamList = {

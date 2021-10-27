@@ -60,6 +60,7 @@ import {ExportAccountWithJsonFileScreen} from 'screen/ExportAccountWithJsonFileS
 import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
 import {NetworkSelectionScreen} from 'screen/NetworkSelectionScreen';
 import {ChainApiContext} from 'context/ChainApiContext';
+import {ConnectionRetryScreen} from 'screen/ConnectionRetryScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -288,6 +289,7 @@ function ApiLoadingNavigator() {
       }}>
       <ApiLoadingStack.Screen name={routeKeys.apiLoadingScreen} component={ApiLoadingScreen} />
       <ApiLoadingStack.Screen name={routeKeys.networkSelectionScreen} component={NetworkSelectionScreen} />
+      <ApiLoadingStack.Screen name={routeKeys.connectionRetryScreen} component={ConnectionRetryScreen} />
     </ApiLoadingStack.Navigator>
   );
 }
