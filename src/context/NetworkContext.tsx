@@ -1,4 +1,4 @@
-import React, {createContext, useMemo, useCallback} from 'react';
+import React, {createContext, useMemo} from 'react';
 import {noop} from 'lodash';
 import {NetworkContextValueType, NetworkType} from 'src/types';
 import {usePersistedState} from 'src/hook/usePersistedState';
@@ -55,20 +55,9 @@ type PropTypes = {
 export default function NetworkContextProvider({children}: PropTypes) {
   const [currentNetwork, setCurrentNetwork] = usePersistedState<NetworkType>('network', PolkadotNetwork);
 
-  const select = useCallback(
-    (network: NetworkType) => {
-      setCurrentNetwork(network);
-    },
-    [setCurrentNetwork],
-  );
-
   const value = useMemo(
-    () => ({
-      currentNetwork,
-      availableNetworks,
-      select,
-    }),
-    [currentNetwork, select],
+    () => ({currentNetwork, availableNetworks, select: setCurrentNetwork}),
+    [currentNetwork, setCurrentNetwork],
   );
 
   return <NetworkContext.Provider value={value}>{children}</NetworkContext.Provider>;

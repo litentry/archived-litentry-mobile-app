@@ -2,7 +2,6 @@ import React, {useMemo} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
 import {Card, Divider, ListItem, Text} from '@ui-kitten/components';
 import {formatNumber, BN_ONE, BN_HUNDRED, bnToBn, bnToHex} from '@polkadot/util';
-import BN from 'bn.js';
 import type {ParaId} from '@polkadot/types/interfaces';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {useUpcomingParaIds} from 'src/api/hooks/useUpcomingParaIds';
@@ -21,6 +20,7 @@ import LoadingView from 'presentational/LoadingView';
 import {monofontFamily} from 'src/styles';
 import {useNavigation} from '@react-navigation/core';
 import {parachainDetailScreen} from 'src/navigation/routeKeys';
+import {getLeasePeriodString} from 'src/api/utils/parachainLeases';
 
 export function ParachainsOverviewScreen() {
   const {data: leasePeriod, isLoading: isLeasePeriodLoading} = useParachainsLeasePeriod();
@@ -133,25 +133,8 @@ function Parachain({id, leasePeriod}: {id: ParaId; leasePeriod?: LeasePeriod}) {
   const endpoint = endpoints ? endpoints[endpoints.length - 1] : null;
 
   const period = useMemo(
-    () =>
-      leasePeriod?.currentPeriod &&
-      leases &&
-      leases
-        .reduce((all: [BN, BN][], _period): [BN, BN][] => {
-          const bnp = leasePeriod.currentPeriod.addn(_period);
-
-          if (!all.length || all[all.length - 1]?.[1].add(BN_ONE).lt(bnp)) {
-            all.push([bnp, bnp]);
-          } else {
-            const bn = all[all.length - 1];
-            bn ? (bn[1] = bnp) : null;
-          }
-
-          return all;
-        }, [])
-        .map(([a, b]) => (a.eq(b) ? formatNumber(a) : `${formatNumber(a)} - ${formatNumber(b)}`))
-        .join(', '),
-    [leasePeriod?.currentPeriod, leases],
+    () => leasePeriod?.currentPeriod && leases && getLeasePeriodString(leasePeriod.currentPeriod, leases),
+    [leasePeriod, leases],
   );
 
   const lastLease = leases ? leases[leases.length - 1] : null;

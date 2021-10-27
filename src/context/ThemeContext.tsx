@@ -1,4 +1,4 @@
-import React, {createContext, useCallback, useContext} from 'react';
+import React, {createContext, useCallback, useContext, useMemo} from 'react';
 import {ApplicationProvider} from '@ui-kitten/components';
 import * as eva from '@eva-design/eva';
 
@@ -28,14 +28,11 @@ export default function ThemeProvider({children}: PropTypes) {
     setTheme(theme === 'dark' ? 'light' : 'dark');
   }, [theme, setTheme]);
 
-  const value = {
-    theme,
-    toggleTheme,
-  };
+  const value = useMemo(() => ({theme, toggleTheme}), [theme, toggleTheme]);
 
   return (
     <ThemeContext.Provider value={value}>
-      <ApplicationProvider {...eva} theme={eva[theme]} customMapping={mapping as any}>
+      <ApplicationProvider {...eva} theme={eva[value.theme]} customMapping={mapping as any}>
         {children}
       </ApplicationProvider>
     </ThemeContext.Provider>
