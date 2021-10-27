@@ -80,7 +80,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
  */
 
 project.ext.react = [
-    enableHermes: true,
+    enableHermes: false,
 ]
 
 project.ext.vectoricons = [

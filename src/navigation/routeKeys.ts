@@ -53,6 +53,12 @@ export const polkassemblyDiscussionsNavigator = 'PolkassemblyDiscussionsNavigato
 export const polkassemblyDiscussions = 'PolkassemblyDiscussions' as const;
 export const polkassemblyDiscussionDetail = 'PolkassemblyDiscussionDetail' as const;
 
+export const apiLoadingScreen = 'ApiLoadingScreen' as const;
+export const networkSelectionScreen = 'NetworkSelectionScreen' as const;
+
+export const appStack = 'AppStack' as const;
+export const apiLoadingStack = 'ApiLoadingStack' as const;
+
 export const linking: LinkingOptions<CompleteNavigatorParamList> = {
   prefixes: ['litentry://'],
 

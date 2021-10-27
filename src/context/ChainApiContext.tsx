@@ -25,8 +25,8 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
 
   const {currentNetwork} = useContext(NetworkContext);
 
+  const wsAddress = currentNetwork.ws[state.wsConnectionIndex];
   useEffect(() => {
-    const wsAddress = currentNetwork.ws[state.wsConnectionIndex];
     if (!wsAddress) {
       return;
     }
@@ -64,32 +64,32 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
     apiPromise.on('disconnected', handleDisconnect);
     apiPromise.on('error', handleError);
 
-    const retryInterval = setInterval(() => {
-      if (!apiPromise.isConnected) {
-        const webSocketAddresses = currentNetwork.ws;
-        // pick the next ws api location
-        // rerun the effect by changing the wsConnectionIndex dependency
-        if (webSocketAddresses.length > 1) {
-          const nextWsConnectionIndex = (state.wsConnectionIndex + 1) % webSocketAddresses.length;
-          dispatch({type: 'SET_WS_CONNECTION_INDEX', payload: nextWsConnectionIndex});
+    // const retryInterval = setInterval(() => {
+    //   if (!apiPromise.isConnected) {
+    //     const webSocketAddresses = currentNetwork.ws;
+    //     // pick the next ws api location
+    //     // rerun the effect by changing the wsConnectionIndex dependency
+    //     if (webSocketAddresses.length > 1) {
+    //       const nextWsConnectionIndex = (state.wsConnectionIndex + 1) % webSocketAddresses.length;
+    //       dispatch({type: 'SET_WS_CONNECTION_INDEX', payload: nextWsConnectionIndex});
 
-          logger.debug(
-            `ChainApiContext: switching ws provider to (${nextWsConnectionIndex}) ${webSocketAddresses[nextWsConnectionIndex]}`,
-          );
-        } else {
-          apiPromise.connect();
-        }
-      }
-    }, 5000);
+    //       logger.debug(
+    //         `ChainApiContext: switching ws provider to (${nextWsConnectionIndex}) ${webSocketAddresses[nextWsConnectionIndex]}`,
+    //       );
+    //     } else {
+    //       apiPromise.connect();
+    //     }
+    //   }
+    // }, 5000);
 
     return () => {
       apiPromise.off('connected', handleConnect);
       apiPromise.off('ready', handleReady);
       apiPromise.off('disconnected', handleDisconnect);
       apiPromise.off('error', handleError);
-      clearInterval(retryInterval);
+      // clearInterval(retryInterval);
     };
-  }, [currentNetwork, state.wsConnectionIndex]);
+  }, [currentNetwork.ss58Format, wsAddress]);
 
   return <ChainApiContext.Provider value={state}>{children}</ChainApiContext.Provider>;
 }

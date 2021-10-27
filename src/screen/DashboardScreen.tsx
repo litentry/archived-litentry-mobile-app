@@ -14,28 +14,35 @@ import NetworkItem from 'presentational/NetworkItem';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React, {useContext, useState} from 'react';
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
-import NetworkSelect from 'src/layout/NetworkSelect';
-import {AppStackParamList, DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
-import {councilScreen, democracyScreen, tipsScreen, treasuryScreen, bountiesScreen} from 'src/navigation/routeKeys';
+import {ApiLoadingStackParamList, DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
+import {
+  councilScreen,
+  democracyScreen,
+  tipsScreen,
+  treasuryScreen,
+  bountiesScreen,
+  networkSelectionScreen,
+} from 'src/navigation/routeKeys';
 import globalStyles from 'src/styles';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
-    CompositeNavigationProp<StackNavigationProp<DashboardStackParamList>, StackNavigationProp<AppStackParamList>>,
+    CompositeNavigationProp<
+      StackNavigationProp<DashboardStackParamList>,
+      StackNavigationProp<ApiLoadingStackParamList>
+    >,
     DrawerNavigationProp<DrawerParamList>
   >;
 };
 
 function DashboardScreen({navigation}: PropTypes) {
-  const [networkSelectOpen, setNetworkSelectOpen] = useState(false);
-
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => <DashboardHeaderLeft />,
       headerRight: () => <View />,
-      headerTitle: () => <DashboardTitle setNetworkSelectOpen={setNetworkSelectOpen} />,
+      headerTitle: () => <DashboardTitle onNetworkSelect={() => navigation.navigate(networkSelectionScreen)} />,
     });
-  }, [navigation, setNetworkSelectOpen]);
+  }, [navigation]);
 
   return (
     <SafeView edges={noTopEdges}>
@@ -51,7 +58,6 @@ function DashboardScreen({navigation}: PropTypes) {
           </ScrollView>
         </View>
       </FadeInAnimatedView>
-      <NetworkSelect open={networkSelectOpen} onClose={() => setNetworkSelectOpen(false)} />
     </SafeView>
   );
 }
@@ -77,12 +83,12 @@ export function DashboardHeaderLeft() {
   return <TopNavigationAction onPress={navigation.openDrawer} icon={(p) => <Icon {...p} name={'menu-2-outline'} />} />;
 }
 
-function DashboardTitle({setNetworkSelectOpen}: {setNetworkSelectOpen: (v: boolean) => void}) {
+function DashboardTitle({onNetworkSelect}: {onNetworkSelect: () => void}) {
   const {currentNetwork} = useContext(NetworkContext);
   const {status} = useApi();
 
   return (
-    <TouchableOpacity style={styles.titleContainer} onPress={() => setNetworkSelectOpen(true)}>
+    <TouchableOpacity style={styles.titleContainer} onPress={onNetworkSelect}>
       <Text category="s1">Litentry</Text>
       {currentNetwork ? (
         <NetworkItem item={currentNetwork} isConnected={status === 'connected' || status === 'ready'} />

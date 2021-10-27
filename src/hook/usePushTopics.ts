@@ -1,5 +1,5 @@
 import {useQueryClient, useQuery, useMutation} from 'react-query';
-import * as AsyncStorage from 'src/service/AsyncStorage';
+import * as Storage from 'src/service/PersistedObjectStorage';
 import messaging from '@react-native-firebase/messaging';
 import {useCallback, useMemo} from 'react';
 
@@ -15,7 +15,7 @@ export function usePushTopics() {
   const queryClient = useQueryClient();
 
   const {data, isLoading, isError} = useQuery(SELECTED_PUSH_TOPICS_QUERY_KEY, () =>
-    AsyncStorage.getItem<string[]>(SELECTED_PUSH_TOPICS_QUERY_KEY, []),
+    Storage.getItem<string[]>(SELECTED_PUSH_TOPICS_QUERY_KEY, []),
   );
 
   const {mutateAsync: toggleTopic} = useMutation<
@@ -29,7 +29,7 @@ export function usePushTopics() {
         throw new Error('DATA NOT LOADED YET!');
       }
       const updatedData = subscribe ? [...data, id] : data.filter((t) => t !== id);
-      await AsyncStorage.setItem(SELECTED_PUSH_TOPICS_QUERY_KEY, updatedData);
+      await Storage.setItem(SELECTED_PUSH_TOPICS_QUERY_KEY, updatedData);
 
       if (subscribe) {
         messaging().subscribeToTopic(id);
