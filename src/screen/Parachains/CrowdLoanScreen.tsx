@@ -2,18 +2,22 @@ import {LinkOption} from '@polkadot/apps-config/endpoints/types';
 import type {ParaId} from '@polkadot/types/interfaces';
 import {BN, BN_ZERO} from '@polkadot/util';
 import {NavigationProp, useNavigation} from '@react-navigation/core';
-import {Button, Card, Text, useTheme} from '@ui-kitten/components';
+import {Button, Card, Input, Text, useTheme, Modal} from '@ui-kitten/components';
+import {useApi} from 'context/ChainApiContext';
 import {EmptyView} from 'presentational/EmptyView';
 import LoadingView from 'presentational/LoadingView';
 import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
+import {SelectAccount} from 'presentational/SelectAccount';
 import React from 'react';
 import {SectionList, StyleSheet, View} from 'react-native';
 import {ProgressChart} from 'react-native-chart-kit';
+import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {Campaign, useFunds} from 'src/api/hooks/useFunds';
 import {LeasePeriod, useParachainsLeasePeriod} from 'src/api/hooks/useParachainsLeasePeriod';
 import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
+import {getBalanceFromString} from 'src/api/utils/balance';
 import {ParachainsStackParamList} from 'src/navigation/navigation';
 import {crowdloanFundDetailScreen} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
@@ -23,6 +27,8 @@ export function CrowdLoanScreen() {
   const formatBalance = useFormatBalance();
   const {data, isError} = useFunds();
   const {data: leasePeriod} = useParachainsLeasePeriod();
+
+  const [openContributeId, setOpenContributeId] = React.useState<number>();
 
   if (isError) {
     return <Text>Something bad happend!</Text>;
@@ -112,11 +118,30 @@ export function CrowdLoanScreen() {
         SectionSeparatorComponent={() => <Padder scale={1} />}
         renderSectionHeader={({section}) => <Text category="h5">{section.key}</Text>}
         renderItem={({item, section: {key}}) => {
-          return <Fund item={item} active={key === 'Ongoing'} />;
+          return (
+            <Fund
+              item={item}
+              active={key === 'Ongoing'}
+              onPressContribute={() => {
+                setOpenContributeId(item.paraId.toNumber());
+              }}
+            />
+          );
         }}
         keyExtractor={(item) => item.key}
         stickySectionHeadersEnabled={false}
       />
+      {openContributeId !== undefined ? (
+        <ContributeBox
+          visible={true}
+          setVisible={(visible) => {
+            if (!visible) {
+              setOpenContributeId(undefined);
+            }
+          }}
+          parachainId={openContributeId}
+        />
+      ) : null}
     </SafeView>
   );
 }
@@ -152,7 +177,7 @@ function Chart({percent}: {percent: number}) {
   );
 }
 
-function Fund({item, active}: {item: Campaign; active: boolean}) {
+function Fund({item, active, onPressContribute}: {item: Campaign; active: boolean; onPressContribute: () => void}) {
   const formatBalance = useFormatBalance();
   const {cap, raised} = item.info;
   const endpoints = useParaEndpoints(item.paraId);
@@ -185,14 +210,7 @@ function Fund({item, active}: {item: Campaign; active: boolean}) {
         <View style={styles.listItemRightSide}>
           <Chart percent={percentage} />
           {active && (
-            <Button
-              style={styles.button}
-              appearance="filled"
-              status="basic"
-              size="tiny"
-              onPress={() => {
-                return;
-              }}>
+            <Button style={styles.button} appearance="filled" status="basic" size="tiny" onPress={onPressContribute}>
               + Contribute
             </Button>
           )}
@@ -265,3 +283,75 @@ function extractLists(value: Campaign[] | null, leasePeriod?: LeasePeriod): [Cam
 
   return [active, ended, allIds];
 }
+
+function ContributeBox({
+  visible,
+  setVisible,
+  parachainId,
+}: {
+  visible: boolean;
+  setVisible: (_visible: boolean) => void;
+  parachainId: number;
+}) {
+  const startTx = useApiTx();
+  const {api} = useApi();
+  const [account, setAccount] = React.useState<string>();
+  const [amount, setAmount] = React.useState<string>('');
+  const formatBalance = useFormatBalance();
+
+  const reset = () => {
+    setAccount(undefined);
+    setAmount('');
+    setVisible(false);
+  };
+
+  return (
+    <Modal visible={visible} backdropStyle={globalStyles.backdrop} onBackdropPress={reset}>
+      <Card disabled={true} style={contributeBoxStyles.modalCard}>
+        <Text>Vote with account</Text>
+        <Padder scale={0.5} />
+        <SelectAccount selected={account} onSelect={setAccount} />
+        <Padder scale={1.5} />
+
+        <Text>Vote Value</Text>
+        <Padder scale={0.5} />
+        <Input
+          placeholder="Place your Text"
+          keyboardType="decimal-pad"
+          value={amount}
+          onFocus={() => setAmount('')}
+          onChangeText={(nextValue) => setAmount(nextValue.replace(/[^(\d+).(\d+)]/g, ''))}
+        />
+        <Text>{api ? formatBalance(getBalanceFromString(api, amount)) : ''}</Text>
+        <Padder scale={1.5} />
+
+        <View style={contributeBoxStyles.row}>
+          <Button onPress={reset} appearance="ghost" status="basic">
+            CANCEL
+          </Button>
+          <Button
+            disabled={!account}
+            onPress={() => {
+              if (api && account) {
+                const balance = getBalanceFromString(api, amount);
+
+                startTx({
+                  address: account,
+                  txMethod: 'crowdloan.contribute',
+                  params: [parachainId, balance, null],
+                });
+                reset();
+              }
+            }}>
+            Contribute
+          </Button>
+        </View>
+      </Card>
+    </Modal>
+  );
+}
+
+const contributeBoxStyles = StyleSheet.create({
+  modalCard: {width: 300},
+  row: {flexDirection: 'row', justifyContent: 'space-between'},
+});
