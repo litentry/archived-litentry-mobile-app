@@ -300,7 +300,6 @@ function ContributeBox({
   const [amount, setAmount] = React.useState<string>('');
   const formatBalance = useFormatBalance();
   const {accounts} = useAccounts();
-  console.log('accounts222', accounts);
 
   const reset = () => {
     setAccount(undefined);
