@@ -11,7 +11,7 @@ import {appStack, networkSelectionScreen} from 'src/navigation/routeKeys';
 
 export function ApiLoadingScreen({navigation}: {navigation: NavigationProp<any>}) {
   const {currentNetwork} = useContext(NetworkContext);
-  const {status} = useContext(ChainApiContext);
+  const {status, inProgress} = useContext(ChainApiContext);
 
   React.useEffect(() => {
     if (status === 'ready') {
@@ -26,7 +26,7 @@ export function ApiLoadingScreen({navigation}: {navigation: NavigationProp<any>}
           <TouchableOpacity onPress={() => navigation.navigate(networkSelectionScreen)}>
             <Layout style={{alignItems: 'center'}}>
               <Text category="s1">Litentry</Text>
-              {currentNetwork ? <NetworkItem item={currentNetwork} isConnected={false} /> : null}
+              {currentNetwork ? <NetworkItem item={currentNetwork} isConnected={status === 'ready'} /> : null}
             </Layout>
           </TouchableOpacity>
         )}
@@ -34,16 +34,20 @@ export function ApiLoadingScreen({navigation}: {navigation: NavigationProp<any>}
       <View style={globalStyles.centeredContainer}>
         <View style={styles.textContainer}>
           <Icon style={[globalStyles.inlineIconDimension, {color: colorGreen}]} name="planet" pack="ionic" />
-          <Text style={styles.text}>Connecting to {currentNetwork?.name ?? ''}</Text>
+          <Text style={styles.text}>
+            {`${inProgress ? 'Connecting' : 'Connected'}`} to {currentNetwork?.name ?? ''}
+          </Text>
         </View>
-        <ActivityIndicator size={'large'} color={colorGreen} />
+        {inProgress ? <ActivityIndicator size={'large'} color={colorGreen} /> : null}
       </View>
     </Layout>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {flex: 1},
+  container: {
+    flex: 1,
+  },
   textContainer: {
     flexDirection: 'row',
     alignItems: 'center',

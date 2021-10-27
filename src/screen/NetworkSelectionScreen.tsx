@@ -51,6 +51,7 @@ export function NetworkSelectionScreen({navigation}: {navigation: NavigationProp
           selected={currentNetwork}
           onSelect={(item) => {
             select(item);
+            navigation.navigate(apiLoadingScreen);
           }}
         />
         <Divider style={globalStyles.divider} />
