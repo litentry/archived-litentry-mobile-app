@@ -1,15 +1,16 @@
 import React, {useContext} from 'react';
-import {ActivityIndicator, View, TouchableOpacity, StyleSheet} from 'react-native';
-import {Icon, Layout, Text} from '@ui-kitten/components';
-import globalStyles, {monofontFamily, colorGreen, standardPadding} from 'src/styles';
+import {View, TouchableOpacity, StyleSheet} from 'react-native';
+import {Button, Icon, Layout, Text} from '@ui-kitten/components';
+import globalStyles, {monofontFamily, standardPadding, colorRed} from 'src/styles';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import NetworkItem from 'presentational/NetworkItem';
 import {NetworkContext} from 'context/NetworkContext';
 import {CompositeNavigationProp} from '@react-navigation/native';
 import {ChainApiContext} from 'context/ChainApiContext';
-import {appStack, networkSelectionScreen} from 'src/navigation/routeKeys';
+import {apiLoadingScreen, networkSelectionScreen} from 'src/navigation/routeKeys';
 import {ApiLoadingStackParamList, RootStackParamList} from 'src/navigation/navigation';
 import {StackNavigationProp} from '@react-navigation/stack';
+import Padder from 'presentational/Padder';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
@@ -18,15 +19,18 @@ type PropTypes = {
   >;
 };
 
-export function ApiLoadingScreen({navigation}: PropTypes) {
-  const {currentNetwork} = useContext(NetworkContext);
-  const {status, inProgress} = useContext(ChainApiContext);
+export function ConnectionRetryScreen({navigation}: PropTypes) {
+  const {currentNetwork, select} = useContext(NetworkContext);
+  const {status} = useContext(ChainApiContext);
 
-  React.useEffect(() => {
-    if (status === 'ready') {
-      navigation.navigate(appStack);
-    }
-  }, [navigation, status]);
+  const onRetry = () => {
+    select({...currentNetwork}); // to make the useEffect hook run again in ChainApiContext
+    navigation.navigate(apiLoadingScreen);
+  };
+
+  const onChangeNetwork = () => {
+    navigation.navigate(networkSelectionScreen);
+  };
 
   return (
     <Layout style={styles.container}>
@@ -35,19 +39,27 @@ export function ApiLoadingScreen({navigation}: PropTypes) {
           <TouchableOpacity onPress={() => navigation.navigate(networkSelectionScreen)}>
             <Layout style={{alignItems: 'center'}}>
               <Text category="s1">Litentry</Text>
-              {currentNetwork ? <NetworkItem item={currentNetwork} isConnected={status === 'ready'} /> : null}
+              {currentNetwork ? <NetworkItem item={currentNetwork} isConnected={false} /> : null}
             </Layout>
           </TouchableOpacity>
         )}
       />
       <View style={globalStyles.centeredContainer}>
         <View style={styles.textContainer}>
-          <Icon style={[globalStyles.inlineIconDimension, {color: colorGreen}]} name="planet" pack="ionic" />
-          <Text style={styles.text}>
-            {`${inProgress ? 'Connecting' : 'Connected'}`} to {currentNetwork?.name ?? ''}
-          </Text>
+          <Icon
+            style={[globalStyles.inlineIconDimension, {color: colorRed}]}
+            name="cloud-offline-outline"
+            pack="ionic"
+          />
+          <Text style={styles.text}>Disconnected from {currentNetwork?.name ?? ''}</Text>
         </View>
-        {inProgress ? <ActivityIndicator size={'large'} color={colorGreen} /> : null}
+        <Button status="basic" onPress={onRetry}>
+          Retry
+        </Button>
+        <Padder scale={1} />
+        <Button status="basic" onPress={onChangeNetwork}>
+          Change Network
+        </Button>
       </View>
     </Layout>
   );
@@ -56,6 +68,9 @@ export function ApiLoadingScreen({navigation}: PropTypes) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  retryContainer: {
+    marginTop: 50,
   },
   textContainer: {
     flexDirection: 'row',

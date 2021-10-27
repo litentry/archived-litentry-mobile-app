@@ -55,6 +55,7 @@ export const polkassemblyDiscussionDetail = 'PolkassemblyDiscussionDetail' as co
 
 export const apiLoadingScreen = 'ApiLoadingScreen' as const;
 export const networkSelectionScreen = 'NetworkSelectionScreen' as const;
+export const connectionRetryScreen = 'ConnectionRetryScreen' as const;
 
 export const appStack = 'AppStack' as const;
 export const apiLoadingStack = 'ApiLoadingStack' as const;
