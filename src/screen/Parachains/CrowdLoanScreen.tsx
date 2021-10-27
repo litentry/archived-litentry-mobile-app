@@ -3,6 +3,7 @@ import type {ParaId} from '@polkadot/types/interfaces';
 import {BN, BN_ZERO} from '@polkadot/util';
 import {NavigationProp, useNavigation} from '@react-navigation/core';
 import {Button, Card, Input, Text, useTheme, Modal} from '@ui-kitten/components';
+import {useAccounts} from 'context/AccountsContext';
 import {useApi} from 'context/ChainApiContext';
 import {EmptyView} from 'presentational/EmptyView';
 import LoadingView from 'presentational/LoadingView';
@@ -298,6 +299,8 @@ function ContributeBox({
   const [account, setAccount] = React.useState<string>();
   const [amount, setAmount] = React.useState<string>('');
   const formatBalance = useFormatBalance();
+  const {accounts} = useAccounts();
+  console.log('accounts222', accounts);
 
   const reset = () => {
     setAccount(undefined);
@@ -308,9 +311,9 @@ function ContributeBox({
   return (
     <Modal visible={visible} backdropStyle={globalStyles.backdrop} onBackdropPress={reset}>
       <Card disabled={true} style={contributeBoxStyles.modalCard}>
-        <Text>Vote with account</Text>
+        <Text>Contribute with Account</Text>
         <Padder scale={0.5} />
-        <SelectAccount selected={account} onSelect={setAccount} />
+        <SelectAccount accounts={accounts} selected={account} onSelect={setAccount} />
         <Padder scale={1.5} />
 
         <Text>Vote Value</Text>
