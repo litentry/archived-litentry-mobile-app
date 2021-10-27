@@ -2,7 +2,7 @@ import {LinkOption} from '@polkadot/apps-config/endpoints/types';
 import type {ParaId} from '@polkadot/types/interfaces';
 import {BN, BN_ZERO} from '@polkadot/util';
 import {NavigationProp, useNavigation} from '@react-navigation/core';
-import {Card, Text, useTheme} from '@ui-kitten/components';
+import {Button, Card, Text, useTheme} from '@ui-kitten/components';
 import {EmptyView} from 'presentational/EmptyView';
 import LoadingView from 'presentational/LoadingView';
 import Padder from 'presentational/Padder';
@@ -111,8 +111,8 @@ export function CrowdLoanScreen() {
         ].filter(notEmpty)}
         SectionSeparatorComponent={() => <Padder scale={1} />}
         renderSectionHeader={({section}) => <Text category="h5">{section.key}</Text>}
-        renderItem={({item}) => {
-          return <Fund item={item} />;
+        renderItem={({item, section: {key}}) => {
+          return <Fund item={item} active={key === 'Ongoing'} />;
         }}
         keyExtractor={(item) => item.key}
         stickySectionHeadersEnabled={false}
@@ -152,7 +152,7 @@ function Chart({percent}: {percent: number}) {
   );
 }
 
-function Fund({item}: {item: Campaign}) {
+function Fund({item, active}: {item: Campaign; active: boolean}) {
   const formatBalance = useFormatBalance();
   const {cap, raised} = item.info;
   const endpoints = useParaEndpoints(item.paraId);
@@ -182,7 +182,21 @@ function Fund({item}: {item: Campaign}) {
           })} / ${formatBalance(cap, {isShort: true})}`}</Text>
         </View>
         <View style={styles.spacer} />
-        <Chart percent={percentage} />
+        <View style={styles.listItemRightSide}>
+          <Chart percent={percentage} />
+          {active && (
+            <Button
+              style={styles.button}
+              appearance="filled"
+              status="basic"
+              size="tiny"
+              onPress={() => {
+                return;
+              }}>
+              + Contribute
+            </Button>
+          )}
+        </View>
       </View>
     </Card>
   );
@@ -223,6 +237,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 10,
+  },
+  button: {
+    marginTop: standardPadding,
+    width: 100,
+  },
+  listItemRightSide: {
+    alignItems: 'center',
   },
 });
 
