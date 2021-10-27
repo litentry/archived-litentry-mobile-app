@@ -1,6 +1,5 @@
 import messaging from '@react-native-firebase/messaging';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Icon, TopNavigationAction} from '@ui-kitten/components';
 import React from 'react';
@@ -38,7 +37,6 @@ import TipsScreen from 'screen/tips/TipsScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
 import WebviewScreen from 'screen/WebviewScreen';
 import {ParachainsOverviewScreen} from 'screen/Parachains/OverviewScreen';
-import {useTheme} from 'src/context/ThemeContext';
 import {useFirebase} from 'src/hook/useFirebase';
 import {usePushAuthorizationStatus} from 'src/hook/usePushNotificationsPermissions';
 import {useTurnOnAllNotificationsOnAppStartForAndroid} from 'src/hook/useTurnOnAllNotificationsOnAppStartForAndroid';
@@ -53,7 +51,6 @@ import {
   RootStackParamList,
 } from 'src/navigation/navigation';
 import * as routeKeys from 'src/navigation/routeKeys';
-import {darkTheme, lightTheme} from 'src/navigation/theme';
 import globalStyles from 'src/styles';
 import {ParachainDetailScreen} from 'screen/Parachains/ParachainDetailScreen';
 import {CrowdLoanFundDetailScreen} from 'screen/Parachains/CrowdLoanFundDetailScreen';
@@ -325,27 +322,24 @@ function AppNavigator() {
 const RootStack = createStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
-  const {theme} = useTheme();
   useTurnOnAllNotificationsOnAppStartForAndroid();
   const {status} = React.useContext(ChainApiContext);
 
   return (
-    <NavigationContainer linking={routeKeys.linking} theme={theme === 'dark' ? darkTheme : lightTheme}>
-      <RootStack.Navigator
-        screenOptions={{
-          presentation: 'transparentModal',
-          headerShown: false,
-          animationEnabled: false,
-          cardStyle: {
-            backgroundColor: 'transparent',
-            opacity: 1,
-          },
-          gestureEnabled: false,
-        }}>
-        {status === 'ready' ? <RootStack.Screen name={routeKeys.appStack} component={AppNavigator} /> : undefined}
-        <RootStack.Screen name={routeKeys.apiLoadingStack} component={ApiLoadingNavigator} />
-      </RootStack.Navigator>
-    </NavigationContainer>
+    <RootStack.Navigator
+      screenOptions={{
+        presentation: 'transparentModal',
+        headerShown: false,
+        animationEnabled: false,
+        cardStyle: {
+          backgroundColor: 'transparent',
+          opacity: 1,
+        },
+        gestureEnabled: false,
+      }}>
+      {status === 'ready' ? <RootStack.Screen name={routeKeys.appStack} component={AppNavigator} /> : undefined}
+      <RootStack.Screen name={routeKeys.apiLoadingStack} component={ApiLoadingNavigator} />
+    </RootStack.Navigator>
   );
 }
 
