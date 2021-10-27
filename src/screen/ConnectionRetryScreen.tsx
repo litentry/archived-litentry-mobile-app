@@ -24,7 +24,7 @@ export function ConnectionRetryScreen({navigation}: PropTypes) {
   const {reconnect} = useContext(ChainApiContext);
 
   const onRetry = () => {
-    reconnect();
+    reconnect(currentNetwork);
     navigation.navigate(apiLoadingScreen);
   };
 

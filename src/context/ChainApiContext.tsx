@@ -1,18 +1,21 @@
 import {ApiPromise, WsProvider} from '@polkadot/api';
-import React, {createContext, useContext, useEffect, useReducer, useCallback} from 'react';
+import React, {createContext, useContext, useEffect, useReducer} from 'react';
 import {createLogger} from 'src/utils';
 import {NetworkContext} from './NetworkContext';
 import {keyring} from '@polkadot/ui-keyring';
 import {keyringStore} from 'src/service/KeyringStore';
 import {useNavigation} from '@react-navigation/core';
 import {connectionRetryScreen} from 'src/navigation/routeKeys';
+import {NetworkType} from 'src/types';
+
+type Reconnect = (_: NetworkType) => void;
 
 const initialState: ChainApiContext = {
   status: 'unknown',
   inProgress: false,
   api: undefined,
   wsConnectionIndex: 0,
-  reconnect: () => ({}),
+  reconnect: (_: NetworkType) => ({}),
 };
 
 keyring.loadAll({store: keyringStore, type: 'sr25519'});
@@ -29,9 +32,9 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
   const {currentNetwork, select} = useContext(NetworkContext);
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const wsAddress = currentNetwork.ws[state.wsConnectionIndex];
+  const wsAddress = currentNetwork.ws[state.wsConnectionIndex];
 
+  useEffect(() => {
     if (!wsAddress) {
       return;
     }
@@ -56,8 +59,8 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
         type: 'ON_READY',
         payload: {
           apiPromise,
-          reconnect: () => {
-            select({...currentNetwork});
+          reconnect: (network: NetworkType) => {
+            select({...network});
           },
         },
       });
@@ -105,7 +108,7 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
       apiPromise.off('error', handleError);
       // clearInterval(retryInterval);
     };
-  }, [currentNetwork, state.wsConnectionIndex, navigation, select]);
+  }, [currentNetwork, wsAddress, navigation, select]);
 
   return <ChainApiContext.Provider value={state}>{children}</ChainApiContext.Provider>;
 }
@@ -117,14 +120,13 @@ type ChainApiContext = {
   inProgress: boolean;
   api?: ApiPromise;
   wsConnectionIndex: number;
-  reconnect: () => void;
+  reconnect: (network: NetworkType) => void;
 };
 
 type Action =
   | {type: 'ON_CONNECT'}
   | {type: 'CONNECT'}
-  | {type: 'RECONNECT'}
-  | {type: 'ON_READY'; payload: {apiPromise: ApiPromise; reconnect: () => void}}
+  | {type: 'ON_READY'; payload: {apiPromise: ApiPromise; reconnect: Reconnect}}
   | {type: 'ON_DISCONNECT'}
   | {type: 'ON_ERROR'}
   | {type: 'SET_WS_CONNECTION_INDEX'; payload: number};
