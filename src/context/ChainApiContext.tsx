@@ -56,7 +56,8 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
 
     function handleDisconnect() {
       logger.debug('ChainApiContext: Api disconnected', wsAddress);
-      dispatch({type: 'ON_DISCONNECT'});
+      // dispatch({type: 'ON_DISCONNECT'});
+      navigation.navigate(connectionRetryScreen);
     }
 
     function handleError(error: unknown) {
