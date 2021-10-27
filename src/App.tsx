@@ -14,6 +14,7 @@ import {ErrorBoundary} from 'src/ErrorBoundary';
 import AppNavigator from 'src/navigation/AppNavigator';
 import ThemeProvider from './context/ThemeContext';
 import {IonicIconsPack} from './Ionic-icons';
+import {NavigationContainer} from 'context/NavigationContainer';
 
 // init type registry
 import 'src/typeRegistry';
@@ -25,25 +26,27 @@ export default function App() {
     <>
       <IconRegistry icons={[EvaIconsPack, IonicIconsPack]} />
       <QueryClientProvider client={queryClient}>
-        <NetworkContextProvider>
-          <ChainApiContextProvider>
-            <AccountsProvider>
-              <SafeAreaProvider>
-                <ThemeProvider>
-                  <InAppNotificationContextProvider>
-                    <ErrorBoundary>
-                      <Host>
-                        <TxContextProvider>
-                          <AppNavigator />
-                        </TxContextProvider>
-                      </Host>
-                    </ErrorBoundary>
-                  </InAppNotificationContextProvider>
-                </ThemeProvider>
-              </SafeAreaProvider>
-            </AccountsProvider>
-          </ChainApiContextProvider>
-        </NetworkContextProvider>
+        <ThemeProvider>
+          <NavigationContainer>
+            <NetworkContextProvider>
+              <ChainApiContextProvider>
+                <AccountsProvider>
+                  <SafeAreaProvider>
+                    <InAppNotificationContextProvider>
+                      <ErrorBoundary>
+                        <Host>
+                          <TxContextProvider>
+                            <AppNavigator />
+                          </TxContextProvider>
+                        </Host>
+                      </ErrorBoundary>
+                    </InAppNotificationContextProvider>
+                  </SafeAreaProvider>
+                </AccountsProvider>
+              </ChainApiContextProvider>
+            </NetworkContextProvider>
+          </NavigationContainer>
+        </ThemeProvider>
       </QueryClientProvider>
     </>
   );
