@@ -1,5 +1,5 @@
 import {ApiPromise, WsProvider} from '@polkadot/api';
-import React, {createContext, useContext, useEffect, useReducer} from 'react';
+import React, {createContext, useContext, useEffect, useReducer, useCallback} from 'react';
 import {createLogger} from 'src/utils';
 import {NetworkContext} from './NetworkContext';
 import {keyring} from '@polkadot/ui-keyring';
@@ -12,6 +12,7 @@ const initialState: ChainApiContext = {
   inProgress: false,
   api: undefined,
   wsConnectionIndex: 0,
+  reconnect: () => ({}),
 };
 
 keyring.loadAll({store: keyringStore, type: 'sr25519'});
@@ -25,7 +26,7 @@ const logger = createLogger('ChainApiContext');
 export function ChainApiContextProvider({children}: {children: React.ReactNode}) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const {currentNetwork} = useContext(NetworkContext);
+  const {currentNetwork, select} = useContext(NetworkContext);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -51,7 +52,15 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
     function handleReady() {
       logger.debug('ChainApiContext: Api ready at', wsAddress);
       keyring.setSS58Format(currentNetwork.ss58Format);
-      dispatch({type: 'ON_READY', payload: apiPromise});
+      dispatch({
+        type: 'ON_READY',
+        payload: {
+          apiPromise,
+          reconnect: () => {
+            select({...currentNetwork});
+          },
+        },
+      });
     }
 
     function handleDisconnect() {
@@ -96,7 +105,7 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
       apiPromise.off('error', handleError);
       // clearInterval(retryInterval);
     };
-  }, [currentNetwork, state.wsConnectionIndex, navigation]);
+  }, [currentNetwork, state.wsConnectionIndex, navigation, select]);
 
   return <ChainApiContext.Provider value={state}>{children}</ChainApiContext.Provider>;
 }
@@ -108,12 +117,14 @@ type ChainApiContext = {
   inProgress: boolean;
   api?: ApiPromise;
   wsConnectionIndex: number;
+  reconnect: () => void;
 };
 
 type Action =
   | {type: 'ON_CONNECT'}
   | {type: 'CONNECT'}
-  | {type: 'ON_READY'; payload: ApiPromise}
+  | {type: 'RECONNECT'}
+  | {type: 'ON_READY'; payload: {apiPromise: ApiPromise; reconnect: () => void}}
   | {type: 'ON_DISCONNECT'}
   | {type: 'ON_ERROR'}
   | {type: 'SET_WS_CONNECTION_INDEX'; payload: number};
@@ -128,7 +139,13 @@ function reducer(state: ChainApiContext = initialState, action: Action): ChainAp
     case 'ON_ERROR':
       return {...state, status: 'disconnected', inProgress: false};
     case 'ON_READY':
-      return {...state, status: 'ready', inProgress: false, api: action.payload};
+      return {
+        ...state,
+        status: 'ready',
+        inProgress: false,
+        api: action.payload.apiPromise,
+        reconnect: action.payload.reconnect,
+      };
 
     case 'SET_WS_CONNECTION_INDEX':
       return {...state, wsConnectionIndex: action.payload};

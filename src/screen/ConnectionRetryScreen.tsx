@@ -4,13 +4,13 @@ import {Button, Icon, Layout, Text} from '@ui-kitten/components';
 import globalStyles, {monofontFamily, standardPadding, colorRed} from 'src/styles';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import NetworkItem from 'presentational/NetworkItem';
-import {NetworkContext} from 'context/NetworkContext';
 import {CompositeNavigationProp} from '@react-navigation/native';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {apiLoadingScreen, networkSelectionScreen} from 'src/navigation/routeKeys';
 import {ApiLoadingStackParamList, RootStackParamList} from 'src/navigation/navigation';
 import {StackNavigationProp} from '@react-navigation/stack';
 import Padder from 'presentational/Padder';
+import {NetworkContext} from 'context/NetworkContext';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
@@ -20,11 +20,11 @@ type PropTypes = {
 };
 
 export function ConnectionRetryScreen({navigation}: PropTypes) {
-  const {currentNetwork, select} = useContext(NetworkContext);
-  const {status} = useContext(ChainApiContext);
+  const {currentNetwork} = useContext(NetworkContext);
+  const {reconnect} = useContext(ChainApiContext);
 
   const onRetry = () => {
-    select({...currentNetwork}); // to make the useEffect hook run again in ChainApiContext
+    reconnect();
     navigation.navigate(apiLoadingScreen);
   };
 
