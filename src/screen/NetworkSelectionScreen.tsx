@@ -8,7 +8,7 @@ import {NetworkContext} from 'context/NetworkContext';
 import {NetworkType} from 'src/types';
 import {NavigationProp} from '@react-navigation/native';
 import {ChainApiContext} from 'context/ChainApiContext';
-import {apiLoadingScreen, appStack} from 'src/navigation/routeKeys';
+import {apiLoadingScreen, appStack, connectionRetryScreen} from 'src/navigation/routeKeys';
 
 export type InjectedPropTypes = {
   networkSelection: {
@@ -24,12 +24,12 @@ export function NetworkSelectionScreen({navigation}: {navigation: NavigationProp
   }, []);
 
   const {status} = useContext(ChainApiContext);
-  const isApiReady = status === 'ready';
 
   function onClose() {
-    navigation.navigate(apiLoadingScreen);
-    if (isApiReady) {
+    if (status === 'ready') {
       navigation.navigate(appStack);
+    } else if (status === 'disconnected') {
+      navigation.navigate(connectionRetryScreen);
     }
   }
 
@@ -43,8 +43,7 @@ export function NetworkSelectionScreen({navigation}: {navigation: NavigationProp
       adjustToContentHeight
       closeOnOverlayTap={false}
       panGestureEnabled={false}
-      tapGestureEnabled={false}
-      onClose={onClose}>
+      tapGestureEnabled={false}>
       <View style={styles.networkModal}>
         <NetworkSelectionList
           items={availableNetworks}
@@ -55,7 +54,7 @@ export function NetworkSelectionScreen({navigation}: {navigation: NavigationProp
           }}
         />
         <Divider style={globalStyles.divider} />
-        <Button appearance="ghost" onPress={onClose} disabled={!isApiReady}>
+        <Button appearance="ghost" onPress={onClose}>
           Close
         </Button>
       </View>
