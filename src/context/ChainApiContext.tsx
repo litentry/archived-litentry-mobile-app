@@ -1,21 +1,18 @@
 import {ApiPromise, WsProvider} from '@polkadot/api';
-import React, {createContext, useContext, useEffect, useReducer} from 'react';
+import React, {createContext, useCallback, useContext, useEffect, useReducer} from 'react';
 import {createLogger} from 'src/utils';
 import {NetworkContext} from './NetworkContext';
 import {keyring} from '@polkadot/ui-keyring';
 import {keyringStore} from 'src/service/KeyringStore';
 import {useNavigation} from '@react-navigation/core';
 import {connectionRetryScreen} from 'src/navigation/routeKeys';
-import {NetworkType} from 'src/types';
-
-type Reconnect = (_: NetworkType) => void;
 
 const initialState: ChainApiContext = {
   status: 'unknown',
   inProgress: false,
   api: undefined,
   wsConnectionIndex: 0,
-  reconnect: (_: NetworkType) => ({}),
+  reconnect: () => ({}),
 };
 
 keyring.loadAll({store: keyringStore, type: 'sr25519'});
@@ -33,6 +30,10 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
   const navigation = useNavigation();
 
   const wsAddress = currentNetwork.ws[state.wsConnectionIndex];
+
+  const reconnect = useCallback(() => {
+    select({...currentNetwork});
+  }, [currentNetwork, select]);
 
   useEffect(() => {
     if (!wsAddress) {
@@ -57,12 +58,7 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
       keyring.setSS58Format(currentNetwork.ss58Format);
       dispatch({
         type: 'ON_READY',
-        payload: {
-          apiPromise,
-          reconnect: (network: NetworkType) => {
-            select({...network});
-          },
-        },
+        payload: apiPromise,
       });
     }
 
@@ -110,7 +106,7 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
     };
   }, [currentNetwork, wsAddress, navigation, select]);
 
-  return <ChainApiContext.Provider value={state}>{children}</ChainApiContext.Provider>;
+  return <ChainApiContext.Provider value={{...state, reconnect}}>{children}</ChainApiContext.Provider>;
 }
 
 type ApiChainStatusType = 'unknown' | 'connected' | 'disconnected' | 'ready';
@@ -120,13 +116,13 @@ type ChainApiContext = {
   inProgress: boolean;
   api?: ApiPromise;
   wsConnectionIndex: number;
-  reconnect: (network: NetworkType) => void;
+  reconnect: () => void;
 };
 
 type Action =
   | {type: 'ON_CONNECT'}
   | {type: 'CONNECT'}
-  | {type: 'ON_READY'; payload: {apiPromise: ApiPromise; reconnect: Reconnect}}
+  | {type: 'ON_READY'; payload: ApiPromise}
   | {type: 'ON_DISCONNECT'}
   | {type: 'ON_ERROR'}
   | {type: 'SET_WS_CONNECTION_INDEX'; payload: number};
@@ -145,8 +141,7 @@ function reducer(state: ChainApiContext = initialState, action: Action): ChainAp
         ...state,
         status: 'ready',
         inProgress: false,
-        api: action.payload.apiPromise,
-        reconnect: action.payload.reconnect,
+        api: action.payload,
       };
 
     case 'SET_WS_CONNECTION_INDEX':
