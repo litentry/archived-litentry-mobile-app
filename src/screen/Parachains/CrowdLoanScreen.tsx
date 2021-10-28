@@ -23,13 +23,14 @@ import {ParachainsStackParamList} from 'src/navigation/navigation';
 import {crowdloanFundDetailScreen} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
 import {notEmpty} from 'src/utils';
+import type {BalanceOf} from '@polkadot/types/interfaces';
 
 export function CrowdLoanScreen() {
   const formatBalance = useFormatBalance();
   const {data, isError} = useFunds();
   const {data: leasePeriod} = useParachainsLeasePeriod();
 
-  const [openContributeId, setOpenContributeId] = React.useState<number>();
+  const [openContributeId, setOpenContributeId] = React.useState<ParaId>();
 
   if (isError) {
     return <Text>Something bad happend!</Text>;
@@ -124,7 +125,7 @@ export function CrowdLoanScreen() {
               item={item}
               active={key === 'Ongoing'}
               onPressContribute={() => {
-                setOpenContributeId(item.paraId.toNumber());
+                setOpenContributeId(item.paraId);
               }}
             />
           );
@@ -292,7 +293,7 @@ function ContributeBox({
 }: {
   visible: boolean;
   setVisible: (_visible: boolean) => void;
-  parachainId: number;
+  parachainId: ParaId;
 }) {
   const startTx = useApiTx();
   const {api} = useApi();
@@ -307,15 +308,21 @@ function ContributeBox({
     setVisible(false);
   };
 
+  const minContribution = api?.consts.crowdloan?.minContribution as BalanceOf | undefined;
+  const minBalance = minContribution ? formatBalance(minContribution) : '';
+
+  const balance = api && getBalanceFromString(api, amount);
+  const disabled = !account || !balance || !minContribution || balance.isZero() || balance.lt(minContribution);
+
   return (
     <Modal visible={visible} backdropStyle={globalStyles.backdrop} onBackdropPress={reset}>
       <Card disabled={true} style={contributeBoxStyles.modalCard}>
-        <Text>Contribute with Account</Text>
+        <Text>Contribute with:</Text>
         <Padder scale={0.5} />
         <SelectAccount accounts={accounts} selected={account} onSelect={setAccount} />
         <Padder scale={1.5} />
 
-        <Text>Vote Value</Text>
+        <Text>Amount:</Text>
         <Padder scale={0.5} />
         <Input
           placeholder="Place your Text"
@@ -326,17 +333,17 @@ function ContributeBox({
         />
         <Text>{api ? formatBalance(getBalanceFromString(api, amount)) : ''}</Text>
         <Padder scale={1.5} />
+        <Text>minimum allowed: </Text>
+        <Text>{minBalance}</Text>
 
         <View style={contributeBoxStyles.row}>
           <Button onPress={reset} appearance="ghost" status="basic">
             CANCEL
           </Button>
           <Button
-            disabled={!account}
+            disabled={disabled}
             onPress={() => {
-              if (api && account) {
-                const balance = getBalanceFromString(api, amount);
-
+              if (account) {
                 startTx({
                   address: account,
                   txMethod: 'crowdloan.contribute',
