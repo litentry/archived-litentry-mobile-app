@@ -31,7 +31,6 @@ export function PromotionBanner() {
       </View>
       <View style={styles.buttonContainer}>
         <Button
-          appearance="filled"
           size="small"
           status="control"
           onPress={() => {
