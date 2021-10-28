@@ -12,7 +12,7 @@ import {TreasurySummaryTeaser} from 'layout/TreasurySummaryTeaser';
 import FadeInAnimatedView from 'presentational/FadeInAnimatedView';
 import NetworkItem from 'presentational/NetworkItem';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {ApiLoadingStackParamList, DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
 import {
@@ -24,6 +24,7 @@ import {
   networkSelectionScreen,
 } from 'src/navigation/routeKeys';
 import globalStyles from 'src/styles';
+import {PromotionBanner} from 'src/presentational/CrowdloanPromotionBanner';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
@@ -47,6 +48,7 @@ function DashboardScreen({navigation}: PropTypes) {
   return (
     <SafeView edges={noTopEdges}>
       <Divider style={styles.divider} />
+      <PromotionBanner />
       <FadeInAnimatedView>
         <View style={[globalStyles.flex, styles.main]}>
           <ScrollView style={styles.scrollView}>
