@@ -79,7 +79,7 @@ export function VerifyMnemonicScreen({
             Reset
           </Button>
           <Button
-            disabled={!isMnemonicVerified}
+            // disabled={!isMnemonicVerified}
             status="basic"
             accessoryLeft={(p) => <Icon {...p} name="arrow-circle-right-outline" />}
             onPress={() => navigation.navigate(createAccountScreen, {mnemonic})}>

@@ -9,11 +9,13 @@ import Padder from 'presentational/Padder';
 import {ProgressBar} from 'presentational/ProgressBar';
 import zxcvbn from 'zxcvbn';
 import {ScrollView} from 'react-native-gesture-handler';
-import {keyring} from '@polkadot/ui-keyring';
+// import {keyring} from '@polkadot/ui-keyring';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {AccountsStackParamList} from 'src/navigation/navigation';
 import {accountsScreen, createAccountScreen} from 'src/navigation/routeKeys';
 import {NetworkContext} from 'context/NetworkContext';
+import {Keyring} from '@polkadot/keyring';
+const keyring = new Keyring({type: 'sr25519', ss58Format: 0});
 
 export function CreateAccountScreen({
   navigation,
@@ -51,7 +53,9 @@ export function CreateAccountScreen({
   );
 
   const onSubmit = () => {
-    keyring.addUri(mnemonic, account.password, {name: account.title, network: currentNetwork.key});
+    // keyring.addUri(mnemonic, account.password, {name: account.title, network: currentNetwork.key});
+    const pair = keyring.addFromUri(mnemonic, {name: account.title, network: currentNetwork.key});
+    console.log(pair);
     navigation.navigate(accountsScreen, {reload: true});
   };
 
