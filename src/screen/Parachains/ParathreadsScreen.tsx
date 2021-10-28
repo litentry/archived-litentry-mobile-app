@@ -3,10 +3,10 @@ import {View, FlatList, StyleSheet, Linking} from 'react-native';
 import globalStyles, {standardPadding} from 'src/styles';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {LeaseInfo, useParathreads} from 'src/api/hooks/useParaThreads';
-import {useParachainsLeasePeriod} from 'src/api/hooks/useParachainsLeasePeriod';
+import {LeasePeriod, useParachainsLeasePeriod} from 'src/api/hooks/useParachainsLeasePeriod';
 import {Text, Divider, ListItem} from '@ui-kitten/components';
 import type {ParaId} from '@polkadot/types/interfaces';
-import {formatNumber} from '@polkadot/util';
+import {formatNumber, bnToBn, BN_ONE} from '@polkadot/util';
 import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
 import {useParathreadInfo} from 'src/api/hooks/useParathreadInfo';
 import Identicon from '@polkadot/reactnative-identicon';
@@ -14,6 +14,9 @@ import {EmptyView} from 'presentational/EmptyView';
 import LoadingView from 'presentational/LoadingView';
 import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
+import {notEmpty} from 'src/utils';
+import {BlockTime} from 'layout/BlockTime';
+import {getLeasePeriodString} from 'src/api/utils/parachainLeases';
 
 type ParathreadData = {
   name?: string;
@@ -42,7 +45,7 @@ export function ParathreadsScreen() {
           contentContainerStyle={styles.content}
           keyExtractor={(item) => item.id.toString()}
           data={parathreads}
-          renderItem={({item}) => <ParathreadItem id={item.id} leases={item.leases} />}
+          renderItem={({item}) => <ParathreadItem id={item.id} leases={item.leases} leasePeriod={leasePeriod} />}
           ItemSeparatorComponent={Divider}
           ListEmptyComponent={EmptyView}
         />
@@ -56,12 +59,15 @@ export function ParathreadsScreen() {
 type ParathreadItemProps = {
   id: ParaId;
   leases: LeaseInfo[];
+  leasePeriod: LeasePeriod;
 };
 
-function ParathreadItem({id}: ParathreadItemProps) {
+function ParathreadItem({id, leases, leasePeriod}: ParathreadItemProps) {
   const {data: parathreadInfo} = useParathreadInfo(id);
   const parathreadData = useParathreadData(id);
   const {data: manager} = useAccountIdentityInfo(parathreadInfo?.manager?.toString());
+
+  const {periodString, blocks} = parseLeases({leasePeriod, leases});
 
   return (
     <ListItem
@@ -79,11 +85,30 @@ function ParathreadItem({id}: ParathreadItemProps) {
               {parathreadData.name}
             </Text>
           )}
+          {periodString ? (
+            <Text category="c1" appearance="hint">
+              {periodString}
+            </Text>
+          ) : null}
+          {blocks ? <BlockTime blockNumber={blocks} /> : null}
         </>
       )}
       accessoryRight={() => <Text>{formatNumber(id)}</Text>}
     />
   );
+}
+
+function parseLeases({leases, leasePeriod}: {leases: LeaseInfo[]; leasePeriod: LeasePeriod}) {
+  const leasesPeriods = leases?.map((lease) => lease?.period).filter(notEmpty);
+  const periodString = getLeasePeriodString(leasePeriod.currentPeriod, leasesPeriods);
+
+  const periods = leasePeriod?.currentPeriod ? leasesPeriods : undefined;
+  const firstPeriod = periods?.[0];
+
+  const blocks =
+    leasePeriod && firstPeriod && bnToBn(firstPeriod).sub(BN_ONE).imul(leasePeriod.length).iadd(leasePeriod.remainder);
+
+  return {periodString, blocks};
 }
 
 function useParathreadData(id: ParaId) {
