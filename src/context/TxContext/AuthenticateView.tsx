@@ -3,7 +3,8 @@ import {Dimensions, StyleSheet} from 'react-native';
 import {Icon, IconProps, Layout, Input, Button, Text} from '@ui-kitten/components';
 import ModalTitle from 'presentational/ModalTitle';
 import Padder from 'presentational/Padder';
-import type {KeyringPair} from 'src/types';
+import SubstrateSign from 'react-native-substrate-sign';
+import {Account, InternalAccount, useAccounts} from 'context/AccountsContext';
 
 const {height} = Dimensions.get('window');
 
@@ -17,19 +18,29 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  keyringPair: KeyringPair;
-  onAuthenticate: () => void;
+  address: string;
+  onAuthenticate: (seed: string) => void;
 };
 
-export function AuthenticateView({onAuthenticate, keyringPair}: Props) {
+function isInternal(a: Account): a is InternalAccount {
+  return a.isExternal === false;
+}
+
+export function AuthenticateView({onAuthenticate, address}: Props) {
   const [password, setPassword] = useState('');
   const [isValid, setIsValid] = useState<boolean | undefined>();
+  const {accounts} = useAccounts();
+  const encoded = accounts.filter(isInternal).find((a) => a.address === address)?.encoded;
 
   const onPressUnlock = () => {
+    if (!encoded) {
+      throw new Error('No encoded found');
+    }
     try {
-      keyringPair.unlock(password);
-      setIsValid(true);
-      onAuthenticate();
+      SubstrateSign.decryptData(encoded, password).then((seed) => {
+        setIsValid(true);
+        onAuthenticate(seed);
+      });
     } catch (e) {
       setIsValid(false);
     }

@@ -45,7 +45,7 @@ export function BalanceScreen({
       panGestureEnabled>
       {accountInfo && (
         <Layout level="1" style={globalStyles.paddedContainer}>
-          <ModalTitle title={currentAccount.name} subtitle={` (@${currentNetwork.name})`} />
+          <ModalTitle title={currentAccount.meta.name} subtitle={` (@${currentNetwork.name})`} />
           <Divider />
           <Balances balance={accountInfo} />
           <Divider style={globalStyles.divider} />

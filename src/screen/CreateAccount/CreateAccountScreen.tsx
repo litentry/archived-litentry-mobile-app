@@ -9,11 +9,12 @@ import Padder from 'presentational/Padder';
 import {ProgressBar} from 'presentational/ProgressBar';
 import zxcvbn from 'zxcvbn';
 import {ScrollView} from 'react-native-gesture-handler';
-import {keyring} from '@polkadot/ui-keyring';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {AccountsStackParamList} from 'src/navigation/navigation';
 import {accountsScreen, createAccountScreen} from 'src/navigation/routeKeys';
 import {NetworkContext} from 'context/NetworkContext';
+import {useAccounts} from 'context/AccountsContext';
+import SubstrateSign from 'react-native-substrate-sign';
 
 export function CreateAccountScreen({
   navigation,
@@ -26,6 +27,7 @@ export function CreateAccountScreen({
 
   const theme = useTheme();
   const {currentNetwork} = React.useContext(NetworkContext);
+  const {addAccount} = useAccounts();
 
   const [account, setAccount] = React.useState<{
     title: string;
@@ -37,9 +39,8 @@ export function CreateAccountScreen({
   const [address, setAddress] = React.useState('');
 
   React.useEffect(() => {
-    const {address} = keyring.createFromUri(mnemonic);
-    setAddress(address);
-  }, [mnemonic]);
+    SubstrateSign.substrateAddress(mnemonic, currentNetwork.ss58Format).then(setAddress);
+  }, [mnemonic, currentNetwork.ss58Format]);
 
   const passwordStrength = zxcvbn(account.password).score;
 
@@ -50,8 +51,22 @@ export function CreateAccountScreen({
     passwordStrength >= 3
   );
 
-  const onSubmit = () => {
-    keyring.addUri(mnemonic, account.password, {name: account.title, network: currentNetwork.key});
+  const onSubmit = async () => {
+    const address = await SubstrateSign.substrateAddress(mnemonic, currentNetwork.ss58Format);
+    const encoded = await SubstrateSign.encryptData(mnemonic, account.password);
+    const newAcc = {
+      address,
+      encoded,
+      meta: {
+        name: account.title,
+        network: currentNetwork.key,
+        isFavorite: false,
+      },
+      isExternal: false,
+    };
+
+    addAccount(newAcc);
+
     navigation.navigate(accountsScreen, {reload: true});
   };
 

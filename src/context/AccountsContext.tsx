@@ -6,65 +6,63 @@ import {SupportedNetworkType} from 'src/types';
 import {NetworkContext} from 'src/context/NetworkContext';
 import {useApi} from 'src/context/ChainApiContext';
 
-export type Account = {
+export type InternalAccount = {
+  encoded: string;
   address: string;
-  name: string;
-  isFavorite: boolean;
-  isExternal: boolean;
-  network: SupportedNetworkType;
+  meta: {
+    name: string;
+    isFavorite: boolean;
+    network: SupportedNetworkType;
+  };
+  isExternal: false;
 };
+
+export type ExternalAccount = {
+  address: string;
+  meta: {
+    name: string;
+    isFavorite: boolean;
+    network: SupportedNetworkType;
+  };
+  isExternal: true;
+};
+
+export type Account = InternalAccount | ExternalAccount;
 
 type Accounts = Record<string, Account>;
 
-const AccountsContext = createContext<Accounts>({});
+type Context = {
+  accounts: Accounts;
+  addAccount: (account: Account) => void;
+
+  // addAccount: (address: string, name: string, isFavorite: boolean, isExternal: boolean) => void;
+  // removeAccount: (address: string) => void;
+  // setAccountName: (address: string, name: string) => void;
+  // setAccountFavorite: (address: string, isFavorite: boolean) => void;
+  // setAccountExternal: (address: string, isExternal: boolean) => void;
+  // setAccountNetwork: (address: string, network: SupportedNetworkType) => void;
+};
+
+const AccountsContext = createContext<Context>({
+  accounts: {},
+  addAccount: () => {
+    return;
+  },
+});
 
 function AccountsProvider({children}: {children: React.ReactNode}) {
   const {currentNetwork} = useContext(NetworkContext);
   const [accounts, setAccounts] = useState<Accounts>({});
   const {api} = useApi();
 
-  useEffect(() => {
-    let unsubscribe: VoidFn | undefined;
+  const value = {
+    accounts,
+    addAccount: (account: Account) => {
+      setAccounts({...accounts, [account.address]: account});
+    },
+  };
 
-    if (api) {
-      const subscription = keyring.accounts.subject.subscribe((accounts) => {
-        const keyringAccounts = Object.values(accounts).reduce((map, {json}) => {
-          const pair = tryGetPair(json.address);
-          if (json.meta.network === currentNetwork.key && pair) {
-            map = {
-              ...map,
-              [pair.address]: {
-                address: pair.address,
-                name: json.meta.name,
-                isFavorite: Boolean(json.meta.isFavorite),
-                isExternal: Boolean(json.meta.isExternal),
-                network: json.meta.network as SupportedNetworkType,
-              },
-            };
-          }
-          return map;
-        }, {});
-
-        setAccounts(keyringAccounts);
-      });
-
-      unsubscribe = subscription.unsubscribe.bind(subscription);
-    }
-
-    return () => {
-      unsubscribe && unsubscribe();
-    };
-  }, [currentNetwork, api]);
-
-  return <AccountsContext.Provider value={accounts}>{children}</AccountsContext.Provider>;
-}
-
-function tryGetPair(address: string) {
-  try {
-    return keyring.getPair(address);
-  } catch (e) {
-    return undefined;
-  }
+  return <AccountsContext.Provider value={value}>{children}</AccountsContext.Provider>;
 }
 
 function useAccounts() {
@@ -74,11 +72,11 @@ function useAccounts() {
     throw new Error('useAccounts must be used within a AccountsProvider');
   }
 
-  return {accounts: Object.values(context)};
+  return {accounts: Object.values(context.accounts), addAccount: context.addAccount};
 }
 
 function getAccountDisplayValue(account: Account) {
-  return account.name ? account.name : account.address;
+  return account.meta.name ? account.meta.name : account.address;
 }
 
 export {AccountsProvider, useAccounts, getAccountDisplayValue};

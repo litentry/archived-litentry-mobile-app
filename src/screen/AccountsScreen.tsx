@@ -57,7 +57,7 @@ export function AccountsScreen({navigation}: {navigation: NavigationProp<Complet
             <AccountItem
               isExternal={item.account.isExternal}
               identity={item.identity}
-              isFavorite={item.account.isFavorite}
+              isFavorite={item.account.meta.isFavorite}
               toggleFavorite={() => onToggleFavorite(item.account.address)}
               onPress={() => {
                 navigation.navigate(myAccountScreen, {address: item.account.address});
@@ -175,7 +175,7 @@ function sortByDisplayName(a: CombinedData, b: CombinedData) {
 }
 
 function sortByIsFavorite(a: CombinedData, b: CombinedData) {
-  return a.account.isFavorite ? -1 : b.account.isFavorite ? 1 : 0;
+  return a.account.meta.isFavorite ? -1 : b.account.meta.isFavorite ? 1 : 0;
 }
 
 function AccountItem({
