@@ -9,11 +9,12 @@ import DocumentPicker, {DocumentPickerResponse} from 'react-native-document-pick
 import RNFS from 'react-native-fs';
 import {monofontFamily, standardPadding} from 'src/styles';
 import type {KeyringPair$Json} from '@polkadot/keyring/types';
-import {keyring} from '@polkadot/ui-keyring';
 import {NavigationProp} from '@react-navigation/core';
 import {AccountsStackParamList} from 'src/navigation/navigation';
 import {accountsScreen} from 'src/navigation/routeKeys';
 import {NetworkContext} from 'context/NetworkContext';
+import {useAccounts} from 'context/AccountsContext';
+import SubstrateSign from 'react-native-substrate-sign';
 
 export function ImportAccountWithJsonFileScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const theme = useTheme();
@@ -23,12 +24,26 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
   const parsedJson = jsonContent ? tryParseJson(jsonContent) : undefined;
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
   const [password, setPassword] = React.useState('');
+  const {addAccount} = useAccounts();
 
-  function restoreAccount() {
+  async function restoreAccount() {
     if (parsedJson && password) {
-      const pair = keyring.restoreAccount(parsedJson, password);
-      keyring.saveAccountMeta(pair, {network: currentNetwork.key});
-      navigation.navigate(accountsScreen, {reload: true});
+      try {
+        // TODO: NOT WORKING WITH POLKADOT EXTENSION THE ENCODING IS DIFFERENT THERE
+        await SubstrateSign.decryptData(parsedJson.encoded, password);
+
+        const newAcc = {
+          address: parsedJson.address,
+          encoded: parsedJson.encoded,
+          meta: {name: '', ...parsedJson.meta, network: currentNetwork.key, isFavorite: false},
+          isExternal: false,
+        };
+        addAccount(newAcc);
+        navigation.navigate(accountsScreen, {reload: true});
+      } catch (e: any) {
+        console.warn(e);
+        setError(e.message);
+      }
     }
   }
 
@@ -61,9 +76,9 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
               <Text>Pick the json file</Text>
             </Button>
             <Padder scale={0.5} />
-            <Text status="danger">{error}</Text>
           </>
         )}
+        <Text status="danger">{error}</Text>
         <Padder scale={1} />
         <Input
           secureTextEntry={!isPasswordVisible}
