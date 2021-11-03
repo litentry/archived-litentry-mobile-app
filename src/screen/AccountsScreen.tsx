@@ -22,7 +22,7 @@ type CombinedData = {
 };
 
 export function AccountsScreen({navigation}: {navigation: NavigationProp<CompleteNavigatorParamList>}) {
-  const {accounts} = useAccounts();
+  const {accounts, setAccountFavorite} = useAccounts();
   const {currentNetwork} = React.useContext(NetworkContext);
   const {data, isLoading} = useAccountsIdentityInfo(accounts.map(({address}) => address));
   const combinedData = data?.reduce<CombinedData[]>((acc, current) => {
@@ -36,11 +36,6 @@ export function AccountsScreen({navigation}: {navigation: NavigationProp<Complet
   const [sortBy, setSortBy] = React.useState<'name' | 'favorites'>('name');
   const sortByFunction = sortBy === 'name' ? sortByDisplayName : sortByIsFavorite;
   const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
-
-  const onToggleFavorite = (address: string) => {
-    const pair = keyring.getPair(address);
-    keyring.saveAccountMeta(pair, {isFavorite: !pair.meta.isFavorite, network: currentNetwork.key});
-  };
 
   return (
     <SafeView edges={noTopEdges}>
@@ -58,7 +53,7 @@ export function AccountsScreen({navigation}: {navigation: NavigationProp<Complet
               isExternal={item.account.isExternal}
               identity={item.identity}
               isFavorite={item.account.meta.isFavorite}
-              toggleFavorite={() => onToggleFavorite(item.account.address)}
+              toggleFavorite={() => setAccountFavorite(item.account.address, !item.account.meta.isFavorite)}
               onPress={() => {
                 navigation.navigate(myAccountScreen, {address: item.account.address});
               }}

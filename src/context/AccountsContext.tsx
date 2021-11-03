@@ -34,11 +34,11 @@ type Accounts = Record<string, Account>;
 type Context = {
   accounts: Accounts;
   addAccount: (account: Account) => void;
+  setAccountFavorite: (address: string, isFavorite: boolean) => void;
 
   // addAccount: (address: string, name: string, isFavorite: boolean, isExternal: boolean) => void;
   // removeAccount: (address: string) => void;
   // setAccountName: (address: string, name: string) => void;
-  // setAccountFavorite: (address: string, isFavorite: boolean) => void;
   // setAccountExternal: (address: string, isExternal: boolean) => void;
   // setAccountNetwork: (address: string, network: SupportedNetworkType) => void;
 };
@@ -46,6 +46,9 @@ type Context = {
 const AccountsContext = createContext<Context>({
   accounts: {},
   addAccount: () => {
+    return;
+  },
+  setAccountFavorite: () => {
     return;
   },
 });
@@ -60,6 +63,13 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
     addAccount: (account: Account) => {
       setAccounts({...accounts, [account.address]: account});
     },
+    setAccountFavorite: (address: string, isFavorite: boolean) => {
+      const account = accounts[address];
+      if (account) {
+        const newAccount = {...account, meta: {...account.meta, isFavorite}};
+        setAccounts({...accounts, [address]: newAccount});
+      }
+    },
   };
 
   return <AccountsContext.Provider value={value}>{children}</AccountsContext.Provider>;
@@ -72,7 +82,11 @@ function useAccounts() {
     throw new Error('useAccounts must be used within a AccountsProvider');
   }
 
-  return {accounts: Object.values(context.accounts), addAccount: context.addAccount};
+  return {
+    accounts: Object.values(context.accounts),
+    addAccount: context.addAccount,
+    setAccountFavorite: context.setAccountFavorite,
+  };
 }
 
 function getAccountDisplayValue(account: Account) {
