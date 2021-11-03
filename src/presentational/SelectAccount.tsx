@@ -20,7 +20,7 @@ export function SelectAccount({selected, onSelect}: Props) {
       selectedIndex={selectedIndexPath}
       onSelect={(index) => {
         if (!Array.isArray(index)) {
-          const selectedAddress = accounts[index.row]?.address;
+          const selectedAddress = Object.values(accounts)[index.row]?.address;
           if (selectedAddress) {
             onSelect(selectedAddress);
           }
