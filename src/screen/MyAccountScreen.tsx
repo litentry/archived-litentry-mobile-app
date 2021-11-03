@@ -1,7 +1,7 @@
-import {keyring} from '@polkadot/ui-keyring';
 import {BN_ZERO} from '@polkadot/util';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Text, useTheme} from '@ui-kitten/components';
+import {useAccounts} from 'context/AccountsContext';
 import Icon from 'presentational/Icon';
 import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
@@ -34,7 +34,12 @@ export function MyAccountScreen({
   const formatBalance = useFormatBalance();
   const {data: accountInfo} = useAccountInfo(address);
   const theme = useTheme();
-  const pair = keyring.getPair(address);
+  const {accounts, removeAccount} = useAccounts();
+  const account = accounts[address];
+
+  if (!account) {
+    return null;
+  }
 
   return (
     <SafeView edges={noTopEdges}>
@@ -90,7 +95,7 @@ export function MyAccountScreen({
               {
                 text: 'Delete',
                 onPress: () => {
-                  keyring.forgetAccount(address);
+                  removeAccount(address);
                   navigation.navigate(accountsScreen);
                 },
                 style: 'destructive',
@@ -103,7 +108,7 @@ export function MyAccountScreen({
           <Padder scale={2} />
           <Text category="h6">Remove Account</Text>
         </TouchableOpacity>
-        {!pair.meta.isExternal ? (
+        {!account.isExternal ? (
           <TouchableOpacity
             style={styles.button}
             onPress={() => navigation.navigate(exportAccountWithJsonFileScreen, {address})}>

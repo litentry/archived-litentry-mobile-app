@@ -26,7 +26,7 @@ export function BalanceScreen({
     modalRef.current?.open();
   }, []);
 
-  const currentAccount = accounts.find(({address}) => address === route.params.address);
+  const currentAccount = accounts[route.params.address];
   if (!currentAccount) {
     throw new Error("Couldn't find the account ");
   }

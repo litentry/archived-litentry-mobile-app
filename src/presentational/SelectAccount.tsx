@@ -9,7 +9,7 @@ interface Props {
 
 export function SelectAccount({selected, onSelect}: Props) {
   const {accounts} = useAccounts();
-  const selectedIndex = accounts.findIndex((a) => a.address === selected);
+  const selectedIndex = Object.values(accounts).findIndex((a) => a.address === selected);
   const selectedIndexPath = selectedIndex > -1 ? new IndexPath(selectedIndex) : undefined;
 
   return (
@@ -26,7 +26,7 @@ export function SelectAccount({selected, onSelect}: Props) {
           }
         }
       }}>
-      {accounts.map((item) => (
+      {Object.values(accounts).map((item) => (
         <SelectItem key={item.address} title={item.address} />
       ))}
     </Select>

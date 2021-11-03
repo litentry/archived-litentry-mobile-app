@@ -83,7 +83,7 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
       const args = meta?.args.map(({name}) => name).join(', ') || '';
       const title = `Sending transaction ${section}.${method}(${args})`;
       const description = formatCallMeta(meta);
-      const isExternal = Boolean(accounts.find(({address: accountAddress}) => accountAddress === address)?.isExternal);
+      const isExternal = Boolean(accounts[address]?.isExternal);
 
       showPreviewRef.current = async (txPayload: SignerPayloadJSON, seed?: string) => {
         const info = await transaction.paymentInfo(address);

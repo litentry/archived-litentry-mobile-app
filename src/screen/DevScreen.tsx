@@ -85,7 +85,7 @@ function DevScreen() {
               )}
             />
             <Divider />
-            {accounts.map((account) => (
+            {Object.values(accounts).map((account) => (
               <View key={account.address}>
                 {/* <ListItem
                   title={`Remove account ${account.address}`}
@@ -104,7 +104,7 @@ function DevScreen() {
                 <Divider />
               </View>
             ))}
-            {accounts.map((account) => (
+            {Object.values(accounts).map((account) => (
               <View key={account.address}>
                 <ListItem
                   title={`Identity of ${account.address}`}

@@ -30,7 +30,8 @@ export function AuthenticateView({onAuthenticate, address}: Props) {
   const [password, setPassword] = useState('');
   const [isValid, setIsValid] = useState<boolean | undefined>();
   const {accounts} = useAccounts();
-  const encoded = accounts.filter(isInternal).find((a) => a.address === address)?.encoded;
+  const account = accounts[address];
+  const encoded = account && isInternal(account) ? account.encoded : null;
 
   const onPressUnlock = () => {
     if (!encoded) {

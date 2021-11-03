@@ -35,9 +35,7 @@ type Context = {
   accounts: Accounts;
   addAccount: (account: Account) => void;
   setAccountFavorite: (address: string, isFavorite: boolean) => void;
-
-  // addAccount: (address: string, name: string, isFavorite: boolean, isExternal: boolean) => void;
-  // removeAccount: (address: string) => void;
+  removeAccount: (address: string) => void;
   // setAccountName: (address: string, name: string) => void;
   // setAccountExternal: (address: string, isExternal: boolean) => void;
   // setAccountNetwork: (address: string, network: SupportedNetworkType) => void;
@@ -49,6 +47,9 @@ const AccountsContext = createContext<Context>({
     return;
   },
   setAccountFavorite: () => {
+    return;
+  },
+  removeAccount: () => {
     return;
   },
 });
@@ -70,6 +71,11 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
         setAccounts({...accounts, [address]: newAccount});
       }
     },
+    removeAccount: (address: string) => {
+      const newAccounts = {...accounts};
+      delete newAccounts[address];
+      setAccounts(newAccounts);
+    },
   };
 
   return <AccountsContext.Provider value={value}>{children}</AccountsContext.Provider>;
@@ -82,11 +88,7 @@ function useAccounts() {
     throw new Error('useAccounts must be used within a AccountsProvider');
   }
 
-  return {
-    accounts: Object.values(context.accounts),
-    addAccount: context.addAccount,
-    setAccountFavorite: context.setAccountFavorite,
-  };
+  return context;
 }
 
 function getAccountDisplayValue(account: Account) {

@@ -12,9 +12,7 @@ export function useCouncilMembers() {
 
     return {
       members,
-      isMember: members.some((member) =>
-        accounts.find((account) => account.address.toString() === member.accountId.toString()),
-      ),
+      isMember: members.some((member) => accounts[member.accountId.toString()]),
     };
   });
 }

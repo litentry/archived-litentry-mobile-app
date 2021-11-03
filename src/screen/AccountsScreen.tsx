@@ -11,10 +11,8 @@ import {FlatList, Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {useAccountsIdentityInfo} from 'src/api/hooks/useAccountsIdentityInfo';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 import {CompleteNavigatorParamList} from 'src/navigation/navigation';
-import {addAccountScreen, importAccountScreen, myAccountScreen, mnemonicScreen} from 'src/navigation/routeKeys';
+import {addAccountScreen, importAccountScreen, mnemonicScreen, myAccountScreen} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
-import {keyring} from '@polkadot/ui-keyring';
-import {NetworkContext} from 'context/NetworkContext';
 
 type CombinedData = {
   identity: IdentityInfo;
@@ -23,10 +21,9 @@ type CombinedData = {
 
 export function AccountsScreen({navigation}: {navigation: NavigationProp<CompleteNavigatorParamList>}) {
   const {accounts, setAccountFavorite} = useAccounts();
-  const {currentNetwork} = React.useContext(NetworkContext);
-  const {data, isLoading} = useAccountsIdentityInfo(accounts.map(({address}) => address));
+  const {data, isLoading} = useAccountsIdentityInfo(Object.keys(accounts));
   const combinedData = data?.reduce<CombinedData[]>((acc, current) => {
-    const account = accounts.find((a) => a.address === String(current.accountId));
+    const account = accounts[String(current.accountId)];
     if (!account) {
       return acc;
     }
