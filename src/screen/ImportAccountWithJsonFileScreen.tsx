@@ -8,12 +8,11 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import DocumentPicker, {DocumentPickerResponse} from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
 import {monofontFamily, standardPadding} from 'src/styles';
-import type {KeyringPair$Json} from '@polkadot/keyring/types';
 import {NavigationProp} from '@react-navigation/core';
 import {AccountsStackParamList} from 'src/navigation/navigation';
 import {accountsScreen} from 'src/navigation/routeKeys';
 import {NetworkContext} from 'context/NetworkContext';
-import {useAccounts} from 'context/AccountsContext';
+import {InternalAccount, useAccounts} from 'context/AccountsContext';
 import SubstrateSign from 'react-native-substrate-sign';
 
 export function ImportAccountWithJsonFileScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
@@ -35,7 +34,7 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
         const newAcc = {
           address: parsedJson.address,
           encoded: parsedJson.encoded,
-          meta: {name: '', ...parsedJson.meta, network: currentNetwork.key, isFavorite: false},
+          meta: {...parsedJson.meta, network: currentNetwork.key, isFavorite: false},
           isExternal: false,
         };
         addAccount(newAcc);
@@ -151,7 +150,7 @@ async function pickFile() {
   }
 }
 
-function tryParseJson(json: string): KeyringPair$Json | undefined {
+function tryParseJson(json: string): InternalAccount | undefined {
   try {
     return JSON.parse(json);
   } catch (e) {
