@@ -6,6 +6,7 @@ import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import globalStyles, {standardPadding} from 'src/styles';
 import {HashBlock} from 'presentational/HashBlock';
 import Padder from 'presentational/Padder';
+import {BN} from '@polkadot/util';
 
 type PropTypes = {
   transactionTitle: string;
@@ -50,9 +51,7 @@ export function TxPreview(props: PropTypes): React.ReactElement {
           />
         </TouchableOpacity>
         {open ? (
-          <Text style={[styles.payload, {backgroundColor: theme['color-basic-500']}]}>
-            {JSON.stringify(params, null, 2)}
-          </Text>
+          <Text style={[styles.payload, {backgroundColor: theme['color-basic-500']}]}>{stringifyParams(params)}</Text>
         ) : undefined}
         <Text category={'c1'}>{`Fees of ${partialFee / 10 ** 6} micro Unit will be applied to the submission`}</Text>
         <Padder scale={1} />
@@ -89,3 +88,19 @@ const styles = StyleSheet.create({
   submit: {flex: 2},
   payload: {fontSize: 9, padding: standardPadding, marginVertical: standardPadding},
 });
+
+function stringifyParams(params: unknown[]): string {
+  return JSON.stringify(
+    params.map((p) => {
+      if (BN.isBN(p)) {
+        return p.toNumber().toLocaleString();
+      }
+      if (Array.isArray(p)) {
+        return stringifyParams(p);
+      }
+      return p;
+    }),
+    null,
+    2,
+  );
+}

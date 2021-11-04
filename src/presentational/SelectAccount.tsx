@@ -1,14 +1,14 @@
 import {IndexPath, Select, SelectItem} from '@ui-kitten/components';
-import {useAccounts} from 'context/AccountsContext';
+import {Account} from 'context/AccountsContext';
 import React from 'react';
 
 interface Props {
+  accounts: Account[];
   selected?: string;
   onSelect: (address: string) => void;
 }
 
-export function SelectAccount({selected, onSelect}: Props) {
-  const {accounts} = useAccounts();
+export function SelectAccount({selected, onSelect, accounts}: Props) {
   const selectedIndex = accounts.findIndex((a) => a.address === selected);
   const selectedIndexPath = selectedIndex > -1 ? new IndexPath(selectedIndex) : undefined;
 

@@ -152,10 +152,11 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
             dispatch({type: 'SHOW_ERROR', payload: error});
             reject();
           }
+        }).catch((error) => {
+          reject(error.message);
         });
       });
     } catch (e) {
-      console.warn('transaction error', e);
       dispatch({type: 'SHOW_ERROR', payload: String(e)});
     }
   }, []);
