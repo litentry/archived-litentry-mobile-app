@@ -17,7 +17,7 @@ function ErrorDialog(props: PropTypes) {
         <Icon style={styles.icon} fill={colorRed} name="close-circle-outline" />
         <Text style={[styles.text, styles.withIcon]}>{text}</Text>
       </Layout>
-      <Text>{msg}</Text>
+      <Text style={styles.msg}>{msg}</Text>
     </Layout>
   );
 }
@@ -34,7 +34,11 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: 'bold',
     fontFamily: monofontFamily,
-    padding: standardPadding * 4,
+    padding: standardPadding * 2,
+  },
+  msg: {
+    paddingHorizontal: standardPadding * 2,
+    textAlign: 'center',
   },
 });
 

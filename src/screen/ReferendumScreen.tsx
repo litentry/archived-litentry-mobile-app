@@ -31,10 +31,12 @@ import {DashboardStackParamList} from 'src/navigation/navigation';
 import {referendumScreen} from 'src/navigation/routeKeys';
 import {formatCallMeta} from 'src/packages/call_inspector/CallInspector';
 import globalStyles, {standardPadding} from 'src/styles';
+import {useAccounts} from 'context/AccountsContext';
 
 export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
   const startTx = useApiTx();
   const {api} = useApi();
+  const {networkAccounts} = useAccounts();
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -161,6 +163,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
             <Text>Vote with account</Text>
             <Padder scale={0.5} />
             <SelectAccount
+              accounts={networkAccounts}
               selected={state.account}
               onSelect={(account) => {
                 dispatch({type: 'SELECT_ACCOUNT', payload: account});

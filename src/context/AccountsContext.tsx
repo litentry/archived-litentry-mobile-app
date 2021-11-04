@@ -1,3 +1,4 @@
+import {NetworkContext} from 'context/NetworkContext';
 import React, {createContext, useContext} from 'react';
 import {usePersistedState} from 'src/hook/usePersistedState';
 import {SupportedNetworkType} from 'src/types';
@@ -74,12 +75,16 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
 
 function useAccounts() {
   const context = useContext(AccountsContext);
+  const {currentNetwork} = useContext(NetworkContext);
+  const networkAccounts = Object.values(context.accounts).filter(
+    (account) => account.meta.network === currentNetwork.key,
+  );
 
   if (!context) {
     throw new Error('useAccounts must be used within a AccountsProvider');
   }
 
-  return context;
+  return {...context, networkAccounts};
 }
 
 function getAccountDisplayValue(account: Account) {

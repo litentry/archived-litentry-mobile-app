@@ -9,11 +9,13 @@ import {SelectAccount} from 'presentational/SelectAccount';
 import {DashboardStackParamList} from 'src/navigation/navigation';
 import globalStyles, {standardPadding} from 'src/styles';
 import {useApiTx} from 'src/api/hooks/useApiTx';
+import {useAccounts} from 'context/AccountsContext';
 
 export function SubmitTipScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const startTx = useApiTx();
   const queryClient = useQueryClient();
+  const {networkAccounts} = useAccounts();
 
   const valid = state.account && state.beneficiary && state.reason && state.reason.length > 4;
 
@@ -28,7 +30,11 @@ export function SubmitTipScreen({navigation}: {navigation: NavigationProp<Dashbo
                 <Text>Sending from</Text>
               </View>
             )}>
-            <SelectAccount onSelect={(payload) => dispatch({type: 'SET_ACCOUNT', payload})} selected={state.account} />
+            <SelectAccount
+              accounts={networkAccounts}
+              onSelect={(payload) => dispatch({type: 'SET_ACCOUNT', payload})}
+              selected={state.account}
+            />
           </Card>
 
           <Padder scale={1.5} />
