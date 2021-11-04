@@ -29,8 +29,10 @@ function NetworkSelectionList(props: PropTypes) {
       <RadioGroup
         selectedIndex={selectedIndex}
         onChange={(index) => {
-          setSelectedIndex(index);
-          onSelect(items[index]!);
+          if (index !== selectedIndex) {
+            setSelectedIndex(index);
+            onSelect(items[index]!);
+          }
         }}>
         {items.map((item, index) => {
           const key = item.ws ? item.ws[0] : `key-${index}`;
