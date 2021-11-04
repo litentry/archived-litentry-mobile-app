@@ -33,15 +33,14 @@ export function AuthenticateView({onAuthenticate, address}: Props) {
   const account = accounts[address];
   const encoded = account && isInternal(account) ? account.encoded : null;
 
-  const onPressUnlock = () => {
+  const onPressUnlock = async () => {
     if (!encoded) {
       throw new Error('No encoded found');
     }
     try {
-      SubstrateSign.decryptData(encoded, password).then((seed) => {
-        setIsValid(true);
-        onAuthenticate(seed);
-      });
+      const seed = await SubstrateSign.decryptData(encoded, password);
+      setIsValid(true);
+      onAuthenticate(seed);
     } catch (e) {
       setIsValid(false);
     }
