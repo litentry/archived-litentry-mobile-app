@@ -2,11 +2,12 @@ import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp} from '@react-navigation/native';
 import {Button, Divider, Icon, ListItem, MenuItem, OverflowMenu, Text, useTheme} from '@ui-kitten/components';
 import {Account, useAccounts} from 'context/AccountsContext';
+import {NetworkContext} from 'context/NetworkContext';
 import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
 import LoadingView from 'presentational/LoadingView';
 import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
-import React from 'react';
+import React, {useContext} from 'react';
 import {FlatList, Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useAccountsIdentityInfo} from 'src/api/hooks/useAccountsIdentityInfo';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
@@ -21,7 +22,9 @@ type CombinedData = {
 
 export function AccountsScreen({navigation}: {navigation: NavigationProp<CompleteNavigatorParamList>}) {
   const {accounts, setAccountFavorite} = useAccounts();
-  const {data, isLoading} = useAccountsIdentityInfo(Object.keys(accounts));
+  const {currentNetwork} = useContext(NetworkContext);
+  const networkAccounts = Object.values(accounts).filter((account) => account.meta.network === currentNetwork.key);
+  const {data, isLoading} = useAccountsIdentityInfo(networkAccounts.map((account) => account.address));
   const combinedData = data?.reduce<CombinedData[]>((acc, current) => {
     const account = accounts[String(current.accountId)];
     if (!account) {

@@ -1,4 +1,5 @@
-import React, {createContext, useContext, useState} from 'react';
+import React, {createContext, useContext} from 'react';
+import {usePersistedState} from 'src/hook/usePersistedState';
 import {SupportedNetworkType} from 'src/types';
 
 export type InternalAccount = {
@@ -47,7 +48,7 @@ const AccountsContext = createContext<Context>({
 });
 
 function AccountsProvider({children}: {children: React.ReactNode}) {
-  const [accounts, setAccounts] = useState<Accounts>({});
+  const [accounts, setAccounts] = usePersistedState<Accounts>('accounts', {});
 
   const value = {
     accounts,

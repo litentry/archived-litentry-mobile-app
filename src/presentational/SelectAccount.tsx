@@ -1,6 +1,7 @@
 import {IndexPath, Select, SelectItem} from '@ui-kitten/components';
 import {useAccounts} from 'context/AccountsContext';
-import React from 'react';
+import {NetworkContext} from 'context/NetworkContext';
+import React, {useContext} from 'react';
 
 interface Props {
   selected?: string;
@@ -9,7 +10,10 @@ interface Props {
 
 export function SelectAccount({selected, onSelect}: Props) {
   const {accounts} = useAccounts();
-  const selectedIndex = Object.values(accounts).findIndex((a) => a.address === selected);
+  const {currentNetwork} = useContext(NetworkContext);
+  const networkAccounts = Object.values(accounts).filter((account) => account.meta.network === currentNetwork.key);
+
+  const selectedIndex = networkAccounts.findIndex((a) => a.address === selected);
   const selectedIndexPath = selectedIndex > -1 ? new IndexPath(selectedIndex) : undefined;
 
   return (
@@ -20,13 +24,13 @@ export function SelectAccount({selected, onSelect}: Props) {
       selectedIndex={selectedIndexPath}
       onSelect={(index) => {
         if (!Array.isArray(index)) {
-          const selectedAddress = Object.values(accounts)[index.row]?.address;
+          const selectedAddress = networkAccounts[index.row]?.address;
           if (selectedAddress) {
             onSelect(selectedAddress);
           }
         }
       }}>
-      {Object.values(accounts).map((item) => (
+      {networkAccounts.map((item) => (
         <SelectItem key={item.address} title={item.address} />
       ))}
     </Select>
