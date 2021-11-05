@@ -51,6 +51,7 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
     }
   }, [webviewRef, currentNetwork])
 
+  // to pass webview onMessage data to child components
   let callback: (data: Record<string, string>) => void
   const setCallback = (cb: (data: Record<string, string>) => void) => {
     callback = cb
@@ -80,41 +81,6 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
   RNFS.readFileAssets('index.html', 'utf8').then((html) => {
     setHtml(html)
   })
-
-
-
-  // useEffect(() => {
-  //   let unsubscribe: VoidFn | undefined;
-
-  //   if (api) {
-  //     const subscription = keyring.accounts.subject.subscribe((accounts) => {
-  //       const keyringAccounts = Object.values(accounts).reduce((map, {json}) => {
-  //         const pair = tryGetPair(json.address);
-  //         if (json.meta.network === currentNetwork.key && pair) {
-  //           map = {
-  //             ...map,
-  //             [pair.address]: {
-  //               address: pair.address,
-  //               name: json.meta.name,
-  //               isFavorite: Boolean(json.meta.isFavorite),
-  //               isExternal: Boolean(json.meta.isExternal),
-  //               network: json.meta.network as SupportedNetworkType,
-  //             },
-  //           };
-  //         }
-  //         return map;
-  //       }, {});
-
-  //       setAccounts(keyringAccounts);
-  //     });
-
-  //     unsubscribe = subscription.unsubscribe.bind(subscription);
-  //   }
-
-  //   return () => {
-  //     unsubscribe && unsubscribe();
-  //   };
-  // }, [currentNetwork, api]);
 
 
   return (
