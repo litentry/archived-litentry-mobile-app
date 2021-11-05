@@ -1,9 +1,8 @@
 import React, {createContext, useCallback, useContext, useMemo} from 'react';
 import {ApplicationProvider} from '@ui-kitten/components';
-import * as eva from '@eva-design/eva';
-
+import {dark, light, mapping} from '@eva-design/material';
 import {usePersistedState} from 'src/hook/usePersistedState';
-import mapping from 'src/mapping.json';
+import customMapping from 'src/mapping.json';
 
 type Theme = 'light' | 'dark';
 
@@ -32,7 +31,10 @@ export default function ThemeProvider({children}: PropTypes) {
 
   return (
     <ThemeContext.Provider value={value}>
-      <ApplicationProvider {...eva} theme={eva[value.theme]} customMapping={mapping as any}>
+      <ApplicationProvider
+        theme={value.theme === 'dark' ? dark : light}
+        mapping={mapping}
+        customMapping={customMapping as any}>
         {children}
       </ApplicationProvider>
     </ThemeContext.Provider>
