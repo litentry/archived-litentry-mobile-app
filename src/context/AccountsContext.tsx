@@ -25,31 +25,31 @@ type AccountsContext = {
 export const AccountsContext = createContext<AccountsContext>({accounts: {}, webviewRef: null, setCallback: () => ({})});
 
 function AccountsProvider({children}: {children: React.ReactNode}) {
-  const {currentNetwork} = useContext(NetworkContext);
+  // const {currentNetwork} = useContext(NetworkContext);
   const [accounts, setAccounts] = useState<Accounts>({});
   // const {api} = useApi()
   
   const webviewRef = useRef(null)
   const [html, setHtml] = useState('');
 
-  useEffect(() => {
-    if(webviewRef.current != null) {
-      console.log('load all')
-      webviewRef.current.postMessage(JSON.stringify({
-        type: 'LOAD_ALL'
-      }))
-    }
-  }, [webviewRef])
+  // useEffect(() => {
+  //   if(webviewRef.current != null) {
+  //     console.log('load all')
+  //     webviewRef.current.postMessage(JSON.stringify({
+  //       type: 'LOAD_ALL'
+  //     }))
+  //   }
+  // }, [webviewRef])
 
-  useEffect(() => {
-    if(webviewRef.current != null) {
-      console.log('set format')
-      webviewRef.current.postMessage(JSON.stringify({
-        type: 'SET_SS58_FORMAT',
-        payload: {ss58Format: currentNetwork.ss58Format}
-      }))
-    }
-  }, [webviewRef, currentNetwork])
+  // useEffect(() => {
+  //   if(webviewRef.current != null) {
+  //     console.log('set format')
+  //     webviewRef.current.postMessage(JSON.stringify({
+  //       type: 'SET_SS58_FORMAT',
+  //       payload: {ss58Format: currentNetwork.ss58Format}
+  //     }))
+  //   }
+  // }, [webviewRef, currentNetwork])
 
   // to pass webview onMessage data to child components
   let callback: (data: Record<string, string>) => void
