@@ -1,10 +1,10 @@
-import React, {useContext, createContext, useState, useEffect} from 'react';
-
-import {keyring} from '@polkadot/ui-keyring';
-import {VoidFn} from '@polkadot/api/types';
+import React, {useContext, createContext, useState, useRef, useEffect} from 'react';
+import {View} from 'react-native'
 import {SupportedNetworkType} from 'src/types';
 import {NetworkContext} from 'src/context/NetworkContext';
-import {useApi} from 'src/context/ChainApiContext';
+import RNFS from 'react-native-fs';
+import WebView, {WebViewMessageEvent} from 'react-native-webview';
+// import {useApi} from './ChainApiContext';
 
 export type Account = {
   address: string;
@@ -16,65 +16,133 @@ export type Account = {
 
 type Accounts = Record<string, Account>;
 
-const AccountsContext = createContext<Accounts>({});
+type AccountsContext = {
+  accounts: Accounts
+  webviewRef: unknown
+  setCallback: (cb: (data: Record<string, string>) => void) => void
+}
+
+export const AccountsContext = createContext<AccountsContext>({accounts: {}, webviewRef: null, setCallback: () => ({})});
 
 function AccountsProvider({children}: {children: React.ReactNode}) {
   const {currentNetwork} = useContext(NetworkContext);
   const [accounts, setAccounts] = useState<Accounts>({});
-  const {api} = useApi();
+  // const {api} = useApi()
+  
+  const webviewRef = useRef(null)
+  const [html, setHtml] = useState('');
 
   useEffect(() => {
-    let unsubscribe: VoidFn | undefined;
-
-    if (api) {
-      const subscription = keyring.accounts.subject.subscribe((accounts) => {
-        const keyringAccounts = Object.values(accounts).reduce((map, {json}) => {
-          const pair = tryGetPair(json.address);
-          if (json.meta.network === currentNetwork.key && pair) {
-            map = {
-              ...map,
-              [pair.address]: {
-                address: pair.address,
-                name: json.meta.name,
-                isFavorite: Boolean(json.meta.isFavorite),
-                isExternal: Boolean(json.meta.isExternal),
-                network: json.meta.network as SupportedNetworkType,
-              },
-            };
-          }
-          return map;
-        }, {});
-
-        setAccounts(keyringAccounts);
-      });
-
-      unsubscribe = subscription.unsubscribe.bind(subscription);
+    if(webviewRef.current != null) {
+      console.log('load all')
+      webviewRef.current.postMessage(JSON.stringify({
+        type: 'LOAD_ALL'
+      }))
     }
+  }, [webviewRef])
 
-    return () => {
-      unsubscribe && unsubscribe();
-    };
-  }, [currentNetwork, api]);
+  useEffect(() => {
+    if(webviewRef.current != null) {
+      console.log('set format')
+      webviewRef.current.postMessage(JSON.stringify({
+        type: 'SET_SS58_FORMAT',
+        payload: {ss58Format: currentNetwork.ss58Format}
+      }))
+    }
+  }, [webviewRef, currentNetwork])
 
-  return <AccountsContext.Provider value={accounts}>{children}</AccountsContext.Provider>;
-}
-
-function tryGetPair(address: string) {
-  try {
-    return keyring.getPair(address);
-  } catch (e) {
-    return undefined;
+  let callback: (data: Record<string, string>) => void
+  const setCallback = (cb: (data: Record<string, string>) => void) => {
+    callback = cb
   }
+
+  const onMessage = (event: WebViewMessageEvent) => {
+    const data = JSON.parse(event.nativeEvent.data)
+    console.log('msg from webview ::: ', data)
+    const {type, payload} = data
+
+    switch(type) {
+      case 'ALL_ACCOUNTS':
+        console.log('all accounts :::: ', payload.accounts)
+        setAccounts(payload.accounts)
+        break
+      default:
+        callback(data)
+    }
+  };
+
+  // ios
+  // RNFS.readFile(`${RNFS.MainBundlePath}/litentry-keyring/index.html`, 'utf8').then((html) => {
+  //   setHtml(html);
+  // });
+
+  // android
+  RNFS.readFileAssets('index.html', 'utf8').then((html) => {
+    setHtml(html)
+  })
+
+
+
+  // useEffect(() => {
+  //   let unsubscribe: VoidFn | undefined;
+
+  //   if (api) {
+  //     const subscription = keyring.accounts.subject.subscribe((accounts) => {
+  //       const keyringAccounts = Object.values(accounts).reduce((map, {json}) => {
+  //         const pair = tryGetPair(json.address);
+  //         if (json.meta.network === currentNetwork.key && pair) {
+  //           map = {
+  //             ...map,
+  //             [pair.address]: {
+  //               address: pair.address,
+  //               name: json.meta.name,
+  //               isFavorite: Boolean(json.meta.isFavorite),
+  //               isExternal: Boolean(json.meta.isExternal),
+  //               network: json.meta.network as SupportedNetworkType,
+  //             },
+  //           };
+  //         }
+  //         return map;
+  //       }, {});
+
+  //       setAccounts(keyringAccounts);
+  //     });
+
+  //     unsubscribe = subscription.unsubscribe.bind(subscription);
+  //   }
+
+  //   return () => {
+  //     unsubscribe && unsubscribe();
+  //   };
+  // }, [currentNetwork, api]);
+
+
+  return (
+    <AccountsContext.Provider value={{accounts, webviewRef, setCallback}}>
+      {children}
+      <View style={{height: 0}}>
+        {html ? (
+          <WebView
+            style={{height: 0}}
+            ref={webviewRef}
+            onMessage={onMessage}
+            originWhitelist={['*']}
+            source={{html}}
+          />
+        ) : null}
+      </View>
+    </AccountsContext.Provider>
+  )
 }
 
 function useAccounts() {
-  const context = useContext(AccountsContext);
+  const {accounts} = useContext(AccountsContext);
 
-  if (!context) {
+  if (!accounts) {
     throw new Error('useAccounts must be used within a AccountsProvider');
   }
 
-  return {accounts: Object.values(context)};
+  return {accounts: Object.values(accounts)};
 }
 
 function getAccountDisplayValue(account: Account) {

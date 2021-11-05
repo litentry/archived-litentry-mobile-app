@@ -9,13 +9,11 @@ import Padder from 'presentational/Padder';
 import {ProgressBar} from 'presentational/ProgressBar';
 import zxcvbn from 'zxcvbn';
 import {ScrollView} from 'react-native-gesture-handler';
-// import {keyring} from '@polkadot/ui-keyring';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {AccountsStackParamList} from 'src/navigation/navigation';
 import {accountsScreen, createAccountScreen} from 'src/navigation/routeKeys';
 import {NetworkContext} from 'context/NetworkContext';
-import {Keyring} from '@polkadot/keyring';
-const keyring = new Keyring({type: 'sr25519', ss58Format: 0});
+import {AccountsContext} from 'context/AccountsContext';
 
 export function CreateAccountScreen({
   navigation,
@@ -28,6 +26,47 @@ export function CreateAccountScreen({
 
   const theme = useTheme();
   const {currentNetwork} = React.useContext(NetworkContext);
+  const {webviewRef, setCallback} = React.useContext(AccountsContext)
+
+  setCallback((data) => {
+
+    const {type, payload} = data
+
+    switch(type) {
+      case 'CREATE_ACCOUNT':
+        setAddress(payload.account.address)
+        break
+      case 'ADD_ACCOUNT':
+        console.log('add account ::: ')
+        navigation.navigate(accountsScreen, {reload: true});
+        break
+    }
+  })
+
+  React.useEffect(() => {
+    if(webviewRef.current != null) {
+
+      webviewRef.current.postMessage(JSON.stringify({
+        type: 'LOAD_ALL'
+      }))
+
+      webviewRef.current.postMessage(JSON.stringify({
+        type: 'SET_SS58_FORMAT',
+        payload: {ss58Format: currentNetwork.ss58Format}
+      }))
+
+      webviewRef.current.postMessage(JSON.stringify({
+        type: 'SUBSCRIBE_TO_ACCOUNTS',
+      }))
+
+      setTimeout(() => {
+        webviewRef.current.postMessage(JSON.stringify({
+          type: 'CREATE_ACCOUNT',
+          payload: {mnemonic}
+        }))
+      }, 500)
+    }
+  }, [webviewRef])
 
   const [account, setAccount] = React.useState<{
     title: string;
@@ -37,11 +76,6 @@ export function CreateAccountScreen({
 
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
   const [address, setAddress] = React.useState('');
-
-  React.useEffect(() => {
-    const {address} = keyring.createFromUri(mnemonic);
-    setAddress(address);
-  }, [mnemonic]);
 
   const passwordStrength = zxcvbn(account.password).score;
 
@@ -54,9 +88,14 @@ export function CreateAccountScreen({
 
   const onSubmit = () => {
     // keyring.addUri(mnemonic, account.password, {name: account.title, network: currentNetwork.key});
-    const pair = keyring.addFromUri(mnemonic, {name: account.title, network: currentNetwork.key});
-    console.log(pair);
-    navigation.navigate(accountsScreen, {reload: true});
+    // const pair = keyring.addFromUri(mnemonic, {name: account.title, network: currentNetwork.key});
+    // console.log(pair);
+    // navigation.navigate(accountsScreen, {reload: true});
+
+    webviewRef.current.postMessage(JSON.stringify({
+      type: 'ADD_ACCOUNT',
+      payload: {mnemonic, password: account.password, name: account.title}
+    }))
   };
 
   return (
