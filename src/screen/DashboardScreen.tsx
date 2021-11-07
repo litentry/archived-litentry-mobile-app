@@ -50,7 +50,7 @@ function DashboardScreen({navigation}: PropTypes) {
       <FadeInAnimatedView>
         <View style={[globalStyles.flex, styles.main]}>
           <ScrollView style={styles.scrollView}>
-            {/* <DemocracySummaryTeaser onPressMore={() => navigation.navigate(democracyScreen)} /> */}
+            <DemocracySummaryTeaser onPressMore={() => navigation.navigate(democracyScreen)} />
             <CouncilSummaryTeaser onPressMore={() => navigation.navigate(councilScreen)} />
             <TreasurySummaryTeaser onPressMore={() => navigation.navigate(treasuryScreen)} />
             <TipsSummaryTeaser onPressMore={() => navigation.navigate(tipsScreen)} />

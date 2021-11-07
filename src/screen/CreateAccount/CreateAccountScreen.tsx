@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {Text, Input, ListItem, Icon, useTheme, Button} from '@ui-kitten/components';
@@ -26,47 +26,20 @@ export function CreateAccountScreen({
 
   const theme = useTheme();
   const {currentNetwork} = React.useContext(NetworkContext);
-  const {webviewRef, setCallback} = React.useContext(AccountsContext)
+  const {setCallback, createAccount, addAccount} = React.useContext(AccountsContext)
 
   setCallback((data) => {
-
     const {type, payload} = data
-
     switch(type) {
       case 'CREATE_ACCOUNT':
-        setAddress(payload.account.address)
-        break
-      case 'ADD_ACCOUNT':
-        console.log('add account ::: ')
-        navigation.navigate(accountsScreen, {reload: true});
+        setAddress(payload.address)
         break
     }
   })
 
-  React.useEffect(() => {
-    if(webviewRef.current != null) {
-
-      webviewRef.current.postMessage(JSON.stringify({
-        type: 'LOAD_ALL'
-      }))
-
-      webviewRef.current.postMessage(JSON.stringify({
-        type: 'SET_SS58_FORMAT',
-        payload: {ss58Format: currentNetwork.ss58Format}
-      }))
-
-      webviewRef.current.postMessage(JSON.stringify({
-        type: 'SUBSCRIBE_TO_ACCOUNTS',
-      }))
-
-      setTimeout(() => {
-        webviewRef.current.postMessage(JSON.stringify({
-          type: 'CREATE_ACCOUNT',
-          payload: {mnemonic}
-        }))
-      }, 500)
-    }
-  }, [webviewRef])
+  useEffect(() => {
+    createAccount(mnemonic)
+  }, [])
 
   const [account, setAccount] = React.useState<{
     title: string;
@@ -87,15 +60,15 @@ export function CreateAccountScreen({
   );
 
   const onSubmit = () => {
-    // keyring.addUri(mnemonic, account.password, {name: account.title, network: currentNetwork.key});
-    // const pair = keyring.addFromUri(mnemonic, {name: account.title, network: currentNetwork.key});
-    // console.log(pair);
-    // navigation.navigate(accountsScreen, {reload: true});
-
-    webviewRef.current.postMessage(JSON.stringify({
-      type: 'ADD_ACCOUNT',
-      payload: {mnemonic, password: account.password, name: account.title}
-    }))
+    addAccount({
+      mnemonic,
+      password: account.password,
+      name: account.title,
+      network: currentNetwork.key,
+      isFavorite: false,
+      isExternal: false,
+    })
+    navigation.navigate(accountsScreen, {});
   };
 
   return (

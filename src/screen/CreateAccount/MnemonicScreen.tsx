@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {View, StyleSheet} from 'react-native';
 import {Text, Input, Icon, Button} from '@ui-kitten/components';
@@ -13,19 +13,15 @@ import {AccountsContext} from 'context/AccountsContext'
 
 export function MnemonicScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const [mnemonic, setMnemonic] = React.useState('');
-  const {webviewRef, setCallback} = React.useContext(AccountsContext)
+  const {setCallback, mnemonicGenerate} = React.useContext(AccountsContext)
 
   setCallback((data) => {
     setMnemonic(data.payload.mnemonic)
   })
 
-  React.useEffect(() => {
-    if(webviewRef.current != null) {
-      webviewRef.current.postMessage(JSON.stringify({
-        type: 'MNEMONIC_GENERATE'
-      }))
-    }
-  }, [webviewRef])
+  useEffect(() => {
+    mnemonicGenerate()
+  }, [])
 
   return (
     <SafeView edges={noTopEdges}>
