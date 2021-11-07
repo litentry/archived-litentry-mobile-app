@@ -27,6 +27,11 @@ type AddAccountPayload = {
   isExternal: boolean
 }
 
+type AddExternalAccountPayload = {
+  address: string
+  network: SupportedNetworkType
+}
+
 type Accounts = Record<string, Account>;
 
 type AccountsContext = {
@@ -37,6 +42,7 @@ type AccountsContext = {
   addAccount: (payload: AddAccountPayload) => void
   getAllAccounts: () => void
   mnemonicValidate: (mnemonic: string) => void
+  addExternalAccount: (payload: AddExternalAccountPayload) => void
 }
 
 export const AccountsContext = createContext<AccountsContext>({
@@ -46,7 +52,8 @@ export const AccountsContext = createContext<AccountsContext>({
   createAccount: () => ({}),
   addAccount: () => ({}),
   getAllAccounts: () => ({}),
-  mnemonicValidate: () => ({})
+  mnemonicValidate: () => ({}),
+  addExternalAccount: () => ({})
 });
 
 function addressToHex (address: string): string {
@@ -134,6 +141,7 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
         prepareAccounts(payload.accounts)
         break
       case 'ADD_ACCOUNT':
+      case 'ADD_EXTERNAL_ACCOUNT':
         setLocalStoreAccounts([...localStoreAccounts, {
           key: `account:${addressToHex(payload.account.address)}`,
           value: payload.account
@@ -187,9 +195,25 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
     }))
   }
 
+  const addExternalAccount = (payload: AddExternalAccountPayload) => {
+    webviewRef.current.postMessage(JSON.stringify({
+      type: 'ADD_EXTERNAL_ACCOUNT',
+      payload
+    }))
+  }
+
 
   return (
-    <AccountsContext.Provider value={{accounts, setCallback, mnemonicGenerate, createAccount, addAccount, getAllAccounts, mnemonicValidate}}>
+    <AccountsContext.Provider value={{
+      accounts,
+      setCallback,
+      mnemonicGenerate,
+      createAccount,
+      addAccount,
+      getAllAccounts,
+      mnemonicValidate,
+      addExternalAccount
+    }}>
       {children}
       <View style={{height: 0}}>
         {html ? (

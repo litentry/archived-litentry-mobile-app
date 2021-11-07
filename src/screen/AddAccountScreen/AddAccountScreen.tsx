@@ -13,7 +13,7 @@ import AddressInfoPreview from './AddressPreview';
 import {AppStackParamList} from 'src/navigation/navigation';
 import {default as globalStyles, monofontFamily, standardPadding} from 'src/styles';
 import {isAddressValid, parseAddress} from 'src/utils';
-import {keyring} from '@polkadot/ui-keyring';
+import {AccountsContext} from 'context/AccountsContext';
 
 export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppStackParamList>}) {
   const ref = useRef<Modalize>(null);
@@ -24,6 +24,7 @@ export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppSt
   const {currentNetwork} = useContext(NetworkContext);
   const [state, dispatch] = useReducer(addAccountReducer, initialState);
   const {api} = useContext(ChainApiContext);
+  const {addExternalAccount} = React.useContext(AccountsContext)
 
   const handleInputChange = (text: string) => {
     dispatch({type: 'SET_ADDRESS', payload: text});
@@ -40,7 +41,10 @@ export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppSt
     }
 
     if (state.step === 'preview') {
-      keyring.addExternal(state.address, {name: '', network: currentNetwork.key});
+      addExternalAccount({
+        address: state.address,
+        network: currentNetwork.key
+      })
       dispatch({type: 'SET_STEP', payload: 'success'});
       return;
     }
