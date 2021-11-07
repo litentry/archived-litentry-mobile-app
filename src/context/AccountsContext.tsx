@@ -36,6 +36,7 @@ type AccountsContext = {
   createAccount: (mnemonic: string) => void
   addAccount: (payload: AddAccountPayload) => void
   getAllAccounts: () => void
+  mnemonicValidate: (mnemonic: string) => void
 }
 
 export const AccountsContext = createContext<AccountsContext>({
@@ -44,7 +45,8 @@ export const AccountsContext = createContext<AccountsContext>({
   mnemonicGenerate: () => ({}),
   createAccount: () => ({}),
   addAccount: () => ({}),
-  getAllAccounts: () => ({})
+  getAllAccounts: () => ({}),
+  mnemonicValidate: () => ({})
 });
 
 function addressToHex (address: string): string {
@@ -177,9 +179,17 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
     }))
   }
 
+  const mnemonicValidate = (mnemonic: string) => {
+    console.log('hello ')
+    webviewRef.current.postMessage(JSON.stringify({
+      type: 'MNEMONIC_VALIDATE',
+      payload: {mnemonic}
+    }))
+  }
+
 
   return (
-    <AccountsContext.Provider value={{accounts, setCallback, mnemonicGenerate, createAccount, addAccount, getAllAccounts}}>
+    <AccountsContext.Provider value={{accounts, setCallback, mnemonicGenerate, createAccount, addAccount, getAllAccounts, mnemonicValidate}}>
       {children}
       <View style={{height: 0}}>
         {html ? (

@@ -1,8 +1,7 @@
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
-import {keyring} from '@polkadot/ui-keyring';
-import {mnemonicValidate} from '@polkadot/util-crypto';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {Button, Icon, Input, ListItem, TopNavigationAction, useTheme} from '@ui-kitten/components';
+import { AccountsContext } from 'context/AccountsContext';
 import {NetworkContext} from 'context/NetworkContext';
 import FormLabel from 'presentational/FormLabel';
 import Padder from 'presentational/Padder';
@@ -18,9 +17,38 @@ import zxcvbn from 'zxcvbn';
 export function ImportAccountScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const theme = useTheme();
   const {currentNetwork} = React.useContext(NetworkContext);
+  const [seed, setSeed] = React.useState('')
+  const [address, setAddress] = React.useState('')
+  const [isSeedValid, setIsSeedValid] = React.useState(false)
   const [account, setAccount] = React.useState({title: '', password: '', confirmPassword: ''});
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
-  const {seed, setSeed, address, isSeedValid} = useParseSeed();
+  const {setCallback, createAccount, addAccount, mnemonicValidate} = React.useContext(AccountsContext)
+
+  React.useEffect(() => {
+    if(seed) {
+      mnemonicValidate(seed)
+    }
+  }, [seed])
+
+  React.useEffect(() => {
+    if(isSeedValid) {
+      createAccount(seed)
+    }
+  }, [isSeedValid])
+
+  setCallback((data) => {
+    const {type, payload} = data
+
+    switch(type) {
+      case 'MNEMONIC_VALIDATE':
+        setIsSeedValid(payload.isValid)
+        break
+
+      case 'CREATE_ACCOUNT':
+        setAddress(payload.address)
+        break
+    }
+  })
 
   const passwordStrength = zxcvbn(account.password).score;
 
@@ -32,9 +60,18 @@ export function ImportAccountScreen({navigation}: {navigation: NavigationProp<Ac
     passwordStrength >= 3
   );
 
+
+
   const onSubmit = () => {
-    keyring.addUri(seed, account.password, {name: account.title, network: currentNetwork.key});
-    navigation.navigate(accountsScreen, {reload: true});
+    addAccount({
+      mnemonic: seed,
+      password: account.password,
+      name: account.title,
+      network: currentNetwork.key,
+      isFavorite: false,
+      isExternal: false,
+    })
+    navigation.navigate(accountsScreen, {});
   };
 
   return (
@@ -94,7 +131,7 @@ export function ImportAccountScreen({navigation}: {navigation: NavigationProp<Ac
           }
         />
         <Padder scale={2} />
-        {address && (
+        {address ? (
           <>
             <ListItem
               title={account.title}
@@ -103,7 +140,7 @@ export function ImportAccountScreen({navigation}: {navigation: NavigationProp<Ac
             />
             <Padder scale={1} />
           </>
-        )}
+        ): null}
         <Button
           disabled={isDisabled}
           status="basic"
@@ -138,23 +175,6 @@ const styles = StyleSheet.create({
     height: 20,
   },
 });
-
-function useParseSeed() {
-  const [seed, setSeed] = React.useState('');
-
-  let address: string | null = null;
-  const isSeedValid = mnemonicValidate(seed);
-  if (isSeedValid) {
-    try {
-      address = keyring.createFromUri(seed, {}, 'sr25519').address;
-    } catch (error) {
-      address = null;
-      console.error(error);
-    }
-  }
-
-  return {seed, setSeed, address, isSeedValid};
-}
 
 export function ImportScreenHeaderRight() {
   const navigation = useNavigation();
