@@ -8,12 +8,11 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import DocumentPicker, {DocumentPickerResponse} from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
 import {monofontFamily, standardPadding} from 'src/styles';
-import type {KeyringPair$Json} from '@polkadot/keyring/types';
-import {keyring} from '@polkadot/ui-keyring';
 import {NavigationProp} from '@react-navigation/core';
 import {AccountsStackParamList} from 'src/navigation/navigation';
 import {accountsScreen} from 'src/navigation/routeKeys';
 import {NetworkContext} from 'context/NetworkContext';
+import { AccountsContext } from 'context/AccountsContext';
 
 export function ImportAccountWithJsonFileScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const theme = useTheme();
@@ -23,12 +22,18 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
   const parsedJson = jsonContent ? tryParseJson(jsonContent) : undefined;
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
   const [password, setPassword] = React.useState('');
+  const {restoreAccount} = React.useContext(AccountsContext)
 
-  function restoreAccount() {
+  function onRestoreAccount() {
     if (parsedJson && password) {
-      const pair = keyring.restoreAccount(parsedJson, password);
-      keyring.saveAccountMeta(pair, {network: currentNetwork.key});
-      navigation.navigate(accountsScreen, {reload: true});
+      restoreAccount({
+        json: parsedJson,
+        password,
+        network: currentNetwork.key,
+        isExternal: false,
+        isFavorite: false
+      })
+      navigation.navigate(accountsScreen, {});
     }
   }
 
@@ -84,7 +89,7 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
         />
 
         <Padder scale={2} />
-        <Button disabled={!password || !parsedJson} onPress={() => restoreAccount()}>
+        <Button disabled={!password || !parsedJson} onPress={() => onRestoreAccount()}>
           <Text>Restore</Text>
         </Button>
       </View>
@@ -136,7 +141,7 @@ async function pickFile() {
   }
 }
 
-function tryParseJson(json: string): KeyringPair$Json | undefined {
+function tryParseJson(json: string) {
   try {
     return JSON.parse(json);
   } catch (e) {

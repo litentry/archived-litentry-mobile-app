@@ -30,6 +30,15 @@ type AddAccountPayload = {
 type AddExternalAccountPayload = {
   address: string
   network: SupportedNetworkType
+  isFavorite: boolean
+}
+
+type RestoreAccountPayload = {
+  json: any
+  password: string
+  network: SupportedNetworkType
+  isExternal: boolean,
+  isFavorite: boolean
 }
 
 type Accounts = Record<string, Account>;
@@ -43,6 +52,7 @@ type AccountsContext = {
   getAllAccounts: () => void
   mnemonicValidate: (mnemonic: string) => void
   addExternalAccount: (payload: AddExternalAccountPayload) => void
+  restoreAccount: (payload: RestoreAccountPayload) => void
 }
 
 export const AccountsContext = createContext<AccountsContext>({
@@ -53,7 +63,8 @@ export const AccountsContext = createContext<AccountsContext>({
   addAccount: () => ({}),
   getAllAccounts: () => ({}),
   mnemonicValidate: () => ({}),
-  addExternalAccount: () => ({})
+  addExternalAccount: () => ({}),
+  restoreAccount: () => ({})
 });
 
 function addressToHex (address: string): string {
@@ -81,7 +92,8 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
   }
 
   const prepareAccounts = (accounts) => {
-    setAccounts(accounts.map((account) => {
+    // console.log(accounts)
+    setAccounts(accounts.filter((account) => account.meta.network === currentNetwork.key).map((account) => {
       const {address, meta: {name, isExternal, isFavorite, network}} = account
       return {
         address: address,
@@ -92,6 +104,13 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
       }
     }))
   }
+
+  useEffect(() => {
+    if(html) {
+      setSS58Format(currentNetwork.ss58Format)
+      getAllAccounts()
+    }
+  }, [currentNetwork, html])
 
   useEffect(() => {
     const webviewAccounts = mmkvStorage.getString(KEYRING_ACCOUNTS)
@@ -142,6 +161,7 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
         break
       case 'ADD_ACCOUNT':
       case 'ADD_EXTERNAL_ACCOUNT':
+      case 'RESTORE_ACCOUNT':
         setLocalStoreAccounts([...localStoreAccounts, {
           key: `account:${addressToHex(payload.account.address)}`,
           value: payload.account
@@ -201,6 +221,13 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
     }))
   }
 
+  const restoreAccount = (payload: RestoreAccountPayload) => {
+    webviewRef.current.postMessage(JSON.stringify({
+      type: 'RESTORE_ACCOUNT',
+      payload
+    }))
+  }
+
 
   return (
     <AccountsContext.Provider value={{
@@ -211,7 +238,8 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
       addAccount,
       getAllAccounts,
       mnemonicValidate,
-      addExternalAccount
+      addExternalAccount,
+      restoreAccount
     }}>
       {children}
       <View style={{height: 0}}>

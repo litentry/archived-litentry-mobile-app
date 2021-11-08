@@ -43,7 +43,8 @@ export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppSt
     if (state.step === 'preview') {
       addExternalAccount({
         address: state.address,
-        network: currentNetwork.key
+        network: currentNetwork.key,
+        isFavorite: false,
       })
       dispatch({type: 'SET_STEP', payload: 'success'});
       return;
