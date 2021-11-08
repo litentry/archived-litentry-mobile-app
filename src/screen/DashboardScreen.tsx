@@ -1,7 +1,7 @@
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {Divider, Icon, Text, TopNavigationAction} from '@ui-kitten/components';
+import {Divider, Icon, Text, TopNavigation, TopNavigationAction} from '@ui-kitten/components';
 import {useApi} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
 import {CouncilSummaryTeaser} from 'layout/CouncilSummaryTeaser';
@@ -12,7 +12,7 @@ import {TreasurySummaryTeaser} from 'layout/TreasurySummaryTeaser';
 import FadeInAnimatedView from 'presentational/FadeInAnimatedView';
 import NetworkItem from 'presentational/NetworkItem';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {ApiLoadingStackParamList, DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
 import {
@@ -80,7 +80,14 @@ export default DashboardScreen;
 
 export function DashboardHeaderLeft() {
   const navigation: PropTypes['navigation'] = useNavigation();
-  return <TopNavigationAction onPress={navigation.openDrawer} icon={(p) => <Icon {...p} name={'menu-2-outline'} />} />;
+  return (
+    <TopNavigationAction
+      onPress={navigation.openDrawer}
+      icon={(p) => {
+        return <Icon {...p} name={'menu-2-outline'} />;
+      }}
+    />
+  );
 }
 
 function DashboardTitle({onNetworkSelect}: {onNetworkSelect: () => void}) {

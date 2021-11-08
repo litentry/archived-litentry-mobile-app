@@ -21,5 +21,16 @@
     "text-subtitle-2-font-size": 13,
 
     "text-caption-1-font-size": 12
+  },
+  "components": {
+    "TopNavigationAction": {
+      "appearances": {
+        "default": {
+          "mapping": {
+            "iconTintColor": "text-basic-color"
+          }
+        }
+      }
+    }
   }
 }
