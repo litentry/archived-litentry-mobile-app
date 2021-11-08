@@ -22,7 +22,6 @@
     "@polkadot/util": "^7.6.1"
   },
   "dependencies": {
-    "@eva-design/eva": "^2.1.1",
     "@eva-design/material": "^2.1.1",
     "@polkadot/api": "^6.5.1",
     "@polkadot/apps-config": "^0.96.1",
