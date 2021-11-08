@@ -397,7 +397,7 @@ type State =
       description: string;
       partialFee: number;
       isExternalAccount: false;
-      signature: Signature;
+      signature: SignerResult;
     }
   | {view: 'qr_code_tx_payload_view'; txPayload: SignerPayloadJSON}
   | {view: 'scan_signature_view'}
@@ -405,11 +405,6 @@ type State =
   | {view: 'warning_view'; warning: string};
 
 const initialState: State = {view: 'initial_view'};
-
-type Signature = {
-  id: number;
-  signature: string;
-};
 
 type Action =
   | {type: 'RESET'}
@@ -438,7 +433,7 @@ type Action =
             title: string;
             description: string;
             isExternalAccount: false;
-            signature: Signature;
+            signature: SignerResult;
           };
     }
   | {
