@@ -12,7 +12,7 @@
     "prettier": "./node_modules/.bin/prettier --ignore-path .gitignore \"**/*.+(js|ts|tsx|json)\"",
     "nodeify": "rn-nodeify --hack --install process,crypto,events,constant,console,stream,url,util",
     "validate": "./node_modules/.bin/npm-run-all --parallel check-types lint",
-    "postinstall": "npm run nodeify && patch-package",
+    "postinstall": "npm run nodeify && patch-package && cd ./litentry-keyring && yarn && npx webpack && cd ..",
     "prepare": "husky install",
     "bundle:android": "cd android/ && ./gradlew bundleRelease",
     "assemble:android": "cd android/ && ./gradlew clean && ./gradlew assembleRelease"
