@@ -188,7 +188,6 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
   }
 
   const mnemonicValidate = (mnemonic: string) => {
-    console.log('hello ')
     webviewRef.current.postMessage(JSON.stringify({
       type: 'MNEMONIC_VALIDATE',
       payload: {mnemonic}
