@@ -53,6 +53,7 @@ type AccountsContext = {
   mnemonicValidate: (mnemonic: string) => void
   addExternalAccount: (payload: AddExternalAccountPayload) => void
   restoreAccount: (payload: RestoreAccountPayload) => void
+  toggleFavorite: (address: string) => void
 }
 
 export const AccountsContext = createContext<AccountsContext>({
@@ -64,7 +65,8 @@ export const AccountsContext = createContext<AccountsContext>({
   getAllAccounts: () => ({}),
   mnemonicValidate: () => ({}),
   addExternalAccount: () => ({}),
-  restoreAccount: () => ({})
+  restoreAccount: () => ({}),
+  toggleFavorite: () => ({})
 });
 
 function addressToHex (address: string): string {
@@ -159,6 +161,7 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
       case 'ALL_ACCOUNTS':
         prepareAccounts(payload.accounts)
         break
+
       case 'ADD_ACCOUNT':
       case 'ADD_EXTERNAL_ACCOUNT':
       case 'RESTORE_ACCOUNT':
@@ -169,6 +172,12 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
         getAllAccounts()
         callback(data)
         break
+
+      case 'TOGGLE_FAVORITE':
+        getAllAccounts()
+        callback(data)
+        break
+        
       default:
         callback(data)
     }
@@ -228,6 +237,13 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
     }))
   }
 
+  const toggleFavorite = (address: string) => {
+    webviewRef.current.postMessage(JSON.stringify({
+      type: 'TOGGLE_FAVORITE',
+      payload: {address}
+    }))
+  }
+
 
   return (
     <AccountsContext.Provider value={{
@@ -239,7 +255,8 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
       getAllAccounts,
       mnemonicValidate,
       addExternalAccount,
-      restoreAccount
+      restoreAccount,
+      toggleFavorite
     }}>
       {children}
       <View style={{height: 0}}>

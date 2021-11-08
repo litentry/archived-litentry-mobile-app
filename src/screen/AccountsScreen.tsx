@@ -1,7 +1,7 @@
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp} from '@react-navigation/native';
 import {Button, Divider, Icon, ListItem, MenuItem, OverflowMenu, Text, useTheme} from '@ui-kitten/components';
-import {Account, useAccounts} from 'context/AccountsContext';
+import {Account, AccountsContext, useAccounts} from 'context/AccountsContext';
 import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
 import LoadingView from 'presentational/LoadingView';
 import Padder from 'presentational/Padder';
@@ -13,8 +13,6 @@ import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 import {CompleteNavigatorParamList} from 'src/navigation/navigation';
 import {addAccountScreen, importAccountScreen, myAccountScreen, mnemonicScreen} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
-import {keyring} from '@polkadot/ui-keyring';
-import {NetworkContext} from 'context/NetworkContext';
 
 type CombinedData = {
   identity: IdentityInfo;
@@ -22,8 +20,8 @@ type CombinedData = {
 };
 
 export function AccountsScreen({navigation}: {navigation: NavigationProp<CompleteNavigatorParamList>}) {
+  const {toggleFavorite} = React.useContext(AccountsContext)
   const {accounts} = useAccounts();
-  const {currentNetwork} = React.useContext(NetworkContext);
   const {data, isLoading} = useAccountsIdentityInfo(accounts.map(({address}) => address));
   const combinedData = data?.reduce<CombinedData[]>((acc, current) => {
     const account = accounts.find((a) => a.address === String(current.accountId));
@@ -38,8 +36,7 @@ export function AccountsScreen({navigation}: {navigation: NavigationProp<Complet
   const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
 
   const onToggleFavorite = (address: string) => {
-    const pair = keyring.getPair(address);
-    keyring.saveAccountMeta(pair, {isFavorite: !pair.meta.isFavorite, network: currentNetwork.key});
+    toggleFavorite(address)
   };
 
   return (
