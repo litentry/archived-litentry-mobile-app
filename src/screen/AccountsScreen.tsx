@@ -21,7 +21,7 @@ type CombinedData = {
 };
 
 export function AccountsScreen({navigation}: {navigation: NavigationProp<CompleteNavigatorParamList>}) {
-  const {accounts, setAccountFavorite} = useAccounts();
+  const {accounts, toggleFavorite} = useAccounts();
   const {currentNetwork} = useContext(NetworkContext);
   const networkAccounts = Object.values(accounts).filter((account) => account.meta.network === currentNetwork.key);
   const {data, isLoading} = useAccountsIdentityInfo(networkAccounts.map((account) => account.address));
@@ -53,7 +53,7 @@ export function AccountsScreen({navigation}: {navigation: NavigationProp<Complet
               isExternal={item.account.isExternal}
               identity={item.identity}
               isFavorite={item.account.meta.isFavorite}
-              toggleFavorite={() => setAccountFavorite(item.account.address, !item.account.meta.isFavorite)}
+              toggleFavorite={() => toggleFavorite(item.account.address)}
               onPress={() => {
                 navigation.navigate(myAccountScreen, {address: item.account.address});
               }}

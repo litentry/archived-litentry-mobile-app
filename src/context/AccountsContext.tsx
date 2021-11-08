@@ -31,7 +31,7 @@ type Accounts = Record<string, Account>;
 type Context = {
   accounts: Accounts;
   addAccount: (account: Account) => void;
-  setAccountFavorite: (address: string, isFavorite: boolean) => void;
+  toggleFavorite: (address: string) => void;
   removeAccount: (address: string) => void;
 };
 
@@ -40,7 +40,7 @@ const AccountsContext = createContext<Context>({
   addAccount: () => {
     return;
   },
-  setAccountFavorite: () => {
+  toggleFavorite: () => {
     return;
   },
   removeAccount: () => {
@@ -56,10 +56,10 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
     addAccount: (account: Account) => {
       setAccounts({...accounts, [account.address]: account});
     },
-    setAccountFavorite: (address: string, isFavorite: boolean) => {
+    toggleFavorite: (address: string) => {
       const account = accounts[address];
       if (account) {
-        const newAccount = {...account, meta: {...account.meta, isFavorite}};
+        const newAccount = {...account, meta: {...account.meta, isFavorite: !account.meta.isFavorite}};
         setAccounts({...accounts, [address]: newAccount});
       }
     },
