@@ -1,5 +1,7 @@
 {
   "strict": {
+    "text-font-family": "DMSans-Regular",
+
     "text-heading-6-font-size": 14,
     "text-heading-6-font-weight": "800",
 
