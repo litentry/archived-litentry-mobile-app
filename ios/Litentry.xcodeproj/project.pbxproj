@@ -24,7 +24,7 @@
 		8804DE6E2576F18D00D915D3 /* logo-256.png in Resources */ = {isa = PBXBuildFile; fileRef = 8804DE6D2576F18D00D915D3 /* logo-256.png */; };
 		9172275A498FD7B64F2D18CF /* libPods-Litentry-LitentryTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FC43D0E04EE748AF1AD86CB7 /* libPods-Litentry-LitentryTests.a */; };
 		C6A5683056BED6919802D6E6 /* libPods-Litentry-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93B327CEEC8ECC7F12EB8885 /* libPods-Litentry-tvOSTests.a */; };
-		CA31A0462733F15D000BE764 /* litentry-keyring in Resources */ = {isa = PBXBuildFile; fileRef = CA31A0452733F15C000BE764 /* litentry-keyring */; };
+		CA3B519227392799004E078C /* public in Resources */ = {isa = PBXBuildFile; fileRef = CA3B519127392799004E078C /* public */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,7 +72,7 @@
 		93B327CEEC8ECC7F12EB8885 /* libPods-Litentry-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Litentry-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		96B593DB4A031929E319B05A /* Pods-Litentry-LitentryTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Litentry-LitentryTests.debug.xcconfig"; path = "Target Support Files/Pods-Litentry-LitentryTests/Pods-Litentry-LitentryTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C22922F4D75E981DCA9984DF /* Pods-Litentry-LitentryTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Litentry-LitentryTests.release.xcconfig"; path = "Target Support Files/Pods-Litentry-LitentryTests/Pods-Litentry-LitentryTests.release.xcconfig"; sourceTree = "<group>"; };
-		CA31A0452733F15C000BE764 /* litentry-keyring */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "litentry-keyring"; path = "../litentry-keyring"; sourceTree = "<group>"; };
+		CA3B519127392799004E078C /* public */ = {isa = PBXFileReference; lastKnownFileType = folder; name = public; path = "../litentry-keyring/public"; sourceTree = "<group>"; };
 		D391DFFC5928ADB157439CF1 /* Pods-Litentry.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Litentry.release.xcconfig"; path = "Target Support Files/Pods-Litentry/Pods-Litentry.release.xcconfig"; sourceTree = "<group>"; };
 		E3603F54669F8FCD786DA83A /* Pods-Litentry.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Litentry.debug.xcconfig"; path = "Target Support Files/Pods-Litentry/Pods-Litentry.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -173,7 +173,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				CA31A0452733F15C000BE764 /* litentry-keyring */,
+				CA3B519127392799004E078C /* public */,
 				299A9112265E2DED00002549 /* File.swift */,
 				13B07FAE1A68108700A75B9A /* Litentry */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -359,7 +359,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CA31A0462733F15D000BE764 /* litentry-keyring in Resources */,
+				CA3B519227392799004E078C /* public in Resources */,
 				8804DE6E2576F18D00D915D3 /* logo-256.png in Resources */,
 				2902EEF926820A6F009FB826 /* GoogleService-Info.plist in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,

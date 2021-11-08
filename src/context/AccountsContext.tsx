@@ -74,7 +74,7 @@ function addressToHex (address: string): string {
 }
 
 async function loadHtml(setHtml: (html: string) => void) {
-  const html = Platform.OS === 'android' ? await RNFS.readFileAssets('index.html', 'utf8') : await RNFS.readFile(`${RNFS.MainBundlePath}/litentry-keyring/index.html`, 'utf8')
+  const html = Platform.OS === 'android' ? await RNFS.readFileAssets('index.html', 'utf8') : await RNFS.readFile(`${RNFS.MainBundlePath}/public/index.html`, 'utf8')
   setHtml(html)
 }
 
