@@ -51,12 +51,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
   },
-  textSubstitute: {
-    height: 20,
-    opacity: 0.3,
-    marginTop: 5,
-    marginBottom: 5,
-  },
   loadingItem: {
     height: 20,
     opacity: 0.2,
