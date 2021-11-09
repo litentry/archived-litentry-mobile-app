@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native';
 import {Card} from '@ui-kitten/components';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
 import {TipReason} from 'layout/tips/TipReason';
@@ -12,15 +11,15 @@ import {standardPadding} from 'src/styles';
 
 type TipTeaserProps = {
   tip: Tip;
+  onPress: (hash: string) => void;
 };
 
-export function TipTeaser({tip}: TipTeaserProps) {
-  const navigation = useNavigation();
+export function TipTeaser({tip, onPress}: TipTeaserProps) {
   const {who, reason} = tip[1];
   const tipHash = tip[0];
 
   return (
-    <Card style={styles.card} onPress={() => navigation.navigate(tipDetailScreen, {hash: tipHash})}>
+    <Card style={styles.card} onPress={() => onPress(tipHash)}>
       <AddressInlineTeaser address={String(who)} />
       <Padder scale={0.5} />
       <StatInfoBlock title="Reason">
@@ -29,6 +28,8 @@ export function TipTeaser({tip}: TipTeaserProps) {
     </Card>
   );
 }
+
+export const MemoizedTipTeaser = React.memo(TipTeaser);
 
 const styles = StyleSheet.create({
   card: {
