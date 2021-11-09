@@ -2007,10 +2007,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^17.0.26":
-  version "17.0.26"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.26.tgz#960ea4b3518cc154ed7df3b35656c508df653331"
-  integrity sha512-MXxuXrH2xOcv5cp/su4oz69dNQnSA90JjFw5HBd5wifw6Ihi94j7dRJm7qNsB30tnruXSCPc9qmlhGop4nh9Hw==
+"@types/react@*", "@types/react@^17.0.34":
+  version "17.0.34"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.34.tgz#797b66d359b692e3f19991b6b07e4b0c706c0102"
+  integrity sha512-46FEGrMjc2+8XhHXILr+3+/sTe3OfzSPU9YGKILLrUYbQ1CLQC9Daqo1KzENGXAWwrFwiY0l4ZbF20gRvgpWTg==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -7918,10 +7918,10 @@ react-native-device-info@^8.4.0:
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-8.4.0.tgz#c434af5c928c7f8e2c3b1a1ca07061b83d50ccd4"
   integrity sha512-/ZHDJajkEmjNmjvm52o7pqIpR2uKocD66iH00GMe5QpUdM9u9vDxS2hgcRbgrVaKEfA5IRIBctpalYMrrbQU+Q==
 
-react-native-document-picker@^7.1.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-document-picker/-/react-native-document-picker-7.1.0.tgz#3b08f8a1a296617f4677e8e834427f63ef28e0d3"
-  integrity sha512-pdGlOYh7YM9X0GCrDJIGNHrwCV/l7QCYGvLya8w4YnJAE3NmM/39lk+pPrbxnkEygifwPqG9R3IBt7ydmPLi/w==
+react-native-document-picker@^7.1.1:
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-document-picker/-/react-native-document-picker-7.1.1.tgz#87f573918eb46681d1a0be4292f3325c7feda5c2"
+  integrity sha512-lEgyfl+JbU/UCDu8UdagBrC5CC71WTfqCzWyGeALLZiXGHrCJo/5BMqWbAc9PSCeiqNMnFkjcybO/kws5gMkxA==
   dependencies:
     invariant "^2.2.4"
 
