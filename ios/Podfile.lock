@@ -281,7 +281,7 @@ PODS:
     - React-Core
   - react-native-camera/RN (4.2.1):
     - React-Core
-  - react-native-document-picker (7.1.0):
+  - react-native-document-picker (7.1.1):
     - React-Core
   - react-native-in-app-message (1.0.32):
     - React
@@ -386,7 +386,7 @@ PODS:
     - React-Core
   - RNPermissions (3.0.5):
     - React-Core
-  - RNReactNativeHapticFeedback (1.11.0):
+  - RNReactNativeHapticFeedback (1.13.0):
     - React-Core
   - RNReanimated (2.2.3):
     - DoubleConversion
@@ -657,7 +657,7 @@ SPEC CHECKSUMS:
   React-logger: bfddd3418dc1d45b77b822958f3e31422e2c179b
   react-native-aes: c6e4e3ffcff410535e31e161fca95d50e608d4ee
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
-  react-native-document-picker: bf12b9ca87790f9b723106ffde0eff239928e515
+  react-native-document-picker: f4cc4df2eff8c9015d862a59bdaef11a153f1292
   react-native-in-app-message: 7a54e2fd7a490e5c33857bbbb260f855205433db
   react-native-mmkv: 27029f9f3a30dc798726cfc92775f4cbedcb7dd7
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
@@ -687,7 +687,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNKeychain: 4f63aada75ebafd26f4bc2c670199461eab85d94
   RNPermissions: 7043bacbf928eae25808275cfe73799b8f618911
-  RNReactNativeHapticFeedback: 653a8c126a0f5e88ce15ffe280b3ff37e1fbb285
+  RNReactNativeHapticFeedback: b83bfb4b537bdd78eb4f6ffe63c6884f7b049ead
   RNReanimated: b04ef2a4f0cb61b062bbcf033f84a9e470f4f60b
   RNScreens: 6e1ea5787989f92b0671049b808aef64fa1ef98c
   RNShare: 0fec82bd2e67d09f895937ccb4f5a097e714dec2

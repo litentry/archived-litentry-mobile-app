@@ -1303,20 +1303,6 @@
     "@polkadot/util" "7.8.2"
     "@polkadot/util-crypto" "7.8.2"
 
-"@polkadot/networks@6.11.1":
-  version "6.11.1"
-  resolved "https://registry.yarnpkg.com/@polkadot/networks/-/networks-6.11.1.tgz#8fd189593f6ee4f8bf64378d0aaae09e39a37d35"
-  integrity sha512-0C6Ha2kvr42se3Gevx6UhHzv3KnPHML0N73Amjwvdr4y0HLZ1Nfw+vcm5yqpz5gpiehqz97XqFrsPRauYdcksQ==
-  dependencies:
-    "@babel/runtime" "^7.14.6"
-
-"@polkadot/networks@7.6.1":
-  version "7.6.1"
-  resolved "https://registry.yarnpkg.com/@polkadot/networks/-/networks-7.6.1.tgz#d7ca346a3c15b29c9286ccbc67b1438bf9c8130e"
-  integrity sha512-76RdEVy+G14P13oxSe3+VDwFdVYRNVAy7xi9ESJBRZFnQC/TIL2rOeg7Gq5+HP/mkgzG4gL5X30VdE+aKzokpA==
-  dependencies:
-    "@babel/runtime" "^7.15.4"
-
 "@polkadot/networks@7.8.2", "@polkadot/networks@^7.8.2":
   version "7.8.2"
   resolved "https://registry.yarnpkg.com/@polkadot/networks/-/networks-7.8.2.tgz#24bc6f946069395c08a24da65c848f7158fb7abf"
@@ -1416,52 +1402,7 @@
     "@babel/runtime" "^7.15.4"
     color "^3.2.1"
 
-"@polkadot/util-crypto@6.11.1":
-  version "6.11.1"
-  resolved "https://registry.yarnpkg.com/@polkadot/util-crypto/-/util-crypto-6.11.1.tgz#7a36acf5c8bf52541609ec0b0b2a69af295d652e"
-  integrity sha512-fWA1Nz17FxWJslweZS4l0Uo30WXb5mYV1KEACVzM+BSZAvG5eoiOAYX6VYZjyw6/7u53XKrWQlD83iPsg3KvZw==
-  dependencies:
-    "@babel/runtime" "^7.14.6"
-    "@polkadot/networks" "6.11.1"
-    "@polkadot/util" "6.11.1"
-    "@polkadot/wasm-crypto" "^4.0.2"
-    "@polkadot/x-randomvalues" "6.11.1"
-    base-x "^3.0.8"
-    base64-js "^1.5.1"
-    blakejs "^1.1.1"
-    bn.js "^4.11.9"
-    create-hash "^1.2.0"
-    elliptic "^6.5.4"
-    hash.js "^1.1.7"
-    js-sha3 "^0.8.0"
-    scryptsy "^2.1.0"
-    tweetnacl "^1.0.3"
-    xxhashjs "^0.2.2"
-
-"@polkadot/util-crypto@7.6.1", "@polkadot/util-crypto@^7.4.1":
-  version "7.6.1"
-  resolved "https://registry.yarnpkg.com/@polkadot/util-crypto/-/util-crypto-7.6.1.tgz#3e40270e9dce7885d92d0992aef9761feb57f2e2"
-  integrity sha512-5lLEfexkYOc73jitwC4K/Ll3JNA8Hdo2aU3GSOkDah8bBpm02djD7ypwfmuWRJw0UDyTgY67g0SXn4frPcQiag==
-  dependencies:
-    "@babel/runtime" "^7.15.4"
-    "@polkadot/networks" "7.6.1"
-    "@polkadot/util" "7.6.1"
-    "@polkadot/wasm-crypto" "^4.2.1"
-    "@polkadot/x-randomvalues" "7.6.1"
-    base-x "^3.0.9"
-    base64-js "^1.5.1"
-    blakejs "^1.1.1"
-    bn.js "^4.12.0"
-    create-hash "^1.2.0"
-    ed2curve "^0.3.0"
-    elliptic "^6.5.4"
-    hash.js "^1.1.7"
-    js-sha3 "^0.8.0"
-    scryptsy "^2.1.0"
-    tweetnacl "^1.0.3"
-    xxhashjs "^0.2.2"
-
-"@polkadot/util-crypto@7.8.2", "@polkadot/util-crypto@^7.8.2":
+"@polkadot/util-crypto@6.11.1", "@polkadot/util-crypto@7.6.1", "@polkadot/util-crypto@7.8.2", "@polkadot/util-crypto@^7.4.1", "@polkadot/util-crypto@^7.8.2":
   version "7.8.2"
   resolved "https://registry.yarnpkg.com/@polkadot/util-crypto/-/util-crypto-7.8.2.tgz#8fdf177793b00eced2d132ce03b0a9c0b0d1441b"
   integrity sha512-wmWRRQuYmf3j4DJMPG2+J2BCS0uyO9yXuYlPdZ31enehTNDPl7Uke9sCUAdlAIwIfz60i4SIh8wyFPKMMwthqQ==
@@ -1511,7 +1452,7 @@
   dependencies:
     "@babel/runtime" "^7.15.3"
 
-"@polkadot/wasm-crypto@^4.0.2", "@polkadot/wasm-crypto@^4.2.1":
+"@polkadot/wasm-crypto@^4.2.1":
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/@polkadot/wasm-crypto/-/wasm-crypto-4.2.1.tgz#4d09402f5ac71a90962fb58cbe4b1707772a4fb6"
   integrity sha512-C/A/QnemOilRTLnM0LfhPY2N/x3ZFd1ihm9sXYyuh98CxtekSVYI9h4IJ5Jrgz5imSUHgvt9oJLqJ5GbWQV/Zg==
@@ -1530,42 +1471,12 @@
     "@types/node-fetch" "^2.5.12"
     node-fetch "^2.6.6"
 
-"@polkadot/x-global@6.11.1":
-  version "6.11.1"
-  resolved "https://registry.yarnpkg.com/@polkadot/x-global/-/x-global-6.11.1.tgz#c292b3825fea60e9b33fff1790323fc57de1ca5d"
-  integrity sha512-lsBK/e4KbjfieyRmnPs7bTiGbP/6EoCZz7rqD/voNS5qsJAaXgB9LR+ilubun9gK/TDpebyxgO+J19OBiQPIRw==
-  dependencies:
-    "@babel/runtime" "^7.14.6"
-
-"@polkadot/x-global@7.6.1":
-  version "7.6.1"
-  resolved "https://registry.yarnpkg.com/@polkadot/x-global/-/x-global-7.6.1.tgz#f43a61d40bfaf2f43f9a4ef39e01a24546768394"
-  integrity sha512-jKPNFHiC0yIc6TfqZtopaqsW3pDun1uh9lp0kcDkfOYozwwN1NVXWLClDBa2C5UiKU/jxA3biYiNZUyZpbV13g==
-  dependencies:
-    "@babel/runtime" "^7.15.4"
-
 "@polkadot/x-global@7.8.2", "@polkadot/x-global@^7.8.2":
   version "7.8.2"
   resolved "https://registry.yarnpkg.com/@polkadot/x-global/-/x-global-7.8.2.tgz#bc15bfd46e78b8a97622e07824f1e75566f3cb3a"
   integrity sha512-olULRitxWv1tsSDgLdiVBbyzaU+OJbw8aTdmUMj9ZiIJstBzbNT/vsTWkX6JuMSLb9hw6ElaDXJ7zaffHY5siw==
   dependencies:
     "@babel/runtime" "^7.16.0"
-
-"@polkadot/x-randomvalues@6.11.1":
-  version "6.11.1"
-  resolved "https://registry.yarnpkg.com/@polkadot/x-randomvalues/-/x-randomvalues-6.11.1.tgz#f006fa250c8e82c92ccb769976a45a8e7f3df28b"
-  integrity sha512-2MfUfGZSOkuPt7GF5OJkPDbl4yORI64SUuKM25EGrJ22o1UyoBnPOClm9eYujLMD6BfDZRM/7bQqqoLW+NuHVw==
-  dependencies:
-    "@babel/runtime" "^7.14.6"
-    "@polkadot/x-global" "6.11.1"
-
-"@polkadot/x-randomvalues@7.6.1":
-  version "7.6.1"
-  resolved "https://registry.yarnpkg.com/@polkadot/x-randomvalues/-/x-randomvalues-7.6.1.tgz#0cd143cf976e36f5c9fcf53ba41fd5fffca95c44"
-  integrity sha512-hfSMBeMZTrnuejv/oXp3tMZARTOGyQZ3G0GW44dV2fR2L1+tlLj9VuXgVGgupNBq7AC6eSfE3XhJwCGyH5FhmQ==
-  dependencies:
-    "@babel/runtime" "^7.15.4"
-    "@polkadot/x-global" "7.6.1"
 
 "@polkadot/x-randomvalues@7.8.2":
   version "7.8.2"
@@ -2096,10 +2007,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^17.0.26":
-  version "17.0.26"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.26.tgz#960ea4b3518cc154ed7df3b35656c508df653331"
-  integrity sha512-MXxuXrH2xOcv5cp/su4oz69dNQnSA90JjFw5HBd5wifw6Ihi94j7dRJm7qNsB30tnruXSCPc9qmlhGop4nh9Hw==
+"@types/react@*", "@types/react@^17.0.34":
+  version "17.0.34"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.34.tgz#797b66d359b692e3f19991b6b07e4b0c706c0102"
+  integrity sha512-46FEGrMjc2+8XhHXILr+3+/sTe3OfzSPU9YGKILLrUYbQ1CLQC9Daqo1KzENGXAWwrFwiY0l4ZbF20gRvgpWTg==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -8007,10 +7918,10 @@ react-native-device-info@^8.4.0:
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-8.4.0.tgz#c434af5c928c7f8e2c3b1a1ca07061b83d50ccd4"
   integrity sha512-/ZHDJajkEmjNmjvm52o7pqIpR2uKocD66iH00GMe5QpUdM9u9vDxS2hgcRbgrVaKEfA5IRIBctpalYMrrbQU+Q==
 
-react-native-document-picker@^7.1.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-document-picker/-/react-native-document-picker-7.1.0.tgz#3b08f8a1a296617f4677e8e834427f63ef28e0d3"
-  integrity sha512-pdGlOYh7YM9X0GCrDJIGNHrwCV/l7QCYGvLya8w4YnJAE3NmM/39lk+pPrbxnkEygifwPqG9R3IBt7ydmPLi/w==
+react-native-document-picker@^7.1.1:
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-document-picker/-/react-native-document-picker-7.1.1.tgz#87f573918eb46681d1a0be4292f3325c7feda5c2"
+  integrity sha512-lEgyfl+JbU/UCDu8UdagBrC5CC71WTfqCzWyGeALLZiXGHrCJo/5BMqWbAc9PSCeiqNMnFkjcybO/kws5gMkxA==
   dependencies:
     invariant "^2.2.4"
 
@@ -8043,10 +7954,10 @@ react-native-gesture-handler@^1.8.0:
     invariant "^2.2.4"
     prop-types "^15.7.2"
 
-react-native-haptic-feedback@^1.11.0:
-  version "1.11.0"
-  resolved "https://registry.yarnpkg.com/react-native-haptic-feedback/-/react-native-haptic-feedback-1.11.0.tgz#adfd841f3b67046532f912c6ec827aea0037d8ad"
-  integrity sha512-KTIy7lExwMtB6pOpCARyUzFj5EzYTh+A1GN/FB5Eb0LrW5C6hbb1kdj9K2/RHyZC+wyAJD1M823ZaDCU6n6cLA==
+react-native-haptic-feedback@^1.13.0:
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/react-native-haptic-feedback/-/react-native-haptic-feedback-1.13.0.tgz#e4974fc465a38548be262748e73098dc9dd3a0fb"
+  integrity sha512-g8G5QURitDeC/zRlobDvUXLxKYfMlIM2HQNWJKbHPSu61qfs0djnK4s1NZuQzihkeAO0KJ4AS2XWvKBzUmlXtA==
 
 react-native-in-app-message@^1.0.32:
   version "1.0.32"

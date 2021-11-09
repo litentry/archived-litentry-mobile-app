@@ -194,13 +194,19 @@ function Fund({item, active, onPressContribute}: {item: Campaign; active: boolea
 
   return (
     <Card
+      status={item.isSpecial ? 'success' : 'control'}
       style={styles.fund}
       onPress={() => {
         navigation.navigate(crowdloanFundDetailScreen, {title: String(text), paraId: item.paraId});
       }}>
       <View style={[globalStyles.rowAlignCenter]}>
         <View style={styles.shrink}>
-          <Text category="h6" numberOfLines={1} adjustsFontSizeToFit style={styles.shrink}>
+          <Text
+            category="h6"
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            style={styles.shrink}
+            status={item.isSpecial ? 'success' : 'basic'}>
             {String(text)}
           </Text>
           <Padder scale={0.5} />
@@ -212,7 +218,12 @@ function Fund({item, active, onPressContribute}: {item: Campaign; active: boolea
         <View style={styles.listItemRightSide}>
           <Chart percent={percentage} />
           {active && (
-            <Button style={styles.button} appearance="filled" status="basic" size="tiny" onPress={onPressContribute}>
+            <Button
+              style={styles.button}
+              appearance="filled"
+              status={item.isSpecial ? 'success' : 'basic'}
+              size="tiny"
+              onPress={onPressContribute}>
               + Contribute
             </Button>
           )}

@@ -10,7 +10,7 @@ import {StyleSheet, View} from 'react-native';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import {useTreasuryInfo} from 'src/api/hooks/useTreasuryInfo';
+import {useTreasurySummary} from 'src/api/hooks/useTreasurySummary';
 import globalStyles from 'src/styles';
 
 type PropTypes = {
@@ -19,9 +19,9 @@ type PropTypes = {
 
 export function TreasurySummaryTeaser(props: PropTypes) {
   const bestNumber = useBestNumber();
-  const {data: treasuryInfo, isLoading} = useTreasuryInfo();
-  const total = treasuryInfo?.spendPeriod || BN_ONE;
-  const value = bestNumber?.mod(treasuryInfo?.spendPeriod?.toBn() ?? BN_ONE);
+  const {data: treasurySummary, isLoading} = useTreasurySummary();
+  const total = treasurySummary?.spendPeriod || BN_ONE;
+  const value = bestNumber?.mod(treasurySummary?.spendPeriod?.toBn() ?? BN_ONE);
   const angle = total.gtn(0)
     ? bnToBn(value || 0)
         .muln(36000)
@@ -30,7 +30,7 @@ export function TreasurySummaryTeaser(props: PropTypes) {
     : 0;
   const percentage = Math.floor((angle * 100) / 360);
 
-  const {timeStringParts} = useBlockTime(treasuryInfo?.spendPeriod);
+  const {timeStringParts} = useBlockTime(treasurySummary?.spendPeriod);
   const {timeStringParts: termLeft} = useBlockTime(total.sub(value || BN_ONE));
   const formatBalance = useFormatBalance();
 
@@ -38,16 +38,16 @@ export function TreasurySummaryTeaser(props: PropTypes) {
     <SectionTeaserContainer onPressMore={props.onPressMore} title="Treasury">
       {isLoading ? (
         <LoadingBox />
-      ) : treasuryInfo ? (
+      ) : treasurySummary ? (
         <View>
           <Layout style={styles.container}>
             <Card style={[styles.item, styles.left]} disabled>
               <View style={globalStyles.spaceBetweenRowContainer}>
-                <StatInfoBlock title="Proposals">{String(treasuryInfo.proposals.proposals.length)}</StatInfoBlock>
-                <StatInfoBlock title="Totals">{formatNumber(treasuryInfo.proposals.proposalCount)}</StatInfoBlock>
+                <StatInfoBlock title="Proposals">{String(treasurySummary.activeProposals)}</StatInfoBlock>
+                <StatInfoBlock title="Totals">{formatNumber(treasurySummary.proposalCount)}</StatInfoBlock>
               </View>
               <Padder scale={1} />
-              <StatInfoBlock title="Approved">{String(treasuryInfo.proposals.approvals.length)}</StatInfoBlock>
+              <StatInfoBlock title="Approved">{String(treasurySummary.approvedProposals)}</StatInfoBlock>
             </Card>
             <Card style={[styles.item, styles.right, styles.center]} disabled>
               <ProgressChartWidget
@@ -61,10 +61,10 @@ export function TreasurySummaryTeaser(props: PropTypes) {
           <Card disabled>
             <View style={globalStyles.spaceBetweenRowContainer}>
               <StatInfoBlock title="Available">
-                {formatBalance(treasuryInfo.treasuryBalance?.freeBalance)}
+                {formatBalance(treasurySummary.treasuryBalance?.freeBalance)}
               </StatInfoBlock>
               <StatInfoBlock title="Next Burn">
-                {formatBalance(treasuryInfo.burn || BN_ZERO, {isShort: true})}
+                {formatBalance(treasurySummary.burn || BN_ZERO, {isShort: true})}
               </StatInfoBlock>
             </View>
           </Card>
