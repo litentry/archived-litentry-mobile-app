@@ -4,7 +4,6 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {QueryClient, QueryClientProvider} from 'react-query';
 import {IconRegistry} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
-
 import {ChainApiContextProvider} from 'context/ChainApiContext';
 import TxContextProvider from 'context/TxContext';
 import {AccountsProvider} from 'src/context/AccountsContext';
@@ -15,6 +14,7 @@ import AppNavigator from 'src/navigation/AppNavigator';
 import ThemeProvider from './context/ThemeContext';
 import {IonicIconsPack} from './Ionic-icons';
 import {NavigationContainer} from 'context/NavigationContainer';
+import SplashScreen from 'react-native-splash-screen';
 
 // init type registry
 import 'src/typeRegistry';
@@ -22,6 +22,10 @@ import 'src/typeRegistry';
 const queryClient = new QueryClient();
 
 export default function App() {
+  React.useEffect(() => {
+    SplashScreen.hide();
+  }, []);
+
   return (
     <>
       <IconRegistry icons={[EvaIconsPack, IonicIconsPack]} />
