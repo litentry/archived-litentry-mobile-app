@@ -14,7 +14,6 @@ import AppNavigator from 'src/navigation/AppNavigator';
 import ThemeProvider from './context/ThemeContext';
 import {IonicIconsPack} from './Ionic-icons';
 import {NavigationContainer} from 'context/NavigationContainer';
-import SplashScreen from 'react-native-splash-screen';
 
 // init type registry
 import 'src/typeRegistry';
@@ -22,10 +21,6 @@ import 'src/typeRegistry';
 const queryClient = new QueryClient();
 
 export default function App() {
-  React.useEffect(() => {
-    SplashScreen.hide();
-  }, []);
-
   return (
     <>
       <IconRegistry icons={[EvaIconsPack, IonicIconsPack]} />
