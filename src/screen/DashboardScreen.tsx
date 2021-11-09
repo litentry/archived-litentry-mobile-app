@@ -12,7 +12,7 @@ import {TreasurySummaryTeaser} from 'layout/TreasurySummaryTeaser';
 import FadeInAnimatedView from 'presentational/FadeInAnimatedView';
 import NetworkItem from 'presentational/NetworkItem';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {ApiLoadingStackParamList, DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
 import {
