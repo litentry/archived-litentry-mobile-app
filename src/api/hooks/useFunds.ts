@@ -79,6 +79,7 @@ function createAddress(paraId: ParaId): Uint8Array {
   return u8aConcat(CROWD_PREFIX, paraId.toU8a(), EMPTY_U8A).subarray(0, 32);
 }
 
+const LITENTRY_CROWDLOAN_ACCOUNT_ID = '152deMvsN7wxMbSmdApsds6LWNNNGgsJ8TTpZLTD2ipEHNg3';
 const optFundMulti = {
   transform: (paraIds: ParaId[], optFunds: Option<FundInfo>[]): Campaign[] =>
     paraIds
@@ -94,15 +95,21 @@ const optFundMulti = {
           lastSlot: info.lastPeriod,
           paraId,
           value: info.raised,
+          isSpecial: String(info.depositor) === LITENTRY_CROWDLOAN_ACCOUNT_ID,
         }),
       )
-      .sort(
-        (a, b) =>
+      .sort((a, b) => {
+        if (a.isSpecial || b.isSpecial) {
+          return a.isSpecial && b.isSpecial ? 0 : b.isSpecial ? 1 : -1;
+        }
+
+        return (
           a.info.end.cmp(b.info.end) ||
           a.info.firstPeriod.cmp(b.info.firstPeriod) ||
           a.info.lastPeriod.cmp(b.info.lastPeriod) ||
-          a.paraId.cmp(b.paraId),
-      ),
+          a.paraId.cmp(b.paraId)
+        );
+      }),
   withParamsTransform: true,
 };
 
@@ -176,6 +183,8 @@ export interface Campaign extends WinnerData {
   isCapped?: boolean;
   isEnded?: boolean;
   isWinner?: boolean;
+  // should be sorted on top
+  isSpecial?: boolean;
 }
 
 export interface WinnerData {
