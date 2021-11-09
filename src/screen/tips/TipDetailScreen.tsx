@@ -73,9 +73,6 @@ function TipDetailContent({tip, bestNumber}: TipDetailContentProps) {
         </View>
       </Card>
       <View style={styles.containerSpacing}>
-        <Text category="s1" style={styles.sectionText}>
-          Reason
-        </Text>
         <TipReason reasonHash={tip.reason} />
       </View>
       {closesAt && bestNumber && closesAt.gt(bestNumber) ? (
