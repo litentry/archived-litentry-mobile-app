@@ -1,6 +1,4 @@
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
-import {keyring} from '@polkadot/ui-keyring';
-import {mnemonicValidate} from '@polkadot/util-crypto';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {Button, Icon, Input, ListItem, TopNavigationAction, useTheme} from '@ui-kitten/components';
 import {NetworkContext} from 'context/NetworkContext';
@@ -14,6 +12,8 @@ import {AccountsStackParamList} from 'src/navigation/navigation';
 import {accountsScreen, importAccountWithJsonFileScreen} from 'src/navigation/routeKeys';
 import {monofontFamily, standardPadding} from 'src/styles';
 import zxcvbn from 'zxcvbn';
+import SubstrateSign from 'react-native-substrate-sign';
+import {useAccounts} from 'context/AccountsContext';
 
 export function ImportAccountScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const theme = useTheme();
@@ -21,6 +21,7 @@ export function ImportAccountScreen({navigation}: {navigation: NavigationProp<Ac
   const [account, setAccount] = React.useState({title: '', password: '', confirmPassword: ''});
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
   const {seed, setSeed, address, isSeedValid} = useParseSeed();
+  const {addAccount} = useAccounts();
 
   const passwordStrength = zxcvbn(account.password).score;
 
@@ -32,8 +33,23 @@ export function ImportAccountScreen({navigation}: {navigation: NavigationProp<Ac
     passwordStrength >= 3
   );
 
-  const onSubmit = () => {
-    keyring.addUri(seed, account.password, {name: account.title, network: currentNetwork.key});
+  const onSubmit = async () => {
+    if (!address) {
+      throw new Error('address not provided');
+    }
+    const encoded = await SubstrateSign.encryptData(seed, account.password);
+    const newAcc = {
+      address,
+      encoded,
+      meta: {
+        name: account.title,
+        network: currentNetwork.key,
+        isFavorite: false,
+      },
+      isExternal: false,
+    };
+
+    addAccount(newAcc);
     navigation.navigate(accountsScreen, {reload: true});
   };
 
@@ -140,20 +156,20 @@ const styles = StyleSheet.create({
 });
 
 function useParseSeed() {
+  const {currentNetwork} = React.useContext(NetworkContext);
   const [seed, setSeed] = React.useState('');
+  const [address, setAddress] = React.useState<string>();
 
-  let address: string | null = null;
-  const isSeedValid = mnemonicValidate(seed);
-  if (isSeedValid) {
-    try {
-      address = keyring.createFromUri(seed, {}, 'sr25519').address;
-    } catch (error) {
-      address = null;
-      console.error(error);
-    }
-  }
+  React.useEffect(() => {
+    (async () => {
+      if (seed) {
+        const address = await SubstrateSign.substrateAddress(seed, currentNetwork.ss58Format);
+        setAddress(address);
+      }
+    })();
+  }, [currentNetwork.ss58Format, seed]);
 
-  return {seed, setSeed, address, isSeedValid};
+  return {seed, setSeed, address, isSeedValid: Boolean(address)};
 }
 
 export function ImportScreenHeaderRight() {

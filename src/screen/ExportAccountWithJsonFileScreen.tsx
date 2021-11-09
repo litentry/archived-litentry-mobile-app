@@ -1,5 +1,4 @@
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
-import keyring from '@polkadot/ui-keyring';
 import {RouteProp} from '@react-navigation/core';
 import {Icon, Input, Text, ListItem, useTheme, Button} from '@ui-kitten/components';
 import FormLabel from 'presentational/FormLabel';
@@ -11,6 +10,7 @@ import {AccountsStackParamList} from 'src/navigation/navigation';
 import {exportAccountWithJsonFileScreen} from 'src/navigation/routeKeys';
 import {monofontFamily, standardPadding} from 'src/styles';
 import Share from 'react-native-share';
+import {useAccounts} from 'context/AccountsContext';
 
 export function ExportAccountWithJsonFileScreen({
   route,
@@ -19,7 +19,8 @@ export function ExportAccountWithJsonFileScreen({
 }) {
   const theme = useTheme();
   const {address} = route.params;
-  const pair = keyring.getPair(address);
+  const {accounts} = useAccounts();
+  const account = accounts[address];
 
   const [password, setPassword] = React.useState('');
   const [error, setError] = React.useState('');
@@ -28,8 +29,11 @@ export function ExportAccountWithJsonFileScreen({
   const _doBackup = async () => {
     setError('');
     try {
-      const json = keyring.backupAccount(pair, password);
-      const blob = new Blob([JSON.stringify(json)], {type: 'application/json', lastModified: Date.now()});
+      if (!account || account.isExternal) {
+        throw new Error('Account not found');
+      }
+
+      const blob = new Blob([JSON.stringify(account)], {type: 'application/json', lastModified: Date.now()});
       await Share.open({
         title: address,
         filename: `${address}.json`,
@@ -50,7 +54,7 @@ export function ExportAccountWithJsonFileScreen({
     <SafeView edges={noTopEdges}>
       <View style={styles.container}>
         <ListItem
-          title={pair.meta.name as string}
+          title={account?.meta.name}
           accessoryLeft={() => <IdentityIcon value={address} size={40} />}
           description={address}
         />

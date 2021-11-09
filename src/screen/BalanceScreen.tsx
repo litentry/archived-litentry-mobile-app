@@ -26,7 +26,7 @@ export function BalanceScreen({
     modalRef.current?.open();
   }, []);
 
-  const currentAccount = accounts.find(({address}) => address === route.params.address);
+  const currentAccount = accounts[route.params.address];
   if (!currentAccount) {
     throw new Error("Couldn't find the account ");
   }
@@ -45,7 +45,7 @@ export function BalanceScreen({
       panGestureEnabled>
       {accountInfo && (
         <Layout level="1" style={globalStyles.paddedContainer}>
-          <ModalTitle title={currentAccount.name} subtitle={` (@${currentNetwork.name})`} />
+          <ModalTitle title={currentAccount.meta.name} subtitle={` (@${currentNetwork.name})`} />
           <Divider />
           <Balances balance={accountInfo} />
           <Divider style={globalStyles.divider} />

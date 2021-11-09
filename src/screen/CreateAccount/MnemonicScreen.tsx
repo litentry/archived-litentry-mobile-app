@@ -2,18 +2,20 @@ import React from 'react';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {View, StyleSheet} from 'react-native';
 import {Text, Input, Icon, Button} from '@ui-kitten/components';
-import {mnemonicGenerate} from '@polkadot/util-crypto';
 import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 import {NavigationProp} from '@react-navigation/native';
 import {AccountsStackParamList} from 'src/navigation/navigation';
 import FormLabel from 'presentational/FormLabel';
 import Padder from 'presentational/Padder';
 import {verifyMnemonicScreen} from 'src/navigation/routeKeys';
+import SubstrateSign from 'react-native-substrate-sign';
 
 export function MnemonicScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
-  const [mnemonic] = React.useState(() => {
-    return mnemonicGenerate();
-  });
+  const [mnemonic, setMnemonic] = React.useState<string>();
+
+  React.useEffect(() => {
+    SubstrateSign.randomPhrase(12).then(setMnemonic);
+  }, []);
 
   return (
     <SafeView edges={noTopEdges}>
@@ -36,7 +38,7 @@ export function MnemonicScreen({navigation}: {navigation: NavigationProp<Account
         <Button
           status="basic"
           accessoryLeft={(p) => <Icon {...p} name="arrow-circle-right-outline" />}
-          onPress={() => navigation.navigate(verifyMnemonicScreen, {mnemonic})}>
+          onPress={() => (mnemonic ? navigation.navigate(verifyMnemonicScreen, {mnemonic}) : undefined)}>
           Next
         </Button>
       </View>

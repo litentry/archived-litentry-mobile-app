@@ -37,10 +37,7 @@ function TipDetailContent({tip, bestNumber}: TipDetailContentProps) {
   const {accounts} = useAccounts();
   const tipState = useMemo(() => {
     if (tip) {
-      return extractTipState(
-        tip,
-        accounts.map((a) => a.address),
-      );
+      return extractTipState(tip, Object.keys(accounts));
     }
   }, [tip, accounts]);
 

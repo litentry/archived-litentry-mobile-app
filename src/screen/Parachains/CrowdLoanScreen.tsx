@@ -300,7 +300,7 @@ function ContributeBox({
   const [account, setAccount] = React.useState<string>();
   const [amount, setAmount] = React.useState<string>('');
   const formatBalance = useFormatBalance();
-  const {accounts} = useAccounts();
+  const {networkAccounts} = useAccounts();
 
   const reset = () => {
     setAccount(undefined);
@@ -319,7 +319,7 @@ function ContributeBox({
       <Card disabled={true} style={contributeBoxStyles.modalCard}>
         <Text>Contribute with:</Text>
         <Padder scale={0.5} />
-        <SelectAccount accounts={accounts} selected={account} onSelect={setAccount} />
+        <SelectAccount accounts={networkAccounts} selected={account} onSelect={setAccount} />
         <Padder scale={1.5} />
 
         <Text>Amount:</Text>
