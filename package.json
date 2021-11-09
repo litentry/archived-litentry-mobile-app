@@ -19,12 +19,13 @@
   },
   "resolutions": {
     "@polkadot/types": "^6.7.1",
-    "@polkadot/util": "^7.8.2"
+    "@polkadot/util": "^7.8.2",
+    "@polkadot/util-crypto": "^7.8.2"
   },
   "dependencies": {
     "@eva-design/material": "^2.1.1",
     "@polkadot/api": "^6.7.1",
-    "@polkadot/apps-config": "^0.96.1",
+    "@polkadot/apps-config": "^0.98.2-61",
     "@polkadot/reactnative-identicon": "0.85.4",
     "@polkadot/ui-settings": "^0.85.5",
     "@react-native-community/async-storage": "^1.12.1",
@@ -59,10 +60,10 @@
     "react-native-chart-kit": "^6.11.0",
     "react-native-crypto": "^2.2.0",
     "react-native-device-info": "^8.4.0",
-    "react-native-document-picker": "^7.1.0",
+    "react-native-document-picker": "^7.1.1",
     "react-native-fs": "^2.18.0",
     "react-native-gesture-handler": "^1.8.0",
-    "react-native-haptic-feedback": "^1.11.0",
+    "react-native-haptic-feedback": "^1.13.0",
     "react-native-in-app-message": "^1.0.32",
     "react-native-keychain": "^8.0.0",
     "react-native-linear-gradient": "^2.5.6",
@@ -96,7 +97,7 @@
     "@react-native-community/eslint-config": "^3.0.1",
     "@types/jest": "^27.0.2",
     "@types/lodash": "^4.14.175",
-    "@types/react": "^17.0.26",
+    "@types/react": "^17.0.34",
     "@types/react-native": "^0.65.8",
     "@types/react-test-renderer": "^17.0.1",
     "@typescript-eslint/eslint-plugin": "^4.33.0",

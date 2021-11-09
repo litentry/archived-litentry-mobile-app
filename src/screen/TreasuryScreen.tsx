@@ -15,8 +15,8 @@ export function TreasuryScreen() {
   const {isLoading, data, refetch} = useTreasuryInfo();
 
   const groupedData = [
-    {title: 'Proposals', data: data?.proposals.proposals ?? []},
-    {title: 'Approved', data: data?.proposals.approvals ?? []},
+    {title: 'Proposals', data: data?.proposals ?? []},
+    {title: 'Approved', data: data?.approvals ?? []},
   ];
 
   const formatBalance = useFormatBalance();
