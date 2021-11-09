@@ -1,7 +1,6 @@
 import {DeriveAccountRegistration} from '@polkadot/api-derive/types';
 import {Registration} from '@polkadot/types/interfaces';
 import {BarCodeReadEvent} from 'react-native-camera';
-import {keyring} from '@polkadot/ui-keyring';
 
 export type SupportedNetworkType = 'ethereum' | 'polkadot' | 'kusama' | 'litentry_test';
 
@@ -67,5 +66,3 @@ export interface AddressIdentity extends DeriveAccountRegistration {
   isExistent: boolean;
   waitCount: number;
 }
-
-export type KeyringPair = ReturnType<typeof keyring.getPair>;

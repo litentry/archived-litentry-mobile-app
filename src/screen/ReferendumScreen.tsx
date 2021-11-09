@@ -36,7 +36,7 @@ import {useAccounts} from 'context/AccountsContext';
 export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
   const startTx = useApiTx();
   const {api} = useApi();
-  const {accounts} = useAccounts();
+  const {networkAccounts} = useAccounts();
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -163,7 +163,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
             <Text>Vote with account</Text>
             <Padder scale={0.5} />
             <SelectAccount
-              accounts={accounts}
+              accounts={networkAccounts}
               selected={state.account}
               onSelect={(account) => {
                 dispatch({type: 'SELECT_ACCOUNT', payload: account});

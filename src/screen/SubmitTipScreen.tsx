@@ -15,7 +15,7 @@ export function SubmitTipScreen({navigation}: {navigation: NavigationProp<Dashbo
   const [state, dispatch] = useReducer(reducer, initialState);
   const startTx = useApiTx();
   const queryClient = useQueryClient();
-  const {accounts} = useAccounts();
+  const {networkAccounts} = useAccounts();
 
   const valid = state.account && state.beneficiary && state.reason && state.reason.length > 4;
 
@@ -31,7 +31,7 @@ export function SubmitTipScreen({navigation}: {navigation: NavigationProp<Dashbo
               </View>
             )}>
             <SelectAccount
-              accounts={accounts}
+              accounts={networkAccounts}
               onSelect={(payload) => dispatch({type: 'SET_ACCOUNT', payload})}
               selected={state.account}
             />

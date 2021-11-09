@@ -20,7 +20,7 @@ import globalStyles, {standardPadding} from 'src/styles';
 import {useAccounts} from 'context/AccountsContext';
 
 export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
-  const {accounts} = useAccounts();
+  const {networkAccounts} = useAccounts();
   const startTx = useApiTx();
   const {api} = useApi();
 
@@ -151,7 +151,7 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
             <Text>Vote with account</Text>
             <Padder scale={0.5} />
             <SelectAccount
-              accounts={accounts}
+              accounts={networkAccounts}
               selected={state.account}
               onSelect={(account) => {
                 dispatch({type: 'SELECT_ACCOUNT', payload: account});

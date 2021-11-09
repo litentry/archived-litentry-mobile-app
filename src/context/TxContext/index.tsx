@@ -1,26 +1,27 @@
-import React, {createContext, useCallback, useEffect, useMemo, useReducer, useRef} from 'react';
-import {Dimensions, StyleSheet} from 'react-native';
-import {Modalize} from 'react-native-modalize';
-import QRCodeScanner from 'react-native-qrcode-scanner';
 import {ApiPromise} from '@polkadot/api';
-import {keyring} from '@polkadot/ui-keyring';
 import {SubmittableExtrinsic} from '@polkadot/api/submittable/types';
+import {ExtrinsicPayload} from '@polkadot/types/interfaces';
 import {SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
-import {BN_ZERO} from '@polkadot/util';
+import {BN_ZERO, hexToU8a, u8aConcat, u8aToHex} from '@polkadot/util';
 import {Icon, IconProps, Layout, Text} from '@ui-kitten/components';
+import {useAccounts} from 'context/AccountsContext';
 import {useApi} from 'context/ChainApiContext';
-import {TxPreview} from 'context/TxContext/TxPreview';
 import {AuthenticateView} from 'context/TxContext/AuthenticateView';
+import {TxPreview} from 'context/TxContext/TxPreview';
 import {get} from 'lodash';
 import ErrorDialog from 'presentational/ErrorDialog';
 import LoadingView from 'presentational/LoadingView';
 import SuccessDialog from 'presentational/SuccessDialog';
 import TxPayloadQr from 'presentational/TxPayloadQr';
+import WarningDialog from 'presentational/WarningDialog';
+import React, {createContext, useCallback, useEffect, useMemo, useReducer, useRef} from 'react';
+import {Dimensions, StyleSheet} from 'react-native';
+import {Modalize} from 'react-native-modalize';
+import QRCodeScanner from 'react-native-qrcode-scanner';
+import SubstrateSign from 'react-native-substrate-sign';
 import {formatCallMeta} from 'src/packages/call_inspector/CallInspector';
 import AsyncSigner from 'src/service/AsyncSigner';
 import globalStyles, {standardPadding} from 'src/styles';
-import WarningDialog from 'presentational/WarningDialog';
-import type {KeyringPair} from 'src/types';
 
 let id = 0;
 
@@ -47,7 +48,7 @@ export type StartConfig = {
 function TxContextProvider({children}: PropTypes): React.ReactElement {
   const modalRef = useRef<Modalize>(null);
   const signTransactionRef = useRef<(value: SignerResult) => void>();
-  const showPreviewRef = useRef<(txPayload: SignerPayloadJSON) => Promise<void>>();
+  const showPreviewRef = useRef<(txPayload: SignerPayloadJSON, seed?: string) => Promise<void>>();
   const [state, dispatch] = useReducer(reducer, initialState);
   const {api: apiPromise} = useApi();
 
@@ -59,107 +60,121 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
       });
     }
   }, [apiPromise?.isConnected, state.view]);
+  const {accounts} = useAccounts();
 
-  const start = useCallback(async (config: StartConfig) => {
-    const {api, txMethod, params, address} = config;
-    const [section, method] = txMethod.split('.');
+  const start = useCallback(
+    async (config: StartConfig) => {
+      const {api, txMethod, params, address} = config;
+      const [section, method] = txMethod.split('.');
 
-    if (!section || !method) {
-      throw new Error('section or method undefined');
-    }
-
-    if (!get(api.tx, [section, method])) {
-      throw new Error(`Unable to find method ${section}.${method}`);
-    }
-
-    const transaction: SubmittableExtrinsic<'promise'> = api.tx[section]![method]!(...params);
-
-    modalRef.current?.open();
-
-    const {meta} = transaction.registry.findMetaCall(transaction.callIndex);
-    const args = meta?.args.map(({name}) => name).join(', ') || '';
-    const title = `Sending transaction ${section}.${method}(${args})`;
-    const description = formatCallMeta(meta);
-    const keyringPair = keyring.getPair(address);
-    const isExternal = Boolean(keyringPair.meta.isExternal);
-
-    showPreviewRef.current = async (txPayload: SignerPayloadJSON) => {
-      const info = await transaction.paymentInfo(address);
-      if (isExternal) {
-        dispatch({
-          type: 'SHOW_TX_PREVIEW',
-          payload: {
-            txPayload: txPayload,
-            params,
-            title,
-            description,
-            partialFee: info.partialFee.toNumber(),
-            isExternalAccount: true,
-          },
-        });
-      } else {
-        const signed = transaction.registry
-          .createType('ExtrinsicPayload', txPayload, {version: txPayload.version})
-          .sign(keyringPair);
-
-        dispatch({
-          type: 'SHOW_TX_PREVIEW',
-          payload: {
-            txPayload: txPayload,
-            params,
-            title,
-            description,
-            partialFee: info.partialFee.toNumber(),
-            isExternalAccount: false,
-            signature: {id: ++id, ...signed},
-          },
-        });
+      if (!section || !method) {
+        throw new Error('section or method undefined');
       }
-    };
 
-    try {
-      const f = await transaction.signAsync(address, {
-        nonce: -1,
-        tip: BN_ZERO,
-        signer: new AsyncSigner(async (txPayload) => {
-          if (!isExternal && keyringPair.isLocked) {
-            dispatch({type: 'SHOW_AUTHENTICATE_VIEW', payload: {txPayload, keyringPair}});
-          } else {
-            showPreviewRef.current?.(txPayload);
-          }
-          return new Promise((resolve) => {
-            signTransactionRef.current = resolve;
+      if (!get(api.tx, [section, method])) {
+        throw new Error(`Unable to find method ${section}.${method}`);
+      }
+
+      const transaction: SubmittableExtrinsic<'promise'> = api.tx[section]![method]!(...params);
+
+      modalRef.current?.open();
+
+      const {meta} = transaction.registry.findMetaCall(transaction.callIndex);
+      const args = meta?.args.map(({name}) => name).join(', ') || '';
+      const title = `Sending transaction ${section}.${method}(${args})`;
+      const description = formatCallMeta(meta);
+      const isExternal = Boolean(accounts[address]?.isExternal);
+
+      showPreviewRef.current = async (txPayload: SignerPayloadJSON, seed?: string) => {
+        const info = await transaction.paymentInfo(address);
+        if (isExternal) {
+          dispatch({
+            type: 'SHOW_TX_PREVIEW',
+            payload: {
+              txPayload: txPayload,
+              params,
+              title,
+              description,
+              partialFee: info.partialFee.toNumber(),
+              isExternalAccount: true,
+            },
           });
-        }),
-      });
+        } else {
+          if (!seed) {
+            throw new Error('Seed is required for non-external accounts');
+          }
+          const wrapper: ExtrinsicPayload = transaction.registry.createType('ExtrinsicPayload', txPayload, {
+            version: txPayload.version,
+          });
 
-      await new Promise((resolve, reject) => {
-        f.send((result) => {
-          if (result.isFinalized && !result.isError) {
-            dispatch({type: 'SHOW_SUCCESS_VIEW'});
-            resolve(undefined);
-          }
-          if (result.isError && result.dispatchError) {
-            let error;
-            if (result.dispatchError.isModule) {
-              // for module errors, we have the section indexed, lookup
-              const decoded = api.registry.findMetaError(result.dispatchError.asModule);
-              const {docs} = decoded;
-              error = docs.join(' ').trim();
+          const signable = u8aToHex(wrapper.toU8a(true), -1, false);
+          let signed = await SubstrateSign.substrateSign(seed, signable);
+          signed = '0x' + signed;
+          const SIG_TYPE_SR25519 = new Uint8Array([1]);
+          const sig = u8aConcat(SIG_TYPE_SR25519, hexToU8a(signed));
+          const signature = u8aToHex(sig, -1);
+
+          dispatch({
+            type: 'SHOW_TX_PREVIEW',
+            payload: {
+              txPayload: txPayload,
+              params,
+              title,
+              description,
+              partialFee: info.partialFee.toNumber(),
+              isExternalAccount: false,
+              signature: {id: ++id, signature},
+            },
+          });
+        }
+      };
+
+      try {
+        const f = await transaction.signAsync(address, {
+          nonce: -1,
+          tip: BN_ZERO,
+          signer: new AsyncSigner(async (txPayload) => {
+            if (!isExternal) {
+              dispatch({type: 'SHOW_AUTHENTICATE_VIEW', payload: {txPayload, address}});
             } else {
-              error = result.dispatchError.toString();
+              showPreviewRef.current?.(txPayload);
             }
-            dispatch({type: 'SHOW_ERROR', payload: error});
-            reject();
-          }
-        }).catch((error) => {
-          reject(error.message);
+            return new Promise((resolve) => {
+              signTransactionRef.current = resolve;
+            });
+          }),
         });
-      });
-    } catch (e) {
-      dispatch({type: 'SHOW_ERROR', payload: String(e)});
-    }
-  }, []);
+
+        await new Promise((resolve, reject) => {
+          f.send((result) => {
+            if (result.isFinalized && !result.isError) {
+              dispatch({type: 'SHOW_SUCCESS_VIEW'});
+              resolve(undefined);
+            }
+            if (result.isError && result.dispatchError) {
+              let error;
+              if (result.dispatchError.isModule) {
+                // for module errors, we have the section indexed, lookup
+                const decoded = api.registry.findMetaError(result.dispatchError.asModule);
+                const {docs} = decoded;
+                error = docs.join(' ').trim();
+              } else {
+                error = result.dispatchError.toString();
+              }
+              dispatch({type: 'SHOW_ERROR', payload: error});
+              reject();
+            }
+          }).catch((error) => {
+            reject(error.message);
+          });
+        });
+      } catch (e) {
+        console.warn('transaction error', e);
+        dispatch({type: 'SHOW_ERROR', payload: String(e)});
+      }
+    },
+    [accounts],
+  );
 
   const modalContent = useMemo(() => {
     switch (state.view) {
@@ -173,9 +188,9 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
       case 'authenticate_view':
         return (
           <AuthenticateView
-            keyringPair={state.keyringPair}
-            onAuthenticate={() => {
-              showPreviewRef.current?.(state.txPayload);
+            address={state.address}
+            onAuthenticate={(seed) => {
+              showPreviewRef.current?.(state.txPayload, seed);
             }}
           />
         );
@@ -379,7 +394,7 @@ export default TxContextProvider;
 
 type State =
   | {view: 'initial_view' | 'submitting_view' | 'success_view'}
-  | {view: 'authenticate_view'; txPayload: SignerPayloadJSON; keyringPair: KeyringPair}
+  | {view: 'authenticate_view'; txPayload: SignerPayloadJSON; address: string; seed?: string}
   | {
       view: 'tx_preview';
       txPayload: SignerPayloadJSON;
@@ -412,7 +427,8 @@ type Action =
       type: 'SHOW_AUTHENTICATE_VIEW';
       payload: {
         txPayload: SignerPayloadJSON;
-        keyringPair: KeyringPair;
+        address: string;
+        seed?: string;
       };
     }
   | {
@@ -456,7 +472,12 @@ function reducer(state: State, action: Action): State {
       return initialState;
 
     case 'SHOW_AUTHENTICATE_VIEW':
-      return {view: 'authenticate_view', txPayload: action.payload.txPayload, keyringPair: action.payload.keyringPair};
+      return {
+        view: 'authenticate_view',
+        txPayload: action.payload.txPayload,
+        seed: action.payload.seed,
+        address: action.payload.address,
+      };
 
     case 'SHOW_TX_PREVIEW':
       return {view: 'tx_preview', ...action.payload};
