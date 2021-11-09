@@ -14,7 +14,7 @@ import {Balance, Call, FunctionMetadataLatest, ProposalIndex} from '@polkadot/ty
 import React, {useContext} from 'react';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {ChainApiContext} from 'context/ChainApiContext';
-import {Compact, GenericCall, getTypeDef} from '@polkadot/types';
+import {Compact, getTypeDef} from '@polkadot/types';
 import {useQuery} from 'react-query';
 
 export function CallInspector({call}: {call: Call}) {
