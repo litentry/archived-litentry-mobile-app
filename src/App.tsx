@@ -1,10 +1,8 @@
 import React from 'react';
-import {Host} from 'react-native-portalize';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {QueryClient, QueryClientProvider} from 'react-query';
 import {IconRegistry} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
-
 import {ChainApiContextProvider} from 'context/ChainApiContext';
 import TxContextProvider from 'context/TxContext';
 import {AccountsProvider} from 'src/context/AccountsContext';
@@ -34,11 +32,9 @@ export default function App() {
                   <SafeAreaProvider>
                     <InAppNotificationContextProvider>
                       <ErrorBoundary>
-                        <Host>
-                          <TxContextProvider>
-                            <AppNavigator />
-                          </TxContextProvider>
-                        </Host>
+                        <TxContextProvider>
+                          <AppNavigator />
+                        </TxContextProvider>
                       </ErrorBoundary>
                     </InAppNotificationContextProvider>
                   </SafeAreaProvider>

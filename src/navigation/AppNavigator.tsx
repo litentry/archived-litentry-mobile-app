@@ -20,7 +20,7 @@ import DevScreen from 'screen/DevScreen';
 import DrawerScreen from 'screen/Drawer/DrawerScreen';
 import {MotionDetailScreen} from 'screen/MotionDetailScreen';
 import {MyAccountScreen} from 'screen/MyAccountScreen';
-import MyIdentityScreen from 'screen/MyIdentityScreen';
+import ManageIdentityScreen from 'screen/MyIdentityScreen/ManageIdentity';
 import {IdentityGuideScreen} from 'screen/MyIdentityScreen/IdentityGuideScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
 import {CrowdLoanScreen} from 'screen/Parachains/CrowdLoanScreen';
@@ -137,7 +137,7 @@ function AccountsNavigator() {
         component={AccountsScreen}
         options={{headerLeft: DashboardHeaderLeft}}
       />
-      <AccountsStack.Screen name={routeKeys.myIdentityScreen} component={MyIdentityScreen} />
+      <AccountsStack.Screen name={routeKeys.manageIdentityScreen} component={ManageIdentityScreen} />
       <AccountsStack.Screen name={routeKeys.myAccountScreen} component={MyAccountScreen} />
       <AccountsStack.Screen name={routeKeys.registerSubIdentitiesScreen} component={RegisterSubIdentitiesScreen} />
       <AccountsStack.Screen name={routeKeys.mnemonicScreen} component={MnemonicScreen} />

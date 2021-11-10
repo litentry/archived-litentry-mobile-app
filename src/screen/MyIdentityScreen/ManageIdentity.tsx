@@ -20,18 +20,18 @@ import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useSubIdentities} from 'src/api/hooks/useSubIdentities';
 import {AccountsStackParamList} from 'src/navigation/navigation';
-import {myIdentityScreen, registerSubIdentitiesScreen} from 'src/navigation/routeKeys';
+import {manageIdentityScreen, registerSubIdentitiesScreen} from 'src/navigation/routeKeys';
 import {buildAddressDetailUrl} from 'src/service/Polkasembly';
 import {standardPadding} from 'src/styles';
 
-function MyIdentity({
+function ManageIdentity({
   navigation,
   route: {
     params: {address},
   },
 }: {
   navigation: NavigationProp<AccountsStackParamList>;
-  route: RouteProp<AccountsStackParamList, typeof myIdentityScreen>;
+  route: RouteProp<AccountsStackParamList, typeof manageIdentityScreen>;
 }) {
   const startTx = useApiTx();
   const queryClient = useQueryClient();
@@ -300,7 +300,7 @@ function MyIdentity({
   );
 }
 
-export default MyIdentity;
+export default ManageIdentity;
 
 const styles = StyleSheet.create({
   content: {padding: standardPadding * 2},

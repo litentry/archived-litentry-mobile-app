@@ -11,7 +11,7 @@ import {
   drawerNavigatorScreen,
   motionDetailScreen,
   motionsScreen,
-  myIdentityScreen,
+  manageIdentityScreen,
   notificationSettingsScreen,
   democracyScreen,
   permissionGrantingPromptScreen,
@@ -112,7 +112,7 @@ type AccountsStackParamList = {
   [verifyMnemonicScreen]: {mnemonic: string};
   [createAccountScreen]: {mnemonic: string};
   [accountsScreen]: {reload?: boolean};
-  [myIdentityScreen]: {address: string};
+  [manageIdentityScreen]: {address: string};
   [myAccountScreen]: {address: string};
   [registerSubIdentitiesScreen]: {address: string};
   [importAccountScreen]: undefined;

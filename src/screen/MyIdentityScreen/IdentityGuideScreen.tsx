@@ -18,15 +18,7 @@ export function IdentityGuideScreen({navigation}: {navigation: NavigationProp<Ap
   const unselectedColor = theme['color-basic-500'];
 
   return (
-    <Modalize
-      ref={modalRef}
-      threshold={250}
-      scrollViewProps={{showsVerticalScrollIndicator: false}}
-      adjustToContentHeight
-      handlePosition="outside"
-      onClose={navigation.goBack}
-      closeOnOverlayTap
-      panGestureEnabled>
+    <Modalize ref={modalRef} adjustToContentHeight onClose={navigation.goBack} panGestureEnabled={false}>
       <Layout level="1" style={[globalStyles.paddedContainer]}>
         <ModalTitle title={'Set Identity'} />
         <ViewPager selectedIndex={selectedIndex} onSelect={(index) => setSelectedIndex(index)}>

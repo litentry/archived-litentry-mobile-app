@@ -80,14 +80,14 @@ export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppSt
   return (
     <Modalize
       ref={ref}
-      withOverlay={true}
-      threshold={250}
-      scrollViewProps={{showsVerticalScrollIndicator: false}}
       adjustToContentHeight
-      onClose={navigation.goBack}
-      handlePosition="outside"
+      onClose={() => {
+        // timeout fixes a warning about animation event handling
+        // not sure what is the problem
+        setTimeout(navigation.goBack, 0);
+      }}
       closeOnOverlayTap
-      panGestureEnabled>
+      panGestureEnabled={false}>
       <Layout level="1" style={[globalStyles.paddedContainer, styles.modal]}>
         <ModalTitle title="Add Account" />
         <Divider />
