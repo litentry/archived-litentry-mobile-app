@@ -3,7 +3,7 @@ import {SectionTeaserContainer} from 'presentational/SectionTeaserContainer';
 import StatInfoBlock from 'presentational/StatInfoBlock';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {useDemocracy} from 'src/api/hooks/useDemocracy';
+import {useDemocracySummary} from 'src/api/hooks/useDemocracySummary';
 import {formatNumber, BN_ONE, BN_ZERO, BN_HUNDRED} from '@polkadot/util';
 import Padder from 'presentational/Padder';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
@@ -17,7 +17,7 @@ type Props = {
 };
 
 export function DemocracySummaryTeaser(props: Props) {
-  const {data, isLoading} = useDemocracy();
+  const {data, isLoading} = useDemocracySummary();
   const bestNumber = useBestNumber();
 
   const total = data?.launchPeriod;
@@ -41,11 +41,11 @@ export function DemocracySummaryTeaser(props: Props) {
         <View style={styles.boxRow}>
           <Card style={styles.card}>
             <View style={styles.itemRow}>
-              <StatInfoBlock title="Proposals">{formatNumber(data?.activeProposals.length)}</StatInfoBlock>
+              <StatInfoBlock title="Proposals">{formatNumber(data?.activeProposalsCount)}</StatInfoBlock>
               <StatInfoBlock title="Total">{formatNumber(data?.publicPropCount)}</StatInfoBlock>
             </View>
             <View style={styles.itemRow}>
-              <StatInfoBlock title="Referenda">{formatNumber(data?.referendums.length)}</StatInfoBlock>
+              <StatInfoBlock title="Referenda">{formatNumber(data?.referenda)}</StatInfoBlock>
               <StatInfoBlock title="Total">{formatNumber(data?.referendumTotal)}</StatInfoBlock>
             </View>
           </Card>

@@ -1,5 +1,6 @@
 import Identicon from '@polkadot/reactnative-identicon';
 import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
+import {LoadingItem} from 'presentational/LoadingBox';
 import Padder from 'presentational/Padder';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -11,7 +12,11 @@ type PropTypes = {
 
 function AddressInlineTeaser(props: PropTypes) {
   const {address} = props;
-  const {data} = useAccountIdentityInfo(address);
+  const {data, isLoading} = useAccountIdentityInfo(address);
+
+  if (isLoading) {
+    return <LoadingItem />;
+  }
 
   return (
     <View style={styles.container}>

@@ -17,6 +17,7 @@ export function useBounties() {
       activeBounties,
       pastBounties,
       totalValue,
+      treasurySpendPeriod: api.consts.treasury.spendPeriod,
     };
   });
 }

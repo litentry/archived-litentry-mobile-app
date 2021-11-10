@@ -7,7 +7,6 @@ import {standardPadding} from 'src/styles';
 import {useBounties} from 'src/api/hooks/useBounties';
 import StatInfoBlock from 'presentational/StatInfoBlock';
 import Padder from 'presentational/Padder';
-import {useTreasuryInfo} from 'src/api/hooks/useTreasuryInfo';
 import ProgressChartWidget from 'presentational/ProgressWidget';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import {BN_ONE, BN_ZERO, BN_HUNDRED} from '@polkadot/util';
@@ -23,9 +22,8 @@ export function BountySummaryTeaser(props: Props) {
   const formatBalance = useFormatBalance();
   const bestNumber = useBestNumber();
   const {data: bounties, isLoading} = useBounties();
-  const {data: treasuryInfo} = useTreasuryInfo();
 
-  const spendPeriod = treasuryInfo?.spendPeriod;
+  const spendPeriod = bounties?.treasurySpendPeriod;
   const progress = spendPeriod && bestNumber ? bestNumber.mod(spendPeriod).iadd(BN_ONE) : BN_ZERO;
 
   const timeLeft = spendPeriod?.sub(progress);

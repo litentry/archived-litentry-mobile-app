@@ -1,9 +1,6 @@
 import {AccountId} from '@polkadot/types/interfaces';
 import useApiQuery from 'src/api/hooks/useApiQuery';
 import {getAccountsIdentityInfo} from 'src/api/queryFunctions/getAccountsIdentityInfo';
-import {u8aConcat, BN_MILLION} from '@polkadot/util';
-
-const EMPTY_U8A_32 = new Uint8Array(32);
 
 export function useTreasuryInfo() {
   return useApiQuery(['treasury_info'], async (api) => {
@@ -23,25 +20,10 @@ export function useTreasuryInfo() {
 
     const accountInfos = await getAccountsIdentityInfo(api, accountIds);
 
-    const treasuryAccount = u8aConcat(
-      'modl',
-      api.consts.treasury && api.consts.treasury.palletId ? api.consts.treasury.palletId.toU8a(true) : 'py/trsry',
-      EMPTY_U8A_32,
-    ).subarray(0, 32) as AccountId;
-
-    const treasuryBalance = await api.derive.balances.account(treasuryAccount);
-
-    const burn =
-      treasuryBalance?.freeBalance.gtn(0) && !api.consts.treasury.burn.isZero()
-        ? api.consts.treasury.burn.mul(treasuryBalance?.freeBalance).div(BN_MILLION)
-        : null;
-
     return {
-      proposals: proposals,
+      proposals: proposals.proposals,
+      approvals: proposals.approvals,
       accountInfos: accountInfos,
-      spendPeriod: api.consts.treasury.spendPeriod,
-      treasuryBalance,
-      burn,
     };
   });
 }
