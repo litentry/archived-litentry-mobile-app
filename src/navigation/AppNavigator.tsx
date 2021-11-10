@@ -285,7 +285,15 @@ function ApiLoadingNavigator() {
 const AppStack = createStackNavigator<AppStackParamList>();
 
 function AppNavigator() {
-  const {pushAuthorizationStatus} = usePushAuthorizationStatus();
+  const {pushAuthorizationStatus, isLoading} = usePushAuthorizationStatus();
+
+  // We need this here, becuase otherwise PermissionGrantingPrompt
+  // wouldn't mount on the first render, loading indicator is not necessary
+  // because the promise is resolving almost immediatly
+  if (isLoading) {
+    return null;
+  }
+
   return (
     <AppStack.Navigator
       screenOptions={{
