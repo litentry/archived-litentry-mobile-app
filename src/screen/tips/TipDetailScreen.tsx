@@ -12,6 +12,7 @@ import {BlockTime} from 'layout/BlockTime';
 import {TipReason} from 'layout/tips/TipReason';
 import {extractTipState} from 'layout/tips/utils';
 import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
+import LoadingView from 'presentational/LoadingView';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React, {useContext, useMemo} from 'react';
 import {FlatList, Image, StyleSheet, View} from 'react-native';
@@ -111,18 +112,18 @@ function TipDetailScreen({route}: ScreenProps) {
   const formatBalance = useFormatBalance();
   const {api} = useContext(ChainApiContext);
   const hash = route.params?.hash;
-  const tip = useTip(hash);
+  const {data: tip, isLoading} = useTip(hash);
   const bestNumber = useCall<BlockNumber>(api?.derive.chain.bestNumber);
 
-  if (!tip) {
-    return null;
+  if (isLoading) {
+    return <LoadingView />;
   }
 
   return (
     <SafeView edges={noTopEdges}>
       <FlatList
-        ListHeaderComponent={<TipDetailContent tip={tip} bestNumber={bestNumber} />}
-        data={tip.tips.toArray()}
+        ListHeaderComponent={tip ? <TipDetailContent tip={tip} bestNumber={bestNumber} /> : null}
+        data={tip?.tips.toArray()}
         style={[globalStyles.paddedContainer, styles.container]}
         ItemSeparatorComponent={Divider}
         renderItem={({item}) => {
@@ -151,6 +152,7 @@ function TipDetailScreen({route}: ScreenProps) {
           );
         }}
         ListEmptyComponent={<EmptyTippers />}
+        showsVerticalScrollIndicator={false}
       />
     </SafeView>
   );
