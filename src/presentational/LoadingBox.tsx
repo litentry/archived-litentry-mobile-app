@@ -1,17 +1,11 @@
 import {useTheme} from '@ui-kitten/components';
-import React, {useRef, useState} from 'react';
+import React, {useRef} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Animated} from 'react-native';
-
-// get random width between 15% and 85%
-function getRandomWidth() {
-  return `${Math.floor(Math.random() * (85 - 15 + 1)) + 15}%`;
-}
 
 export function LoadingBox() {
   const theme = useTheme();
   const fadeAnim = useRef(new Animated.Value(0.2)).current;
-  const [textWidths] = useState([getRandomWidth(), getRandomWidth(), getRandomWidth(), getRandomWidth()]);
 
   React.useEffect(() => {
     Animated.loop(
@@ -21,8 +15,6 @@ export function LoadingBox() {
       ]),
     ).start();
   }, [fadeAnim]);
-
-  const textBackground = theme['text-basic-color'];
 
   return (
     <Animated.View
@@ -34,11 +26,19 @@ export function LoadingBox() {
           backgroundColor: theme['background-basic-color-2'],
         },
       ]}>
-      {textWidths.map((textWidth, key) => (
-        <View key={key} style={[styles.textSubstitue, {backgroundColor: textBackground, width: textWidth}]} />
-      ))}
+      <LoadingItem width={50} />
+      <LoadingItem width={70} />
+      <LoadingItem width={60} />
+      <LoadingItem width={80} />
     </Animated.View>
   );
+}
+
+export function LoadingItem({width = 70}: {width?: number}) {
+  const theme = useTheme();
+  const textBackground = theme['text-basic-color'];
+
+  return <View style={[styles.loadingItem, {backgroundColor: textBackground, width: `${width}%`}]} />;
 }
 
 const styles = StyleSheet.create({
@@ -51,10 +51,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
   },
-  textSubstitue: {
+  loadingItem: {
     height: 20,
-    opacity: 0.3,
+    opacity: 0.2,
     marginTop: 5,
-    marginBottom: 5,
   },
 });

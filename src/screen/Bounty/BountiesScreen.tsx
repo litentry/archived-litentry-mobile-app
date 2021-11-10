@@ -55,7 +55,6 @@ export function BountiesScreen() {
                 bountyStatus={item.bountyStatus}
               />
             )}
-            ItemSeparatorComponent={Divider}
             ListEmptyComponent={EmptyView}
           />
         )}
