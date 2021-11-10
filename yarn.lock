@@ -715,14 +715,7 @@
     pirates "^4.0.0"
     source-map-support "^0.5.16"
 
-"@babel/runtime@^7.12.5", "@babel/runtime@^7.14.6", "@babel/runtime@^7.15.3", "@babel/runtime@^7.15.4", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.6":
-  version "7.15.4"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.15.4.tgz#fd17d16bfdf878e6dd02d19753a39fa8a8d9c84a"
-  integrity sha512-99catp6bHCaxr4sJ/DbTGgHS4+Rs2RVd2g7iOap6SLGPDknRK9ztKNsE/Fg6QhSeh1FGE5f6gHGQmvvn3I3xhw==
-  dependencies:
-    regenerator-runtime "^0.13.4"
-
-"@babel/runtime@^7.16.0":
+"@babel/runtime@^7.12.5", "@babel/runtime@^7.14.6", "@babel/runtime@^7.15.3", "@babel/runtime@^7.15.4", "@babel/runtime@^7.16.0", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.6":
   version "7.16.0"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.16.0.tgz#e27b977f2e2088ba24748bf99b5e1dece64e4f0b"
   integrity sha512-Nht8L0O8YCktmsDV6FqFue7vQLRx3Hb0B37lS5y0jDRqRxlBG4wIJHnf9/bgSE2UyipKFA01YtS+npRdTWBUyw==
@@ -8130,10 +8123,10 @@ react-native@^0.66.1:
     whatwg-fetch "^3.0.0"
     ws "^6.1.4"
 
-react-query@^3.25.1:
-  version "3.25.1"
-  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.25.1.tgz#221ff17406518a7689378dcbbdc986b0ba2c3919"
-  integrity sha512-tGZkap921d9dJD2F8+NpEu3djLRP+tpZKHKhQvqUMYMfWT5R18iRtGAG5ZeUMlRKuhzNaZx3cHiYj3DsyZ1SWw==
+react-query@^3.32.1:
+  version "3.32.1"
+  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.32.1.tgz#829a87d039ece85660d8911ac59b1c92d1879064"
+  integrity sha512-7UN8BYBaZb911iJUyJ/T+CjlBGBf5W8rcm3jRQ5wW4f+mt/onvRxJlB0U2r2fsT204poJt6VO0jPlm5dwu3PrQ==
   dependencies:
     "@babel/runtime" "^7.5.5"
     broadcast-channel "^3.4.1"
