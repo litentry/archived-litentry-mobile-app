@@ -16,28 +16,32 @@ import {createMaterialTopTabNavigator, MaterialTopTabBarProps} from '@react-navi
 
 const {Navigator, Screen} = createMaterialTopTabNavigator();
 
-const TopTabBar = ({navigation, state}: MaterialTopTabBarProps) => (
-  <TabBar
-    selectedIndex={state.index}
-    onSelect={(index) => {
-      const route = state.routeNames[index];
-      if (route) {
-        navigation.navigate(route);
-      }
-    }}>
-    <Tab title="Overview" />
-    <Tab title="Tips" />
-  </TabBar>
-);
+function TopTabBar({navigation, state}: MaterialTopTabBarProps) {
+  return (
+    <TabBar
+      selectedIndex={state.index}
+      onSelect={(index) => {
+        const route = state.routeNames[index];
+        if (route) {
+          navigation.navigate(route);
+        }
+      }}>
+      <Tab title="Overview" />
+      <Tab title="Tips" />
+    </TabBar>
+  );
+}
 
-export const TreasuryScreen = () => (
-  <Navigator tabBar={(props) => <TopTabBar {...props} />}>
-    <Screen name="TreasuryOverviewScreen" component={TreasuryOverviewScreen} />
-    <Screen name="TipsScreen" component={TipsScreen} />
-  </Navigator>
-);
+export function TreasuryScreen() {
+  return (
+    <Navigator tabBar={(props) => <TopTabBar {...props} />}>
+      <Screen name="TreasuryOverviewScreen" component={TreasuryOverviewScreen} />
+      <Screen name="TipsScreen" component={TipsScreen} />
+    </Navigator>
+  );
+}
 
-export function TreasuryOverviewScreen() {
+function TreasuryOverviewScreen() {
   const {isLoading, data, refetch} = useTreasuryInfo();
 
   const groupedData = [
