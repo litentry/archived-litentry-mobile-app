@@ -1,18 +1,46 @@
 import React, {useMemo} from 'react';
 import {StyleSheet, View, SectionList} from 'react-native';
-import {Button, Divider, Icon, Layout, ListItem, Spinner, Text, useTheme} from '@ui-kitten/components';
+import {Divider, Layout, ListItem, Spinner, Text, useTheme, Tab, TabBar} from '@ui-kitten/components';
 import globalStyles, {standardPadding} from 'src/styles';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {EmptyView} from 'presentational/EmptyView';
 import {useCouncil} from 'src/api/hooks/useCouncil';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
-import {candidateScreen, motionsScreen} from 'src/navigation/routeKeys';
-import {DashboardStackParamList} from 'src/navigation/navigation';
+import {candidateScreen} from 'src/navigation/routeKeys';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useCouncilSummary} from 'src/api/hooks/useCouncilSummary';
+import {MotionsScreen} from './MotionsScreen';
 
-export function CouncilScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
+import {createMaterialTopTabNavigator, MaterialTopTabBarProps} from '@react-navigation/material-top-tabs';
+const {Navigator, Screen} = createMaterialTopTabNavigator();
+
+function TopTabBar({navigation, state}: MaterialTopTabBarProps) {
+  return (
+    <TabBar
+      selectedIndex={state.index}
+      onSelect={(index) => {
+        const route = state.routeNames[index];
+        if (route) {
+          navigation.navigate(route);
+        }
+      }}>
+      <Tab title="Overview" />
+      <Tab title="Motions" />
+    </TabBar>
+  );
+}
+
+export function CouncilScreen() {
+  return (
+    <Navigator tabBar={(props) => <TopTabBar {...props} />}>
+      <Screen name="CouncilOverviewScreen" component={CouncilOverviewScreen} />
+      <Screen name="MotionsScreen" component={MotionsScreen} />
+    </Navigator>
+  );
+}
+
+function CouncilOverviewScreen() {
   const {data, isLoading} = useCouncil();
   const {data: summary} = useCouncilSummary();
   const theme = useTheme();
@@ -32,14 +60,6 @@ export function CouncilScreen({navigation}: {navigation: NavigationProp<Dashboar
   return (
     <Layout style={globalStyles.flex}>
       <SafeView edges={noTopEdges}>
-        <View style={styles.header}>
-          <Button
-            status={'basic'}
-            onPress={() => navigation.navigate(motionsScreen)}
-            accessoryLeft={(props) => <Icon {...props} name={'activity-outline'} />}>
-            Motions
-          </Button>
-        </View>
         {isLoading ? (
           <View style={globalStyles.centeredContainer}>
             <Spinner />
