@@ -4,7 +4,6 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {QueryClient, QueryClientProvider} from 'react-query';
 import {IconRegistry} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
-
 import {ChainApiContextProvider} from 'context/ChainApiContext';
 import TxContextProvider from 'context/TxContext';
 import {AccountsProvider} from 'src/context/AccountsContext';

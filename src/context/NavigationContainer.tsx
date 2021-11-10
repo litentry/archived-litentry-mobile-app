@@ -3,6 +3,7 @@ import {NavigationContainer as RNnavigationContainer} from '@react-navigation/na
 import {useTheme} from 'src/context/ThemeContext';
 import {darkTheme, lightTheme} from 'src/navigation/theme';
 import {linking} from 'src/navigation/routeKeys';
+import SplashScreen from 'react-native-splash-screen';
 
 type PropTypes = {
   children: React.ReactNode;
@@ -12,7 +13,10 @@ export function NavigationContainer({children}: PropTypes) {
   const {theme} = useTheme();
 
   return (
-    <RNnavigationContainer linking={linking} theme={theme === 'dark' ? darkTheme : lightTheme}>
+    <RNnavigationContainer
+      onReady={() => SplashScreen.hide()}
+      linking={linking}
+      theme={theme === 'dark' ? darkTheme : lightTheme}>
       {children}
     </RNnavigationContainer>
   );
