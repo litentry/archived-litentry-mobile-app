@@ -11,7 +11,7 @@ import globalStyles, {standardPadding} from 'src/styles';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useAccounts} from 'context/AccountsContext';
 
-export function SubmitTipScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
+export function ProposeTipScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const startTx = useApiTx();
   const queryClient = useQueryClient();

@@ -16,7 +16,7 @@ import {
   democracyScreen,
   permissionGrantingPromptScreen,
   registrarListScreen,
-  submitTipScreen,
+  proposeTipScreen,
   tipDetailScreen,
   tipsScreen,
   treasuryScreen,
@@ -66,7 +66,7 @@ type DashboardStackParamList = {
     title: string;
     backing?: string;
   };
-  [submitTipScreen]: undefined;
+  [proposeTipScreen]: undefined;
   [treasuryScreen]: undefined;
   [motionsScreen]: undefined;
   [democracyScreen]: undefined;

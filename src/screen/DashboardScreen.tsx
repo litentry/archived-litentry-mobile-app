@@ -6,7 +6,6 @@ import {useApi} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
 import {CouncilSummaryTeaser} from 'layout/CouncilSummaryTeaser';
 import {DemocracySummaryTeaser} from 'layout/DemocracySummaryTeaser';
-import TipsSummaryTeaser from 'layout/tips/TipsSummaryTeaser';
 import {BountySummaryTeaser} from 'layout/BountySummaryTeaser';
 import {TreasurySummaryTeaser} from 'layout/TreasurySummaryTeaser';
 import FadeInAnimatedView from 'presentational/FadeInAnimatedView';
@@ -18,7 +17,6 @@ import {ApiLoadingStackParamList, DashboardStackParamList, DrawerParamList} from
 import {
   councilScreen,
   democracyScreen,
-  tipsScreen,
   treasuryScreen,
   bountiesScreen,
   networkSelectionScreen,
@@ -53,7 +51,6 @@ function DashboardScreen({navigation}: PropTypes) {
             <DemocracySummaryTeaser onPressMore={() => navigation.navigate(democracyScreen)} />
             <CouncilSummaryTeaser onPressMore={() => navigation.navigate(councilScreen)} />
             <TreasurySummaryTeaser onPressMore={() => navigation.navigate(treasuryScreen)} />
-            <TipsSummaryTeaser onPressMore={() => navigation.navigate(tipsScreen)} />
             <BountySummaryTeaser onPressMore={() => navigation.navigate(bountiesScreen)} />
           </ScrollView>
         </View>
