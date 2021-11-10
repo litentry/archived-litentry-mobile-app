@@ -294,6 +294,8 @@ PODS:
     - React-Core
   - react-native-sensitive-info (5.5.8):
     - React
+  - react-native-splash-screen (3.2.0):
+    - React
   - react-native-substrate-sign (1.1.1):
     - React
   - react-native-webview (11.14.1):
@@ -458,6 +460,7 @@ DEPENDENCIES:
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-sensitive-info (from `../node_modules/react-native-sensitive-info`)
+  - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-substrate-sign (from `../node_modules/react-native-substrate-sign`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -560,6 +563,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-sensitive-info:
     :path: "../node_modules/react-native-sensitive-info"
+  react-native-splash-screen:
+    :path: "../node_modules/react-native-splash-screen"
   react-native-substrate-sign:
     :path: "../node_modules/react-native-substrate-sign"
   react-native-webview:
@@ -663,6 +668,7 @@ SPEC CHECKSUMS:
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
   react-native-sensitive-info: 400c6e3d27945e15c8cddb5b4b92233c85ee06f8
+  react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-substrate-sign: 77515bc7fe68e2f8bd23f1aba8ecc40ef27bb50e
   react-native-webview: db22ab831b8c5f7697957a67f7a7ac1cecfed18d
   React-perflogger: fcac6090a80e3d967791b4c7f1b1a017f9d4a398
