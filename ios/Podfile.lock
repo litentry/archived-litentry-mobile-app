@@ -288,6 +288,8 @@ PODS:
   - react-native-mmkv (1.5.2):
     - MMKV
     - React-Core
+  - react-native-pager-view (5.4.9):
+    - React-Core
   - react-native-randombytes (3.6.1):
     - React-Core
   - react-native-safe-area-context (3.3.2):
@@ -457,6 +459,7 @@ DEPENDENCIES:
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-in-app-message (from `../node_modules/react-native-in-app-message`)
   - react-native-mmkv (from `../node_modules/react-native-mmkv`)
+  - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-sensitive-info (from `../node_modules/react-native-sensitive-info`)
@@ -557,6 +560,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-in-app-message"
   react-native-mmkv:
     :path: "../node_modules/react-native-mmkv"
+  react-native-pager-view:
+    :path: "../node_modules/react-native-pager-view"
   react-native-randombytes:
     :path: "../node_modules/react-native-randombytes"
   react-native-safe-area-context:
@@ -665,6 +670,7 @@ SPEC CHECKSUMS:
   react-native-document-picker: f4cc4df2eff8c9015d862a59bdaef11a153f1292
   react-native-in-app-message: 7a54e2fd7a490e5c33857bbbb260f855205433db
   react-native-mmkv: 27029f9f3a30dc798726cfc92775f4cbedcb7dd7
+  react-native-pager-view: 3ee7d4c7697fb3ef788346e834a60cca97ed8540
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
   react-native-sensitive-info: 400c6e3d27945e15c8cddb5b4b92233c85ee06f8
