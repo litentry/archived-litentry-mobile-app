@@ -9,7 +9,7 @@ import React from 'react';
 import {SectionList, StyleSheet, View} from 'react-native';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useTreasuryInfo} from 'src/api/hooks/useTreasuryInfo';
-import globalStyles, {standardPadding, colorGreen} from 'src/styles';
+import globalStyles, {standardPadding} from 'src/styles';
 
 import TipsScreen from './tips/TipsScreen';
 import {createMaterialTopTabNavigator, MaterialTopTabBarProps} from '@react-navigation/material-top-tabs';
@@ -31,14 +31,9 @@ const TopTabBar = ({navigation, state}: MaterialTopTabBarProps) => (
 );
 
 export const TreasuryScreen = () => (
-  <Navigator
-    tabBar={(props) => <TopTabBar {...props} />}
-    screenOptions={{
-      tabBarActiveTintColor: colorGreen,
-      tabBarStyle: {backgroundColor: 'red'},
-    }}>
-    <Screen name="Users" component={TreasuryOverviewScreen} />
-    <Screen name="Orders" component={TipsScreen} />
+  <Navigator tabBar={(props) => <TopTabBar {...props} />}>
+    <Screen name="TreasuryOverviewScreen" component={TreasuryOverviewScreen} />
+    <Screen name="TipsScreen" component={TipsScreen} />
   </Navigator>
 );
 
