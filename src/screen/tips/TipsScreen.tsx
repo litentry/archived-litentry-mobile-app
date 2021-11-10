@@ -29,6 +29,7 @@ function TipsScreen() {
             renderItem={({item}) => <MemoizedTipTeaser tip={item} onPress={toTipDetails} />}
             keyExtractor={(item) => item.toString()}
             ListEmptyComponent={EmptyView}
+            showsVerticalScrollIndicator={false}
           />
         )}
       </View>
