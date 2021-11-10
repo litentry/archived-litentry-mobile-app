@@ -48,7 +48,7 @@ function TipsSummaryTeaser({onPressMore}: TipsSummaryTeaserProps) {
             </View>
           </View>
           <Padder scale={0.5} />
-          <StatInfoBlock title="Reason">{tip.reason && <TipReason reasonHash={tip.reason} />}</StatInfoBlock>
+          {tip.reason && <TipReason reasonHash={tip.reason} />}
         </Card>
       ) : undefined}
     </SectionTeaserContainer>
