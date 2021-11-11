@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, FlatList} from 'react-native';
-import {Divider, Layout, Spinner, Text, Card} from '@ui-kitten/components';
+import {Layout, Text, Card} from '@ui-kitten/components';
 import globalStyles, {standardPadding} from 'src/styles';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {useBounties} from 'src/api/hooks/useBounties';
@@ -12,6 +12,7 @@ import {Bounty, BountyIndex} from '@polkadot/types/interfaces';
 import {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {BountyStatusInfo, getBountyStatus} from './helper/getBountyStatus';
+import LoadingView from 'presentational/LoadingView';
 
 type BountyItemProps = {
   bounty: Bounty;
@@ -38,7 +39,7 @@ export function BountiesScreen() {
       <SafeView edges={noTopEdges}>
         {isLoading ? (
           <View style={globalStyles.centeredContainer}>
-            <Spinner />
+            <LoadingView />
           </View>
         ) : (
           <FlatList

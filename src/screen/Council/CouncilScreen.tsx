@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {StyleSheet, View, SectionList} from 'react-native';
-import {Divider, Layout, ListItem, Spinner, Text, useTheme, Tab, TabBar} from '@ui-kitten/components';
+import {Divider, Layout, ListItem, Text, useTheme, Tab, TabBar} from '@ui-kitten/components';
 import globalStyles, {standardPadding} from 'src/styles';
 import {useNavigation} from '@react-navigation/native';
 import Identicon from '@polkadot/reactnative-identicon';
@@ -13,6 +13,7 @@ import {useCouncilSummary} from 'src/api/hooks/useCouncilSummary';
 import {MotionsScreen} from './MotionsScreen';
 
 import {createMaterialTopTabNavigator, MaterialTopTabBarProps} from '@react-navigation/material-top-tabs';
+import LoadingView from 'presentational/LoadingView';
 const {Navigator, Screen} = createMaterialTopTabNavigator();
 
 function TopTabBar({navigation, state}: MaterialTopTabBarProps) {
@@ -62,7 +63,7 @@ function CouncilOverviewScreen() {
       <SafeView edges={noTopEdges}>
         {isLoading ? (
           <View style={globalStyles.centeredContainer}>
-            <Spinner />
+            <LoadingView />
           </View>
         ) : (
           <SectionList
