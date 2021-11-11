@@ -11,6 +11,7 @@ import {verifyMnemonicScreen, createAccountScreen} from 'src/navigation/routeKey
 import {shuffle} from 'lodash';
 
 type Word = {
+  id: number;
   text: string;
   isSelected: boolean;
 };
@@ -28,7 +29,8 @@ export function VerifyMnemonicScreen({
   const [selectedMnemonic, setSelectedMnemonic] = React.useState('');
 
   const [words, setWords] = React.useState<Word[]>(() => {
-    return shuffle(mnemonic.split(' ')).map((word) => ({
+    return shuffle(mnemonic.split(' ')).map((word, index) => ({
+      id: index,
       text: word,
       isSelected: false,
     }));
@@ -41,7 +43,7 @@ export function VerifyMnemonicScreen({
 
   const onSelect = (selectedWord: Word) => {
     const wordsSelected = words.map((word) =>
-      word.text === selectedWord.text ? {...word, isSelected: !word.isSelected} : word,
+      word.id === selectedWord.id ? {...word, isSelected: !word.isSelected} : word,
     );
     setWords(wordsSelected);
 
@@ -100,7 +102,7 @@ function WordSelector({words, onSelect}: WordSelectorProps) {
   return (
     <View style={styles.words}>
       {words.map((word) => (
-        <View style={styles.wordButton} key={word.text}>
+        <View style={styles.wordButton} key={word.id}>
           <Button
             status={`${word.isSelected ? 'success' : 'primary'}`}
             onPress={() => onSelect(word)}
