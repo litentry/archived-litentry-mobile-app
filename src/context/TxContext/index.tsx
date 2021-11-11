@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {ApiPromise} from '@polkadot/api';
 import {SubmittableExtrinsic} from '@polkadot/api/submittable/types';
 import {ExtrinsicPayload} from '@polkadot/types/interfaces';

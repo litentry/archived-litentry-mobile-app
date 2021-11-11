@@ -17,16 +17,6 @@ function getParamsFromDeeplink(deeplink: string) {
   }
 }
 
-async function requestUserPermission() {
-  const authStatus = await messaging().requestPermission();
-  const enabled =
-    authStatus === messaging.AuthorizationStatus.AUTHORIZED || authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-  if (enabled) {
-    console.log('Authorization status:', authStatus);
-  }
-}
-
 export function useFirebase() {
   const linkTo = useLinkTo();
   const {trigger} = useInAppNotification();

@@ -20,9 +20,9 @@ export function MnemonicScreen({navigation}: {navigation: NavigationProp<Account
   const [mnemonic, setMnemonic] = React.useState<string>();
 
   React.useEffect(() => {
-    SubstrateSign.randomPhrase(12).then((mnemonic) => {
-      consoleLogMnemonic(mnemonic);
-      setMnemonic(mnemonic);
+    SubstrateSign.randomPhrase(12).then((_mnemonic) => {
+      consoleLogMnemonic(_mnemonic);
+      setMnemonic(_mnemonic);
     });
   }, []);
 
