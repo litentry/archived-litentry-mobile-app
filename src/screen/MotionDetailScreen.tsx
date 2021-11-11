@@ -1,6 +1,6 @@
 import {AccountId} from '@polkadot/types/interfaces';
 import {RouteProp} from '@react-navigation/native';
-import {Card, Icon, Text} from '@ui-kitten/components';
+import {Card, Icon, Layout, Text} from '@ui-kitten/components';
 import {NetworkContext} from 'context/NetworkContext';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
 import _ from 'lodash';
@@ -156,19 +156,21 @@ export function MotionDetailScreen(props: PropTypes) {
         withReactModal
         useNativeDriver
         panGestureEnabled>
-        <WebView
-          injectedJavaScript={`(function() {
+        <Layout>
+          <WebView
+            injectedJavaScript={`(function() {
                 // remove some html element
                 document.getElementById('menubar').remove();
                 var footer = document.getElementsByTagName('footer');
                 Array.prototype.forEach.call(footer, el => el.remove());
             })();`}
-          source={{
-            uri: buildMotionDetailUrl(motion.votes?.index.toNumber() ?? 0, currentNetwork?.key || 'polkadot'),
-          }}
-          style={{height: height * 0.6}}
-          onMessage={() => null}
-        />
+            source={{
+              uri: buildMotionDetailUrl(motion.votes?.index.toNumber() ?? 0, currentNetwork?.key || 'polkadot'),
+            }}
+            style={{height: height * 0.6}}
+            onMessage={() => null}
+          />
+        </Layout>
       </Modalize>
     </SafeView>
   );

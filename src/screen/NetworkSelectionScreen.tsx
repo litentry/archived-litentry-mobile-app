@@ -3,7 +3,7 @@ import {Modalize} from 'react-native-modalize';
 import {StyleSheet, View} from 'react-native';
 import NetworkSelectionList from 'presentational/NetworkSelectionList';
 import globalStyles, {standardPadding} from 'src/styles';
-import {Button, Divider} from '@ui-kitten/components';
+import {Button, Divider, Layout} from '@ui-kitten/components';
 import {NetworkContext} from 'context/NetworkContext';
 import {NetworkType} from 'src/types';
 import {NavigationProp} from '@react-navigation/native';
@@ -39,12 +39,12 @@ export function NetworkSelectionScreen({navigation}: {navigation: NavigationProp
     <Modalize
       ref={modalRef}
       threshold={250}
-      handlePosition="outside"
       adjustToContentHeight
+      scrollViewProps={{style: {overflow: 'hidden'}}}
       closeOnOverlayTap={false}
       panGestureEnabled={false}
       tapGestureEnabled={false}>
-      <View style={styles.networkModal}>
+      <Layout style={styles.networkModal}>
         <NetworkSelectionList
           items={availableNetworks}
           selected={currentNetwork}
@@ -57,17 +57,13 @@ export function NetworkSelectionScreen({navigation}: {navigation: NavigationProp
         <Button appearance="ghost" onPress={onClose}>
           Close
         </Button>
-      </View>
+      </Layout>
     </Modalize>
   );
 }
 
 const styles = StyleSheet.create({
-  modal: {},
-  flex1: {flex: 1},
   networkModal: {
-    backgroundColor: 'transparent',
-    flex: 1,
     paddingVertical: standardPadding * 3,
     paddingHorizontal: standardPadding * 2,
   },

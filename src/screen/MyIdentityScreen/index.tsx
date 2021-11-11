@@ -1,6 +1,6 @@
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {Button, Divider, Icon, IconProps, ListItem, MenuGroup, MenuItem, Text} from '@ui-kitten/components';
+import {Button, Divider, Icon, IconProps, Layout, ListItem, MenuGroup, MenuItem, Text} from '@ui-kitten/components';
 import BN from 'bn.js';
 import {NetworkContext} from 'context/NetworkContext';
 import RegistrarSelectionModal from 'layout/RegistrarSelectionModal';
@@ -270,9 +270,9 @@ function MyIdentity({
           withReactModal
           useNativeDriver
           panGestureEnabled>
-          <View>
+          <Layout>
             <IdentityInfoForm onSubmit={onSubmitIdentityInfo} identity={identity} />
-          </View>
+          </Layout>
         </Modalize>
 
         <Modalize
