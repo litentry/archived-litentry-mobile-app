@@ -31,7 +31,7 @@ import {ReferendumScreen} from 'screen/ReferendumScreen';
 import RegistrarListScreen from 'screen/RegistrarListScreen';
 import {ParathreadsScreen} from 'screen/Parachains/ParathreadsScreen';
 import {RegisterSubIdentitiesScreen} from 'screen/subIdentities/RegisterSubIdentitiesScreen';
-import {SubmitTipScreen} from 'screen/SubmitTipScreen';
+import {ProposeTipScreen} from 'screen/ProposeTipScreen';
 import TipDetailScreen from 'screen/tips/TipDetailScreen';
 import TipsScreen from 'screen/tips/TipsScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
@@ -84,23 +84,11 @@ function DashboardStackNavigator() {
       }}>
       <DashboardStack.Screen name={routeKeys.dashboardScreen} component={DashboardScreen} />
       <DashboardStack.Screen name={routeKeys.motionDetailScreen} component={MotionDetailScreen} />
-      <DashboardStack.Screen
-        name={routeKeys.tipsScreen}
-        component={TipsScreen}
-        options={({navigation}) => ({
-          headerRight: () => (
-            <TopNavigationAction
-              icon={(props) => <Icon {...props} name="plus-circle-outline" />}
-              onPress={() => navigation.navigate(routeKeys.submitTipScreen)}
-            />
-          ),
-        })}
-      />
       <DashboardStack.Screen name={routeKeys.tipDetailScreen} component={TipDetailScreen} />
       <DashboardStack.Screen name={routeKeys.councilScreen} component={CouncilScreen} />
       <DashboardStack.Screen name={routeKeys.candidateScreen} component={CandidateScreen} />
       <DashboardStack.Screen name={routeKeys.treasuryScreen} component={TreasuryScreen} />
-      <DashboardStack.Screen name={routeKeys.submitTipScreen} component={SubmitTipScreen} />
+      <DashboardStack.Screen name={routeKeys.proposeTipScreen} component={ProposeTipScreen} />
       <DashboardStack.Screen name={routeKeys.motionsScreen} component={MotionsScreen} />
       <DashboardStack.Screen name={routeKeys.democracyScreen} component={DemocracyScreen} />
       <DashboardStack.Screen name={routeKeys.referendumScreen} component={ReferendumScreen} />
@@ -297,7 +285,15 @@ function ApiLoadingNavigator() {
 const AppStack = createStackNavigator<AppStackParamList>();
 
 function AppNavigator() {
-  const {pushAuthorizationStatus} = usePushAuthorizationStatus();
+  const {pushAuthorizationStatus, isLoading} = usePushAuthorizationStatus();
+
+  // We need this here, becuase otherwise PermissionGrantingPrompt
+  // wouldn't mount on the first render, loading indicator is not necessary
+  // because the promise is resolving almost immediatly
+  if (isLoading) {
+    return null;
+  }
+
   return (
     <AppStack.Navigator
       screenOptions={{

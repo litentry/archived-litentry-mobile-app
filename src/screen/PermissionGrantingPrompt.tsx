@@ -10,6 +10,10 @@ export function PermissionGrantingPrompt() {
   const theme = useTheme();
 
   const {requestPermissions} = usePushNotificationsPermissions();
+  // We request permissions on mount, so we can only relay on messaging().hasPermission()
+  // result instead of storing a seperate state in persistent storage.
+  // this way we remove the component from the stack when the user has granted permissions
+  // or declined them.
   useEffect(() => requestPermissions(), [requestPermissions]);
   const [error, setError] = useState<string>();
 
