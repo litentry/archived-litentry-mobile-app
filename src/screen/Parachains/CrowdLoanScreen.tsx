@@ -149,7 +149,6 @@ export function CrowdLoanScreen() {
 }
 
 function Chart({percent}: {percent: number}) {
-  const theme = useTheme();
   return (
     <View>
       <ProgressChart
@@ -159,14 +158,9 @@ function Chart({percent}: {percent: number}) {
         strokeWidth={5}
         radius={21}
         chartConfig={{
-          backgroundGradientFromOpacity: 0.5,
-          backgroundGradientFrom: theme['background-basic-color-1'],
-          backgroundGradientTo: theme['background-basic-color-1'],
-          backgroundGradientToOpacity: 1,
-          color: (opacity = 1) => `rgba(27, 197, 117, ${opacity})`,
-          strokeWidth: 2, // optional, default 3
-          barPercentage: 0.5,
-          useShadowColorFromDataset: false, // optional
+          backgroundGradientFromOpacity: 0,
+          backgroundGradientToOpacity: 0,
+          color: (opacity = 1) => `rgba(0, 197, 117, ${opacity})`,
         }}
         hideLegend
       />

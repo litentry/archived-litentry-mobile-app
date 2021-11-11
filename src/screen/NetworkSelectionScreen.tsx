@@ -1,6 +1,6 @@
 import React, {useContext, useRef} from 'react';
 import {Modalize} from 'react-native-modalize';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import NetworkSelectionList from 'presentational/NetworkSelectionList';
 import globalStyles, {standardPadding} from 'src/styles';
 import {Button, Divider, Layout} from '@ui-kitten/components';
