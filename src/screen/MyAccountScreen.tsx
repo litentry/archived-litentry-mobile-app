@@ -17,7 +17,7 @@ import {
   balanceScreen,
   exportAccountWithJsonFileScreen,
   identityGuideScreen,
-  myIdentityScreen,
+  manageIdentityScreen,
 } from 'src/navigation/routeKeys';
 import {standardPadding} from 'src/styles';
 
@@ -28,7 +28,7 @@ export function MyAccountScreen({
   },
 }: {
   navigation: NavigationProp<CompleteNavigatorParamList>;
-  route: RouteProp<AccountsStackParamList, typeof myIdentityScreen>;
+  route: RouteProp<AccountsStackParamList, typeof manageIdentityScreen>;
 }) {
   const {data} = useAccountIdentityInfo(address);
   const formatBalance = useFormatBalance();
@@ -78,7 +78,7 @@ export function MyAccountScreen({
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            navigation.navigate(myIdentityScreen, {address});
+            navigation.navigate(manageIdentityScreen, {address});
             navigation.navigate(identityGuideScreen);
           }}>
           <View style={[styles.iconContainer, {backgroundColor: theme['background-basic-color-2']}]}>

@@ -7985,10 +7985,10 @@ react-native-mmkv@^1.5.2:
   resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-1.5.2.tgz#d2b84f22f13d3ed0c2395addbd6ef8f2fe986c35"
   integrity sha512-vvmtcjWVUTKoErg1RxMwPijyoySqWd2nuD6LC1PiZsBQO0sCXi8mJel1dI5Agnq3SsNYhPTcRNSHzVKz4q7gyw==
 
-react-native-modalize@^2.0.6:
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/react-native-modalize/-/react-native-modalize-2.0.8.tgz#5dcb2c56d82e3dbd271582f832e7e02ae4cbb503"
-  integrity sha512-OKdpFVExEe4YM2uFHL/aStS9p0JaC6gBupjaW1QVHkGq22T2ASYwkhDvTnMS8BLOLWPx2fC3xEBzOcn2rh7EYw==
+react-native-modalize@^2.0.11:
+  version "2.0.11"
+  resolved "https://registry.yarnpkg.com/react-native-modalize/-/react-native-modalize-2.0.11.tgz#a9b3c3d04a57b7413332dc659115021b7b7ececa"
+  integrity sha512-foRnZBvg0IOXi1TopNsci+60vnlvrGoPYVNVVlJC2jEASka2Juua3HQ43g8E4uxlu14xrSx8C+c5ra5GXmPQGA==
 
 react-native-pager-view@^5.4.9:
   version "5.4.9"
@@ -8004,11 +8004,6 @@ react-native-permissions@^3.0.5:
   version "3.0.5"
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-3.0.5.tgz#94542a343abdac801fa0a4593ea2c751cb45c41f"
   integrity sha512-hcvLtHhTyOTXC+CCv79d4Qtdnj6PGuY5Ms0fhW8V6Et1T/mPvzO6++Du4jwEv/oHZ62qMWKUDq0/Tsh63QHuyQ==
-
-react-native-portalize@^1.0.7:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/react-native-portalize/-/react-native-portalize-1.0.7.tgz#8b3c742a06f863654d526ea1075a8596625f8482"
-  integrity sha512-icqopPh9ZSV+I8C5LlZN9pQJ0OMeBDNqHhP80+qDx0hOGEcsDC09wgjogbEMfJE0GcMDM7PDYtyQkqa9gIqd1g==
 
 react-native-qrcode-scanner@^1.5.4:
   version "1.5.4"
