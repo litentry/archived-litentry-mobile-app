@@ -38,9 +38,7 @@ export function BountiesScreen() {
     <Layout style={globalStyles.flex}>
       <SafeView edges={noTopEdges}>
         {isLoading ? (
-          <View style={globalStyles.centeredContainer}>
-            <LoadingView />
-          </View>
+          <LoadingView />
         ) : (
           <FlatList
             style={globalStyles.flex}

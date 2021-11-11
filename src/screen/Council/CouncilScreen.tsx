@@ -62,9 +62,7 @@ function CouncilOverviewScreen() {
     <Layout style={globalStyles.flex}>
       <SafeView edges={noTopEdges}>
         {isLoading ? (
-          <View style={globalStyles.centeredContainer}>
-            <LoadingView />
-          </View>
+          <LoadingView />
         ) : (
           <SectionList
             style={globalStyles.flex}

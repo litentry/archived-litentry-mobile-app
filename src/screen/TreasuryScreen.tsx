@@ -56,9 +56,7 @@ function TreasuryOverviewScreen() {
     <Layout style={globalStyles.flex}>
       <SafeView edges={noTopEdges}>
         {!data ? (
-          <View style={globalStyles.centeredContainer}>
-            <LoadingView />
-          </View>
+          <LoadingView />
         ) : (
           <SectionList
             contentContainerStyle={styles.sectionList}
