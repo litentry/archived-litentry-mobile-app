@@ -7,13 +7,14 @@ import Padder from 'presentational/Padder';
 import QRCamera from 'presentational/QRCamera';
 import SuccessDialog from 'presentational/SuccessDialog';
 import React, {useCallback, useContext, useEffect, useMemo, useReducer, useRef} from 'react';
-import {Alert, Platform, StyleSheet, View} from 'react-native';
+import {Alert, StyleSheet, View} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import AddressInfoPreview from './AddressPreview';
 import {AppStackParamList} from 'src/navigation/navigation';
 import {default as globalStyles, monofontFamily, standardPadding} from 'src/styles';
 import {isAddressValid, parseAddress} from 'src/utils';
 import {useAccounts} from 'context/AccountsContext';
+import SafeView, {noTopEdges} from 'presentational/SafeView';
 
 export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppStackParamList>}) {
   const ref = useRef<Modalize>(null);
@@ -88,70 +89,75 @@ export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppSt
       }}
       closeOnOverlayTap
       panGestureEnabled={false}>
-      <Layout level="1" style={[globalStyles.paddedContainer, styles.modal]}>
-        <ModalTitle title="Add Account" />
-        <Divider />
-        {(() => {
-          switch (state.step) {
-            case 'input':
-              return (
-                <TabView
-                  shouldLoadComponent={(index) => {
-                    return state.tabIndex === index;
-                  }}
-                  indicatorStyle={styles.tabViewIndicator}
-                  style={styles.tabViewContainer}
-                  selectedIndex={state.tabIndex}
-                  onSelect={(index) => dispatch({type: 'SET_TAB_INDEX', payload: index})}>
-                  <Tab title={InputIcon}>
-                    <Layout style={styles.tabContainer}>
-                      <Input
-                        onChangeText={handleInputChange}
-                        value={state.address}
-                        multiline={true}
-                        textStyle={styles.input}
-                        placeholder="👉 Paste address here, e.g. 167r...14h"
-                      />
-                    </Layout>
-                  </Tab>
-                  <Tab title={QrIcon}>
-                    <Layout style={styles.tabContainer}>
-                      <QRCamera onRead={handleScan} />
-                    </Layout>
-                  </Tab>
-                </TabView>
-              );
-            case 'preview':
-              return <AddressInfoPreview address={state.address} api={api} network={currentNetwork} />;
-            case 'success':
-              return (
-                <Layout style={globalStyles.dialogMinHeight}>
-                  <SuccessDialog text="Account import success" />
-                </Layout>
-              );
-          }
-        })()}
-        <Divider style={globalStyles.divider} />
-        <Layout style={styles.btnContainer}>
-          {state.step !== 'success' ? (
-            <>
-              <Button style={styles.btn} appearance="ghost" status="danger" onPress={navigation.goBack}>
-                {'Cancel'}
-              </Button>
-              <View style={styles.gap20} />
-            </>
-          ) : undefined}
-          <Button style={styles.btn} appearance="ghost" disabled={confirmBtnDisabled} onPress={handleConfirm}>
-            {state.step === 'success' ? 'Close' : 'Confirm'}
-          </Button>
+      <SafeView edges={noTopEdges}>
+        <Layout level="1" style={styles.modal}>
+          <ModalTitle title="Add Account" />
+          <Divider />
+          {(() => {
+            switch (state.step) {
+              case 'input':
+                return (
+                  <TabView
+                    shouldLoadComponent={(index) => {
+                      return state.tabIndex === index;
+                    }}
+                    indicatorStyle={styles.tabViewIndicator}
+                    style={styles.tabViewContainer}
+                    selectedIndex={state.tabIndex}
+                    onSelect={(index) => dispatch({type: 'SET_TAB_INDEX', payload: index})}>
+                    <Tab title={InputIcon}>
+                      <Layout style={styles.tabContainer}>
+                        <Input
+                          onChangeText={handleInputChange}
+                          value={state.address}
+                          multiline={true}
+                          textStyle={styles.input}
+                          placeholder="👉 Paste address here, e.g. 167r...14h"
+                        />
+                      </Layout>
+                    </Tab>
+                    <Tab title={QrIcon}>
+                      <Layout style={styles.tabContainer}>
+                        <QRCamera onRead={handleScan} />
+                      </Layout>
+                    </Tab>
+                  </TabView>
+                );
+              case 'preview':
+                return <AddressInfoPreview address={state.address} api={api} network={currentNetwork} />;
+              case 'success':
+                return (
+                  <Layout style={globalStyles.dialogMinHeight}>
+                    <SuccessDialog text="Account import success" />
+                  </Layout>
+                );
+            }
+          })()}
+          <Divider style={globalStyles.divider} />
+          <Layout style={styles.btnContainer}>
+            {state.step !== 'success' ? (
+              <>
+                <Button style={styles.btn} appearance="ghost" status="danger" onPress={navigation.goBack}>
+                  {'Cancel'}
+                </Button>
+                <View style={styles.gap20} />
+              </>
+            ) : undefined}
+            <Button style={styles.btn} appearance="ghost" disabled={confirmBtnDisabled} onPress={handleConfirm}>
+              {state.step === 'success' ? 'Close' : 'Confirm'}
+            </Button>
+          </Layout>
         </Layout>
-      </Layout>
+      </SafeView>
     </Modalize>
   );
 }
 
 const styles = StyleSheet.create({
-  modal: {marginBottom: Platform.OS === 'ios' ? standardPadding : 0},
+  modal: {
+    padding: standardPadding * 2,
+    paddingBottom: standardPadding,
+  },
   tabViewContainer: {
     paddingVertical: standardPadding * 2,
     height: 410,

@@ -1,6 +1,6 @@
 import React, {createContext, useCallback, useContext, useMemo} from 'react';
 import {ApplicationProvider} from '@ui-kitten/components';
-import {dark, mapping} from '@eva-design/material';
+import {mapping} from '@eva-design/material';
 import {usePersistedState} from 'src/hook/usePersistedState';
 import customMapping from 'src/mapping.json';
 import {darkMaterialThemeOverride, lightMaterialThemeOverride} from 'src/navigation/theme';
