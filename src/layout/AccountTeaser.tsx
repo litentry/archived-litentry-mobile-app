@@ -7,7 +7,7 @@ import React, {useState} from 'react';
 import {Dimensions, StyleSheet, TouchableOpacity} from 'react-native';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useAccounts} from 'src/context/AccountsContext';
-import {myIdentityScreen} from 'src/navigation/routeKeys';
+import {manageIdentityScreen} from 'src/navigation/routeKeys';
 import globalStyles, {getIconColorByTheme, monofontFamily, standardPadding} from 'src/styles';
 import AccountInfoInlineTeaser from '../presentational/AccountInfoInlineTeaser';
 import Padder from '../presentational/Padder';
@@ -32,7 +32,7 @@ function AccountTeaser(props: PropTypes) {
 
   const handleIconPressed = (addr?: string) => {
     if (addr) {
-      navigation.navigate(myIdentityScreen, {address: addr});
+      navigation.navigate(manageIdentityScreen, {address: addr});
     }
   };
 

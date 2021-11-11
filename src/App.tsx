@@ -1,5 +1,4 @@
 import React from 'react';
-import {Host} from 'react-native-portalize';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {QueryClient, QueryClientProvider} from 'react-query';
 import {IconRegistry} from '@ui-kitten/components';
@@ -33,11 +32,9 @@ export default function App() {
                   <SafeAreaProvider>
                     <InAppNotificationContextProvider>
                       <ErrorBoundary>
-                        <Host>
-                          <TxContextProvider>
-                            <AppNavigator />
-                          </TxContextProvider>
-                        </Host>
+                        <TxContextProvider>
+                          <AppNavigator />
+                        </TxContextProvider>
                       </ErrorBoundary>
                     </InAppNotificationContextProvider>
                   </SafeAreaProvider>
