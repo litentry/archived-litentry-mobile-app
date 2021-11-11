@@ -9,16 +9,19 @@ import FormLabel from 'presentational/FormLabel';
 import Padder from 'presentational/Padder';
 import {verifyMnemonicScreen} from 'src/navigation/routeKeys';
 import SubstrateSign from 'react-native-substrate-sign';
-import {createLogger} from 'src/utils';
 
-const logger = createLogger('Mnemonic');
+function consoleLogMnemonic(mnemonic: string) {
+  if (__DEV__) {
+    console.log('Mnemonic seed ::: ', mnemonic);
+  }
+}
 
 export function MnemonicScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const [mnemonic, setMnemonic] = React.useState<string>();
 
   React.useEffect(() => {
     SubstrateSign.randomPhrase(12).then((mnemonic) => {
-      logger.debug('Mnemonic seed ::: ', mnemonic);
+      consoleLogMnemonic(mnemonic);
       setMnemonic(mnemonic);
     });
   }, []);
