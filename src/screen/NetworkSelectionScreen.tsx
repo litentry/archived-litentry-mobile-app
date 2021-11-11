@@ -1,6 +1,6 @@
 import React, {useContext, useRef} from 'react';
 import {Modalize} from 'react-native-modalize';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import NetworkSelectionList from 'presentational/NetworkSelectionList';
 import globalStyles, {standardPadding} from 'src/styles';
 import {Button, Divider, Layout} from '@ui-kitten/components';
@@ -9,6 +9,7 @@ import {NetworkType} from 'src/types';
 import {NavigationProp} from '@react-navigation/native';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {apiLoadingScreen, appStack, connectionRetryScreen} from 'src/navigation/routeKeys';
+import {CompleteNavigatorParamList} from 'src/navigation/navigation';
 
 export type InjectedPropTypes = {
   networkSelection: {
@@ -17,7 +18,7 @@ export type InjectedPropTypes = {
   };
 };
 
-export function NetworkSelectionScreen({navigation}: {navigation: NavigationProp<any>}) {
+export function NetworkSelectionScreen({navigation}: {navigation: NavigationProp<CompleteNavigatorParamList>}) {
   const modalRef = useRef<Modalize>(null);
   React.useEffect(() => {
     modalRef.current?.open();

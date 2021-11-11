@@ -117,7 +117,7 @@ function useParathreadData(id: ParaId) {
   if (endpoints != null && endpoints.length > 0) {
     const endpoint = endpoints[endpoints.length - 1];
     parathread.name = endpoint?.text ? String(endpoint.text) : undefined;
-    parathread.homepage = endpoint != null && 'homepage' in endpoint ? (endpoint as any).homepage : undefined;
+    parathread.homepage = endpoint != null && 'homepage' in endpoint ? endpoint.homepage : undefined;
   }
   return parathread;
 }

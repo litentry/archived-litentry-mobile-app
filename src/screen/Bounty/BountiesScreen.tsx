@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, FlatList} from 'react-native';
-import {Divider, Layout, Spinner, Text, Card} from '@ui-kitten/components';
+import {Layout, Spinner, Text, Card} from '@ui-kitten/components';
 import globalStyles, {standardPadding} from 'src/styles';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {useBounties} from 'src/api/hooks/useBounties';
