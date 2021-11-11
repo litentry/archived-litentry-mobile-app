@@ -4,24 +4,24 @@ import {light, dark} from '@eva-design/material';
 export const darkTheme: Theme = {
   dark: true,
   colors: {
-    primary: '#FFFFFF' /*text-alternative-color*/,
-    background: '#222B45' /*background-alternative-color-1*/,
-    card: '#222B45' /*background-alternative-color-1*/,
-    text: '#FFFFFF' /*text-alternative-color*/,
-    border: '#222B45',
-    notification: '#222B45',
+    primary: dark['color-basic-100'],
+    background: dark['color-basic-800'],
+    card: dark['color-basic-800'],
+    text: dark['color-basic-100'],
+    border: dark['color-basic-800'],
+    notification: dark['color-basic-800'],
   },
 };
 
 export const lightTheme: Theme = {
   dark: false,
   colors: {
-    primary: '#222B45' /*text-basic-color*/,
-    background: '#FFFFFF' /*background-alternative-color-1*/,
-    card: '#FFFFFF',
-    text: '#222B45' /*text-basic-color*/,
-    border: '#FFFFFF',
-    notification: '#FFFFFF',
+    primary: light['color-basic-800'],
+    background: light['color-basic-100'],
+    card: light['color-basic-100'],
+    text: light['color-basic-800'],
+    border: light['color-basic-100'],
+    notification: light['color-basic-100'],
   },
 };
 
