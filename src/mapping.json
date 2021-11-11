@@ -40,6 +40,32 @@
           }
         }
       }
+    },
+    "Tab": {
+      "appearances": {
+        "default": {
+          "mapping": {
+            "textColor": "text-basic-color",
+            "state": {
+              "hover": {
+                "textColor": "text-basic-color"
+              },
+              "selected": {
+                "textColor": "text-basic-color"
+              }
+            }
+          }
+        }
+      }
+    },
+    "TabBar": {
+      "appearances": {
+        "default": {
+          "mapping": {
+            "backgroundColor": "background-basic-color-1"
+          }
+        }
+      }
     }
   }
 }
