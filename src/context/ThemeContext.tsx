@@ -1,7 +1,6 @@
 import React, {createContext, useCallback, useContext, useMemo} from 'react';
 import {ApplicationProvider} from '@ui-kitten/components';
 import * as eva from '@eva-design/eva';
-
 import {usePersistedState} from 'src/hook/usePersistedState';
 import mapping from 'src/mapping.json';
 

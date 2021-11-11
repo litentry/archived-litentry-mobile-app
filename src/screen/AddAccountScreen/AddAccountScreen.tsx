@@ -7,7 +7,7 @@ import Padder from 'presentational/Padder';
 import QRCamera from 'presentational/QRCamera';
 import SuccessDialog from 'presentational/SuccessDialog';
 import React, {useCallback, useContext, useEffect, useMemo, useReducer, useRef} from 'react';
-import {Alert, Platform, StyleSheet, View} from 'react-native';
+import {Alert, StyleSheet, View} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import AddressInfoPreview from './AddressPreview';
 import {AppStackParamList} from 'src/navigation/navigation';
@@ -81,14 +81,14 @@ export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppSt
   return (
     <Modalize
       ref={ref}
-      withOverlay={true}
-      threshold={250}
-      scrollViewProps={{showsVerticalScrollIndicator: false}}
       adjustToContentHeight
-      onClose={navigation.goBack}
-      handlePosition="outside"
+      onClose={() => {
+        // timeout fixes a warning about animation event handling
+        // not sure what is the problem
+        setTimeout(navigation.goBack, 0);
+      }}
       closeOnOverlayTap
-      panGestureEnabled>
+      panGestureEnabled={false}>
       <SafeView edges={noTopEdges}>
         <Layout level="1" style={styles.modal}>
           <ModalTitle title="Add Account" />
