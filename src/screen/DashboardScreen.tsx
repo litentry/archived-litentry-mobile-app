@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   titleContainer: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   divider: {height: 2},
 });
