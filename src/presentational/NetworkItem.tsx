@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Layout, Text} from '@ui-kitten/components';
+import {Text} from '@ui-kitten/components';
 import {NetworkType} from 'src/types';
 import {standardPadding} from 'src/styles';
 
@@ -9,10 +9,10 @@ type PropTypes = {item: NetworkType; isConnected: boolean};
 function NetworkItem(props: PropTypes) {
   const {item, isConnected} = props;
   return (
-    <Layout style={styles.container}>
+    <View style={styles.container}>
       <Text category="label">{item.name}</Text>
       <View style={[styles.connectionIndicator, isConnected ? styles.connected : styles.notConnected]} />
-    </Layout>
+    </View>
   );
 }
 

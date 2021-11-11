@@ -848,10 +848,10 @@
   resolved "https://registry.yarnpkg.com/@eva-design/dss/-/dss-2.1.1.tgz#bd8da793e13a0dcac91d852b91ebf05e6fbdc0ee"
   integrity sha512-Z6rZSodsQHWW1yDuiop1glJU8xKJSdKTPoWWCBsQWXYMNwTAEPgcZV69HNlnerB+T++jwj2jeoBzO24CTc0PmQ==
 
-"@eva-design/eva@^2.1.1":
+"@eva-design/material@^2.1.1":
   version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@eva-design/eva/-/eva-2.1.1.tgz#ad237ae76d63e7c474b3a0755c697490bbe5a4bc"
-  integrity sha512-WS1ykETXyq0Kxa0aFlPMBeftEtBeTDv9qEUeQ4VvbTETMc7hsZPSkPr2HudtQhFihiM72GFfwAK6GIAlF6GXdQ==
+  resolved "https://registry.yarnpkg.com/@eva-design/material/-/material-2.1.1.tgz#b08bd8f2c8411871c118fac11f7b59c2f4cdfb2f"
+  integrity sha512-fVqknxM+PVsuPx0H/CcEgoZkZ1UIr41Cxt56yt67LBCus4xIILqyXx5pAvc//QTz3x7K29UEWH80YS6gpZaRag==
 
 "@eva-design/processor@^2.0.0":
   version "2.1.1"

@@ -90,7 +90,7 @@ export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppSt
       closeOnOverlayTap
       panGestureEnabled={false}>
       <SafeView edges={noTopEdges}>
-        <Layout level="1" style={styles.modal}>
+        <Layout style={styles.modal}>
           <ModalTitle title="Add Account" />
           <Divider />
           {(() => {
@@ -155,18 +155,17 @@ export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppSt
 
 const styles = StyleSheet.create({
   modal: {
-    padding: standardPadding * 2,
+    paddingTop: standardPadding * 2,
     paddingBottom: standardPadding,
   },
   tabViewContainer: {
-    paddingVertical: standardPadding * 2,
     height: 410,
   },
   tabTitle: {
     flexDirection: 'row',
   },
   tabContainer: {
-    paddingVertical: standardPadding,
+    padding: standardPadding,
     justifyContent: 'space-between',
   },
   input: {
@@ -198,19 +197,19 @@ const styles = StyleSheet.create({
 });
 
 const QrIcon = (props: IconProps) => (
-  <Layout style={styles.tabTitle}>
+  <View style={styles.tabTitle}>
     <Text category="s1">Via QR</Text>
     <Padder scale={0.5} />
     <Icon {...props} pack="ionic" name="qr-code-sharp" />
-  </Layout>
+  </View>
 );
 
 const InputIcon = (props: IconProps) => (
-  <Layout style={styles.tabTitle}>
+  <View style={styles.tabTitle}>
     <Text category="s1">Type in</Text>
     <Padder scale={0.5} />
     <Icon {...props} pack="ionic" name="keypad-outline" />
-  </Layout>
+  </View>
 );
 
 /**
