@@ -3,7 +3,8 @@ import {Text, useTheme} from '@ui-kitten/components';
 import Padder from 'presentational/Padder';
 import React from 'react';
 import {View} from 'react-native';
-import {CallInspector, formatCallMeta} from 'src/packages/call_inspector/CallInspector';
+import {CallInspector} from 'src/packages/call_inspector/CallInspector';
+import {formatCallMeta} from 'src/packages/call_inspector/useCallParams';
 
 export function ProposalInfo({proposal}: {proposal: ProposalType}) {
   const theme = useTheme();
