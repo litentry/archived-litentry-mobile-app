@@ -19,7 +19,7 @@ import {Dimensions, StyleSheet} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import SubstrateSign from 'react-native-substrate-sign';
-import {formatCallMeta} from 'src/packages/call_inspector/CallInspector';
+import {formatCallMeta} from 'src/packages/call_inspector/useCallParams';
 import AsyncSigner from 'src/service/AsyncSigner';
 import globalStyles, {standardPadding} from 'src/styles';
 
