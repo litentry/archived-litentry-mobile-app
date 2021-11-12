@@ -3,7 +3,7 @@ import {BackHandler} from 'react-native';
 import {useFocusEffect, useRoute} from '@react-navigation/native';
 import * as routeKeys from 'src/navigation/routeKeys';
 
-export function useBackHandlerKillApp() {
+export function useCustomBackHandler() {
   const route = useRoute();
 
   useFocusEffect(
