@@ -37,8 +37,8 @@ export function VerifyMnemonicScreen({
   });
 
   React.useEffect(() => {
-    const isMnemonicVerified = mnemonic === selectedMnemonic;
-    setIsMnemonicVerified(isMnemonicVerified);
+    const _isMnemonicVerified = mnemonic === selectedMnemonic;
+    setIsMnemonicVerified(_isMnemonicVerified);
   }, [selectedMnemonic, mnemonic]);
 
   const onSelect = (selectedWord: Word) => {
@@ -68,7 +68,7 @@ export function VerifyMnemonicScreen({
         <Input
           label={() => <FormLabel text="Mnemonic seed" />}
           style={styles.input}
-          textStyle={{height: 50}}
+          textStyle={styles.inputTextStyle}
           value={selectedMnemonic}
           disabled
           multiline
@@ -125,6 +125,7 @@ const styles = StyleSheet.create({
     fontFamily: monofontFamily,
     height: 70,
   },
+  inputTextStyle: {height: 50},
   words: {
     flexDirection: 'row',
     flexWrap: 'wrap',

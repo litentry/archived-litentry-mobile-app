@@ -57,6 +57,7 @@ async function getFunds(paraIds: ParaId[], bestNumber: BlockNumber, api: ApiProm
     Array<Option<ITuple<[AccountId, BalanceOf]>>>[] | undefined,
   ] = await Promise.all([
     api.query.crowdloan?.funds?.multi<Option<FundInfo>>(paraIds),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     api.query.slots?.leases?.multi<any>(paraIds),
   ]);
 

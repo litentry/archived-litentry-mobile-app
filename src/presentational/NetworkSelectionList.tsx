@@ -31,7 +31,10 @@ function NetworkSelectionList(props: PropTypes) {
         onChange={(index) => {
           if (index !== selectedIndex) {
             setSelectedIndex(index);
-            onSelect(items[index]!);
+            const network = items[index];
+            if (network) {
+              onSelect(network);
+            }
           }
         }}>
         {items.map((item, index) => {
