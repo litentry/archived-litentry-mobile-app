@@ -21,6 +21,7 @@ import {
   networkSelectionScreen,
 } from 'src/navigation/routeKeys';
 import globalStyles from 'src/styles';
+import {useBackHandlerKillApp} from 'src/hook/useBackHandlerKillApp';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
@@ -33,6 +34,8 @@ type PropTypes = {
 };
 
 function DashboardScreen({navigation}: PropTypes) {
+  useBackHandlerKillApp();
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => <DashboardHeaderLeft />,
