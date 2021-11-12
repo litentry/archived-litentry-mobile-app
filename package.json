@@ -30,7 +30,6 @@
     "@polkadot/ui-settings": "^0.85.5",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/clipboard": "^1.5.1",
-    "@react-native-community/hooks": "^2.6.0",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-firebase/app": "^12.9.0",
     "@react-native-firebase/messaging": "^12.9.0",

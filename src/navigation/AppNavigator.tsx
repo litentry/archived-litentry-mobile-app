@@ -1,7 +1,7 @@
 import messaging from '@react-native-firebase/messaging';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createStackNavigator} from '@react-navigation/stack';
-import {Icon, TopNavigationAction} from '@ui-kitten/components';
+import {Icon} from '@ui-kitten/components';
 import React from 'react';
 import {AccountsScreen} from 'screen/AccountsScreen';
 import {AddAccountScreen} from 'screen/AddAccountScreen/AddAccountScreen';
@@ -33,7 +33,6 @@ import {ParathreadsScreen} from 'screen/Parachains/ParathreadsScreen';
 import {RegisterSubIdentitiesScreen} from 'screen/subIdentities/RegisterSubIdentitiesScreen';
 import {ProposeTipScreen} from 'screen/ProposeTipScreen';
 import TipDetailScreen from 'screen/tips/TipDetailScreen';
-import TipsScreen from 'screen/tips/TipsScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
 import WebviewScreen from 'screen/WebviewScreen';
 import {ParachainsOverviewScreen} from 'screen/Parachains/OverviewScreen';
