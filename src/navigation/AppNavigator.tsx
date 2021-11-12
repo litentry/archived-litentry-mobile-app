@@ -61,6 +61,7 @@ import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
 import {NetworkSelectionScreen} from 'screen/NetworkSelectionScreen';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {ConnectionRetryScreen} from 'screen/ConnectionRetryScreen';
+import {useAppBackgroundApiReconnect} from 'src/hook/useAppBackgroundApiReconnect';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -287,9 +288,9 @@ const AppStack = createStackNavigator<AppStackParamList>();
 function AppNavigator() {
   const {pushAuthorizationStatus, isLoading} = usePushAuthorizationStatus();
 
-  // We need this here, becuase otherwise PermissionGrantingPrompt
+  // We need this here, because otherwise PermissionGrantingPrompt
   // wouldn't mount on the first render, loading indicator is not necessary
-  // because the promise is resolving almost immediatly
+  // because the promise is resolving almost immediately
   if (isLoading) {
     return null;
   }
@@ -320,6 +321,7 @@ function AppNavigator() {
 const RootStack = createStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+  useAppBackgroundApiReconnect();
   useTurnOnAllNotificationsOnAppStartForAndroid();
   const {status} = React.useContext(ChainApiContext);
 
