@@ -29,7 +29,7 @@ import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import {DashboardStackParamList} from 'src/navigation/navigation';
 import {referendumScreen} from 'src/navigation/routeKeys';
-import {formatCallMeta} from 'src/packages/call_inspector/CallInspector';
+import {formatCallMeta} from 'src/packages/call_inspector/useCallParams';
 import globalStyles, {standardPadding} from 'src/styles';
 import {useAccounts} from 'context/AccountsContext';
 

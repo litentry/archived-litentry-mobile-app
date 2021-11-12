@@ -1,7 +1,7 @@
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {Divider, Icon, Text, TopNavigationAction} from '@ui-kitten/components';
+import {Divider, Icon, Layout, Text, TopNavigationAction} from '@ui-kitten/components';
 import {useApi} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
 import {CouncilSummaryTeaser} from 'layout/CouncilSummaryTeaser';
@@ -10,7 +10,6 @@ import {BountySummaryTeaser} from 'layout/BountySummaryTeaser';
 import {TreasurySummaryTeaser} from 'layout/TreasurySummaryTeaser';
 import FadeInAnimatedView from 'presentational/FadeInAnimatedView';
 import NetworkItem from 'presentational/NetworkItem';
-import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React, {useContext} from 'react';
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {ApiLoadingStackParamList, DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
@@ -43,7 +42,7 @@ function DashboardScreen({navigation}: PropTypes) {
   }, [navigation]);
 
   return (
-    <SafeView edges={noTopEdges}>
+    <Layout style={styles.container}>
       <Divider style={styles.divider} />
       <FadeInAnimatedView>
         <View style={[globalStyles.flex, styles.main]}>
@@ -55,7 +54,7 @@ function DashboardScreen({navigation}: PropTypes) {
           </ScrollView>
         </View>
       </FadeInAnimatedView>
-    </SafeView>
+    </Layout>
   );
 }
 
@@ -64,8 +63,6 @@ const styles = StyleSheet.create({
   scrollView: {},
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   titleContainer: {
     alignItems: 'center',
@@ -77,7 +74,14 @@ export default DashboardScreen;
 
 export function DashboardHeaderLeft() {
   const navigation: PropTypes['navigation'] = useNavigation();
-  return <TopNavigationAction onPress={navigation.openDrawer} icon={(p) => <Icon {...p} name={'menu-2-outline'} />} />;
+  return (
+    <TopNavigationAction
+      onPress={navigation.openDrawer}
+      icon={(p) => {
+        return <Icon {...p} name={'menu-2-outline'} />;
+      }}
+    />
+  );
 }
 
 function DashboardTitle({onNetworkSelect}: {onNetworkSelect: () => void}) {

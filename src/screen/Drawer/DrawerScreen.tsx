@@ -150,6 +150,7 @@ const styles = StyleSheet.create({
   },
   menuGroup: {
     paddingLeft: 12,
+    backgroundColor: undefined,
   },
 });
 

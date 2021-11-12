@@ -1,50 +1,48 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * referenced from
  * https://github.com/polkadot-js/apps/tree/master/packages/react-params/src/Param
  */
 
-import {Codec, IExtrinsic, IMethod, TypeDef} from '@polkadot/types/types';
-import {Account} from 'src/layout/Account';
-import {StyleSheet, View} from 'react-native';
-import {Text} from '@ui-kitten/components';
-import Identicon from '@polkadot/reactnative-identicon';
-import Padder from 'presentational/Padder';
+import {Balance, Call} from '@polkadot/types/interfaces';
 import {isU8a, u8aToString} from '@polkadot/util';
-import {Balance, Call, FunctionMetadataLatest, ProposalIndex} from '@polkadot/types/interfaces';
-import React, {useContext} from 'react';
+import {Card, Text} from '@ui-kitten/components';
+import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
+import Padder from 'presentational/Padder';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import {ChainApiContext} from 'context/ChainApiContext';
-import {Compact, getTypeDef} from '@polkadot/types';
-import {useQuery} from 'react-query';
+import {Account} from 'src/layout/Account';
+import {useParams} from 'src/packages/call_inspector/useCallParams';
+import globalStyles from 'src/styles';
 
 export function CallInspector({call}: {call: Call}) {
   const formatBalance = useFormatBalance();
   const data = useParams(call);
+  const {method, section} = call.registry.findMetaCall(call.callIndex);
 
   return (
-    <View>
+    <Card style={style.container}>
+      <Text category={'c1'}>{`${method}.${section}():`}</Text>
+      <Padder scale={0.5} />
       {data.map((p, key) => {
         return (
-          <View style={styles.paramRow} key={key}>
+          <View key={key}>
             {(() => {
-              if (p.type.type === 'AccountId' && p.value) {
+              if ((p.type.type === 'AccountId' || p.type.type === 'MultiAddress') && p.value) {
                 return (
-                  <Account id={p.value.toString()} key={key}>
-                    {(identity) => {
-                      return identity ? (
-                        <>
-                          <Text>{p.name}: </Text>
-                          <Identicon value={identity.accountId} size={20} />
-                          <Padder scale={0.3} />
-                          <Text numberOfLines={1} category={'c1'} style={styles.identityDisplay}>
-                            {identity.display}
-                          </Text>
-                        </>
-                      ) : (
-                        <Text>{p.value?.toString()}</Text>
-                      );
-                    }}
-                  </Account>
+                  <View style={globalStyles.rowAlignCenter}>
+                    <Text category="label">{p.name}: </Text>
+                    <Account id={p.value.toString()} key={key}>
+                      {(identity) => {
+                        return identity ? (
+                          <AccountInfoInlineTeaser identity={identity} />
+                        ) : (
+                          <Text>{p.value?.toString()}</Text>
+                        );
+                      }}
+                    </Account>
+                  </View>
                 );
               }
 
@@ -53,94 +51,40 @@ export function CallInspector({call}: {call: Call}) {
               }
 
               if (p.type.type === 'Balance' && p.value) {
+                return <Text>{`${p.name}:${formatBalance(p.value as Balance)}`}</Text>;
+              }
+
+              if (p.type.type === 'Call') {
                 return (
-                  <>
+                  <View style={globalStyles.rowAlignCenter}>
                     <Text>{p.name}: </Text>
-                    <Text>{formatBalance(p.value as Balance)}</Text>
-                  </>
+                    <CallInspector call={p.value as any} />
+                  </View>
                 );
               }
 
-              return <Text>{`${p.name}: ${p.value}`}</Text>;
+              if (p.type.type === 'Vec<Call>' && Array.isArray(p.value)) {
+                return (
+                  <View>
+                    <Text>{p.name}:</Text>
+                    {p.value?.map((_call, index) => {
+                      return <CallInspector call={_call} key={index} />;
+                    })}
+                  </View>
+                );
+              }
+
+              return <Text category="c1">{`${p.name}: ${p.value}`}</Text>;
             })()}
           </View>
         );
       })}
-    </View>
+    </Card>
   );
 }
 
-const styles = StyleSheet.create({
-  paramRow: {flexDirection: 'row', alignItems: 'center'},
-  identityDisplay: {flex: 1},
+const style = StyleSheet.create({
+  container: {
+    marginTop: 10,
+  },
 });
-const METHOD_TREA = ['approveProposal', 'rejectProposal'];
-
-export interface Param {
-  name: string;
-  type: TypeDef;
-  value?: Codec;
-}
-
-export function useParams(proposal: Call): Param[] {
-  const {api} = useContext(ChainApiContext);
-  const {method, section} = proposal.registry.findMetaCall(proposal.callIndex);
-  const isTreasury = section === 'treasury' && METHOD_TREA.includes(method);
-  const proposalId = isTreasury ? (proposal.args[0] as Compact<ProposalIndex>).unwrap() : undefined;
-  const {data: treasuryProposal} = useQuery(
-    ['proposal', proposalId?.toString()],
-    () => (proposalId ? api?.query.treasury.proposals(proposalId).then((p) => p.unwrapOr(undefined)) : undefined),
-    {
-      enabled: !!proposalId,
-    },
-  );
-  const extractedParams = extractParams(proposal);
-  if (treasuryProposal) {
-    extractedParams.push({type: getTypeDef('AccountId'), value: treasuryProposal.beneficiary, name: 'beneficiary'});
-    extractedParams.push({type: getTypeDef('AccountId'), value: treasuryProposal.proposer, name: 'proposer'});
-    extractedParams.push({type: getTypeDef('Balance'), value: treasuryProposal.value, name: 'payout'});
-  }
-  return extractedParams;
-}
-
-function extractParams(value: IExtrinsic | IMethod): Param[] {
-  const params = value.meta.args.map(
-    ({name, type}, index): Param => ({
-      name: name.toString(),
-      type: getTypeDef(type.toString()),
-      value: value.args[index],
-    }),
-  );
-  return params;
-}
-
-/**
- * functions bellow help extract useful data
- * from each motion object. they are mostly loosely copied from
- * https://github.com/polkadot-js/apps/blob/master/packages/react-components/src/Call.tsx
- */
-
-export function formatCallMeta(meta?: FunctionMetadataLatest): string {
-  if (!meta || !meta.docs.length) {
-    return '';
-  }
-
-  const strings = meta.docs.map((doc) => doc.toString().trim());
-  const firstEmpty = strings.findIndex((doc) => !doc.length);
-  const combined = (firstEmpty === -1 ? strings : strings.slice(0, firstEmpty))
-    .join(' ')
-    .replace(/#(<weight>| <weight>).*<\/weight>/, '');
-  const parts = splitParts(combined.replace(/\\/g, '').replace(/`/g, ''));
-
-  return parts.join(' ');
-}
-
-function splitSingle(value: string[], sep: string): string[] {
-  return value.reduce((result: string[], _value: string): string[] => {
-    return _value.split(sep).reduce((_result: string[], __value: string) => _result.concat(__value), result);
-  }, []);
-}
-
-function splitParts(value: string): string[] {
-  return ['[', ']'].reduce((result: string[], sep) => splitSingle(result, sep), [value]);
-}

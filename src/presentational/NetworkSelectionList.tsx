@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {StyleSheet} from 'react-native';
-import {Layout, Text, Divider, RadioGroup, Radio} from '@ui-kitten/components';
+import {StyleSheet, View} from 'react-native';
+import {Text, Divider, RadioGroup, Radio} from '@ui-kitten/components';
 import globalStyles from 'src/styles';
 import {NetworkType} from 'src/types';
 import {isEqual} from 'lodash';
@@ -20,11 +20,11 @@ function NetworkSelectionList(props: PropTypes) {
   }
 
   return (
-    <Layout style={styles.container} level="1">
-      <Layout level="1" style={styles.header}>
-        <Text category="h4">Networks</Text>
+    <>
+      <View style={styles.header}>
+        <Text category="h6">Networks</Text>
         <Divider style={globalStyles.divider} />
-      </Layout>
+      </View>
 
       <RadioGroup
         selectedIndex={selectedIndex}
@@ -46,7 +46,7 @@ function NetworkSelectionList(props: PropTypes) {
           );
         })}
       </RadioGroup>
-    </Layout>
+    </>
   );
 }
 

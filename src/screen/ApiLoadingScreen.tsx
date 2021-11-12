@@ -33,10 +33,10 @@ export function ApiLoadingScreen({navigation}: PropTypes) {
       <ScreenNavigation
         renderTitle={() => (
           <TouchableOpacity onPress={() => navigation.navigate(networkSelectionScreen)}>
-            <Layout style={styles.titleContainer}>
+            <View style={styles.titleContainer}>
               <Text category="s1">Litentry</Text>
               {currentNetwork ? <NetworkItem item={currentNetwork} isConnected={status === 'ready'} /> : null}
-            </Layout>
+            </View>
           </TouchableOpacity>
         )}
       />

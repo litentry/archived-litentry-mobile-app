@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, {createContext, useCallback, useContext, useMemo} from 'react';
 import {ApplicationProvider} from '@ui-kitten/components';
-import * as eva from '@eva-design/eva';
+import {mapping} from '@eva-design/material';
 import {usePersistedState} from 'src/hook/usePersistedState';
-import mapping from 'src/mapping.json';
+import customMapping from 'src/mapping.json';
+import {darkMaterialThemeOverride, lightMaterialThemeOverride} from 'src/navigation/theme';
 
 type Theme = 'light' | 'dark';
 
@@ -32,7 +33,10 @@ export default function ThemeProvider({children}: PropTypes) {
 
   return (
     <ThemeContext.Provider value={value}>
-      <ApplicationProvider {...eva} theme={eva[value.theme]} customMapping={mapping as any}>
+      <ApplicationProvider
+        theme={value.theme === 'dark' ? darkMaterialThemeOverride : lightMaterialThemeOverride}
+        mapping={mapping}
+        customMapping={customMapping as any}>
         {children}
       </ApplicationProvider>
     </ThemeContext.Provider>

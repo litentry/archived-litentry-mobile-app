@@ -11,6 +11,7 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		20E23BEDCD184D88BDB33A9B /* DMSans-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9E7F73C68E2F409C8734E436 /* DMSans-BoldItalic.ttf */; };
 		2902EEF926820A6F009FB826 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2902EEF826820A6F009FB826 /* GoogleService-Info.plist */; };
 		2902EEFA26820A6F009FB826 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2902EEF826820A6F009FB826 /* GoogleService-Info.plist */; };
 		299A9113265E2DED00002549 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299A9112265E2DED00002549 /* File.swift */; };
@@ -20,10 +21,15 @@
 		2DCD954D1E0B4F2C00145EB5 /* LitentryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* LitentryTests.m */; };
 		32474834DF705BF2BD74A5CB /* libPods-Litentry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 86CB3E182E033C48FE853073 /* libPods-Litentry.a */; };
 		6124E7B263B1F7067E1328B2 /* libPods-Litentry-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 29FDBF5D7B92E16BD0939B4C /* libPods-Litentry-tvOS.a */; };
+		63991905202E452FBFC2D38C /* DMSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F302499289A54007B731735B /* DMSans-Bold.ttf */; };
+		81A74323D4924FFA94AB2407 /* DMSans-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B3C5624626DD4EB58CA220E6 /* DMSans-Italic.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		8804DE6E2576F18D00D915D3 /* logo-256.png in Resources */ = {isa = PBXBuildFile; fileRef = 8804DE6D2576F18D00D915D3 /* logo-256.png */; };
 		9172275A498FD7B64F2D18CF /* libPods-Litentry-LitentryTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FC43D0E04EE748AF1AD86CB7 /* libPods-Litentry-LitentryTests.a */; };
+		973BF00854C44A979F82A9CC /* DMSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7C1E214184154FFA98A940FD /* DMSans-Medium.ttf */; };
+		AEBE897542274D5BA4677D1C /* DMSans-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 599B5A7EDF20464887C94196 /* DMSans-MediumItalic.ttf */; };
 		C6A5683056BED6919802D6E6 /* libPods-Litentry-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93B327CEEC8ECC7F12EB8885 /* libPods-Litentry-tvOSTests.a */; };
+		ED5645098B3345A491E48F73 /* DMSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9E03F1CF171D4C44A1D63AE2 /* DMSans-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,7 +68,9 @@
 		2D02E47B1E0B4A5D006451C7 /* Litentry-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Litentry-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* Litentry-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Litentry-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		358E582BC3C4FE79A776AC6D /* Pods-Litentry-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Litentry-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-Litentry-tvOSTests/Pods-Litentry-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		599B5A7EDF20464887C94196 /* DMSans-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "DMSans-MediumItalic.ttf"; path = "../assets/DMSans-MediumItalic.ttf"; sourceTree = "<group>"; };
 		62223BEC39663459F02C2EAC /* Pods-Litentry-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Litentry-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-Litentry-tvOSTests/Pods-Litentry-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		7C1E214184154FFA98A940FD /* DMSans-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "DMSans-Medium.ttf"; path = "../assets/DMSans-Medium.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Litentry/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		86CB3E182E033C48FE853073 /* libPods-Litentry.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Litentry.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		87D9B5E495741E2E4D9334DF /* Pods-Litentry-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Litentry-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-Litentry-tvOS/Pods-Litentry-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -70,11 +78,15 @@
 		8856EFBE26A2F4E1001BFD4D /* Litentry.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Litentry.entitlements; path = Litentry/Litentry.entitlements; sourceTree = "<group>"; };
 		93B327CEEC8ECC7F12EB8885 /* libPods-Litentry-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Litentry-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		96B593DB4A031929E319B05A /* Pods-Litentry-LitentryTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Litentry-LitentryTests.debug.xcconfig"; path = "Target Support Files/Pods-Litentry-LitentryTests/Pods-Litentry-LitentryTests.debug.xcconfig"; sourceTree = "<group>"; };
+		9E03F1CF171D4C44A1D63AE2 /* DMSans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "DMSans-Regular.ttf"; path = "../assets/DMSans-Regular.ttf"; sourceTree = "<group>"; };
+		9E7F73C68E2F409C8734E436 /* DMSans-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "DMSans-BoldItalic.ttf"; path = "../assets/DMSans-BoldItalic.ttf"; sourceTree = "<group>"; };
+		B3C5624626DD4EB58CA220E6 /* DMSans-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "DMSans-Italic.ttf"; path = "../assets/DMSans-Italic.ttf"; sourceTree = "<group>"; };
 		C22922F4D75E981DCA9984DF /* Pods-Litentry-LitentryTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Litentry-LitentryTests.release.xcconfig"; path = "Target Support Files/Pods-Litentry-LitentryTests/Pods-Litentry-LitentryTests.release.xcconfig"; sourceTree = "<group>"; };
 		D391DFFC5928ADB157439CF1 /* Pods-Litentry.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Litentry.release.xcconfig"; path = "Target Support Files/Pods-Litentry/Pods-Litentry.release.xcconfig"; sourceTree = "<group>"; };
 		E3603F54669F8FCD786DA83A /* Pods-Litentry.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Litentry.debug.xcconfig"; path = "Target Support Files/Pods-Litentry/Pods-Litentry.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
+		F302499289A54007B731735B /* DMSans-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "DMSans-Bold.ttf"; path = "../assets/DMSans-Bold.ttf"; sourceTree = "<group>"; };
 		FC43D0E04EE748AF1AD86CB7 /* libPods-Litentry-LitentryTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Litentry-LitentryTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -179,6 +191,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				E137E345352848B0AF0D8300 /* Pods */,
 				299A9111265E2DED00002549 /* Litentry-Bridging-Header.h */,
+				D44D8FDEEEC84CB98EE670AC /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -194,6 +207,20 @@
 				2D02E4901E0B4A5D006451C7 /* Litentry-tvOSTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		D44D8FDEEEC84CB98EE670AC /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F302499289A54007B731735B /* DMSans-Bold.ttf */,
+				9E7F73C68E2F409C8734E436 /* DMSans-BoldItalic.ttf */,
+				B3C5624626DD4EB58CA220E6 /* DMSans-Italic.ttf */,
+				7C1E214184154FFA98A940FD /* DMSans-Medium.ttf */,
+				599B5A7EDF20464887C94196 /* DMSans-MediumItalic.ttf */,
+				9E03F1CF171D4C44A1D63AE2 /* DMSans-Regular.ttf */,
+			);
+			name = Resources;
+			path = "";
 			sourceTree = "<group>";
 		};
 		E137E345352848B0AF0D8300 /* Pods */ = {
@@ -360,6 +387,12 @@
 				2902EEF926820A6F009FB826 /* GoogleService-Info.plist in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				63991905202E452FBFC2D38C /* DMSans-Bold.ttf in Resources */,
+				20E23BEDCD184D88BDB33A9B /* DMSans-BoldItalic.ttf in Resources */,
+				81A74323D4924FFA94AB2407 /* DMSans-Italic.ttf in Resources */,
+				973BF00854C44A979F82A9CC /* DMSans-Medium.ttf in Resources */,
+				AEBE897542274D5BA4677D1C /* DMSans-MediumItalic.ttf in Resources */,
+				ED5645098B3345A491E48F73 /* DMSans-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
