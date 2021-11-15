@@ -25,7 +25,7 @@ export function CouncilSummaryTeaser(props: PropTypes) {
       {isLoading ? (
         <LoadingBox />
       ) : summary ? (
-        <Layout style={styles.container}>
+        <View style={styles.container}>
           <Card style={[styles.item, styles.left]} disabled>
             <View style={globalStyles.spaceBetweenRowContainer}>
               <StatInfoBlock title="Seats">{summary.seats}</StatInfoBlock>
@@ -45,7 +45,7 @@ export function CouncilSummaryTeaser(props: PropTypes) {
               data={[summary.termProgress.percentage / 100]}
             />
           </Card>
-        </Layout>
+        </View>
       ) : null}
     </SectionTeaserContainer>
   );
