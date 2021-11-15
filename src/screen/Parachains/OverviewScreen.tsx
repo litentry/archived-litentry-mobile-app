@@ -145,10 +145,7 @@ function Parachain({id, leasePeriod}: {id: ParaId; leasePeriod?: LeasePeriod}) {
     [leasePeriod, leaseValue],
   );
 
-  if (!endpoint) {
-    return null;
-  }
-  const {text: parachainName} = endpoint;
+  const parachainName = endpoint?.text ?? `#${id.toString()}`;
 
   return (
     <>
