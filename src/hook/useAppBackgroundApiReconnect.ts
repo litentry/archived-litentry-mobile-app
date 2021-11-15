@@ -1,27 +1,27 @@
-import {useEffect} from 'react';
+import {useEffect, useRef} from 'react';
 import {useApiReconnect} from 'context/ChainApiContext';
 import {useNavigation} from '@react-navigation/core';
 import {apiLoadingScreen} from 'src/navigation/routeKeys';
-import {useAppState} from './useAppState';
+import {useAppState} from 'src/hook/useAppState';
 
 export function useAppBackgroundApiReconnect() {
   const {canReconnect, reconnect} = useApiReconnect();
   const navigation = useNavigation();
-  const {didAppCameToForeground, setDidAppCameToForeground} = useAppState();
+  const appState = useAppState();
+  const didAppCameToForegroundOnce = useRef(false);
 
   useEffect(() => {
-    if (didAppCameToForeground && canReconnect) {
-      /**
-       * make it false once used, otherwise it will try to reconnect on any
-       * type of disconnect event. Such as we don't want automatic reconnect
-       * when the app is already in foreground.
-       */
-      setDidAppCameToForeground(false);
+    didAppCameToForegroundOnce.current = appState.didAppCameToForeground;
+  }, [appState]);
 
+  useEffect(() => {
+    if (didAppCameToForegroundOnce.current && canReconnect) {
       reconnect();
       setTimeout(() => {
         navigation.navigate(apiLoadingScreen);
       }, 0);
+
+      didAppCameToForegroundOnce.current = false;
     }
-  }, [canReconnect, navigation, reconnect, didAppCameToForeground, setDidAppCameToForeground]);
+  }, [canReconnect, navigation, reconnect, appState]);
 }

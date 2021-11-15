@@ -2,30 +2,27 @@ import {useRef, useEffect, useState} from 'react';
 import {AppState} from 'react-native';
 
 export function useAppState() {
-  const appState = useRef(AppState.currentState);
-  const [isActive, setIsActive] = useState(false);
-  const [didAppCameToForeground, setDidAppCameToForeground] = useState(false);
+  const appStateRef = useRef(AppState.currentState);
+  const [appState, setAppState] = useState({
+    isActive: false,
+    didAppCameToForeground: false,
+  });
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
       const isNextStateActive = nextAppState === 'active';
-      setIsActive(isNextStateActive);
-
-      if (appState.current.match(/inactive|background/) && isNextStateActive) {
-        setDidAppCameToForeground(true);
+      setAppState({...appState, isActive: true});
+      if (appStateRef.current.match(/inactive|background/) && isNextStateActive) {
+        setAppState({...appState, didAppCameToForeground: true});
       }
-
-      appState.current = nextAppState;
+      appStateRef.current = nextAppState;
     });
 
     return () => {
       subscription.remove();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return {
-    isActive,
-    didAppCameToForeground,
-    setDidAppCameToForeground,
-  };
+  return appState;
 }
