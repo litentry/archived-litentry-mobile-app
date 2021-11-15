@@ -12,8 +12,7 @@ export function useAppState() {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
       const isNextStateActive = nextAppState === 'active';
       setAppState({
-        ...appState,
-        isActive: true,
+        isActive: isNextStateActive,
         didAppCameToForeground: Boolean(appStateRef.current.match(/inactive|background/)) && isNextStateActive,
       });
       appStateRef.current = nextAppState;
@@ -22,7 +21,6 @@ export function useAppState() {
     return () => {
       subscription.remove();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return appState;
