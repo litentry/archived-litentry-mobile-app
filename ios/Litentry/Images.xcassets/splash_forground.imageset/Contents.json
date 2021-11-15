@@ -1,0 +1,23 @@
+{
+  "images": [
+    {
+      "filename": "splash_forground.png",
+      "idiom": "universal",
+      "scale": "1x"
+    },
+    {
+      "filename": "splash_forground@2x.png",
+      "idiom": "universal",
+      "scale": "2x"
+    },
+    {
+      "filename": "splash_forground@3x.png",
+      "idiom": "universal",
+      "scale": "3x"
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
+  }
+}
