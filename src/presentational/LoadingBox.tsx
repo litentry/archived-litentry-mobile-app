@@ -54,6 +54,6 @@ const styles = StyleSheet.create({
   loadingItem: {
     height: 20,
     opacity: 0.2,
-    marginTop: 5,
+    marginVertical: 2,
   },
 });
