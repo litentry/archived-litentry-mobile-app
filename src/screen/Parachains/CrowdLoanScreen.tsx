@@ -179,11 +179,9 @@ function Fund({item, active, onPressContribute}: {item: Campaign; active: boolea
   const endpoints = useParaEndpoints(item.paraId);
   const navigation = useNavigation<NavigationProp<ParachainsStackParamList>>();
 
-  if (!endpoints?.length) {
-    return null;
-  }
+  const lastEndpoint = endpoints?.[endpoints.length - 1] as LinkOption;
+  const text = lastEndpoint?.text ?? `#${item.paraId.toString()}`;
 
-  const {text} = endpoints[endpoints.length - 1] as LinkOption;
   const percentage = cap.isZero() ? 100 : raised.muln(10000).div(cap).toNumber() / 10000;
 
   return (
