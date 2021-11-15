@@ -11,10 +11,11 @@ export function useAppState() {
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
       const isNextStateActive = nextAppState === 'active';
-      setAppState({...appState, isActive: true});
-      if (appStateRef.current.match(/inactive|background/) && isNextStateActive) {
-        setAppState({...appState, didAppCameToForeground: true});
-      }
+      setAppState({
+        ...appState,
+        isActive: true,
+        didAppCameToForeground: Boolean(appStateRef.current.match(/inactive|background/) && isNextStateActive),
+      });
       appStateRef.current = nextAppState;
     });
 
