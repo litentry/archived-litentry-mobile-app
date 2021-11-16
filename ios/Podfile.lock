@@ -428,7 +428,7 @@ PODS:
     - React-Core
   - RNSVG (12.2.0):
     - React-Core
-  - RNVectorIcons (8.1.0):
+  - RNVectorIcons (9.0.0):
     - React-Core
   - Yoga (1.14.0)
 
@@ -704,7 +704,7 @@ SPEC CHECKSUMS:
   RNScreens: 6e1ea5787989f92b0671049b808aef64fa1ef98c
   RNShare: 0fec82bd2e67d09f895937ccb4f5a097e714dec2
   RNSVG: 4ecc2e8f38b6ebe7889909570c26f3abe8059767
-  RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
+  RNVectorIcons: 4143ba35feebab8fdbe6bc43d1e776b393d47ac8
   Yoga: 2b4a01651f42a32f82e6cef3830a3ba48088237f
 
 PODFILE CHECKSUM: 6852a45f6e4b316b3a385817bef77e73eddbfa2e
