@@ -13,7 +13,10 @@ function NetworkSelection({data, onSelect}: PropTypes) {
   const handleSelection = useCallback(
     (index: IndexPath) => {
       setSelectedIndex(index);
-      onSelect(data[index.row]!);
+      const network = data[index.row];
+      if (network) {
+        onSelect(network);
+      }
     },
     [data, onSelect],
   );

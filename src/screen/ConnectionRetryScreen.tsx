@@ -80,4 +80,5 @@ const styles = StyleSheet.create({
     fontFamily: monofontFamily,
     marginLeft: standardPadding,
   },
+  titleContainer: {alignItems: 'center'},
 });

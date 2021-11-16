@@ -33,7 +33,7 @@ export function ApiLoadingScreen({navigation}: PropTypes) {
       <ScreenNavigation
         renderTitle={() => (
           <TouchableOpacity onPress={() => navigation.navigate(networkSelectionScreen)}>
-            <View style={{alignItems: 'center'}}>
+            <View style={styles.titleContainer}>
               <Text category="s1">Litentry</Text>
               {currentNetwork ? <NetworkItem item={currentNetwork} isConnected={status === 'ready'} /> : null}
             </View>
@@ -67,4 +67,5 @@ const styles = StyleSheet.create({
     fontFamily: monofontFamily,
     marginLeft: standardPadding,
   },
+  titleContainer: {alignItems: 'center'},
 });

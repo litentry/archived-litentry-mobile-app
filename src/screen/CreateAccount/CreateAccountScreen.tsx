@@ -52,10 +52,10 @@ export function CreateAccountScreen({
   );
 
   const onSubmit = async () => {
-    const address = await SubstrateSign.substrateAddress(mnemonic, currentNetwork.ss58Format);
+    const _address = await SubstrateSign.substrateAddress(mnemonic, currentNetwork.ss58Format);
     const encoded = await SubstrateSign.encryptData(mnemonic, account.password);
     const newAcc = {
-      address,
+      address: _address,
       encoded,
       meta: {
         name: account.title,

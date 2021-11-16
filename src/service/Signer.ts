@@ -54,6 +54,7 @@ export const getPayload = async (
     blockNumber = signedBlock.block.header.number;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const transaction: SubmittableExtrinsic<'promise'> = api.tx[section]![method]!(...params);
 
   const payload: SignerPayload = api.createType('SignerPayload', {
