@@ -3,7 +3,6 @@ import {StyleSheet, Dimensions} from 'react-native';
 import {standardPadding} from 'src/styles';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {Layout, Icon, Text, IconProps} from '@ui-kitten/components';
-import {QRScannedPayload} from 'src/types';
 import {BarCodeReadEvent} from 'react-native-camera';
 const {width, height} = Dimensions.get('window');
 

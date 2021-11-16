@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {NetworkContext} from 'context/NetworkContext';
 import gql from 'graphql-tag';
 import {print} from 'graphql/language/printer';

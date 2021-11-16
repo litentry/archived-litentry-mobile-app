@@ -39,18 +39,12 @@ function AddressInfoPreview(props: PropTypes) {
           <ListItem
             title="Address"
             accessoryLeft={() => (
-              <View style={{paddingHorizontal: 10}}>
+              <View style={styles.identiconContainer}>
                 <Identicon value={address} size={20} />
               </View>
             )}
             accessoryRight={() => (
-              <Text
-                selectable
-                category="label"
-                {...OnelineAddressStyle}
-                ellipsizeMode="middle"
-                numberOfLines={1}
-                style={{width: '50%'}}>
+              <Text selectable category="label" {...OnelineAddressStyle} ellipsizeMode="middle" numberOfLines={1}>
                 {address}
               </Text>
             )}
@@ -59,12 +53,7 @@ function AddressInfoPreview(props: PropTypes) {
             title="Display"
             accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="person-outline" />}
             accessoryRight={() => (
-              <Text
-                selectable
-                category="label"
-                numberOfLines={1}
-                style={{width: '50%', textAlign: 'right'}}
-                ellipsizeMode="middle">
+              <Text selectable category="label" numberOfLines={1} style={styles.displayText} ellipsizeMode="middle">
                 {data?.hasIdentity ? data.display : 'untitled account'}
               </Text>
             )}
@@ -114,6 +103,8 @@ function AddressInfoPreview(props: PropTypes) {
 
 const styles = StyleSheet.create({
   container: {minHeight: height * 0.3},
+  displayText: {width: '50%', textAlign: 'right'},
+  identiconContainer: {paddingHorizontal: 10},
 });
 
 export default AddressInfoPreview;

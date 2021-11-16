@@ -38,6 +38,8 @@ function TxPayloadQr({payload, onConfirm, onCancel}: PropTypes): React.ReactElem
     const frames = createFrames(signPayload);
     const qr = QrCode(0, 'M');
 
+    // TODO: check me!
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     qr.addData(frames[0] as any, 'Byte');
     qr.make();
 

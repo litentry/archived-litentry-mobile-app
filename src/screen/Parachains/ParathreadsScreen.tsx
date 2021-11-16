@@ -31,9 +31,9 @@ const toParathreadHomepage = (url?: string) => {
 
 export function ParathreadsScreen() {
   const {data: leasePeriod} = useParachainsLeasePeriod();
-  const {data: parathreads, isLoading} = useParathreads();
+  const {data: parathreads, isLoading, isIdle} = useParathreads();
 
-  if (isLoading) {
+  if (isLoading || isIdle) {
     return <LoadingView />;
   }
 
@@ -117,7 +117,7 @@ function useParathreadData(id: ParaId) {
   if (endpoints != null && endpoints.length > 0) {
     const endpoint = endpoints[endpoints.length - 1];
     parathread.name = endpoint?.text ? String(endpoint.text) : undefined;
-    parathread.homepage = endpoint != null && 'homepage' in endpoint ? (endpoint as any).homepage : undefined;
+    parathread.homepage = endpoint != null && 'homepage' in endpoint ? endpoint.homepage : undefined;
   }
   return parathread;
 }

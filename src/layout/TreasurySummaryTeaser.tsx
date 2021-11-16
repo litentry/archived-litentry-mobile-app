@@ -1,5 +1,5 @@
 import {bnToBn, BN_ONE, BN_ZERO, formatNumber} from '@polkadot/util';
-import {Card, Layout} from '@ui-kitten/components';
+import {Card} from '@ui-kitten/components';
 import {LoadingBox} from 'presentational/LoadingBox';
 import Padder from 'presentational/Padder';
 import ProgressChartWidget from 'presentational/ProgressWidget';
@@ -39,8 +39,8 @@ export function TreasurySummaryTeaser(props: PropTypes) {
       {isLoading ? (
         <LoadingBox />
       ) : treasurySummary ? (
-        <View>
-          <Layout style={styles.container}>
+        <>
+          <View style={styles.container}>
             <Card style={[styles.item, styles.left]} disabled>
               <View style={globalStyles.spaceBetweenRowContainer}>
                 <StatInfoBlock title="Proposals">{String(treasurySummary.activeProposals)}</StatInfoBlock>
@@ -56,7 +56,7 @@ export function TreasurySummaryTeaser(props: PropTypes) {
                 data={[percentage / 100]}
               />
             </Card>
-          </Layout>
+          </View>
           <Padder scale={0.3} />
           <Card disabled>
             <View style={globalStyles.spaceBetweenRowContainer}>
@@ -68,7 +68,7 @@ export function TreasurySummaryTeaser(props: PropTypes) {
               </StatInfoBlock>
             </View>
           </Card>
-        </View>
+        </>
       ) : null}
     </SectionTeaserContainer>
   );

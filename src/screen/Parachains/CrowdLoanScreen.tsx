@@ -2,7 +2,7 @@ import {LinkOption} from '@polkadot/apps-config/endpoints/types';
 import type {ParaId} from '@polkadot/types/interfaces';
 import {BN, BN_ZERO} from '@polkadot/util';
 import {NavigationProp, useNavigation} from '@react-navigation/core';
-import {Button, Card, Input, Text, useTheme, Modal} from '@ui-kitten/components';
+import {Button, Card, Input, Text, Modal} from '@ui-kitten/components';
 import {useAccounts} from 'context/AccountsContext';
 import {useApi} from 'context/ChainApiContext';
 import {EmptyView} from 'presentational/EmptyView';
@@ -179,11 +179,9 @@ function Fund({item, active, onPressContribute}: {item: Campaign; active: boolea
   const endpoints = useParaEndpoints(item.paraId);
   const navigation = useNavigation<NavigationProp<ParachainsStackParamList>>();
 
-  if (!endpoints?.length) {
-    return null;
-  }
+  const lastEndpoint = endpoints?.[endpoints.length - 1] as LinkOption;
+  const text = lastEndpoint?.text ?? `#${item.paraId.toString()}`;
 
-  const {text} = endpoints[endpoints.length - 1] as LinkOption;
   const percentage = cap.isZero() ? 100 : raised.muln(10000).div(cap).toNumber() / 10000;
 
   return (

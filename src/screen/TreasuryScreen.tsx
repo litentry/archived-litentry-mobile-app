@@ -43,11 +43,11 @@ export function TreasuryScreen() {
 }
 
 function TreasuryOverviewScreen() {
-  const {isLoading, data, refetch} = useTreasuryInfo();
+  const {isLoading, data: treasuryInfo, refetch} = useTreasuryInfo();
 
   const groupedData = [
-    {title: 'Proposals', data: data?.proposals ?? []},
-    {title: 'Approved', data: data?.approvals ?? []},
+    {title: 'Proposals', data: treasuryInfo?.proposals ?? []},
+    {title: 'Approved', data: treasuryInfo?.approvals ?? []},
   ];
 
   const formatBalance = useFormatBalance();
@@ -55,7 +55,7 @@ function TreasuryOverviewScreen() {
   return (
     <Layout style={globalStyles.flex}>
       <SafeView edges={noTopEdges}>
-        {!data ? (
+        {!treasuryInfo ? (
           <LoadingView />
         ) : (
           <SectionList
@@ -65,7 +65,7 @@ function TreasuryOverviewScreen() {
             sections={groupedData}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({item}) => {
-              const accountInfo = data?.accountInfos.find(
+              const accountInfo = treasuryInfo?.accountInfos.find(
                 (i) => i.accountId.toString() === item.proposal.proposer.toString(),
               );
               const proposer = accountInfo?.info
