@@ -11,7 +11,7 @@ import {TreasurySummaryTeaser} from 'layout/TreasurySummaryTeaser';
 import FadeInAnimatedView from 'presentational/FadeInAnimatedView';
 import NetworkItem from 'presentational/NetworkItem';
 import React, {useContext} from 'react';
-import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import {ApiLoadingStackParamList, DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
 import {
   councilScreen,
@@ -22,6 +22,7 @@ import {
 } from 'src/navigation/routeKeys';
 import globalStyles from 'src/styles';
 import {useCustomBackHandler} from 'src/hook/useCustomBackHandler';
+import {AppBar} from 'src/packages/base_components';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
@@ -36,16 +37,9 @@ type PropTypes = {
 function DashboardScreen({navigation}: PropTypes) {
   useCustomBackHandler();
 
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => <DashboardHeaderLeft />,
-      headerRight: () => <View />,
-      headerTitle: () => <DashboardTitle onNetworkSelect={() => navigation.navigate(networkSelectionScreen)} />,
-    });
-  }, [navigation]);
-
   return (
     <Layout style={styles.container}>
+      <DashboardAppBar onNetworkSelect={() => navigation.navigate(networkSelectionScreen)} />
       <Divider style={styles.divider} />
       <FadeInAnimatedView>
         <View style={[globalStyles.flex, styles.main]}>
@@ -87,16 +81,23 @@ export function DashboardHeaderLeft() {
   );
 }
 
-function DashboardTitle({onNetworkSelect}: {onNetworkSelect: () => void}) {
+function DashboardAppBar({onNetworkSelect}: {onNetworkSelect: () => void}) {
+  const navigation = useNavigation<DrawerNavigationProp<DrawerParamList>>();
   const {currentNetwork} = useContext(NetworkContext);
   const {status} = useApi();
 
   return (
-    <TouchableOpacity style={styles.titleContainer} onPress={onNetworkSelect}>
-      <Text category="s1">Litentry</Text>
-      {currentNetwork ? (
-        <NetworkItem item={currentNetwork} isConnected={status === 'connected' || status === 'ready'} />
-      ) : null}
-    </TouchableOpacity>
+    <AppBar.Header>
+      <AppBar.Action icon="menu" onPress={navigation.openDrawer} />
+      <AppBar.Content
+        title="Litentry"
+        onPress={onNetworkSelect}
+        subtitle={
+          currentNetwork ? (
+            <NetworkItem item={currentNetwork} isConnected={status === 'connected' || status === 'ready'} />
+          ) : null
+        }
+      />
+    </AppBar.Header>
   );
 }

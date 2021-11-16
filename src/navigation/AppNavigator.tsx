@@ -68,20 +68,7 @@ function DashboardStackNavigator() {
   useFirebase();
 
   return (
-    <DashboardStack.Navigator
-      screenOptions={{
-        headerBackTitleVisible: false,
-        headerLeftContainerStyle: {paddingHorizontal: 10},
-        headerRightContainerStyle: {paddingHorizontal: 10},
-        headerBackImage: ({tintColor}) => (
-          <Icon
-            name={'arrow-back-outline'}
-            style={[globalStyles.icon25, {color: tintColor}]}
-            fill={tintColor}
-            pack={'ionic'}
-          />
-        ),
-      }}>
+    <DashboardStack.Navigator screenOptions={{headerShown: false}}>
       <DashboardStack.Screen name={routeKeys.dashboardScreen} component={DashboardScreen} />
       <DashboardStack.Screen name={routeKeys.motionDetailScreen} component={MotionDetailScreen} />
       <DashboardStack.Screen name={routeKeys.tipDetailScreen} component={TipDetailScreen} />
