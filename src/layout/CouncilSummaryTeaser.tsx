@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Card, Layout} from '@ui-kitten/components';
+import {Card} from '@ui-kitten/components';
 import globalStyles from 'src/styles';
 import Padder from 'presentational/Padder';
 import AddressInlineTeaser from './AddressInlineTeaser';

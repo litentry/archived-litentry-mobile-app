@@ -1,5 +1,5 @@
 import {bnToBn, BN_ONE, BN_ZERO, formatNumber} from '@polkadot/util';
-import {Card, Layout} from '@ui-kitten/components';
+import {Card} from '@ui-kitten/components';
 import {LoadingBox} from 'presentational/LoadingBox';
 import Padder from 'presentational/Padder';
 import ProgressChartWidget from 'presentational/ProgressWidget';
