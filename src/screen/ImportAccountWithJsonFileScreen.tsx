@@ -39,6 +39,7 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
         };
         addAccount(newAcc);
         navigation.navigate(accountsScreen, {reload: true});
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         console.warn(e);
         setError(e.message);

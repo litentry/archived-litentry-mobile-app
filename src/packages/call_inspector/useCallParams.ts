@@ -67,8 +67,8 @@ export function formatCallMeta(meta?: FunctionMetadataLatest): string {
 }
 
 function splitSingle(value: string[], sep: string): string[] {
-  return value.reduce((result: string[], value: string): string[] => {
-    return value.split(sep).reduce((result: string[], value: string) => result.concat(value), result);
+  return value.reduce((result: string[], _value: string): string[] => {
+    return _value.split(sep).reduce((_result: string[], __value: string) => _result.concat(__value), result);
   }, []);
 }
 

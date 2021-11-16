@@ -127,7 +127,9 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   timestamptz: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   uuid: any;
 };
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, {createContext, useCallback, useContext, useMemo} from 'react';
 import {ApplicationProvider} from '@ui-kitten/components';
 import {mapping} from '@eva-design/material';

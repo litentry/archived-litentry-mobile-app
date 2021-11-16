@@ -10,6 +10,7 @@ import {formatBalance} from '@polkadot/util';
  * Everything here is a loose copy of
  * https://github.com/polkadot-js/apps/blob/bd78840d2142df121d182e8700b20308880dde0a/packages/react-query/src/FormatBalance.tsx
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Balance = Compact<any> | BN | string | number;
 type FormatBalanceOptions = {
   isShort?: boolean;

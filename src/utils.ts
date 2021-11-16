@@ -26,7 +26,7 @@ export const QrCode: typeof _qrcode = _qrcode;
 
 // HACK The default function take string -> number[], the Uint8array is compatible
 // with that signature and the use thereof
-// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/no-unsafe-member-access
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (QrCode as any).stringToBytes = (data: Uint8Array): Uint8Array => data;
 
 export function encodeNumber(value: number): Uint8Array {
@@ -151,6 +151,7 @@ export function parseAddress(payload: string): AccountAddressType {
   const parts = trim(payload).split(':').filter(Boolean);
 
   if (parts.length === 1) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return {protocol: '', address: parts[0]!, name: ''};
   }
 
@@ -158,6 +159,7 @@ export function parseAddress(payload: string): AccountAddressType {
     throw new Error('address format wrong');
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return {protocol: parts[0], address: parts[1]!, name: parts[3]!};
 }
 

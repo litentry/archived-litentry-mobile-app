@@ -42,6 +42,7 @@ export function ExportAccountWithJsonFileScreen({
         saveToFiles: true,
         url: await blobToBase64(blob),
       });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       if ('message' in e) {
         setError(e.message);

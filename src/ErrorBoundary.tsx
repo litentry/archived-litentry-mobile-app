@@ -13,7 +13,7 @@ export class ErrorBoundary extends React.Component<{children: React.ReactNode}, 
     return {hasError: true};
   }
 
-  componentDidCatch(error: any, errorInfo: any) {
+  componentDidCatch(error: unknown, errorInfo: unknown) {
     // You can also log the error to an error reporting service
     console.error('ERROR CAUGHT: ');
     console.error(error);

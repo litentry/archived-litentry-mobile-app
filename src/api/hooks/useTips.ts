@@ -13,7 +13,7 @@ function extractTips(tipsWithHashes?: [string[], Option<OpenTip>[]], inHashes?: 
   const [hashes, optTips] = tipsWithHashes;
 
   return optTips
-    ?.map((opt, index): [string, OpenTip | null] => [hashes[index]!, opt.unwrapOr(null)])
+    ?.map((opt, index): [string, OpenTip | null] => [hashes[index] || '', opt.unwrapOr(null)])
     .filter((val): val is [string, OpenTip] => inHashes.includes(val[0]) && !!val[1])
     .sort((a, b) =>
       a[1].closes.isNone
