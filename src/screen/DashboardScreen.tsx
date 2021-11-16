@@ -21,6 +21,7 @@ import {
   networkSelectionScreen,
 } from 'src/navigation/routeKeys';
 import globalStyles from 'src/styles';
+import {useCustomBackHandler} from 'src/hook/useCustomBackHandler';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
@@ -33,6 +34,8 @@ type PropTypes = {
 };
 
 function DashboardScreen({navigation}: PropTypes) {
+  useCustomBackHandler();
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => <DashboardHeaderLeft />,
@@ -65,7 +68,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   titleContainer: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   divider: {height: 2},
 });

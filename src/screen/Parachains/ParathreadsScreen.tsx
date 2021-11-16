@@ -31,9 +31,9 @@ const toParathreadHomepage = (url?: string) => {
 
 export function ParathreadsScreen() {
   const {data: leasePeriod} = useParachainsLeasePeriod();
-  const {data: parathreads, isLoading} = useParathreads();
+  const {data: parathreads, isLoading, isIdle} = useParathreads();
 
-  if (isLoading) {
+  if (isLoading || isIdle) {
     return <LoadingView />;
   }
 

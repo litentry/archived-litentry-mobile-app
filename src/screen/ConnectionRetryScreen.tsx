@@ -1,16 +1,16 @@
 import React, {useContext} from 'react';
-import {View, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {Button, Icon, Layout, Text} from '@ui-kitten/components';
 import globalStyles, {monofontFamily, standardPadding, colorRed} from 'src/styles';
 import ScreenNavigation from 'layout/ScreenNavigation';
 import NetworkItem from 'presentational/NetworkItem';
 import {CompositeNavigationProp} from '@react-navigation/native';
-import {ChainApiContext} from 'context/ChainApiContext';
 import {apiLoadingScreen, networkSelectionScreen} from 'src/navigation/routeKeys';
 import {ApiLoadingStackParamList, RootStackParamList} from 'src/navigation/navigation';
 import {StackNavigationProp} from '@react-navigation/stack';
 import Padder from 'presentational/Padder';
 import {NetworkContext} from 'context/NetworkContext';
+import {useApiReconnect} from 'context/ChainApiContext';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
@@ -21,7 +21,7 @@ type PropTypes = {
 
 export function ConnectionRetryScreen({navigation}: PropTypes) {
   const {currentNetwork} = useContext(NetworkContext);
-  const {reconnect} = useContext(ChainApiContext);
+  const {reconnect} = useApiReconnect();
 
   const onRetry = () => {
     reconnect();
@@ -36,12 +36,10 @@ export function ConnectionRetryScreen({navigation}: PropTypes) {
     <Layout style={styles.container}>
       <ScreenNavigation
         renderTitle={() => (
-          <TouchableOpacity onPress={() => navigation.navigate(networkSelectionScreen)}>
-            <Layout style={styles.titleContainer}>
-              <Text category="s1">Litentry</Text>
-              {currentNetwork ? <NetworkItem item={currentNetwork} isConnected={false} /> : null}
-            </Layout>
-          </TouchableOpacity>
+          <View style={styles.networkName}>
+            <Text category="s1">Litentry</Text>
+            {currentNetwork ? <NetworkItem item={currentNetwork} isConnected={false} /> : null}
+          </View>
         )}
       />
       <View style={globalStyles.centeredContainer}>
@@ -69,8 +67,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  retryContainer: {
-    marginTop: 50,
+  networkName: {
+    alignItems: 'center',
   },
   textContainer: {
     flexDirection: 'row',

@@ -66,6 +66,7 @@ function extractParaMap(hasLinksMap: Record<string, boolean>, paraIds: ParaId[],
 export function useParathreads() {
   const {data: ids} = useUpcomingParaIds();
   const hasLinksMap = useIsParasLinked(ids);
+
   return useApiQuery(
     ['parathreads', ids],
     async (api: ApiPromise) => {
@@ -74,6 +75,6 @@ export function useParathreads() {
         return extractParaMap(hasLinksMap, ids, leases);
       }
     },
-    {enabled: ids && ids.length > 0},
+    {enabled: Boolean(ids) && Boolean(hasLinksMap)},
   );
 }
