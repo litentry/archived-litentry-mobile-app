@@ -3,8 +3,8 @@ import type BN from 'bn.js';
 import {useRelayEndpoints} from './useRelayEndpoints';
 import {bnToBn} from '@polkadot/util';
 
-export function extractParaEndpoints(allEndpoints: LinkOption[], paraId: BN | number): LinkOption[] {
-  const numId = bnToBn(paraId).toNumber();
+export function extractParaEndpoints(allEndpoints: LinkOption[], _paraId: BN | number): LinkOption[] {
+  const numId = bnToBn(_paraId).toNumber();
   return allEndpoints.filter(({paraId}) => paraId === numId);
 }
 

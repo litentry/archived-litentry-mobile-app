@@ -9,6 +9,7 @@ import {NetworkType} from 'src/types';
 import {NavigationProp} from '@react-navigation/native';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {apiLoadingScreen, appStack, connectionRetryScreen} from 'src/navigation/routeKeys';
+import {CompleteNavigatorParamList} from 'src/navigation/navigation';
 
 export type InjectedPropTypes = {
   networkSelection: {
@@ -17,7 +18,7 @@ export type InjectedPropTypes = {
   };
 };
 
-export function NetworkSelectionScreen({navigation}: {navigation: NavigationProp<any>}) {
+export function NetworkSelectionScreen({navigation}: {navigation: NavigationProp<CompleteNavigatorParamList>}) {
   const modalRef = useRef<Modalize>(null);
   React.useEffect(() => {
     modalRef.current?.open();

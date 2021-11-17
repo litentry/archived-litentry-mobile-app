@@ -33,7 +33,7 @@ export function ApiLoadingScreen({navigation}: PropTypes) {
       <AppBar.Header>
         <AppBar.Content
           title={
-            <TouchableOpacity onPress={() => navigation.navigate(networkSelectionScreen)} style={styles.center}>
+            <TouchableOpacity onPress={() => navigation.navigate(networkSelectionScreen)} style={styles.titleContainer}>
               <Text category="s1">Litentry</Text>
               {currentNetwork ? <NetworkItem item={currentNetwork} isConnected={status === 'ready'} /> : null}
             </TouchableOpacity>
@@ -67,7 +67,5 @@ const styles = StyleSheet.create({
     fontFamily: monofontFamily,
     marginLeft: standardPadding,
   },
-  center: {
-    alignItems: 'center',
-  },
+  titleContainer: {alignItems: 'center'},
 });

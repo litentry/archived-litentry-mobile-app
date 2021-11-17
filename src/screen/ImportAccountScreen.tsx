@@ -164,8 +164,8 @@ function useParseSeed() {
   React.useEffect(() => {
     (async () => {
       if (seed) {
-        const address = await SubstrateSign.substrateAddress(seed, currentNetwork.ss58Format);
-        setAddress(address);
+        const _address = await SubstrateSign.substrateAddress(seed, currentNetwork.ss58Format);
+        setAddress(_address);
       }
     })();
   }, [currentNetwork.ss58Format, seed]);

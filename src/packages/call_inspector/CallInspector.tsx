@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * referenced from
  * https://github.com/polkadot-js/apps/tree/master/packages/react-params/src/Param

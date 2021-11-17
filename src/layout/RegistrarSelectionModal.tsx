@@ -70,16 +70,16 @@ function RegistrarSelectionModal({onSelect, visible, onClose}: PropTypes) {
           selectedIndex={selectedRegistrar}
           value={selectedRegistrarDisplay}
           onSelect={setSelectedRegistrar}>
-          {registrars.map((registrar, index) => {
+          {registrars.map((_registrar, index) => {
             return (
               <SelectItem
-                disabled={registrar.fee.eq(BN_ZERO)}
-                key={registrar.account.toString()}
+                disabled={_registrar.fee.eq(BN_ZERO)}
+                key={_registrar.account.toString()}
                 accessoryLeft={() => {
-                  return <Identicon value={registrar.account.toString()} size={20} />;
+                  return <Identicon value={_registrar.account.toString()} size={20} />;
                 }}
                 title={`#${index}`}
-                accessoryRight={() => <Text style={styles.indexText}>{formatBalance(registrar.fee)}</Text>}
+                accessoryRight={() => <Text style={styles.indexText}>{formatBalance(_registrar.fee)}</Text>}
               />
             );
           })}
