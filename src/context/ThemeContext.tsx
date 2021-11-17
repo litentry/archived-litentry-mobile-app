@@ -4,6 +4,25 @@ import {mapping} from '@eva-design/material';
 import {usePersistedState} from 'src/hook/usePersistedState';
 import customMapping from 'src/mapping.json';
 import {darkMaterialThemeOverride, lightMaterialThemeOverride} from 'src/navigation/theme';
+import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
+
+const paperTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#85A3F2',
+    accent: '#FEA34F',
+    background: 'red',
+    surface: 'red',
+    error: 'red',
+    text: 'red',
+    onSurface: 'red',
+    disabled: 'red',
+    placeholder: 'red',
+    backdrop: 'red',
+    notification: 'red',
+  },
+};
 
 type Theme = 'light' | 'dark';
 
@@ -32,12 +51,14 @@ export default function ThemeProvider({children}: PropTypes) {
 
   return (
     <ThemeContext.Provider value={value}>
-      <ApplicationProvider
-        theme={value.theme === 'dark' ? darkMaterialThemeOverride : lightMaterialThemeOverride}
-        mapping={mapping}
-        customMapping={customMapping as any}>
-        {children}
-      </ApplicationProvider>
+      <PaperProvider theme={paperTheme}>
+        <ApplicationProvider
+          theme={value.theme === 'dark' ? darkMaterialThemeOverride : lightMaterialThemeOverride}
+          mapping={mapping}
+          customMapping={customMapping as any}>
+          {children}
+        </ApplicationProvider>
+      </PaperProvider>
     </ThemeContext.Provider>
   );
 }

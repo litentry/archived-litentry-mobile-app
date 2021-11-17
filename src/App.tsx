@@ -13,7 +13,6 @@ import AppNavigator from 'src/navigation/AppNavigator';
 import ThemeProvider from './context/ThemeContext';
 import {IonicIconsPack} from './Ionic-icons';
 import {NavigationContainer} from 'context/NavigationContainer';
-import {Provider as PaperProvider} from 'react-native-paper';
 
 // init type registry
 import 'src/typeRegistry';
@@ -25,27 +24,25 @@ export default function App() {
     <>
       <IconRegistry icons={[EvaIconsPack, IonicIconsPack]} />
       <QueryClientProvider client={queryClient}>
-        <PaperProvider>
-          <ThemeProvider>
-            <NavigationContainer>
-              <NetworkContextProvider>
-                <ChainApiContextProvider>
-                  <AccountsProvider>
-                    <SafeAreaProvider>
-                      <InAppNotificationContextProvider>
-                        <ErrorBoundary>
-                          <TxContextProvider>
-                            <AppNavigator />
-                          </TxContextProvider>
-                        </ErrorBoundary>
-                      </InAppNotificationContextProvider>
-                    </SafeAreaProvider>
-                  </AccountsProvider>
-                </ChainApiContextProvider>
-              </NetworkContextProvider>
-            </NavigationContainer>
-          </ThemeProvider>
-        </PaperProvider>
+        <ThemeProvider>
+          <NavigationContainer>
+            <NetworkContextProvider>
+              <ChainApiContextProvider>
+                <AccountsProvider>
+                  <SafeAreaProvider>
+                    <InAppNotificationContextProvider>
+                      <ErrorBoundary>
+                        <TxContextProvider>
+                          <AppNavigator />
+                        </TxContextProvider>
+                      </ErrorBoundary>
+                    </InAppNotificationContextProvider>
+                  </SafeAreaProvider>
+                </AccountsProvider>
+              </ChainApiContextProvider>
+            </NetworkContextProvider>
+          </NavigationContainer>
+        </ThemeProvider>
       </QueryClientProvider>
     </>
   );

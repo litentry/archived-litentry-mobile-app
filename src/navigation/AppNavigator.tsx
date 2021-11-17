@@ -2,65 +2,66 @@ import messaging from '@react-native-firebase/messaging';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Icon} from '@ui-kitten/components';
+import {ChainApiContext} from 'context/ChainApiContext';
 import React from 'react';
 import {AccountsScreen} from 'screen/AccountsScreen';
 import {AddAccountScreen} from 'screen/AddAccountScreen/AddAccountScreen';
-import {MnemonicScreen} from 'screen/CreateAccount/MnemonicScreen';
-import {VerifyMnemonicScreen} from 'screen/CreateAccount/VerifyMnemonic';
-import {CreateAccountScreen} from 'screen/CreateAccount/CreateAccountScreen';
+import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
 import {BalanceScreen} from 'screen/BalanceScreen';
+import {BountiesScreen} from 'screen/Bounty/BountiesScreen';
+import {ConnectionRetryScreen} from 'screen/ConnectionRetryScreen';
 import {CandidateScreen} from 'screen/Council/CandidateScreen';
 import {CouncilScreen} from 'screen/Council/CouncilScreen';
-import {BountiesScreen} from 'screen/Bounty/BountiesScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
+import {CreateAccountScreen} from 'screen/CreateAccount/CreateAccountScreen';
+import {MnemonicScreen} from 'screen/CreateAccount/MnemonicScreen';
+import {VerifyMnemonicScreen} from 'screen/CreateAccount/VerifyMnemonic';
 import DashboardScreen, {DashboardHeaderLeft} from 'screen/DashboardScreen';
 import {DemocracyProposalScreen} from 'screen/DemocracyProposalScreen';
 import {DemocracyScreen} from 'screen/DemocracyScreen';
 import DevScreen from 'screen/DevScreen';
 import DrawerScreen from 'screen/Drawer/DrawerScreen';
+import {ExportAccountWithJsonFileScreen} from 'screen/ExportAccountWithJsonFileScreen';
+import {ImportAccountScreen, ImportScreenHeaderRight} from 'screen/ImportAccountScreen';
+import {ImportAccountWithJsonFileScreen} from 'screen/ImportAccountWithJsonFileScreen';
 import {MotionDetailScreen} from 'screen/MotionDetailScreen';
 import {MyAccountScreen} from 'screen/MyAccountScreen';
-import ManageIdentityScreen from 'screen/MyIdentityScreen/ManageIdentity';
 import {IdentityGuideScreen} from 'screen/MyIdentityScreen/IdentityGuideScreen';
+import ManageIdentityScreen from 'screen/MyIdentityScreen/ManageIdentity';
+import {NetworkSelectionScreen} from 'screen/NetworkSelectionScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
+import {CrowdLoanFundDetailScreen} from 'screen/Parachains/CrowdLoanFundDetailScreen';
 import {CrowdLoanScreen} from 'screen/Parachains/CrowdLoanScreen';
+import {ParachainsOverviewScreen} from 'screen/Parachains/OverviewScreen';
+import {ParachainDetailScreen} from 'screen/Parachains/ParachainDetailScreen';
+import {ParathreadsScreen} from 'screen/Parachains/ParathreadsScreen';
 import {PermissionGrantingPrompt} from 'screen/PermissionGrantingPrompt';
 import {PolkassemblyDiscussionDetail} from 'screen/Polkassembly/PolkassemblyDiscussionDetail';
 import {PolkassemblyDiscussions} from 'screen/Polkassembly/PolkassemblyDiscussions';
+import {ProposeTipScreen} from 'screen/ProposeTipScreen';
 import {ReferendumScreen} from 'screen/ReferendumScreen';
 import RegistrarListScreen from 'screen/RegistrarListScreen';
-import {ParathreadsScreen} from 'screen/Parachains/ParathreadsScreen';
 import {RegisterSubIdentitiesScreen} from 'screen/subIdentities/RegisterSubIdentitiesScreen';
-import {ProposeTipScreen} from 'screen/ProposeTipScreen';
 import TipDetailScreen from 'screen/tips/TipDetailScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
 import WebviewScreen from 'screen/WebviewScreen';
-import {ParachainsOverviewScreen} from 'screen/Parachains/OverviewScreen';
+import {useAppBackgroundApiReconnect} from 'src/hook/useAppBackgroundApiReconnect';
 import {useFirebase} from 'src/hook/useFirebase';
 import {usePushAuthorizationStatus} from 'src/hook/usePushNotificationsPermissions';
 import {useTurnOnAllNotificationsOnAppStartForAndroid} from 'src/hook/useTurnOnAllNotificationsOnAppStartForAndroid';
+import {DashboardAppBar, DashboardStackAppBar} from 'src/navigation/AppBars';
 import {
   AccountsStackParamList,
+  ApiLoadingStackParamList,
   AppStackParamList,
   DashboardStackParamList,
   DrawerParamList,
-  PolkassemblyDiscussionStackParamList,
   ParachainsStackParamList,
-  ApiLoadingStackParamList,
+  PolkassemblyDiscussionStackParamList,
   RootStackParamList,
 } from 'src/navigation/navigation';
 import * as routeKeys from 'src/navigation/routeKeys';
 import globalStyles from 'src/styles';
-import {ParachainDetailScreen} from 'screen/Parachains/ParachainDetailScreen';
-import {CrowdLoanFundDetailScreen} from 'screen/Parachains/CrowdLoanFundDetailScreen';
-import {ImportAccountScreen, ImportScreenHeaderRight} from 'screen/ImportAccountScreen';
-import {ImportAccountWithJsonFileScreen} from 'screen/ImportAccountWithJsonFileScreen';
-import {ExportAccountWithJsonFileScreen} from 'screen/ExportAccountWithJsonFileScreen';
-import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
-import {NetworkSelectionScreen} from 'screen/NetworkSelectionScreen';
-import {ChainApiContext} from 'context/ChainApiContext';
-import {ConnectionRetryScreen} from 'screen/ConnectionRetryScreen';
-import {useAppBackgroundApiReconnect} from 'src/hook/useAppBackgroundApiReconnect';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -68,8 +69,12 @@ function DashboardStackNavigator() {
   useFirebase();
 
   return (
-    <DashboardStack.Navigator screenOptions={{headerShown: false}}>
-      <DashboardStack.Screen name={routeKeys.dashboardScreen} component={DashboardScreen} />
+    <DashboardStack.Navigator screenOptions={{header: (props) => <DashboardStackAppBar {...props} />}}>
+      <DashboardStack.Screen
+        name={routeKeys.dashboardScreen}
+        component={DashboardScreen}
+        options={{header: (props) => <DashboardAppBar {...props} />}}
+      />
       <DashboardStack.Screen name={routeKeys.motionDetailScreen} component={MotionDetailScreen} />
       <DashboardStack.Screen name={routeKeys.tipDetailScreen} component={TipDetailScreen} />
       <DashboardStack.Screen name={routeKeys.councilScreen} component={CouncilScreen} />
