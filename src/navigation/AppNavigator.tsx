@@ -60,7 +60,7 @@ import {
   RootStackParamList,
 } from 'src/navigation/navigation';
 import * as routeKeys from 'src/navigation/routeKeys';
-import {AppBarActionMenu} from 'src/packages/base_components';
+import {AppBar} from 'src/packages/base_components';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -194,7 +194,11 @@ function ParachainsNavigator() {
       <ParachainsStack.Screen
         name={routeKeys.crowdloanScreen}
         component={CrowdLoanScreen}
-        options={{headerLeft: (props) => <AppBarActionMenu {...props} />}}
+        options={{
+          headerLeft: (props) => (
+            <AppBar.Action icon="menu" {...props} tvParallaxProperties={undefined} hasTVPreferredFocus={false} />
+          ),
+        }}
       />
       <ParachainsStack.Screen
         name={routeKeys.crowdloanFundDetailScreen}
@@ -202,7 +206,11 @@ function ParachainsNavigator() {
         options={{title: 'Fund details'}}
       />
       <ParachainsStack.Screen
-        options={{headerLeft: (props) => <AppBarActionMenu {...props} />}}
+        options={{
+          headerLeft: (props) => (
+            <AppBar.Action icon="menu" {...props} tvParallaxProperties={undefined} hasTVPreferredFocus={false} />
+          ),
+        }}
         name={routeKeys.parathreadsScreen}
         component={ParathreadsScreen}
       />

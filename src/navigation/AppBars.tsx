@@ -49,7 +49,12 @@ export function MainStackAppBar({
             onPress={navigation.goBack}
           />
         ) : (
-          <Base.AppBarActionMenu onPress={openDrawer} />
+          <Base.AppBar.Action
+            tvParallaxProperties={undefined}
+            hasTVPreferredFocus={false}
+            onPress={openDrawer}
+            icon={'menu'}
+          />
         )
       }
       headerRight={options.headerRight ? options.headerRight({}) : null}
