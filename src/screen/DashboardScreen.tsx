@@ -1,7 +1,7 @@
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
+import {CompositeNavigationProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {Divider, Icon, Layout, TopNavigationAction} from '@ui-kitten/components';
+import {Layout} from '@ui-kitten/components';
 import {BountySummaryTeaser} from 'layout/BountySummaryTeaser';
 import {CouncilSummaryTeaser} from 'layout/CouncilSummaryTeaser';
 import {DemocracySummaryTeaser} from 'layout/DemocracySummaryTeaser';
@@ -29,7 +29,6 @@ function DashboardScreen({navigation}: PropTypes) {
 
   return (
     <Layout style={styles.container}>
-      <Divider style={styles.divider} />
       <FadeInAnimatedView>
         <View style={[globalStyles.flex, styles.main]}>
           <ScrollView style={styles.scrollView}>

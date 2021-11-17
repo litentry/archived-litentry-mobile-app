@@ -175,5 +175,12 @@ function useParseSeed() {
 
 export function ImportScreenHeaderRight() {
   const navigation = useNavigation();
-  return <AppBar.Action icon="plus" onPress={() => navigation.navigate(importAccountWithJsonFileScreen)} />;
+  return (
+    <AppBar.Action
+      tvParallaxProperties={undefined}
+      hasTVPreferredFocus={false}
+      icon="plus"
+      onPress={() => navigation.navigate(importAccountWithJsonFileScreen)}
+    />
+  );
 }

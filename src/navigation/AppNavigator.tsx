@@ -48,7 +48,7 @@ import {useAppBackgroundApiReconnect} from 'src/hook/useAppBackgroundApiReconnec
 import {useFirebase} from 'src/hook/useFirebase';
 import {usePushAuthorizationStatus} from 'src/hook/usePushNotificationsPermissions';
 import {useTurnOnAllNotificationsOnAppStartForAndroid} from 'src/hook/useTurnOnAllNotificationsOnAppStartForAndroid';
-import {DashboardAppBar, MenuAppBar, MainStackAppBar, MainDrawerAppBar} from 'src/navigation/AppBars';
+import {DashboardAppBar, AppBarActionMenu, MainStackAppBar, MainDrawerAppBar} from 'src/navigation/AppBars';
 import {
   AccountsStackParamList,
   ApiLoadingStackParamList,
@@ -193,7 +193,7 @@ function ParachainsNavigator() {
       <ParachainsStack.Screen
         name={routeKeys.crowdloanScreen}
         component={CrowdLoanScreen}
-        options={{headerLeft: (props) => <MenuAppBar {...props} />}}
+        options={{headerLeft: (props) => <AppBarActionMenu {...props} />}}
       />
       <ParachainsStack.Screen
         name={routeKeys.crowdloanFundDetailScreen}
@@ -201,7 +201,7 @@ function ParachainsNavigator() {
         options={{title: 'Fund details'}}
       />
       <ParachainsStack.Screen
-        options={{headerLeft: (props) => <MenuAppBar {...props} />}}
+        options={{headerLeft: (props) => <AppBarActionMenu {...props} />}}
         name={routeKeys.parathreadsScreen}
         component={ParathreadsScreen}
       />

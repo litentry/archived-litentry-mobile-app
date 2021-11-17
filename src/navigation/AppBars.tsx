@@ -6,6 +6,7 @@ import {NetworkContext} from 'context/NetworkContext';
 import {noop} from 'lodash';
 import NetworkItem from 'presentational/NetworkItem';
 import React, {useContext} from 'react';
+import {useTheme} from 'react-native-paper';
 import {networkSelectionScreen} from 'src/navigation/routeKeys';
 import {AppBar} from 'src/packages/base_components';
 
@@ -19,10 +20,10 @@ export function MainDrawerAppBar({
   navigation: DrawerNavigationProp<ParamListBase>;
 }) {
   return (
-    <AppBar.Header>
-      <MenuAppBar onPress={navigation.openDrawer} />
+    <AppHeader>
+      <AppBarActionMenu onPress={navigation.openDrawer} />
       <AppBar.Content title={options.title ?? route.name} />
-    </AppBar.Header>
+    </AppHeader>
   );
 }
 
@@ -44,22 +45,22 @@ export function MainStackAppBar({
   };
 
   return (
-    <AppBar.Header>
+    <AppHeader>
       {options.headerLeft ? (
         options.headerLeft({onPress: openDrawer})
       ) : back ? (
-        <AppBar.BackAction onPress={navigation.goBack} />
+        <AppBar.BackAction tvParallaxProperties={undefined} hasTVPreferredFocus={false} onPress={navigation.goBack} />
       ) : (
-        <MenuAppBar onPress={openDrawer} />
+        <AppBarActionMenu onPress={openDrawer} />
       )}
       <AppBar.Content title={options.title ?? route.name} />
       {options.headerRight ? options.headerRight({}) : null}
-    </AppBar.Header>
+    </AppHeader>
   );
 }
 
-export function MenuAppBar({onPress = noop}: {onPress?: () => void}) {
-  return <AppBar.Action onPress={onPress} icon={'menu'} />;
+export function AppBarActionMenu({onPress = noop}: {onPress?: () => void}) {
+  return <AppBar.Action tvParallaxProperties={undefined} hasTVPreferredFocus={false} onPress={onPress} icon={'menu'} />;
 }
 
 function navigationSupportsDrawer(navigation: unknown): navigation is DrawerNavigationProp<ParamListBase> {
@@ -70,13 +71,21 @@ function navigationSupportsDrawer(navigation: unknown): navigation is DrawerNavi
   throw new Error('Navigation is not of expected type');
 }
 
+export function AppHeader({children}: {children: React.ReactNode}) {
+  const theme = useTheme();
+
+  return <AppBar.Header style={{backgroundColor: theme.colors.background}}>{children}</AppBar.Header>;
+}
+
 export function DashboardAppBar({navigation}: {navigation: StackNavigationProp<ParamListBase>}) {
   const {currentNetwork} = useContext(NetworkContext);
   const {status} = useApi();
 
   return (
-    <AppBar.Header>
+    <AppHeader>
       <AppBar.Action
+        tvParallaxProperties={undefined}
+        hasTVPreferredFocus={false}
         icon="menu"
         onPress={() => {
           if (navigationSupportsDrawer(navigation)) {
@@ -92,9 +101,9 @@ export function DashboardAppBar({navigation}: {navigation: StackNavigationProp<P
         subtitle={
           currentNetwork ? (
             <NetworkItem item={currentNetwork} isConnected={status === 'connected' || status === 'ready'} />
-          ) : null
+          ) : undefined
         }
       />
-    </AppBar.Header>
+    </AppHeader>
   );
 }

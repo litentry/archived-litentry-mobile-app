@@ -6,6 +6,7 @@ import {NetworkContext} from 'context/NetworkContext';
 import NetworkItem from 'presentational/NetworkItem';
 import React, {useContext} from 'react';
 import {ActivityIndicator, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {AppHeader} from 'src/navigation/AppBars';
 import {ApiLoadingStackParamList, RootStackParamList} from 'src/navigation/navigation';
 import {appStack, networkSelectionScreen} from 'src/navigation/routeKeys';
 import {AppBar} from 'src/packages/base_components';
@@ -30,7 +31,7 @@ export function ApiLoadingScreen({navigation}: PropTypes) {
 
   return (
     <Layout style={styles.container}>
-      <AppBar.Header>
+      <AppHeader>
         <AppBar.Content
           title={
             <TouchableOpacity onPress={() => navigation.navigate(networkSelectionScreen)} style={styles.titleContainer}>
@@ -39,7 +40,7 @@ export function ApiLoadingScreen({navigation}: PropTypes) {
             </TouchableOpacity>
           }
         />
-      </AppBar.Header>
+      </AppHeader>
       <View style={globalStyles.centeredContainer}>
         <View style={styles.textContainer}>
           <Icon style={[globalStyles.inlineIconDimension, {color: colorGreen}]} name="planet" pack="ionic" />

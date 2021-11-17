@@ -1,1 +1,1 @@
-export {AppBar, AppBarWithBackBtn} from './AppBar';
+export {AppBar} from './AppBar';

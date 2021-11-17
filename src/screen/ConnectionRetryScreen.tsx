@@ -11,6 +11,7 @@ import Padder from 'presentational/Padder';
 import {NetworkContext} from 'context/NetworkContext';
 import {useApiReconnect} from 'context/ChainApiContext';
 import {AppBar} from 'src/packages/base_components';
+import {AppHeader} from 'src/navigation/AppBars';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
@@ -34,7 +35,7 @@ export function ConnectionRetryScreen({navigation}: PropTypes) {
 
   return (
     <Layout style={styles.container}>
-      <AppBar.Header>
+      <AppHeader>
         <AppBar.Content
           title={
             <View style={styles.networkName}>
@@ -43,7 +44,7 @@ export function ConnectionRetryScreen({navigation}: PropTypes) {
             </View>
           }
         />
-      </AppBar.Header>
+      </AppHeader>
       <View style={globalStyles.centeredContainer}>
         <View style={styles.textContainer}>
           <Icon
