@@ -11,6 +11,7 @@ import Padder from 'presentational/Padder';
 import {NetworkContext} from 'context/NetworkContext';
 import {useApiReconnect} from 'context/ChainApiContext';
 import {AppBar, AppHeader} from 'src/packages/base_components';
+import {noop} from 'lodash';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
@@ -35,6 +36,7 @@ export function ConnectionRetryScreen({navigation}: PropTypes) {
   return (
     <Layout style={styles.container}>
       <AppHeader>
+        <AppBar.Action icon="" tvParallaxProperties={undefined} hasTVPreferredFocus={false} onPress={noop} />
         <AppBar.Content
           title={
             <View style={styles.networkName}>

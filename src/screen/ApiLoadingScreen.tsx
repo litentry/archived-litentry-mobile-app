@@ -3,6 +3,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {Icon, Layout, Text} from '@ui-kitten/components';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
+import {noop} from 'lodash';
 import NetworkItem from 'presentational/NetworkItem';
 import React, {useContext} from 'react';
 import {ActivityIndicator, StyleSheet, TouchableOpacity, View} from 'react-native';
@@ -31,6 +32,7 @@ export function ApiLoadingScreen({navigation}: PropTypes) {
   return (
     <Layout style={styles.container}>
       <AppHeader>
+        <AppBar.Action icon="" tvParallaxProperties={undefined} hasTVPreferredFocus={false} onPress={noop} />
         <AppBar.Content
           title={
             <TouchableOpacity onPress={() => navigation.navigate(networkSelectionScreen)} style={styles.titleContainer}>
