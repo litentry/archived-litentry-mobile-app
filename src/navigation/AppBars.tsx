@@ -71,28 +71,20 @@ export function DashboardAppBar({navigation}: {navigation: StackNavigationProp<P
   const {status} = useApi();
 
   return (
-    <Base.AppHeader>
-      <Base.AppBar.Action
-        tvParallaxProperties={undefined}
-        hasTVPreferredFocus={false}
-        icon="menu"
-        onPress={() => {
-          if (navigationSupportsDrawer(navigation)) {
-            navigation.openDrawer();
-          }
-        }}
-      />
-      <Base.AppBar.Content
-        title="Litentry"
-        onPress={() => {
-          return navigation.navigate(networkSelectionScreen);
-        }}
-        subtitle={
-          currentNetwork ? (
-            <NetworkItem item={currentNetwork} isConnected={status === 'connected' || status === 'ready'} />
-          ) : undefined
+    <Base.DashboardAppBar
+      onActionLeftPress={() => {
+        if (navigationSupportsDrawer(navigation)) {
+          navigation.openDrawer();
         }
-      />
-    </Base.AppHeader>
+      }}
+      onContentPress={() => {
+        return navigation.navigate(networkSelectionScreen);
+      }}
+      subtitle={
+        currentNetwork ? (
+          <NetworkItem item={currentNetwork} isConnected={status === 'connected' || status === 'ready'} />
+        ) : undefined
+      }
+    />
   );
 }
