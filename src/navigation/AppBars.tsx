@@ -3,12 +3,10 @@ import {DrawerNavigationOptions, DrawerNavigationProp} from '@react-navigation/d
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack';
 import {useApi} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
-import {noop} from 'lodash';
 import NetworkItem from 'presentational/NetworkItem';
 import React, {useContext} from 'react';
-import {useTheme} from 'react-native-paper';
 import {networkSelectionScreen} from 'src/navigation/routeKeys';
-import {AppBar} from 'src/packages/base_components';
+import * as Base from 'src/packages/base_components';
 
 export function MainDrawerAppBar({
   navigation,
@@ -19,12 +17,7 @@ export function MainDrawerAppBar({
   options: DrawerNavigationOptions;
   navigation: DrawerNavigationProp<ParamListBase>;
 }) {
-  return (
-    <AppHeader>
-      <AppBarActionMenu onPress={navigation.openDrawer} />
-      <AppBar.Content title={options.title ?? route.name} />
-    </AppHeader>
-  );
+  return <Base.MainDrawerAppBar onActionMenuPress={navigation.openDrawer} title={options.title ?? route.name} />;
 }
 
 export function MainStackAppBar({
@@ -45,22 +38,24 @@ export function MainStackAppBar({
   };
 
   return (
-    <AppHeader>
-      {options.headerLeft ? (
-        options.headerLeft({onPress: openDrawer})
-      ) : back ? (
-        <AppBar.BackAction tvParallaxProperties={undefined} hasTVPreferredFocus={false} onPress={navigation.goBack} />
-      ) : (
-        <AppBarActionMenu onPress={openDrawer} />
-      )}
-      <AppBar.Content title={options.title ?? route.name} />
-      {options.headerRight ? options.headerRight({}) : null}
-    </AppHeader>
+    <Base.MainStackAppBar
+      headerLeft={
+        options.headerLeft ? (
+          options.headerLeft({onPress: openDrawer})
+        ) : back ? (
+          <Base.AppBar.BackAction
+            tvParallaxProperties={undefined}
+            hasTVPreferredFocus={false}
+            onPress={navigation.goBack}
+          />
+        ) : (
+          <Base.AppBarActionMenu onPress={openDrawer} />
+        )
+      }
+      headerRight={options.headerRight ? options.headerRight({}) : null}
+      title={options.title ?? route.name}
+    />
   );
-}
-
-export function AppBarActionMenu({onPress = noop}: {onPress?: () => void}) {
-  return <AppBar.Action tvParallaxProperties={undefined} hasTVPreferredFocus={false} onPress={onPress} icon={'menu'} />;
 }
 
 function navigationSupportsDrawer(navigation: unknown): navigation is DrawerNavigationProp<ParamListBase> {
@@ -71,19 +66,13 @@ function navigationSupportsDrawer(navigation: unknown): navigation is DrawerNavi
   throw new Error('Navigation is not of expected type');
 }
 
-export function AppHeader({children}: {children: React.ReactNode}) {
-  const theme = useTheme();
-
-  return <AppBar.Header style={{backgroundColor: theme.colors.background}}>{children}</AppBar.Header>;
-}
-
 export function DashboardAppBar({navigation}: {navigation: StackNavigationProp<ParamListBase>}) {
   const {currentNetwork} = useContext(NetworkContext);
   const {status} = useApi();
 
   return (
-    <AppHeader>
-      <AppBar.Action
+    <Base.AppHeader>
+      <Base.AppBar.Action
         tvParallaxProperties={undefined}
         hasTVPreferredFocus={false}
         icon="menu"
@@ -93,7 +82,7 @@ export function DashboardAppBar({navigation}: {navigation: StackNavigationProp<P
           }
         }}
       />
-      <AppBar.Content
+      <Base.AppBar.Content
         title="Litentry"
         onPress={() => {
           return navigation.navigate(networkSelectionScreen);
@@ -104,6 +93,6 @@ export function DashboardAppBar({navigation}: {navigation: StackNavigationProp<P
           ) : undefined
         }
       />
-    </AppHeader>
+    </Base.AppHeader>
   );
 }

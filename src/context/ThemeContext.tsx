@@ -4,13 +4,8 @@ import {ApplicationProvider} from '@ui-kitten/components';
 import {mapping} from '@eva-design/material';
 import {usePersistedState} from 'src/hook/usePersistedState';
 import customMapping from 'src/mapping.json';
-import {
-  darkMaterialThemeOverride,
-  lightMaterialThemeOverride,
-  paperThemeDark,
-  paperThemeLight,
-} from 'src/navigation/theme';
-import {Provider as PaperProvider} from 'react-native-paper';
+import {darkMaterialThemeOverride, lightMaterialThemeOverride} from 'src/navigation/theme';
+import {themeDark, themeLight, Provider as PaperProvider} from 'src/packages/base_components';
 
 type Theme = 'light' | 'dark';
 
@@ -39,7 +34,7 @@ export default function ThemeProvider({children}: PropTypes) {
 
   return (
     <ThemeContext.Provider value={value}>
-      <PaperProvider theme={value.theme === 'dark' ? paperThemeDark : paperThemeLight}>
+      <PaperProvider theme={value.theme === 'dark' ? themeDark : themeLight}>
         <ApplicationProvider
           theme={value.theme === 'dark' ? darkMaterialThemeOverride : lightMaterialThemeOverride}
           mapping={mapping}

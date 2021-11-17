@@ -6,10 +6,9 @@ import {NetworkContext} from 'context/NetworkContext';
 import NetworkItem from 'presentational/NetworkItem';
 import React, {useContext} from 'react';
 import {ActivityIndicator, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {AppHeader} from 'src/navigation/AppBars';
 import {ApiLoadingStackParamList, RootStackParamList} from 'src/navigation/navigation';
 import {appStack, networkSelectionScreen} from 'src/navigation/routeKeys';
-import {AppBar} from 'src/packages/base_components';
+import {AppBar, AppHeader} from 'src/packages/base_components';
 import globalStyles, {colorGreen, monofontFamily, standardPadding} from 'src/styles';
 
 type PropTypes = {

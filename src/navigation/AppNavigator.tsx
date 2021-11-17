@@ -48,7 +48,7 @@ import {useAppBackgroundApiReconnect} from 'src/hook/useAppBackgroundApiReconnec
 import {useFirebase} from 'src/hook/useFirebase';
 import {usePushAuthorizationStatus} from 'src/hook/usePushNotificationsPermissions';
 import {useTurnOnAllNotificationsOnAppStartForAndroid} from 'src/hook/useTurnOnAllNotificationsOnAppStartForAndroid';
-import {DashboardAppBar, AppBarActionMenu, MainStackAppBar, MainDrawerAppBar} from 'src/navigation/AppBars';
+import {DashboardAppBar, MainDrawerAppBar, MainStackAppBar} from 'src/navigation/AppBars';
 import {
   AccountsStackParamList,
   ApiLoadingStackParamList,
@@ -60,6 +60,7 @@ import {
   RootStackParamList,
 } from 'src/navigation/navigation';
 import * as routeKeys from 'src/navigation/routeKeys';
+import {AppBarActionMenu} from 'src/packages/base_components';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 

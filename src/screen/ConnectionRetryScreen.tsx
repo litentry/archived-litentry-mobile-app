@@ -10,8 +10,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import Padder from 'presentational/Padder';
 import {NetworkContext} from 'context/NetworkContext';
 import {useApiReconnect} from 'context/ChainApiContext';
-import {AppBar} from 'src/packages/base_components';
-import {AppHeader} from 'src/navigation/AppBars';
+import {AppBar, AppHeader} from 'src/packages/base_components';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<

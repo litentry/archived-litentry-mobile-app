@@ -1,6 +1,5 @@
 import {Theme} from '@react-navigation/native';
 import {light, dark} from '@eva-design/material';
-import {DefaultTheme as PaperDefaultTheme, DarkTheme as PaperDarkTheme} from 'react-native-paper';
 
 export const darkTheme: Theme = {
   dark: true,
@@ -23,42 +22,6 @@ export const lightTheme: Theme = {
     text: light['color-basic-800'],
     border: light['color-basic-100'],
     notification: light['color-basic-100'],
-  },
-};
-
-export const paperThemeLight: typeof PaperDefaultTheme = {
-  ...PaperDefaultTheme,
-  colors: {
-    ...PaperDefaultTheme.colors,
-    primary: '#85A3F2',
-    accent: '#FEA34F',
-    // background: 'white',
-    // surface: 'red',
-    // error: 'red',
-    // text: 'red',
-    // onSurface: 'red',
-    // disabled: 'red',
-    // placeholder: 'red',
-    // backdrop: 'red',
-    // notification: 'red',
-  },
-};
-
-export const paperThemeDark: typeof PaperDarkTheme = {
-  ...PaperDarkTheme,
-  colors: {
-    ...PaperDarkTheme.colors,
-    primary: '#85A3F2',
-    accent: '#FEA34F',
-    // background: 'white',
-    // surface: 'red',
-    // error: 'red',
-    // text: 'red',
-    // onSurface: 'red',
-    // disabled: 'red',
-    // placeholder: 'red',
-    // backdrop: 'red',
-    // notification: 'red',
   },
 };
 
