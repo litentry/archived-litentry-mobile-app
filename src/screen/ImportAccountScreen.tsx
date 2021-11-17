@@ -14,6 +14,7 @@ import {monofontFamily, standardPadding} from 'src/styles';
 import zxcvbn from 'zxcvbn';
 import SubstrateSign from 'react-native-substrate-sign';
 import {useAccounts} from 'context/AccountsContext';
+import {AppBar} from 'src/packages/base_components';
 
 export function ImportAccountScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const theme = useTheme();
@@ -174,10 +175,5 @@ function useParseSeed() {
 
 export function ImportScreenHeaderRight() {
   const navigation = useNavigation();
-  return (
-    <TopNavigationAction
-      onPress={() => navigation.navigate(importAccountWithJsonFileScreen)}
-      icon={(p) => <Icon {...p} name={'flip-2-outline'} />}
-    />
-  );
+  return <AppBar.Action icon="plus" onPress={() => navigation.navigate(importAccountWithJsonFileScreen)} />;
 }

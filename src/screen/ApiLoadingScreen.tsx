@@ -1,15 +1,15 @@
-import React, {useContext} from 'react';
-import {ActivityIndicator, View, TouchableOpacity, StyleSheet} from 'react-native';
-import {Icon, Layout, Text} from '@ui-kitten/components';
-import globalStyles, {monofontFamily, colorGreen, standardPadding} from 'src/styles';
-import ScreenNavigation from 'layout/ScreenNavigation';
-import NetworkItem from 'presentational/NetworkItem';
-import {NetworkContext} from 'context/NetworkContext';
 import {CompositeNavigationProp} from '@react-navigation/native';
-import {ChainApiContext} from 'context/ChainApiContext';
-import {appStack, networkSelectionScreen} from 'src/navigation/routeKeys';
-import {ApiLoadingStackParamList, RootStackParamList} from 'src/navigation/navigation';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {Icon, Layout, Text} from '@ui-kitten/components';
+import {ChainApiContext} from 'context/ChainApiContext';
+import {NetworkContext} from 'context/NetworkContext';
+import NetworkItem from 'presentational/NetworkItem';
+import React, {useContext} from 'react';
+import {ActivityIndicator, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ApiLoadingStackParamList, RootStackParamList} from 'src/navigation/navigation';
+import {appStack, networkSelectionScreen} from 'src/navigation/routeKeys';
+import {AppBar} from 'src/packages/base_components';
+import globalStyles, {colorGreen, monofontFamily, standardPadding} from 'src/styles';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
@@ -30,16 +30,16 @@ export function ApiLoadingScreen({navigation}: PropTypes) {
 
   return (
     <Layout style={styles.container}>
-      <ScreenNavigation
-        renderTitle={() => (
-          <TouchableOpacity onPress={() => navigation.navigate(networkSelectionScreen)}>
-            <View style={{alignItems: 'center'}}>
+      <AppBar.Header>
+        <AppBar.Content
+          title={
+            <TouchableOpacity onPress={() => navigation.navigate(networkSelectionScreen)} style={styles.center}>
               <Text category="s1">Litentry</Text>
               {currentNetwork ? <NetworkItem item={currentNetwork} isConnected={status === 'ready'} /> : null}
-            </View>
-          </TouchableOpacity>
-        )}
-      />
+            </TouchableOpacity>
+          }
+        />
+      </AppBar.Header>
       <View style={globalStyles.centeredContainer}>
         <View style={styles.textContainer}>
           <Icon style={[globalStyles.inlineIconDimension, {color: colorGreen}]} name="planet" pack="ionic" />
@@ -66,5 +66,8 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: monofontFamily,
     marginLeft: standardPadding,
+  },
+  center: {
+    alignItems: 'center',
   },
 });

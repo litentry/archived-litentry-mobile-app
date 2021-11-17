@@ -57,15 +57,3 @@ const styles = StyleSheet.create({
 });
 
 export default DashboardScreen;
-
-export function DashboardHeaderLeft() {
-  const navigation: PropTypes['navigation'] = useNavigation();
-  return (
-    <TopNavigationAction
-      onPress={navigation.openDrawer}
-      icon={(p) => {
-        return <Icon {...p} name={'menu-2-outline'} />;
-      }}
-    />
-  );
-}
