@@ -29,7 +29,7 @@ import {IdentityGuideScreen} from 'screen/MyIdentityScreen/IdentityGuideScreen';
 import ManageIdentityScreen from 'screen/MyIdentityScreen/ManageIdentity';
 import {NetworkSelectionScreen} from 'screen/NetworkSelectionScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
-import {ParachainsAuctionsScreen} from 'screen/Parachains/CrowdLoanAuctionsScreen';
+import {ParachainsAuctionsScreen} from 'screen/Parachains/ParachainAuctionsScreen';
 import {CrowdLoanFundDetailScreen} from 'screen/Parachains/CrowdLoanFundDetailScreen';
 import {CrowdLoanScreen} from 'screen/Parachains/CrowdLoanScreen';
 import {ParachainsOverviewScreen} from 'screen/Parachains/OverviewScreen';
