@@ -1,6 +1,6 @@
 import {CompositeNavigationProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {Icon, Layout, Text} from '@ui-kitten/components';
+import {Icon, Text} from '@ui-kitten/components';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
 import {noop} from 'lodash';
@@ -9,7 +9,7 @@ import React, {useContext} from 'react';
 import {ActivityIndicator, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {ApiLoadingStackParamList, RootStackParamList} from 'src/navigation/navigation';
 import {appStack, networkSelectionScreen} from 'src/navigation/routeKeys';
-import {AppBar, AppHeader} from 'src/packages/base_components';
+import {AppBar, AppHeader, Layout} from 'src/packages/base_components';
 import globalStyles, {colorGreen, monofontFamily, standardPadding} from 'src/styles';
 
 type PropTypes = {

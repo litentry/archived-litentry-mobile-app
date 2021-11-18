@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {Button, Icon, Layout, Text} from '@ui-kitten/components';
+import {Button, Icon, Text} from '@ui-kitten/components';
 import globalStyles, {monofontFamily, standardPadding, colorRed} from 'src/styles';
 import NetworkItem from 'presentational/NetworkItem';
 import {CompositeNavigationProp} from '@react-navigation/native';
@@ -10,7 +10,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import Padder from 'presentational/Padder';
 import {NetworkContext} from 'context/NetworkContext';
 import {useApiReconnect} from 'context/ChainApiContext';
-import {AppBar, AppHeader} from 'src/packages/base_components';
+import {AppBar, AppHeader, Layout} from 'src/packages/base_components';
 import {noop} from 'lodash';
 
 type PropTypes = {
