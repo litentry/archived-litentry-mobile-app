@@ -124,8 +124,6 @@ function Item({
 
   return (
     <List.Item
-      hasTVPreferredFocus={false}
-      tvParallaxProperties={undefined}
       title={title}
       left={() => (
         <View style={globalStyles.justifyCenter}>

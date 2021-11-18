@@ -96,8 +96,6 @@ function ReferendumListItem({item}: {item: DeriveReferendumExt}) {
     <Card onPress={goToRefrenda}>
       <Card.Content>
         <List.Item
-          hasTVPreferredFocus={true}
-          tvParallaxProperties={undefined}
           style={referendumStyle.item}
           title={title}
           disabled
@@ -138,12 +136,7 @@ function ProposalListItem({item}: {item: DeriveProposal}) {
       style={proposalStyle.container}
       onPress={() => navigation.navigate(democracyProposalScreen, {index: String(item.index)})}>
       <Card.Content>
-        <List.Item
-          hasTVPreferredFocus={true}
-          tvParallaxProperties={undefined}
-          left={() => <Headline>{item.index.toString()}</Headline>}
-          title={title}
-        />
+        <List.Item left={() => <Headline>{item.index.toString()}</Headline>} title={title} />
         {proposal ? (
           <ProposalInfo proposal={proposal} />
         ) : (
