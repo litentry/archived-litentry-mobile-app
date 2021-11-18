@@ -4,12 +4,7 @@ import React from 'react';
 export function MainDrawerAppBar({onActionMenuPress, title}: {onActionMenuPress: () => void; title: string}) {
   return (
     <AppHeader>
-      <AppBar.Action
-        tvParallaxProperties={undefined}
-        hasTVPreferredFocus={false}
-        onPress={onActionMenuPress}
-        icon={'menu'}
-      />
+      <AppBar.Action onPress={onActionMenuPress} icon={'menu'} />
       <AppBar.Content title={title} />
     </AppHeader>
   );
@@ -50,12 +45,7 @@ export function DashboardAppBar({
 }) {
   return (
     <AppHeader>
-      <AppBar.Action
-        tvParallaxProperties={undefined}
-        hasTVPreferredFocus={false}
-        onPress={onActionLeftPress}
-        icon={'menu'}
-      />
+      <AppBar.Action onPress={onActionLeftPress} icon={'menu'} />
       <AppBar.Content title="Litentry" onPress={onContentPress} subtitle={subtitle} />
     </AppHeader>
   );

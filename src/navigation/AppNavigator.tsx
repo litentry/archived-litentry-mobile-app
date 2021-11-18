@@ -195,9 +195,7 @@ function ParachainsNavigator() {
         name={routeKeys.crowdloanScreen}
         component={CrowdLoanScreen}
         options={{
-          headerLeft: (props) => (
-            <AppBar.Action icon="menu" {...props} tvParallaxProperties={undefined} hasTVPreferredFocus={false} />
-          ),
+          headerLeft: (props) => <AppBar.Action icon="menu" {...props} />,
         }}
       />
       <ParachainsStack.Screen
@@ -207,9 +205,7 @@ function ParachainsNavigator() {
       />
       <ParachainsStack.Screen
         options={{
-          headerLeft: (props) => (
-            <AppBar.Action icon="menu" {...props} tvParallaxProperties={undefined} hasTVPreferredFocus={false} />
-          ),
+          headerLeft: (props) => <AppBar.Action icon="menu" {...props} />,
         }}
         name={routeKeys.parathreadsScreen}
         component={ParathreadsScreen}
