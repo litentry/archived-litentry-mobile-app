@@ -2,7 +2,7 @@ import type {DeriveProposal, DeriveReferendumExt} from '@polkadot/api-derive/typ
 import {BN_ONE} from '@polkadot/util';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {Card, Icon, Layout, ListItem, Text} from '@ui-kitten/components';
+import {Layout} from '@ui-kitten/components';
 import {EmptyView} from 'presentational/EmptyView';
 import LoadingView from 'presentational/LoadingView';
 import Padder from 'presentational/Padder';
@@ -16,6 +16,7 @@ import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import {useDemocracy} from 'src/api/hooks/useDemocracy';
 import {DashboardStackParamList} from 'src/navigation/navigation';
 import {democracyProposalScreen, referendumScreen} from 'src/navigation/routeKeys';
+import {Card, Headline, List, Text} from 'src/packages/base_components';
 import globalStyles, {standardPadding} from 'src/styles';
 
 export function DemocracyScreen() {
@@ -52,9 +53,7 @@ export function DemocracyScreen() {
               return (
                 <>
                   {title === 'Proposals' && <Padder scale={1.5} />}
-                  <Text category={'s1'} style={styles.header}>
-                    {title}
-                  </Text>
+                  <Text style={styles.header}>{title}</Text>
                 </>
               );
             }}
@@ -94,34 +93,36 @@ function ReferendumListItem({item}: {item: DeriveReferendumExt}) {
   };
 
   return (
-    <Card style={referendumStyle.container} onPress={goToRefrenda}>
-      <ListItem
-        style={referendumStyle.item}
-        title={title}
-        disabled
-        accessoryLeft={() => <Text category={'h4'}>{item.index.toString()}</Text>}
-        accessoryRight={() => (
-          <View style={referendumStyle.row}>
-            <Text category={'p1'} adjustsFontSizeToFit={true} numberOfLines={1}>
-              {timeStringParts.slice(0, 2).join(' ')}
-            </Text>
-            <Icon name="chevron-right-outline" fill="grey" style={globalStyles.icon25} />
-          </View>
+    <Card onPress={goToRefrenda}>
+      <Card.Content>
+        <List.Item
+          hasTVPreferredFocus={true}
+          tvParallaxProperties={undefined}
+          style={referendumStyle.item}
+          title={title}
+          disabled
+          left={() => <Headline>{item.index.toString()}</Headline>}
+          right={() => (
+            <View style={referendumStyle.row}>
+              <Text adjustsFontSizeToFit={true} numberOfLines={1}>
+                {timeStringParts.slice(0, 2).join(' ')}
+              </Text>
+            </View>
+          )}
+        />
+        {proposal ? (
+          <ProposalInfo proposal={proposal} />
+        ) : (
+          <Text numberOfLines={1} ellipsizeMode="middle">
+            {String(item.imageHash)}
+          </Text>
         )}
-      />
-      {proposal ? (
-        <ProposalInfo proposal={proposal} />
-      ) : (
-        <Text numberOfLines={1} ellipsizeMode="middle" category={'c1'}>
-          {String(item.imageHash)}
-        </Text>
-      )}
+      </Card.Content>
     </Card>
   );
 }
 
 const referendumStyle = StyleSheet.create({
-  container: {marginBottom: standardPadding},
   row: {flexDirection: 'row', alignItems: 'center'},
   item: {backgroundColor: 'transparent'},
 });
@@ -136,34 +137,25 @@ function ProposalListItem({item}: {item: DeriveProposal}) {
     <Card
       style={proposalStyle.container}
       onPress={() => navigation.navigate(democracyProposalScreen, {index: String(item.index)})}>
-      <View style={proposalStyle.item}>
-        <Text category={'h4'} style={proposalStyle.index}>
-          {item.index.toString()}
-        </Text>
-        <View style={proposalStyle.desc}>
-          <Text>{title}</Text>
-          {proposal ? (
-            <ProposalInfo proposal={proposal} />
-          ) : (
-            <Text numberOfLines={1} ellipsizeMode="middle" category={'c1'}>
-              {String(item.imageHash)}
-            </Text>
-          )}
-        </View>
-      </View>
+      <Card.Content>
+        <List.Item
+          hasTVPreferredFocus={true}
+          tvParallaxProperties={undefined}
+          left={() => <Headline>{item.index.toString()}</Headline>}
+          title={title}
+        />
+        {proposal ? (
+          <ProposalInfo proposal={proposal} />
+        ) : (
+          <Text numberOfLines={1} ellipsizeMode="middle">
+            {String(item.imageHash)}
+          </Text>
+        )}
+      </Card.Content>
     </Card>
   );
 }
 
 const proposalStyle = StyleSheet.create({
   container: {marginBottom: standardPadding},
-  item: {
-    flexDirection: 'row',
-  },
-  index: {
-    paddingRight: standardPadding,
-  },
-  desc: {
-    flex: 1,
-  },
 });
