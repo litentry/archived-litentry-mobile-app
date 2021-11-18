@@ -84,7 +84,8 @@ project.ext.react = [
 ]
 
 project.ext.vectoricons = [
-    iconFontNames: [ 'Ionicons.ttf' ] // Name of the font files you want to copy
+    // TODO: remove Ionicons after updating completely to rnpaper and removing ui-kitten
+    iconFontNames: [ 'Ionicons.ttf', 'MaterialIcons.ttf', 'MaterialCommunityIcons.ttf'] // Name of the font files you want to copy
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
