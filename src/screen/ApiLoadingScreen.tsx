@@ -32,7 +32,13 @@ export function ApiLoadingScreen({navigation}: PropTypes) {
   return (
     <Layout style={styles.container}>
       <AppHeader>
-        <AppBar.Action icon="" tvParallaxProperties={undefined} hasTVPreferredFocus={false} onPress={noop} />
+        <AppBar.Action
+          icon="menu"
+          color="transparent"
+          tvParallaxProperties={undefined}
+          hasTVPreferredFocus={false}
+          onPress={noop}
+        />
         <AppBar.Content
           title={
             <TouchableOpacity onPress={() => navigation.navigate(networkSelectionScreen)} style={styles.titleContainer}>
