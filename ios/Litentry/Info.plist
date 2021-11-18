@@ -45,6 +45,8 @@
 	<string></string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>MaterialIcons.ttf</string>
+		<string>MaterialCommunityIcons.ttf</string>
 		<string>Ionicons.ttf</string>
 		<string>DMSans-Bold.ttf</string>
 		<string>DMSans-BoldItalic.ttf</string>

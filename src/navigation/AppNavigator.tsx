@@ -1,66 +1,66 @@
 import messaging from '@react-native-firebase/messaging';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createStackNavigator} from '@react-navigation/stack';
-import {Icon} from '@ui-kitten/components';
+import {ChainApiContext} from 'context/ChainApiContext';
 import React from 'react';
 import {AccountsScreen} from 'screen/AccountsScreen';
 import {AddAccountScreen} from 'screen/AddAccountScreen/AddAccountScreen';
-import {MnemonicScreen} from 'screen/CreateAccount/MnemonicScreen';
-import {VerifyMnemonicScreen} from 'screen/CreateAccount/VerifyMnemonic';
-import {CreateAccountScreen} from 'screen/CreateAccount/CreateAccountScreen';
+import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
 import {BalanceScreen} from 'screen/BalanceScreen';
+import {BountiesScreen} from 'screen/Bounty/BountiesScreen';
+import {ConnectionRetryScreen} from 'screen/ConnectionRetryScreen';
 import {CandidateScreen} from 'screen/Council/CandidateScreen';
 import {CouncilScreen} from 'screen/Council/CouncilScreen';
-import {BountiesScreen} from 'screen/Bounty/BountiesScreen';
 import {MotionsScreen} from 'screen/Council/MotionsScreen';
-import DashboardScreen, {DashboardHeaderLeft} from 'screen/DashboardScreen';
+import {CreateAccountScreen} from 'screen/CreateAccount/CreateAccountScreen';
+import {MnemonicScreen} from 'screen/CreateAccount/MnemonicScreen';
+import {VerifyMnemonicScreen} from 'screen/CreateAccount/VerifyMnemonic';
+import DashboardScreen from 'screen/DashboardScreen';
 import {DemocracyProposalScreen} from 'screen/DemocracyProposalScreen';
 import {DemocracyScreen} from 'screen/DemocracyScreen';
 import DevScreen from 'screen/DevScreen';
 import DrawerScreen from 'screen/Drawer/DrawerScreen';
+import {ExportAccountWithJsonFileScreen} from 'screen/ExportAccountWithJsonFileScreen';
+import {ImportAccountScreen, ImportScreenHeaderRight} from 'screen/ImportAccountScreen';
+import {ImportAccountWithJsonFileScreen} from 'screen/ImportAccountWithJsonFileScreen';
 import {MotionDetailScreen} from 'screen/MotionDetailScreen';
 import {MyAccountScreen} from 'screen/MyAccountScreen';
-import ManageIdentityScreen from 'screen/MyIdentityScreen/ManageIdentity';
 import {IdentityGuideScreen} from 'screen/MyIdentityScreen/IdentityGuideScreen';
+import ManageIdentityScreen from 'screen/MyIdentityScreen/ManageIdentity';
+import {NetworkSelectionScreen} from 'screen/NetworkSelectionScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
+import {CrowdLoanFundDetailScreen} from 'screen/Parachains/CrowdLoanFundDetailScreen';
 import {CrowdLoanScreen} from 'screen/Parachains/CrowdLoanScreen';
+import {ParachainsOverviewScreen} from 'screen/Parachains/OverviewScreen';
+import {ParachainDetailScreen} from 'screen/Parachains/ParachainDetailScreen';
+import {ParathreadsScreen} from 'screen/Parachains/ParathreadsScreen';
 import {PermissionGrantingPrompt} from 'screen/PermissionGrantingPrompt';
 import {PolkassemblyDiscussionDetail} from 'screen/Polkassembly/PolkassemblyDiscussionDetail';
 import {PolkassemblyDiscussions} from 'screen/Polkassembly/PolkassemblyDiscussions';
+import {ProposeTipScreen} from 'screen/ProposeTipScreen';
 import {ReferendumScreen} from 'screen/ReferendumScreen';
 import RegistrarListScreen from 'screen/RegistrarListScreen';
-import {ParathreadsScreen} from 'screen/Parachains/ParathreadsScreen';
 import {RegisterSubIdentitiesScreen} from 'screen/subIdentities/RegisterSubIdentitiesScreen';
-import {ProposeTipScreen} from 'screen/ProposeTipScreen';
 import TipDetailScreen from 'screen/tips/TipDetailScreen';
 import {TreasuryScreen} from 'screen/TreasuryScreen';
 import WebviewScreen from 'screen/WebviewScreen';
-import {ParachainsOverviewScreen} from 'screen/Parachains/OverviewScreen';
+import {useAppBackgroundApiReconnect} from 'src/hook/useAppBackgroundApiReconnect';
 import {useFirebase} from 'src/hook/useFirebase';
 import {usePushAuthorizationStatus} from 'src/hook/usePushNotificationsPermissions';
 import {useTurnOnAllNotificationsOnAppStartForAndroid} from 'src/hook/useTurnOnAllNotificationsOnAppStartForAndroid';
+import {DashboardAppBar, MainDrawerAppBar, MainStackAppBar} from 'src/navigation/AppBars';
 import {
   AccountsStackParamList,
+  ApiLoadingStackParamList,
   AppStackParamList,
   DashboardStackParamList,
   DrawerParamList,
-  PolkassemblyDiscussionStackParamList,
   ParachainsStackParamList,
-  ApiLoadingStackParamList,
+  PolkassemblyDiscussionStackParamList,
   RootStackParamList,
 } from 'src/navigation/navigation';
 import * as routeKeys from 'src/navigation/routeKeys';
-import globalStyles from 'src/styles';
-import {ParachainDetailScreen} from 'screen/Parachains/ParachainDetailScreen';
-import {CrowdLoanFundDetailScreen} from 'screen/Parachains/CrowdLoanFundDetailScreen';
-import {ImportAccountScreen, ImportScreenHeaderRight} from 'screen/ImportAccountScreen';
-import {ImportAccountWithJsonFileScreen} from 'screen/ImportAccountWithJsonFileScreen';
-import {ExportAccountWithJsonFileScreen} from 'screen/ExportAccountWithJsonFileScreen';
-import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
-import {NetworkSelectionScreen} from 'screen/NetworkSelectionScreen';
-import {ChainApiContext} from 'context/ChainApiContext';
-import {ConnectionRetryScreen} from 'screen/ConnectionRetryScreen';
-import {useAppBackgroundApiReconnect} from 'src/hook/useAppBackgroundApiReconnect';
+import {AppBar} from 'src/packages/base_components';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -68,21 +68,12 @@ function DashboardStackNavigator() {
   useFirebase();
 
   return (
-    <DashboardStack.Navigator
-      screenOptions={{
-        headerBackTitleVisible: false,
-        headerLeftContainerStyle: {paddingHorizontal: 10},
-        headerRightContainerStyle: {paddingHorizontal: 10},
-        headerBackImage: ({tintColor}) => (
-          <Icon
-            name={'arrow-back-outline'}
-            style={[globalStyles.icon25, {color: tintColor}]}
-            fill={tintColor}
-            pack={'ionic'}
-          />
-        ),
-      }}>
-      <DashboardStack.Screen name={routeKeys.dashboardScreen} component={DashboardScreen} />
+    <DashboardStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
+      <DashboardStack.Screen
+        name={routeKeys.dashboardScreen}
+        component={DashboardScreen}
+        options={{header: (props) => <DashboardAppBar {...props} />}}
+      />
       <DashboardStack.Screen name={routeKeys.motionDetailScreen} component={MotionDetailScreen} />
       <DashboardStack.Screen name={routeKeys.tipDetailScreen} component={TipDetailScreen} />
       <DashboardStack.Screen name={routeKeys.councilScreen} component={CouncilScreen} />
@@ -106,25 +97,8 @@ const AccountsStack = createStackNavigator<AccountsStackParamList>();
 
 function AccountsNavigator() {
   return (
-    <AccountsStack.Navigator
-      screenOptions={{
-        headerBackTitleVisible: false,
-        headerLeftContainerStyle: {paddingHorizontal: 10},
-        headerRightContainerStyle: {paddingHorizontal: 10},
-        headerBackImage: ({tintColor}) => (
-          <Icon
-            name={'arrow-back-outline'}
-            style={[globalStyles.icon25, {color: tintColor}]}
-            fill={tintColor}
-            pack={'ionic'}
-          />
-        ),
-      }}>
-      <AccountsStack.Screen
-        name={routeKeys.accountsScreen}
-        component={AccountsScreen}
-        options={{headerLeft: DashboardHeaderLeft}}
-      />
+    <AccountsStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
+      <AccountsStack.Screen name={routeKeys.accountsScreen} component={AccountsScreen} />
       <AccountsStack.Screen name={routeKeys.manageIdentityScreen} component={ManageIdentityScreen} />
       <AccountsStack.Screen name={routeKeys.myAccountScreen} component={MyAccountScreen} />
       <AccountsStack.Screen name={routeKeys.registerSubIdentitiesScreen} component={RegisterSubIdentitiesScreen} />
@@ -134,7 +108,7 @@ function AccountsNavigator() {
       <AccountsStack.Screen
         name={routeKeys.importAccountScreen}
         component={ImportAccountScreen}
-        options={{headerRight: ImportScreenHeaderRight}}
+        options={{headerRight: () => <ImportScreenHeaderRight />}}
       />
       <AccountsStack.Screen
         name={routeKeys.importAccountWithJsonFileScreen}
@@ -152,24 +126,11 @@ const DiscussionNavigator = createStackNavigator<PolkassemblyDiscussionStackPara
 
 function PolkassemblyDiscussionsNavigator() {
   return (
-    <DiscussionNavigator.Navigator
-      screenOptions={{
-        headerBackTitleVisible: false,
-        headerLeftContainerStyle: {paddingHorizontal: 10},
-        headerRightContainerStyle: {paddingHorizontal: 10},
-        headerBackImage: ({tintColor}) => (
-          <Icon
-            name={'arrow-back-outline'}
-            style={[globalStyles.icon25, {color: tintColor}]}
-            fill={tintColor}
-            pack={'ionic'}
-          />
-        ),
-      }}>
+    <DiscussionNavigator.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
       <DiscussionNavigator.Screen
         name={routeKeys.polkassemblyDiscussions}
         component={PolkassemblyDiscussions}
-        options={{title: 'Discussions', headerLeft: DashboardHeaderLeft}}
+        options={{title: 'Discussions'}}
       />
       <DiscussionNavigator.Screen
         name={routeKeys.polkassemblyDiscussionDetail}
@@ -185,17 +146,25 @@ const Drawer = createDrawerNavigator<DrawerParamList>();
 function DrawerNavigator() {
   return (
     <Drawer.Navigator
-      screenOptions={{
-        headerShown: true,
-        headerLeft: DashboardHeaderLeft,
-      }}
-      drawerContent={(props) => <DrawerScreen {...props} />}>
+      drawerContent={(props) => <DrawerScreen {...props} />}
+      screenOptions={{header: (props) => <MainDrawerAppBar {...props} />}}>
       <Drawer.Screen
         name={routeKeys.dashboardNavigator}
         component={DashboardStackNavigator}
         options={{headerShown: false}}
       />
+      <Drawer.Screen name={routeKeys.accountsNavigator} component={AccountsNavigator} options={{headerShown: false}} />
       <Drawer.Screen name={routeKeys.registrarListScreen} component={RegistrarListScreen} />
+      <Drawer.Screen
+        name={routeKeys.parachainsNavigator}
+        component={ParachainsNavigator}
+        options={{headerShown: false}}
+      />
+      <Drawer.Screen
+        name={routeKeys.polkassemblyDiscussionsNavigator}
+        component={PolkassemblyDiscussionsNavigator}
+        options={{headerShown: false}}
+      />
       <Drawer.Screen
         name={routeKeys.webviewScreen}
         component={WebviewScreen}
@@ -203,17 +172,6 @@ function DrawerNavigator() {
       />
       <Drawer.Screen name={routeKeys.devScreen} component={DevScreen} />
       <Drawer.Screen name={routeKeys.notificationSettingsScreen} component={NotificationSettingsScreen} />
-      <Drawer.Screen
-        name={routeKeys.polkassemblyDiscussionsNavigator}
-        component={PolkassemblyDiscussionsNavigator}
-        options={{headerShown: false}}
-      />
-      <Drawer.Screen
-        name={routeKeys.parachainsNavigator}
-        component={ParachainsNavigator}
-        options={{headerShown: false}}
-      />
-      <Drawer.Screen name={routeKeys.accountsNavigator} component={AccountsNavigator} options={{headerShown: false}} />
     </Drawer.Navigator>
   );
 }
@@ -222,24 +180,11 @@ const ParachainsStack = createStackNavigator<ParachainsStackParamList>();
 
 function ParachainsNavigator() {
   return (
-    <ParachainsStack.Navigator
-      screenOptions={{
-        headerBackTitleVisible: false,
-        headerLeftContainerStyle: {paddingHorizontal: 10},
-        headerRightContainerStyle: {paddingHorizontal: 10},
-        headerBackImage: ({tintColor}) => (
-          <Icon
-            name={'arrow-back-outline'}
-            style={[globalStyles.icon25, {color: tintColor}]}
-            fill={tintColor}
-            pack={'ionic'}
-          />
-        ),
-      }}>
+    <ParachainsStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
       <ParachainsStack.Screen
         name={routeKeys.parachainsOverviewScreen}
         component={ParachainsOverviewScreen}
-        options={{headerLeft: DashboardHeaderLeft, title: 'Overview'}}
+        options={{title: 'Overview'}}
       />
       <ParachainsStack.Screen
         name={routeKeys.parachainDetailScreen}
@@ -249,7 +194,9 @@ function ParachainsNavigator() {
       <ParachainsStack.Screen
         name={routeKeys.crowdloanScreen}
         component={CrowdLoanScreen}
-        options={{headerLeft: DashboardHeaderLeft}}
+        options={{
+          headerLeft: (props) => <AppBar.Action icon="menu" {...props} />,
+        }}
       />
       <ParachainsStack.Screen
         name={routeKeys.crowdloanFundDetailScreen}
@@ -257,7 +204,9 @@ function ParachainsNavigator() {
         options={{title: 'Fund details'}}
       />
       <ParachainsStack.Screen
-        options={{headerLeft: DashboardHeaderLeft}}
+        options={{
+          headerLeft: (props) => <AppBar.Action icon="menu" {...props} />,
+        }}
         name={routeKeys.parathreadsScreen}
         component={ParathreadsScreen}
       />

@@ -5,6 +5,7 @@ import {mapping} from '@eva-design/material';
 import {usePersistedState} from 'src/hook/usePersistedState';
 import customMapping from 'src/mapping.json';
 import {darkMaterialThemeOverride, lightMaterialThemeOverride} from 'src/navigation/theme';
+import {themeDark, themeLight, Provider as PaperProvider} from 'src/packages/base_components';
 
 type Theme = 'light' | 'dark';
 
@@ -33,12 +34,14 @@ export default function ThemeProvider({children}: PropTypes) {
 
   return (
     <ThemeContext.Provider value={value}>
-      <ApplicationProvider
-        theme={value.theme === 'dark' ? darkMaterialThemeOverride : lightMaterialThemeOverride}
-        mapping={mapping}
-        customMapping={customMapping as any}>
-        {children}
-      </ApplicationProvider>
+      <PaperProvider theme={value.theme === 'dark' ? themeDark : themeLight}>
+        <ApplicationProvider
+          theme={value.theme === 'dark' ? darkMaterialThemeOverride : lightMaterialThemeOverride}
+          mapping={mapping}
+          customMapping={customMapping as any}>
+          {children}
+        </ApplicationProvider>
+      </PaperProvider>
     </ThemeContext.Provider>
   );
 }

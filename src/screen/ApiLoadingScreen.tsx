@@ -1,15 +1,16 @@
-import React, {useContext} from 'react';
-import {ActivityIndicator, View, TouchableOpacity, StyleSheet} from 'react-native';
-import {Icon, Layout, Text} from '@ui-kitten/components';
-import globalStyles, {monofontFamily, colorGreen, standardPadding} from 'src/styles';
-import ScreenNavigation from 'layout/ScreenNavigation';
-import NetworkItem from 'presentational/NetworkItem';
-import {NetworkContext} from 'context/NetworkContext';
 import {CompositeNavigationProp} from '@react-navigation/native';
-import {ChainApiContext} from 'context/ChainApiContext';
-import {appStack, networkSelectionScreen} from 'src/navigation/routeKeys';
-import {ApiLoadingStackParamList, RootStackParamList} from 'src/navigation/navigation';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {Icon, Layout, Text} from '@ui-kitten/components';
+import {ChainApiContext} from 'context/ChainApiContext';
+import {NetworkContext} from 'context/NetworkContext';
+import {noop} from 'lodash';
+import NetworkItem from 'presentational/NetworkItem';
+import React, {useContext} from 'react';
+import {ActivityIndicator, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ApiLoadingStackParamList, RootStackParamList} from 'src/navigation/navigation';
+import {appStack, networkSelectionScreen} from 'src/navigation/routeKeys';
+import {AppBar, AppHeader} from 'src/packages/base_components';
+import globalStyles, {colorGreen, monofontFamily, standardPadding} from 'src/styles';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
@@ -30,16 +31,17 @@ export function ApiLoadingScreen({navigation}: PropTypes) {
 
   return (
     <Layout style={styles.container}>
-      <ScreenNavigation
-        renderTitle={() => (
-          <TouchableOpacity onPress={() => navigation.navigate(networkSelectionScreen)}>
-            <View style={styles.titleContainer}>
+      <AppHeader>
+        <AppBar.Action icon="menu" color="transparent" onPress={noop} />
+        <AppBar.Content
+          title={
+            <TouchableOpacity onPress={() => navigation.navigate(networkSelectionScreen)} style={styles.titleContainer}>
               <Text category="s1">Litentry</Text>
               {currentNetwork ? <NetworkItem item={currentNetwork} isConnected={status === 'ready'} /> : null}
-            </View>
-          </TouchableOpacity>
-        )}
-      />
+            </TouchableOpacity>
+          }
+        />
+      </AppHeader>
       <View style={globalStyles.centeredContainer}>
         <View style={styles.textContainer}>
           <Icon style={[globalStyles.inlineIconDimension, {color: colorGreen}]} name="planet" pack="ionic" />

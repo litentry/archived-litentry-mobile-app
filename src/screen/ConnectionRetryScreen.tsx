@@ -2,7 +2,6 @@ import React, {useContext} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Button, Icon, Layout, Text} from '@ui-kitten/components';
 import globalStyles, {monofontFamily, standardPadding, colorRed} from 'src/styles';
-import ScreenNavigation from 'layout/ScreenNavigation';
 import NetworkItem from 'presentational/NetworkItem';
 import {CompositeNavigationProp} from '@react-navigation/native';
 import {apiLoadingScreen, networkSelectionScreen} from 'src/navigation/routeKeys';
@@ -11,6 +10,8 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import Padder from 'presentational/Padder';
 import {NetworkContext} from 'context/NetworkContext';
 import {useApiReconnect} from 'context/ChainApiContext';
+import {AppBar, AppHeader} from 'src/packages/base_components';
+import {noop} from 'lodash';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
@@ -34,14 +35,17 @@ export function ConnectionRetryScreen({navigation}: PropTypes) {
 
   return (
     <Layout style={styles.container}>
-      <ScreenNavigation
-        renderTitle={() => (
-          <View style={styles.networkName}>
-            <Text category="s1">Litentry</Text>
-            {currentNetwork ? <NetworkItem item={currentNetwork} isConnected={false} /> : null}
-          </View>
-        )}
-      />
+      <AppHeader>
+        <AppBar.Action icon="menu" color="transparent" onPress={noop} />
+        <AppBar.Content
+          title={
+            <View style={styles.networkName}>
+              <Text category="s1">Litentry</Text>
+              {currentNetwork ? <NetworkItem item={currentNetwork} isConnected={false} /> : null}
+            </View>
+          }
+        />
+      </AppHeader>
       <View style={globalStyles.centeredContainer}>
         <View style={styles.textContainer}>
           <Icon
