@@ -36,13 +36,7 @@ export function ConnectionRetryScreen({navigation}: PropTypes) {
   return (
     <Layout style={styles.container}>
       <AppHeader>
-        <AppBar.Action
-          icon="menu"
-          color="transparent"
-          tvParallaxProperties={undefined}
-          hasTVPreferredFocus={false}
-          onPress={noop}
-        />
+        <AppBar.Action icon="menu" color="transparent" onPress={noop} />
         <AppBar.Content
           title={
             <View style={styles.networkName}>

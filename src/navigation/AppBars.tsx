@@ -43,18 +43,9 @@ export function MainStackAppBar({
         options.headerLeft ? (
           options.headerLeft({onPress: openDrawer})
         ) : back ? (
-          <Base.AppBar.BackAction
-            tvParallaxProperties={undefined}
-            hasTVPreferredFocus={false}
-            onPress={navigation.goBack}
-          />
+          <Base.AppBar.BackAction onPress={navigation.goBack} />
         ) : (
-          <Base.AppBar.Action
-            tvParallaxProperties={undefined}
-            hasTVPreferredFocus={false}
-            onPress={openDrawer}
-            icon={'menu'}
-          />
+          <Base.AppBar.Action onPress={openDrawer} icon={'menu'} />
         )
       }
       headerRight={options.headerRight ? options.headerRight({}) : null}
