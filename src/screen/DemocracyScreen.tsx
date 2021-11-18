@@ -1,4 +1,4 @@
-import type {DeriveReferendumExt, DeriveProposal} from '@polkadot/api-derive/types';
+import type {DeriveProposal, DeriveReferendumExt} from '@polkadot/api-derive/types';
 import {BN_ONE} from '@polkadot/util';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
