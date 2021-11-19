@@ -2,6 +2,7 @@ import {DefaultTheme as PaperDefaultTheme, DarkTheme as PaperDarkTheme} from 're
 
 export const themeLight: typeof PaperDefaultTheme = {
   ...PaperDefaultTheme,
+
   colors: {
     ...PaperDefaultTheme.colors,
     primary: '#85A3F2',

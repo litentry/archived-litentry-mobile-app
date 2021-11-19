@@ -46,6 +46,9 @@ const globalStyles = StyleSheet.create({
   alignCenter: {
     alignItems: 'center',
   },
+  justifyCenter: {
+    justifyContent: 'center',
+  },
   divider: {
     marginVertical: standardPadding,
     ...dividerPlain,
