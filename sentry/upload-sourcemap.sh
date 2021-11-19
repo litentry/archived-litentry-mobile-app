@@ -7,7 +7,7 @@ mkdir -p $CURRENT_DIR/${BUNDLE_DIR}
 
 SENTRY_PROJECT="litentry-mobile-app"
 SENTRY_ORG="litentry-technologies-gmbh"
-ANDROID_BUNDLE="index.android.bundle";
+ANDROID_BUNDLE="index.android.bundle"
 IOS_BUNDLE="main.jsbundle"
 
 
