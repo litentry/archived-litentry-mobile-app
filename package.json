@@ -25,7 +25,7 @@
   "dependencies": {
     "@eva-design/material": "^2.1.1",
     "@polkadot/api": "^6.7.1",
-    "@polkadot/apps-config": "^0.98.2-61",
+    "@polkadot/apps-config": "^0.98.2-84",
     "@polkadot/reactnative-identicon": "0.85.4",
     "@polkadot/ui-settings": "^0.85.5",
     "@react-native-community/async-storage": "^1.12.1",
@@ -86,7 +86,7 @@
     "react-native-tab-view": "^3.1.1",
     "react-native-vector-icons": "^9.0.0",
     "react-native-webview": "^11.14.1",
-    "react-query": "^3.32.1",
+    "react-query": "^3.33.1",
     "readable-stream": "^3.6.0",
     "rn-nodeify": "^10.3.0",
     "stream-browserify": "^3.0.0",
