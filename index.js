@@ -2,10 +2,13 @@ import './shim';
 import 'proxy-polyfill'; // added for android hermes engine, double check when upgrade RN to 0.64
 import 'react-native-gesture-handler';
 import 'fast-text-encoding';
+import Sentry from './sentry';
 import {AppRegistry} from 'react-native';
 import App from './src/App';
 import {name as appName} from './app.json';
 import {LogBox} from 'react-native';
+
+const SentryApp = Sentry.wrap(App);
 
 /**
  * ignore warning about long period timers on android
@@ -17,4 +20,4 @@ if (__DEV__) {
   import('./ReactotronConfig').then(() => console.log('Reactotron Configured'));
 }
 
-AppRegistry.registerComponent(appName, () => App);
+AppRegistry.registerComponent(appName, () => SentryApp);

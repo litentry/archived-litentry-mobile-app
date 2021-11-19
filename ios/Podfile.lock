@@ -421,15 +421,21 @@ PODS:
     - React-RCTVibration
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.8.0):
+  - RNScreens (3.9.0):
     - React-Core
     - React-RCTImage
+  - RNSentry (3.2.3):
+    - React-Core
+    - Sentry (= 7.5.1)
   - RNShare (7.1.2):
     - React-Core
   - RNSVG (12.2.0):
     - React-Core
   - RNVectorIcons (9.0.0):
     - React-Core
+  - Sentry (7.5.1):
+    - Sentry/Core (= 7.5.1)
+  - Sentry/Core (7.5.1)
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -491,6 +497,7 @@ DEPENDENCIES:
   - RNReactNativeHapticFeedback (from `../node_modules/react-native-haptic-feedback`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNShare (from `../node_modules/react-native-share`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
@@ -510,6 +517,7 @@ SPEC REPOS:
     - MMKVCore
     - nanopb
     - PromisesObjC
+    - Sentry
 
 EXTERNAL SOURCES:
   boost:
@@ -624,6 +632,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSentry:
+    :path: "../node_modules/@sentry/react-native"
   RNShare:
     :path: "../node_modules/react-native-share"
   RNSVG:
@@ -701,10 +711,12 @@ SPEC CHECKSUMS:
   RNPermissions: 7043bacbf928eae25808275cfe73799b8f618911
   RNReactNativeHapticFeedback: b83bfb4b537bdd78eb4f6ffe63c6884f7b049ead
   RNReanimated: b04ef2a4f0cb61b062bbcf033f84a9e470f4f60b
-  RNScreens: 6e1ea5787989f92b0671049b808aef64fa1ef98c
+  RNScreens: 4d79118be80f79fa1f4aa131909a1d6e86280af3
+  RNSentry: 97bc62fa65b7d663daee16fbf9771470852217cf
   RNShare: 0fec82bd2e67d09f895937ccb4f5a097e714dec2
   RNSVG: 4ecc2e8f38b6ebe7889909570c26f3abe8059767
   RNVectorIcons: 4143ba35feebab8fdbe6bc43d1e776b393d47ac8
+  Sentry: 0718c3ad7a08e1107599610795adaf08864102f3
   Yoga: 2b4a01651f42a32f82e6cef3830a3ba48088237f
 
 PODFILE CHECKSUM: bad0874a98a687bb322619ec166e3d73adc40713
