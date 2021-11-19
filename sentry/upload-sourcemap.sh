@@ -16,7 +16,7 @@ while echo $1 | grep ^- > /dev/null; do declare $( echo $1 | sed 's/-//g' | sed 
 
 
 # Android bundle and upload
-npx react-native bundle \
+node_modules/react-native/cli.js bundle \
 --dev false \
 --platform android \
 --entry-file ./index.js \
@@ -34,7 +34,7 @@ upload-sourcemaps \
 
 
 # iOS bundle and upload
-npx react-native bundle \
+node_modules/react-native/cli.js bundle \
 --dev false \
 --platform ios \
 --entry-file ./index.js \
