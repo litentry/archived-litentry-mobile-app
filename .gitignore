@@ -64,3 +64,5 @@ buck-out/
 # CocoaPods
 /ios/Pods/
 
+#sentry
+/sentry/bundles
