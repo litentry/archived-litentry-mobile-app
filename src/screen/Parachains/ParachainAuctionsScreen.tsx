@@ -3,24 +3,40 @@ import {Caption, DataTable, Layout, Text, useTheme, View} from 'src/packages/bas
 import {StyleSheet} from 'react-native';
 import globalStyles, {standardPadding} from 'src/styles';
 import {Chart, Padder} from 'presentational/index';
-import {BN_ONE, BN_ZERO, formatNumber} from '@polkadot/util';
+import {BN, BN_ONE, BN_ZERO, formatNumber} from '@polkadot/util';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useAuctionInfo} from 'src/api/hooks/useAuctionInfo';
 import LoadingView from 'presentational/LoadingView';
 import type {u32} from '@polkadot/types';
 import {useWinningData} from 'src/api/hooks/useWinningData';
 import {useTotalIssuance} from 'src/api/hooks/useTotalIssuance';
+import {useBestNumber} from 'src/api/hooks/useBestNumber';
+import {BlockTime} from 'layout/BlockTime';
 
 export function ParachainsAuctionsScreen() {
   const {data, isLoading} = useAuctionInfo();
   const {data: winningData} = useWinningData(data);
   const {data: totalIssuance} = useTotalIssuance();
+  const bestNumber = useBestNumber();
   const formatBalance = useFormatBalance();
 
   const lastWinners = winningData && winningData[0];
   const raised = lastWinners?.total ?? BN_ZERO;
   const total = totalIssuance ?? BN_ZERO;
   const raisedPercent = total.isZero() ? 0 : raised.muln(10000).div(total).toNumber() / 10000;
+
+  function getEndingPeriodValues(): [BN, BN] {
+    if (data?.endBlock && bestNumber) {
+      if (bestNumber.lt(data.endBlock)) {
+        return [data.endBlock, bestNumber];
+      } else if (data.endingPeriod) {
+        return [data.endingPeriod, bestNumber.sub(data.endBlock)];
+      }
+    }
+    return [BN_ZERO, BN_ZERO];
+  }
+  const [endingAt, currentPosition] = getEndingPeriodValues();
+  const remainingPercent = currentPosition.muln(10000).div(endingAt).toNumber() / 10000;
 
   if (!data || isLoading) {
     return <LoadingView />;
@@ -36,7 +52,7 @@ export function ParachainsAuctionsScreen() {
           last: formatNumber(data.leasePeriod?.add((data.leasePeriodsPerSlot as u32) ?? BN_ONE).isub(BN_ONE)),
         }}
         stats={{raised: formatBalance(raised, {isShort: true}) ?? '', raisedPercent}}
-        duration={{length: '5 days', remaining: '2 days 1 h1', remainingPercent: 0.23}}
+        duration={{endingAt, remaining: endingAt.sub(currentPosition), remainingPercent}}
       />
       <DataTableComp />
     </Layout>
@@ -48,13 +64,13 @@ type HeaderProps = {
   active: boolean;
   firstLast: {first: string; last: string};
   stats: {raised: string; raisedPercent: number};
-  duration: {length: string; remaining: string; remainingPercent: number};
+  duration: {endingAt: BN; remaining: BN; remainingPercent: number};
 };
 
 function Header(props: HeaderProps) {
   const {firstLast, stats, duration} = props;
   const {first, last} = firstLast;
-  const {length, remaining, remainingPercent} = duration;
+  const {endingAt, remaining, remainingPercent} = duration;
   const {raised, raisedPercent} = stats;
 
   const theme = useTheme();
@@ -95,8 +111,8 @@ function Header(props: HeaderProps) {
               <Chart percent={remainingPercent} />
               <Padder scale={0.5} />
               <View>
-                <Text>{length}</Text>
-                <Text>{remaining}</Text>
+                <BlockTime blockNumber={endingAt} />
+                <BlockTime blockNumber={remaining} />
               </View>
             </View>
           </View>
