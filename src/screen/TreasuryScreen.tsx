@@ -1,8 +1,10 @@
 import Identicon from '@polkadot/reactnative-identicon';
 import {u8aToString} from '@polkadot/util';
-import {Card, Layout, Text, Tab, TabBar} from '@ui-kitten/components';
+import {createMaterialTopTabNavigator, MaterialTopTabBarProps} from '@react-navigation/material-top-tabs';
+import {Card, Layout, Tab, TabBar, Text} from '@ui-kitten/components';
 import {Account} from 'layout/Account';
 import {EmptyView} from 'presentational/EmptyView';
+import LoadingView from 'presentational/LoadingView';
 import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React from 'react';
@@ -10,10 +12,7 @@ import {SectionList, StyleSheet, View} from 'react-native';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useTreasuryInfo} from 'src/api/hooks/useTreasuryInfo';
 import globalStyles, {standardPadding} from 'src/styles';
-
 import TipsScreen from './tips/TipsScreen';
-import {createMaterialTopTabNavigator, MaterialTopTabBarProps} from '@react-navigation/material-top-tabs';
-import LoadingView from 'presentational/LoadingView';
 
 const {Navigator, Screen} = createMaterialTopTabNavigator();
 
@@ -59,6 +58,7 @@ function TreasuryOverviewScreen() {
           <LoadingView />
         ) : (
           <SectionList
+            stickySectionHeadersEnabled={false}
             contentContainerStyle={styles.sectionList}
             refreshing={isLoading}
             onRefresh={refetch}
