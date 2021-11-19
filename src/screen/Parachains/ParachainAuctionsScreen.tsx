@@ -1,25 +1,42 @@
 import React from 'react';
-import {DataTable, Headline, Layout, Text, useTheme, View} from 'src/packages/base_components';
+import {Caption, DataTable, Layout, Text, useTheme, View} from 'src/packages/base_components';
 import {StyleSheet} from 'react-native';
 import globalStyles, {standardPadding} from 'src/styles';
 import {Chart, Padder} from 'presentational/index';
-import {BN} from '@polkadot/util';
+import {BN_ONE, BN_ZERO, formatNumber} from '@polkadot/util';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
+import {useAuctionInfo} from 'src/api/hooks/useAuctionInfo';
+import LoadingView from 'presentational/LoadingView';
+import type {u32} from '@polkadot/types';
+import {useWinningData} from 'src/api/hooks/useWinningData';
+import {useTotalIssuance} from 'src/api/hooks/useTotalIssuance';
 
 export function ParachainsAuctionsScreen() {
-  const raised = new BN(1);
-  const total = new BN(33);
+  const {data, isLoading} = useAuctionInfo();
+  const {data: winningData} = useWinningData(data);
+  const {data: totalIssuance} = useTotalIssuance();
   const formatBalance = useFormatBalance();
+
+  const lastWinners = winningData && winningData[0];
+  const raised = lastWinners?.total ?? BN_ZERO;
+  const total = totalIssuance ?? BN_ZERO;
   const raisedPercent = total.isZero() ? 0 : raised.muln(10000).div(total).toNumber() / 10000;
+
+  if (!data || isLoading) {
+    return <LoadingView />;
+  }
 
   return (
     <Layout>
       <Header
-        count={2}
-        active={true}
-        firstLast={{first: 1, last: 2}}
+        count={formatNumber(data.numAuctions) ?? 0}
+        active={Boolean(data.leasePeriod)}
+        firstLast={{
+          first: formatNumber(data.leasePeriod),
+          last: formatNumber(data.leasePeriod?.add((data.leasePeriodsPerSlot as u32) ?? BN_ONE).isub(BN_ONE)),
+        }}
+        stats={{raised: formatBalance(raised, {isShort: true}) ?? '', raisedPercent}}
         duration={{length: '5 days', remaining: '2 days 1 h1', remainingPercent: 0.23}}
-        stats={{raised: formatBalance(raised) ?? '', raisedPercent}}
       />
       <DataTableComp />
     </Layout>
@@ -27,9 +44,9 @@ export function ParachainsAuctionsScreen() {
 }
 
 type HeaderProps = {
-  count: number;
+  count: string;
   active: boolean;
-  firstLast: {first: number; last: number};
+  firstLast: {first: string; last: string};
   stats: {raised: string; raisedPercent: number};
   duration: {length: string; remaining: string; remainingPercent: number};
 };
@@ -46,15 +63,15 @@ function Header(props: HeaderProps) {
     <View>
       <View style={headerStyle.container}>
         <View style={globalStyles.alignCenter}>
-          <Headline>Auction</Headline>
+          <Caption>Auction</Caption>
           <Text>{props.count}</Text>
         </View>
         <View style={globalStyles.alignCenter}>
-          <Headline>Active</Headline>
+          <Caption>Active</Caption>
           <Text style={props.active ? {color: theme.colors.success} : undefined}>{props.active ? 'yes' : 'no'}</Text>
         </View>
         <View style={globalStyles.alignCenter}>
-          <Headline>First - Last</Headline>
+          <Caption>First - Last</Caption>
           <Text>
             {first} - {last}
           </Text>
@@ -63,7 +80,7 @@ function Header(props: HeaderProps) {
       <View style={headerStyle.container}>
         <View style={headerStyle.container}>
           <View style={globalStyles.alignCenter}>
-            <Headline>Total</Headline>
+            <Caption>Total</Caption>
             <View style={globalStyles.rowAlignCenter}>
               <Chart percent={raisedPercent} />
               <Padder scale={0.5} />
@@ -73,7 +90,7 @@ function Header(props: HeaderProps) {
         </View>
         <View style={headerStyle.container}>
           <View style={globalStyles.alignCenter}>
-            <Headline>Ending Period</Headline>
+            <Caption>Ending Period</Caption>
             <View style={globalStyles.rowAlignCenter}>
               <Chart percent={remainingPercent} />
               <Padder scale={0.5} />
