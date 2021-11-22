@@ -1,43 +1,31 @@
+import {SectionList, StyleSheet, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {u8aToString} from '@polkadot/util';
-import {createMaterialTopTabNavigator, MaterialTopTabBarProps} from '@react-navigation/material-top-tabs';
-import {Card, Layout, Tab, TabBar, Text} from '@ui-kitten/components';
+import {Card, Layout, Text} from '@ui-kitten/components';
+import {Tabs, TabScreen, useTheme} from 'src/packages/base_components';
 import {Account} from 'layout/Account';
 import {EmptyView} from 'presentational/EmptyView';
 import LoadingView from 'presentational/LoadingView';
 import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React from 'react';
-import {SectionList, StyleSheet, View} from 'react-native';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useTreasuryInfo} from 'src/api/hooks/useTreasuryInfo';
 import globalStyles, {standardPadding} from 'src/styles';
 import TipsScreen from './tips/TipsScreen';
 
-const {Navigator, Screen} = createMaterialTopTabNavigator();
-
-function TopTabBar({navigation, state}: MaterialTopTabBarProps) {
-  return (
-    <TabBar
-      selectedIndex={state.index}
-      onSelect={(index) => {
-        const route = state.routeNames[index];
-        if (route) {
-          navigation.navigate(route);
-        }
-      }}>
-      <Tab title="Overview" />
-      <Tab title="Tips" />
-    </TabBar>
-  );
-}
-
 export function TreasuryScreen() {
+  const theme = useTheme();
+
   return (
-    <Navigator tabBar={(props) => <TopTabBar {...props} />}>
-      <Screen name="TreasuryOverviewScreen" component={TreasuryOverviewScreen} />
-      <Screen name="TipsScreen" component={TipsScreen} />
-    </Navigator>
+    <Tabs uppercase={false} style={{backgroundColor: theme.colors.surface}}>
+      <TabScreen label="Overview">
+        <TreasuryOverviewScreen />
+      </TabScreen>
+      <TabScreen label="Tips">
+        <TipsScreen />
+      </TabScreen>
+    </Tabs>
   );
 }
 
