@@ -1,4 +1,6 @@
+import {useWindowDimensions} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {useNavigation} from '@react-navigation/native';
 import {Divider, Text} from '@ui-kitten/components';
 import {EmptyView} from 'presentational/EmptyView';
@@ -10,22 +12,20 @@ import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useCouncil} from 'src/api/hooks/useCouncil';
 import {useCouncilSummary} from 'src/api/hooks/useCouncilSummary';
 import {candidateScreen} from 'src/navigation/routeKeys';
-import {Layout, List, Tabs, TabScreen, useTheme} from 'src/packages/base_components';
+import {Layout, List} from 'src/packages/base_components';
 import globalStyles, {standardPadding} from 'src/styles';
 import {MotionsScreen} from './MotionsScreen';
 
+const Tab = createMaterialTopTabNavigator();
+
 export function CouncilScreen() {
-  const theme = useTheme();
+  const layout = useWindowDimensions();
 
   return (
-    <Tabs uppercase={false} style={{backgroundColor: theme.colors.surface}}>
-      <TabScreen label="Overview">
-        <CouncilOverviewScreen />
-      </TabScreen>
-      <TabScreen label="Motions">
-        <MotionsScreen />
-      </TabScreen>
-    </Tabs>
+    <Tab.Navigator initialLayout={{width: layout.width}} screenOptions={{tabBarLabelStyle: {fontSize: 12}}}>
+      <Tab.Screen name="Overview" component={CouncilOverviewScreen} />
+      <Tab.Screen name="Motions" component={MotionsScreen} />
+    </Tab.Navigator>
   );
 }
 

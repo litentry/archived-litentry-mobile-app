@@ -1,8 +1,8 @@
-import {SectionList, StyleSheet, View} from 'react-native';
+import {SectionList, StyleSheet, View, useWindowDimensions} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {u8aToString} from '@polkadot/util';
 import {Card, Layout, Text} from '@ui-kitten/components';
-import {Tabs, TabScreen, useTheme} from 'src/packages/base_components';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {Account} from 'layout/Account';
 import {EmptyView} from 'presentational/EmptyView';
 import LoadingView from 'presentational/LoadingView';
@@ -14,18 +14,16 @@ import {useTreasuryInfo} from 'src/api/hooks/useTreasuryInfo';
 import globalStyles, {standardPadding} from 'src/styles';
 import TipsScreen from './tips/TipsScreen';
 
+const Tab = createMaterialTopTabNavigator();
+
 export function TreasuryScreen() {
-  const theme = useTheme();
+  const layout = useWindowDimensions();
 
   return (
-    <Tabs uppercase={false} style={{backgroundColor: theme.colors.surface}}>
-      <TabScreen label="Overview">
-        <TreasuryOverviewScreen />
-      </TabScreen>
-      <TabScreen label="Tips">
-        <TipsScreen />
-      </TabScreen>
-    </Tabs>
+    <Tab.Navigator initialLayout={{width: layout.width}}>
+      <Tab.Screen name="Overview" component={TreasuryOverviewScreen} />
+      <Tab.Screen name="Tips" component={TipsScreen} />
+    </Tab.Navigator>
   );
 }
 
