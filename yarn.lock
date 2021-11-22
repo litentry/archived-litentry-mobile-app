@@ -8254,6 +8254,11 @@ react-native-pager-view@^5.4.9:
   resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-5.4.9.tgz#c0d40847cfeda5a4e729b53271b0ee0fedff3eb5"
   integrity sha512-D6tzxpwMGdl6CXgtskGWhKRc5cJakCazESRGt7PkqnpyiH3N35ft1KmR82pCSQetAFlytFiToeu3a/dG5CELvA==
 
+react-native-paper-tabs@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/react-native-paper-tabs/-/react-native-paper-tabs-0.6.0.tgz#f0a9e7d461f253cc2f5b8faf8a3f0ff9ee37f1d7"
+  integrity sha512-H8dp/ggXmgAWwhXxWQ4qdFb4CQqjC6NjXTLZvEaUbmBLaQHmt57CAfOMpeHDO+fYeRZBoFXEJYqmiTwXoFG2rQ==
+
 react-native-paper@^4.10.1:
   version "4.10.1"
   resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-4.10.1.tgz#aafbc83747a503c8b4cce634aa20a7eb4be8c1d2"
