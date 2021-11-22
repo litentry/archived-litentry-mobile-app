@@ -12,11 +12,15 @@ import {useWinningData} from 'src/api/hooks/useWinningData';
 import {useTotalIssuance} from 'src/api/hooks/useTotalIssuance';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import {BlockTime} from 'layout/BlockTime';
+import {ScrollView} from 'react-native-gesture-handler';
+import {useRelayEndpoints} from 'src/api/hooks/useRelayEndpoints';
+import {bnToBn} from '@polkadot/util';
 
 export function ParachainsAuctionsScreen() {
   const {data, isLoading} = useAuctionInfo();
   const {data: winningData} = useWinningData(data);
   const {data: totalIssuance} = useTotalIssuance();
+  const {data: endpoints} = useRelayEndpoints();
   const bestNumber = useBestNumber();
   const formatBalance = useFormatBalance();
 
@@ -36,25 +40,37 @@ export function ParachainsAuctionsScreen() {
     return [BN_ZERO, BN_ZERO];
   }
   const [endingAt, currentPosition] = getEndingPeriodValues();
-  const remainingPercent = currentPosition.muln(10000).div(endingAt).toNumber() / 10000;
+  const remainingPercent = endingAt.isZero() ? 0 : currentPosition.muln(10000).div(endingAt).toNumber() / 10000;
 
   if (!data || isLoading) {
     return <LoadingView />;
   }
 
+  const items: DataTableProps['items'] =
+    winningData?.map((wd) => {
+      return {
+        blockNumber: String(formatNumber(wd.blockNumber)),
+        projectID: String(formatNumber(wd.winners[0]?.paraId)),
+        projectName: String(endpoints?.find((e) => e.paraId === bnToBn(wd.winners[0]?.paraId).toNumber())?.text),
+        value: String(formatBalance(wd.total)),
+      };
+    }) ?? [];
+
   return (
-    <Layout>
-      <Header
-        count={formatNumber(data.numAuctions) ?? 0}
-        active={Boolean(data.leasePeriod)}
-        firstLast={{
-          first: formatNumber(data.leasePeriod),
-          last: formatNumber(data.leasePeriod?.add((data.leasePeriodsPerSlot as u32) ?? BN_ONE).isub(BN_ONE)),
-        }}
-        stats={{raised: formatBalance(raised, {isShort: true}) ?? '', raisedPercent}}
-        duration={{endingAt, remaining: endingAt.sub(currentPosition), remainingPercent}}
-      />
-      <DataTableComp />
+    <Layout style={globalStyles.flex}>
+      <ScrollView>
+        <Header
+          count={formatNumber(data.numAuctions) ?? 0}
+          active={Boolean(data.leasePeriod)}
+          firstLast={{
+            first: formatNumber(data.leasePeriod),
+            last: formatNumber(data.leasePeriod?.add((data.leasePeriodsPerSlot as u32) ?? BN_ONE).isub(BN_ONE)),
+          }}
+          stats={{raised: formatBalance(raised, {isShort: true}) ?? '', raisedPercent}}
+          duration={{endingAt, remaining: endingAt.sub(currentPosition), remainingPercent}}
+        />
+        <DataTableComp items={items} />
+      </ScrollView>
     </Layout>
   );
 }
@@ -130,23 +146,59 @@ const headerStyle = StyleSheet.create({
   },
 });
 
-const DataTableComp = () => {
+type DataTableProps = {
+  items: {
+    blockNumber: string;
+    projectID: string;
+    projectName: string;
+    value: string;
+  }[];
+};
+const DataTableComp = (props: DataTableProps) => {
   const theme = useTheme();
+  const [page, setPage] = React.useState(0);
+
+  const {items} = props;
+  const numberOfItemsPerPage = 8;
+
+  const from = page * numberOfItemsPerPage;
+  const to = Math.min((page + 1) * numberOfItemsPerPage, items.length);
+  const pageItems = props.items.slice(from, to);
+
+  React.useEffect(() => {
+    setPage(0);
+  }, [numberOfItemsPerPage]);
+
   return (
     <DataTable style={[{backgroundColor: theme.colors.surface}, tableStyle.container]}>
       <DataTable.Header>
         <DataTable.Title>Bids</DataTable.Title>
-        <DataTable.Title>{''}</DataTable.Title>
         <DataTable.Title>Project</DataTable.Title>
         <DataTable.Title numeric>Value</DataTable.Title>
       </DataTable.Header>
 
-      <DataTable.Row>
-        <DataTable.Cell>Frozen yogurt</DataTable.Cell>
-        <DataTable.Cell>2,000</DataTable.Cell>
-        <DataTable.Cell>159</DataTable.Cell>
-        <DataTable.Cell numeric>6.0</DataTable.Cell>
-      </DataTable.Row>
+      {pageItems.map((item) => (
+        <DataTable.Row key={item.blockNumber}>
+          <DataTable.Cell>
+            <Caption>#{item.blockNumber}</Caption>
+          </DataTable.Cell>
+          <DataTable.Cell>
+            {item.projectName + ' '}
+            <Caption>{item.projectID}</Caption>
+          </DataTable.Cell>
+          <DataTable.Cell numeric>{item.value}</DataTable.Cell>
+        </DataTable.Row>
+      ))}
+
+      <DataTable.Pagination
+        page={page}
+        numberOfPages={Math.ceil(items.length / numberOfItemsPerPage)}
+        onPageChange={setPage}
+        label={`${from + 1}-${to} of ${items.length}`}
+        showFastPaginationControls
+        numberOfItemsPerPage={numberOfItemsPerPage}
+        selectPageDropdownLabel={'Rows per page'}
+      />
     </DataTable>
   );
 };
