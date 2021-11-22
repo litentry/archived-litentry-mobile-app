@@ -1,6 +1,5 @@
 import {Appbar as AppBar, useTheme} from 'react-native-paper';
 import React from 'react';
-import {useIOSStatusBarStyle} from 'src/hook/useIOSStatusBarStyle';
 
 export function MainDrawerAppBar({onActionMenuPress, title}: {onActionMenuPress: () => void; title: string}) {
   return (
@@ -30,7 +29,6 @@ export function MainStackAppBar({
 }
 
 export function AppHeader({children}: {children: React.ReactNode}) {
-  useIOSStatusBarStyle();
   const theme = useTheme();
 
   return <AppBar.Header style={{backgroundColor: theme.colors.background}}>{children}</AppBar.Header>;
