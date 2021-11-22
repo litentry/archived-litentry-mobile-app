@@ -1,7 +1,6 @@
 import Identicon from '@polkadot/reactnative-identicon';
-import {createMaterialTopTabNavigator, MaterialTopTabBarProps} from '@react-navigation/material-top-tabs';
 import {useNavigation} from '@react-navigation/native';
-import {Divider, Tab, TabBar, Text} from '@ui-kitten/components';
+import {Divider, Text} from '@ui-kitten/components';
 import {EmptyView} from 'presentational/EmptyView';
 import LoadingView from 'presentational/LoadingView';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
@@ -11,34 +10,22 @@ import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useCouncil} from 'src/api/hooks/useCouncil';
 import {useCouncilSummary} from 'src/api/hooks/useCouncilSummary';
 import {candidateScreen} from 'src/navigation/routeKeys';
-import {Layout, List} from 'src/packages/base_components';
+import {Layout, List, Tabs, TabScreen, useTheme} from 'src/packages/base_components';
 import globalStyles, {standardPadding} from 'src/styles';
 import {MotionsScreen} from './MotionsScreen';
 
-const {Navigator, Screen} = createMaterialTopTabNavigator();
-
-function TopTabBar({navigation, state}: MaterialTopTabBarProps) {
-  return (
-    <TabBar
-      selectedIndex={state.index}
-      onSelect={(index) => {
-        const route = state.routeNames[index];
-        if (route) {
-          navigation.navigate(route);
-        }
-      }}>
-      <Tab title="Overview" />
-      <Tab title="Motions" />
-    </TabBar>
-  );
-}
-
 export function CouncilScreen() {
+  const theme = useTheme();
+
   return (
-    <Navigator tabBar={(props) => <TopTabBar {...props} />}>
-      <Screen name="CouncilOverviewScreen" component={CouncilOverviewScreen} />
-      <Screen name="MotionsScreen" component={MotionsScreen} />
-    </Navigator>
+    <Tabs uppercase={false} style={{backgroundColor: theme.colors.surface}}>
+      <TabScreen label="Overview">
+        <CouncilOverviewScreen />
+      </TabScreen>
+      <TabScreen label="Motions">
+        <MotionsScreen />
+      </TabScreen>
+    </Tabs>
   );
 }
 
