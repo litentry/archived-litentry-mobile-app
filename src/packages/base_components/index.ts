@@ -1,5 +1,7 @@
 export * from './AppBars';
+
 export {themeDark, themeLight} from './theme';
+
 export {
   Provider,
   useTheme,
@@ -14,4 +16,7 @@ export {
   Headline,
   IconButton,
 } from 'react-native-paper';
+
 export {Layout} from './Layout';
+
+export {Tabs, TabScreen, useTabIndex, useTabNavigation} from 'react-native-paper-tabs';
