@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, {createContext, useCallback, useContext, useMemo} from 'react';
+import React, {createContext, useCallback, useContext, useEffect, useMemo} from 'react';
 import {ApplicationProvider} from '@ui-kitten/components';
 import {mapping} from '@eva-design/material';
 import {usePersistedState} from 'src/hook/usePersistedState';
 import customMapping from 'src/mapping.json';
 import {darkMaterialThemeOverride, lightMaterialThemeOverride} from 'src/navigation/theme';
 import {themeDark, themeLight, Provider as PaperProvider} from 'src/packages/base_components';
+import {Platform, StatusBar} from 'react-native';
 
 type Theme = 'light' | 'dark';
 
@@ -29,6 +30,12 @@ export default function ThemeProvider({children}: PropTypes) {
   const toggleTheme = useCallback(() => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
   }, [theme, setTheme]);
+
+  useEffect(() => {
+    if (Platform.OS === 'ios') {
+      StatusBar.setBarStyle(`${theme === 'dark' ? 'light' : 'dark'}-content`);
+    }
+  }, [theme]);
 
   const value = useMemo(() => ({theme, toggleTheme}), [theme, toggleTheme]);
 
