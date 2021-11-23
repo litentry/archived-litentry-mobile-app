@@ -22,7 +22,7 @@ export function CouncilScreen() {
   const layout = useWindowDimensions();
 
   return (
-    <Tab.Navigator initialLayout={{width: layout.width}} screenOptions={{tabBarLabelStyle: {fontSize: 12}}}>
+    <Tab.Navigator initialLayout={{width: layout.width}}>
       <Tab.Screen name="Overview" component={CouncilOverviewScreen} />
       <Tab.Screen name="Motions" component={MotionsScreen} />
     </Tab.Navigator>
