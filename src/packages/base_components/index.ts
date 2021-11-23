@@ -17,6 +17,8 @@ export {
   DataTable,
   IconButton,
   Button,
+  Portal,
+  FAB,
 } from 'react-native-paper';
 
 export {Layout} from './Layout';

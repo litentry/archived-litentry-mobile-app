@@ -6,7 +6,6 @@ import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
 import LoadingView from 'presentational/LoadingView';
 import {
   Padder,
-  Button,
   View,
   FlatList,
   Image,
@@ -16,13 +15,22 @@ import {
   IconButton,
   List,
   useTheme,
+  Portal,
+  FAB,
+  Provider,
 } from 'src/packages/base_components';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React from 'react';
 import {useAccountsIdentityInfo} from 'src/api/hooks/useAccountsIdentityInfo';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 import {CompleteNavigatorParamList} from 'src/navigation/navigation';
-import {addAccountScreen, importAccountScreen, mnemonicScreen, myAccountScreen} from 'src/navigation/routeKeys';
+import {
+  accountsScreen,
+  addAccountScreen,
+  importAccountScreen,
+  mnemonicScreen,
+  myAccountScreen,
+} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
 
 type CombinedData = {
@@ -30,7 +38,11 @@ type CombinedData = {
   account: Account;
 };
 
-export function AccountsScreen({navigation}: {navigation: NavigationProp<CompleteNavigatorParamList>}) {
+type Props = {
+  navigation: NavigationProp<CompleteNavigatorParamList, typeof accountsScreen>;
+};
+
+export function AccountsScreen({navigation}: Props) {
   const {accounts, networkAccounts, toggleFavorite} = useAccounts();
   const {data, isLoading} = useAccountsIdentityInfo(networkAccounts.map((account) => account.address));
   const combinedData = data?.reduce<CombinedData[]>((acc, current) => {
@@ -111,23 +123,9 @@ export function AccountsScreen({navigation}: {navigation: NavigationProp<Complet
               </OverflowMenu>
             </View>
           )}
-          ListFooterComponent={() => (
-            <View style={styles.footer}>
-              <Button icon="plus" mode="outlined" onPress={() => navigation.navigate(addAccountScreen)}>
-                Add External Account
-              </Button>
-              <Padder scale={1} />
-              <Button icon="key-plus" mode="outlined" onPress={() => navigation.navigate(mnemonicScreen)}>
-                Generate New Seed
-              </Button>
-              <Padder scale={1} />
-              <Button icon="import" mode="outlined" onPress={() => navigation.navigate(importAccountScreen)}>
-                Import Seed
-              </Button>
-            </View>
-          )}
         />
       )}
+      <Buttons navigation={navigation} />
     </SafeView>
   );
 }
@@ -207,3 +205,47 @@ function AccountItem({
     />
   );
 }
+
+const Buttons = ({navigation}: {navigation: Props['navigation']}) => {
+  const [state, setState] = React.useState({open: false});
+
+  const onStateChange = ({open}: {open: boolean}) => setState({open});
+
+  const {open} = state;
+
+  return (
+    <Provider>
+      <Portal>
+        <FAB.Group
+          visible={true}
+          open={open}
+          icon={open ? 'minus' : 'plus'}
+          actions={[
+            {
+              icon: 'import',
+              label: 'Import seed',
+              onPress: () => navigation.navigate(importAccountScreen),
+            },
+            {
+              icon: 'plus',
+              label: 'Add External Account',
+              onPress: () => navigation.navigate(addAccountScreen),
+            },
+            {
+              icon: 'key-plus',
+              label: 'Generate New Seed',
+              onPress: () => navigation.navigate(mnemonicScreen),
+              small: false,
+            },
+          ]}
+          onStateChange={onStateChange}
+          onPress={() => {
+            if (open) {
+              // do something if the speed dial is open
+            }
+          }}
+        />
+      </Portal>
+    </Provider>
+  );
+};
