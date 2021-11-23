@@ -1,6 +1,6 @@
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {Button, Icon, Input, ListItem, TopNavigationAction, useTheme} from '@ui-kitten/components';
+import {Button, Icon, Input, ListItem, useTheme} from '@ui-kitten/components';
 import {NetworkContext} from 'context/NetworkContext';
 import FormLabel from 'presentational/FormLabel';
 import Padder from 'presentational/Padder';

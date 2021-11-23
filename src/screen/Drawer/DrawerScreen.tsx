@@ -21,6 +21,8 @@ import {
   parachainAuctionsScreen,
 } from 'src/navigation/routeKeys';
 import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
+import {appVersion} from 'src/service/Device';
+import {getCurrentYear} from 'src/utils';
 
 function DrawerScreen({navigation}: DrawerContentComponentProps) {
   const {theme, toggleTheme} = useTheme();
@@ -127,8 +129,18 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
             </>
           )}
         </Layout>
+        <Footer />
       </Layout>
     </SafeView>
+  );
+}
+
+function Footer() {
+  return (
+    <View style={styles.footer}>
+      <Text category="c2">{`© ${getCurrentYear()} Litentry Technologies GmbH`}</Text>
+      <Text category="c2">{`Version ${appVersion()}`}</Text>
+    </View>
   );
 }
 
@@ -157,6 +169,7 @@ const styles = StyleSheet.create({
     paddingLeft: 12,
     backgroundColor: undefined,
   },
+  footer: {alignItems: 'center', paddingVertical: 15},
 });
 
 export default DrawerScreen;

@@ -23,3 +23,5 @@ export const getReadableVersion = () => {
   const code = Platform.OS === 'ios' ? ` (${Device.getBuildNumber()})` : '';
   return `${Device.getVersion()}${code}`;
 };
+
+export const appVersion = () => `${Device.getVersion()} [${Device.getBuildNumber()}]`;
