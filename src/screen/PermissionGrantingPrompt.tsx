@@ -1,5 +1,5 @@
 import {Button, Icon, Layout, Text, useTheme} from '@ui-kitten/components';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import SafeView from 'presentational/SafeView';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';

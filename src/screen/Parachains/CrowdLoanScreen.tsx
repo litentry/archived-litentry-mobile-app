@@ -7,7 +7,7 @@ import {useAccounts} from 'context/AccountsContext';
 import {useApi} from 'context/ChainApiContext';
 import {EmptyView} from 'presentational/EmptyView';
 import LoadingView from 'presentational/LoadingView';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import {SelectAccount} from 'presentational/SelectAccount';
 import React from 'react';
 import {SectionList, StyleSheet, View} from 'react-native';

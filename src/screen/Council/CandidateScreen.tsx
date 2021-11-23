@@ -10,7 +10,7 @@ import {useCouncil} from 'src/api/hooks/useCouncil';
 import LoadingView from 'presentational/LoadingView';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import AccountInfoInlineTeaser from 'src/presentational/AccountInfoInlineTeaser';
-import Padder from 'src/presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import {standardPadding} from 'src/styles';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';

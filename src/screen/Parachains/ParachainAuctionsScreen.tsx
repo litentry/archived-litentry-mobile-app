@@ -1,8 +1,8 @@
 import React from 'react';
-import {Caption, DataTable, Layout, Text, useTheme, View} from 'src/packages/base_components';
+import {Caption, DataTable, Layout, Padder, Text, useTheme, View} from 'src/packages/base_components';
 import {StyleSheet} from 'react-native';
 import globalStyles, {standardPadding} from 'src/styles';
-import {Chart, Padder} from 'presentational/index';
+import {Chart} from 'presentational/index';
 import {BN, BN_ONE, BN_ZERO, formatNumber} from '@polkadot/util';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useAuctionInfo} from 'src/api/hooks/useAuctionInfo';

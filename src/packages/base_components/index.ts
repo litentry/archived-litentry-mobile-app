@@ -20,3 +20,4 @@ export {
 
 export {Layout} from './Layout';
 export {View, StyleSheet} from 'react-native';
+export {Padder} from './Padder';

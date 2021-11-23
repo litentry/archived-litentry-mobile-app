@@ -5,7 +5,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useDemocracySummary} from 'src/api/hooks/useDemocracySummary';
 import {formatNumber, BN_ONE, BN_ZERO, BN_HUNDRED} from '@polkadot/util';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import ProgressChartWidget from 'presentational/ProgressWidget';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';

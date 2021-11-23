@@ -1,7 +1,7 @@
 import {bnToBn, BN_ONE, BN_ZERO, formatNumber} from '@polkadot/util';
 import {Card} from '@ui-kitten/components';
 import {LoadingBox} from 'presentational/LoadingBox';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import ProgressChartWidget from 'presentational/ProgressWidget';
 import {SectionTeaserContainer} from 'presentational/SectionTeaserContainer';
 import StatInfoBlock from 'presentational/StatInfoBlock';

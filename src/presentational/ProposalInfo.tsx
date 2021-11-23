@@ -1,5 +1,5 @@
 import type {Proposal as ProposalType} from '@polkadot/types/interfaces';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import React from 'react';
 import {View} from 'react-native';
 import {Paragraph} from 'src/packages/base_components';

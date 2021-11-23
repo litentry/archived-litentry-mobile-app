@@ -7,7 +7,7 @@ import RegistrarSelectionModal from 'layout/RegistrarSelectionModal';
 import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
 import IdentityInfoForm, {IdentityPayload} from 'presentational/IdentityInfoForm';
 import InfoBanner from 'presentational/InfoBanner';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import SuccessDialog from 'presentational/SuccessDialog';
 import React, {useCallback, useContext, useRef, useState} from 'react';

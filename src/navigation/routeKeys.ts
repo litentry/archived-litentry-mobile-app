@@ -25,6 +25,7 @@ export const registrarListScreen = 'Registrars' as const;
 export const motionDetailScreen = 'Motion' as const;
 export const notificationSettingsScreen = 'Notification' as const;
 export const accountsScreen = 'My Accounts' as const;
+export const accountsGuideScreen = 'AccountsGuide' as const;
 export const myAccountScreen = 'My Account' as const;
 export const importAccountScreen = 'Import account' as const;
 export const importAccountWithJsonFileScreen = 'Import json' as const;
