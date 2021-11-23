@@ -29,6 +29,7 @@ import {IdentityGuideScreen} from 'screen/MyIdentityScreen/IdentityGuideScreen';
 import ManageIdentityScreen from 'screen/MyIdentityScreen/ManageIdentity';
 import {NetworkSelectionScreen} from 'screen/NetworkSelectionScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
+import {ParachainsAuctionsScreen} from 'screen/Parachains/ParachainAuctionsScreen';
 import {CrowdLoanFundDetailScreen} from 'screen/Parachains/CrowdLoanFundDetailScreen';
 import {CrowdLoanScreen} from 'screen/Parachains/CrowdLoanScreen';
 import {ParachainsOverviewScreen} from 'screen/Parachains/OverviewScreen';
@@ -184,12 +185,10 @@ function ParachainsNavigator() {
       <ParachainsStack.Screen
         name={routeKeys.parachainsOverviewScreen}
         component={ParachainsOverviewScreen}
-        options={{title: 'Overview'}}
-      />
-      <ParachainsStack.Screen
-        name={routeKeys.parachainDetailScreen}
-        component={ParachainDetailScreen}
-        options={{title: 'Parachain'}}
+        options={{
+          title: 'Overview',
+          headerLeft: (props) => <AppBar.Action icon="menu" {...props} />,
+        }}
       />
       <ParachainsStack.Screen
         name={routeKeys.crowdloanScreen}
@@ -199,16 +198,29 @@ function ParachainsNavigator() {
         }}
       />
       <ParachainsStack.Screen
-        name={routeKeys.crowdloanFundDetailScreen}
-        component={CrowdLoanFundDetailScreen}
-        options={{title: 'Fund details'}}
-      />
-      <ParachainsStack.Screen
         options={{
           headerLeft: (props) => <AppBar.Action icon="menu" {...props} />,
         }}
         name={routeKeys.parathreadsScreen}
         component={ParathreadsScreen}
+      />
+      <ParachainsStack.Screen
+        options={{
+          title: 'Auctions',
+          headerLeft: (props) => <AppBar.Action icon="menu" {...props} />,
+        }}
+        name={routeKeys.parachainAuctionsScreen}
+        component={ParachainsAuctionsScreen}
+      />
+      <ParachainsStack.Screen
+        name={routeKeys.parachainDetailScreen}
+        component={ParachainDetailScreen}
+        options={{title: 'Parachain'}}
+      />
+      <ParachainsStack.Screen
+        name={routeKeys.crowdloanFundDetailScreen}
+        component={CrowdLoanFundDetailScreen}
+        options={{title: 'Fund details'}}
       />
     </ParachainsStack.Navigator>
   );

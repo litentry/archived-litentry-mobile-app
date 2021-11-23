@@ -18,6 +18,7 @@ import {
   parathreadsScreen,
   crowdloanScreen,
   parachainsOverviewScreen,
+  parachainAuctionsScreen,
 } from 'src/navigation/routeKeys';
 import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 import {appVersion} from 'src/service/Device';
@@ -68,6 +69,10 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
               <MenuItem
                 title="Parathreads"
                 onPress={() => navigation.navigate(parachainsNavigator, {screen: parathreadsScreen})}
+              />
+              <MenuItem
+                title="Auctions"
+                onPress={() => navigation.navigate(parachainsNavigator, {screen: parachainAuctionsScreen})}
               />
             </MenuGroup>
           ) : null}
