@@ -126,7 +126,7 @@ export function ImportAccountScreen({navigation}: {navigation: NavigationProp<Ac
           status="basic"
           accessoryLeft={(p) => <Icon {...p} name="download-outline" />}
           onPress={onSubmit}>
-          Import account
+          Import Seed
         </Button>
       </ScrollView>
     </SafeView>

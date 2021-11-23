@@ -1,13 +1,24 @@
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp} from '@react-navigation/native';
-import {Button, Divider, Icon, ListItem, MenuItem, OverflowMenu, Text, useTheme} from '@ui-kitten/components';
+import {Divider, MenuItem, OverflowMenu} from '@ui-kitten/components';
 import {Account, useAccounts} from 'context/index';
 import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
 import LoadingView from 'presentational/LoadingView';
-import {Padder} from 'src/packages/base_components';
+import {
+  Padder,
+  Button,
+  View,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  Text,
+  IconButton,
+  List,
+  useTheme,
+} from 'src/packages/base_components';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React from 'react';
-import {FlatList, Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useAccountsIdentityInfo} from 'src/api/hooks/useAccountsIdentityInfo';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 import {CompleteNavigatorParamList} from 'src/navigation/navigation';
@@ -61,11 +72,9 @@ export function AccountsScreen({navigation}: {navigation: NavigationProp<Complet
             <View style={styles.emptyContainer}>
               <Image source={require('src/image/no_accounts.png')} style={styles.emptyImage} />
               <Padder scale={1} />
-              <Text style={styles.emptyText} status="basic" category="h4">
-                No accounts added
-              </Text>
+              <Text style={styles.emptyText}>No accounts added</Text>
               <Padder scale={1.5} />
-              <Text category="c1">Please add an account to take further actions</Text>
+              <Text>Please add an account to take further actions</Text>
             </View>
           )}
           ListHeaderComponent={() => (
@@ -77,13 +86,9 @@ export function AccountsScreen({navigation}: {navigation: NavigationProp<Complet
                       setSortMenuVisible(true);
                     }}
                     style={globalStyles.rowAlignCenter}>
-                    <Text category="c1">Sort by</Text>
+                    <Text>Sort by</Text>
                     <Padder scale={0.5} />
-                    <Icon
-                      name="arrow-ios-downward-outline"
-                      style={globalStyles.icon}
-                      fill={globalStyles.iconColor.color}
-                    />
+                    <IconButton icon="chevron-down" style={globalStyles.icon} color={globalStyles.iconColor.color} />
                   </TouchableOpacity>
                 )}
                 placement="bottom end"
@@ -108,25 +113,16 @@ export function AccountsScreen({navigation}: {navigation: NavigationProp<Complet
           )}
           ListFooterComponent={() => (
             <View style={styles.footer}>
-              <Button
-                status="basic"
-                accessoryLeft={(p) => <Icon {...p} name="plus-circle-outline" />}
-                onPress={() => navigation.navigate(addAccountScreen)}>
-                Add Account
+              <Button icon="plus" mode="outlined" onPress={() => navigation.navigate(addAccountScreen)}>
+                Add External Account
               </Button>
               <Padder scale={1} />
-              <Button
-                status="basic"
-                accessoryLeft={(p) => <Icon {...p} name="plus-circle-outline" />}
-                onPress={() => navigation.navigate(mnemonicScreen)}>
-                Create Account
+              <Button icon="key-plus" mode="outlined" onPress={() => navigation.navigate(mnemonicScreen)}>
+                Generate New Seed
               </Button>
               <Padder scale={1} />
-              <Button
-                status="basic"
-                onPress={() => navigation.navigate(importAccountScreen)}
-                accessoryLeft={(p) => <Icon {...p} name="download-outline" />}>
-                Import account
+              <Button icon="import" mode="outlined" onPress={() => navigation.navigate(importAccountScreen)}>
+                Import Seed
               </Button>
             </View>
           )}
@@ -186,9 +182,9 @@ function AccountItem({
   const theme = useTheme();
 
   return (
-    <ListItem
+    <List.Item
       onPress={onPress}
-      accessoryLeft={(p) => (
+      left={(p) => (
         <View {...p}>
           <Identicon value={String(identity.accountId)} size={25} />
         </View>
@@ -199,12 +195,12 @@ function AccountItem({
           <AccountInfoInlineTeaser identity={identity} />
         </View>
       )}
-      accessoryRight={(p) => (
+      right={(p) => (
         <TouchableOpacity {...p} onPress={toggleFavorite}>
-          <Icon
+          <IconButton
             style={globalStyles.icon25}
-            fill={isFavorite ? theme['color-warning-500'] : theme['color-basic-500']}
-            name={isFavorite ? 'star' : 'star-outline'}
+            color={isFavorite ? theme.colors.accent : theme.colors.backdrop}
+            icon={isFavorite ? 'star' : 'star-outline'}
           />
         </TouchableOpacity>
       )}

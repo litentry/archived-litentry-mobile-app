@@ -91,7 +91,7 @@ export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppSt
       panGestureEnabled={false}>
       <SafeView edges={noTopEdges}>
         <Layout style={styles.modal}>
-          <ModalTitle title="Add Account" />
+          <ModalTitle title="Add External Account" />
           <Divider />
           {(() => {
             switch (state.step) {
