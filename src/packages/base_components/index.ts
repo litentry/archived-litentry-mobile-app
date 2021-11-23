@@ -14,7 +14,9 @@ export {
   Paragraph,
   Subheading,
   Headline,
+  DataTable,
   IconButton,
 } from 'react-native-paper';
 
 export {Layout} from './Layout';
+export {View, StyleSheet} from 'react-native';

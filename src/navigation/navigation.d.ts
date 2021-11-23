@@ -49,6 +49,7 @@ import {
   connectionRetryScreen,
   appStack,
   apiLoadingStack,
+  parachainAuctionsScreen,
 } from 'src/navigation/routeKeys';
 
 type DashboardStackParamList = {
@@ -92,6 +93,7 @@ type ParachainsStackParamList = {
   [crowdloanScreen]: undefined;
   [crowdloanFundDetailScreen]: {title: string; paraId: ParaId};
   [parathreadsScreen]: undefined;
+  [parachainAuctionsScreen]: undefined;
 };
 
 type PolkassemblyDiscussionStackParamList = {
