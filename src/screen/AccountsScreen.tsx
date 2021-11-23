@@ -18,6 +18,7 @@ import {
   Portal,
   FAB,
   Provider,
+  Caption,
 } from 'src/packages/base_components';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React from 'react';
@@ -182,19 +183,15 @@ function AccountItem({
   return (
     <List.Item
       onPress={onPress}
-      left={(p) => (
-        <View {...p}>
-          <Identicon value={String(identity.accountId)} size={25} />
-        </View>
-      )}
-      description={`${isExternal ? 'External' : ''}`}
+      left={() => <Identicon value={String(identity.accountId)} size={25} />}
+      description={(p) => <Caption {...p}>{isExternal ? 'External' : ''}</Caption>}
       title={(p) => (
         <View {...p}>
           <AccountInfoInlineTeaser identity={identity} />
         </View>
       )}
       right={(p) => (
-        <TouchableOpacity {...p} onPress={toggleFavorite}>
+        <TouchableOpacity onPress={toggleFavorite}>
           <IconButton
             style={globalStyles.icon25}
             color={isFavorite ? theme.colors.accent : theme.colors.backdrop}
