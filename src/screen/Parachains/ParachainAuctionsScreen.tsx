@@ -165,10 +165,6 @@ const DataTableComp = (props: DataTableProps) => {
   const to = Math.min((page + 1) * numberOfItemsPerPage, items.length);
   const pageItems = props.items.slice(from, to);
 
-  React.useEffect(() => {
-    setPage(0);
-  }, [numberOfItemsPerPage]);
-
   return (
     <DataTable style={[{backgroundColor: theme.colors.surface}, tableStyle.container]}>
       <DataTable.Header>
