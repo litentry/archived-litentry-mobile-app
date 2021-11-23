@@ -16,6 +16,7 @@ export {
   Headline,
   DataTable,
   IconButton,
+  ActivityIndicator,
 } from 'react-native-paper';
 
 export {Layout} from './Layout';

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Caption, DataTable, Layout, Text, useTheme, View} from 'src/packages/base_components';
+import {Caption, DataTable, Layout, Text, useTheme, View, ActivityIndicator} from 'src/packages/base_components';
 import {StyleSheet} from 'react-native';
 import globalStyles, {standardPadding} from 'src/styles';
 import {Chart, Padder} from 'presentational/index';
@@ -17,10 +17,10 @@ import {useRelayEndpoints} from 'src/api/hooks/useRelayEndpoints';
 import {bnToBn} from '@polkadot/util';
 
 export function ParachainsAuctionsScreen() {
-  const {data, isLoading} = useAuctionInfo();
-  const {data: winningData} = useWinningData(data);
-  const {data: totalIssuance} = useTotalIssuance();
-  const {data: endpoints} = useRelayEndpoints();
+  const {data, isLoading: auctionInfoIsLoading, isError: auctionIsError} = useAuctionInfo();
+  const {data: winningData, isLoading: winningDataIsLoading, isError: winningDataIsError} = useWinningData(data);
+  const {data: totalIssuance, isLoading: issuanceIsLoading, isError: issuanceIsError} = useTotalIssuance();
+  const {data: endpoints, isLoading: endpointsIsLoading, isError: endpointsIsError} = useRelayEndpoints();
   const bestNumber = useBestNumber();
   const formatBalance = useFormatBalance();
 
@@ -42,10 +42,15 @@ export function ParachainsAuctionsScreen() {
   const [endingAt, currentPosition] = getEndingPeriodValues();
   const remainingPercent = endingAt.isZero() ? 0 : currentPosition.muln(10000).div(endingAt).toNumber() / 10000;
 
-  if (!data || isLoading) {
+  if (auctionIsError || winningDataIsError || issuanceIsError || endpointsIsError) {
+    return <ErrorView />;
+  }
+
+  if (!data || auctionInfoIsLoading) {
     return <LoadingView />;
   }
 
+  const tableIsLoading = auctionInfoIsLoading || winningDataIsLoading || issuanceIsLoading || endpointsIsLoading;
   const items: DataTableProps['items'] =
     winningData?.map((wd) => {
       return {
@@ -56,12 +61,14 @@ export function ParachainsAuctionsScreen() {
       };
     }) ?? [];
 
+  const isActive = Boolean(data.leasePeriod);
+
   return (
     <Layout style={globalStyles.flex}>
       <ScrollView>
         <Header
           count={formatNumber(data.numAuctions) ?? 0}
-          active={Boolean(data.leasePeriod)}
+          active={isActive}
           firstLast={{
             first: formatNumber(data.leasePeriod),
             last: formatNumber(data.leasePeriod?.add((data.leasePeriodsPerSlot as u32) ?? BN_ONE).isub(BN_ONE)),
@@ -69,7 +76,13 @@ export function ParachainsAuctionsScreen() {
           stats={{raised: formatBalance(raised, {isShort: true}) ?? '', raisedPercent}}
           duration={{endingAt, remaining: endingAt.sub(currentPosition), remainingPercent}}
         />
-        <DataTableComp items={items} />
+        {isActive ? (
+          <DataTableComp items={items} loading={tableIsLoading} />
+        ) : (
+          <View style={globalStyles.centeredContainer}>
+            <Caption>The auction is not active.</Caption>
+          </View>
+        )}
       </ScrollView>
     </Layout>
   );
@@ -153,12 +166,13 @@ type DataTableProps = {
     projectName: string;
     value: string;
   }[];
+  loading: boolean;
 };
 const DataTableComp = (props: DataTableProps) => {
   const theme = useTheme();
   const [page, setPage] = React.useState(0);
 
-  const {items} = props;
+  const {items, loading} = props;
   const numberOfItemsPerPage = 8;
 
   const from = page * numberOfItemsPerPage;
@@ -173,18 +187,24 @@ const DataTableComp = (props: DataTableProps) => {
         <DataTable.Title numeric>Value</DataTable.Title>
       </DataTable.Header>
 
-      {pageItems.map((item) => (
-        <DataTable.Row key={item.blockNumber}>
-          <DataTable.Cell>
-            <Caption>#{item.blockNumber}</Caption>
-          </DataTable.Cell>
-          <DataTable.Cell>
-            {item.projectName + ' '}
-            <Caption>{item.projectID}</Caption>
-          </DataTable.Cell>
-          <DataTable.Cell numeric>{item.value}</DataTable.Cell>
-        </DataTable.Row>
-      ))}
+      {loading ? (
+        <View style={globalStyles.paddedContainer}>
+          <ActivityIndicator />
+        </View>
+      ) : (
+        pageItems.map((item) => (
+          <DataTable.Row key={item.blockNumber}>
+            <DataTable.Cell>
+              <Caption>#{item.blockNumber}</Caption>
+            </DataTable.Cell>
+            <DataTable.Cell>
+              {item.projectName + ' '}
+              <Caption>{item.projectID}</Caption>
+            </DataTable.Cell>
+            <DataTable.Cell numeric>{item.value}</DataTable.Cell>
+          </DataTable.Row>
+        ))
+      )}
 
       <DataTable.Pagination
         page={page}
@@ -204,3 +224,11 @@ const tableStyle = StyleSheet.create({
     flex: 1,
   },
 });
+
+function ErrorView() {
+  return (
+    <View style={[globalStyles.paddedContainer, globalStyles.centeredContainer]}>
+      <Text>Something went wrong! please try again later.</Text>
+    </View>
+  );
+}
