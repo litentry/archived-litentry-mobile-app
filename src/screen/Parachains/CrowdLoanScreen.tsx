@@ -32,7 +32,7 @@ export function CrowdLoanScreen() {
   const [openContributeId, setOpenContributeId] = React.useState<ParaId>();
 
   if (isError) {
-    return <Text>Something bad happend!</Text>;
+    return <Text>Something bad happened!</Text>;
   }
 
   if (!data) {

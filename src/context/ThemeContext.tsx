@@ -5,7 +5,12 @@ import {mapping} from '@eva-design/material';
 import {usePersistedState} from 'src/hook/usePersistedState';
 import customMapping from 'src/mapping.json';
 import {darkMaterialThemeOverride, lightMaterialThemeOverride} from 'src/navigation/theme';
-import {themeDark, themeLight, Provider as PaperProvider} from 'src/packages/base_components';
+import {
+  themeDark,
+  themeLight,
+  Provider as PaperProvider,
+  useTheme as useRNPaperTheme,
+} from 'src/packages/base_components';
 import {Platform, StatusBar} from 'react-native';
 
 type Theme = 'light' | 'dark';
@@ -54,11 +59,12 @@ export default function ThemeProvider({children}: PropTypes) {
 }
 
 export function useTheme() {
+  const rnPaperTheme = useRNPaperTheme();
   const context = useContext(ThemeContext);
 
   if (!context) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
 
-  return context;
+  return {...context, ...rnPaperTheme};
 }
