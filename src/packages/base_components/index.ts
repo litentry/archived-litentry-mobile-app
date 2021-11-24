@@ -19,6 +19,7 @@ export {
   Button,
   Portal,
   FAB,
+  ActivityIndicator,
 } from 'react-native-paper';
 
 export {Layout} from './Layout';
