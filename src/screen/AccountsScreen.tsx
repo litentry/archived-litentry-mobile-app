@@ -58,75 +58,77 @@ export function AccountsScreen({navigation}: Props) {
   const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
 
   return (
-    <SafeView edges={noTopEdges}>
-      {isLoading ? (
-        <LoadingView />
-      ) : (
-        <FlatList
-          style={styles.container}
-          contentContainerStyle={styles.content}
-          data={combinedData?.sort(sortByFunction)}
-          showsVerticalScrollIndicator
-          keyExtractor={(item) => item.account.address}
-          renderItem={({item}) => (
-            <AccountItem
-              isExternal={item.account.isExternal}
-              identity={item.identity}
-              isFavorite={item.account.meta.isFavorite}
-              toggleFavorite={() => toggleFavorite(item.account.address)}
-              onPress={() => {
-                navigation.navigate(myAccountScreen, {address: item.account.address});
-              }}
-            />
-          )}
-          ItemSeparatorComponent={() => <Divider />}
-          ListEmptyComponent={() => (
-            <View style={styles.emptyContainer}>
-              <IconButton icon="badge-account-alert-outline" size={100} />
-              <Padder scale={1} />
-              <Text style={styles.emptyText}>No accounts added!</Text>
-              <Padder scale={1.5} />
-              <Text>Please add an account to take further actions.</Text>
-            </View>
-          )}
-          ListHeaderComponent={() => (
-            <View style={styles.header}>
-              <OverflowMenu
-                anchor={() => (
-                  <TouchableOpacity
-                    onPress={() => {
-                      setSortMenuVisible(true);
-                    }}
-                    style={globalStyles.rowAlignCenter}>
-                    <Text>Sort by</Text>
-                    <Padder scale={0.5} />
-                    <IconButton icon="chevron-down" style={globalStyles.icon} color={globalStyles.iconColor.color} />
-                  </TouchableOpacity>
-                )}
-                placement="bottom end"
-                style={styles.overflowMenu}
-                visible={sortMenuVisible}
-                onSelect={({row}: {row: number}) => {
-                  setSortMenuVisible(false);
-                  switch (row) {
-                    case 0:
-                      setSortBy('name');
-                      break;
-                    case 1:
-                      setSortBy('favorites');
-                      break;
-                  }
+    <Provider>
+      <SafeView edges={noTopEdges}>
+        {isLoading ? (
+          <LoadingView />
+        ) : (
+          <FlatList
+            style={styles.container}
+            contentContainerStyle={styles.content}
+            data={combinedData?.sort(sortByFunction)}
+            showsVerticalScrollIndicator
+            keyExtractor={(item) => item.account.address}
+            renderItem={({item}) => (
+              <AccountItem
+                isExternal={item.account.isExternal}
+                identity={item.identity}
+                isFavorite={item.account.meta.isFavorite}
+                toggleFavorite={() => toggleFavorite(item.account.address)}
+                onPress={() => {
+                  navigation.navigate(myAccountScreen, {address: item.account.address});
                 }}
-                onBackdropPress={() => setSortMenuVisible(false)}>
-                <MenuItem title="Name" style={sortBy === 'name' && styles.selectedItem} />
-                <MenuItem title="Favorite" style={sortBy === 'favorites' && styles.selectedItem} />
-              </OverflowMenu>
-            </View>
-          )}
-        />
-      )}
-      <Buttons navigation={navigation} />
-    </SafeView>
+              />
+            )}
+            ItemSeparatorComponent={() => <Divider />}
+            ListEmptyComponent={() => (
+              <View style={styles.emptyContainer}>
+                <IconButton icon="badge-account-alert-outline" size={100} />
+                <Padder scale={1} />
+                <Text style={styles.emptyText}>No accounts added!</Text>
+                <Padder scale={1.5} />
+                <Text>Please add an account to take further actions.</Text>
+              </View>
+            )}
+            ListHeaderComponent={() => (
+              <View style={styles.header}>
+                <OverflowMenu
+                  anchor={() => (
+                    <TouchableOpacity
+                      onPress={() => {
+                        setSortMenuVisible(true);
+                      }}
+                      style={globalStyles.rowAlignCenter}>
+                      <Text>Sort by</Text>
+                      <Padder scale={0.5} />
+                      <IconButton icon="chevron-down" style={globalStyles.icon} color={globalStyles.iconColor.color} />
+                    </TouchableOpacity>
+                  )}
+                  placement="bottom end"
+                  style={styles.overflowMenu}
+                  visible={sortMenuVisible}
+                  onSelect={({row}: {row: number}) => {
+                    setSortMenuVisible(false);
+                    switch (row) {
+                      case 0:
+                        setSortBy('name');
+                        break;
+                      case 1:
+                        setSortBy('favorites');
+                        break;
+                    }
+                  }}
+                  onBackdropPress={() => setSortMenuVisible(false)}>
+                  <MenuItem title="Name" style={sortBy === 'name' && styles.selectedItem} />
+                  <MenuItem title="Favorite" style={sortBy === 'favorites' && styles.selectedItem} />
+                </OverflowMenu>
+              </View>
+            )}
+          />
+        )}
+        <Buttons navigation={navigation} />
+      </SafeView>
+    </Provider>
   );
 }
 
@@ -211,38 +213,31 @@ const Buttons = ({navigation}: {navigation: Props['navigation']}) => {
   const {open} = state;
 
   return (
-    <Provider>
-      <Portal>
-        <FAB.Group
-          visible={true}
-          open={open}
-          icon={open ? 'minus' : 'plus'}
-          actions={[
-            {
-              icon: 'import',
-              label: 'Import seed',
-              onPress: () => navigation.navigate(importAccountScreen),
-            },
-            {
-              icon: 'plus',
-              label: 'Add External Account',
-              onPress: () => navigation.navigate(addAccountScreen),
-            },
-            {
-              icon: 'key-plus',
-              label: 'Generate New Seed',
-              onPress: () => navigation.navigate(mnemonicScreen),
-              small: false,
-            },
-          ]}
-          onStateChange={onStateChange}
-          onPress={() => {
-            if (open) {
-              // do something if the speed dial is open
-            }
-          }}
-        />
-      </Portal>
-    </Provider>
+    <Portal>
+      <FAB.Group
+        visible={true}
+        open={open}
+        icon={open ? 'minus' : 'plus'}
+        actions={[
+          {
+            icon: 'import',
+            label: 'Import seed',
+            onPress: () => navigation.navigate(importAccountScreen),
+          },
+          {
+            icon: 'plus',
+            label: 'Add External Account',
+            onPress: () => navigation.navigate(addAccountScreen),
+          },
+          {
+            icon: 'key-plus',
+            label: 'Generate New Seed',
+            onPress: () => navigation.navigate(mnemonicScreen),
+            small: false,
+          },
+        ]}
+        onStateChange={onStateChange}
+      />
+    </Portal>
   );
 };
