@@ -8,7 +8,6 @@ import {
   Padder,
   View,
   FlatList,
-  Image,
   TouchableOpacity,
   StyleSheet,
   Text,
@@ -83,11 +82,11 @@ export function AccountsScreen({navigation}: Props) {
           ItemSeparatorComponent={() => <Divider />}
           ListEmptyComponent={() => (
             <View style={styles.emptyContainer}>
-              <Image source={require('src/image/no_accounts.png')} style={styles.emptyImage} />
+              <IconButton icon="badge-account-alert-outline" size={100} />
               <Padder scale={1} />
-              <Text style={styles.emptyText}>No accounts added</Text>
+              <Text style={styles.emptyText}>No accounts added!</Text>
               <Padder scale={1.5} />
-              <Text>Please add an account to take further actions</Text>
+              <Text>Please add an account to take further actions.</Text>
             </View>
           )}
           ListHeaderComponent={() => (
@@ -154,7 +153,6 @@ const styles = StyleSheet.create({
   },
   emptyContainer: {alignItems: 'center', justifyContent: 'center', padding: standardPadding * 2},
   emptyText: {fontWeight: 'normal'},
-  emptyImage: {width: 200, height: 200},
 });
 
 function sortByDisplayName(a: CombinedData, b: CombinedData) {
@@ -183,21 +181,23 @@ function AccountItem({
   return (
     <List.Item
       onPress={onPress}
-      left={() => <Identicon value={String(identity.accountId)} size={25} />}
-      description={(p) => <Caption {...p}>{isExternal ? 'External' : ''}</Caption>}
-      title={(p) => (
-        <View {...p}>
-          <AccountInfoInlineTeaser identity={identity} />
+      left={() => (
+        <View style={globalStyles.justifyCenter}>
+          <Identicon value={String(identity.accountId)} size={25} />
         </View>
       )}
-      right={(p) => (
-        <TouchableOpacity onPress={toggleFavorite}>
-          <IconButton
-            style={globalStyles.icon25}
-            color={isFavorite ? theme.colors.accent : theme.colors.backdrop}
-            icon={isFavorite ? 'star' : 'star-outline'}
-          />
-        </TouchableOpacity>
+      title={() => (
+        <View style={globalStyles.justifyCenter}>
+          <AccountInfoInlineTeaser identity={identity} />
+          {isExternal && <Caption>External</Caption>}
+        </View>
+      )}
+      right={() => (
+        <IconButton
+          onPress={toggleFavorite}
+          color={isFavorite ? theme.colors.accent : theme.colors.disabled}
+          icon={isFavorite ? 'star' : 'star-outline'}
+        />
       )}
     />
   );
