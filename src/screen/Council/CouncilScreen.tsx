@@ -9,7 +9,7 @@ import LoadingView from 'presentational/LoadingView';
 import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {SelectAccount} from 'presentational/SelectAccount';
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {SectionList, StyleSheet, View} from 'react-native';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useCouncil} from 'src/api/hooks/useCouncil';
@@ -27,6 +27,7 @@ import Badge from 'presentational/Badge';
 import {noop} from 'lodash';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useTheme} from 'context/ThemeContext';
+import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 
 const MAX_VOTES = 16;
 
@@ -184,6 +185,14 @@ function CouncilVote({visible, setVisible, candidates, module}: CouncilVoteProps
   const [account, setAccount] = React.useState<string>();
   const [amount, setAmount] = React.useState<string>('');
   const [selectedCandidates, setSelectedCandidates] = React.useState<Array<string>>([]);
+  const {data: voterData} = useCouncilVotesOf(account);
+
+  // preselect already voted council members
+  useEffect(() => {
+    if (voterData != null) {
+      setSelectedCandidates(voterData.votes.map((a) => a.toString()).filter((a) => candidates.includes(a)));
+    }
+  }, [voterData, candidates]);
 
   const {api} = useApi();
   const startTx = useApiTx();
