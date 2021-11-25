@@ -43,6 +43,7 @@ type Props = {
 };
 
 export function AccountsScreen({navigation}: Props) {
+  const theme = useTheme();
   const {accounts, networkAccounts, toggleFavorite} = useAccounts();
   const {data, isLoading} = useAccountsIdentityInfo(networkAccounts.map((account) => account.address));
   const combinedData = data?.reduce<CombinedData[]>((acc, current) => {
@@ -58,7 +59,7 @@ export function AccountsScreen({navigation}: Props) {
   const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
 
   return (
-    <Provider>
+    <Provider theme={theme}>
       <SafeView edges={noTopEdges}>
         {isLoading ? (
           <LoadingView />
@@ -207,9 +208,7 @@ function AccountItem({
 
 const Buttons = ({navigation}: {navigation: Props['navigation']}) => {
   const [state, setState] = React.useState({open: false});
-
   const onStateChange = ({open}: {open: boolean}) => setState({open});
-
   const {open} = state;
 
   return (
