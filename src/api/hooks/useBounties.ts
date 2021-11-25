@@ -1,5 +1,6 @@
 import {ApiPromise} from '@polkadot/api';
-import {BountyStatus, AccountId, BlockNumber} from '@polkadot/types/interfaces';
+import {BountyStatus, BountyIndex, Bounty, AccountId, BlockNumber} from '@polkadot/types/interfaces';
+import {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
 
 import useApiQuery from 'src/api/hooks/useApiQuery';
 
@@ -13,18 +14,27 @@ export interface BountyStatusInfo {
   updateDue: BlockNumber | undefined;
 }
 
+export type BountyData = {
+  index: BountyIndex;
+  bounty: Bounty;
+  bountyStatus: BountyStatusInfo;
+  description: string;
+  proposals?: DeriveCollectiveProposal[];
+};
+
 export function useBounties() {
   return useApiQuery('bounties', async (api: ApiPromise) => {
     const deriveBounties = await api.derive.bounties.bounties();
-    const bounties = deriveBounties
-      .sort((a, b) => b.index.cmp(a.index))
-      .map(({bounty, description, index, proposals}) => ({
+    const bounties = deriveBounties.reduce((_bounties, {bounty, description, index, proposals}) => {
+      const _bounty = {
         index,
         bounty,
         bountyStatus: getBountyStatus(bounty.status),
         description,
         proposals,
-      }));
+      };
+      return {..._bounties, [index.toString()]: _bounty};
+    }, {} as Record<string, BountyData>);
 
     return bounties;
   });

@@ -1,26 +1,21 @@
 import React from 'react';
 import {StyleSheet, View, FlatList} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {Layout} from '@ui-kitten/components';
 import globalStyles, {standardPadding} from 'src/styles';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
-import {useBounties, BountyStatusInfo} from 'src/api/hooks/useBounties';
+import {useBounties, BountyData} from 'src/api/hooks/useBounties';
 import {EmptyView} from 'presentational/EmptyView';
-import {Bounty, BountyIndex} from '@polkadot/types/interfaces';
-import {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import LoadingView from 'presentational/LoadingView';
 import {Text, Caption, Card, Headline} from 'src/packages/base_components/index';
-
-type BountyItemProps = {
-  bounty: Bounty;
-  bountyStatus: BountyStatusInfo;
-  description: string;
-  index: BountyIndex;
-  proposals?: DeriveCollectiveProposal[];
-};
+import {bountyDetailScreen} from 'src/navigation/routeKeys';
 
 export function BountiesScreen() {
   const {data, isLoading} = useBounties();
+  const bounties = React.useMemo(() => {
+    return data ? Object.values(data).sort((a, b) => b.index.cmp(a.index)) : [];
+  }, [data]);
 
   return (
     <Layout style={globalStyles.flex}>
@@ -29,18 +24,19 @@ export function BountiesScreen() {
           <LoadingView />
         ) : (
           <FlatList
-            data={data}
+            data={bounties}
             style={globalStyles.flex}
             contentContainerStyle={styles.listContent}
-            keyExtractor={(item) => item.index.toString()}
+            keyExtractor={({index}) => index.toString()}
             renderItem={({item}) => {
+              const {index, bounty, description, proposals, bountyStatus} = item;
               return (
                 <BountyItem
-                  bounty={item.bounty}
-                  description={item.description}
-                  index={item.index}
-                  proposals={item.proposals}
-                  bountyStatus={item.bountyStatus}
+                  bounty={bounty}
+                  description={description}
+                  index={index}
+                  proposals={proposals}
+                  bountyStatus={bountyStatus}
                 />
               );
             }}
@@ -52,12 +48,13 @@ export function BountiesScreen() {
   );
 }
 
-function BountyItem({bounty, description, index, bountyStatus}: BountyItemProps) {
+function BountyItem({bounty, description, index, bountyStatus}: BountyData) {
+  const navigation = useNavigation();
   const formatBalance = useFormatBalance();
   const {value} = bounty;
 
   return (
-    <Card onPress={() => console.log('navigate to detail screen')} style={styles.itemContainer}>
+    <Card onPress={() => navigation.navigate(bountyDetailScreen)} style={styles.itemContainer}>
       <Card.Content style={styles.itemContent}>
         <View style={styles.itemRight}>
           <View style={styles.bountyIndexContainer}>
