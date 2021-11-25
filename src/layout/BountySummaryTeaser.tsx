@@ -4,7 +4,7 @@ import {Card} from '@ui-kitten/components/ui';
 import {LoadingBox} from 'presentational/LoadingBox';
 import {SectionTeaserContainer} from 'presentational/SectionTeaserContainer';
 import {standardPadding} from 'src/styles';
-import {useBounties} from 'src/api/hooks/useBounties';
+import {useBountiesSummary} from 'src/api/hooks/useBountiesSummary';
 import StatInfoBlock from 'presentational/StatInfoBlock';
 import Padder from 'presentational/Padder';
 import ProgressChartWidget from 'presentational/ProgressWidget';
@@ -21,9 +21,9 @@ type Props = {
 export function BountySummaryTeaser(props: Props) {
   const formatBalance = useFormatBalance();
   const bestNumber = useBestNumber();
-  const {data: bounties, isLoading} = useBounties();
+  const {data, isLoading} = useBountiesSummary();
 
-  const spendPeriod = bounties?.treasurySpendPeriod;
+  const spendPeriod = data?.treasurySpendPeriod;
   const progress = spendPeriod && bestNumber ? bestNumber.mod(spendPeriod).iadd(BN_ONE) : BN_ZERO;
 
   const timeLeft = spendPeriod?.sub(progress);
@@ -45,12 +45,12 @@ export function BountySummaryTeaser(props: Props) {
         <View style={styles.boxRow}>
           <Card style={styles.card}>
             <View style={styles.itemRow}>
-              <StatInfoBlock title="Active">{formatNumber(bounties?.activeBounties)}</StatInfoBlock>
-              <StatInfoBlock title="Past">{formatNumber(bounties?.pastBounties)}</StatInfoBlock>
+              <StatInfoBlock title="Active">{formatNumber(data?.activeBounties)}</StatInfoBlock>
+              <StatInfoBlock title="Past">{formatNumber(data?.pastBounties)}</StatInfoBlock>
             </View>
             <View style={styles.itemRow}>
               <StatInfoBlock title="Active total">
-                {bounties?.totalValue ? formatBalance(bounties.totalValue) : null}
+                {data?.totalValue ? formatBalance(data.totalValue) : null}
               </StatInfoBlock>
             </View>
           </Card>
