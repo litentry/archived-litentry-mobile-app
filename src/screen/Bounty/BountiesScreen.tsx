@@ -1,7 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {Layout} from '@ui-kitten/components';
 import globalStyles, {standardPadding} from 'src/styles';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {useBounties, BountyData} from 'src/api/hooks/useBounties';
@@ -18,33 +17,31 @@ export function BountiesScreen() {
   }, [data]);
 
   return (
-    <Layout style={globalStyles.flex}>
-      <SafeView edges={noTopEdges}>
-        {isLoading ? (
-          <LoadingView />
-        ) : (
-          <FlatList
-            data={bounties}
-            style={globalStyles.flex}
-            contentContainerStyle={styles.listContent}
-            keyExtractor={({index}) => index.toString()}
-            renderItem={({item}) => {
-              const {index, bounty, description, proposals, bountyStatus} = item;
-              return (
-                <BountyItem
-                  bounty={bounty}
-                  description={description}
-                  index={index}
-                  proposals={proposals}
-                  bountyStatus={bountyStatus}
-                />
-              );
-            }}
-            ListEmptyComponent={EmptyView}
-          />
-        )}
-      </SafeView>
-    </Layout>
+    <SafeView edges={noTopEdges}>
+      {isLoading ? (
+        <LoadingView />
+      ) : (
+        <FlatList
+          data={bounties}
+          style={globalStyles.flex}
+          contentContainerStyle={styles.listContent}
+          keyExtractor={({index}) => index.toString()}
+          renderItem={({item}) => {
+            const {index, bounty, description, proposals, bountyStatus} = item;
+            return (
+              <BountyItem
+                bounty={bounty}
+                description={description}
+                index={index}
+                proposals={proposals}
+                bountyStatus={bountyStatus}
+              />
+            );
+          }}
+          ListEmptyComponent={EmptyView}
+        />
+      )}
+    </SafeView>
   );
 }
 
@@ -54,7 +51,9 @@ function BountyItem({bounty, description, index, bountyStatus}: BountyData) {
   const {value} = bounty;
 
   return (
-    <Card onPress={() => navigation.navigate(bountyDetailScreen)} style={styles.itemContainer}>
+    <Card
+      onPress={() => navigation.navigate(bountyDetailScreen, {index: index.toString()})}
+      style={styles.itemContainer}>
       <Card.Content style={styles.itemContent}>
         <View style={styles.itemRight}>
           <View style={styles.bountyIndexContainer}>
