@@ -8,6 +8,7 @@ import {AddAccountScreen} from 'screen/AddAccountScreen/AddAccountScreen';
 import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
 import {BalanceScreen} from 'screen/BalanceScreen';
 import {BountiesScreen} from 'screen/Bounty/BountiesScreen';
+import {BountyDetailScreen} from 'screen/Bounty/BountyDetailScreen';
 import {ConnectionRetryScreen} from 'screen/ConnectionRetryScreen';
 import {CandidateScreen} from 'screen/Council/CandidateScreen';
 import {CouncilScreen} from 'screen/Council/CouncilScreen';
@@ -90,6 +91,7 @@ function DashboardStackNavigator() {
         options={{title: 'Proposal'}}
       />
       <DashboardStack.Screen name={routeKeys.bountiesScreen} component={BountiesScreen} />
+      <DashboardStack.Screen name={routeKeys.bountyDetailScreen} component={BountyDetailScreen} />
     </DashboardStack.Navigator>
   );
 }
