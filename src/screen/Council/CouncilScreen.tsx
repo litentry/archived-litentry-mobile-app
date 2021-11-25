@@ -2,7 +2,6 @@ import {useWindowDimensions} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {useNavigation} from '@react-navigation/native';
-import {Divider, Text, Card, Input, Modal} from '@ui-kitten/components';
 import {useAccounts} from 'context/AccountsContext';
 import {useApi} from 'context/ChainApiContext';
 import {EmptyView} from 'presentational/EmptyView';
@@ -18,7 +17,8 @@ import {useCouncilSummary} from 'src/api/hooks/useCouncilSummary';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import {candidateScreen} from 'src/navigation/routeKeys';
-import {List, FAB, Button} from 'src/packages/base_components';
+import {Input, Text} from '@ui-kitten/components';
+import {List, Button, Divider, Modal, Card} from 'src/packages/base_components';
 import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 import {MotionsScreen} from './MotionsScreen';
 import {ScrollView, TouchableOpacity} from 'react-native';
@@ -44,7 +44,6 @@ export function CouncilScreen() {
 }
 
 function CouncilOverviewScreen() {
-  const {colors} = useTheme();
   const {data: council, isLoading} = useCouncil();
   const {data: summary} = useCouncilSummary();
   const {data: moduleElection} = useModuleElections();
@@ -74,48 +73,54 @@ function CouncilOverviewScreen() {
   }, [council]);
 
   return (
-    <>
-      <SafeView edges={noTopEdges}>
-        {isLoading ? (
-          <LoadingView />
-        ) : (
-          <SectionList
-            style={globalStyles.flex}
-            contentContainerStyle={styles.content}
-            sections={sectionsData}
-            keyExtractor={(item) => item.accountId.toString()}
-            stickySectionHeadersEnabled={false}
-            renderItem={({item, section}) => {
-              const votes = council?.getVoters(item.accountId.toString())?.length;
-              return (
-                <Item
-                  accountId={item.accountId.toString()}
-                  backing={item.backing}
-                  votes={votes}
-                  sectionType={
-                    section.title === 'Members' ? 'Member' : section.title === 'Runners Up' ? 'Runner Up' : 'Candidate'
-                  }
-                />
-              );
-            }}
-            renderSectionHeader={({section: {title}}) => {
-              return (
-                <List.Subheader style={styles.sectionHeader}>
-                  {`${title} ${
-                    title === 'Members'
-                      ? summary?.seats
-                      : title === 'Runners Up'
-                      ? summary?.runnersUp
-                      : summary?.candidatesCount
-                  }`}
-                </List.Subheader>
-              );
-            }}
-            ItemSeparatorComponent={Divider}
-            ListEmptyComponent={EmptyView}
-          />
-        )}
-      </SafeView>
+    <SafeView edges={noTopEdges}>
+      {isLoading ? (
+        <LoadingView />
+      ) : (
+        <SectionList
+          style={globalStyles.flex}
+          contentContainerStyle={styles.content}
+          sections={sectionsData}
+          keyExtractor={(item) => item.accountId.toString()}
+          stickySectionHeadersEnabled={false}
+          renderItem={({item, section}) => {
+            const votes = council?.getVoters(item.accountId.toString())?.length;
+            return (
+              <Item
+                accountId={item.accountId.toString()}
+                backing={item.backing}
+                votes={votes}
+                sectionType={
+                  section.title === 'Members' ? 'Member' : section.title === 'Runners Up' ? 'Runner Up' : 'Candidate'
+                }
+              />
+            );
+          }}
+          renderSectionHeader={({section: {title}}) => (
+            <List.Item
+              style={styles.sectionHeader}
+              title={`${title} ${
+                title === 'Members'
+                  ? summary?.seats
+                  : title === 'Runners Up'
+                  ? summary?.runnersUp
+                  : summary?.candidatesCount
+              }`}
+              right={() => {
+                if (title === 'Members') {
+                  return (
+                    <Button icon="vote" mode="outlined" onPress={() => setCouncilVoteVisible(true)}>
+                      Vote
+                    </Button>
+                  );
+                }
+              }}
+            />
+          )}
+          ItemSeparatorComponent={Divider}
+          ListEmptyComponent={EmptyView}
+        />
+      )}
       {council && moduleElection?.hasElections ? (
         <CouncilVote
           visible={councilVoteVisible}
@@ -126,14 +131,7 @@ function CouncilOverviewScreen() {
           module={moduleElection.module}
         />
       ) : null}
-      <FAB
-        style={[styles.fab, {backgroundColor: colors.primary}]}
-        icon="vote"
-        onPress={() => {
-          setCouncilVoteVisible(true);
-        }}
-      />
-    </>
+    </SafeView>
   );
 }
 
@@ -205,11 +203,7 @@ function CouncilVote({visible, setVisible, candidates, module}: CouncilVoteProps
   const bondValue = useMemo(() => {
     if (api != null) {
       const location = api.consts.elections || api.consts.phragmenElection || api.consts.electionsPhragmen;
-      return (
-        location &&
-        location.votingBondBase &&
-        location.votingBondBase.add(location.votingBondFactor.muln(selectedCandidates.length))
-      );
+      return location?.votingBondBase?.add(location.votingBondFactor.muln(selectedCandidates.length));
     }
   }, [api, selectedCandidates]);
 
@@ -232,8 +226,8 @@ function CouncilVote({visible, setVisible, candidates, module}: CouncilVoteProps
   };
 
   return (
-    <Modal visible={visible} backdropStyle={globalStyles.backdrop} onBackdropPress={reset}>
-      <Card disabled={true} style={styles.modalWidth}>
+    <Modal visible={visible} onDismiss={reset}>
+      <Card style={styles.modalCard}>
         <View style={styles.centerAlign}>
           <Text category="s1">Vote for council</Text>
         </View>
@@ -253,6 +247,7 @@ function CouncilVote({visible, setVisible, candidates, module}: CouncilVoteProps
           onFocus={() => setAmount('')}
           onChangeText={(nextValue) => setAmount(nextValue.replace(/[^(\d+).(\d+)]/g, ''))}
         />
+
         <Text category="s1">{api ? formatBalance(getBalanceFromString(api, amount)) : ''}</Text>
 
         <Padder scale={1} />
@@ -345,14 +340,14 @@ const styles = StyleSheet.create({
     paddingVertical: standardPadding,
     paddingHorizontal: standardPadding * 2,
   },
-  modalWidth: {width: 350},
+  modalCard: {paddingHorizontal: standardPadding * 2, paddingVertical: standardPadding},
   centerAlign: {alignItems: 'center'},
   candidatesContainer: {flexDirection: 'row', height: 200},
   candidates: {flex: 3, paddingVertical: standardPadding},
   scrollView: {marginRight: standardPadding},
   votingBond: {flex: 1, justifyContent: 'center', alignItems: 'center'},
   bondValue: {fontSize: 10},
-  buttons: {flexDirection: 'row', justifyContent: 'space-around'},
+  buttons: {flexDirection: 'row', justifyContent: 'space-around', marginBottom: standardPadding},
   voteButton: {width: 100},
   candidateItemContainer: {
     flexDirection: 'row',

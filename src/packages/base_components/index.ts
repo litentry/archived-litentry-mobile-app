@@ -20,8 +20,9 @@ export {
   FAB,
   Button,
   Portal,
-  Modal,
+  Divider,
 } from 'react-native-paper';
 
+export {Modal} from './Modal';
 export {Layout} from './Layout';
 export {View, StyleSheet} from 'react-native';

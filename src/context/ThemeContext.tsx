@@ -46,14 +46,12 @@ export default function ThemeProvider({children}: PropTypes) {
 
   return (
     <ThemeContext.Provider value={value}>
-      <PaperProvider theme={value.theme === 'dark' ? themeDark : themeLight}>
-        <ApplicationProvider
-          theme={value.theme === 'dark' ? darkMaterialThemeOverride : lightMaterialThemeOverride}
-          mapping={mapping}
-          customMapping={customMapping as any}>
-          {children}
-        </ApplicationProvider>
-      </PaperProvider>
+      <ApplicationProvider
+        theme={value.theme === 'dark' ? darkMaterialThemeOverride : lightMaterialThemeOverride}
+        mapping={mapping}
+        customMapping={customMapping as any}>
+        <PaperProvider theme={value.theme === 'dark' ? themeDark : themeLight}>{children}</PaperProvider>
+      </ApplicationProvider>
     </ThemeContext.Provider>
   );
 }
