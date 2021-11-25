@@ -207,7 +207,7 @@ function CouncilVote({visible, setVisible, candidates, module}: CouncilVoteProps
       : noop;
   };
 
-  const disabled = !amount || !account || !(selectedCandidates.length > 0);
+  const disabled = !amount || !account || selectedCandidates.length === 0;
 
   const bondValue = useMemo(() => {
     if (api != null) {
@@ -262,7 +262,7 @@ function CouncilVote({visible, setVisible, candidates, module}: CouncilVoteProps
         <Padder scale={1} />
 
         <View style={styles.centerAlign}>
-          <Text category="c1">Select upto 16 candidates in the preferred order:</Text>
+          <Text category="c1">{`Select upto ${MAX_VOTES} candidates in the preferred order:`}</Text>
         </View>
 
         <View style={styles.candidatesContainer}>
