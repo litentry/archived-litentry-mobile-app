@@ -1,18 +1,15 @@
 import React from 'react';
 import {StyleSheet, View, FlatList} from 'react-native';
-import {Layout, Text, Card} from '@ui-kitten/components';
+import {Layout} from '@ui-kitten/components';
 import globalStyles, {standardPadding} from 'src/styles';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
-import {useBounties} from 'src/api/hooks/useBounties';
+import {useBounties, BountyStatusInfo} from 'src/api/hooks/useBounties';
 import {EmptyView} from 'presentational/EmptyView';
-import Padder from 'presentational/Padder';
-import {Account} from 'layout/Account';
-import Identicon from '@polkadot/reactnative-identicon';
 import {Bounty, BountyIndex} from '@polkadot/types/interfaces';
 import {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import {BountyStatusInfo, getBountyStatus} from './helper/getBountyStatus';
 import LoadingView from 'presentational/LoadingView';
+import {Text, Caption, Card, Headline} from 'src/packages/base_components/index';
 
 type BountyItemProps = {
   bounty: Bounty;
@@ -24,15 +21,6 @@ type BountyItemProps = {
 
 export function BountiesScreen() {
   const {data, isLoading} = useBounties();
-  const bounties = data?.bounties
-    .sort((a, b) => b.index.cmp(a.index))
-    .map(({bounty, description, index, proposals}) => ({
-      bounty,
-      bountyStatus: getBountyStatus(bounty.status),
-      description,
-      index,
-      proposals,
-    }));
 
   return (
     <Layout style={globalStyles.flex}>
@@ -41,19 +29,21 @@ export function BountiesScreen() {
           <LoadingView />
         ) : (
           <FlatList
+            data={data}
             style={globalStyles.flex}
-            contentContainerStyle={styles.content}
+            contentContainerStyle={styles.listContent}
             keyExtractor={(item) => item.index.toString()}
-            data={bounties}
-            renderItem={({item}) => (
-              <BountyItem
-                bounty={item.bounty}
-                description={item.description}
-                index={item.index}
-                proposals={item.proposals}
-                bountyStatus={item.bountyStatus}
-              />
-            )}
+            renderItem={({item}) => {
+              return (
+                <BountyItem
+                  bounty={item.bounty}
+                  description={item.description}
+                  index={item.index}
+                  proposals={item.proposals}
+                  bountyStatus={item.bountyStatus}
+                />
+              );
+            }}
             ListEmptyComponent={EmptyView}
           />
         )}
@@ -67,50 +57,25 @@ function BountyItem({bounty, description, index, bountyStatus}: BountyItemProps)
   const {value} = bounty;
 
   return (
-    <Card style={styles.card} disabled>
-      <View style={styles.row}>
-        <Text category="s1" appearance="hint">
-          {index.toString()}
-        </Text>
-        <Text style={styles.description} category={'c1'} numberOfLines={1} ellipsizeMode="middle">
-          {description}
-        </Text>
+    <Card onPress={() => console.log('navigate to detail screen')} style={styles.itemContainer}>
+      <Card.Content style={styles.itemContent}>
         <View style={styles.itemRight}>
-          <Text category={'c2'}>{formatBalance(value)}</Text>
+          <View style={styles.bountyIndexContainer}>
+            <Headline>{index.toString()}</Headline>
+          </View>
+          <Text>{description}</Text>
         </View>
-      </View>
-      <View style={styles.row}>
-        {bountyStatus.curator && (
-          <>
-            <Text category="c1">curator: </Text>
-            <Account id={bountyStatus.curator.toString()}>
-              {(identity) => (
-                <View style={[styles.row, styles.accountsRow]}>
-                  {identity?.accountId && <Identicon value={identity.accountId} size={20} />}
-                  <Padder scale={0.3} />
-                  {identity?.display && (
-                    <Text numberOfLines={1} category={'c1'} ellipsizeMode="middle">
-                      {identity.display}
-                    </Text>
-                  )}
-                </View>
-              )}
-            </Account>
-          </>
-        )}
-      </View>
-      <View style={styles.row}>
-        <Text category="c1">status: </Text>
-        <Text category={'c1'} numberOfLines={1} ellipsizeMode="middle" status="info">
-          {bountyStatus.status}
-        </Text>
-      </View>
+        <View style={styles.itemLeft}>
+          <Text>{formatBalance(value)}</Text>
+          <Caption>{bountyStatus.status}</Caption>
+        </View>
+      </Card.Content>
     </Card>
   );
 }
 
 const styles = StyleSheet.create({
-  content: {
+  listContent: {
     paddingVertical: standardPadding * 2,
     paddingHorizontal: standardPadding * 2,
   },
@@ -118,21 +83,16 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 20,
   },
-  card: {
-    marginBottom: standardPadding,
-  },
-  description: {
-    marginLeft: 10,
-    flex: 1,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   itemRight: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
-    paddingLeft: standardPadding,
   },
+  itemLeft: {alignItems: 'flex-end'},
+  itemContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  itemContainer: {marginBottom: 10},
+  bountyIndexContainer: {marginRight: 15},
 });
