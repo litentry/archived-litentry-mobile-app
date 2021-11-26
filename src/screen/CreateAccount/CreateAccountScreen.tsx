@@ -5,7 +5,7 @@ import {Text, Input, ListItem, Icon, useTheme, Button} from '@ui-kitten/componen
 import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 import FormLabel from 'presentational/FormLabel';
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import {ProgressBar} from 'presentational/ProgressBar';
 import zxcvbn from 'zxcvbn';
 import {ScrollView} from 'react-native-gesture-handler';

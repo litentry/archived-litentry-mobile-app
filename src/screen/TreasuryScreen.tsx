@@ -6,13 +6,13 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {Account} from 'layout/Account';
 import {EmptyView} from 'presentational/EmptyView';
 import LoadingView from 'presentational/LoadingView';
-import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React from 'react';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useTreasuryInfo} from 'src/api/hooks/useTreasuryInfo';
 import globalStyles, {standardPadding} from 'src/styles';
 import TipsScreen from './tips/TipsScreen';
+import {Padder} from 'src/packages/base_components';
 
 const Tab = createMaterialTopTabNavigator();
 

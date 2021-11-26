@@ -4,7 +4,7 @@ import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {RouteProp} from '@react-navigation/native';
 import {ParachainsStackParamList} from 'src/navigation/navigation';
 import {Text, Divider, useTheme, ListItem, Icon, Button} from '@ui-kitten/components';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import {BlockTime} from 'layout/BlockTime';
 import {useParachainEvents} from 'src/api/hooks/useParachainEvents';
 import {formatNumber, hexToBn} from '@polkadot/util';
