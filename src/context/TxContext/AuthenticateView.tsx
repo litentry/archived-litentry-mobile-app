@@ -10,7 +10,7 @@ const {height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
-    height: height * 0.25,
+    height: height * 0.3,
     justifyContent: 'center',
     paddingHorizontal: 30,
     paddingBottom: 50,

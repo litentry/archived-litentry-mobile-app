@@ -20,8 +20,10 @@ export {
   Portal,
   FAB,
   ActivityIndicator,
+  Divider,
 } from 'react-native-paper';
 
+export {Modal} from './Modal';
 export {Layout} from './Layout';
 export {View, StyleSheet, TouchableOpacity, Image, FlatList} from 'react-native';
 export {Padder} from './Padder';
