@@ -6,7 +6,6 @@ import {useAccounts} from 'context/AccountsContext';
 import {useApi} from 'context/ChainApiContext';
 import {EmptyView} from 'presentational/EmptyView';
 import LoadingView from 'presentational/LoadingView';
-import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {SelectAccount} from 'presentational/SelectAccount';
 import React, {useEffect, useMemo, useState} from 'react';
@@ -18,7 +17,7 @@ import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import {candidateScreen} from 'src/navigation/routeKeys';
 import {Input, Text} from '@ui-kitten/components';
-import {List, Button, Divider, Modal, Card} from 'src/packages/base_components';
+import {List, Button, Divider, Modal, Card, Padder} from 'src/packages/base_components';
 import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 import {MotionsScreen} from './MotionsScreen';
 import {ScrollView, TouchableOpacity} from 'react-native';
@@ -123,7 +122,7 @@ function CouncilOverviewScreen() {
         />
       )}
       {council && moduleElection?.hasElections ? (
-        <CouncilVote
+        <CouncilVoteModal
           visible={councilVoteVisible}
           setVisible={(visible) => {
             setCouncilVoteVisible(visible);
@@ -181,7 +180,7 @@ type CouncilVoteProps = {
   module: string | null;
 };
 
-function CouncilVote({visible, setVisible, candidates, module}: CouncilVoteProps) {
+function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVoteProps) {
   const [account, setAccount] = React.useState<string>();
   const [amount, setAmount] = React.useState<string>('');
   const [selectedCandidates, setSelectedCandidates] = React.useState<Array<string>>([]);
@@ -262,7 +261,7 @@ function CouncilVote({visible, setVisible, candidates, module}: CouncilVoteProps
         <Padder scale={1} />
 
         <View style={styles.centerAlign}>
-          <Text category="c1">{`Select upto ${MAX_VOTES} candidates in the preferred order:`}</Text>
+          <Text category="c1">{`Select up to ${MAX_VOTES} candidates in the preferred order:`}</Text>
         </View>
 
         <View style={styles.candidatesContainer}>
