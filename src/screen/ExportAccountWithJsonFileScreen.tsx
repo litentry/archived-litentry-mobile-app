@@ -2,7 +2,7 @@ import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {RouteProp} from '@react-navigation/core';
 import {Icon, Input, Text, ListItem, useTheme, Button} from '@ui-kitten/components';
 import FormLabel from 'presentational/FormLabel';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';

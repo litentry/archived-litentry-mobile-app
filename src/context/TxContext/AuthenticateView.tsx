@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Dimensions, StyleSheet} from 'react-native';
 import {Icon, IconProps, Layout, Input, Button, Text} from '@ui-kitten/components';
 import ModalTitle from 'presentational/ModalTitle';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import SubstrateSign from 'react-native-substrate-sign';
 import {Account, InternalAccount, useAccounts} from 'context/AccountsContext';
 

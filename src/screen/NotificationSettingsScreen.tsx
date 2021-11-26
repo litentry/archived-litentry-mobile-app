@@ -1,7 +1,7 @@
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {Divider, Icon, Layout, ListItem, Text} from '@ui-kitten/components';
 import LoadingView from 'presentational/LoadingView';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React from 'react';
 import {StyleSheet, Switch, View} from 'react-native';

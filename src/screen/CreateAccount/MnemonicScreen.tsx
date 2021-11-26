@@ -6,7 +6,7 @@ import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 import {NavigationProp} from '@react-navigation/native';
 import {AccountsStackParamList} from 'src/navigation/navigation';
 import FormLabel from 'presentational/FormLabel';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import {verifyMnemonicScreen} from 'src/navigation/routeKeys';
 import SubstrateSign from 'react-native-substrate-sign';
 

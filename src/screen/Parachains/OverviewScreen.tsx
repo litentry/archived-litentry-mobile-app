@@ -13,7 +13,7 @@ import ProgressChartWidget from 'presentational/ProgressWidget';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import StatInfoBlock from 'presentational/StatInfoBlock';
 import {standardPadding} from 'src/styles';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
 import {BlockTime} from 'layout/BlockTime';
 import LoadingView from 'presentational/LoadingView';

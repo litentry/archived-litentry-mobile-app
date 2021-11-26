@@ -1,18 +1,36 @@
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp} from '@react-navigation/native';
-import {Button, Divider, Icon, ListItem, MenuItem, OverflowMenu, Text, useTheme} from '@ui-kitten/components';
-import {Account, useAccounts} from 'context/AccountsContext';
-import {NetworkContext} from 'context/NetworkContext';
+import {Divider, MenuItem, OverflowMenu} from '@ui-kitten/components';
+import {Account, useAccounts} from 'context/index';
 import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
 import LoadingView from 'presentational/LoadingView';
-import Padder from 'presentational/Padder';
+import {
+  Padder,
+  View,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  Text,
+  IconButton,
+  List,
+  useTheme,
+  Portal,
+  FAB,
+  Provider,
+  Caption,
+} from 'src/packages/base_components';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
-import React, {useContext} from 'react';
-import {FlatList, Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import React from 'react';
 import {useAccountsIdentityInfo} from 'src/api/hooks/useAccountsIdentityInfo';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 import {CompleteNavigatorParamList} from 'src/navigation/navigation';
-import {addAccountScreen, importAccountScreen, mnemonicScreen, myAccountScreen} from 'src/navigation/routeKeys';
+import {
+  accountsScreen,
+  addAccountScreen,
+  importAccountScreen,
+  mnemonicScreen,
+  myAccountScreen,
+} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
 
 type CombinedData = {
@@ -20,10 +38,13 @@ type CombinedData = {
   account: Account;
 };
 
-export function AccountsScreen({navigation}: {navigation: NavigationProp<CompleteNavigatorParamList>}) {
-  const {accounts, toggleFavorite} = useAccounts();
-  const {currentNetwork} = useContext(NetworkContext);
-  const networkAccounts = Object.values(accounts).filter((account) => account.meta.network === currentNetwork.key);
+type Props = {
+  navigation: NavigationProp<CompleteNavigatorParamList, typeof accountsScreen>;
+};
+
+export function AccountsScreen({navigation}: Props) {
+  const theme = useTheme();
+  const {accounts, networkAccounts, toggleFavorite} = useAccounts();
   const {data, isLoading} = useAccountsIdentityInfo(networkAccounts.map((account) => account.address));
   const combinedData = data?.reduce<CombinedData[]>((acc, current) => {
     const account = accounts[String(current.accountId)];
@@ -38,104 +59,77 @@ export function AccountsScreen({navigation}: {navigation: NavigationProp<Complet
   const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
 
   return (
-    <SafeView edges={noTopEdges}>
-      {isLoading ? (
-        <LoadingView />
-      ) : (
-        <FlatList
-          style={styles.container}
-          contentContainerStyle={styles.content}
-          data={combinedData?.sort(sortByFunction)}
-          showsVerticalScrollIndicator
-          keyExtractor={(item) => item.account.address}
-          renderItem={({item}) => (
-            <AccountItem
-              isExternal={item.account.isExternal}
-              identity={item.identity}
-              isFavorite={item.account.meta.isFavorite}
-              toggleFavorite={() => toggleFavorite(item.account.address)}
-              onPress={() => {
-                navigation.navigate(myAccountScreen, {address: item.account.address});
-              }}
-            />
-          )}
-          ItemSeparatorComponent={() => <Divider />}
-          ListEmptyComponent={() => (
-            <View style={styles.emptyContainer}>
-              <Image source={require('src/image/no_accounts.png')} style={styles.emptyImage} />
-              <Padder scale={1} />
-              <Text style={styles.emptyText} status="basic" category="h4">
-                No accounts added
-              </Text>
-              <Padder scale={1.5} />
-              <Text category="c1">Please add an account to take further actions</Text>
-            </View>
-          )}
-          ListHeaderComponent={() => (
-            <View style={styles.header}>
-              <OverflowMenu
-                anchor={() => (
-                  <TouchableOpacity
-                    onPress={() => {
-                      setSortMenuVisible(true);
-                    }}
-                    style={globalStyles.rowAlignCenter}>
-                    <Text category="c1">Sort by</Text>
-                    <Padder scale={0.5} />
-                    <Icon
-                      name="arrow-ios-downward-outline"
-                      style={globalStyles.icon}
-                      fill={globalStyles.iconColor.color}
-                    />
-                  </TouchableOpacity>
-                )}
-                placement="bottom end"
-                style={styles.overflowMenu}
-                visible={sortMenuVisible}
-                onSelect={({row}: {row: number}) => {
-                  setSortMenuVisible(false);
-                  switch (row) {
-                    case 0:
-                      setSortBy('name');
-                      break;
-                    case 1:
-                      setSortBy('favorites');
-                      break;
-                  }
+    <Provider theme={theme}>
+      <SafeView edges={noTopEdges}>
+        {isLoading ? (
+          <LoadingView />
+        ) : (
+          <FlatList
+            style={styles.container}
+            contentContainerStyle={styles.content}
+            data={combinedData?.sort(sortByFunction)}
+            showsVerticalScrollIndicator
+            keyExtractor={(item) => item.account.address}
+            renderItem={({item}) => (
+              <AccountItem
+                isExternal={item.account.isExternal}
+                identity={item.identity}
+                isFavorite={item.account.meta.isFavorite}
+                toggleFavorite={() => toggleFavorite(item.account.address)}
+                onPress={() => {
+                  navigation.navigate(myAccountScreen, {address: item.account.address});
                 }}
-                onBackdropPress={() => setSortMenuVisible(false)}>
-                <MenuItem title="Name" style={sortBy === 'name' && styles.selectedItem} />
-                <MenuItem title="Favorite" style={sortBy === 'favorites' && styles.selectedItem} />
-              </OverflowMenu>
-            </View>
-          )}
-          ListFooterComponent={() => (
-            <View style={styles.footer}>
-              <Button
-                status="basic"
-                accessoryLeft={(p) => <Icon {...p} name="plus-circle-outline" />}
-                onPress={() => navigation.navigate(addAccountScreen)}>
-                Add Account
-              </Button>
-              <Padder scale={1} />
-              <Button
-                status="basic"
-                accessoryLeft={(p) => <Icon {...p} name="plus-circle-outline" />}
-                onPress={() => navigation.navigate(mnemonicScreen)}>
-                Create Account
-              </Button>
-              <Padder scale={1} />
-              <Button
-                status="basic"
-                onPress={() => navigation.navigate(importAccountScreen)}
-                accessoryLeft={(p) => <Icon {...p} name="download-outline" />}>
-                Import account
-              </Button>
-            </View>
-          )}
-        />
-      )}
-    </SafeView>
+              />
+            )}
+            ItemSeparatorComponent={() => <Divider />}
+            ListEmptyComponent={() => (
+              <View style={styles.emptyContainer}>
+                <IconButton icon="badge-account-alert-outline" size={100} />
+                <Padder scale={1} />
+                <Text style={styles.emptyText}>No accounts added!</Text>
+                <Padder scale={1.5} />
+                <Text>Please add an account to take further actions.</Text>
+              </View>
+            )}
+            ListHeaderComponent={() => (
+              <View style={styles.header}>
+                <OverflowMenu
+                  anchor={() => (
+                    <TouchableOpacity
+                      onPress={() => {
+                        setSortMenuVisible(true);
+                      }}
+                      style={globalStyles.rowAlignCenter}>
+                      <Text>Sort by</Text>
+                      <Padder scale={0.5} />
+                      <IconButton icon="chevron-down" style={globalStyles.icon} color={globalStyles.iconColor.color} />
+                    </TouchableOpacity>
+                  )}
+                  placement="bottom end"
+                  style={styles.overflowMenu}
+                  visible={sortMenuVisible}
+                  onSelect={({row}: {row: number}) => {
+                    setSortMenuVisible(false);
+                    switch (row) {
+                      case 0:
+                        setSortBy('name');
+                        break;
+                      case 1:
+                        setSortBy('favorites');
+                        break;
+                    }
+                  }}
+                  onBackdropPress={() => setSortMenuVisible(false)}>
+                  <MenuItem title="Name" style={sortBy === 'name' && styles.selectedItem} />
+                  <MenuItem title="Favorite" style={sortBy === 'favorites' && styles.selectedItem} />
+                </OverflowMenu>
+              </View>
+            )}
+          />
+        )}
+        <Buttons navigation={navigation} />
+      </SafeView>
+    </Provider>
   );
 }
 
@@ -162,7 +156,6 @@ const styles = StyleSheet.create({
   },
   emptyContainer: {alignItems: 'center', justifyContent: 'center', padding: standardPadding * 2},
   emptyText: {fontWeight: 'normal'},
-  emptyImage: {width: 200, height: 200},
 });
 
 function sortByDisplayName(a: CombinedData, b: CombinedData) {
@@ -189,28 +182,61 @@ function AccountItem({
   const theme = useTheme();
 
   return (
-    <ListItem
+    <List.Item
       onPress={onPress}
-      accessoryLeft={(p) => (
-        <View {...p}>
+      left={() => (
+        <View style={globalStyles.justifyCenter}>
           <Identicon value={String(identity.accountId)} size={25} />
         </View>
       )}
-      description={`${isExternal ? 'External' : ''}`}
-      title={(p) => (
-        <View {...p}>
+      title={() => (
+        <View style={globalStyles.justifyCenter}>
           <AccountInfoInlineTeaser identity={identity} />
+          {isExternal && <Caption>External</Caption>}
         </View>
       )}
-      accessoryRight={(p) => (
-        <TouchableOpacity {...p} onPress={toggleFavorite}>
-          <Icon
-            style={globalStyles.icon25}
-            fill={isFavorite ? theme['color-warning-500'] : theme['color-basic-500']}
-            name={isFavorite ? 'star' : 'star-outline'}
-          />
-        </TouchableOpacity>
+      right={() => (
+        <IconButton
+          onPress={toggleFavorite}
+          color={isFavorite ? theme.colors.accent : theme.colors.disabled}
+          icon={isFavorite ? 'star' : 'star-outline'}
+        />
       )}
     />
   );
 }
+
+const Buttons = ({navigation}: {navigation: Props['navigation']}) => {
+  const [state, setState] = React.useState({open: false});
+  const onStateChange = ({open}: {open: boolean}) => setState({open});
+  const {open} = state;
+
+  return (
+    <Portal>
+      <FAB.Group
+        visible={true}
+        open={open}
+        icon={open ? 'minus' : 'plus'}
+        actions={[
+          {
+            icon: 'import',
+            label: 'Import seed',
+            onPress: () => navigation.navigate(importAccountScreen),
+          },
+          {
+            icon: 'plus',
+            label: 'Add External Account',
+            onPress: () => navigation.navigate(addAccountScreen),
+          },
+          {
+            icon: 'key-plus',
+            label: 'Generate New Seed',
+            onPress: () => navigation.navigate(mnemonicScreen),
+            small: false,
+          },
+        ]}
+        onStateChange={onStateChange}
+      />
+    </Portal>
+  );
+};
