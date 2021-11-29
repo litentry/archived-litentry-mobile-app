@@ -21,6 +21,7 @@ export {
   FAB,
   ActivityIndicator,
   Divider,
+  TextInput,
 } from 'react-native-paper';
 
 export {Modal} from './Modal';
