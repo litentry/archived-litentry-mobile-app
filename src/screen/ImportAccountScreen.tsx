@@ -3,7 +3,7 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {Button, Icon, Input, ListItem, useTheme} from '@ui-kitten/components';
 import {NetworkContext} from 'context/NetworkContext';
 import FormLabel from 'presentational/FormLabel';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import {ProgressBar} from 'presentational/ProgressBar';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React from 'react';
@@ -126,7 +126,7 @@ export function ImportAccountScreen({navigation}: {navigation: NavigationProp<Ac
           status="basic"
           accessoryLeft={(p) => <Icon {...p} name="download-outline" />}
           onPress={onSubmit}>
-          Import account
+          Import Seed
         </Button>
       </ScrollView>
     </SafeView>

@@ -7,7 +7,7 @@ import type {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
 
 import {ChainApiContext} from 'context/ChainApiContext';
 import {EmptyView} from 'presentational/EmptyView';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import {useAccounts} from 'context/AccountsContext';
 import {useVotingStatus} from 'src/api/hooks/useVotingStatus';
 import {useCouncilMembers} from 'src/api/hooks/useCouncilMembers';

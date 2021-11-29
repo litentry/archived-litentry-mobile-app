@@ -5,13 +5,13 @@ import {flatten} from 'lodash';
 import moment from 'moment';
 import {Label} from 'presentational/Label';
 import LoadingView from 'presentational/LoadingView';
-import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import * as React from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {OrderByType, topicIdMap, usePolkassemblyDiscussions} from 'src/api/hooks/usePolkassemblyDiscussions';
 import {PolkassemblyDiscussionStackParamList} from 'src/navigation/navigation';
 import {polkassemblyDiscussionDetail} from 'src/navigation/routeKeys';
+import {Padder} from 'src/packages/base_components';
 import globalStyles, {standardPadding} from 'src/styles';
 
 export function PolkassemblyDiscussions({

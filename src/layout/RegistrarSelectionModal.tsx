@@ -6,7 +6,7 @@ import {useRegistrars} from 'src/api/hooks/useRegistrars';
 import {BN_ZERO} from '@polkadot/util';
 import {standardPadding, monofontFamily} from 'src/styles';
 import Identicon from '@polkadot/reactnative-identicon';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 
 const {height, width} = Dimensions.get('window');
