@@ -1,10 +1,9 @@
+import React from 'react';
+import {Image, StyleSheet, TouchableOpacity, View, ScrollView} from 'react-native';
 import {DrawerContentComponentProps} from '@react-navigation/drawer';
-import {Divider, Icon, Layout, ListItem, Text, Toggle, MenuGroup, MenuItem} from '@ui-kitten/components';
 import {useTheme} from 'context/ThemeContext';
 import logo from 'image/logo.png';
 import SafeView from 'presentational/SafeView';
-import React from 'react';
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useIsParachainAvailable} from 'src/api/hooks/useIsParachainAvailable';
 import {
   accountsNavigator,
@@ -20,117 +19,147 @@ import {
   parachainsOverviewScreen,
   parachainAuctionsScreen,
 } from 'src/navigation/routeKeys';
-import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
+import {standardPadding} from 'src/styles';
 import {appVersion} from 'src/service/Device';
 import {getCurrentYear} from 'src/utils';
+import {Drawer, Switch, Text, Divider} from 'src/packages/base_components';
 
 function DrawerScreen({navigation}: DrawerContentComponentProps) {
   const {theme, toggleTheme} = useTheme();
   const isParachainAvailable = useIsParachainAvailable();
+  const [activeScreen, setActiveScreen] = React.useState('Dashboard');
 
   return (
     <SafeView>
-      <Layout style={styles.container}>
-        <View style={styles.main}>
-          <TouchableOpacity style={styles.logoContainer} onPress={() => navigation.navigate(dashboardScreen)}>
-            <Image source={logo} style={styles.logoImage} />
-            <Text style={styles.slogan}>Decentralized Identity</Text>
-          </TouchableOpacity>
-        </View>
-        <Layout style={styles.rest}>
-          <Divider />
-          <ListItem
-            title="Dashboard"
-            accessoryLeft={(props) => <Icon {...props} name="browser-outline" animation="zoom" />}
-            onPress={() => navigation.navigate(dashboardScreen)}
+      <View>
+        <TouchableOpacity style={styles.logoContainer} onPress={() => navigation.navigate(dashboardScreen)}>
+          <Image source={logo} style={styles.logoImage} />
+          <Text style={styles.slogan}>Decentralized Identity</Text>
+        </TouchableOpacity>
+      </View>
+      <Divider />
+      <ScrollView>
+        <Drawer.Section>
+          <Drawer.Item
+            label="Dashboard"
+            icon="view-dashboard"
+            active={activeScreen === 'Dashboard'}
+            onPress={() => {
+              setActiveScreen('Dashboard');
+              navigation.navigate(dashboardScreen);
+            }}
           />
-          <Divider />
-          <ListItem
-            title="Accounts"
-            accessoryLeft={(props) => <Icon {...props} name="person-outline" animation="zoom" />}
-            onPress={() => navigation.navigate(accountsNavigator)}
+          <Drawer.Item
+            label="Accounts"
+            icon="account-details"
+            active={activeScreen === 'Accounts'}
+            onPress={() => {
+              setActiveScreen('Accounts');
+              navigation.navigate(accountsNavigator);
+            }}
           />
-          <Divider />
-          {isParachainAvailable ? (
-            <MenuGroup
-              title="Parachains"
-              accessoryLeft={(props) => <Icon {...props} name="link-2-outline" animation="zoom" />}
-              style={styles.menuGroup}>
-              <MenuItem
-                title="Overview"
-                onPress={() => navigation.navigate(parachainsNavigator, {screen: parachainsOverviewScreen})}
-              />
-              <MenuItem
-                title="Crowdloan"
-                onPress={() => {
-                  navigation.navigate(parachainsNavigator, {screen: crowdloanScreen});
-                }}
-              />
-              <MenuItem
-                title="Parathreads"
-                onPress={() => navigation.navigate(parachainsNavigator, {screen: parathreadsScreen})}
-              />
-              <MenuItem
-                title="Auctions"
-                onPress={() => navigation.navigate(parachainsNavigator, {screen: parachainAuctionsScreen})}
-              />
-            </MenuGroup>
-          ) : null}
-          <Divider />
-          <ListItem
-            title="Registrars"
-            accessoryLeft={(props) => <Icon {...props} name="award-outline" animation="zoom" />}
-            onPress={() => navigation.navigate(registrarListScreen)}
+          <Drawer.Item
+            label="Registrars"
+            icon="playlist-check"
+            active={activeScreen === 'Registrars'}
+            onPress={() => {
+              setActiveScreen('Registrars');
+              navigation.navigate(registrarListScreen);
+            }}
           />
-          <Divider />
-          <ListItem
-            title="Discussions"
-            accessoryLeft={(props) => <Icon {...props} name="message-square-outline" animation="zoom" />}
-            onPress={() => navigation.navigate(polkassemblyDiscussionsNavigator)}
+          <Drawer.Item
+            label="Discussions"
+            icon="forum"
+            active={activeScreen === 'Discussions'}
+            onPress={() => {
+              setActiveScreen('Discussions');
+              navigation.navigate(polkassemblyDiscussionsNavigator);
+            }}
           />
-          <Divider />
-          <ListItem
-            title="About Litentry"
-            description="Read more about us."
-            accessoryLeft={(props) => <Icon {...props} name="hash-outline" animation="zoom" />}
-            onPress={() =>
+        </Drawer.Section>
+        {isParachainAvailable ? (
+          <Drawer.Section title="Parachains">
+            <Drawer.Item
+              label="Overview"
+              icon="link-variant"
+              active={activeScreen === 'Overview'}
+              onPress={() => {
+                setActiveScreen('Overview');
+                navigation.navigate(parachainsNavigator, {screen: parachainsOverviewScreen});
+              }}
+            />
+            <Drawer.Item
+              label="Parathreads"
+              icon="link"
+              active={activeScreen === 'Parathreads'}
+              onPress={() => {
+                setActiveScreen('Parathreads');
+                navigation.navigate(parachainsNavigator, {screen: parathreadsScreen});
+              }}
+            />
+            <Drawer.Item
+              label="Auctions"
+              icon="gavel"
+              active={activeScreen === 'Auctions'}
+              onPress={() => {
+                setActiveScreen('Auctions');
+                navigation.navigate(parachainsNavigator, {screen: parachainAuctionsScreen});
+              }}
+            />
+            <Drawer.Item
+              label="Crowdloan"
+              icon="bank-transfer-in"
+              active={activeScreen === 'Crowdloan'}
+              onPress={() => {
+                setActiveScreen('Crowdloan');
+                navigation.navigate(parachainsNavigator, {screen: crowdloanScreen});
+              }}
+            />
+          </Drawer.Section>
+        ) : null}
+        <Drawer.Section title="Settings">
+          <Drawer.Item
+            label="Dark theme"
+            icon="brightness-6"
+            right={() => <Switch value={theme === 'dark'} onValueChange={toggleTheme} />}
+          />
+          <Drawer.Item
+            label="Notifications"
+            icon="bell"
+            active={activeScreen === 'Notifications'}
+            onPress={() => {
+              setActiveScreen('Notifications');
+              navigation.navigate(notificationSettingsScreen);
+            }}
+          />
+          {__DEV__ && (
+            <Drawer.Item
+              label="Dev Kit"
+              icon="code-tags"
+              active={activeScreen === 'Dev Kit'}
+              onPress={() => {
+                setActiveScreen('Dev Kit');
+                navigation.navigate(devScreen);
+              }}
+            />
+          )}
+        </Drawer.Section>
+        <Drawer.Section>
+          <Drawer.Item
+            label="About Litentry"
+            icon="information-outline"
+            active={activeScreen === 'About Litentry'}
+            onPress={() => {
+              setActiveScreen('About Litentry');
               navigation.navigate(webviewScreen, {
                 title: 'About Litentry',
                 uri: 'https://www.litentry.com',
-              })
-            }
+              });
+            }}
           />
-          <Divider />
-          <Layout style={globalStyles.paddedContainer}>
-            <Text category="h6">Settings</Text>
-          </Layout>
-          <ListItem
-            title="Dark theme"
-            accessoryLeft={(props) => <Icon {...props} name="sun-outline" animation="zoom" />}
-            accessoryRight={() => <Toggle checked={theme === 'dark'} onChange={toggleTheme} />}
-          />
-          <Divider />
-          <ListItem
-            title="Notifications"
-            description="Personalize notifications settings."
-            accessoryLeft={(props) => <Icon {...props} name="bell-outline" animation="zoom" />}
-            onPress={() => navigation.navigate(notificationSettingsScreen)}
-          />
-          <Divider />
-          {__DEV__ && (
-            <>
-              <ListItem
-                title="Dev Kit"
-                description="Here lists the helpers for devs"
-                accessoryLeft={(props) => <Icon {...props} name="code-outline" animation="zoom" />}
-                onPress={() => navigation.navigate(devScreen)}
-              />
-              <Divider />
-            </>
-          )}
-        </Layout>
+        </Drawer.Section>
         <Footer />
-      </Layout>
+      </ScrollView>
     </SafeView>
   );
 }
@@ -138,8 +167,8 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
 function Footer() {
   return (
     <View style={styles.footer}>
-      <Text category="c2">{`© ${getCurrentYear()} Litentry Technologies GmbH`}</Text>
-      <Text category="c2">{`Version ${appVersion()}`}</Text>
+      <Text>{`© ${getCurrentYear()} Litentry Technologies GmbH`}</Text>
+      <Text>{`Version ${appVersion()}`}</Text>
     </View>
   );
 }
@@ -154,13 +183,6 @@ const styles = StyleSheet.create({
   logoImage: {width: 50, height: 50},
   slogan: {
     marginLeft: standardPadding * 2,
-    fontFamily: monofontFamily,
-    fontSize: 12,
-  },
-  main: {},
-  rest: {flex: 1},
-  backdrop: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   overflowMenu: {
     minWidth: 200,
