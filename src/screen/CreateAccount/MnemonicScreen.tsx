@@ -26,7 +26,7 @@ export function MnemonicScreen({navigation}: {navigation: NavigationProp<Account
 
   return (
     <SafeView edges={noTopEdges}>
-      <View style={globalStyles.paddedContainer}>
+      <View style={[globalStyles.paddedContainer, globalStyles.flex]}>
         <TextInput
           autoComplete={false}
           label={'Generated mnemonic seed'}
@@ -39,13 +39,14 @@ export function MnemonicScreen({navigation}: {navigation: NavigationProp<Account
         <Caption>
           {`Please write down the mnemonic seed and keep it in a safe place. The mnemonic can be used to restore your account. keep it carefully to not lose your assets.`}
         </Caption>
-        <Padder scale={2} />
+        <View style={globalStyles.flex} />
         <Button
           mode="outlined"
           icon={'arrow-right-circle'}
           onPress={() => (mnemonic ? navigation.navigate(verifyMnemonicScreen, {mnemonic}) : undefined)}>
           Next
         </Button>
+        <Padder scale={2} />
       </View>
     </SafeView>
   );

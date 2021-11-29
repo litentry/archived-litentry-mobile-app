@@ -5,12 +5,12 @@ import {NetworkContext} from 'context/NetworkContext';
 import {ProgressBar} from 'presentational/ProgressBar';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import SubstrateSign from 'react-native-substrate-sign';
 import {AccountsStackParamList} from 'src/navigation/navigation';
 import {accountsScreen, importAccountWithJsonFileScreen} from 'src/navigation/routeKeys';
 import {AppBar, Button, ErrorText, List, Padder, TextInput, useTheme} from 'src/packages/base_components';
-import {monofontFamily, standardPadding} from 'src/styles';
+import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 import zxcvbn from 'zxcvbn';
 
 type Account = {
@@ -69,7 +69,7 @@ export function ImportAccountScreen({navigation}: {navigation: NavigationProp<Ac
 
   return (
     <SafeView edges={noTopEdges}>
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
         <TextInput
           autoComplete={false}
           label={'EXISTING 12 WORD MNEMONIC SEED'}
@@ -145,10 +145,12 @@ export function ImportAccountScreen({navigation}: {navigation: NavigationProp<Ac
             <Padder scale={1} />
           </>
         ) : null}
+        <View style={globalStyles.flex} />
         <Button mode="outlined" icon={'download'} onPress={onSubmit}>
           Import Seed
         </Button>
-      </ScrollView>
+        <Padder scale={2} />
+      </View>
     </SafeView>
   );
 }
@@ -177,10 +179,12 @@ function useParseSeed() {
 
   React.useEffect(() => {
     (async () => {
-      if (seed) {
-        const _address = await SubstrateSign.substrateAddress(seed.trim(), currentNetwork.ss58Format);
-        setAddress(_address);
-      }
+      try {
+        if (seed) {
+          const _address = await SubstrateSign.substrateAddress(seed.trim(), currentNetwork.ss58Format);
+          setAddress(_address);
+        }
+      } catch (e) {}
     })();
   }, [currentNetwork.ss58Format, seed]);
 

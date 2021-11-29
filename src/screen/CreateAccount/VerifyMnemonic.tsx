@@ -24,7 +24,7 @@ export function VerifyMnemonicScreen({
   const {mnemonic} = route.params;
 
   const [isMnemonicVerified, setIsMnemonicVerified] = React.useState(false);
-  const [selectedMnemonic, setSelectedMnemonic] = React.useState('');
+  const [selectedMnemonic, setSelectedMnemonic] = React.useState(' ');
 
   const invalidMnemonic = selectedMnemonic.length === mnemonic.length && selectedMnemonic !== mnemonic;
 
@@ -59,12 +59,12 @@ export function VerifyMnemonicScreen({
 
   const onReset = () => {
     setWords(words.map((word) => ({...word, isSelected: false})));
-    setSelectedMnemonic('');
+    setSelectedMnemonic(' ');
   };
 
   return (
     <SafeView edges={noTopEdges}>
-      <View style={globalStyles.paddedContainer}>
+      <View style={[globalStyles.paddedContainer, globalStyles.flex]}>
         <Text>Verify your mnemonic by selecting the words in the correct order.</Text>
         <Padder scale={1} />
         <TextInput
@@ -75,6 +75,7 @@ export function VerifyMnemonicScreen({
           multiline
           autoComplete={false}
           mode={'outlined'}
+          style={styles.mnemonic}
         />
         <Padder scale={2} />
         <WordSelector words={words} onSelect={onSelect} />
@@ -85,6 +86,7 @@ export function VerifyMnemonicScreen({
             <Padder scale={2} />
           </>
         )}
+        <View style={globalStyles.flex} />
         <View style={styles.buttons}>
           <Button mode="outlined" icon={'repeat'} onPress={onReset}>
             Reset
@@ -97,6 +99,7 @@ export function VerifyMnemonicScreen({
             Next
           </Button>
         </View>
+        <Padder scale={2} />
       </View>
     </SafeView>
   );
@@ -138,5 +141,8 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+  },
+  mnemonic: {
+    height: 100,
   },
 });
