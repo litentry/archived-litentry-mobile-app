@@ -6,7 +6,7 @@ import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {AccountsStackParamList} from 'src/navigation/navigation';
 import FormLabel from 'presentational/FormLabel';
-import {Padder} from 'src/packages/base_components';
+import {ErrorText, Padder} from 'src/packages/base_components';
 import {verifyMnemonicScreen, createAccountScreen} from 'src/navigation/routeKeys';
 import {shuffle} from 'lodash';
 
@@ -27,6 +27,8 @@ export function VerifyMnemonicScreen({
 
   const [isMnemonicVerified, setIsMnemonicVerified] = React.useState(false);
   const [selectedMnemonic, setSelectedMnemonic] = React.useState('');
+
+  const invalidMnemonic = selectedMnemonic.length === mnemonic.length && selectedMnemonic !== mnemonic;
 
   const [words, setWords] = React.useState<Word[]>(() => {
     return shuffle(mnemonic.split(' ')).map((word, index) => ({
@@ -76,6 +78,12 @@ export function VerifyMnemonicScreen({
         <Padder scale={2} />
         <WordSelector words={words} onSelect={onSelect} />
         <Padder scale={2} />
+        {invalidMnemonic && (
+          <>
+            <ErrorText>The mnemonic seed you entered is invalid. Please try again.</ErrorText>
+            <Padder scale={2} />
+          </>
+        )}
         <View style={styles.buttons}>
           <Button status="basic" accessoryLeft={(p) => <Icon {...p} name="repeat-outline" />} onPress={onReset}>
             Reset
