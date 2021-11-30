@@ -7,13 +7,12 @@ import Identicon from '@polkadot/reactnative-identicon';
 import {DashboardStackParamList} from 'src/navigation/navigation';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {useBounty} from 'src/api/hooks/useBounty';
-import {Subheading, Paragraph, Text, Divider} from 'src/packages/base_components';
+import {Subheading, Paragraph, Text, Divider, Padder} from 'src/packages/base_components';
 import AccountInfoInlineTeaser from 'src/presentational/AccountInfoInlineTeaser';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
-import Padder from 'presentational/Padder';
 
 type ScreenProps = {
   navigation: StackNavigationProp<DashboardStackParamList>;

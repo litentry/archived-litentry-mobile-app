@@ -5,13 +5,9 @@ import globalStyles, {standardPadding} from 'src/styles';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {useBounties, BountyData} from 'src/api/hooks/useBounties';
 import {EmptyView} from 'presentational/EmptyView';
-import {Account} from 'layout/Account';
-import Identicon from '@polkadot/reactnative-identicon';
-import {Bounty, BountyIndex} from '@polkadot/types/interfaces';
-import {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import LoadingView from 'presentational/LoadingView';
-import {Text, Caption, Card, Headline, Padder} from 'src/packages/base_components';
+import {Text, Caption, Card, Headline} from 'src/packages/base_components';
 import {bountyDetailScreen} from 'src/navigation/routeKeys';
 
 export function BountiesScreen() {
