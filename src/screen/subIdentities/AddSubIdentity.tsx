@@ -1,10 +1,10 @@
 import {Button, Icon, IconProps, Input, Layout, Tab, TabView, Text} from '@ui-kitten/components';
 import {NetworkContext} from 'context/NetworkContext';
-import Padder from 'presentational/Padder';
 import QRCamera from 'presentational/QRCamera';
 import React, {useContext, useState} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
+import {Padder} from 'src/packages/base_components';
 import {monofontFamily, standardPadding} from 'src/styles';
 import {isAddressValid, parseAddress} from 'src/utils';
 

@@ -3,7 +3,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {Card} from '@ui-kitten/components';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
 import {LoadingBox} from 'presentational/LoadingBox';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import {SectionTeaserContainer} from 'presentational/SectionTeaserContainer';
 import StatInfoBlock from 'presentational/StatInfoBlock';
 import React from 'react';

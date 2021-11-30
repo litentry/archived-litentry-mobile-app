@@ -5,7 +5,7 @@ import globalStyles, {standardPadding} from 'src/styles';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {useBounties} from 'src/api/hooks/useBounties';
 import {EmptyView} from 'presentational/EmptyView';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import {Account} from 'layout/Account';
 import Identicon from '@polkadot/reactnative-identicon';
 import {Bounty, BountyIndex} from '@polkadot/types/interfaces';

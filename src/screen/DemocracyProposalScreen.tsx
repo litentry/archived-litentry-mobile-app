@@ -7,7 +7,7 @@ import {useApi} from 'context/ChainApiContext';
 import AddressInlineTeaser from 'layout/AddressInlineTeaser';
 import {EmptyView} from 'presentational/EmptyView';
 import LoadingView from 'presentational/LoadingView';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import {ProposalInfo} from 'presentational/ProposalInfo';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {SelectAccount} from 'presentational/SelectAccount';

@@ -50,6 +50,7 @@ import {
   appStack,
   apiLoadingStack,
   parachainAuctionsScreen,
+  accountsGuideScreen,
 } from 'src/navigation/routeKeys';
 
 type DashboardStackParamList = {
@@ -107,6 +108,7 @@ type AppStackParamList = {
   [addAccountScreen]: undefined;
   [balanceScreen]: {address: string};
   [identityGuideScreen]: undefined;
+  [accountsGuideScreen]: undefined;
 };
 
 type AccountsStackParamList = {
