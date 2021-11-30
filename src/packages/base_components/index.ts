@@ -20,6 +20,8 @@ export {
   Portal,
   FAB,
   ActivityIndicator,
+  Drawer,
+  Switch,
   Divider,
 } from 'react-native-paper';
 
