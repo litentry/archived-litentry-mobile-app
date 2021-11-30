@@ -62,7 +62,8 @@ import {
   RootStackParamList,
 } from 'src/navigation/navigation';
 import * as routeKeys from 'src/navigation/routeKeys';
-import {AppBar} from 'src/packages/base_components';
+import {AppBar, IconButton} from 'src/packages/base_components';
+import {AccountsGuideScreen} from 'screen/AccountsGuideScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -101,7 +102,15 @@ const AccountsStack = createStackNavigator<AccountsStackParamList>();
 function AccountsNavigator() {
   return (
     <AccountsStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
-      <AccountsStack.Screen name={routeKeys.accountsScreen} component={AccountsScreen} />
+      <AccountsStack.Screen
+        name={routeKeys.accountsScreen}
+        component={AccountsScreen}
+        options={({navigation}) => ({
+          headerRight: () => (
+            <IconButton icon="information" onPress={() => navigation.navigate(routeKeys.accountsGuideScreen)} />
+          ),
+        })}
+      />
       <AccountsStack.Screen name={routeKeys.manageIdentityScreen} component={ManageIdentityScreen} />
       <AccountsStack.Screen name={routeKeys.myAccountScreen} component={MyAccountScreen} />
       <AccountsStack.Screen name={routeKeys.registerSubIdentitiesScreen} component={RegisterSubIdentitiesScreen} />
@@ -276,6 +285,7 @@ function AppNavigator() {
       <AppStack.Screen name={routeKeys.addAccountScreen} component={AddAccountScreen} />
       <AppStack.Screen name={routeKeys.balanceScreen} component={BalanceScreen} />
       <AppStack.Screen name={routeKeys.identityGuideScreen} component={IdentityGuideScreen} />
+      <AppStack.Screen name={routeKeys.accountsGuideScreen} component={AccountsGuideScreen} />
     </AppStack.Navigator>
   );
 }

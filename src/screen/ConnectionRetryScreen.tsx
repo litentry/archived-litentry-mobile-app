@@ -7,7 +7,7 @@ import {CompositeNavigationProp} from '@react-navigation/native';
 import {apiLoadingScreen, networkSelectionScreen} from 'src/navigation/routeKeys';
 import {ApiLoadingStackParamList, RootStackParamList} from 'src/navigation/navigation';
 import {StackNavigationProp} from '@react-navigation/stack';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import {NetworkContext} from 'context/NetworkContext';
 import {useApiReconnect} from 'context/ChainApiContext';
 import {AppBar, AppHeader, Layout} from 'src/packages/base_components';

@@ -8,7 +8,7 @@ import {Balance, Call} from '@polkadot/types/interfaces';
 import {isU8a, u8aToString} from '@polkadot/util';
 import {Text} from '@ui-kitten/components';
 import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';

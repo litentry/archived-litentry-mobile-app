@@ -1,20 +1,28 @@
-import React from 'react';
-import {Caption, DataTable, Layout, Text, useTheme, View, ActivityIndicator} from 'src/packages/base_components';
-import {StyleSheet} from 'react-native';
-import globalStyles, {standardPadding} from 'src/styles';
-import {Chart, Padder} from 'presentational/index';
-import {BN, BN_ONE, BN_ZERO, formatNumber} from '@polkadot/util';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import {useAuctionInfo} from 'src/api/hooks/useAuctionInfo';
-import LoadingView from 'presentational/LoadingView';
 import type {u32} from '@polkadot/types';
-import {useWinningData} from 'src/api/hooks/useWinningData';
-import {useTotalIssuance} from 'src/api/hooks/useTotalIssuance';
-import {useBestNumber} from 'src/api/hooks/useBestNumber';
+import {BN, bnToBn, BN_ONE, BN_ZERO, formatNumber} from '@polkadot/util';
 import {BlockTime} from 'layout/BlockTime';
+import {Chart} from 'presentational/index';
+import LoadingView from 'presentational/LoadingView';
+import React from 'react';
+import {StyleSheet} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
+import {useAuctionInfo} from 'src/api/hooks/useAuctionInfo';
+import {useBestNumber} from 'src/api/hooks/useBestNumber';
+import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useRelayEndpoints} from 'src/api/hooks/useRelayEndpoints';
-import {bnToBn} from '@polkadot/util';
+import {useTotalIssuance} from 'src/api/hooks/useTotalIssuance';
+import {useWinningData} from 'src/api/hooks/useWinningData';
+import {
+  ActivityIndicator,
+  Caption,
+  DataTable,
+  Layout,
+  Padder,
+  Text,
+  useTheme,
+  View,
+} from 'src/packages/base_components';
+import globalStyles, {standardPadding} from 'src/styles';
 
 export function ParachainsAuctionsScreen() {
   const {data, isLoading: auctionInfoIsLoading, isError: auctionIsError} = useAuctionInfo();

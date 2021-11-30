@@ -16,9 +16,16 @@ export {
   Headline,
   DataTable,
   IconButton,
+  Button,
+  Portal,
+  FAB,
   ActivityIndicator,
+  Drawer,
+  Switch,
   Divider,
 } from 'react-native-paper';
 
+export {Modal} from './Modal';
 export {Layout} from './Layout';
-export {View, StyleSheet} from 'react-native';
+export {View, StyleSheet, TouchableOpacity, Image, FlatList} from 'react-native';
+export {Padder} from './Padder';

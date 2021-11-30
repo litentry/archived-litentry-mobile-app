@@ -5,7 +5,7 @@ import ModalTitle from 'presentational/ModalTitle';
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import globalStyles, {standardPadding} from 'src/styles';
 import {HashBlock} from 'presentational/HashBlock';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import {BN} from '@polkadot/util';
 
 type PropTypes = {

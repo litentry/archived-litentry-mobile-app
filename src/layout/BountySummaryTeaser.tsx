@@ -6,7 +6,7 @@ import {SectionTeaserContainer} from 'presentational/SectionTeaserContainer';
 import {standardPadding} from 'src/styles';
 import {useBountiesSummary} from 'src/api/hooks/useBountiesSummary';
 import StatInfoBlock from 'presentational/StatInfoBlock';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import ProgressChartWidget from 'presentational/ProgressWidget';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import {BN_ONE, BN_ZERO, BN_HUNDRED} from '@polkadot/util';
