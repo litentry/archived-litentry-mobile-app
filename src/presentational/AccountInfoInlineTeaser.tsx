@@ -29,7 +29,6 @@ function AccountInfoInlineTeaser({identity}: PropTypes) {
 const styles = StyleSheet.create({
   text: {fontFamily: monofontFamily, fontWeight: 'bold', flexShrink: 1},
   container: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
   },
