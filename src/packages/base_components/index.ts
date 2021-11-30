@@ -17,6 +17,7 @@ export {
   DataTable,
   IconButton,
   ActivityIndicator,
+  Divider,
 } from 'react-native-paper';
 
 export {Layout} from './Layout';
