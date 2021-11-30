@@ -27,7 +27,7 @@ import {Drawer, Switch, Text, Divider} from 'src/packages/base_components';
 function DrawerScreen({navigation}: DrawerContentComponentProps) {
   const {theme, toggleTheme} = useTheme();
   const isParachainAvailable = useIsParachainAvailable();
-  const [activeScreen, setActiveScreen] = React.useState('Dashboard');
+  const [activeScreen, setActiveScreen] = React.useState<string>(dashboardScreen);
 
   return (
     <SafeView>
@@ -43,36 +43,36 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
           <Drawer.Item
             label="Dashboard"
             icon="view-dashboard"
-            active={activeScreen === 'Dashboard'}
+            active={activeScreen === dashboardScreen}
             onPress={() => {
-              setActiveScreen('Dashboard');
+              setActiveScreen(dashboardScreen);
               navigation.navigate(dashboardScreen);
             }}
           />
           <Drawer.Item
             label="Accounts"
             icon="account-details"
-            active={activeScreen === 'Accounts'}
+            active={activeScreen === accountsNavigator}
             onPress={() => {
-              setActiveScreen('Accounts');
+              setActiveScreen(accountsNavigator);
               navigation.navigate(accountsNavigator);
             }}
           />
           <Drawer.Item
             label="Registrars"
             icon="playlist-check"
-            active={activeScreen === 'Registrars'}
+            active={activeScreen === registrarListScreen}
             onPress={() => {
-              setActiveScreen('Registrars');
+              setActiveScreen(registrarListScreen);
               navigation.navigate(registrarListScreen);
             }}
           />
           <Drawer.Item
             label="Discussions"
             icon="forum"
-            active={activeScreen === 'Discussions'}
+            active={activeScreen === polkassemblyDiscussionsNavigator}
             onPress={() => {
-              setActiveScreen('Discussions');
+              setActiveScreen(polkassemblyDiscussionsNavigator);
               navigation.navigate(polkassemblyDiscussionsNavigator);
             }}
           />
@@ -82,36 +82,36 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
             <Drawer.Item
               label="Overview"
               icon="link-variant"
-              active={activeScreen === 'Overview'}
+              active={activeScreen === parachainsOverviewScreen}
               onPress={() => {
-                setActiveScreen('Overview');
+                setActiveScreen(parachainsOverviewScreen);
                 navigation.navigate(parachainsNavigator, {screen: parachainsOverviewScreen});
               }}
             />
             <Drawer.Item
               label="Parathreads"
               icon="link"
-              active={activeScreen === 'Parathreads'}
+              active={activeScreen === parathreadsScreen}
               onPress={() => {
-                setActiveScreen('Parathreads');
+                setActiveScreen(parathreadsScreen);
                 navigation.navigate(parachainsNavigator, {screen: parathreadsScreen});
               }}
             />
             <Drawer.Item
               label="Auctions"
               icon="gavel"
-              active={activeScreen === 'Auctions'}
+              active={activeScreen === parachainAuctionsScreen}
               onPress={() => {
-                setActiveScreen('Auctions');
+                setActiveScreen(parachainAuctionsScreen);
                 navigation.navigate(parachainsNavigator, {screen: parachainAuctionsScreen});
               }}
             />
             <Drawer.Item
               label="Crowdloan"
               icon="bank-transfer-in"
-              active={activeScreen === 'Crowdloan'}
+              active={activeScreen === crowdloanScreen}
               onPress={() => {
-                setActiveScreen('Crowdloan');
+                setActiveScreen(crowdloanScreen);
                 navigation.navigate(parachainsNavigator, {screen: crowdloanScreen});
               }}
             />
@@ -126,9 +126,9 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
           <Drawer.Item
             label="Notifications"
             icon="bell"
-            active={activeScreen === 'Notifications'}
+            active={activeScreen === notificationSettingsScreen}
             onPress={() => {
-              setActiveScreen('Notifications');
+              setActiveScreen(notificationSettingsScreen);
               navigation.navigate(notificationSettingsScreen);
             }}
           />
@@ -136,9 +136,9 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
             <Drawer.Item
               label="Dev Kit"
               icon="code-tags"
-              active={activeScreen === 'Dev Kit'}
+              active={activeScreen === devScreen}
               onPress={() => {
-                setActiveScreen('Dev Kit');
+                setActiveScreen(devScreen);
                 navigation.navigate(devScreen);
               }}
             />
