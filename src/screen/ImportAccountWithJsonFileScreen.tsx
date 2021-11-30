@@ -40,7 +40,7 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         console.warn(e);
-        setError(e.message);
+        setError('Password appears to be incorrect! Please try again.');
       }
     }
   }
@@ -76,8 +76,6 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
             <Padder scale={0.5} />
           </>
         )}
-        <ErrorText>{error}</ErrorText>
-        <Padder scale={1} />
         <TextInput
           autoComplete={false}
           secureTextEntry={!isPasswordVisible}
@@ -94,6 +92,8 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
             />
           )}
         />
+        <Padder scale={1} />
+        <ErrorText>{error}</ErrorText>
 
         <View style={globalStyles.flex} />
         <Button mode="outlined" disabled={!password || !parsedJson} onPress={() => restoreAccount()}>
