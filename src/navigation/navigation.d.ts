@@ -32,6 +32,7 @@ import {
   identityGuideScreen,
   myAccountScreen,
   bountiesScreen,
+  bountyDetailScreen,
   parathreadsScreen,
   parachainsOverviewScreen,
   parachainDetailScreen,
@@ -75,6 +76,7 @@ type DashboardStackParamList = {
   [referendumScreen]: {index: string};
   [democracyProposalScreen]: {index: string};
   [bountiesScreen]: undefined;
+  [bountyDetailScreen]: {index: string};
 };
 
 type DrawerParamList = {
