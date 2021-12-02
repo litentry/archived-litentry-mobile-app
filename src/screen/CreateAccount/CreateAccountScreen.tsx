@@ -1,20 +1,34 @@
-import React from 'react';
-import SafeView, {noTopEdges} from 'presentational/SafeView';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
-import {Text, Input, ListItem, Icon, useTheme, Button} from '@ui-kitten/components';
-import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
-import FormLabel from 'presentational/FormLabel';
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
-import {Padder} from 'src/packages/base_components';
-import {ProgressBar} from 'presentational/ProgressBar';
-import zxcvbn from 'zxcvbn';
-import {ScrollView} from 'react-native-gesture-handler';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
+import {useAccounts} from 'context/AccountsContext';
+import {NetworkContext} from 'context/NetworkContext';
+import {ProgressBar} from 'presentational/ProgressBar';
+import SafeView, {noTopEdges} from 'presentational/SafeView';
+import React from 'react';
+import {ScrollView} from 'react-native-gesture-handler';
+import SubstrateSign from 'react-native-substrate-sign';
 import {AccountsStackParamList} from 'src/navigation/navigation';
 import {accountsScreen, createAccountScreen} from 'src/navigation/routeKeys';
-import {NetworkContext} from 'context/NetworkContext';
-import {useAccounts} from 'context/AccountsContext';
-import SubstrateSign from 'react-native-substrate-sign';
+import {
+  Button,
+  Caption,
+  ErrorText,
+  List,
+  Padder,
+  StyleSheet,
+  Text,
+  TextInput,
+  useTheme,
+  View,
+} from 'src/packages/base_components';
+import globalStyles from 'src/styles';
+import zxcvbn from 'zxcvbn';
+
+type Account = {
+  title: string;
+  password: string;
+  confirmPassword: string;
+};
 
 export function CreateAccountScreen({
   navigation,
@@ -29,11 +43,11 @@ export function CreateAccountScreen({
   const {currentNetwork} = React.useContext(NetworkContext);
   const {addAccount} = useAccounts();
 
-  const [account, setAccount] = React.useState<{
-    title: string;
-    password: string;
-    confirmPassword: string;
-  }>({title: '', password: '', confirmPassword: ''});
+  const [account, setAccountState] = React.useState<Account>({title: '', password: '', confirmPassword: ''});
+  const setAccount = (acc: Account) => {
+    setAccountState(acc);
+    setError(null);
+  };
 
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
   const [address, setAddress] = React.useState('');
@@ -44,102 +58,96 @@ export function CreateAccountScreen({
 
   const passwordStrength = zxcvbn(account.password).score;
 
-  const isDisabled = !(
-    account.password &&
-    account.password === account.confirmPassword &&
-    account.title &&
-    passwordStrength >= 3
-  );
+  const [error, setError] = React.useState<string | null>(null);
 
   const onSubmit = async () => {
-    const _address = await SubstrateSign.substrateAddress(mnemonic, currentNetwork.ss58Format);
-    const encoded = await SubstrateSign.encryptData(mnemonic, account.password);
-    const newAcc = {
-      address: _address,
-      encoded,
-      meta: {
-        name: account.title,
-        network: currentNetwork.key,
-        isFavorite: false,
-      },
-      isExternal: false,
-    };
+    if (passwordStrength < 3) {
+      setError('Password is too weak');
+    } else if (account.password !== account.confirmPassword) {
+      setError('Passwords do not match');
+    } else if (!account.title) {
+      setError('Account title is required');
+    } else {
+      const _address = await SubstrateSign.substrateAddress(mnemonic, currentNetwork.ss58Format);
+      const encoded = await SubstrateSign.encryptData(mnemonic, account.password);
+      const newAcc = {
+        address: _address,
+        encoded,
+        meta: {
+          name: account.title,
+          network: currentNetwork.key,
+          isFavorite: false,
+        },
+        isExternal: false,
+      };
 
-    addAccount(newAcc);
+      addAccount(newAcc);
 
-    navigation.navigate(accountsScreen, {reload: true});
+      navigation.navigate(accountsScreen, {reload: true});
+    }
   };
 
   return (
     <SafeView edges={noTopEdges}>
       <ScrollView style={globalStyles.paddedContainer}>
-        <ListItem
-          title={() => (
-            <View style={styles.accountName}>
-              <Text>{account.title}</Text>
-            </View>
-          )}
-          accessoryLeft={() => <IdentityIcon value={address} size={40} />}
+        <List.Item
+          title={() => <Text>{account.title}</Text>}
+          left={() => <IdentityIcon value={address} size={40} />}
           description={address}
         />
         <Padder scale={1} />
-        <Input
-          label={() => <FormLabel text="Mnemonic seed" />}
-          style={styles.input}
-          value={mnemonic}
-          disabled
-          multiline
-          caption={() => (
-            <View style={styles.caption}>
-              <Text category="c1" appearance="hint">
-                {`Please write down the mnemonic seed and keep it in a safe place. The mnemonic can be used to restore your account. keep it carefully to not lose your assets.`}
-              </Text>
-            </View>
-          )}
-        />
+        <TextInput autoComplete={false} label={'Mnemonic seed'} value={mnemonic} disabled multiline />
+        <Caption>
+          {`Please write down the mnemonic seed and keep it in a safe place. The mnemonic can be used to restore your account. keep it carefully to not lose your assets.`}
+        </Caption>
         <Padder scale={2} />
-        <Input
-          label={() => <FormLabel text="Descriptive name for the account" />}
-          style={styles.input}
+        <TextInput
+          mode="outlined"
+          autoComplete
+          label={'Descriptive name for the account'}
           value={account.title}
           onChangeText={(text) => setAccount({...account, title: text})}
         />
         <Padder scale={1} />
-        <Input
+        <TextInput
           secureTextEntry={!isPasswordVisible}
-          label={() => <FormLabel text="New password for the account" />}
-          style={styles.input}
+          label={'New password for the account'}
           value={account.password}
           onChangeText={(text) => {
             setAccount({...account, password: text});
           }}
-          accessoryRight={() => (
-            <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
-              <Icon
-                name={`${isPasswordVisible ? 'eye' : 'eye-off'}-outline`}
-                fill={theme['color-basic-600']}
-                style={styles.icon}
-              />
-            </TouchableOpacity>
-          )}
-          status={account.password ? (passwordStrength >= 3 ? 'success' : 'danger') : 'basic'}
+          right={
+            <TextInput.Icon
+              onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+              name={`${isPasswordVisible ? 'eye' : 'eye-off'}-outline`}
+              color={theme.colors.disabled}
+            />
+          }
+          mode="outlined"
+          autoComplete={false}
+          error={Boolean(account.password) && passwordStrength < 3}
         />
         <View style={styles.passwordMeter}>
           <ProgressBar percentage={passwordStrength * 25} requiredAmount={75} />
         </View>
         <Padder scale={1} />
-        <Input
+        <TextInput
+          mode="outlined"
           secureTextEntry={!isPasswordVisible}
-          label={() => <FormLabel text="Confirm password" />}
-          style={styles.input}
+          label={'Confirm password'}
           value={account.confirmPassword}
           onChangeText={(text) => setAccount({...account, confirmPassword: text})}
-          status={
-            account.confirmPassword ? (account.password === account.confirmPassword ? 'success' : 'danger') : 'basic'
-          }
+          error={Boolean(account.confirmPassword) && account.password !== account.confirmPassword}
+          autoComplete={false}
         />
         <Padder scale={2} />
-        <Button disabled={isDisabled} status="basic" onPress={onSubmit}>
+        {error ? (
+          <>
+            <ErrorText>{error}</ErrorText>
+            <Padder scale={2} />
+          </>
+        ) : null}
+        <Button mode="outlined" onPress={onSubmit}>
           Submit
         </Button>
       </ScrollView>
@@ -148,17 +156,6 @@ export function CreateAccountScreen({
 }
 
 const styles = StyleSheet.create({
-  caption: {
-    marginTop: standardPadding,
-  },
-  accountName: {
-    height: 20,
-    marginLeft: standardPadding,
-  },
-  input: {
-    fontSize: 16,
-    fontFamily: monofontFamily,
-  },
   passwordMeter: {
     marginTop: 5,
   },

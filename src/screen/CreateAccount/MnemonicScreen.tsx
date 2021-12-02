@@ -1,12 +1,10 @@
 import React from 'react';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {View, StyleSheet} from 'react-native';
-import {Text, Input, Icon, Button} from '@ui-kitten/components';
 import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 import {NavigationProp} from '@react-navigation/native';
 import {AccountsStackParamList} from 'src/navigation/navigation';
-import FormLabel from 'presentational/FormLabel';
-import {Padder} from 'src/packages/base_components';
+import {Button, Caption, Padder, TextInput} from 'src/packages/base_components';
 import {verifyMnemonicScreen} from 'src/navigation/routeKeys';
 import SubstrateSign from 'react-native-substrate-sign';
 
@@ -28,28 +26,27 @@ export function MnemonicScreen({navigation}: {navigation: NavigationProp<Account
 
   return (
     <SafeView edges={noTopEdges}>
-      <View style={globalStyles.paddedContainer}>
-        <Input
-          label={() => <FormLabel text="Generated mnemonic seed" />}
+      <View style={[globalStyles.paddedContainer, globalStyles.flex]}>
+        <TextInput
+          autoComplete={false}
+          label={'Generated mnemonic seed'}
           style={styles.input}
           value={mnemonic}
           disabled
           multiline
-          caption={() => (
-            <View style={styles.caption}>
-              <Text category="c1" appearance="hint">
-                {`Please write down the mnemonic seed and keep it in a safe place. The mnemonic can be used to restore your account. keep it carefully to not lose your assets.`}
-              </Text>
-            </View>
-          )}
         />
-        <Padder scale={2} />
+        <Padder scale={1} />
+        <Caption>
+          {`Please write down the mnemonic seed and keep it in a safe place. The mnemonic can be used to restore your account. keep it carefully to not lose your assets.`}
+        </Caption>
+        <View style={globalStyles.flex} />
         <Button
-          status="basic"
-          accessoryLeft={(p) => <Icon {...p} name="arrow-circle-right-outline" />}
+          mode="outlined"
+          icon={'arrow-right-circle'}
           onPress={() => (mnemonic ? navigation.navigate(verifyMnemonicScreen, {mnemonic}) : undefined)}>
           Next
         </Button>
+        <Padder scale={2} />
       </View>
     </SafeView>
   );
