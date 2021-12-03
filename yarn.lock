@@ -8168,10 +8168,10 @@ react-native-crypto@^2.2.0:
     public-encrypt "^4.0.0"
     randomfill "^1.0.3"
 
-react-native-device-info@^8.4.0:
-  version "8.4.0"
-  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-8.4.0.tgz#c434af5c928c7f8e2c3b1a1ca07061b83d50ccd4"
-  integrity sha512-/ZHDJajkEmjNmjvm52o7pqIpR2uKocD66iH00GMe5QpUdM9u9vDxS2hgcRbgrVaKEfA5IRIBctpalYMrrbQU+Q==
+react-native-device-info@^8.4.8:
+  version "8.4.8"
+  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-8.4.8.tgz#fc92ae423e47db6cfbf30c30012e09cee63727fa"
+  integrity sha512-92676ZWHZHsPM/EW1ulgb2MuVfjYfMWRTWMbLcrCsipkcMaZ9Traz5mpsnCS7KZpsOksnvUinzDIjsct2XGc6Q==
 
 react-native-document-picker@^7.1.1:
   version "7.1.1"
@@ -8239,10 +8239,10 @@ react-native-logs@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-native-logs/-/react-native-logs-3.0.4.tgz#a22c26815ff26d45c4aad96c1b674768f043d79b"
   integrity sha512-gIRuhwllXFWMg3Cq4iQv2K6t9v/gHOmQ2N5gSfsNqsJfx361Y36IkKVVzeK48LBKwa+vf9DmE70MRcJXnikAYw==
 
-react-native-mmkv@^1.5.2:
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-1.5.2.tgz#d2b84f22f13d3ed0c2395addbd6ef8f2fe986c35"
-  integrity sha512-vvmtcjWVUTKoErg1RxMwPijyoySqWd2nuD6LC1PiZsBQO0sCXi8mJel1dI5Agnq3SsNYhPTcRNSHzVKz4q7gyw==
+react-native-mmkv@^1.5.3:
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-1.5.3.tgz#106fae1322bb86d36e70f436da656b165d8f9d1e"
+  integrity sha512-WAw4amVA+fhHc1X/G+Khx+kBFFQMZVDjtMTCi55nsojlmBcq99eqm8v7yzzsUT1K2znvd/ptjZ0eDIuYGKCkOQ==
 
 react-native-modalize@^2.0.11:
   version "2.0.11"
