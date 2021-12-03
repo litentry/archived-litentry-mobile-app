@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Card} from '@ui-kitten/components';
 import globalStyles from 'src/styles';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import AddressInlineTeaser from './AddressInlineTeaser';
 import {SectionTeaserContainer} from 'presentational/SectionTeaserContainer';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';

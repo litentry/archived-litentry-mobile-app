@@ -4,7 +4,7 @@ import {Text, Divider} from '@ui-kitten/components';
 import {useRegistrars} from 'src/api/hooks/useRegistrars';
 import globalStyles, {standardPadding, monofontFamily} from 'src/styles';
 import StatInfoBlock from 'presentational/StatInfoBlock';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import RegistrarTeaser from './RegistrarTeaser';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 

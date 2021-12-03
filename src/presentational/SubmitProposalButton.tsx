@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Button, Card, Icon, Input, Modal, Text} from '@ui-kitten/components';
 import {useApi} from 'context/ChainApiContext';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import {SelectAccount} from 'presentational/SelectAccount';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';

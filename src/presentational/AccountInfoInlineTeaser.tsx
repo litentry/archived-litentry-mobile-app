@@ -1,5 +1,5 @@
 import {Text} from '@ui-kitten/components';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
@@ -29,7 +29,6 @@ function AccountInfoInlineTeaser({identity}: PropTypes) {
 const styles = StyleSheet.create({
   text: {fontFamily: monofontFamily, fontWeight: 'bold', flexShrink: 1},
   container: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
   },

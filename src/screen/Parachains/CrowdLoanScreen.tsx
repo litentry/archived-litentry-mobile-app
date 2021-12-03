@@ -7,12 +7,10 @@ import {useAccounts} from 'context/AccountsContext';
 import {useApi} from 'context/ChainApiContext';
 import {EmptyView} from 'presentational/EmptyView';
 import LoadingView from 'presentational/LoadingView';
-import Padder from 'presentational/Padder';
-import SafeView, {noTopEdges} from 'presentational/SafeView';
+import {Padder} from 'src/packages/base_components';
 import {SelectAccount} from 'presentational/SelectAccount';
 import React from 'react';
 import {SectionList, StyleSheet, View} from 'react-native';
-import {ProgressChart} from 'react-native-chart-kit';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {Campaign, useFunds} from 'src/api/hooks/useFunds';
@@ -24,6 +22,7 @@ import {crowdloanFundDetailScreen} from 'src/navigation/routeKeys';
 import globalStyles, {standardPadding} from 'src/styles';
 import {notEmpty} from 'src/utils';
 import type {BalanceOf} from '@polkadot/types/interfaces';
+import {Chart, SafeView, noTopEdges} from 'presentational/index';
 
 export function CrowdLoanScreen() {
   const formatBalance = useFormatBalance();
@@ -33,7 +32,7 @@ export function CrowdLoanScreen() {
   const [openContributeId, setOpenContributeId] = React.useState<ParaId>();
 
   if (isError) {
-    return <Text>Something bad happend!</Text>;
+    return <Text>Something bad happened!</Text>;
   }
 
   if (!data) {
@@ -145,31 +144,6 @@ export function CrowdLoanScreen() {
         />
       ) : null}
     </SafeView>
-  );
-}
-
-function Chart({percent}: {percent: number}) {
-  return (
-    <View>
-      <ProgressChart
-        data={[percent]}
-        width={50}
-        height={50}
-        strokeWidth={5}
-        radius={21}
-        chartConfig={{
-          backgroundGradientFromOpacity: 0,
-          backgroundGradientToOpacity: 0,
-          color: (opacity = 1) => `rgba(0, 197, 117, ${opacity})`,
-        }}
-        hideLegend
-      />
-      <View style={styles.chartOverlay}>
-        <Text category="label" adjustsFontSizeToFit numberOfLines={1}>
-          {(percent * 100).toFixed(2)}%
-        </Text>
-      </View>
-    </View>
   );
 }
 

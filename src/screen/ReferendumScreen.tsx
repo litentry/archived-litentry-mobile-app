@@ -16,7 +16,6 @@ import {
   Text,
 } from '@ui-kitten/components';
 import {useApi} from 'context/ChainApiContext';
-import Padder from 'presentational/Padder';
 import {ProgressBar} from 'presentational/ProgressBar';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {SelectAccount} from 'presentational/SelectAccount';
@@ -32,6 +31,7 @@ import {referendumScreen} from 'src/navigation/routeKeys';
 import {formatCallMeta} from 'src/packages/call_inspector/useCallParams';
 import globalStyles, {standardPadding} from 'src/styles';
 import {useAccounts} from 'context/AccountsContext';
+import {Padder} from 'src/packages/base_components';
 
 export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
   const startTx = useApiTx();

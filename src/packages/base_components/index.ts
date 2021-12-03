@@ -1,5 +1,7 @@
 export * from './AppBars';
+
 export {themeDark, themeLight} from './theme';
+
 export {
   Provider,
   useTheme,
@@ -12,6 +14,20 @@ export {
   Paragraph,
   Subheading,
   Headline,
+  DataTable,
   IconButton,
+  Button,
+  Portal,
+  FAB,
+  ActivityIndicator,
+  Drawer,
+  Switch,
+  Divider,
+  TextInput,
 } from 'react-native-paper';
+
+export {Modal} from './Modal';
 export {Layout} from './Layout';
+export {View, StyleSheet, TouchableOpacity, Image, FlatList} from 'react-native';
+export {Padder} from './Padder';
+export {ErrorText} from './typography_extras';
