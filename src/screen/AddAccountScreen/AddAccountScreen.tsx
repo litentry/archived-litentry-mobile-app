@@ -3,7 +3,7 @@ import {Button, Divider, Icon, IconProps, Input, Layout, Tab, TabView, Text} fro
 import {ChainApiContext} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
 import ModalTitle from 'presentational/ModalTitle';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import QRCamera from 'presentational/QRCamera';
 import SuccessDialog from 'presentational/SuccessDialog';
 import React, {useCallback, useContext, useEffect, useMemo, useReducer, useRef} from 'react';
@@ -91,7 +91,7 @@ export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppSt
       panGestureEnabled={false}>
       <SafeView edges={noTopEdges}>
         <Layout style={styles.modal}>
-          <ModalTitle title="Add Account" />
+          <ModalTitle title="Add External Account" />
           <Divider />
           {(() => {
             switch (state.step) {

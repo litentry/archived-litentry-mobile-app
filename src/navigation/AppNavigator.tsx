@@ -8,6 +8,7 @@ import {AddAccountScreen} from 'screen/AddAccountScreen/AddAccountScreen';
 import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
 import {BalanceScreen} from 'screen/BalanceScreen';
 import {BountiesScreen} from 'screen/Bounty/BountiesScreen';
+import {BountyDetailScreen} from 'screen/Bounty/BountyDetailScreen';
 import {ConnectionRetryScreen} from 'screen/ConnectionRetryScreen';
 import {CandidateScreen} from 'screen/Council/CandidateScreen';
 import {CouncilScreen} from 'screen/Council/CouncilScreen';
@@ -29,6 +30,7 @@ import {IdentityGuideScreen} from 'screen/MyIdentityScreen/IdentityGuideScreen';
 import ManageIdentityScreen from 'screen/MyIdentityScreen/ManageIdentity';
 import {NetworkSelectionScreen} from 'screen/NetworkSelectionScreen';
 import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
+import {ParachainsAuctionsScreen} from 'screen/Parachains/ParachainAuctionsScreen';
 import {CrowdLoanFundDetailScreen} from 'screen/Parachains/CrowdLoanFundDetailScreen';
 import {CrowdLoanScreen} from 'screen/Parachains/CrowdLoanScreen';
 import {ParachainsOverviewScreen} from 'screen/Parachains/OverviewScreen';
@@ -60,7 +62,8 @@ import {
   RootStackParamList,
 } from 'src/navigation/navigation';
 import * as routeKeys from 'src/navigation/routeKeys';
-import {AppBar} from 'src/packages/base_components';
+import {AppBar, IconButton} from 'src/packages/base_components';
+import {AccountsGuideScreen} from 'screen/AccountsGuideScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -89,6 +92,7 @@ function DashboardStackNavigator() {
         options={{title: 'Proposal'}}
       />
       <DashboardStack.Screen name={routeKeys.bountiesScreen} component={BountiesScreen} />
+      <DashboardStack.Screen name={routeKeys.bountyDetailScreen} component={BountyDetailScreen} />
     </DashboardStack.Navigator>
   );
 }
@@ -98,7 +102,15 @@ const AccountsStack = createStackNavigator<AccountsStackParamList>();
 function AccountsNavigator() {
   return (
     <AccountsStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
-      <AccountsStack.Screen name={routeKeys.accountsScreen} component={AccountsScreen} />
+      <AccountsStack.Screen
+        name={routeKeys.accountsScreen}
+        component={AccountsScreen}
+        options={({navigation}) => ({
+          headerRight: () => (
+            <IconButton icon="information" onPress={() => navigation.navigate(routeKeys.accountsGuideScreen)} />
+          ),
+        })}
+      />
       <AccountsStack.Screen name={routeKeys.manageIdentityScreen} component={ManageIdentityScreen} />
       <AccountsStack.Screen name={routeKeys.myAccountScreen} component={MyAccountScreen} />
       <AccountsStack.Screen name={routeKeys.registerSubIdentitiesScreen} component={RegisterSubIdentitiesScreen} />
@@ -184,12 +196,10 @@ function ParachainsNavigator() {
       <ParachainsStack.Screen
         name={routeKeys.parachainsOverviewScreen}
         component={ParachainsOverviewScreen}
-        options={{title: 'Overview'}}
-      />
-      <ParachainsStack.Screen
-        name={routeKeys.parachainDetailScreen}
-        component={ParachainDetailScreen}
-        options={{title: 'Parachain'}}
+        options={{
+          title: 'Overview',
+          headerLeft: (props) => <AppBar.Action icon="menu" {...props} />,
+        }}
       />
       <ParachainsStack.Screen
         name={routeKeys.crowdloanScreen}
@@ -199,16 +209,29 @@ function ParachainsNavigator() {
         }}
       />
       <ParachainsStack.Screen
-        name={routeKeys.crowdloanFundDetailScreen}
-        component={CrowdLoanFundDetailScreen}
-        options={{title: 'Fund details'}}
-      />
-      <ParachainsStack.Screen
         options={{
           headerLeft: (props) => <AppBar.Action icon="menu" {...props} />,
         }}
         name={routeKeys.parathreadsScreen}
         component={ParathreadsScreen}
+      />
+      <ParachainsStack.Screen
+        options={{
+          title: 'Auctions',
+          headerLeft: (props) => <AppBar.Action icon="menu" {...props} />,
+        }}
+        name={routeKeys.parachainAuctionsScreen}
+        component={ParachainsAuctionsScreen}
+      />
+      <ParachainsStack.Screen
+        name={routeKeys.parachainDetailScreen}
+        component={ParachainDetailScreen}
+        options={{title: 'Parachain'}}
+      />
+      <ParachainsStack.Screen
+        name={routeKeys.crowdloanFundDetailScreen}
+        component={CrowdLoanFundDetailScreen}
+        options={{title: 'Fund details'}}
       />
     </ParachainsStack.Navigator>
   );
@@ -262,6 +285,7 @@ function AppNavigator() {
       <AppStack.Screen name={routeKeys.addAccountScreen} component={AddAccountScreen} />
       <AppStack.Screen name={routeKeys.balanceScreen} component={BalanceScreen} />
       <AppStack.Screen name={routeKeys.identityGuideScreen} component={IdentityGuideScreen} />
+      <AppStack.Screen name={routeKeys.accountsGuideScreen} component={AccountsGuideScreen} />
     </AppStack.Navigator>
   );
 }

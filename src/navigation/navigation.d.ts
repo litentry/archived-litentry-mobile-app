@@ -32,6 +32,7 @@ import {
   identityGuideScreen,
   myAccountScreen,
   bountiesScreen,
+  bountyDetailScreen,
   parathreadsScreen,
   parachainsOverviewScreen,
   parachainDetailScreen,
@@ -49,6 +50,8 @@ import {
   connectionRetryScreen,
   appStack,
   apiLoadingStack,
+  parachainAuctionsScreen,
+  accountsGuideScreen,
 } from 'src/navigation/routeKeys';
 
 type DashboardStackParamList = {
@@ -73,6 +76,7 @@ type DashboardStackParamList = {
   [referendumScreen]: {index: string};
   [democracyProposalScreen]: {index: string};
   [bountiesScreen]: undefined;
+  [bountyDetailScreen]: {index: string};
 };
 
 type DrawerParamList = {
@@ -92,6 +96,7 @@ type ParachainsStackParamList = {
   [crowdloanScreen]: undefined;
   [crowdloanFundDetailScreen]: {title: string; paraId: ParaId};
   [parathreadsScreen]: undefined;
+  [parachainAuctionsScreen]: undefined;
 };
 
 type PolkassemblyDiscussionStackParamList = {
@@ -105,6 +110,7 @@ type AppStackParamList = {
   [addAccountScreen]: undefined;
   [balanceScreen]: {address: string};
   [identityGuideScreen]: undefined;
+  [accountsGuideScreen]: undefined;
 };
 
 type AccountsStackParamList = {

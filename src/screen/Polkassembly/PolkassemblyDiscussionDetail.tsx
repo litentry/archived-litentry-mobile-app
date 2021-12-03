@@ -4,7 +4,7 @@ import moment from 'moment';
 import Icon from 'presentational/Icon';
 import {Label} from 'presentational/Label';
 import LoadingView from 'presentational/LoadingView';
-import Padder from 'presentational/Padder';
+import {Padder} from 'src/packages/base_components';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React from 'react';
 import {Linking, StyleSheet, TouchableOpacity, View, FlatList} from 'react-native';

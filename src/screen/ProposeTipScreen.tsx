@@ -3,13 +3,13 @@ import {StyleSheet, View} from 'react-native';
 import {useQueryClient} from 'react-query';
 import {NavigationProp} from '@react-navigation/native';
 import {Button, Card, Input, Text} from '@ui-kitten/components';
-import Padder from 'presentational/Padder';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import {SelectAccount} from 'presentational/SelectAccount';
 import {DashboardStackParamList} from 'src/navigation/navigation';
 import globalStyles, {standardPadding} from 'src/styles';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useAccounts} from 'context/AccountsContext';
+import {Padder} from 'src/packages/base_components';
 
 export function ProposeTipScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const [state, dispatch] = useReducer(reducer, initialState);

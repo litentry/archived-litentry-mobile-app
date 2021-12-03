@@ -1,19 +1,17 @@
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
-import {Button, Icon, Input, ListItem, Text, useTheme} from '@ui-kitten/components';
-import FormLabel from 'presentational/FormLabel';
-import Padder from 'presentational/Padder';
+import {NavigationProp} from '@react-navigation/core';
+import {InternalAccount, useAccounts} from 'context/AccountsContext';
+import {NetworkContext} from 'context/NetworkContext';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import DocumentPicker, {DocumentPickerResponse} from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
-import {monofontFamily, standardPadding} from 'src/styles';
-import {NavigationProp} from '@react-navigation/core';
+import SubstrateSign from 'react-native-substrate-sign';
 import {AccountsStackParamList} from 'src/navigation/navigation';
 import {accountsScreen} from 'src/navigation/routeKeys';
-import {NetworkContext} from 'context/NetworkContext';
-import {InternalAccount, useAccounts} from 'context/AccountsContext';
-import SubstrateSign from 'react-native-substrate-sign';
+import {Button, Caption, ErrorText, List, Padder, Text, TextInput, useTheme} from 'src/packages/base_components';
+import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
 
 export function ImportAccountWithJsonFileScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const theme = useTheme();
@@ -42,7 +40,7 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         console.warn(e);
-        setError(e.message);
+        setError('Password appears to be incorrect! Please try again.');
       }
     }
   }
@@ -53,18 +51,18 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
         <Text>Add via backup file</Text>
         <Padder scale={1} />
 
-        <Text category="c1">Supply a backed-up JSON file, encrypted with your account-specific password.</Text>
+        <Caption>Supply a backed-up JSON file, encrypted with your account-specific password.</Caption>
         <Padder scale={0.5} />
         {parsedJson ? (
-          <ListItem
+          <List.Item
             title={parsedJson.meta.name as string}
-            accessoryLeft={() => <IdentityIcon value={parsedJson.address} size={40} />}
+            left={() => <IdentityIcon value={parsedJson.address} size={40} />}
             description={parsedJson.address}
           />
         ) : (
           <>
             <Button
-              status="basic"
+              mode="outlined"
               onPress={() =>
                 pickFile()
                   .then(setJsonContent)
@@ -78,30 +76,30 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
             <Padder scale={0.5} />
           </>
         )}
-        <Text status="danger">{error}</Text>
-        <Padder scale={1} />
-        <Input
+        <TextInput
+          autoComplete={false}
           secureTextEntry={!isPasswordVisible}
-          label={() => <FormLabel text="password" />}
-          style={styles.input}
+          label={'Password'}
           value={password}
           onChangeText={setPassword}
-          accessoryRight={() => (
-            <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
-              <Icon
-                name={`${isPasswordVisible ? 'eye' : 'eye-off'}-outline`}
-                fill={theme['color-basic-600']}
-                style={styles.icon}
-              />
-            </TouchableOpacity>
+          mode="outlined"
+          right={() => (
+            <TextInput.Icon
+              onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+              name={`${isPasswordVisible ? 'eye' : 'eye-off'}-outline`}
+              color={theme.colors.disabled}
+              style={styles.icon}
+            />
           )}
-          status={password ? 'success' : 'basic'}
         />
+        <Padder scale={1} />
+        <ErrorText>{error}</ErrorText>
 
-        <Padder scale={2} />
-        <Button disabled={!password || !parsedJson} onPress={() => restoreAccount()}>
+        <View style={globalStyles.flex} />
+        <Button mode="outlined" disabled={!password || !parsedJson} onPress={() => restoreAccount()}>
           <Text>Restore</Text>
         </Button>
+        <Padder scale={2} />
       </View>
     </SafeView>
   );
