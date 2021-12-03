@@ -1,6 +1,5 @@
 import Clipboard from '@react-native-community/clipboard';
 import {NavigationProp, RouteProp} from '@react-navigation/core';
-import {useTheme} from 'context/ThemeContext';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React, {useEffect, useRef, useState} from 'react';
 import {Dimensions, Image, Share} from 'react-native';
@@ -9,7 +8,7 @@ import {AccountsStackParamList} from 'src/navigation/navigation';
 import {receiveFundScreen} from 'src/navigation/routeKeys';
 import {Caption, Headline, IconButton, Padder, StyleSheet, View} from 'src/packages/base_components';
 import globalStyles, {standardPadding} from 'src/styles';
-import {QrCode} from 'src/utils';
+import qrcode from 'qrcode-generator';
 
 type Props = {
   navigation: NavigationProp<AccountsStackParamList, typeof receiveFundScreen>;
@@ -17,7 +16,6 @@ type Props = {
 };
 
 export function ReceiveFundScreen({navigation, route}: Props) {
-  const theme = useTheme();
   const {address} = route.params;
   const ref = useRef<Modalize>(null);
 
@@ -75,7 +73,11 @@ const styles = StyleSheet.create({
 });
 
 function getAccountQRCode(text: string) {
-  const qr = QrCode(0, 'M');
+  if (qrcode.stringToBytesFuncs['UTF-8']) {
+    qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
+  }
+
+  const qr = qrcode(0, 'M');
   qr.addData(text, 'Byte');
   qr.make();
   return qr.createDataURL(16);

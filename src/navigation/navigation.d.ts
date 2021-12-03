@@ -108,10 +108,6 @@ type PolkassemblyDiscussionStackParamList = {
 type AppStackParamList = {
   [permissionGrantingPromptScreen]: undefined;
   [drawerNavigatorScreen]: undefined;
-  [addAccountScreen]: undefined;
-  [balanceScreen]: {address: string};
-  [identityGuideScreen]: undefined;
-  [accountsGuideScreen]: undefined;
 };
 
 type AccountsStackParamList = {
@@ -126,6 +122,10 @@ type AccountsStackParamList = {
   [importAccountWithJsonFileScreen]: undefined;
   [exportAccountWithJsonFileScreen]: {address: string};
   [receiveFundScreen]: {address: string};
+  [addAccountScreen]: undefined;
+  [balanceScreen]: {address: string};
+  [identityGuideScreen]: undefined;
+  [accountsGuideScreen]: undefined;
 };
 
 type ApiLoadingStackParamList = {
