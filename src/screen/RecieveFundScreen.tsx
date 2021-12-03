@@ -1,6 +1,6 @@
 import {NavigationProp, RouteProp} from '@react-navigation/core';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Modalize} from 'react-native-modalize';
 import {AccountsStackParamList} from 'src/navigation/navigation';
 import {StyleSheet, Headline, View, Button, IconButton, Caption} from 'src/packages/base_components';
@@ -9,6 +9,7 @@ import {receiveFundScreen} from 'src/navigation/routeKeys';
 import {Image, Share} from 'react-native';
 import {useTheme} from 'context/ThemeContext';
 import Clipboard from '@react-native-community/clipboard';
+import {QrCode} from 'src/utils';
 
 type Props = {
   navigation: NavigationProp<AccountsStackParamList, typeof receiveFundScreen>;
@@ -24,12 +25,14 @@ export function ReceiveFundScreen({navigation, route}: Props) {
     ref.current?.open();
   }, []);
 
+  const [imageUri] = useState(() => getAccountQRCode(address));
+
   return (
     <Modalize ref={ref} adjustToContentHeight onClose={navigation.goBack} closeOnOverlayTap panGestureEnabled={false}>
       <SafeView edges={noTopEdges}>
         <View style={styles.container}>
           <Headline>Receive</Headline>
-          <Image source={{uri: qrCode(address)}} style={styles.qrCode} />
+          <Image source={{uri: imageUri}} style={styles.qrCode} />
           <View style={globalStyles.rowAlignCenter}>
             <Caption style={styles.address}>{address}</Caption>
             <IconButton
@@ -72,6 +75,9 @@ const styles = StyleSheet.create({
   },
 });
 
-function qrCode(string: string) {
-  return `https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=${string}`;
+function getAccountQRCode(text: string) {
+  const qr = QrCode(0, 'M');
+  qr.addData(text, 'Byte');
+  qr.make();
+  return qr.createDataURL(16);
 }
