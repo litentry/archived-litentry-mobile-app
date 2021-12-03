@@ -3,7 +3,7 @@ import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Text, useTheme} from '@ui-kitten/components';
 import {useAccounts} from 'context/AccountsContext';
 import Icon from 'presentational/Icon';
-import {Padder} from 'src/packages/base_components';
+import {Button, Padder} from 'src/packages/base_components';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React from 'react';
 import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
@@ -18,6 +18,7 @@ import {
   exportAccountWithJsonFileScreen,
   identityGuideScreen,
   manageIdentityScreen,
+  receiveFundScreen,
 } from 'src/navigation/routeKeys';
 import {standardPadding} from 'src/styles';
 
@@ -119,6 +120,9 @@ export function MyAccountScreen({
             <Text category="h6">Export Account</Text>
           </TouchableOpacity>
         ) : null}
+        <Button onPress={() => navigation.navigate(receiveFundScreen, {address})} icon="download">
+          Recieve Fund
+        </Button>
       </ScrollView>
     </SafeView>
   );

@@ -52,6 +52,7 @@ import {
   apiLoadingStack,
   parachainAuctionsScreen,
   accountsGuideScreen,
+  receiveFundScreen,
 } from 'src/navigation/routeKeys';
 
 type DashboardStackParamList = {
@@ -124,6 +125,7 @@ type AccountsStackParamList = {
   [importAccountScreen]: undefined;
   [importAccountWithJsonFileScreen]: undefined;
   [exportAccountWithJsonFileScreen]: {address: string};
+  [receiveFundScreen]: {address: string};
 };
 
 type ApiLoadingStackParamList = {
