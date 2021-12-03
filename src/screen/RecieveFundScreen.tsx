@@ -1,14 +1,14 @@
+import Clipboard from '@react-native-community/clipboard';
 import {NavigationProp, RouteProp} from '@react-navigation/core';
+import {useTheme} from 'context/ThemeContext';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React, {useEffect, useRef, useState} from 'react';
+import {Dimensions, Image, Share} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import {AccountsStackParamList} from 'src/navigation/navigation';
-import {StyleSheet, Headline, View, Button, IconButton, Caption} from 'src/packages/base_components';
-import globalStyles, {standardPadding} from 'src/styles';
 import {receiveFundScreen} from 'src/navigation/routeKeys';
-import {Image, Share} from 'react-native';
-import {useTheme} from 'context/ThemeContext';
-import Clipboard from '@react-native-community/clipboard';
+import {Caption, Headline, IconButton, Padder, StyleSheet, View} from 'src/packages/base_components';
+import globalStyles, {standardPadding} from 'src/styles';
 import {QrCode} from 'src/utils';
 
 type Props = {
@@ -28,22 +28,18 @@ export function ReceiveFundScreen({navigation, route}: Props) {
   const [imageUri] = useState(() => getAccountQRCode(address));
 
   return (
-    <Modalize ref={ref} adjustToContentHeight onClose={navigation.goBack} closeOnOverlayTap panGestureEnabled={false}>
+    <Modalize ref={ref} adjustToContentHeight onClose={navigation.goBack} closeOnOverlayTap>
       <SafeView edges={noTopEdges}>
         <View style={styles.container}>
           <Headline>Receive</Headline>
+          <Padder scale={1} />
           <Image source={{uri: imageUri}} style={styles.qrCode} />
+          <Padder scale={1} />
           <View style={globalStyles.rowAlignCenter}>
-            <Caption style={styles.address}>{address}</Caption>
-            <IconButton
-              icon="content-copy"
-              color={theme.colors.disabled}
-              onPress={() => Clipboard.setString(address)}
-            />
+            <IconButton icon="content-copy" size={20} onPress={() => Clipboard.setString(address)} />
+            <IconButton icon="share-variant" size={20} onPress={() => share(address)} />
           </View>
-          <Button icon="share-variant" onPress={() => share(address)}>
-            Share
-          </Button>
+          <Caption style={styles.address}>{address}</Caption>
         </View>
       </SafeView>
     </Modalize>
@@ -57,6 +53,8 @@ function share(string: string) {
   });
 }
 
+const QR_CODE_DIMENSION = Dimensions.get('screen').width * 0.5;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -68,10 +66,11 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     marginVertical: standardPadding,
+    marginHorizontal: standardPadding * 4,
   },
   qrCode: {
-    width: 250,
-    height: 250,
+    width: QR_CODE_DIMENSION,
+    height: QR_CODE_DIMENSION,
   },
 });
 
