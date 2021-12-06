@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import Animatable from 'react-native-animatable';
+import * as Animatable from 'react-native-animatable';
 
 type PropTypes = {children: React.ReactNode};
 
