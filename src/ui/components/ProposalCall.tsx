@@ -13,7 +13,7 @@ import {Padder} from '@ui/components/Padder';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {Account} from '@ui/components/Account';
 import {Card} from '@ui/library';
-import {useProposalCallParams} from 'hook/useProposalCallParams';
+import {useProposalCallParams} from '@hooks/useProposalCallParams';
 import globalStyles from '@ui/styles';
 
 export function ProposalCall({call}: {call: Call}) {
