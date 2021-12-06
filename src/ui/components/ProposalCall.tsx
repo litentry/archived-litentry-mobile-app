@@ -3,23 +3,22 @@
  * referenced from
  * https://github.com/polkadot-js/apps/tree/master/packages/react-params/src/Param
  */
-
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
 import {Balance, Call} from '@polkadot/types/interfaces';
 import {isU8a, u8aToString} from '@polkadot/util';
 import {Text} from '@ui-kitten/components';
-import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
-import {Padder} from 'src/packages/base_components';
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
+import {Padder} from '@ui/components/Padder';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {Account} from 'src/layout/Account';
-import {Card} from 'src/packages/base_components';
-import {useParams} from 'src/packages/call_inspector/useCallParams';
-import globalStyles from 'src/styles';
+import {Card} from '@ui/library';
+import {useProposalCallParams} from 'hook/useProposalCallParams';
+import globalStyles from '@ui/styles';
 
-export function CallInspector({call}: {call: Call}) {
+export function ProposalCall({call}: {call: Call}) {
   const formatBalance = useFormatBalance();
-  const data = useParams(call);
+  const data = useProposalCallParams(call);
   const {method, section} = call.registry.findMetaCall(call.callIndex);
 
   return (
@@ -60,7 +59,7 @@ export function CallInspector({call}: {call: Call}) {
                   return (
                     <View style={globalStyles.rowAlignCenter}>
                       <Text>{p.name}: </Text>
-                      <CallInspector call={p.value as any} />
+                      <ProposalCall call={p.value as any} />
                     </View>
                   );
                 }
@@ -70,7 +69,7 @@ export function CallInspector({call}: {call: Call}) {
                     <View>
                       <Text>{p.name}:</Text>
                       {p.value?.map((_call, index) => {
-                        return <CallInspector call={_call} key={index} />;
+                        return <ProposalCall call={_call} key={index} />;
                       })}
                     </View>
                   );
