@@ -1,7 +1,4 @@
-import Reactotron from 'reactotron-react-native';
 import {FunctionMetadataLatest} from '@polkadot/types/interfaces';
-
-export const ReactotronDebug = Reactotron.debug;
 
 // useful for removing empty values from an array using filter
 // the types after the filter would not include the empty values
