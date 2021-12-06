@@ -21,7 +21,7 @@ import {
 } from '@ui/navigation/routeKeys';
 import {standardPadding} from '@ui/styles';
 import {appVersion} from 'src/service/Device';
-import {getCurrentYear} from 'src/utils';
+import {getCurrentYear} from 'src/utils/date';
 import {Drawer, Switch, Text, Divider} from '@ui/library';
 
 function DrawerScreen({navigation}: DrawerContentComponentProps) {
