@@ -4,7 +4,7 @@ import type {Proposal as ProposalType} from '@polkadot/types/interfaces';
 import {Padder} from '@ui/components/Padder';
 import {Paragraph} from '@ui/library';
 import {ProposalCall} from '@ui/components/ProposalCall';
-import {formatCallMeta} from 'src/utils';
+import {formatCallMeta} from 'src/utils/callMetadata';
 
 export function ProposalInfo({proposal}: {proposal: ProposalType}) {
   const {meta} = proposal.registry.findMetaCall(proposal.callIndex);

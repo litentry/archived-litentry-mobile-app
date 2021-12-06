@@ -20,7 +20,7 @@ import WarningDialog from '@ui/components/WarningDialog';
 import {Modalize} from 'react-native-modalize';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import SubstrateSign from 'react-native-substrate-sign';
-import {formatCallMeta} from 'src/utils';
+import {formatCallMeta} from 'src/utils/callMetadata';
 import AsyncSigner from 'src/service/AsyncSigner';
 import globalStyles, {standardPadding} from '@ui/styles';
 

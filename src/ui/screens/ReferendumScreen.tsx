@@ -28,7 +28,7 @@ import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {referendumScreen} from '@ui/navigation/routeKeys';
-import {formatCallMeta} from 'src/utils';
+import {formatCallMeta} from 'src/utils/callMetadata';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {useAccounts} from 'context/AccountsContext';
 import {Padder} from '@ui/components/Padder';
