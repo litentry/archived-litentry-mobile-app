@@ -5,12 +5,12 @@ import {IconRegistry} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
 import {ChainApiContextProvider} from 'context/ChainApiContext';
 import TxContextProvider from 'context/TxContext';
-import {AccountsProvider} from 'src/context/AccountsContext';
-import InAppNotificationContextProvider from 'src/context/InAppNotificationContext';
-import NetworkContextProvider from 'src/context/NetworkContext';
-import {ErrorBoundary} from 'src/ErrorBoundary';
+import {AccountsProvider} from 'context/AccountsContext';
+import InAppNotificationContextProvider from 'context/InAppNotificationContext';
+import NetworkContextProvider from 'context/NetworkContext';
+import {ErrorBoundary} from '@ui/components/ErrorBoundary';
 import AppNavigator from '@ui/navigation/AppNavigator';
-import ThemeProvider from './context/ThemeContext';
+import ThemeProvider from 'context/ThemeContext';
 import {IonicIconsPack} from './Ionic-icons';
 import {NavigationContainer} from 'context/NavigationContainer';
 
