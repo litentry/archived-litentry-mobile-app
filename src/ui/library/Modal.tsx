@@ -1,6 +1,6 @@
 import React from 'react';
-import {Modal as RNPaperModal, Portal} from 'react-native-paper';
 import {StyleSheet} from 'react-native';
+import {Modal as RNPaperModal, Portal} from 'react-native-paper';
 
 type ModalProps = {
   visible: boolean;
