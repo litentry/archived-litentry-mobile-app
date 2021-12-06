@@ -1,6 +1,6 @@
 import {useState, useCallback} from 'react';
 import {setItem, getItem} from 'src/service/PersistedObjectStorage';
-import {createLogger} from 'src/utils';
+import {createLogger} from 'src/utils/logger';
 
 const logger = createLogger('usePersistedState');
 

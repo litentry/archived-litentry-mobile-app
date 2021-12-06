@@ -1,7 +1,6 @@
 // Note: have to patch _qrcode
 import _qrcode from 'qrcode-generator';
 
-import {consoleTransport, logger} from 'react-native-logs';
 import Reactotron from 'reactotron-react-native';
 import {u8aConcat, u8aToU8a} from '@polkadot/util';
 import {
@@ -33,21 +32,6 @@ export function encodeNumber(value: number): Uint8Array {
   // eslint-disable-next-line no-bitwise
   return new Uint8Array([value >> 8, value & 0xff]);
 }
-
-export const createLogger = (name: string) => {
-  const log = logger.createLogger({
-    transport: consoleTransport,
-    transportOptions: {hideDate: true, loggerName: name},
-  });
-
-  if (__DEV__) {
-    log.setSeverity('debug');
-  } else {
-    log.setSeverity('error');
-  }
-
-  return log;
-};
 
 export function createFrames(input: Uint8Array): Uint8Array[] {
   const frames = [];

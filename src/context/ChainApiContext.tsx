@@ -1,6 +1,6 @@
 import React, {createContext, useCallback, useContext, useEffect, useReducer} from 'react';
 import {ApiPromise, WsProvider} from '@polkadot/api';
-import {createLogger} from 'src/utils';
+import {createLogger} from 'src/utils/logger';
 import {NetworkContext} from './NetworkContext';
 import {useNavigation} from '@react-navigation/core';
 import {connectionRetryScreen} from '@ui/navigation/routeKeys';
