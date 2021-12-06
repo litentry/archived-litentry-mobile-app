@@ -9,7 +9,7 @@ import {AccountsProvider} from 'src/context/AccountsContext';
 import InAppNotificationContextProvider from 'src/context/InAppNotificationContext';
 import NetworkContextProvider from 'src/context/NetworkContext';
 import {ErrorBoundary} from 'src/ErrorBoundary';
-import AppNavigator from 'src/navigation/AppNavigator';
+import AppNavigator from '@ui/navigation/AppNavigator';
 import ThemeProvider from './context/ThemeContext';
 import {IonicIconsPack} from './Ionic-icons';
 import {NavigationContainer} from 'context/NavigationContainer';
