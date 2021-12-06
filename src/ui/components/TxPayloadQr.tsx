@@ -4,7 +4,7 @@ import {ExtrinsicPayload} from '@polkadot/types/interfaces';
 import {Button, Divider, Icon, IconProps, Layout} from '@ui-kitten/components';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {SignerPayloadJSON} from '@polkadot/types/types';
-import {createFrames, QrCode} from 'src/utils';
+import {createFrames, QrCode} from 'src/utils/qrCode';
 import {createSignPayload} from 'src/utils/signer';
 import {CMD_HASH, CMD_MORTAL} from 'src/constants';
 import ModalTitle from './ModalTitle';
