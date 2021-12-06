@@ -23,10 +23,11 @@ export {
   Divider,
   TextInput,
   ThemeProvider,
+  Appbar as AppBar,
   useTheme,
 } from 'react-native-paper';
 
 export {ProgressChart} from 'react-native-chart-kit';
 
-export {AppBar} from './AppBar';
+export {AppHeader} from './AppHeader';
 export {Modal} from './Modal';

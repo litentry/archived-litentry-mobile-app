@@ -9,7 +9,7 @@ import {noop} from 'lodash';
 import NetworkItem from '@ui/components/NetworkItem';
 import {ApiLoadingStackParamList, RootStackParamList} from '@ui/navigation/navigation';
 import {appStack, networkSelectionScreen} from '@ui/navigation/routeKeys';
-import {AppBar} from '@ui/library';
+import {AppBar, AppHeader} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import globalStyles, {colorGreen, monofontFamily, standardPadding} from '@ui/styles';
 
@@ -32,7 +32,7 @@ export function ApiLoadingScreen({navigation}: PropTypes) {
 
   return (
     <Layout style={styles.container}>
-      <AppBar.Header>
+      <AppHeader>
         <AppBar.Action icon="menu" color="transparent" onPress={noop} />
         <AppBar.Content
           title={
@@ -42,7 +42,7 @@ export function ApiLoadingScreen({navigation}: PropTypes) {
             </TouchableOpacity>
           }
         />
-      </AppBar.Header>
+      </AppHeader>
       <View style={globalStyles.centeredContainer}>
         <View style={styles.textContainer}>
           <Icon style={[globalStyles.inlineIconDimension, {color: colorGreen}]} name="planet" pack="ionic" />

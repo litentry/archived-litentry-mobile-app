@@ -10,7 +10,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {Padder} from '@ui/components/Padder';
 import {NetworkContext} from 'context/NetworkContext';
 import {useApiReconnect} from 'context/ChainApiContext';
-import {AppBar} from '@ui/library';
+import {AppBar, AppHeader} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {noop} from 'lodash';
 
@@ -36,7 +36,7 @@ export function ConnectionRetryScreen({navigation}: PropTypes) {
 
   return (
     <Layout style={styles.container}>
-      <AppBar.Header>
+      <AppHeader>
         <AppBar.Action icon="menu" color="transparent" onPress={noop} />
         <AppBar.Content
           title={
@@ -46,7 +46,7 @@ export function ConnectionRetryScreen({navigation}: PropTypes) {
             </View>
           }
         />
-      </AppBar.Header>
+      </AppHeader>
       <View style={globalStyles.centeredContainer}>
         <View style={styles.textContainer}>
           <Icon

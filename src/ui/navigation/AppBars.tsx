@@ -6,7 +6,7 @@ import {NetworkContext} from 'context/NetworkContext';
 import NetworkItem from '@ui/components/NetworkItem';
 import React, {useContext} from 'react';
 import {networkSelectionScreen} from '@ui/navigation/routeKeys';
-import {AppBar} from '@ui/library';
+import {AppBar, AppHeader} from '@ui/library';
 
 export function MainDrawerAppBar({
   navigation,
@@ -18,10 +18,10 @@ export function MainDrawerAppBar({
   navigation: DrawerNavigationProp<ParamListBase>;
 }) {
   return (
-    <AppBar.Header>
+    <AppHeader>
       <AppBar.Action onPress={navigation.openDrawer} icon={'menu'} />
       <AppBar.Content title={options.title ?? route.name} />
-    </AppBar.Header>
+    </AppHeader>
   );
 }
 
@@ -43,7 +43,7 @@ export function MainStackAppBar({
   };
 
   return (
-    <AppBar.Header>
+    <AppHeader>
       {options.headerLeft ? (
         options.headerLeft({onPress: openDrawer})
       ) : back ? (
@@ -53,7 +53,7 @@ export function MainStackAppBar({
       )}
       <AppBar.Content title={options.title ?? route.name} />
       {options.headerRight ? options.headerRight({}) : null}
-    </AppBar.Header>
+    </AppHeader>
   );
 }
 
@@ -76,7 +76,7 @@ export function DashboardAppBar({navigation}: {navigation: StackNavigationProp<P
   }, [navigation]);
 
   return (
-    <AppBar.Header>
+    <AppHeader>
       <AppBar.Action onPress={onActionLeftPress} icon={'menu'} />
       <AppBar.Content
         title="Litentry"
@@ -87,6 +87,6 @@ export function DashboardAppBar({navigation}: {navigation: StackNavigationProp<P
           ) : undefined
         }
       />
-    </AppBar.Header>
+    </AppHeader>
   );
 }
