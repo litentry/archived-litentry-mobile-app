@@ -5,7 +5,7 @@ import {Divider, Icon, Layout, ListItem, Text} from '@ui-kitten/components';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {usePushTopics} from 'src/hook/usePushTopics';
+import {usePushTopics} from '@hooks/usePushTopics';
 import {DrawerParamList} from '@ui/navigation/navigation';
 import globalStyles, {standardPadding} from '@ui/styles';
 

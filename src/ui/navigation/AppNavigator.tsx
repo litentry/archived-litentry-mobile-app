@@ -47,10 +47,10 @@ import {RegisterSubIdentitiesScreen} from '@ui/screens/subIdentities/RegisterSub
 import TipDetailScreen from '@ui/screens/tips/TipDetailScreen';
 import {TreasuryScreen} from '@ui/screens/TreasuryScreen';
 import WebviewScreen from '@ui/screens/WebviewScreen';
-import {useAppBackgroundApiReconnect} from 'src/hook/useAppBackgroundApiReconnect';
-import {useFirebase} from 'src/hook/useFirebase';
-import {usePushAuthorizationStatus} from 'src/hook/usePushNotificationsPermissions';
-import {useTurnOnAllNotificationsOnAppStartForAndroid} from 'src/hook/useTurnOnAllNotificationsOnAppStartForAndroid';
+import {useAppBackgroundApiReconnect} from '@hooks/useAppBackgroundApiReconnect';
+import {useFirebase} from '@hooks/useFirebase';
+import {usePushAuthorizationStatus} from '@hooks/usePushNotificationsPermissions';
+import {useTurnOnAllNotificationsOnAppStartForAndroid} from '@hooks/useTurnOnAllNotificationsOnAppStartForAndroid';
 import {DashboardAppBar, MainDrawerAppBar, MainStackAppBar} from '@ui/navigation/AppBars';
 import {
   AccountsStackParamList,

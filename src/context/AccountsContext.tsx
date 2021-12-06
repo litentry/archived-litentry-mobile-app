@@ -1,6 +1,6 @@
 import React, {createContext, useContext} from 'react';
 import {NetworkContext} from 'context/NetworkContext';
-import {usePersistedState} from 'src/hook/usePersistedState';
+import {usePersistedState} from '@hooks/usePersistedState';
 import {SupportedNetworkType} from 'src/types';
 
 export type InternalAccount = {

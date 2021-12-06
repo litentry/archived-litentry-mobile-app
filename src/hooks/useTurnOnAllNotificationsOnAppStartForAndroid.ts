@@ -1,7 +1,7 @@
 import React from 'react';
 import {Platform} from 'react-native';
 import {usePushTopics} from './usePushTopics';
-import {useIsFirstAppStart} from 'src/hook/useIsFirstAppStart';
+import {useIsFirstAppStart} from '@hooks/useIsFirstAppStart';
 
 export function useTurnOnAllNotificationsOnAppStartForAndroid() {
   const {subscribeToAllTopics, isLoading: topicsLoading} = usePushTopics();

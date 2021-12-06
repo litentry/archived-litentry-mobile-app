@@ -3,7 +3,7 @@ import React, {createContext, useCallback, useContext, useEffect, useMemo} from 
 import {Platform, StatusBar} from 'react-native';
 import {ApplicationProvider} from '@ui-kitten/components';
 import {mapping} from '@eva-design/material';
-import {usePersistedState} from 'src/hook/usePersistedState';
+import {usePersistedState} from '@hooks/usePersistedState';
 import customMapping from 'src/mapping.json';
 import {darkMaterialThemeOverride, lightMaterialThemeOverride} from '@ui/navigation/theme';
 import {Provider as PaperProvider, useTheme as useRNPaperTheme} from '@ui/library';

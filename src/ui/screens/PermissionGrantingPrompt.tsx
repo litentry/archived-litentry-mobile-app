@@ -3,7 +3,7 @@ import {StyleSheet, View} from 'react-native';
 import {Button, Icon, Layout, Text, useTheme} from '@ui-kitten/components';
 import {Padder} from '@ui/components/Padder';
 import SafeView from '@ui/components/SafeView';
-import {usePushNotificationsPermissions} from 'src/hook/usePushNotificationsPermissions';
+import {usePushNotificationsPermissions} from '@hooks/usePushNotificationsPermissions';
 import globalStyles, {standardPadding} from '@ui/styles';
 
 export function PermissionGrantingPrompt() {

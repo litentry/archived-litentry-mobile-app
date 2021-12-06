@@ -9,7 +9,7 @@ import {TreasurySummaryTeaser} from '@ui/components/TreasurySummaryTeaser';
 import FadeInAnimatedView from '@ui/components/FadeInAnimatedView';
 import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import {useCustomBackHandler} from 'src/hook/useCustomBackHandler';
+import {useCustomBackHandler} from '@hooks/useCustomBackHandler';
 import {ApiLoadingStackParamList, DashboardStackParamList, DrawerParamList} from '@ui/navigation/navigation';
 import {bountiesScreen, councilScreen, democracyScreen, treasuryScreen} from '@ui/navigation/routeKeys';
 import globalStyles from '@ui/styles';

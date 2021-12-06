@@ -21,7 +21,7 @@
       "image/*": ["src/image/*"],
       "svg/*": ["src/svg/*"],
       "service/*": ["src/service/*"],
-      "hook/*": ["src/hook/*"],
+      "@hooks/*": ["src/hooks/*"],
       "assets/*": ["assets/*"]
     },
     "allowSyntheticDefaultImports": true,

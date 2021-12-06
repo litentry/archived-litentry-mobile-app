@@ -18,7 +18,7 @@ import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useTip} from 'src/api/hooks/useTip';
-import {useCall} from 'src/hook/useCall';
+import {useCall} from '@hooks/useCall';
 import {Account} from '@ui/components/Account';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
