@@ -3,30 +3,6 @@ import {FunctionMetadataLatest} from '@polkadot/types/interfaces';
 
 export const ReactotronDebug = Reactotron.debug;
 
-export const WHITESPACE = [' ', '\t'];
-
-export function validateFormField(
-  hasValue: boolean,
-  value: string | null | undefined,
-  minLength: number,
-  includes: string[],
-  excludes: string[],
-  starting: string[],
-  notStarting: string[] = WHITESPACE,
-  notEnding: string[] = WHITESPACE,
-): boolean {
-  return (
-    !hasValue ||
-    (!!value &&
-      value.length >= minLength &&
-      includes.reduce((hasIncludes: boolean, check) => hasIncludes && value.includes(check), true) &&
-      (!starting.length || starting.some((check) => value.startsWith(check))) &&
-      !excludes.some((check) => value.includes(check)) &&
-      !notStarting.some((check) => value.startsWith(check)) &&
-      !notEnding.some((check) => value.endsWith(check)))
-  );
-}
-
 // useful for removing empty values from an array using filter
 // the types after the filter would not include the empty values
 export function notEmpty<TValue>(value: TValue | null | undefined | ''): value is TValue {

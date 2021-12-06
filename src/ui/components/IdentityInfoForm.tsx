@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, ScrollView} from 'react-native';
 import {Input, Button, Icon, IconProps} from '@ui-kitten/components';
-import {WHITESPACE, validateFormField} from 'src/utils';
+import {WHITESPACE, validateFormField} from 'src/utils/form';
 import FormLabel from '@ui/components/FormLabel';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 
