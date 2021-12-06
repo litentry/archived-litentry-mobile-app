@@ -2,19 +2,10 @@
 import _qrcode from 'qrcode-generator';
 
 import Reactotron from 'reactotron-react-native';
-import {u8aConcat, u8aToU8a} from '@polkadot/util';
-import {
-  ADDRESS_PREFIX_KUSAMA,
-  ADDRESS_PREFIX_LITENTRY,
-  ADDRESS_PREFIX_POLKADOT,
-  CRYPTO_SR25519,
-  FRAME_SIZE,
-  SUBSTRATE_ID,
-} from './constants';
-import {blake2AsU8a, checkAddress, decodeAddress, isEthereumChecksum} from '@polkadot/util-crypto';
-import {SignerPayloadJSON} from '@polkadot/types/types';
-import {ExtrinsicPayload, FunctionMetadataLatest} from '@polkadot/types/interfaces';
-import registry from 'src/typeRegistry';
+import {u8aConcat} from '@polkadot/util';
+import {ADDRESS_PREFIX_KUSAMA, ADDRESS_PREFIX_LITENTRY, ADDRESS_PREFIX_POLKADOT, FRAME_SIZE} from './constants';
+import {checkAddress, isEthereumChecksum} from '@polkadot/util-crypto';
+import {FunctionMetadataLatest} from '@polkadot/types/interfaces';
 import {AccountAddressType, NetworkType} from './types';
 import {trim} from 'lodash';
 
@@ -47,39 +38,6 @@ export function createFrames(input: Uint8Array): Uint8Array[] {
     (frame, index: number): Uint8Array => u8aConcat(MULTIPART, encodeNumber(frames.length), encodeNumber(index), frame),
   );
 }
-
-export function createSignPayload(
-  address: string,
-  cmd: number,
-  payload: string | Uint8Array,
-  genesisHash: string | Uint8Array,
-): Uint8Array {
-  return u8aConcat(
-    SUBSTRATE_ID,
-    CRYPTO_SR25519,
-    new Uint8Array([cmd]),
-    decodeAddress(address),
-    u8aToU8a(payload),
-    u8aToU8a(genesisHash),
-  );
-}
-
-export const toSignPayload = (payload: SignerPayloadJSON) => {
-  // limit size of the transaction
-  const isQrHashed = payload.method.length > 5000;
-  console.log('ExtrinsicPayload', payload);
-  const wrapper: ExtrinsicPayload = registry.createType('ExtrinsicPayload', payload, {
-    version: payload.version,
-  });
-
-  const qrPayload = isQrHashed ? blake2AsU8a(wrapper.toU8a(true)) : wrapper.toU8a(true);
-
-  return {
-    isQrHashed,
-    qrAddress: payload.address,
-    qrPayload,
-  };
-};
 
 /*
  * @return strippedData: the rawBytes from react-native-camera, stripped of the ec11 padding to fill the frame size. See: decoders.js
