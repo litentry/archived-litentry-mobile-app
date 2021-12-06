@@ -1,9 +1,9 @@
 import {Button, Divider, Layout} from '@ui-kitten/components';
 import {NetworkContext} from 'context/NetworkContext';
-import NetworkSelectionList from 'presentational/NetworkSelectionList';
+import NetworkSelectionList from '@ui/components/NetworkSelectionList';
 import React, {useContext, useEffect, useRef} from 'react';
 import {Modalize} from 'react-native-modalize';
-import globalStyles from 'src/styles';
+import globalStyles from '@ui/styles';
 
 type Props = {
   open: boolean;

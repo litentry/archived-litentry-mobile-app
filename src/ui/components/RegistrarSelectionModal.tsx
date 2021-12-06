@@ -4,9 +4,9 @@ import {StyleSheet, Dimensions, View} from 'react-native';
 import {Select, SelectItem, Modal, Card, Text, Button, IndexPath, Input, Icon, IconProps} from '@ui-kitten/components';
 import {useRegistrars} from 'src/api/hooks/useRegistrars';
 import {BN_ZERO} from '@polkadot/util';
-import {standardPadding, monofontFamily} from 'src/styles';
+import {standardPadding, monofontFamily} from '@ui/styles';
 import Identicon from '@polkadot/reactnative-identicon';
-import {Padder} from 'src/packages/base_components';
+import {Padder} from '@ui/components/Padder';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 
 const {height, width} = Dimensions.get('window');

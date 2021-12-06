@@ -4,7 +4,7 @@ import {StyleSheet, View} from 'react-native';
 import AddressInlineTeaser from './AddressInlineTeaser';
 import {Text} from '@ui-kitten/components';
 import {Balance} from '@polkadot/types/interfaces';
-import {standardPadding} from 'src/styles';
+import {standardPadding} from '@ui/styles';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 
 type PropTypes = {

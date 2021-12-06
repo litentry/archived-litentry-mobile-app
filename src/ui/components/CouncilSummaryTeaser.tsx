@@ -1,15 +1,15 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Card} from '@ui-kitten/components';
-import globalStyles from 'src/styles';
-import {Padder} from 'src/packages/base_components';
+import globalStyles from '@ui/styles';
+import {Padder} from '@ui/components/Padder';
 import AddressInlineTeaser from './AddressInlineTeaser';
-import {SectionTeaserContainer} from 'presentational/SectionTeaserContainer';
+import {SectionTeaserContainer} from '@ui/components/SectionTeaserContainer';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
-import ProgressChartWidget from 'presentational/ProgressWidget';
-import StatInfoBlock from 'presentational/StatInfoBlock';
+import ProgressChartWidget from '@ui/components/ProgressWidget';
+import StatInfoBlock from '@ui/components/StatInfoBlock';
 import {useCouncilSummary} from 'src/api/hooks/useCouncilSummary';
-import {LoadingBox} from 'presentational/LoadingBox';
+import {LoadingBox} from '@ui/components/LoadingBox';
 
 type PropTypes = {
   onPressMore: () => void;

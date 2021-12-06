@@ -2,9 +2,9 @@ import React, {useMemo} from 'react';
 import {StyleSheet, View, FlatList} from 'react-native';
 import {Text, Divider} from '@ui-kitten/components';
 import {useRegistrars} from 'src/api/hooks/useRegistrars';
-import globalStyles, {standardPadding, monofontFamily} from 'src/styles';
-import StatInfoBlock from 'presentational/StatInfoBlock';
-import {Padder} from 'src/packages/base_components';
+import globalStyles, {standardPadding, monofontFamily} from '@ui/styles';
+import StatInfoBlock from '@ui/components/StatInfoBlock';
+import {Padder} from '@ui/components/Padder';
 import RegistrarTeaser from './RegistrarTeaser';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 

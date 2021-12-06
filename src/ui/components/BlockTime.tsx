@@ -5,7 +5,7 @@ import {BlockNumber} from '@polkadot/types/interfaces';
 import BN from 'bn.js';
 
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
-import {monofontFamily} from 'src/styles';
+import {monofontFamily} from '@ui/styles';
 
 type Props = {
   blockNumber: BlockNumber | BN;

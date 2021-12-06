@@ -1,11 +1,11 @@
-import {useNavigation} from '@react-navigation/native';
-import {Card, Text} from '@ui-kitten/components';
-import LoadingView from 'presentational/LoadingView';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {Card, Text} from '@ui-kitten/components';
+import LoadingView from '@ui/components/LoadingView';
 import {useCouncilMotions} from 'src/api/hooks/useCouncilMotions';
-import {motionDetailScreen} from 'src/navigation/routeKeys';
-import globalStyles, {monofontFamily, standardPadding} from 'src/styles';
+import {motionDetailScreen} from '@ui/navigation/routeKeys';
+import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
 
 type PropTypes = {title: string};
 

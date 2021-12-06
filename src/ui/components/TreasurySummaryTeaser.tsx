@@ -1,17 +1,17 @@
 import {bnToBn, BN_ONE, BN_ZERO, formatNumber} from '@polkadot/util';
 import {Card} from '@ui-kitten/components';
-import {LoadingBox} from 'presentational/LoadingBox';
-import {Padder} from 'src/packages/base_components';
-import ProgressChartWidget from 'presentational/ProgressWidget';
-import {SectionTeaserContainer} from 'presentational/SectionTeaserContainer';
-import StatInfoBlock from 'presentational/StatInfoBlock';
+import {LoadingBox} from '@ui/components/LoadingBox';
+import {Padder} from '@ui/components/Padder';
+import ProgressChartWidget from '@ui/components/ProgressWidget';
+import {SectionTeaserContainer} from '@ui/components/SectionTeaserContainer';
+import StatInfoBlock from '@ui/components/StatInfoBlock';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useTreasurySummary} from 'src/api/hooks/useTreasurySummary';
-import globalStyles from 'src/styles';
+import globalStyles from '@ui/styles';
 
 type PropTypes = {
   onPressMore: () => void;

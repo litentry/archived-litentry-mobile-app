@@ -3,8 +3,8 @@ import {View} from 'react-native';
 import type {Proposal as ProposalType} from '@polkadot/types/interfaces';
 import {Padder} from '@ui/components/Padder';
 import {Paragraph} from '@ui/library';
-import {CallInspector} from 'src/packages/call_inspector/CallInspector';
-import {formatCallMeta} from 'src/packages/call_inspector/useCallParams';
+import {ProposalCall} from '@ui/components/ProposalCall';
+import {formatCallMeta} from 'src/utils';
 
 export function ProposalInfo({proposal}: {proposal: ProposalType}) {
   const {meta} = proposal.registry.findMetaCall(proposal.callIndex);
@@ -14,7 +14,7 @@ export function ProposalInfo({proposal}: {proposal: ProposalType}) {
       <Padder scale={1} />
       <Paragraph>{`${formatCallMeta(meta)}`}</Paragraph>
       <Padder scale={1} />
-      <CallInspector call={proposal} />
+      <ProposalCall call={proposal} />
     </View>
   );
 }

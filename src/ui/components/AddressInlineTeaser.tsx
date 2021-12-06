@@ -1,7 +1,7 @@
 import Identicon from '@polkadot/reactnative-identicon';
-import AccountInfoInlineTeaser from 'presentational/AccountInfoInlineTeaser';
-import {LoadingItem} from 'presentational/LoadingBox';
-import {Padder} from 'src/packages/base_components';
+import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
+import {LoadingItem} from '@ui/components/LoadingBox';
+import {Padder} from '@ui/components/Padder';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
