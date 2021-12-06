@@ -52,7 +52,7 @@ import {
   apiLoadingStack,
   parachainAuctionsScreen,
   accountsGuideScreen,
-} from 'src/navigation/routeKeys';
+} from '@ui/navigation/routeKeys';
 
 type DashboardStackParamList = {
   [dashboardScreen]: undefined;

@@ -1,56 +1,57 @@
+import React from 'react';
 import messaging from '@react-native-firebase/messaging';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createStackNavigator} from '@react-navigation/stack';
+
 import {ChainApiContext} from 'context/ChainApiContext';
-import React from 'react';
-import {AccountsScreen} from 'screen/AccountsScreen';
-import {AddAccountScreen} from 'screen/AddAccountScreen/AddAccountScreen';
-import {ApiLoadingScreen} from 'screen/ApiLoadingScreen';
-import {BalanceScreen} from 'screen/BalanceScreen';
-import {BountiesScreen} from 'screen/Bounty/BountiesScreen';
-import {BountyDetailScreen} from 'screen/Bounty/BountyDetailScreen';
-import {ConnectionRetryScreen} from 'screen/ConnectionRetryScreen';
-import {CandidateScreen} from 'screen/Council/CandidateScreen';
-import {CouncilScreen} from 'screen/Council/CouncilScreen';
-import {MotionsScreen} from 'screen/Council/MotionsScreen';
-import {CreateAccountScreen} from 'screen/CreateAccount/CreateAccountScreen';
-import {MnemonicScreen} from 'screen/CreateAccount/MnemonicScreen';
-import {VerifyMnemonicScreen} from 'screen/CreateAccount/VerifyMnemonic';
-import DashboardScreen from 'screen/DashboardScreen';
-import {DemocracyProposalScreen} from 'screen/DemocracyProposalScreen';
-import {DemocracyScreen} from 'screen/DemocracyScreen';
-import DevScreen from 'screen/DevScreen';
-import DrawerScreen from 'screen/Drawer/DrawerScreen';
-import {ExportAccountWithJsonFileScreen} from 'screen/ExportAccountWithJsonFileScreen';
-import {ImportAccountScreen, ImportScreenHeaderRight} from 'screen/ImportAccountScreen';
-import {ImportAccountWithJsonFileScreen} from 'screen/ImportAccountWithJsonFileScreen';
-import {MotionDetailScreen} from 'screen/MotionDetailScreen';
-import {MyAccountScreen} from 'screen/MyAccountScreen';
-import {IdentityGuideScreen} from 'screen/MyIdentityScreen/IdentityGuideScreen';
-import ManageIdentityScreen from 'screen/MyIdentityScreen/ManageIdentity';
-import {NetworkSelectionScreen} from 'screen/NetworkSelectionScreen';
-import {NotificationSettingsScreen} from 'screen/NotificationSettingsScreen';
-import {ParachainsAuctionsScreen} from 'screen/Parachains/ParachainAuctionsScreen';
-import {CrowdLoanFundDetailScreen} from 'screen/Parachains/CrowdLoanFundDetailScreen';
-import {CrowdLoanScreen} from 'screen/Parachains/CrowdLoanScreen';
-import {ParachainsOverviewScreen} from 'screen/Parachains/OverviewScreen';
-import {ParachainDetailScreen} from 'screen/Parachains/ParachainDetailScreen';
-import {ParathreadsScreen} from 'screen/Parachains/ParathreadsScreen';
-import {PermissionGrantingPrompt} from 'screen/PermissionGrantingPrompt';
-import {PolkassemblyDiscussionDetail} from 'screen/Polkassembly/PolkassemblyDiscussionDetail';
-import {PolkassemblyDiscussions} from 'screen/Polkassembly/PolkassemblyDiscussions';
-import {ProposeTipScreen} from 'screen/ProposeTipScreen';
-import {ReferendumScreen} from 'screen/ReferendumScreen';
-import RegistrarListScreen from 'screen/RegistrarListScreen';
-import {RegisterSubIdentitiesScreen} from 'screen/subIdentities/RegisterSubIdentitiesScreen';
-import TipDetailScreen from 'screen/tips/TipDetailScreen';
-import {TreasuryScreen} from 'screen/TreasuryScreen';
-import WebviewScreen from 'screen/WebviewScreen';
+import {AccountsScreen} from '@ui/screens/AccountsScreen';
+import {AddAccountScreen} from '@ui/screens/AddAccountScreen/AddAccountScreen';
+import {ApiLoadingScreen} from '@ui/screens/ApiLoadingScreen';
+import {BalanceScreen} from '@ui/screens/BalanceScreen';
+import {BountiesScreen} from '@ui/screens/Bounty/BountiesScreen';
+import {BountyDetailScreen} from '@ui/screens/Bounty/BountyDetailScreen';
+import {ConnectionRetryScreen} from '@ui/screens/ConnectionRetryScreen';
+import {CandidateScreen} from '@ui/screens/Council/CandidateScreen';
+import {CouncilScreen} from '@ui/screens/Council/CouncilScreen';
+import {MotionsScreen} from '@ui/screens/Council/MotionsScreen';
+import {CreateAccountScreen} from '@ui/screens/CreateAccount/CreateAccountScreen';
+import {MnemonicScreen} from '@ui/screens/CreateAccount/MnemonicScreen';
+import {VerifyMnemonicScreen} from '@ui/screens/CreateAccount/VerifyMnemonic';
+import DashboardScreen from '@ui/screens/DashboardScreen';
+import {DemocracyProposalScreen} from '@ui/screens/DemocracyProposalScreen';
+import {DemocracyScreen} from '@ui/screens/DemocracyScreen';
+import DevScreen from '@ui/screens/DevScreen';
+import DrawerScreen from '@ui/screens/Drawer/DrawerScreen';
+import {ExportAccountWithJsonFileScreen} from '@ui/screens/ExportAccountWithJsonFileScreen';
+import {ImportAccountScreen, ImportScreenHeaderRight} from '@ui/screens/ImportAccountScreen';
+import {ImportAccountWithJsonFileScreen} from '@ui/screens/ImportAccountWithJsonFileScreen';
+import {MotionDetailScreen} from '@ui/screens/MotionDetailScreen';
+import {MyAccountScreen} from '@ui/screens/MyAccountScreen';
+import {IdentityGuideScreen} from '@ui/screens/MyIdentityScreen/IdentityGuideScreen';
+import ManageIdentityScreen from '@ui/screens/MyIdentityScreen/ManageIdentity';
+import {NetworkSelectionScreen} from '@ui/screens/NetworkSelectionScreen';
+import {NotificationSettingsScreen} from '@ui/screens/NotificationSettingsScreen';
+import {ParachainsAuctionsScreen} from '@ui/screens/Parachains/ParachainAuctionsScreen';
+import {CrowdLoanFundDetailScreen} from '@ui/screens/Parachains/CrowdLoanFundDetailScreen';
+import {CrowdLoanScreen} from '@ui/screens/Parachains/CrowdLoanScreen';
+import {ParachainsOverviewScreen} from '@ui/screens/Parachains/OverviewScreen';
+import {ParachainDetailScreen} from '@ui/screens/Parachains/ParachainDetailScreen';
+import {ParathreadsScreen} from '@ui/screens/Parachains/ParathreadsScreen';
+import {PermissionGrantingPrompt} from '@ui/screens/PermissionGrantingPrompt';
+import {PolkassemblyDiscussionDetail} from '@ui/screens/Polkassembly/PolkassemblyDiscussionDetail';
+import {PolkassemblyDiscussions} from '@ui/screens/Polkassembly/PolkassemblyDiscussions';
+import {ProposeTipScreen} from '@ui/screens/ProposeTipScreen';
+import {ReferendumScreen} from '@ui/screens/ReferendumScreen';
+import RegistrarListScreen from '@ui/screens/RegistrarListScreen';
+import {RegisterSubIdentitiesScreen} from '@ui/screens/subIdentities/RegisterSubIdentitiesScreen';
+import TipDetailScreen from '@ui/screens/tips/TipDetailScreen';
+import {TreasuryScreen} from '@ui/screens/TreasuryScreen';
+import WebviewScreen from '@ui/screens/WebviewScreen';
 import {useAppBackgroundApiReconnect} from 'src/hook/useAppBackgroundApiReconnect';
 import {useFirebase} from 'src/hook/useFirebase';
 import {usePushAuthorizationStatus} from 'src/hook/usePushNotificationsPermissions';
 import {useTurnOnAllNotificationsOnAppStartForAndroid} from 'src/hook/useTurnOnAllNotificationsOnAppStartForAndroid';
-import {DashboardAppBar, MainDrawerAppBar, MainStackAppBar} from 'src/navigation/AppBars';
+import {DashboardAppBar, MainDrawerAppBar, MainStackAppBar} from '@ui/navigation/AppBars';
 import {
   AccountsStackParamList,
   ApiLoadingStackParamList,
@@ -60,10 +61,10 @@ import {
   ParachainsStackParamList,
   PolkassemblyDiscussionStackParamList,
   RootStackParamList,
-} from 'src/navigation/navigation';
-import * as routeKeys from 'src/navigation/routeKeys';
-import {AppBar, IconButton} from 'src/packages/base_components';
-import {AccountsGuideScreen} from 'screen/AccountsGuideScreen';
+} from '@ui/navigation/navigation';
+import * as routeKeys from '@ui/navigation/routeKeys';
+import {AppBar, IconButton} from '@ui/library';
+import {AccountsGuideScreen} from '@ui/screens/AccountsGuideScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 

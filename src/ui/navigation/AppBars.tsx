@@ -3,10 +3,10 @@ import {DrawerNavigationOptions, DrawerNavigationProp} from '@react-navigation/d
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack';
 import {useApi} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
-import NetworkItem from 'presentational/NetworkItem';
+import NetworkItem from '@ui/components/NetworkItem';
 import React, {useContext} from 'react';
-import {networkSelectionScreen} from 'src/navigation/routeKeys';
-import * as Base from 'src/packages/base_components';
+import {networkSelectionScreen} from '@ui/navigation/routeKeys';
+import {AppBar} from '@ui/library';
 
 export function MainDrawerAppBar({
   navigation,
@@ -17,7 +17,12 @@ export function MainDrawerAppBar({
   options: DrawerNavigationOptions;
   navigation: DrawerNavigationProp<ParamListBase>;
 }) {
-  return <Base.MainDrawerAppBar onActionMenuPress={navigation.openDrawer} title={options.title ?? route.name} />;
+  return (
+    <AppBar.Header>
+      <AppBar.Action onPress={navigation.openDrawer} icon={'menu'} />
+      <AppBar.Content title={options.title ?? route.name} />
+    </AppBar.Header>
+  );
 }
 
 export function MainStackAppBar({
@@ -38,19 +43,17 @@ export function MainStackAppBar({
   };
 
   return (
-    <Base.MainStackAppBar
-      headerLeft={
-        options.headerLeft ? (
-          options.headerLeft({onPress: openDrawer})
-        ) : back ? (
-          <Base.AppBar.BackAction onPress={navigation.goBack} />
-        ) : (
-          <Base.AppBar.Action onPress={openDrawer} icon={'menu'} />
-        )
-      }
-      headerRight={options.headerRight ? options.headerRight({}) : null}
-      title={options.title ?? route.name}
-    />
+    <AppBar.Header>
+      {options.headerLeft ? (
+        options.headerLeft({onPress: openDrawer})
+      ) : back ? (
+        <AppBar.BackAction onPress={navigation.goBack} />
+      ) : (
+        <AppBar.Action onPress={openDrawer} icon={'menu'} />
+      )}
+      <AppBar.Content title={options.title ?? route.name} />
+      {options.headerRight ? options.headerRight({}) : null}
+    </AppBar.Header>
   );
 }
 
@@ -66,21 +69,24 @@ export function DashboardAppBar({navigation}: {navigation: StackNavigationProp<P
   const {currentNetwork} = useContext(NetworkContext);
   const {status} = useApi();
 
+  const onActionLeftPress = React.useCallback(() => {
+    if (navigationSupportsDrawer(navigation)) {
+      navigation.openDrawer();
+    }
+  }, [navigation]);
+
   return (
-    <Base.DashboardAppBar
-      onActionLeftPress={() => {
-        if (navigationSupportsDrawer(navigation)) {
-          navigation.openDrawer();
+    <AppBar.Header>
+      <AppBar.Action onPress={onActionLeftPress} icon={'menu'} />
+      <AppBar.Content
+        title="Litentry"
+        onPress={() => navigation.navigate(networkSelectionScreen)}
+        subtitle={
+          currentNetwork ? (
+            <NetworkItem item={currentNetwork} isConnected={status === 'connected' || status === 'ready'} />
+          ) : undefined
         }
-      }}
-      onContentPress={() => {
-        return navigation.navigate(networkSelectionScreen);
-      }}
-      subtitle={
-        currentNetwork ? (
-          <NetworkItem item={currentNetwork} isConnected={status === 'connected' || status === 'ready'} />
-        ) : undefined
-      }
-    />
+      />
+    </AppBar.Header>
   );
 }
