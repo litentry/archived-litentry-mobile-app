@@ -1,5 +1,5 @@
 import {Compact, getTypeDef} from '@polkadot/types';
-import {Call, FunctionMetadataLatest, ProposalIndex} from '@polkadot/types/interfaces';
+import {Call, ProposalIndex} from '@polkadot/types/interfaces';
 import {Codec, IExtrinsic, IMethod, TypeDef} from '@polkadot/types/types';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {useContext} from 'react';
@@ -13,7 +13,7 @@ export interface Param {
   value?: Codec;
 }
 
-export function useParams(proposal: Call): Param[] {
+export function useProposalCallParams(proposal: Call): Param[] {
   const {api} = useContext(ChainApiContext);
   const {method, section} = proposal.registry.findMetaCall(proposal.callIndex);
   const isTreasury = section === 'treasury' && METHOD_TREA.includes(method);
@@ -43,35 +43,4 @@ function extractParams(value: IExtrinsic | IMethod): Param[] {
     }),
   );
   return params;
-}
-
-/**
- * functions bellow help extract useful data
- * from each motion object. they are mostly loosely copied from
- * https://github.com/polkadot-js/apps/blob/master/packages/react-components/src/Call.tsx
- */
-
-export function formatCallMeta(meta?: FunctionMetadataLatest): string {
-  if (!meta || !meta.docs.length) {
-    return '';
-  }
-
-  const strings = meta.docs.map((doc) => doc.toString().trim());
-  const firstEmpty = strings.findIndex((doc) => !doc.length);
-  const combined = (firstEmpty === -1 ? strings : strings.slice(0, firstEmpty))
-    .join(' ')
-    .replace(/#(<weight>| <weight>).*<\/weight>/, '');
-  const parts = splitParts(combined.replace(/\\/g, '').replace(/`/g, ''));
-
-  return parts.join(' ');
-}
-
-function splitSingle(value: string[], sep: string): string[] {
-  return value.reduce((result: string[], _value: string): string[] => {
-    return _value.split(sep).reduce((_result: string[], __value: string) => _result.concat(__value), result);
-  }, []);
-}
-
-function splitParts(value: string): string[] {
-  return ['[', ']'].reduce((result: string[], sep) => splitSingle(result, sep), [value]);
 }
