@@ -1,8 +1,8 @@
+import React, {useContext, useState} from 'react';
+import {Alert, StyleSheet, View} from 'react-native';
 import {Button, Icon, IconProps, Input, Layout, Tab, TabView, Text} from '@ui-kitten/components';
 import {NetworkContext} from 'context/NetworkContext';
 import QRCamera from '@ui/components/QRCamera';
-import React, {useContext, useState} from 'react';
-import {Alert, StyleSheet, View} from 'react-native';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 import {Padder} from '@ui/components/Padder';
 import {monofontFamily, standardPadding} from '@ui/styles';

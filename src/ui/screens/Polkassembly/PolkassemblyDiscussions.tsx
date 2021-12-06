@@ -1,6 +1,6 @@
 import {NavigationProp} from '@react-navigation/native';
 import {Button, Card, Divider, Icon, MenuItem, OverflowMenu, Text, useTheme} from '@ui-kitten/components';
-import AddressInlineTeaser from 'layout/AddressInlineTeaser';
+import AddressInlineTeaser from '@ui/components/AddressInlineTeaser';
 import {flatten} from 'lodash';
 import moment from 'moment';
 import {Label} from '@ui/components/Label';

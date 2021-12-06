@@ -15,7 +15,7 @@ import StatInfoBlock from '@ui/components/StatInfoBlock';
 import {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
 import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
-import {BlockTime} from 'layout/BlockTime';
+import {BlockTime} from '@ui/components/BlockTime';
 import LoadingView from '@ui/components/LoadingView';
 import {monofontFamily} from '@ui/styles';
 import {useNavigation} from '@react-navigation/core';

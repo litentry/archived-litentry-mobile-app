@@ -1,5 +1,5 @@
-import {NetworkContext} from 'context/NetworkContext';
 import React, {createContext, useContext} from 'react';
+import {NetworkContext} from 'context/NetworkContext';
 import {usePersistedState} from 'src/hook/usePersistedState';
 import {SupportedNetworkType} from 'src/types';
 

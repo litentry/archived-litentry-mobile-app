@@ -1,13 +1,13 @@
+import React from 'react';
 import {SectionList, StyleSheet, View, useWindowDimensions} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {u8aToString} from '@polkadot/util';
 import {Card, Layout, Text} from '@ui-kitten/components';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {Account} from 'layout/Account';
+import {Account} from '@ui/components/Account';
 import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import React from 'react';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useTreasuryInfo} from 'src/api/hooks/useTreasuryInfo';
 import globalStyles, {standardPadding} from '@ui/styles';

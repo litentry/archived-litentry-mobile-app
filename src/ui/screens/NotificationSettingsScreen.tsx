@@ -1,10 +1,10 @@
+import React from 'react';
+import {StyleSheet, Switch, View} from 'react-native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {Divider, Icon, Layout, ListItem, Text} from '@ui-kitten/components';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import React from 'react';
-import {StyleSheet, Switch, View} from 'react-native';
 import {usePushTopics} from 'src/hook/usePushTopics';
 import {DrawerParamList} from '@ui/navigation/navigation';
 import globalStyles, {standardPadding} from '@ui/styles';

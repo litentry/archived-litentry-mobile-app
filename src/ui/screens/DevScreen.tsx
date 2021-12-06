@@ -1,14 +1,14 @@
 import React, {useCallback, useContext, useRef, useState} from 'react';
+import {Alert, StyleSheet, View} from 'react-native';
 import {Button, Divider, Layout, ListItem, Text} from '@ui-kitten/components';
 import {useAccounts} from 'src/context/AccountsContext';
 import {InAppNotificationContent, InAppNotificationContext} from 'context/InAppNotificationContext';
 import {ChainApiContext} from 'context/ChainApiContext';
-import {Alert, StyleSheet, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Modalize} from 'react-native-modalize';
 import {standardPadding} from '@ui/styles';
 import {NetworkContext} from 'context/NetworkContext';
-import RegistrarSelectionModal from 'layout/RegistrarSelectionModal';
+import RegistrarSelectionModal from '@ui/components/RegistrarSelectionModal';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 
 function DevScreen() {

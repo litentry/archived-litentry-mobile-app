@@ -1,11 +1,11 @@
+import React from 'react';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {RouteProp} from '@react-navigation/core';
 import {Icon, Input, Text, ListItem, useTheme, Button} from '@ui-kitten/components';
 import FormLabel from '@ui/components/FormLabel';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import React from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {exportAccountWithJsonFileScreen} from '@ui/navigation/routeKeys';
 import {monofontFamily, standardPadding} from '@ui/styles';

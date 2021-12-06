@@ -1,3 +1,5 @@
+import React, {useCallback, useContext, useEffect, useMemo, useReducer, useRef} from 'react';
+import {Alert, StyleSheet, View} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
 import {Button, Divider, Icon, IconProps, Input, Layout, Tab, TabView, Text} from '@ui-kitten/components';
 import {ChainApiContext} from 'context/ChainApiContext';
@@ -6,8 +8,6 @@ import ModalTitle from '@ui/components/ModalTitle';
 import {Padder} from '@ui/components/Padder';
 import QRCamera from '@ui/components/QRCamera';
 import SuccessDialog from '@ui/components/SuccessDialog';
-import React, {useCallback, useContext, useEffect, useMemo, useReducer, useRef} from 'react';
-import {Alert, StyleSheet, View} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import AddressInfoPreview from './AddressPreview';
 import {AppStackParamList} from '@ui/navigation/navigation';

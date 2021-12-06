@@ -4,7 +4,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {RouteProp} from '@react-navigation/native';
 import {Button, Card, Icon, Layout, Modal, Text} from '@ui-kitten/components';
 import {useApi} from 'context/ChainApiContext';
-import AddressInlineTeaser from 'layout/AddressInlineTeaser';
+import AddressInlineTeaser from '@ui/components/AddressInlineTeaser';
 import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';

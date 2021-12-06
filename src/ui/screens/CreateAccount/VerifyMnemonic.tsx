@@ -1,8 +1,8 @@
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {shuffle} from 'lodash';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {createAccountScreen, verifyMnemonicScreen} from '@ui/navigation/routeKeys';
 import {Button, Text, TextInput} from '@ui/library';

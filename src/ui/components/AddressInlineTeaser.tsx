@@ -1,9 +1,9 @@
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
 import {LoadingItem} from '@ui/components/LoadingBox';
 import {Padder} from '@ui/components/Padder';
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 
 type PropTypes = {

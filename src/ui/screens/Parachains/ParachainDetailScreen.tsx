@@ -5,7 +5,7 @@ import {RouteProp} from '@react-navigation/native';
 import {ParachainsStackParamList} from '@ui/navigation/navigation';
 import {Text, Divider, useTheme, ListItem, Icon, Button} from '@ui-kitten/components';
 import {Padder} from '@ui/components/Padder';
-import {BlockTime} from 'layout/BlockTime';
+import {BlockTime} from '@ui/components/BlockTime';
 import {useParachainEvents} from 'src/api/hooks/useParachainEvents';
 import {formatNumber, hexToBn} from '@polkadot/util';
 import {monofontFamily, standardPadding} from '@ui/styles';

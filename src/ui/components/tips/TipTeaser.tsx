@@ -1,11 +1,11 @@
-import {Card} from '@ui-kitten/components';
-import AddressInlineTeaser from 'layout/AddressInlineTeaser';
-import {TipReason} from 'layout/tips/TipReason';
-import {Padder} from 'src/packages/base_components';
 import React from 'react';
 import {StyleSheet} from 'react-native';
+import {Card} from '@ui-kitten/components';
+import AddressInlineTeaser from '@ui/components/AddressInlineTeaser';
+import {TipReason} from '@ui/components/tips/TipReason';
+import {Padder} from '@ui/components/Padder';
 import {Tip} from 'src/api/hooks/useTips';
-import {standardPadding} from 'src/styles';
+import {standardPadding} from '@ui/styles';
 
 type TipTeaserProps = {
   tip: Tip;

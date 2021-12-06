@@ -1,8 +1,8 @@
+import React, {useContext, useEffect, useRef} from 'react';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Button, Divider, Layout} from '@ui-kitten/components';
 import Balances from '@ui/components/Balances';
 import ModalTitle from '@ui/components/ModalTitle';
-import React, {useContext, useEffect, useRef} from 'react';
 import {Modalize} from 'react-native-modalize';
 import {useAccountInfo} from 'src/api/hooks/useAccountInfo';
 import {useAccounts} from 'src/context/AccountsContext';

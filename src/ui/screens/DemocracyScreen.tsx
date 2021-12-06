@@ -1,3 +1,5 @@
+import * as React from 'react';
+import {SectionList, StyleSheet, View} from 'react-native';
 import type {DeriveProposal, DeriveReferendumExt} from '@polkadot/api-derive/types';
 import {BN_ONE} from '@polkadot/util';
 import {useNavigation} from '@react-navigation/native';
@@ -9,8 +11,6 @@ import {Padder} from '@ui/components/Padder';
 import {ProposalInfo} from '@ui/components/ProposalInfo';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SubmitProposalButton} from '@ui/components/SubmitProposalButton';
-import * as React from 'react';
-import {SectionList, StyleSheet, View} from 'react-native';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import {useDemocracy} from 'src/api/hooks/useDemocracy';

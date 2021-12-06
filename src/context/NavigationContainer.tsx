@@ -1,8 +1,8 @@
 import React from 'react';
 import {NavigationContainer as RNnavigationContainer} from '@react-navigation/native';
 import {useTheme} from 'src/context/ThemeContext';
-import {darkTheme, lightTheme} from 'src/navigation/theme';
-import {linking} from 'src/navigation/routeKeys';
+import {darkTheme, lightTheme} from '@ui/navigation/theme';
+import {linking} from '@ui/navigation/routeKeys';
 import SplashScreen from 'react-native-splash-screen';
 
 type PropTypes = {

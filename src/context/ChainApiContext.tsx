@@ -1,9 +1,9 @@
-import {ApiPromise, WsProvider} from '@polkadot/api';
 import React, {createContext, useCallback, useContext, useEffect, useReducer} from 'react';
+import {ApiPromise, WsProvider} from '@polkadot/api';
 import {createLogger} from 'src/utils';
 import {NetworkContext} from './NetworkContext';
 import {useNavigation} from '@react-navigation/core';
-import {connectionRetryScreen} from 'src/navigation/routeKeys';
+import {connectionRetryScreen} from '@ui/navigation/routeKeys';
 
 const initialState: ChainApiContext = {
   status: 'unknown',

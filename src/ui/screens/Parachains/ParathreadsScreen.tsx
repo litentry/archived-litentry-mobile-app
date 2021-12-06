@@ -15,7 +15,7 @@ import LoadingView from '@ui/components/LoadingView';
 import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {notEmpty} from 'src/utils';
-import {BlockTime} from 'layout/BlockTime';
+import {BlockTime} from '@ui/components/BlockTime';
 import {getLeasePeriodString} from 'src/api/utils/parachainLeases';
 
 type ParathreadData = {

@@ -1,3 +1,5 @@
+import React from 'react';
+import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {BN_ZERO} from '@polkadot/util';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Text, useTheme} from '@ui-kitten/components';
@@ -5,8 +7,6 @@ import {useAccounts} from 'context/AccountsContext';
 import Icon from '@ui/components/Icon';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import React from 'react';
-import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useAccountInfo} from 'src/api/hooks/useAccountInfo';

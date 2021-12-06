@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import React, {createContext, useCallback, useEffect, useMemo, useReducer, useRef} from 'react';
+import {Dimensions, StyleSheet} from 'react-native';
 import {ApiPromise} from '@polkadot/api';
 import {SubmittableExtrinsic} from '@polkadot/api/submittable/types';
 import {ExtrinsicPayload} from '@polkadot/types/interfaces';
@@ -10,19 +12,17 @@ import {useApi} from 'context/ChainApiContext';
 import {AuthenticateView} from 'context/TxContext/AuthenticateView';
 import {TxPreview} from 'context/TxContext/TxPreview';
 import {get} from 'lodash';
-import ErrorDialog from 'presentational/ErrorDialog';
-import LoadingView from 'presentational/LoadingView';
-import SuccessDialog from 'presentational/SuccessDialog';
-import TxPayloadQr from 'presentational/TxPayloadQr';
-import WarningDialog from 'presentational/WarningDialog';
-import React, {createContext, useCallback, useEffect, useMemo, useReducer, useRef} from 'react';
-import {Dimensions, StyleSheet} from 'react-native';
+import ErrorDialog from '@ui/components/ErrorDialog';
+import LoadingView from '@ui/components/LoadingView';
+import SuccessDialog from '@ui/components/SuccessDialog';
+import TxPayloadQr from '@ui/components/TxPayloadQr';
+import WarningDialog from '@ui/components/WarningDialog';
 import {Modalize} from 'react-native-modalize';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import SubstrateSign from 'react-native-substrate-sign';
-import {formatCallMeta} from 'src/packages/call_inspector/useCallParams';
+import {formatCallMeta} from 'src/utils';
 import AsyncSigner from 'src/service/AsyncSigner';
-import globalStyles, {standardPadding} from 'src/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 
 let id = 0;
 

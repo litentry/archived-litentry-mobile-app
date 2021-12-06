@@ -1,8 +1,8 @@
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
 import {Card} from '@ui-kitten/components/ui';
 import {SectionTeaserContainer} from '@ui/components/SectionTeaserContainer';
 import StatInfoBlock from '@ui/components/StatInfoBlock';
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
 import {useDemocracySummary} from 'src/api/hooks/useDemocracySummary';
 import {formatNumber, BN_ONE, BN_ZERO, BN_HUNDRED} from '@polkadot/util';
 import {Padder} from '@ui/components/Padder';

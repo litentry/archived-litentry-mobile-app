@@ -1,8 +1,8 @@
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, View} from 'react-native';
 import {Button, Icon, Layout, Text, useTheme} from '@ui-kitten/components';
 import {Padder} from '@ui/components/Padder';
 import SafeView from '@ui/components/SafeView';
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
 import {usePushNotificationsPermissions} from 'src/hook/usePushNotificationsPermissions';
 import globalStyles, {standardPadding} from '@ui/styles';
 

@@ -1,17 +1,17 @@
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Card} from '@ui-kitten/components';
-import AddressInlineTeaser from 'layout/AddressInlineTeaser';
-import {LoadingBox} from 'presentational/LoadingBox';
-import {Padder} from 'src/packages/base_components';
-import {SectionTeaserContainer} from 'presentational/SectionTeaserContainer';
-import StatInfoBlock from 'presentational/StatInfoBlock';
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import AddressInlineTeaser from '@ui/components/AddressInlineTeaser';
+import {LoadingBox} from '@ui/components/LoadingBox';
+import {Padder} from '@ui/components/Padder';
+import {SectionTeaserContainer} from '@ui/components/SectionTeaserContainer';
+import StatInfoBlock from '@ui/components/StatInfoBlock';
 import {useTips} from 'src/api/hooks/useTips';
-import {TipReason} from 'src/layout/tips/TipReason';
-import {DashboardStackParamList} from 'src/navigation/navigation';
-import {tipDetailScreen} from 'src/navigation/routeKeys';
+import {TipReason} from '@ui/components/tips/TipReason';
+import {DashboardStackParamList} from '@ui/navigation/navigation';
+import {tipDetailScreen} from '@ui/navigation/routeKeys';
 
 type TipsSummaryTeaserProps = {
   onPressMore: () => void;

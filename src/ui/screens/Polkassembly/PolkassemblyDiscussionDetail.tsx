@@ -1,3 +1,5 @@
+import React from 'react';
+import {Linking, StyleSheet, TouchableOpacity, View, FlatList} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {Text, useTheme} from '@ui-kitten/components';
 import moment from 'moment';
@@ -6,8 +8,6 @@ import {Label} from '@ui/components/Label';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import React from 'react';
-import {Linking, StyleSheet, TouchableOpacity, View, FlatList} from 'react-native';
 import {usePolkassemblyDiscussionDetail} from 'src/api/hooks/usePolkassemblyDiscussionDetail';
 import {PolkassemblyDiscussionStackParamList} from '@ui/navigation/navigation';
 import {polkassemblyDiscussionDetail} from '@ui/navigation/routeKeys';

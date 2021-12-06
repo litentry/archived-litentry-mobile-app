@@ -1,6 +1,6 @@
 import React from 'react';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import RegistrarList from 'layout/RegistrarList';
+import RegistrarList from '@ui/components/RegistrarList';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {DrawerParamList} from '@ui/navigation/navigation';
 

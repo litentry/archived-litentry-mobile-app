@@ -1,8 +1,8 @@
+import React, {useEffect, useRef} from 'react';
+import {Image, ImageSourcePropType, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
 import {Button, Icon, Layout, Text, useTheme, ViewPager} from '@ui-kitten/components';
 import ModalTitle from '@ui/components/ModalTitle';
-import React, {useEffect, useRef} from 'react';
-import {Image, ImageSourcePropType, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import {AppStackParamList} from '@ui/navigation/navigation';
 import globalStyles, {standardPadding} from '@ui/styles';

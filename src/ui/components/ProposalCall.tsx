@@ -11,7 +11,7 @@ import {Text} from '@ui-kitten/components';
 import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
 import {Padder} from '@ui/components/Padder';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import {Account} from 'src/layout/Account';
+import {Account} from '@ui/components/Account';
 import {Card} from '@ui/library';
 import {useProposalCallParams} from 'hook/useProposalCallParams';
 import globalStyles from '@ui/styles';

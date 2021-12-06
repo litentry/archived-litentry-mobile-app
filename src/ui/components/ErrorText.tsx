@@ -1,7 +1,6 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import {Text} from '@ui/library';
-import {useTheme} from '@ui/library';
+import {Text, useTheme} from '@ui/library';
 
 export function ErrorText(props: {children: React.ReactNode}) {
   const theme = useTheme();
