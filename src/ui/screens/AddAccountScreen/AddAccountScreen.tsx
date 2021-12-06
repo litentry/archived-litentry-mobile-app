@@ -12,7 +12,7 @@ import {Modalize} from 'react-native-modalize';
 import AddressInfoPreview from './AddressPreview';
 import {AppStackParamList} from '@ui/navigation/navigation';
 import {default as globalStyles, monofontFamily, standardPadding} from '@ui/styles';
-import {isAddressValid, parseAddress} from 'src/utils';
+import {isAddressValid, parseAddress} from 'src/utils/address';
 import {useAccounts} from 'context/AccountsContext';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 

@@ -6,7 +6,7 @@ import QRCamera from '@ui/components/QRCamera';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 import {Padder} from '@ui/components/Padder';
 import {monofontFamily, standardPadding} from '@ui/styles';
-import {isAddressValid, parseAddress} from 'src/utils';
+import {isAddressValid, parseAddress} from 'src/utils/address';
 
 const QrIcon = (props: IconProps) => (
   <Layout style={styles.tabTitle}>
