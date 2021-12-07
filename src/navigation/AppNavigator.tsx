@@ -1,6 +1,6 @@
 import messaging from '@react-native-firebase/messaging';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createStackNavigator, StackNavigationOptions} from '@react-navigation/stack';
 import {ChainApiContext} from 'context/ChainApiContext';
 import React from 'react';
 import {AccountsScreen} from 'screen/AccountsScreen';
@@ -64,6 +64,7 @@ import {
 import * as routeKeys from 'src/navigation/routeKeys';
 import {AppBar, IconButton} from 'src/packages/base_components';
 import {AccountsGuideScreen} from 'screen/AccountsGuideScreen';
+import {ReceiveFundScreen} from 'screen/ReceiveFundScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -129,6 +130,27 @@ function AccountsNavigator() {
       <AccountsStack.Screen
         name={routeKeys.exportAccountWithJsonFileScreen}
         component={ExportAccountWithJsonFileScreen}
+      />
+      <AccountsStack.Screen
+        name={routeKeys.receiveFundScreen}
+        component={ReceiveFundScreen}
+        options={overlayScreenOptions}
+      />
+      <AccountsStack.Screen
+        name={routeKeys.addAccountScreen}
+        component={AddAccountScreen}
+        options={overlayScreenOptions}
+      />
+      <AccountsStack.Screen name={routeKeys.balanceScreen} component={BalanceScreen} options={overlayScreenOptions} />
+      <AccountsStack.Screen
+        name={routeKeys.identityGuideScreen}
+        component={IdentityGuideScreen}
+        options={overlayScreenOptions}
+      />
+      <AccountsStack.Screen
+        name={routeKeys.accountsGuideScreen}
+        component={AccountsGuideScreen}
+        options={overlayScreenOptions}
       />
     </AccountsStack.Navigator>
   );
@@ -267,25 +289,11 @@ function AppNavigator() {
   }
 
   return (
-    <AppStack.Navigator
-      screenOptions={{
-        presentation: 'transparentModal',
-        headerShown: false,
-        animationEnabled: false,
-        cardStyle: {
-          backgroundColor: 'transparent',
-          opacity: 1,
-        },
-        gestureEnabled: false,
-      }}>
+    <AppStack.Navigator screenOptions={overlayScreenOptions}>
       {pushAuthorizationStatus && pushAuthorizationStatus === messaging.AuthorizationStatus.NOT_DETERMINED ? (
         <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen} component={PermissionGrantingPrompt} />
       ) : undefined}
       <AppStack.Screen name={routeKeys.drawerNavigatorScreen} component={DrawerNavigator} />
-      <AppStack.Screen name={routeKeys.addAccountScreen} component={AddAccountScreen} />
-      <AppStack.Screen name={routeKeys.balanceScreen} component={BalanceScreen} />
-      <AppStack.Screen name={routeKeys.identityGuideScreen} component={IdentityGuideScreen} />
-      <AppStack.Screen name={routeKeys.accountsGuideScreen} component={AccountsGuideScreen} />
     </AppStack.Navigator>
   );
 }
@@ -298,17 +306,7 @@ function RootNavigator() {
   const {status} = React.useContext(ChainApiContext);
 
   return (
-    <RootStack.Navigator
-      screenOptions={{
-        presentation: 'transparentModal',
-        headerShown: false,
-        animationEnabled: false,
-        cardStyle: {
-          backgroundColor: 'transparent',
-          opacity: 1,
-        },
-        gestureEnabled: false,
-      }}>
+    <RootStack.Navigator screenOptions={overlayScreenOptions}>
       {status === 'ready' ? <RootStack.Screen name={routeKeys.appStack} component={AppNavigator} /> : undefined}
       <RootStack.Screen name={routeKeys.apiLoadingStack} component={ApiLoadingNavigator} />
     </RootStack.Navigator>
@@ -316,3 +314,14 @@ function RootNavigator() {
 }
 
 export default RootNavigator;
+
+const overlayScreenOptions: StackNavigationOptions = {
+  presentation: 'transparentModal',
+  headerShown: false,
+  animationEnabled: false,
+  cardStyle: {
+    backgroundColor: 'transparent',
+    opacity: 1,
+  },
+  gestureEnabled: false,
+};
