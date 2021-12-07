@@ -22,6 +22,9 @@ const eventsMock: Event[] = [
   {title: 'Treasury election', date: '2021-12-27T12:00:00', via: 'Treasury'},
   {title: 'Budget', date: '2021-12-31T12:00:00', via: 'Budget'},
   {title: 'Citizen', date: '2022-01-03T12:00:00', via: 'Citizen'},
+  {title: 'Treasury election', date: '2022-01-08T12:00:00', via: 'Treasury'},
+  {title: 'Budget', date: '2022-01-14T12:00:00', via: 'Budget'},
+  {title: 'Citizen', date: '2022-01-20T12:00:00', via: 'Citizen'},
 ];
 
 const CALENDAR_FORMAT = 'YYYY-MM-DD';
