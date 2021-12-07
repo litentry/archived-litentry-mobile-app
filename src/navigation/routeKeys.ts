@@ -35,7 +35,7 @@ export const bountyDetailScreen = 'Bounty' as const;
 export const parachainsOverviewScreen = 'parachainsOverview' as const;
 export const parachainDetailScreen = 'parachainDetail' as const;
 export const parachainAuctionsScreen = 'parachainAuctions' as const;
-export const calendarScreen = 'Calendar' as const;
+export const calendarScreen = 'Event Calendar' as const;
 
 export const webviewScreen = 'Webview' as const;
 export const devScreen = 'Dev Kit' as const;
