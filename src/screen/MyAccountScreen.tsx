@@ -2,11 +2,10 @@ import {BN_ZERO} from '@polkadot/util';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Text, useTheme} from '@ui-kitten/components';
 import {useAccounts} from 'context/AccountsContext';
-import Icon from 'presentational/Icon';
 import {Button, Padder} from 'src/packages/base_components';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React from 'react';
-import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Alert, StyleSheet, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useAccountInfo} from 'src/api/hooks/useAccountInfo';
@@ -65,31 +64,27 @@ export function MyAccountScreen({
           />
         </View>
         <Padder scale={1} />
-        <TouchableOpacity
-          style={styles.button}
+        <Button
           onPress={() => {
             navigation.navigate(balanceScreen, {address});
-          }}>
-          <View style={[styles.iconContainer, {backgroundColor: theme['background-basic-color-2']}]}>
-            <Icon style={styles.icon} fill={theme['text-basic-color']} name="credit-card" />
-          </View>
-          <Padder scale={2} />
-          <Text category="h6">Show Balance details</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
+          }}
+          icon="credit-card"
+          mode="outlined">
+          Show Balance details
+        </Button>
+        <Padder scale={1} />
+        <Button
           onPress={() => {
             navigation.navigate(manageIdentityScreen, {address});
             navigation.navigate(identityGuideScreen);
-          }}>
-          <View style={[styles.iconContainer, {backgroundColor: theme['background-basic-color-2']}]}>
-            <Icon style={styles.icon} fill={theme['text-basic-color']} name="settings-2" />
-          </View>
-          <Padder scale={2} />
-          <Text category="h6">Manage Identity</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
+          }}
+          icon="cog"
+          mode="outlined">
+          Manage Identity
+        </Button>
+        <Padder scale={1} />
+        <Button
+          mode="outlined"
           onPress={() => {
             Alert.alert('Delete Account!', 'Are you sure you want to delete this account?', [
               {text: 'Cancel', style: 'cancel'},
@@ -102,25 +97,23 @@ export function MyAccountScreen({
                 style: 'destructive',
               },
             ]);
-          }}>
-          <View style={[styles.iconContainer, {backgroundColor: theme['background-basic-color-2']}]}>
-            <Icon style={styles.icon} fill={theme['text-basic-color']} name="close-circle" />
-          </View>
-          <Padder scale={2} />
-          <Text category="h6">Remove Account</Text>
-        </TouchableOpacity>
-        {!account.isExternal ? (
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate(exportAccountWithJsonFileScreen, {address})}>
-            <View style={[styles.iconContainer, {backgroundColor: theme['background-basic-color-2']}]}>
-              <Icon style={styles.icon} fill={theme['text-basic-color']} name="close-circle" />
-            </View>
-            <Padder scale={2} />
-            <Text category="h6">Export Account</Text>
-          </TouchableOpacity>
+          }}
+          icon="close-circle">
+          Remove Account
+        </Button>
+        <Padder scale={1} />
+        {account.isExternal ? (
+          <>
+            <Button
+              onPress={() => navigation.navigate(exportAccountWithJsonFileScreen, {address})}
+              icon="export"
+              mode="outlined">
+              Export Account
+            </Button>
+            <Padder scale={1} />
+          </>
         ) : null}
-        <Button onPress={() => navigation.navigate(receiveFundScreen, {address})} icon="download">
+        <Button onPress={() => navigation.navigate(receiveFundScreen, {address})} icon="download" mode="outlined">
           Recieve Fund
         </Button>
       </ScrollView>
