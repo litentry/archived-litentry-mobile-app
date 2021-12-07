@@ -64,6 +64,7 @@ import {
 import * as routeKeys from 'src/navigation/routeKeys';
 import {AppBar, IconButton} from 'src/packages/base_components';
 import {AccountsGuideScreen} from 'screen/AccountsGuideScreen';
+import {CalendarScreen} from 'screen/CalendarScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -93,6 +94,7 @@ function DashboardStackNavigator() {
       />
       <DashboardStack.Screen name={routeKeys.bountiesScreen} component={BountiesScreen} />
       <DashboardStack.Screen name={routeKeys.bountyDetailScreen} component={BountyDetailScreen} />
+      <DashboardStack.Screen name={routeKeys.calendarScreen} component={CalendarScreen} />
     </DashboardStack.Navigator>
   );
 }

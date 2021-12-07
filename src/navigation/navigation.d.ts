@@ -52,6 +52,7 @@ import {
   apiLoadingStack,
   parachainAuctionsScreen,
   accountsGuideScreen,
+  calendarScreen,
 } from 'src/navigation/routeKeys';
 
 type DashboardStackParamList = {
@@ -77,6 +78,7 @@ type DashboardStackParamList = {
   [democracyProposalScreen]: {index: string};
   [bountiesScreen]: undefined;
   [bountyDetailScreen]: {index: string};
+  [calendarScreen]: undefined;
 };
 
 type DrawerParamList = {

@@ -11,8 +11,9 @@ import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {useCustomBackHandler} from 'src/hook/useCustomBackHandler';
 import {ApiLoadingStackParamList, DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
-import {bountiesScreen, councilScreen, democracyScreen, treasuryScreen} from 'src/navigation/routeKeys';
+import {bountiesScreen, calendarScreen, councilScreen, democracyScreen, treasuryScreen} from 'src/navigation/routeKeys';
 import globalStyles from 'src/styles';
+import {Button} from 'src/packages/base_components';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
@@ -32,6 +33,7 @@ function DashboardScreen({navigation}: PropTypes) {
       <FadeInAnimatedView>
         <View style={[globalStyles.flex, styles.main]}>
           <ScrollView style={styles.scrollView}>
+            <Button onPress={() => navigation.navigate(calendarScreen)}>Calendar</Button>
             <DemocracySummaryTeaser onPressMore={() => navigation.navigate(democracyScreen)} />
             <CouncilSummaryTeaser onPressMore={() => navigation.navigate(councilScreen)} />
             <TreasurySummaryTeaser onPressMore={() => navigation.navigate(treasuryScreen)} />
