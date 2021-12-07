@@ -6,7 +6,7 @@ import React, {useContext, useEffect, useRef} from 'react';
 import {Modalize} from 'react-native-modalize';
 import {useAccountInfo} from 'src/api/hooks/useAccountInfo';
 import {useAccounts} from 'src/context/AccountsContext';
-import {AppStackParamList} from 'src/navigation/navigation';
+import {AccountsStackParamList} from 'src/navigation/navigation';
 import {balanceScreen} from 'src/navigation/routeKeys';
 import globalStyles from 'src/styles';
 import {NetworkContext} from '../context/NetworkContext';
@@ -15,8 +15,8 @@ export function BalanceScreen({
   navigation,
   route,
 }: {
-  navigation: NavigationProp<AppStackParamList>;
-  route: RouteProp<AppStackParamList, typeof balanceScreen>;
+  navigation: NavigationProp<AccountsStackParamList>;
+  route: RouteProp<AccountsStackParamList, typeof balanceScreen>;
 }) {
   const {currentNetwork} = useContext(NetworkContext);
   const {accounts} = useAccounts();
