@@ -24,23 +24,44 @@ const eventsMock: Event[] = [
   {title: 'Citizen', date: '2022-01-03T12:00:00', via: 'Citizen'},
 ];
 
+const CALENDAR_FORMAT = 'YYYY-MM-DD';
+
+function useEvents() {
+  const {firstEventDate, lastEventDate} = eventsMock.reduce<{lastEventDate?: string; firstEventDate?: string}>(
+    (acc, event) => {
+      return {
+        firstEventDate: moment(event.date).isBefore(acc.firstEventDate) ? event.date : acc.firstEventDate,
+        lastEventDate: moment(event.date).isAfter(acc.lastEventDate) ? event.date : acc.lastEventDate,
+      };
+    },
+    {lastEventDate: undefined, firstEventDate: undefined},
+  );
+
+  return {events: eventsMock, lastEventDate, firstEventDate};
+}
+
 export function CalendarScreen() {
   const [date, setDate] = React.useState(() => new Date());
 
-  const daysEvents = eventsMock.filter((event) => moment(event.date).isSame(date, 'day'));
+  const {lastEventDate, firstEventDate, events} = useEvents();
+  const daysEvents = events.filter((event) => moment(event.date).isSame(date, 'day'));
+
+  const markedDates = {
+    [moment(date).format('yyyy-MM-DD')]: {selected: true},
+    ...events.reduce((acc, event) => {
+      const dateString = moment(event.date).format(CALENDAR_FORMAT);
+      acc[dateString] = {marked: true, selected: dateString === moment(date).format(CALENDAR_FORMAT)};
+      return acc;
+    }, {} as {[key: string]: {marked: boolean; selected?: boolean}}),
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Card style={styles.card}>
         <Calendar
-          markedDates={{
-            [moment(date).format('yyyy-MM-DD')]: {selected: true},
-            ...eventsMock.reduce((acc, event) => {
-              const dateString = moment(event.date).format('yyyy-MM-DD');
-              acc[dateString] = {marked: true, selected: dateString === moment(date).format('yyyy-MM-DD')};
-              return acc;
-            }, {} as {[key: string]: any}),
-          }}
+          maxDate={lastEventDate ? new Date(lastEventDate) : undefined}
+          minDate={firstEventDate ? new Date(firstEventDate) : undefined}
+          markedDates={markedDates}
           onDayPress={(d) => setDate(new Date(d.dateString))}
         />
       </Card>
@@ -61,6 +82,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: standardPadding,
   },
+  noEventsText: {
+    color: '#999',
+    textAlign: 'center',
+    marginVertical: standardPadding * 3,
+  },
 });
 
 function EventsDisplay({events, headline}: {events: Event[]; headline: string}) {
@@ -69,6 +95,7 @@ function EventsDisplay({events, headline}: {events: Event[]; headline: string}) 
     <Card style={styles.card}>
       <Headline>{headline}</Headline>
       <View>
+        {events.length === 0 && <Caption style={styles.noEventsText}>No events scheduled for this day</Caption>}
         {events.map((event, index) => (
           <View key={index} style={styles.eventRow}>
             <Text style={{color: colors.accent}}>{moment(event.date).format('HH:mm')}</Text>
