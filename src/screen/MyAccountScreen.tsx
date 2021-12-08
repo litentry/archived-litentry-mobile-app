@@ -18,6 +18,7 @@ import {
   identityGuideScreen,
   manageIdentityScreen,
   receiveFundScreen,
+  sendFundScreen,
 } from 'src/navigation/routeKeys';
 import {standardPadding} from 'src/styles';
 
@@ -115,6 +116,10 @@ export function MyAccountScreen({
         ) : null}
         <Button onPress={() => navigation.navigate(receiveFundScreen, {address})} icon="download" mode="outlined">
           Recieve Fund
+        </Button>
+        <Padder scale={1} />
+        <Button onPress={() => navigation.navigate(sendFundScreen, {address})} icon="upload" mode="outlined">
+          Send Fund
         </Button>
       </ScrollView>
     </SafeView>

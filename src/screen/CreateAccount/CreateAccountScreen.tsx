@@ -5,6 +5,7 @@ import {NetworkContext} from 'context/NetworkContext';
 import {ProgressBar} from 'presentational/ProgressBar';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React from 'react';
+import {KeyboardAvoidingView, Platform} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import SubstrateSign from 'react-native-substrate-sign';
 import {AccountsStackParamList} from 'src/navigation/navigation';
@@ -89,68 +90,70 @@ export function CreateAccountScreen({
 
   return (
     <SafeView edges={noTopEdges}>
-      <ScrollView style={globalStyles.paddedContainer}>
-        <List.Item
-          title={() => <Text>{account.title}</Text>}
-          left={() => <IdentityIcon value={address} size={40} />}
-          description={address}
-        />
-        <Padder scale={1} />
-        <TextInput autoComplete={false} label={'Mnemonic seed'} value={mnemonic} disabled multiline />
-        <Caption>
-          {`Please write down the mnemonic seed and keep it in a safe place. The mnemonic can be used to restore your account. keep it carefully to not lose your assets.`}
-        </Caption>
-        <Padder scale={2} />
-        <TextInput
-          mode="outlined"
-          autoComplete
-          label={'Descriptive name for the account'}
-          value={account.title}
-          onChangeText={(text) => setAccount({...account, title: text})}
-        />
-        <Padder scale={1} />
-        <TextInput
-          secureTextEntry={!isPasswordVisible}
-          label={'New password for the account'}
-          value={account.password}
-          onChangeText={(text) => {
-            setAccount({...account, password: text});
-          }}
-          right={
-            <TextInput.Icon
-              onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-              name={`${isPasswordVisible ? 'eye' : 'eye-off'}-outline`}
-              color={theme.colors.disabled}
-            />
-          }
-          mode="outlined"
-          autoComplete={false}
-          error={Boolean(account.password) && passwordStrength < 3}
-        />
-        <View style={styles.passwordMeter}>
-          <ProgressBar percentage={passwordStrength * 25} requiredAmount={75} />
-        </View>
-        <Padder scale={1} />
-        <TextInput
-          mode="outlined"
-          secureTextEntry={!isPasswordVisible}
-          label={'Confirm password'}
-          value={account.confirmPassword}
-          onChangeText={(text) => setAccount({...account, confirmPassword: text})}
-          error={Boolean(account.confirmPassword) && account.password !== account.confirmPassword}
-          autoComplete={false}
-        />
-        <Padder scale={2} />
-        {error ? (
-          <>
-            <ErrorText>{error}</ErrorText>
-            <Padder scale={2} />
-          </>
-        ) : null}
-        <Button mode="outlined" onPress={onSubmit}>
-          Submit
-        </Button>
-      </ScrollView>
+      <KeyboardAvoidingView behavior={'position'} style={styles.keyboardAvoidingViewContaienr}>
+        <ScrollView style={globalStyles.paddedContainer}>
+          <List.Item
+            title={() => <Text>{account.title}</Text>}
+            left={() => <IdentityIcon value={address} size={40} />}
+            description={address}
+          />
+          <Padder scale={1} />
+          <TextInput autoComplete={false} label={'Mnemonic seed'} value={mnemonic} disabled multiline />
+          <Caption>
+            {`Please write down the mnemonic seed and keep it in a safe place. The mnemonic can be used to restore your account. keep it carefully to not lose your assets.`}
+          </Caption>
+          <Padder scale={2} />
+          <TextInput
+            mode="outlined"
+            autoComplete
+            label={'Descriptive name for the account'}
+            value={account.title}
+            onChangeText={(text) => setAccount({...account, title: text})}
+          />
+          <Padder scale={1} />
+          <TextInput
+            secureTextEntry={!isPasswordVisible}
+            label={'New password for the account'}
+            value={account.password}
+            onChangeText={(text) => {
+              setAccount({...account, password: text});
+            }}
+            right={
+              <TextInput.Icon
+                onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+                name={`${isPasswordVisible ? 'eye' : 'eye-off'}-outline`}
+                color={theme.colors.disabled}
+              />
+            }
+            mode="outlined"
+            autoComplete={false}
+            error={Boolean(account.password) && passwordStrength < 3}
+          />
+          <View style={styles.passwordMeter}>
+            <ProgressBar percentage={passwordStrength * 25} requiredAmount={75} />
+          </View>
+          <Padder scale={1} />
+          <TextInput
+            mode="outlined"
+            secureTextEntry={!isPasswordVisible}
+            label={'Confirm password'}
+            value={account.confirmPassword}
+            onChangeText={(text) => setAccount({...account, confirmPassword: text})}
+            error={Boolean(account.confirmPassword) && account.password !== account.confirmPassword}
+            autoComplete={false}
+          />
+          <Padder scale={2} />
+          {error ? (
+            <>
+              <ErrorText>{error}</ErrorText>
+              <Padder scale={2} />
+            </>
+          ) : null}
+          <Button mode="outlined" onPress={onSubmit}>
+            Submit
+          </Button>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeView>
   );
 }
@@ -162,5 +165,8 @@ const styles = StyleSheet.create({
   icon: {
     width: 20,
     height: 20,
+  },
+  keyboardAvoidingViewContaienr: {
+    flex: 1,
   },
 });
