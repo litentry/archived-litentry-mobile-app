@@ -1,7 +1,7 @@
 import {BN_ZERO, stringShorten} from '@polkadot/util';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {useAccounts} from 'context/AccountsContext';
-import {Button, Caption, Padder, IconButton, IconSource} from 'src/packages/base_components';
+import {Button, Caption, Padder, IconButton, IconSource, Card} from 'src/packages/base_components';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React from 'react';
 import {Alert, StyleSheet, View, Share} from 'react-native';
@@ -34,7 +34,6 @@ export function MyAccountScreen({
   const {data: accountIdentityInfo} = useAccountIdentityInfo(address);
   const formatBalance = useFormatBalance();
   const {data: accountInfo} = useAccountInfo(address);
-  const {colors} = useTheme();
 
   const {accounts, removeAccount} = useAccounts();
   const account = accounts[address];
@@ -46,7 +45,7 @@ export function MyAccountScreen({
   return (
     <SafeView edges={noTopEdges}>
       <ScrollView style={styles.container}>
-        <View style={[styles.box, {borderColor: colors.backdrop}]}>
+        <Card style={styles.card}>
           <View style={styles.centerAlign}>
             {account.meta.name ? (
               <>
@@ -93,7 +92,7 @@ export function MyAccountScreen({
           <InfoItem title="BALANCE">
             <Caption>{formatBalance(accountInfo?.data.free ?? BN_ZERO)}</Caption>
           </InfoItem>
-        </View>
+        </Card>
 
         <View style={styles.buttonGroup}>
           <Button icon="credit-card" mode="text" onPress={() => navigation.navigate(balanceScreen, {address})}>
@@ -181,8 +180,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: standardPadding * 2,
   },
-  box: {
-    borderWidth: 1,
+  card: {
     borderRadius: 10,
     paddingVertical: 10,
   },
