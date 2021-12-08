@@ -1,11 +1,10 @@
-import {BN_ZERO} from '@polkadot/util';
+import {BN_ZERO, stringShorten} from '@polkadot/util';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {Text, useTheme} from '@ui-kitten/components';
 import {useAccounts} from 'context/AccountsContext';
-import {Button, Padder} from 'src/packages/base_components';
+import {Button, Caption, Padder, IconButton, IconSource, Card} from 'src/packages/base_components';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React from 'react';
-import {Alert, StyleSheet, View} from 'react-native';
+import {Alert, StyleSheet, View, Share} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useAccountInfo} from 'src/api/hooks/useAccountInfo';
@@ -20,6 +19,8 @@ import {
   receiveFundScreen,
 } from 'src/navigation/routeKeys';
 import {standardPadding} from 'src/styles';
+import Identicon from '@polkadot/reactnative-identicon';
+import {useTheme} from 'context/ThemeContext';
 
 export function MyAccountScreen({
   navigation,
@@ -30,10 +31,10 @@ export function MyAccountScreen({
   navigation: NavigationProp<CompleteNavigatorParamList>;
   route: RouteProp<AccountsStackParamList, typeof manageIdentityScreen>;
 }) {
-  const {data} = useAccountIdentityInfo(address);
+  const {data: accountIdentityInfo} = useAccountIdentityInfo(address);
   const formatBalance = useFormatBalance();
   const {data: accountInfo} = useAccountInfo(address);
-  const theme = useTheme();
+
   const {accounts, removeAccount} = useAccounts();
   const account = accounts[address];
 
@@ -44,94 +45,132 @@ export function MyAccountScreen({
   return (
     <SafeView edges={noTopEdges}>
       <ScrollView style={styles.container}>
-        <View style={[styles.box, {backgroundColor: theme['background-basic-color-2']}]}>
-          <Row title="Display Name" value={data?.display} />
+        <Card style={styles.card}>
+          <View style={styles.centerAlign}>
+            {account.meta.name ? (
+              <>
+                <Caption>{account.meta.name}</Caption>
+                <Padder scale={0.5} />
+              </>
+            ) : null}
+            <Identicon value={address} size={60} />
+            <Padder scale={0.5} />
+            <View style={styles.row}>
+              <ActionButton icon="send" title="Send" onPress={() => console.log('send')} />
+              <ActionButton
+                icon="download"
+                title="Receive"
+                onPress={() => navigation.navigate(receiveFundScreen, {address})}
+              />
+              <ActionButton
+                icon="share-variant"
+                title="Share"
+                onPress={() => {
+                  Share.share({
+                    message: address,
+                  });
+                }}
+              />
+            </View>
+          </View>
+
           <Padder scale={1} />
-          <Row title="Address" value={address} />
+
+          <InfoItem title="ADDRESS">
+            <Caption>{stringShorten(address, 17)}</Caption>
+          </InfoItem>
+
+          <InfoItem title="IDENTITY">
+            <Caption>
+              {accountIdentityInfo?.hasIdentity ? accountIdentityInfo.display : 'No Identity Data Found'}
+            </Caption>
+            {accountIdentityInfo?.hasIdentity && accountIdentityInfo.hasJudgements ? (
+              <Caption>{`${accountIdentityInfo.registration.judgements.length} Judgements`}</Caption>
+            ) : null}
+          </InfoItem>
+
+          <InfoItem title="BALANCE">
+            <Caption>{formatBalance(accountInfo?.data.free ?? BN_ZERO)}</Caption>
+          </InfoItem>
+        </Card>
+
+        <View style={styles.buttonGroup}>
+          <Button icon="credit-card" mode="text" onPress={() => navigation.navigate(balanceScreen, {address})}>
+            Balance details
+          </Button>
           <Padder scale={1} />
-          <Row title="Balance" value={formatBalance(accountInfo?.data.free ?? BN_ZERO)} />
+          <Button
+            icon="cog"
+            mode="text"
+            onPress={() => {
+              navigation.navigate(manageIdentityScreen, {address});
+              navigation.navigate(identityGuideScreen);
+            }}>
+            Manage identity
+          </Button>
           <Padder scale={1} />
-          <Row
-            title="identity"
-            value={
-              <View>
-                <Text category="c1">{data?.hasIdentity ? 'Identity Data Found' : 'No Identity Data Found'}</Text>
-                {data?.hasIdentity && data.hasJudgements ? (
-                  <Text category="c1">{`${data.registration.judgements.length} Judgements`}</Text>
-                ) : null}
-              </View>
-            }
-          />
-        </View>
-        <Padder scale={1} />
-        <Button
-          onPress={() => {
-            navigation.navigate(balanceScreen, {address});
-          }}
-          icon="credit-card"
-          mode="outlined">
-          Show Balance details
-        </Button>
-        <Padder scale={1} />
-        <Button
-          onPress={() => {
-            navigation.navigate(manageIdentityScreen, {address});
-            navigation.navigate(identityGuideScreen);
-          }}
-          icon="cog"
-          mode="outlined">
-          Manage Identity
-        </Button>
-        <Padder scale={1} />
-        <Button
-          mode="outlined"
-          onPress={() => {
-            Alert.alert('Delete Account!', 'Are you sure you want to delete this account?', [
-              {text: 'Cancel', style: 'cancel'},
-              {
-                text: 'Delete',
-                onPress: () => {
-                  removeAccount(address);
-                  navigation.navigate(accountsScreen);
+          <Button
+            icon="delete"
+            mode="text"
+            onPress={() => {
+              Alert.alert('Delete Account!', 'Are you sure you want to delete this account?', [
+                {text: 'Cancel', style: 'cancel'},
+                {
+                  text: 'Delete',
+                  onPress: () => {
+                    removeAccount(address);
+                    navigation.navigate(accountsScreen);
+                  },
+                  style: 'destructive',
                 },
-                style: 'destructive',
-              },
-            ]);
-          }}
-          icon="close-circle">
-          Remove Account
-        </Button>
-        <Padder scale={1} />
-        {account.isExternal ? (
-          <>
-            <Button
-              onPress={() => navigation.navigate(exportAccountWithJsonFileScreen, {address})}
-              icon="export"
-              mode="outlined">
-              Export Account
-            </Button>
-            <Padder scale={1} />
-          </>
-        ) : null}
-        <Button onPress={() => navigation.navigate(receiveFundScreen, {address})} icon="download" mode="outlined">
-          Recieve Fund
-        </Button>
+              ]);
+            }}>
+            Remove account
+          </Button>
+          {!account.isExternal ? (
+            <>
+              <Padder scale={1} />
+              <Button
+                mode="text"
+                onPress={() => navigation.navigate(exportAccountWithJsonFileScreen, {address})}
+                icon="export">
+                Export Account
+              </Button>
+            </>
+          ) : null}
+        </View>
       </ScrollView>
     </SafeView>
   );
 }
 
-function Row({title, value}: {title: string; value?: string | React.ReactChild}) {
+type ActionButtonProps = {
+  icon: IconSource;
+  title: string;
+  onPress: () => void;
+};
+
+function ActionButton({icon, title, onPress}: ActionButtonProps) {
+  const {colors} = useTheme();
   return (
-    <View style={styles.row}>
-      <Text category="c2">{title}: </Text>
-      {typeof value === 'string' ? (
-        <Text category="c1" numberOfLines={1} ellipsizeMode="middle" style={styles.rowValue}>
-          {value}
-        </Text>
-      ) : (
-        value
-      )}
+    <View style={styles.iconButton}>
+      <IconButton icon={icon} color={colors.accent} style={styles.icon} onPress={onPress} />
+      <Caption style={{color: colors.accent}}>{title}</Caption>
+    </View>
+  );
+}
+
+type InfoItemProps = {
+  title: string;
+  children: React.ReactNode;
+};
+
+function InfoItem({title, children}: InfoItemProps) {
+  const {colors} = useTheme();
+  return (
+    <View style={styles.infoItem}>
+      <Caption style={{color: colors.accent}}>{title}</Caption>
+      {children}
     </View>
   );
 }
@@ -141,25 +180,28 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: standardPadding * 2,
   },
-  box: {
-    padding: standardPadding * 4,
+  card: {
+    borderRadius: 10,
+    paddingVertical: 10,
   },
-  button: {
-    flexDirection: 'row',
+  centerAlign: {
     alignItems: 'center',
-    padding: 10,
-    margin: 10,
   },
-  iconContainer: {
-    borderRadius: 100,
-    padding: 15,
+  row: {
+    flexDirection: 'row',
+  },
+  iconButton: {
+    alignItems: 'center',
+    marginHorizontal: standardPadding * 2,
   },
   icon: {
-    width: 40,
-    height: 40,
+    marginBottom: 0,
   },
-  row: {flexDirection: 'row', alignItems: 'flex-start'},
-  rowValue: {
-    flexShrink: 1,
+  infoItem: {
+    marginLeft: standardPadding * 3,
+    marginTop: standardPadding,
+  },
+  buttonGroup: {
+    marginTop: standardPadding * 2,
   },
 });
