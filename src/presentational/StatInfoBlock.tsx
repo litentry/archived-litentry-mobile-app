@@ -1,8 +1,8 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import {Text} from '@ui-kitten/components';
+import {StyleSheet} from 'react-native';
 import {monofontFamily, standardPadding} from 'src/styles';
 import {isString} from 'lodash';
+import {Caption, View} from 'src/packages/base_components';
 
 type PropTypes = {
   title: string;
@@ -14,11 +14,11 @@ function StatInfoBlock(props: PropTypes) {
 
   return (
     <View>
-      <Text category="c1">{title}</Text>
+      <Caption>{title}</Caption>
       {isString(children) ? (
-        <Text numberOfLines={1} style={styles.stat}>
+        <Caption numberOfLines={1} style={styles.stat}>
           {children}
-        </Text>
+        </Caption>
       ) : (
         children
       )}
