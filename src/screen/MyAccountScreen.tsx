@@ -1,10 +1,10 @@
 import {BN_ZERO, stringShorten} from '@polkadot/util';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {useAccounts} from 'context/AccountsContext';
-import {Button, Caption, Padder, IconButton, IconSource, Card} from 'src/packages/base_components';
+import {Button, Caption, Padder, IconButton, IconSource, Card, Snackbar} from 'src/packages/base_components';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React from 'react';
-import {Alert, StyleSheet, View, Share} from 'react-native';
+import {Alert, StyleSheet, View, Share, TouchableOpacity} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useAccountInfo} from 'src/api/hooks/useAccountInfo';
@@ -22,6 +22,7 @@ import {
 import {standardPadding} from 'src/styles';
 import Identicon from '@polkadot/reactnative-identicon';
 import {useTheme} from 'context/ThemeContext';
+import Clipboard from '@react-native-community/clipboard';
 
 export function MyAccountScreen({
   navigation,
@@ -39,6 +40,12 @@ export function MyAccountScreen({
   const {accounts, removeAccount} = useAccounts();
   const account = accounts[address];
 
+  const [visible, setVisible] = React.useState(false);
+  const copyToClipboard = () => {
+    Clipboard.setString(address);
+    setVisible(true);
+  };
+
   if (!account) {
     return null;
   }
@@ -54,7 +61,9 @@ export function MyAccountScreen({
                 <Padder scale={0.5} />
               </>
             ) : null}
-            <Identicon value={address} size={60} />
+            <TouchableOpacity onPress={copyToClipboard}>
+              <Identicon value={address} size={60} />
+            </TouchableOpacity>
             <Padder scale={0.5} />
             <View style={styles.row}>
               <ActionButton icon="send" title="Send" onPress={() => navigation.navigate(sendFundScreen, {address})} />
@@ -79,7 +88,7 @@ export function MyAccountScreen({
           <Padder scale={1} />
 
           <InfoItem title="ADDRESS">
-            <Caption>{stringShorten(address, 17)}</Caption>
+            <Caption onPress={copyToClipboard}>{stringShorten(address, 17)}</Caption>
           </InfoItem>
 
           <InfoItem title="IDENTITY">
@@ -142,6 +151,14 @@ export function MyAccountScreen({
           ) : null}
         </View>
       </ScrollView>
+      <Snackbar
+        visible={visible}
+        onDismiss={() => {
+          setVisible(false);
+        }}
+        duration={3000}>
+        Address copied to clipboard!
+      </Snackbar>
     </SafeView>
   );
 }

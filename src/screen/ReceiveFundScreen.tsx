@@ -6,9 +6,10 @@ import {Dimensions, Image, Share} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import {AccountsStackParamList} from 'src/navigation/navigation';
 import {receiveFundScreen} from 'src/navigation/routeKeys';
-import {Caption, Headline, IconButton, Padder, StyleSheet, View} from 'src/packages/base_components';
+import {Caption, Headline, IconButton, Padder, StyleSheet, View, Snackbar} from 'src/packages/base_components';
 import globalStyles, {standardPadding} from 'src/styles';
 import qrcode from 'qrcode-generator';
+import {stringShorten} from '@polkadot/util';
 
 type Props = {
   navigation: NavigationProp<AccountsStackParamList, typeof receiveFundScreen>;
@@ -18,12 +19,18 @@ type Props = {
 export function ReceiveFundScreen({navigation, route}: Props) {
   const {address} = route.params;
   const ref = useRef<Modalize>(null);
+  const [visible, setVisible] = React.useState(false);
 
   useEffect(() => {
     ref.current?.open();
   }, []);
 
   const [imageUri] = useState(() => getAccountQRCode(address));
+
+  const copyToClipboard = () => {
+    Clipboard.setString(address);
+    setVisible(true);
+  };
 
   return (
     <Modalize ref={ref} adjustToContentHeight onClose={navigation.goBack} closeOnOverlayTap>
@@ -34,12 +41,22 @@ export function ReceiveFundScreen({navigation, route}: Props) {
           <Image source={{uri: imageUri}} style={styles.qrCode} />
           <Padder scale={1} />
           <View style={globalStyles.rowAlignCenter}>
-            <IconButton icon="content-copy" size={20} onPress={() => Clipboard.setString(address)} />
+            <IconButton icon="content-copy" size={20} onPress={copyToClipboard} />
             <IconButton icon="share-variant" size={20} onPress={() => share(address)} />
           </View>
-          <Caption style={styles.address}>{address}</Caption>
+          <Caption onPress={copyToClipboard} style={styles.address}>
+            {stringShorten(address, 16)}
+          </Caption>
         </View>
       </SafeView>
+      <Snackbar
+        visible={visible}
+        onDismiss={() => {
+          setVisible(false);
+        }}
+        duration={3000}>
+        Address copied to clipboard!
+      </Snackbar>
     </Modalize>
   );
 }

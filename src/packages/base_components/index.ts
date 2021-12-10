@@ -24,6 +24,7 @@ export {
   Switch,
   Divider,
   TextInput,
+  Snackbar,
 } from 'react-native-paper';
 
 export type {IconSource} from 'react-native-paper/lib/typescript/components/Icon';
