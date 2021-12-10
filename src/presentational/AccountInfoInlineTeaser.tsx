@@ -1,10 +1,10 @@
-import {Text} from '@ui-kitten/components';
-import {Padder} from 'src/packages/base_components';
 import React from 'react';
+import {Padder, Caption} from 'src/packages/base_components';
 import {StyleSheet, View} from 'react-native';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 import {monofontFamily} from 'src/styles';
 import JudgmentStatus from './JudgmentStatus';
+import {stringShorten} from '@polkadot/util';
 
 type PropTypes = {
   identity: IdentityInfo;
@@ -15,9 +15,9 @@ function AccountInfoInlineTeaser({identity}: PropTypes) {
 
   return (
     <View style={styles.container}>
-      <Text category="c1" style={styles.text} ellipsizeMode="middle" numberOfLines={1}>
-        {identity.display}
-      </Text>
+      <Caption style={styles.text}>
+        {identity.hasIdentity ? identity.display : stringShorten(identity.display, 12)}
+      </Caption>
       {judgements?.length ? <Padder scale={0.5} /> : null}
       {judgements?.map((judgement, i) => (
         <JudgmentStatus key={i} judgement={judgement} hasParent={Boolean(identity.registration?.parent)} />
@@ -27,7 +27,11 @@ function AccountInfoInlineTeaser({identity}: PropTypes) {
 }
 
 const styles = StyleSheet.create({
-  text: {fontFamily: monofontFamily, fontWeight: 'bold', flexShrink: 1},
+  text: {
+    fontFamily: monofontFamily,
+    fontWeight: 'bold',
+    flexShrink: 1,
+  },
   container: {
     flexDirection: 'row',
     alignItems: 'center',
