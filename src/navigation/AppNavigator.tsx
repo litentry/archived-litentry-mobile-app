@@ -65,6 +65,7 @@ import * as routeKeys from 'src/navigation/routeKeys';
 import {AppBar, IconButton} from 'src/packages/base_components';
 import {AccountsGuideScreen} from 'screen/AccountsGuideScreen';
 import {ReceiveFundScreen} from 'screen/ReceiveFundScreen';
+import {SendFundScreen} from 'screen/SendFundScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -136,6 +137,7 @@ function AccountsNavigator() {
         component={ReceiveFundScreen}
         options={overlayScreenOptions}
       />
+      <AccountsStack.Screen name={routeKeys.sendFundScreen} component={SendFundScreen} options={overlayScreenOptions} />
       <AccountsStack.Screen
         name={routeKeys.addAccountScreen}
         component={AddAccountScreen}

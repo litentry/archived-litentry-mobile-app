@@ -17,6 +17,7 @@ import {
   identityGuideScreen,
   manageIdentityScreen,
   receiveFundScreen,
+  sendFundScreen,
 } from 'src/navigation/routeKeys';
 import {standardPadding} from 'src/styles';
 import Identicon from '@polkadot/reactnative-identicon';
@@ -56,7 +57,8 @@ export function MyAccountScreen({
             <Identicon value={address} size={60} />
             <Padder scale={0.5} />
             <View style={styles.row}>
-              <ActionButton icon="send" title="Send" onPress={() => console.log('send')} />
+              <ActionButton icon="send" title="Send" onPress={() => navigation.navigate(sendFundScreen, {address})} />
+
               <ActionButton
                 icon="download"
                 title="Receive"

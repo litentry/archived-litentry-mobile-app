@@ -28,6 +28,7 @@ export const accountsScreen = 'My Accounts' as const;
 export const accountsGuideScreen = 'AccountsGuide' as const;
 export const myAccountScreen = 'My Account' as const;
 export const receiveFundScreen = 'ReceiveFund' as const;
+export const sendFundScreen = 'SendFund' as const;
 export const importAccountScreen = 'Import Seed' as const;
 export const importAccountWithJsonFileScreen = 'Import json' as const;
 export const exportAccountWithJsonFileScreen = 'Export json' as const;
