@@ -29,6 +29,7 @@ export {
 
 export type {IconSource} from 'react-native-paper/lib/typescript/components/Icon';
 
+export {Icon} from './Icon';
 export {Modal} from './Modal';
 export {Layout} from './Layout';
 export {View, StyleSheet, TouchableOpacity, Image, FlatList} from 'react-native';
