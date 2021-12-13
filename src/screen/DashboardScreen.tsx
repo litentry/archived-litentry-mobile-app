@@ -1,18 +1,18 @@
+import React from 'react';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {CompositeNavigationProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {Layout} from '@ui-kitten/components';
 import {BountySummaryTeaser} from 'layout/BountySummaryTeaser';
 import {CouncilSummaryTeaser} from 'layout/CouncilSummaryTeaser';
 import {DemocracySummaryTeaser} from 'layout/DemocracySummaryTeaser';
 import {TreasurySummaryTeaser} from 'layout/TreasurySummaryTeaser';
 import FadeInAnimatedView from 'presentational/FadeInAnimatedView';
-import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {useCustomBackHandler} from 'src/hook/useCustomBackHandler';
 import {ApiLoadingStackParamList, DashboardStackParamList, DrawerParamList} from 'src/navigation/navigation';
 import {bountiesScreen, councilScreen, democracyScreen, treasuryScreen} from 'src/navigation/routeKeys';
-import globalStyles from 'src/styles';
+import globalStyles, {standardPadding} from 'src/styles';
+import {Layout} from 'src/packages/base_components';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
@@ -44,7 +44,9 @@ function DashboardScreen({navigation}: PropTypes) {
 }
 
 const styles = StyleSheet.create({
-  main: {},
+  main: {
+    paddingBottom: standardPadding * 2,
+  },
   scrollView: {},
   container: {
     flex: 1,
