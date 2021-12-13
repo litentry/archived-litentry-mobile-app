@@ -5,7 +5,7 @@ import {NetworkContext} from 'context/NetworkContext';
 import {ProgressBar} from 'presentational/ProgressBar';
 import SafeView, {noTopEdges} from 'presentational/SafeView';
 import React from 'react';
-import {KeyboardAvoidingView, Platform} from 'react-native';
+import {KeyboardAvoidingView} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import SubstrateSign from 'react-native-substrate-sign';
 import {AccountsStackParamList} from 'src/navigation/navigation';
@@ -90,7 +90,7 @@ export function CreateAccountScreen({
 
   return (
     <SafeView edges={noTopEdges}>
-      <KeyboardAvoidingView behavior={'position'} style={styles.keyboardAvoidingViewContaienr}>
+      <KeyboardAvoidingView behavior={'position'} style={styles.keyboardAvoidingViewContainer}>
         <ScrollView style={globalStyles.paddedContainer}>
           <List.Item
             title={() => <Text>{account.title}</Text>}
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
-  keyboardAvoidingViewContaienr: {
+  keyboardAvoidingViewContainer: {
     flex: 1,
   },
 });
