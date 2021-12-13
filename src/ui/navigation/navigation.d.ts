@@ -52,6 +52,8 @@ import {
   apiLoadingStack,
   parachainAuctionsScreen,
   accountsGuideScreen,
+  receiveFundScreen,
+  sendFundScreen,
 } from '@ui/navigation/routeKeys';
 
 type DashboardStackParamList = {
@@ -107,10 +109,6 @@ type PolkassemblyDiscussionStackParamList = {
 type AppStackParamList = {
   [permissionGrantingPromptScreen]: undefined;
   [drawerNavigatorScreen]: undefined;
-  [addAccountScreen]: undefined;
-  [balanceScreen]: {address: string};
-  [identityGuideScreen]: undefined;
-  [accountsGuideScreen]: undefined;
 };
 
 type AccountsStackParamList = {
@@ -124,6 +122,12 @@ type AccountsStackParamList = {
   [importAccountScreen]: undefined;
   [importAccountWithJsonFileScreen]: undefined;
   [exportAccountWithJsonFileScreen]: {address: string};
+  [receiveFundScreen]: {address: string};
+  [sendFundScreen]: {address: string};
+  [addAccountScreen]: undefined;
+  [balanceScreen]: {address: string};
+  [identityGuideScreen]: undefined;
+  [accountsGuideScreen]: undefined;
 };
 
 type ApiLoadingStackParamList = {

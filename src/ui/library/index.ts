@@ -24,10 +24,14 @@ export {
   TextInput,
   ThemeProvider,
   Appbar as AppBar,
+  Snackbar,
   useTheme,
 } from 'react-native-paper';
+
+export type {IconSource} from 'react-native-paper/lib/typescript/components/Icon';
 
 export {ProgressChart} from 'react-native-chart-kit';
 
 export {AppHeader} from './AppHeader';
+
 export {Modal} from './Modal';

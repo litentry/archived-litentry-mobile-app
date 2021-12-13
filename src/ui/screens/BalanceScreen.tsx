@@ -6,17 +6,17 @@ import ModalTitle from '@ui/components/ModalTitle';
 import {Modalize} from 'react-native-modalize';
 import {useAccountInfo} from 'src/api/hooks/useAccountInfo';
 import {useAccounts} from 'src/context/AccountsContext';
-import {AppStackParamList} from '@ui/navigation/navigation';
 import {balanceScreen} from '@ui/navigation/routeKeys';
 import globalStyles from '@ui/styles';
 import {NetworkContext} from 'src/context/NetworkContext';
+import {AccountsStackParamList} from '@ui/navigation/navigation';
 
 export function BalanceScreen({
   navigation,
   route,
 }: {
-  navigation: NavigationProp<AppStackParamList>;
-  route: RouteProp<AppStackParamList, typeof balanceScreen>;
+  navigation: NavigationProp<AccountsStackParamList>;
+  route: RouteProp<AccountsStackParamList, typeof balanceScreen>;
 }) {
   const {currentNetwork} = useContext(NetworkContext);
   const {accounts} = useAccounts();
