@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     zIndex: 1,
     left: '39%',
-    top: '42%',
+    top: '32%',
   },
 });
 
