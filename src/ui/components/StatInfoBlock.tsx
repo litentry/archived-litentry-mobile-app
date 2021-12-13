@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {isString} from 'lodash';
 import {Caption} from '@ui/library';
-import {monofontFamily, standardPadding} from '@ui/styles';
+import {monofontFamily} from '@ui/styles';
 
 type PropTypes = {
   title: string;
@@ -15,13 +15,7 @@ function StatInfoBlock(props: PropTypes) {
   return (
     <View>
       <Caption>{title}</Caption>
-      {isString(children) ? (
-        <Caption numberOfLines={1} style={styles.stat}>
-          {children}
-        </Caption>
-      ) : (
-        children
-      )}
+      {isString(children) ? <Caption style={styles.stat}>{children}</Caption> : children}
     </View>
   );
 }
@@ -29,9 +23,7 @@ function StatInfoBlock(props: PropTypes) {
 const styles = StyleSheet.create({
   stat: {
     textAlign: 'left',
-    paddingVertical: standardPadding,
     fontSize: 16,
-    color: '#ccc',
     fontFamily: monofontFamily,
   },
 });

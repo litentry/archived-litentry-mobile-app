@@ -73,8 +73,7 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     borderWidth: 1,
-    paddingTop: standardPadding * 2,
-    paddingHorizontal: standardPadding * 2,
+    padding: standardPadding * 2,
     borderRadius: 5,
   },
   itemRow: {

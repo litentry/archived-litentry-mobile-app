@@ -21,7 +21,7 @@ function AddressInlineTeaser(props: PropTypes) {
   return (
     <View style={styles.container}>
       <Identicon value={address} size={20} />
-      <Padder scale={0.5} />
+      <Padder scale={0.2} />
       {data && <AccountInfoInlineTeaser identity={data} />}
     </View>
   );

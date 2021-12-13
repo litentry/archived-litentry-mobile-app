@@ -19,7 +19,7 @@ function AccountInfoInlineTeaser({identity}: PropTypes) {
       <Caption style={styles.text}>
         {identity.hasIdentity ? identity.display : stringShorten(identity.display, 12)}
       </Caption>
-      {judgements?.length ? <Padder scale={0.5} /> : null}
+      {judgements?.length ? <Padder scale={0.2} /> : null}
       {judgements?.map((judgement, i) => (
         <JudgmentStatus key={i} judgement={judgement} hasParent={Boolean(identity.registration?.parent)} />
       ))}
