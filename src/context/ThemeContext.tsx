@@ -1,17 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, {createContext, useCallback, useContext, useEffect, useMemo} from 'react';
+import {Platform, StatusBar} from 'react-native';
 import {ApplicationProvider} from '@ui-kitten/components';
 import {mapping} from '@eva-design/material';
-import {usePersistedState} from 'src/hook/usePersistedState';
+import {usePersistedState} from '@hooks/usePersistedState';
 import customMapping from 'src/mapping.json';
-import {darkMaterialThemeOverride, lightMaterialThemeOverride} from 'src/navigation/theme';
-import {
-  themeDark,
-  themeLight,
-  Provider as PaperProvider,
-  useTheme as useRNPaperTheme,
-} from 'src/packages/base_components';
-import {Platform, StatusBar} from 'react-native';
+import {darkMaterialThemeOverride, lightMaterialThemeOverride} from '@ui/navigation/theme';
+import {Provider as PaperProvider, useTheme as useRNPaperTheme} from '@ui/library';
+import {themeDark, themeLight} from '@ui/library/theme';
 
 type Theme = 'light' | 'dark';
 

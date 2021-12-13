@@ -1,7 +1,7 @@
 import React, {createContext, useMemo} from 'react';
 import {noop} from 'lodash';
 import {NetworkContextValueType, NetworkType} from 'src/types';
-import {usePersistedState} from 'src/hook/usePersistedState';
+import {usePersistedState} from '@hooks/usePersistedState';
 
 const PolkadotNetwork: NetworkType = {
   name: 'Polkadot',
