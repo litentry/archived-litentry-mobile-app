@@ -1,8 +1,7 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import {Card} from '@ui-kitten/components';
-import globalStyles from 'src/styles';
-import {Padder} from 'src/packages/base_components';
+import {StyleSheet} from 'react-native';
+import globalStyles, {standardPadding} from 'src/styles';
+import {Padder, View, useTheme} from 'src/packages/base_components';
 import AddressInlineTeaser from './AddressInlineTeaser';
 import {SectionTeaserContainer} from 'presentational/SectionTeaserContainer';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
@@ -16,6 +15,7 @@ type PropTypes = {
 };
 
 export function CouncilSummaryTeaser(props: PropTypes) {
+  const {colors} = useTheme();
   const {data: summary, isLoading} = useCouncilSummary();
   const {timeStringParts} = useBlockTime(summary?.termProgress.termDuration);
   const {timeStringParts: termLeft} = useBlockTime(summary?.termProgress.termLeft);
@@ -26,7 +26,7 @@ export function CouncilSummaryTeaser(props: PropTypes) {
         <LoadingBox />
       ) : summary ? (
         <View style={styles.container}>
-          <Card style={[styles.item, styles.left]} disabled>
+          <View style={[styles.card, {borderColor: colors.backdrop}]}>
             <View style={globalStyles.spaceBetweenRowContainer}>
               <StatInfoBlock title="Seats">{summary.seats}</StatInfoBlock>
               <StatInfoBlock title="Runners up">{summary.runnersUp}</StatInfoBlock>
@@ -35,8 +35,9 @@ export function CouncilSummaryTeaser(props: PropTypes) {
             <StatInfoBlock title="Prime Voter">
               {summary.prime && <AddressInlineTeaser address={summary.prime} />}
             </StatInfoBlock>
-          </Card>
-          <Card style={[styles.item, styles.right, styles.center]} disabled>
+          </View>
+          <Padder scale={0.2} />
+          <View style={[styles.card, {borderColor: colors.backdrop}]}>
             <ProgressChartWidget
               title={`Term Progress (${timeStringParts[0]})`}
               detail={`${summary.termProgress.percentage}%\n${termLeft[0] || ''}${
@@ -44,7 +45,7 @@ export function CouncilSummaryTeaser(props: PropTypes) {
               }`}
               data={[summary.termProgress.percentage / 100]}
             />
-          </Card>
+          </View>
         </View>
       ) : null}
     </SectionTeaserContainer>
@@ -56,16 +57,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  item: {
+  card: {
     flex: 1,
-  },
-  left: {
-    marginRight: 2,
-  },
-  right: {
-    marginLeft: 2,
-  },
-  center: {
-    alignItems: 'center',
+    borderWidth: 1,
+    padding: standardPadding * 2,
+    borderRadius: 5,
   },
 });

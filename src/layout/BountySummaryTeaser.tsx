@@ -1,12 +1,11 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import {Card} from '@ui-kitten/components/ui';
+import {StyleSheet} from 'react-native';
 import {LoadingBox} from 'presentational/LoadingBox';
 import {SectionTeaserContainer} from 'presentational/SectionTeaserContainer';
 import {standardPadding} from 'src/styles';
 import {useBountiesSummary} from 'src/api/hooks/useBountiesSummary';
 import StatInfoBlock from 'presentational/StatInfoBlock';
-import {Padder} from 'src/packages/base_components';
+import {Padder, View, useTheme} from 'src/packages/base_components';
 import ProgressChartWidget from 'presentational/ProgressWidget';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import {BN_ONE, BN_ZERO, BN_HUNDRED} from '@polkadot/util';
@@ -19,6 +18,7 @@ type Props = {
 };
 
 export function BountySummaryTeaser(props: Props) {
+  const {colors} = useTheme();
   const formatBalance = useFormatBalance();
   const bestNumber = useBestNumber();
   const {data, isLoading} = useBountiesSummary();
@@ -43,7 +43,7 @@ export function BountySummaryTeaser(props: Props) {
         <LoadingBox />
       ) : (
         <View style={styles.boxRow}>
-          <Card style={styles.card}>
+          <View style={[styles.card, {borderColor: colors.backdrop}]}>
             <View style={styles.itemRow}>
               <StatInfoBlock title="Active">{formatNumber(data?.activeBounties)}</StatInfoBlock>
               <StatInfoBlock title="Past">{formatNumber(data?.pastBounties)}</StatInfoBlock>
@@ -53,9 +53,9 @@ export function BountySummaryTeaser(props: Props) {
                 {data?.totalValue ? formatBalance(data.totalValue) : null}
               </StatInfoBlock>
             </View>
-          </Card>
+          </View>
           <Padder scale={0.2} />
-          <Card style={styles.card}>
+          <View style={[styles.card, {borderColor: colors.backdrop}]}>
             {bestNumber && spendPeriod?.gtn(0) && (
               <ProgressChartWidget
                 title={`Funding period s (${timeStringParts[0]})`}
@@ -63,7 +63,7 @@ export function BountySummaryTeaser(props: Props) {
                 data={[progressPercent / 100]}
               />
             )}
-          </Card>
+          </View>
         </View>
       )}
     </SectionTeaserContainer>
@@ -76,6 +76,9 @@ const styles = StyleSheet.create({
   },
   card: {
     flex: 1,
+    borderWidth: 1,
+    padding: standardPadding * 2,
+    borderRadius: 5,
   },
   itemRow: {
     flexDirection: 'row',

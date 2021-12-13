@@ -1,11 +1,10 @@
-import {Card} from '@ui-kitten/components/ui';
 import {SectionTeaserContainer} from 'presentational/SectionTeaserContainer';
 import StatInfoBlock from 'presentational/StatInfoBlock';
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {useDemocracySummary} from 'src/api/hooks/useDemocracySummary';
 import {formatNumber, BN_ONE, BN_ZERO, BN_HUNDRED} from '@polkadot/util';
-import {Padder} from 'src/packages/base_components';
+import {Padder, View, useTheme} from 'src/packages/base_components';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import ProgressChartWidget from 'presentational/ProgressWidget';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
@@ -17,6 +16,7 @@ type Props = {
 };
 
 export function DemocracySummaryTeaser(props: Props) {
+  const {colors} = useTheme();
   const {data, isLoading} = useDemocracySummary();
   const bestNumber = useBestNumber();
 
@@ -39,7 +39,7 @@ export function DemocracySummaryTeaser(props: Props) {
         <LoadingBox />
       ) : (
         <View style={styles.boxRow}>
-          <Card style={styles.card}>
+          <View style={[styles.card, {borderColor: colors.backdrop}]}>
             <View style={styles.itemRow}>
               <StatInfoBlock title="Proposals">{formatNumber(data?.activeProposalsCount)}</StatInfoBlock>
               <StatInfoBlock title="Total">{formatNumber(data?.publicPropCount)}</StatInfoBlock>
@@ -48,9 +48,9 @@ export function DemocracySummaryTeaser(props: Props) {
               <StatInfoBlock title="Referenda">{formatNumber(data?.referenda)}</StatInfoBlock>
               <StatInfoBlock title="Total">{formatNumber(data?.referendumTotal)}</StatInfoBlock>
             </View>
-          </Card>
+          </View>
           <Padder scale={0.2} />
-          <Card style={styles.card}>
+          <View style={[styles.card, {borderColor: colors.backdrop}]}>
             {data?.launchPeriod && bestNumber && (
               <ProgressChartWidget
                 title={`Launch period`}
@@ -58,7 +58,7 @@ export function DemocracySummaryTeaser(props: Props) {
                 data={[progressPercent / 100]}
               />
             )}
-          </Card>
+          </View>
         </View>
       )}
     </SectionTeaserContainer>
@@ -71,6 +71,9 @@ const styles = StyleSheet.create({
   },
   card: {
     flex: 1,
+    borderWidth: 1,
+    paddingHorizontal: standardPadding * 2,
+    borderRadius: 5,
   },
   itemRow: {
     flexDirection: 'row',
