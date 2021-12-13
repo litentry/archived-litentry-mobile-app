@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {SignerPayloadJSON} from '@polkadot/types/types';
 import {Button, Divider, Icon, Layout, Text, useTheme} from '@ui-kitten/components';
-import ModalTitle from 'presentational/ModalTitle';
-import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
-import globalStyles, {standardPadding} from 'src/styles';
-import {HashBlock} from 'presentational/HashBlock';
-import {Padder} from 'src/packages/base_components';
+import ModalTitle from '@ui/components/ModalTitle';
+import globalStyles, {standardPadding} from '@ui/styles';
+import {HashBlock} from '@ui/components/HashBlock';
+import {Padder} from '@ui/components/Padder';
 import {BN} from '@polkadot/util';
 
 type PropTypes = {

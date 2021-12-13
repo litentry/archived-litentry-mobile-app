@@ -1,7 +1,7 @@
 import React, {createContext, useRef, useCallback, useMemo, useState, useContext} from 'react';
 import {StyleSheet, View, Text, Platform} from 'react-native';
 import {Notification, NotificationProperties} from 'react-native-in-app-message';
-import {standardPadding} from 'src/styles';
+import {standardPadding} from '@ui/styles';
 import {truncate} from 'lodash';
 
 type InAppNotificationPayloadType =
