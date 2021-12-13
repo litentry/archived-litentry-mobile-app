@@ -1,8 +1,8 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {ProgressChart} from 'react-native-chart-kit';
 import {standardPadding} from 'src/styles';
-import {Text, useTheme} from '@ui-kitten/components';
+import {View, Caption, useTheme} from 'src/packages/base_components';
 
 type PropTypes = {
   title: string;
@@ -11,18 +11,14 @@ type PropTypes = {
 };
 
 function ProgressChartWidget(props: PropTypes) {
-  const theme = useTheme();
+  const {colors} = useTheme();
   const {title, detail, data} = props;
 
   return (
-    <View>
-      <Text category="c1" numberOfLines={1} style={styles.title}>
-        {title}
-      </Text>
+    <>
+      <Caption style={styles.title}>{title}</Caption>
       <View style={styles.chartContainer}>
-        <Text category="c1" style={styles.chartText}>
-          {detail}
-        </Text>
+        <Caption style={styles.chartText}>{detail}</Caption>
         <ProgressChart
           data={data}
           width={100}
@@ -30,10 +26,10 @@ function ProgressChartWidget(props: PropTypes) {
           strokeWidth={12}
           radius={44}
           chartConfig={{
-            backgroundGradientFromOpacity: 0.5,
-            backgroundGradientFrom: theme['background-basic-color-1'],
-            backgroundGradientTo: theme['background-basic-color-1'],
-            backgroundGradientToOpacity: 1,
+            backgroundGradientFromOpacity: 0,
+            backgroundGradientToOpacity: 0,
+            backgroundGradientFrom: colors.surface,
+            backgroundGradientTo: colors.surface,
             color: (opacity = 1) => `rgba(27, 197, 117, ${opacity})`,
             strokeWidth: 2, // optional, default 3
             barPercentage: 0.5,
@@ -42,7 +38,7 @@ function ProgressChartWidget(props: PropTypes) {
           hideLegend
         />
       </View>
-    </View>
+    </>
   );
 }
 
