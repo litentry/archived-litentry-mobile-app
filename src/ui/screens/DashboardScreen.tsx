@@ -31,7 +31,7 @@ function DashboardScreen({navigation}: PropTypes) {
     <Layout style={styles.container}>
       <FadeInAnimatedView>
         <View style={[globalStyles.flex, styles.main]}>
-          <ScrollView style={styles.scrollView}>
+          <ScrollView contentContainerStyle={styles.scrollView}>
             <DemocracySummaryTeaser onPressMore={() => navigation.navigate(democracyScreen)} />
             <CouncilSummaryTeaser onPressMore={() => navigation.navigate(councilScreen)} />
             <TreasurySummaryTeaser onPressMore={() => navigation.navigate(treasuryScreen)} />
@@ -44,10 +44,10 @@ function DashboardScreen({navigation}: PropTypes) {
 }
 
 const styles = StyleSheet.create({
-  main: {
-    paddingBottom: standardPadding * 2,
+  main: {},
+  scrollView: {
+    paddingBottom: standardPadding * 3,
   },
-  scrollView: {},
   container: {
     flex: 1,
   },
