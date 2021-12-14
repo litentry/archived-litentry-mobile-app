@@ -30,7 +30,7 @@ function DashboardScreen({navigation}: PropTypes) {
   return (
     <Layout style={styles.container}>
       <FadeInAnimatedView>
-        <View style={[globalStyles.flex, styles.main]}>
+        <View style={globalStyles.flex}>
           <ScrollView contentContainerStyle={styles.scrollView}>
             <DemocracySummaryTeaser onPress={() => navigation.navigate(democracyScreen)} />
             <CouncilSummaryTeaser onPress={() => navigation.navigate(councilScreen)} />
@@ -44,7 +44,6 @@ function DashboardScreen({navigation}: PropTypes) {
 }
 
 const styles = StyleSheet.create({
-  main: {},
   scrollView: {
     paddingBottom: standardPadding * 3,
   },
