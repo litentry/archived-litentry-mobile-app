@@ -1,6 +1,7 @@
 import {useQueryClient, useQuery, useMutation} from 'react-query';
 import messaging, {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
 import {usePushTopics} from './usePushTopics';
+import {usePersistedState} from './usePersistedState';
 
 export function usePushNotificationsPermissions() {
   const {subscribeToAllTopics} = usePushTopics();
@@ -37,10 +38,20 @@ function permissionAllowed(status: FirebaseMessagingTypes.AuthorizationStatus) {
 }
 
 export function usePushAuthorizationStatus() {
-  // use query is used here to ensure the query is invalidated when the user changes permissions
+  const [isPnPermissionSkipped, setIsPnPermissionSkipped] = usePersistedState('is_pn_permission_skipped', '0');
   const {data: pushAuthorizationStatus, isLoading} = useQuery('push_authorization_status', () =>
     messaging().hasPermission(),
   );
 
-  return {pushAuthorizationStatus, isLoading};
+  const isSkipped = Boolean(Number(isPnPermissionSkipped));
+
+  return {
+    isLoading,
+    pushAuthorizationStatus,
+    isPnPromptNeeded: !isSkipped && pushAuthorizationStatus === messaging.AuthorizationStatus.NOT_DETERMINED,
+    isPnPermissionSkipped: isSkipped,
+    skipPnPermission: () => {
+      setIsPnPermissionSkipped('1');
+    },
+  };
 }

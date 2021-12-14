@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Button, Icon, Layout, Text, useTheme} from '@ui-kitten/components';
 import {Padder} from '@ui/components/Padder';
@@ -6,16 +6,14 @@ import SafeView from '@ui/components/SafeView';
 import {usePushNotificationsPermissions} from '@hooks/usePushNotificationsPermissions';
 import globalStyles, {standardPadding} from '@ui/styles';
 
-export function PermissionGrantingPrompt() {
-  const theme = useTheme();
+type Props = {
+  skipPnPermission: () => void;
+};
 
+export function PermissionGrantingPrompt({skipPnPermission}: Props) {
+  const theme = useTheme();
   const {requestPermissions} = usePushNotificationsPermissions();
-  // We request permissions on mount, so we can only relay on messaging().hasPermission()
-  // result instead of storing a seperate state in persistent storage.
-  // this way we remove the component from the stack when the user has granted permissions
-  // or declined them.
-  useEffect(() => requestPermissions(), [requestPermissions]);
-  const [error, setError] = useState<string>();
+  const [error, setError] = React.useState<string>();
 
   return (
     <Layout style={globalStyles.flex}>
@@ -50,7 +48,7 @@ export function PermissionGrantingPrompt() {
             Allow Notifications
           </Button>
           <Padder scale={0.5} />
-          <Button appearance={'ghost'} status={'success'}>
+          <Button appearance={'ghost'} status={'success'} onPress={skipPnPermission}>
             Skip
           </Button>
         </View>
