@@ -116,7 +116,9 @@ export function MyAccountScreen({
             mode="text"
             onPress={() => {
               navigation.navigate(manageIdentityScreen, {address});
-              navigation.navigate(identityGuideScreen);
+              if (account.isExternal) {
+                navigation.navigate(identityGuideScreen);
+              }
             }}>
             Manage identity
           </Button>
