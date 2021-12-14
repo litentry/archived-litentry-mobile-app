@@ -1,5 +1,7 @@
 import React from 'react';
+import {StyleSheet} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {QueryClient, QueryClientProvider} from 'react-query';
 import {IconRegistry} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
@@ -21,7 +23,7 @@ const queryClient = new QueryClient();
 
 export default function App() {
   return (
-    <>
+    <GestureHandlerRootView style={styles.appContainer}>
       <IconRegistry icons={[EvaIconsPack, IonicIconsPack]} />
       <QueryClientProvider client={queryClient}>
         <NavigationContainer>
@@ -44,6 +46,12 @@ export default function App() {
           </NetworkContextProvider>
         </NavigationContainer>
       </QueryClientProvider>
-    </>
+    </GestureHandlerRootView>
   );
 }
+
+const styles = StyleSheet.create({
+  appContainer: {
+    flex: 1,
+  },
+});
