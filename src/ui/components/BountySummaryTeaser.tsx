@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import {Card} from '@ui-kitten/components/ui';
 import {LoadingBox} from '@ui/components/LoadingBox';
 import {SectionTeaserContainer} from '@ui/components/SectionTeaserContainer';
 import {standardPadding} from '@ui/styles';
@@ -13,9 +12,10 @@ import {BN_ONE, BN_ZERO, BN_HUNDRED} from '@polkadot/util';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {formatNumber} from '@polkadot/util';
+import {Card} from '@ui/library';
 
 type Props = {
-  onPressMore: () => void;
+  onPress: () => void;
 };
 
 export function BountySummaryTeaser(props: Props) {
@@ -38,12 +38,12 @@ export function BountySummaryTeaser(props: Props) {
     .toNumber();
 
   return (
-    <SectionTeaserContainer onPressMore={props.onPressMore} title="Bounties">
+    <SectionTeaserContainer onPress={props.onPress} title="Bounties">
       {isLoading ? (
         <LoadingBox />
       ) : (
         <View style={styles.boxRow}>
-          <Card style={styles.card}>
+          <Card mode="outlined" style={styles.card}>
             <View style={styles.itemRow}>
               <StatInfoBlock title="Active">{formatNumber(data?.activeBounties)}</StatInfoBlock>
               <StatInfoBlock title="Past">{formatNumber(data?.pastBounties)}</StatInfoBlock>
@@ -55,7 +55,7 @@ export function BountySummaryTeaser(props: Props) {
             </View>
           </Card>
           <Padder scale={0.2} />
-          <Card style={styles.card}>
+          <Card mode="outlined" style={styles.card}>
             {bestNumber && spendPeriod?.gtn(0) && (
               <ProgressChartWidget
                 title={`Funding period s (${timeStringParts[0]})`}
@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
   },
   card: {
     flex: 1,
+    padding: standardPadding * 2,
   },
   itemRow: {
     flexDirection: 'row',

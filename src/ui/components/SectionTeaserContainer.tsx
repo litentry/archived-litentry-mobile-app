@@ -1,38 +1,32 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, ViewProps} from 'react-native';
-import {Card, Icon, Text} from '@ui-kitten/components';
-import globalStyles, {standardPadding} from '@ui/styles';
+import {StyleSheet, View} from 'react-native';
+import {Card, Icon} from '@ui/library';
+import {standardPadding} from '@ui/styles';
 
 type PropTypes = {
   title: string;
-  onPressMore: () => void;
+  onPress: () => void;
   children: React.ReactNode;
 };
 
-export function SectionTeaserContainer(props: PropTypes) {
+export function SectionTeaserContainer({children, title, onPress}: PropTypes) {
   return (
-    <Card appearance="filled" activeOpacity={0.8} disabled>
-      <Header onPressMore={props.onPressMore} title={props.title} />
-      {props.children}
+    <Card onPress={onPress}>
+      <Card.Title
+        title={title}
+        right={() => (
+          <View style={styles.icon}>
+            <Icon name="chevron-right" />
+          </View>
+        )}
+      />
+      <Card.Content>{children}</Card.Content>
     </Card>
   );
 }
 
-const Header = (props?: ViewProps & Partial<PropTypes>) => (
-  <TouchableOpacity style={styles.headerContainer} onPress={props?.onPressMore}>
-    <Text category="h6">{props?.title}</Text>
-    <Icon
-      pack="ionic"
-      name="chevron-forward-outline"
-      style={[globalStyles.inlineIconDimension, globalStyles.iconColor]}
-    />
-  </TouchableOpacity>
-);
-
 const styles = StyleSheet.create({
-  headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingBottom: standardPadding,
+  icon: {
+    marginRight: standardPadding,
   },
 });

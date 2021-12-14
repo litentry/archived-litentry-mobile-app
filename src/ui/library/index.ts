@@ -1,6 +1,6 @@
 /**
  *  This is the entry point for third party libraries (UI).
- *  All componnents from a third party library should be exported here.
+ *  All components from a third party library should be exported here.
  **/
 export {
   Provider,
@@ -30,6 +30,7 @@ export {
 
 export type {IconSource} from 'react-native-paper/lib/typescript/components/Icon';
 
+export {Icon} from './Icon';
 export {ProgressChart} from 'react-native-chart-kit';
 
 export {AppHeader} from './AppHeader';

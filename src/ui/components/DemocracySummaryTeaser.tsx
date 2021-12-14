@@ -1,6 +1,5 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Card} from '@ui-kitten/components/ui';
 import {SectionTeaserContainer} from '@ui/components/SectionTeaserContainer';
 import StatInfoBlock from '@ui/components/StatInfoBlock';
 import {useDemocracySummary} from 'src/api/hooks/useDemocracySummary';
@@ -11,9 +10,10 @@ import ProgressChartWidget from '@ui/components/ProgressWidget';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import {standardPadding} from '@ui/styles';
 import {LoadingBox} from '@ui/components/LoadingBox';
+import {Card} from '@ui/library';
 
 type Props = {
-  onPressMore: () => void;
+  onPress: () => void;
 };
 
 export function DemocracySummaryTeaser(props: Props) {
@@ -34,12 +34,12 @@ export function DemocracySummaryTeaser(props: Props) {
   const timeLeftString = firstTwoNoneEmptyTimeParts.join('\n');
 
   return (
-    <SectionTeaserContainer onPressMore={props.onPressMore} title="Democracy">
+    <SectionTeaserContainer onPress={props.onPress} title="Democracy">
       {isLoading ? (
         <LoadingBox />
       ) : (
         <View style={styles.boxRow}>
-          <Card style={styles.card}>
+          <Card mode="outlined" style={styles.card}>
             <View style={styles.itemRow}>
               <StatInfoBlock title="Proposals">{formatNumber(data?.activeProposalsCount)}</StatInfoBlock>
               <StatInfoBlock title="Total">{formatNumber(data?.publicPropCount)}</StatInfoBlock>
@@ -50,7 +50,7 @@ export function DemocracySummaryTeaser(props: Props) {
             </View>
           </Card>
           <Padder scale={0.2} />
-          <Card style={styles.card}>
+          <Card mode="outlined" style={styles.card}>
             {data?.launchPeriod && bestNumber && (
               <ProgressChartWidget
                 title={`Launch period`}
@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
   },
   card: {
     flex: 1,
+    padding: standardPadding * 2,
   },
   itemRow: {
     flexDirection: 'row',

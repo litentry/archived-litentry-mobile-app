@@ -82,7 +82,7 @@ export function CreateAccountScreen({
 
   return (
     <SafeView edges={noTopEdges}>
-      <KeyboardAvoidingView behavior={'position'} style={styles.keyboardAvoidingViewContaienr}>
+      <KeyboardAvoidingView behavior={'position'} style={styles.keyboardAvoidingViewContainer}>
         <ScrollView style={globalStyles.paddedContainer}>
           <List.Item
             title={() => <Text>{account.title}</Text>}
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
-  keyboardAvoidingViewContaienr: {
+  keyboardAvoidingViewContainer: {
     flex: 1,
   },
 });

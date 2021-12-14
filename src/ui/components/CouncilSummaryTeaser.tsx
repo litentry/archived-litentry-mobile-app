@@ -1,7 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Card} from '@ui-kitten/components';
-import globalStyles from '@ui/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
 import AddressInlineTeaser from './AddressInlineTeaser';
 import {SectionTeaserContainer} from '@ui/components/SectionTeaserContainer';
@@ -10,9 +9,10 @@ import ProgressChartWidget from '@ui/components/ProgressWidget';
 import StatInfoBlock from '@ui/components/StatInfoBlock';
 import {useCouncilSummary} from 'src/api/hooks/useCouncilSummary';
 import {LoadingBox} from '@ui/components/LoadingBox';
+import {Card} from '@ui/library';
 
 type PropTypes = {
-  onPressMore: () => void;
+  onPress: () => void;
 };
 
 export function CouncilSummaryTeaser(props: PropTypes) {
@@ -21,12 +21,12 @@ export function CouncilSummaryTeaser(props: PropTypes) {
   const {timeStringParts: termLeft} = useBlockTime(summary?.termProgress.termLeft);
 
   return (
-    <SectionTeaserContainer onPressMore={props.onPressMore} title="Council">
+    <SectionTeaserContainer onPress={props.onPress} title="Council">
       {isLoading ? (
         <LoadingBox />
       ) : summary ? (
         <View style={styles.container}>
-          <Card style={[styles.item, styles.left]} disabled>
+          <Card mode="outlined" style={styles.card}>
             <View style={globalStyles.spaceBetweenRowContainer}>
               <StatInfoBlock title="Seats">{summary.seats}</StatInfoBlock>
               <StatInfoBlock title="Runners up">{summary.runnersUp}</StatInfoBlock>
@@ -36,7 +36,8 @@ export function CouncilSummaryTeaser(props: PropTypes) {
               {summary.prime && <AddressInlineTeaser address={summary.prime} />}
             </StatInfoBlock>
           </Card>
-          <Card style={[styles.item, styles.right, styles.center]} disabled>
+          <Padder scale={0.2} />
+          <Card mode="outlined" style={styles.card}>
             <ProgressChartWidget
               title={`Term Progress (${timeStringParts[0]})`}
               detail={`${summary.termProgress.percentage}%\n${termLeft[0] || ''}${
@@ -56,16 +57,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  item: {
+  card: {
     flex: 1,
-  },
-  left: {
-    marginRight: 2,
-  },
-  right: {
-    marginLeft: 2,
-  },
-  center: {
-    alignItems: 'center',
+    padding: standardPadding * 2,
   },
 });
