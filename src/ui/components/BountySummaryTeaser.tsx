@@ -12,14 +12,13 @@ import {BN_ONE, BN_ZERO, BN_HUNDRED} from '@polkadot/util';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {formatNumber} from '@polkadot/util';
-import {useTheme} from '@ui/library';
+import {Card} from '@ui/library';
 
 type Props = {
-  onPressMore: () => void;
+  onPress: () => void;
 };
 
 export function BountySummaryTeaser(props: Props) {
-  const {colors} = useTheme();
   const formatBalance = useFormatBalance();
   const bestNumber = useBestNumber();
   const {data, isLoading} = useBountiesSummary();
@@ -39,12 +38,12 @@ export function BountySummaryTeaser(props: Props) {
     .toNumber();
 
   return (
-    <SectionTeaserContainer onPressMore={props.onPressMore} title="Bounties">
+    <SectionTeaserContainer onPress={props.onPress} title="Bounties">
       {isLoading ? (
         <LoadingBox />
       ) : (
         <View style={styles.boxRow}>
-          <View style={[styles.card, {borderColor: colors.backdrop}]}>
+          <Card mode="outlined" style={styles.card}>
             <View style={styles.itemRow}>
               <StatInfoBlock title="Active">{formatNumber(data?.activeBounties)}</StatInfoBlock>
               <StatInfoBlock title="Past">{formatNumber(data?.pastBounties)}</StatInfoBlock>
@@ -54,9 +53,9 @@ export function BountySummaryTeaser(props: Props) {
                 {data?.totalValue ? formatBalance(data.totalValue) : null}
               </StatInfoBlock>
             </View>
-          </View>
+          </Card>
           <Padder scale={0.2} />
-          <View style={[styles.card, {borderColor: colors.backdrop}]}>
+          <Card mode="outlined" style={styles.card}>
             {bestNumber && spendPeriod?.gtn(0) && (
               <ProgressChartWidget
                 title={`Funding period s (${timeStringParts[0]})`}
@@ -64,7 +63,7 @@ export function BountySummaryTeaser(props: Props) {
                 data={[progressPercent / 100]}
               />
             )}
-          </View>
+          </Card>
         </View>
       )}
     </SectionTeaserContainer>
@@ -77,9 +76,7 @@ const styles = StyleSheet.create({
   },
   card: {
     flex: 1,
-    borderWidth: 1,
     padding: standardPadding * 2,
-    borderRadius: 5,
   },
   itemRow: {
     flexDirection: 'row',

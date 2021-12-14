@@ -1,7 +1,7 @@
 import {bnToBn, BN_ONE, BN_ZERO, formatNumber} from '@polkadot/util';
 import {LoadingBox} from '@ui/components/LoadingBox';
 import {Padder} from '@ui/components/Padder';
-import {useTheme} from '@ui/library';
+import {Card} from '@ui/library';
 import ProgressChartWidget from '@ui/components/ProgressWidget';
 import {SectionTeaserContainer} from '@ui/components/SectionTeaserContainer';
 import StatInfoBlock from '@ui/components/StatInfoBlock';
@@ -14,11 +14,10 @@ import {useTreasurySummary} from 'src/api/hooks/useTreasurySummary';
 import globalStyles, {standardPadding} from '@ui/styles';
 
 type PropTypes = {
-  onPressMore: () => void;
+  onPress: () => void;
 };
 
 export function TreasurySummaryTeaser(props: PropTypes) {
-  const {colors} = useTheme();
   const bestNumber = useBestNumber();
   const {data: treasurySummary, isLoading} = useTreasurySummary();
   const total = treasurySummary?.spendPeriod || BN_ONE;
@@ -36,31 +35,31 @@ export function TreasurySummaryTeaser(props: PropTypes) {
   const formatBalance = useFormatBalance();
 
   return (
-    <SectionTeaserContainer onPressMore={props.onPressMore} title="Treasury">
+    <SectionTeaserContainer onPress={props.onPress} title="Treasury">
       {isLoading ? (
         <LoadingBox />
       ) : treasurySummary ? (
         <>
           <View style={styles.container}>
-            <View style={[styles.card, {borderColor: colors.backdrop}]}>
+            <Card mode="outlined" style={styles.card}>
               <View style={globalStyles.spaceBetweenRowContainer}>
                 <StatInfoBlock title="Proposals">{String(treasurySummary.activeProposals)}</StatInfoBlock>
                 <StatInfoBlock title="Totals">{formatNumber(treasurySummary.proposalCount)}</StatInfoBlock>
               </View>
               <Padder scale={1} />
               <StatInfoBlock title="Approved">{String(treasurySummary.approvedProposals)}</StatInfoBlock>
-            </View>
+            </Card>
             <Padder scale={0.2} />
-            <View style={[styles.card, {borderColor: colors.backdrop}]}>
+            <Card mode="outlined" style={styles.card}>
               <ProgressChartWidget
                 title={`Spend period s (${timeStringParts[0]})`}
                 detail={`${percentage}%\n${termLeft[0]}${termLeft[1] ? `\n${termLeft[1]}` : ''}`}
                 data={[percentage / 100]}
               />
-            </View>
+            </Card>
           </View>
           <Padder scale={0.2} />
-          <View style={[styles.card, {borderColor: colors.backdrop}]}>
+          <Card mode="outlined" style={styles.card}>
             <View style={globalStyles.spaceBetweenRowContainer}>
               <StatInfoBlock title="Available">
                 {formatBalance(treasurySummary.treasuryBalance?.freeBalance)}
@@ -69,7 +68,7 @@ export function TreasurySummaryTeaser(props: PropTypes) {
                 {formatBalance(treasurySummary.burn || BN_ZERO, {isShort: true})}
               </StatInfoBlock>
             </View>
-          </View>
+          </Card>
         </>
       ) : null}
     </SectionTeaserContainer>
@@ -83,8 +82,6 @@ const styles = StyleSheet.create({
   },
   card: {
     flex: 1,
-    borderWidth: 1,
     padding: standardPadding * 2,
-    borderRadius: 5,
   },
 });

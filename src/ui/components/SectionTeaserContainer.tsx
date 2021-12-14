@@ -5,13 +5,13 @@ import {standardPadding} from '@ui/styles';
 
 type PropTypes = {
   title: string;
-  onPressMore: () => void;
+  onPress: () => void;
   children: React.ReactNode;
 };
 
-export function SectionTeaserContainer({children, title, onPressMore}: PropTypes) {
+export function SectionTeaserContainer({children, title, onPress}: PropTypes) {
   return (
-    <Card onPress={onPressMore}>
+    <Card onPress={onPress}>
       <Card.Title
         title={title}
         right={() => (

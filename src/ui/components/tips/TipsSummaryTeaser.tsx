@@ -14,10 +14,10 @@ import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {tipDetailScreen} from '@ui/navigation/routeKeys';
 
 type TipsSummaryTeaserProps = {
-  onPressMore: () => void;
+  onPress: () => void;
 };
 
-function TipsSummaryTeaser({onPressMore}: TipsSummaryTeaserProps) {
+function TipsSummaryTeaser({onPress}: TipsSummaryTeaserProps) {
   const navigation = useNavigation<StackNavigationProp<DashboardStackParamList>>();
   const {data: tips, isLoading} = useTips();
 
@@ -25,7 +25,7 @@ function TipsSummaryTeaser({onPressMore}: TipsSummaryTeaserProps) {
   const [id, tip] = latestTip ?? [];
 
   return (
-    <SectionTeaserContainer title={`Tips ${tips?.length ? `(${tips.length})` : ''}`} onPressMore={onPressMore}>
+    <SectionTeaserContainer title={`Tips ${tips?.length ? `(${tips.length})` : ''}`} onPress={onPress}>
       {isLoading ? (
         <LoadingBox />
       ) : id && tip ? (

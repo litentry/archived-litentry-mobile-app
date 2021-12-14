@@ -10,14 +10,13 @@ import ProgressChartWidget from '@ui/components/ProgressWidget';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import {standardPadding} from '@ui/styles';
 import {LoadingBox} from '@ui/components/LoadingBox';
-import {useTheme} from '@ui/library';
+import {Card} from '@ui/library';
 
 type Props = {
-  onPressMore: () => void;
+  onPress: () => void;
 };
 
 export function DemocracySummaryTeaser(props: Props) {
-  const {colors} = useTheme();
   const {data, isLoading} = useDemocracySummary();
   const bestNumber = useBestNumber();
 
@@ -35,12 +34,12 @@ export function DemocracySummaryTeaser(props: Props) {
   const timeLeftString = firstTwoNoneEmptyTimeParts.join('\n');
 
   return (
-    <SectionTeaserContainer onPressMore={props.onPressMore} title="Democracy">
+    <SectionTeaserContainer onPress={props.onPress} title="Democracy">
       {isLoading ? (
         <LoadingBox />
       ) : (
         <View style={styles.boxRow}>
-          <View style={[styles.card, {borderColor: colors.backdrop}]}>
+          <Card mode="outlined" style={styles.card}>
             <View style={styles.itemRow}>
               <StatInfoBlock title="Proposals">{formatNumber(data?.activeProposalsCount)}</StatInfoBlock>
               <StatInfoBlock title="Total">{formatNumber(data?.publicPropCount)}</StatInfoBlock>
@@ -49,9 +48,9 @@ export function DemocracySummaryTeaser(props: Props) {
               <StatInfoBlock title="Referenda">{formatNumber(data?.referenda)}</StatInfoBlock>
               <StatInfoBlock title="Total">{formatNumber(data?.referendumTotal)}</StatInfoBlock>
             </View>
-          </View>
+          </Card>
           <Padder scale={0.2} />
-          <View style={[styles.card, {borderColor: colors.backdrop}]}>
+          <Card mode="outlined" style={styles.card}>
             {data?.launchPeriod && bestNumber && (
               <ProgressChartWidget
                 title={`Launch period`}
@@ -59,7 +58,7 @@ export function DemocracySummaryTeaser(props: Props) {
                 data={[progressPercent / 100]}
               />
             )}
-          </View>
+          </Card>
         </View>
       )}
     </SectionTeaserContainer>
@@ -72,9 +71,7 @@ const styles = StyleSheet.create({
   },
   card: {
     flex: 1,
-    borderWidth: 1,
     padding: standardPadding * 2,
-    borderRadius: 5,
   },
   itemRow: {
     flexDirection: 'row',
