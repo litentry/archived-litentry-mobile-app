@@ -9,15 +9,20 @@ import {stringShorten} from '@polkadot/util';
 
 type PropTypes = {
   identity: IdentityInfo;
+  accountName?: string;
 };
 
-function AccountInfoInlineTeaser({identity}: PropTypes) {
+function AccountInfoInlineTeaser({identity, accountName}: PropTypes) {
   const judgements = identity.registration?.judgements;
 
   return (
     <View style={styles.container}>
       <Caption style={styles.text}>
-        {identity.hasIdentity ? identity.display : stringShorten(identity.display, 12)}
+        {identity.hasIdentity
+          ? identity.display
+          : accountName
+          ? `${accountName}(${stringShorten(identity.accountId.toString(), 8)})`
+          : stringShorten(identity.accountId.toString(), 12)}
       </Caption>
       {judgements?.length ? <Padder scale={0.2} /> : null}
       {judgements?.map((judgement, i) => (

@@ -2,13 +2,11 @@ import React from 'react';
 import {FlatList, View, TouchableOpacity, StyleSheet} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp} from '@react-navigation/native';
-import {Divider, MenuItem, OverflowMenu} from '@ui-kitten/components';
 import {Account, useAccounts} from 'context/index';
 import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
 import LoadingView from '@ui/components/LoadingView';
-import {Text, IconButton, List, Portal, FAB, Provider, Caption} from '@ui/library';
+import {useTheme, Divider, Text, IconButton, List, FAB, Caption, Menu, Subheading, Icon} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
-import {useTheme} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useAccountsIdentityInfo} from 'src/api/hooks/useAccountsIdentityInfo';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
@@ -31,8 +29,9 @@ type Props = {
   navigation: NavigationProp<CompleteNavigatorParamList, typeof accountsScreen>;
 };
 
+type SortBy = 'name' | 'favorites';
+
 export function AccountsScreen({navigation}: Props) {
-  const theme = useTheme();
   const {accounts, networkAccounts, toggleFavorite} = useAccounts();
   const {data, isLoading} = useAccountsIdentityInfo(networkAccounts.map((account) => account.address));
   const combinedData = data?.reduce<CombinedData[]>((acc, current) => {
@@ -43,16 +42,59 @@ export function AccountsScreen({navigation}: Props) {
     return [...acc, {identity: current, account}];
   }, []);
 
-  const [sortBy, setSortBy] = React.useState<'name' | 'favorites'>('name');
+  const [sortBy, setSortBy] = React.useState<SortBy>('name');
   const sortByFunction = sortBy === 'name' ? sortByDisplayName : sortByIsFavorite;
   const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
 
+  const toAccountDetail = (address: string) => {
+    navigation.navigate(myAccountScreen, {address});
+  };
+
+  const sortAccounts = (sort: SortBy) => {
+    setSortBy(sort);
+    setSortMenuVisible(false);
+  };
+
   return (
-    <Provider theme={theme}>
-      <SafeView edges={noTopEdges}>
-        {isLoading ? (
-          <LoadingView />
-        ) : (
+    <SafeView edges={noTopEdges}>
+      {isLoading ? (
+        <LoadingView />
+      ) : (
+        <>
+          <View style={styles.sortBy}>
+            <Menu
+              visible={sortMenuVisible}
+              onDismiss={() => {
+                setSortMenuVisible(false);
+              }}
+              anchor={
+                <TouchableOpacity
+                  onPress={() => {
+                    setSortMenuVisible(true);
+                  }}
+                  style={globalStyles.rowAlignCenter}>
+                  <Subheading>Sort by</Subheading>
+                  <Icon name="chevron-down" size={25} />
+                </TouchableOpacity>
+              }>
+              <Menu.Item
+                disabled={sortBy === 'name'}
+                onPress={() => {
+                  sortAccounts('name');
+                }}
+                title="Name"
+              />
+              <Divider />
+              <Menu.Item
+                disabled={sortBy === 'favorites'}
+                onPress={() => {
+                  sortAccounts('favorites');
+                }}
+                title="Favorite"
+              />
+            </Menu>
+          </View>
+
           <FlatList
             style={styles.container}
             contentContainerStyle={styles.content}
@@ -60,15 +102,7 @@ export function AccountsScreen({navigation}: Props) {
             showsVerticalScrollIndicator
             keyExtractor={(item) => item.account.address}
             renderItem={({item}) => (
-              <AccountItem
-                isExternal={item.account.isExternal}
-                identity={item.identity}
-                isFavorite={item.account.meta.isFavorite}
-                toggleFavorite={() => toggleFavorite(item.account.address)}
-                onPress={() => {
-                  navigation.navigate(myAccountScreen, {address: item.account.address});
-                }}
-              />
+              <AccountItem accountData={item} toggleFavorite={toggleFavorite} onPress={toAccountDetail} />
             )}
             ItemSeparatorComponent={() => <Divider />}
             ListEmptyComponent={() => (
@@ -80,45 +114,11 @@ export function AccountsScreen({navigation}: Props) {
                 <Text>Please add an account to take further actions.</Text>
               </View>
             )}
-            ListHeaderComponent={() => (
-              <View style={styles.header}>
-                <OverflowMenu
-                  anchor={() => (
-                    <TouchableOpacity
-                      onPress={() => {
-                        setSortMenuVisible(true);
-                      }}
-                      style={globalStyles.rowAlignCenter}>
-                      <Text>Sort by</Text>
-                      <Padder scale={0.5} />
-                      <IconButton icon="chevron-down" style={globalStyles.icon} color={globalStyles.iconColor.color} />
-                    </TouchableOpacity>
-                  )}
-                  placement="bottom end"
-                  style={styles.overflowMenu}
-                  visible={sortMenuVisible}
-                  onSelect={({row}: {row: number}) => {
-                    setSortMenuVisible(false);
-                    switch (row) {
-                      case 0:
-                        setSortBy('name');
-                        break;
-                      case 1:
-                        setSortBy('favorites');
-                        break;
-                    }
-                  }}
-                  onBackdropPress={() => setSortMenuVisible(false)}>
-                  <MenuItem title="Name" style={sortBy === 'name' && styles.selectedItem} />
-                  <MenuItem title="Favorite" style={sortBy === 'favorites' && styles.selectedItem} />
-                </OverflowMenu>
-              </View>
-            )}
           />
-        )}
-        <Buttons navigation={navigation} />
-      </SafeView>
-    </Provider>
+        </>
+      )}
+      <Buttons navigation={navigation} />
+    </SafeView>
   );
 }
 
@@ -127,22 +127,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    padding: standardPadding * 2,
+    paddingHorizontal: standardPadding * 2,
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: standardPadding * 2,
-  },
-  footer: {
-    marginTop: standardPadding * 4,
-  },
-  selectedItem: {
-    backgroundColor: '#dde',
-  },
-  overflowMenu: {
-    minWidth: 200,
-  },
+  sortBy: {padding: standardPadding * 2, paddingLeft: standardPadding * 3},
   emptyContainer: {alignItems: 'center', justifyContent: 'center', padding: standardPadding * 2},
   emptyText: {fontWeight: 'normal'},
 });
@@ -156,23 +143,26 @@ function sortByIsFavorite(a: CombinedData, b: CombinedData) {
 }
 
 function AccountItem({
-  isExternal,
-  identity,
-  isFavorite,
+  accountData,
   toggleFavorite,
   onPress,
 }: {
-  identity: IdentityInfo;
-  isFavorite: boolean;
-  isExternal: boolean;
-  toggleFavorite: () => void;
-  onPress: () => void;
+  accountData: CombinedData;
+  toggleFavorite: (address: string) => void;
+  onPress: (address: string) => void;
 }) {
   const theme = useTheme();
-
+  const {
+    account: {
+      isExternal,
+      address,
+      meta: {isFavorite, name},
+    },
+    identity,
+  } = accountData;
   return (
     <List.Item
-      onPress={onPress}
+      onPress={() => onPress(address)}
       left={() => (
         <View style={globalStyles.justifyCenter}>
           <Identicon value={String(identity.accountId)} size={25} />
@@ -180,13 +170,13 @@ function AccountItem({
       )}
       title={() => (
         <View style={globalStyles.justifyCenter}>
-          <AccountInfoInlineTeaser identity={identity} />
+          <AccountInfoInlineTeaser identity={identity} accountName={name} />
           {isExternal && <Caption>External</Caption>}
         </View>
       )}
       right={() => (
         <IconButton
-          onPress={toggleFavorite}
+          onPress={() => toggleFavorite(address)}
           color={isFavorite ? theme.colors.accent : theme.colors.disabled}
           icon={isFavorite ? 'star' : 'star-outline'}
         />
@@ -201,31 +191,29 @@ const Buttons = ({navigation}: {navigation: Props['navigation']}) => {
   const {open} = state;
 
   return (
-    <Portal>
-      <FAB.Group
-        visible={true}
-        open={open}
-        icon={open ? 'minus' : 'plus'}
-        actions={[
-          {
-            icon: 'import',
-            label: 'Import seed',
-            onPress: () => navigation.navigate(importAccountScreen),
-          },
-          {
-            icon: 'plus',
-            label: 'Add External Account',
-            onPress: () => navigation.navigate(addAccountScreen),
-          },
-          {
-            icon: 'key-plus',
-            label: 'Generate New Seed',
-            onPress: () => navigation.navigate(mnemonicScreen),
-            small: false,
-          },
-        ]}
-        onStateChange={onStateChange}
-      />
-    </Portal>
+    <FAB.Group
+      visible={true}
+      open={open}
+      icon={open ? 'minus' : 'plus'}
+      actions={[
+        {
+          icon: 'import',
+          label: 'Import account',
+          onPress: () => navigation.navigate(importAccountScreen),
+        },
+        {
+          icon: 'plus',
+          label: 'Add External Account',
+          onPress: () => navigation.navigate(addAccountScreen),
+        },
+        {
+          icon: 'key-plus',
+          label: 'Create new account',
+          onPress: () => navigation.navigate(mnemonicScreen),
+          small: false,
+        },
+      ]}
+      onStateChange={onStateChange}
+    />
   );
 };

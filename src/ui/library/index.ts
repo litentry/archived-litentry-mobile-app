@@ -26,6 +26,7 @@ export {
   Appbar as AppBar,
   Snackbar,
   useTheme,
+  Menu,
 } from 'react-native-paper';
 
 export type {IconSource} from 'react-native-paper/lib/typescript/components/Icon';
