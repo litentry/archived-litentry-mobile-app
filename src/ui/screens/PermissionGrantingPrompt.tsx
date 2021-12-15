@@ -11,7 +11,7 @@ type Props = {
   skipPnPermission: () => void;
 };
 
-export function PermissionGrantingPrompt({skipPnPermission}: Props) {
+function PermissionGrantingPromptScreen({skipPnPermission}: Props) {
   const {colors} = useTheme();
   const {requestPermissions} = usePushNotificationsPermissions();
   const [error, setError] = React.useState<string>();
@@ -53,6 +53,8 @@ export function PermissionGrantingPrompt({skipPnPermission}: Props) {
     </Layout>
   );
 }
+
+export const PermissionGrantingPrompt = React.memo(PermissionGrantingPromptScreen);
 
 const styles = StyleSheet.create({
   container: {alignItems: 'center', justifyContent: 'center', flex: 1, padding: standardPadding * 4},
