@@ -47,6 +47,10 @@ export function AccountsScreen({navigation}: Props) {
   const sortByFunction = sortBy === 'name' ? sortByDisplayName : sortByIsFavorite;
   const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
 
+  const toAccountDetail = (address: string) => {
+    navigation.navigate(myAccountScreen, {address});
+  };
+
   return (
     <Provider theme={theme}>
       <SafeView edges={noTopEdges}>
@@ -60,15 +64,7 @@ export function AccountsScreen({navigation}: Props) {
             showsVerticalScrollIndicator
             keyExtractor={(item) => item.account.address}
             renderItem={({item}) => (
-              <AccountItem
-                isExternal={item.account.isExternal}
-                identity={item.identity}
-                isFavorite={item.account.meta.isFavorite}
-                toggleFavorite={() => toggleFavorite(item.account.address)}
-                onPress={() => {
-                  navigation.navigate(myAccountScreen, {address: item.account.address});
-                }}
-              />
+              <AccountItem accountData={item} toggleFavorite={toggleFavorite} onPress={toAccountDetail} />
             )}
             ItemSeparatorComponent={() => <Divider />}
             ListEmptyComponent={() => (
@@ -156,23 +152,26 @@ function sortByIsFavorite(a: CombinedData, b: CombinedData) {
 }
 
 function AccountItem({
-  isExternal,
-  identity,
-  isFavorite,
+  accountData,
   toggleFavorite,
   onPress,
 }: {
-  identity: IdentityInfo;
-  isFavorite: boolean;
-  isExternal: boolean;
-  toggleFavorite: () => void;
-  onPress: () => void;
+  accountData: CombinedData;
+  toggleFavorite: (address: string) => void;
+  onPress: (address: string) => void;
 }) {
   const theme = useTheme();
-
+  const {
+    account: {
+      isExternal,
+      address,
+      meta: {isFavorite, name},
+    },
+    identity,
+  } = accountData;
   return (
     <List.Item
-      onPress={onPress}
+      onPress={() => onPress(address)}
       left={() => (
         <View style={globalStyles.justifyCenter}>
           <Identicon value={String(identity.accountId)} size={25} />
@@ -180,13 +179,13 @@ function AccountItem({
       )}
       title={() => (
         <View style={globalStyles.justifyCenter}>
-          <AccountInfoInlineTeaser identity={identity} />
+          <AccountInfoInlineTeaser identity={identity} accountName={name} />
           {isExternal && <Caption>External</Caption>}
         </View>
       )}
       right={() => (
         <IconButton
-          onPress={toggleFavorite}
+          onPress={() => toggleFavorite(address)}
           color={isFavorite ? theme.colors.accent : theme.colors.disabled}
           icon={isFavorite ? 'star' : 'star-outline'}
         />
