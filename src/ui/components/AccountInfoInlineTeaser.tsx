@@ -22,7 +22,7 @@ function AccountInfoInlineTeaser({identity, accountName}: PropTypes) {
           ? identity.display
           : accountName
           ? `${accountName}(${stringShorten(identity.accountId.toString(), 8)})`
-          : stringShorten(identity.display, 12)}
+          : stringShorten(identity.accountId.toString(), 12)}
       </Caption>
       {judgements?.length ? <Padder scale={0.2} /> : null}
       {judgements?.map((judgement, i) => (
