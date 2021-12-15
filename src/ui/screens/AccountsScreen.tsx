@@ -32,7 +32,6 @@ type Props = {
 type SortBy = 'name' | 'favorites';
 
 export function AccountsScreen({navigation}: Props) {
-  const {colors} = useTheme();
   const {accounts, networkAccounts, toggleFavorite} = useAccounts();
   const {data, isLoading} = useAccountsIdentityInfo(networkAccounts.map((account) => account.address));
   const combinedData = data?.reduce<CombinedData[]>((acc, current) => {
@@ -79,7 +78,7 @@ export function AccountsScreen({navigation}: Props) {
                 </TouchableOpacity>
               }>
               <Menu.Item
-                style={sortBy === 'name' ? {backgroundColor: colors.background} : undefined}
+                disabled={sortBy === 'name'}
                 onPress={() => {
                   sortAccounts('name');
                 }}
@@ -87,7 +86,7 @@ export function AccountsScreen({navigation}: Props) {
               />
               <Divider />
               <Menu.Item
-                style={sortBy === 'favorites' ? {backgroundColor: colors.background} : undefined}
+                disabled={sortBy === 'favorites'}
                 onPress={() => {
                   sortAccounts('favorites');
                 }}
@@ -199,7 +198,7 @@ const Buttons = ({navigation}: {navigation: Props['navigation']}) => {
       actions={[
         {
           icon: 'import',
-          label: 'Import seed',
+          label: 'Import account',
           onPress: () => navigation.navigate(importAccountScreen),
         },
         {
@@ -209,7 +208,7 @@ const Buttons = ({navigation}: {navigation: Props['navigation']}) => {
         },
         {
           icon: 'key-plus',
-          label: 'Generate New Seed',
+          label: 'Create new account',
           onPress: () => navigation.navigate(mnemonicScreen),
           small: false,
         },
