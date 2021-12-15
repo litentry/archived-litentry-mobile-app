@@ -1,5 +1,4 @@
 import React from 'react';
-import messaging from '@react-native-firebase/messaging';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createStackNavigator, StackNavigationOptions} from '@react-navigation/stack';
 import {ChainApiContext} from 'context/ChainApiContext';
@@ -281,7 +280,7 @@ function ApiLoadingNavigator() {
 const AppStack = createStackNavigator<AppStackParamList>();
 
 function AppNavigator() {
-  const {pushAuthorizationStatus, isLoading} = usePushAuthorizationStatus();
+  const {isPnPromptNeeded, skipPnPermission, isLoading} = usePushAuthorizationStatus();
 
   // We need this here, because otherwise PermissionGrantingPrompt
   // wouldn't mount on the first render, loading indicator is not necessary
@@ -292,8 +291,10 @@ function AppNavigator() {
 
   return (
     <AppStack.Navigator screenOptions={overlayScreenOptions}>
-      {pushAuthorizationStatus && pushAuthorizationStatus === messaging.AuthorizationStatus.NOT_DETERMINED ? (
-        <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen} component={PermissionGrantingPrompt} />
+      {isPnPromptNeeded ? (
+        <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen}>
+          {() => <PermissionGrantingPrompt skipPnPermission={skipPnPermission} />}
+        </AppStack.Screen>
       ) : undefined}
       <AppStack.Screen name={routeKeys.drawerNavigatorScreen} component={DrawerNavigator} />
     </AppStack.Navigator>
