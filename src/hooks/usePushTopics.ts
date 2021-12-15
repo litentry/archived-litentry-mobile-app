@@ -6,7 +6,7 @@ import {useCallback, useMemo} from 'react';
 export const PUSH_NOTIFICATION_TOPICS = [
   {id: 'treasury.Proposed', label: 'New Treasury Proposal'},
   {id: 'tips.NewTip', label: 'Tip Suggestion'},
-  {id: 'democracy.Started', label: 'New referendum has begun!'},
+  {id: 'democracy.Started', label: 'New Referendum'},
 ];
 
 const SELECTED_PUSH_TOPICS_QUERY_KEY = 'selected_push_topics';
