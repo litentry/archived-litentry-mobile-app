@@ -7,12 +7,13 @@ import {Label} from '@ui/components/Label';
 import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import * as React from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {OrderByType, topicIdMap, usePolkassemblyDiscussions} from 'src/api/hooks/usePolkassemblyDiscussions';
 import {PolkassemblyDiscussionStackParamList} from '@ui/navigation/navigation';
 import {polkassemblyDiscussionDetail} from '@ui/navigation/routeKeys';
 import {Padder} from '@ui/components/Padder';
-import globalStyles, {standardPadding} from '@ui/styles';
+import {ActivityIndicator} from '@ui/library';
+import globalStyles, {standardPadding, colorGreen} from '@ui/styles';
 
 export function PolkassemblyDiscussions({
   navigation,
@@ -131,7 +132,7 @@ export function PolkassemblyDiscussions({
             <View style={styles.footer}>
               {hasNextPage ? (
                 isFetching || isFetchingNextPage ? (
-                  <ActivityIndicator />
+                  <ActivityIndicator color={colorGreen} animating />
                 ) : (
                   <Button onPress={() => fetchNextPage()}>Load more ...</Button>
                 )

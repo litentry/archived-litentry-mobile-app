@@ -1,12 +1,13 @@
 import React, {ReactNode} from 'react';
-import {StyleSheet, ActivityIndicator, ActivityIndicatorProps} from 'react-native';
-import {Layout, Text} from '@ui-kitten/components';
+import {StyleSheet} from 'react-native';
+import {Layout} from '@ui/components/Layout';
+import {Text, ActivityIndicator} from '@ui/library';
 import globalStyles, {standardPadding, monofontFamily, colorGreen} from '@ui/styles';
 
 type PropTypes = {
   text?: string;
   renderIcon?: () => ReactNode;
-  size?: ActivityIndicatorProps['size'];
+  size?: React.ComponentProps<typeof ActivityIndicator>['size'];
   appearance?: 'secondary' | 'primary';
 };
 
@@ -19,7 +20,7 @@ function LoadingView(props: PropTypes) {
         {renderIcon && renderIcon()}
         <Text style={[styles.text, renderIcon ? styles.withIcon : {}, styles[appearance || 'primary']]}>{text}</Text>
       </Layout>
-      <ActivityIndicator size={size || 'large'} color={colorGreen} />
+      <ActivityIndicator size={size || 'large'} color={colorGreen} animating />
     </Layout>
   );
 }
