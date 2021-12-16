@@ -16,8 +16,4 @@ const SentryApp = Sentry.wrap(App);
  **/
 LogBox.ignoreLogs(['Setting a timer']);
 
-if (__DEV__) {
-  import('./ReactotronConfig').then(() => console.log('Reactotron Configured'));
-}
-
 AppRegistry.registerComponent(appName, () => SentryApp);
