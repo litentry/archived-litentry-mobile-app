@@ -88,12 +88,12 @@ function ReferendumListItem({item}: {item: DeriveReferendumExt}) {
   const {method, section} = proposal?.registry.findMetaCall(proposal.callIndex) ?? {};
   const title = proposal ? `${method}.${section}` : `preimage`;
 
-  const goToRefrenda = () => {
+  const goToReferenda = () => {
     navigation.navigate(referendumScreen, {index: item.index.toString()});
   };
 
   return (
-    <Card onPress={goToRefrenda}>
+    <Card onPress={goToReferenda}>
       <Card.Content>
         <List.Item
           style={referendumStyle.item}
