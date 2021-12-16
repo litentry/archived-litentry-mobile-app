@@ -13,7 +13,7 @@ function NetworkItem(props: PropTypes) {
 
   return (
     <View style={styles.container}>
-      <Icon name={isConnected ? 'web' : 'web-off'} size={20} color={colors.accent} />
+      <Icon name={isConnected ? 'web' : 'earth-off'} size={16} color={colors.accent} />
       <Padder scale={0.3} />
       <Text style={{color: colors.accent}}>{item.name}</Text>
     </View>
