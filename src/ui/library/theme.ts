@@ -17,16 +17,7 @@ export const themeLight = {
     primary: '#85A3F2',
     accent: '#FEA34F',
     success: 'green',
-
-    // background: 'white',
-    // surface: 'red',
-    // error: 'red',
-    // text: 'red',
-    // onSurface: 'red',
-    // disabled: 'red',
-    // placeholder: 'red',
-    // backdrop: 'red',
-    // notification: 'red',
+    backdrop: '#eeeeee',
   },
 };
 
@@ -37,14 +28,5 @@ export const themeDark = {
     primary: '#85A3F2',
     accent: '#FEA34F',
     success: 'green',
-    // background: 'white',
-    // surface: 'red',
-    // error: 'red',
-    // text: 'red',
-    // onSurface: 'red',
-    // disabled: 'red',
-    // placeholder: 'red',
-    // backdrop: 'red',
-    // notification: 'red',
   },
 };

@@ -13,6 +13,7 @@ import {ApiLoadingStackParamList, DashboardStackParamList, DrawerParamList} from
 import {bountiesScreen, councilScreen, democracyScreen, treasuryScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Layout} from '@ui/components/Layout';
+import {Padder} from '@ui/components/Padder';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
@@ -33,8 +34,11 @@ function DashboardScreen({navigation}: PropTypes) {
         <View style={globalStyles.flex}>
           <ScrollView contentContainerStyle={styles.scrollView}>
             <DemocracySummaryTeaser onPress={() => navigation.navigate(democracyScreen)} />
+            <Padder scale={1} />
             <CouncilSummaryTeaser onPress={() => navigation.navigate(councilScreen)} />
+            <Padder scale={1} />
             <TreasurySummaryTeaser onPress={() => navigation.navigate(treasuryScreen)} />
+            <Padder scale={1} />
             <BountySummaryTeaser onPress={() => navigation.navigate(bountiesScreen)} />
           </ScrollView>
         </View>
@@ -45,7 +49,8 @@ function DashboardScreen({navigation}: PropTypes) {
 
 const styles = StyleSheet.create({
   scrollView: {
-    paddingBottom: standardPadding * 3,
+    padding: standardPadding * 2,
+    paddingBottom: standardPadding * 6,
   },
   container: {
     flex: 1,
