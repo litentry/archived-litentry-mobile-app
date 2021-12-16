@@ -5,8 +5,7 @@ import {NavigationProp} from '@react-navigation/native';
 import {Account, useAccounts} from 'context/index';
 import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
 import LoadingView from '@ui/components/LoadingView';
-import {useTheme, Divider, Text, IconButton, List, FAB, Caption, Menu, Subheading, Icon} from '@ui/library';
-import {Padder} from '@ui/components/Padder';
+import {useTheme, Divider, IconButton, List, FAB, Caption, Menu, Subheading, Icon} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useAccountsIdentityInfo} from 'src/api/hooks/useAccountsIdentityInfo';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
@@ -19,6 +18,7 @@ import {
   myAccountScreen,
 } from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
+import {EmptyView} from '@ui/components/EmptyView';
 
 type CombinedData = {
   identity: IdentityInfo;
@@ -60,62 +60,53 @@ export function AccountsScreen({navigation}: Props) {
       {isLoading ? (
         <LoadingView />
       ) : (
-        <>
-          <View style={styles.sortBy}>
-            <Menu
-              visible={sortMenuVisible}
-              onDismiss={() => {
-                setSortMenuVisible(false);
-              }}
-              anchor={
-                <TouchableOpacity
+        <FlatList
+          style={styles.container}
+          contentContainerStyle={styles.content}
+          data={combinedData?.sort(sortByFunction)}
+          showsVerticalScrollIndicator
+          keyExtractor={(item) => item.account.address}
+          renderItem={({item}) => (
+            <AccountItem accountData={item} toggleFavorite={toggleFavorite} onPress={toAccountDetail} />
+          )}
+          ListHeaderComponent={
+            <View style={styles.sortBy}>
+              <Menu
+                visible={sortMenuVisible}
+                onDismiss={() => {
+                  setSortMenuVisible(false);
+                }}
+                anchor={
+                  <TouchableOpacity
+                    onPress={() => {
+                      setSortMenuVisible(true);
+                    }}
+                    style={globalStyles.rowAlignCenter}>
+                    <Subheading>Sort by</Subheading>
+                    <Icon name="chevron-down" size={25} />
+                  </TouchableOpacity>
+                }>
+                <Menu.Item
+                  disabled={sortBy === 'name'}
                   onPress={() => {
-                    setSortMenuVisible(true);
+                    sortAccounts('name');
                   }}
-                  style={globalStyles.rowAlignCenter}>
-                  <Subheading>Sort by</Subheading>
-                  <Icon name="chevron-down" size={25} />
-                </TouchableOpacity>
-              }>
-              <Menu.Item
-                disabled={sortBy === 'name'}
-                onPress={() => {
-                  sortAccounts('name');
-                }}
-                title="Name"
-              />
-              <Divider />
-              <Menu.Item
-                disabled={sortBy === 'favorites'}
-                onPress={() => {
-                  sortAccounts('favorites');
-                }}
-                title="Favorite"
-              />
-            </Menu>
-          </View>
-
-          <FlatList
-            style={styles.container}
-            contentContainerStyle={styles.content}
-            data={combinedData?.sort(sortByFunction)}
-            showsVerticalScrollIndicator
-            keyExtractor={(item) => item.account.address}
-            renderItem={({item}) => (
-              <AccountItem accountData={item} toggleFavorite={toggleFavorite} onPress={toAccountDetail} />
-            )}
-            ItemSeparatorComponent={() => <Divider />}
-            ListEmptyComponent={() => (
-              <View style={styles.emptyContainer}>
-                <IconButton icon="badge-account-alert-outline" size={100} />
-                <Padder scale={1} />
-                <Text style={styles.emptyText}>No accounts added!</Text>
-                <Padder scale={1.5} />
-                <Text>Please add an account to take further actions.</Text>
-              </View>
-            )}
-          />
-        </>
+                  title="Name"
+                />
+                <Divider />
+                <Menu.Item
+                  disabled={sortBy === 'favorites'}
+                  onPress={() => {
+                    sortAccounts('favorites');
+                  }}
+                  title="Favorite"
+                />
+              </Menu>
+            </View>
+          }
+          ItemSeparatorComponent={Divider}
+          ListEmptyComponent={EmptyView}
+        />
       )}
       <Buttons navigation={navigation} />
     </SafeView>
@@ -129,7 +120,9 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: standardPadding * 2,
   },
-  sortBy: {padding: standardPadding * 2, paddingLeft: standardPadding * 3},
+  sortBy: {
+    padding: standardPadding * 2,
+  },
   emptyContainer: {alignItems: 'center', justifyContent: 'center', padding: standardPadding * 2},
   emptyText: {fontWeight: 'normal'},
 });
