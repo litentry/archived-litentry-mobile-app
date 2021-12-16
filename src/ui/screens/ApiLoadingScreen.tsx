@@ -9,9 +9,9 @@ import {noop} from 'lodash';
 import NetworkItem from '@ui/components/NetworkItem';
 import {ApiLoadingStackParamList, RootStackParamList} from '@ui/navigation/navigation';
 import {appStack, networkSelectionScreen} from '@ui/navigation/routeKeys';
-import {AppBar, AppHeader, ActivityIndicator} from '@ui/library';
+import {AppBar, AppHeader, ActivityIndicator, useTheme} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
-import globalStyles, {colorGreen, monofontFamily, standardPadding} from '@ui/styles';
+import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
@@ -23,6 +23,7 @@ type PropTypes = {
 export function ApiLoadingScreen({navigation}: PropTypes) {
   const {currentNetwork} = useContext(NetworkContext);
   const {status, inProgress} = useContext(ChainApiContext);
+  const {colors} = useTheme();
 
   React.useEffect(() => {
     if (status === 'ready') {
@@ -45,12 +46,12 @@ export function ApiLoadingScreen({navigation}: PropTypes) {
       </AppHeader>
       <View style={globalStyles.centeredContainer}>
         <View style={styles.textContainer}>
-          <Icon style={[globalStyles.inlineIconDimension, {color: colorGreen}]} name="planet" pack="ionic" />
+          <Icon style={[globalStyles.inlineIconDimension, {color: colors.accent}]} name="planet" pack="ionic" />
           <Text style={styles.text}>
             {`${inProgress ? 'Connecting' : 'Connected'}`} to {currentNetwork?.name ?? ''}
           </Text>
         </View>
-        {inProgress ? <ActivityIndicator size={'large'} color={colorGreen} animating /> : null}
+        {inProgress ? <ActivityIndicator size={'large'} animating /> : null}
       </View>
     </Layout>
   );
