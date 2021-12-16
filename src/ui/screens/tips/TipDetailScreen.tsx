@@ -183,21 +183,6 @@ const styles = StyleSheet.create({
   containerSpacing: {
     marginTop: 20,
   },
-  emptyTippersContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  emptyTippersImage: {
-    width: 120,
-    height: 120,
-    alignSelf: 'center',
-    resizeMode: 'contain',
-  },
-  emptyTippersText: {
-    fontFamily: monofontFamily,
-    marginBottom: 10,
-  },
   tipperIconContainer: {marginRight: 15},
 });
 
