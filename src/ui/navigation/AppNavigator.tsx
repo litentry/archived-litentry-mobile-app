@@ -30,8 +30,8 @@ import ManageIdentityScreen from '@ui/screens/MyIdentityScreen/ManageIdentity';
 import {NetworkSelectionScreen} from '@ui/screens/NetworkSelectionScreen';
 import {NotificationSettingsScreen} from '@ui/screens/NotificationSettingsScreen';
 import {ParachainsAuctionsScreen} from '@ui/screens/Parachains/ParachainAuctionsScreen';
-import {CrowdLoanFundDetailScreen} from '@ui/screens/Parachains/CrowdLoanFundDetailScreen';
-import {CrowdLoanScreen} from '@ui/screens/Parachains/CrowdLoanScreen';
+import {CrowdloanFundDetailScreen} from '@ui/screens/Parachains/CrowdloanFundDetailScreen';
+import {CrowdloanScreen} from '@ui/screens/Parachains/CrowdloanScreen';
 import {ParachainsOverviewScreen} from '@ui/screens/Parachains/OverviewScreen';
 import {ParachainDetailScreen} from '@ui/screens/Parachains/ParachainDetailScreen';
 import {ParathreadsScreen} from '@ui/screens/Parachains/ParathreadsScreen';
@@ -226,7 +226,7 @@ function ParachainsNavigator() {
       />
       <ParachainsStack.Screen
         name={routeKeys.crowdloanScreen}
-        component={CrowdLoanScreen}
+        component={CrowdloanScreen}
         options={{
           headerLeft: (props) => <AppBar.Action icon="menu" {...props} />,
         }}
@@ -253,7 +253,7 @@ function ParachainsNavigator() {
       />
       <ParachainsStack.Screen
         name={routeKeys.crowdloanFundDetailScreen}
-        component={CrowdLoanFundDetailScreen}
+        component={CrowdloanFundDetailScreen}
         options={{title: 'Fund details'}}
       />
     </ParachainsStack.Navigator>
