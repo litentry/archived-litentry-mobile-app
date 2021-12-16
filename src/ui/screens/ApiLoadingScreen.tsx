@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {ActivityIndicator, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {CompositeNavigationProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Icon, Text} from '@ui-kitten/components';
@@ -9,7 +9,7 @@ import {noop} from 'lodash';
 import NetworkItem from '@ui/components/NetworkItem';
 import {ApiLoadingStackParamList, RootStackParamList} from '@ui/navigation/navigation';
 import {appStack, networkSelectionScreen} from '@ui/navigation/routeKeys';
-import {AppBar, AppHeader} from '@ui/library';
+import {AppBar, AppHeader, ActivityIndicator} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import globalStyles, {colorGreen, monofontFamily, standardPadding} from '@ui/styles';
 
@@ -50,7 +50,7 @@ export function ApiLoadingScreen({navigation}: PropTypes) {
             {`${inProgress ? 'Connecting' : 'Connected'}`} to {currentNetwork?.name ?? ''}
           </Text>
         </View>
-        {inProgress ? <ActivityIndicator size={'large'} color={colorGreen} /> : null}
+        {inProgress ? <ActivityIndicator size={'large'} color={colorGreen} animating /> : null}
       </View>
     </Layout>
   );
