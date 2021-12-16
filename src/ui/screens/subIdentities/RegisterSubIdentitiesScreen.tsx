@@ -4,7 +4,7 @@ import {Modalize} from 'react-native-modalize';
 import {useQueryClient} from 'react-query';
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {Button, Card, Divider, IconProps, Layout, ListItem, Text, TopNavigationAction} from '@ui-kitten/components';
+import {Button, Divider, IconProps, Layout, ListItem, Text, TopNavigationAction} from '@ui-kitten/components';
 import Icon from '@ui/components/Icon';
 import ModalTitle from '@ui/components/ModalTitle';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -12,11 +12,12 @@ import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useSubIdentities} from 'src/api/hooks/useSubIdentities';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {registerSubIdentitiesScreen} from '@ui/navigation/routeKeys';
-import globalStyles, {monofontFamily} from '@ui/styles';
+import globalStyles from '@ui/styles';
 import {AddSubIdentity} from './AddSubIdentity';
 import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
+import {EmptyView} from '@ui/components/EmptyView';
 
 type ScreenProps = {
   navigation: NavigationProp<AccountsStackParamList>;
@@ -142,7 +143,7 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
               )}
             />
           )}
-          ListEmptyComponent={EmptySubIdentities}
+          ListEmptyComponent={<EmptyView height={200}>{`No sub-identities set.`}</EmptyView>}
         />
       </View>
       <Modalize
@@ -164,28 +165,9 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
   );
 }
 
-function EmptySubIdentities() {
-  return (
-    <Card style={styles.emptySubIdentitiesContainer} disabled>
-      <Text category="c2" style={styles.emptySubIdentitiesText}>
-        No sub-identities set.
-      </Text>
-    </Card>
-  );
-}
-
 const RemoveIcon = (props: IconProps) => <Icon {...props} name="trash-2-outline" />;
 
 const styles = StyleSheet.create({
-  emptySubIdentitiesContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 30,
-    marginTop: 10,
-  },
-  emptySubIdentitiesText: {
-    fontFamily: monofontFamily,
-  },
   setSubIdentitiesButton: {marginBottom: 10, marginHorizontal: 30},
   subIdentitiesListHeader: {paddingBottom: 10, marginTop: 10},
   hintTextContainer: {alignItems: 'center', marginBottom: 20},
