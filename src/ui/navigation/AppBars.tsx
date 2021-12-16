@@ -6,7 +6,12 @@ import {NetworkContext} from 'context/NetworkContext';
 import NetworkItem from '@ui/components/NetworkItem';
 import React, {useContext} from 'react';
 import {networkSelectionScreen} from '@ui/navigation/routeKeys';
-import {AppBar, AppHeader} from '@ui/library';
+import {AppBar, AppHeader, Title} from '@ui/library';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import logo from 'image/logo.png';
+import {standardPadding} from '@ui/styles';
+import {Padder} from '@ui/components/Padder';
+import {useTheme} from 'context/ThemeContext';
 
 export function MainDrawerAppBar({
   navigation,
@@ -68,6 +73,7 @@ function navigationSupportsDrawer(navigation: unknown): navigation is DrawerNavi
 export function DashboardAppBar({navigation}: {navigation: StackNavigationProp<ParamListBase>}) {
   const {currentNetwork} = useContext(NetworkContext);
   const {status} = useApi();
+  const {colors} = useTheme();
 
   const onActionLeftPress = React.useCallback(() => {
     if (navigationSupportsDrawer(navigation)) {
@@ -79,14 +85,41 @@ export function DashboardAppBar({navigation}: {navigation: StackNavigationProp<P
     <AppHeader>
       <AppBar.Action onPress={onActionLeftPress} icon={'menu'} />
       <AppBar.Content
-        title="Litentry"
-        onPress={() => navigation.navigate(networkSelectionScreen)}
-        subtitle={
-          currentNetwork ? (
-            <NetworkItem item={currentNetwork} isConnected={status === 'connected' || status === 'ready'} />
-          ) : undefined
+        style={styles.headerContent}
+        title={
+          <View style={styles.logo}>
+            <Image source={logo} style={styles.logoImage} />
+            <Padder scale={0.5} />
+            <Title>Litentry</Title>
+          </View>
         }
       />
+      <TouchableOpacity
+        onPress={() => navigation.navigate(networkSelectionScreen)}
+        style={[styles.networkSwitch, {backgroundColor: colors.backdrop}]}>
+        {currentNetwork ? (
+          <NetworkItem item={currentNetwork} isConnected={status === 'connected' || status === 'ready'} />
+        ) : undefined}
+      </TouchableOpacity>
     </AppHeader>
   );
 }
+
+const styles = StyleSheet.create({
+  headerContent: {
+    marginRight: 50,
+  },
+  logo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logoImage: {width: 30, height: 30},
+  networkSwitch: {
+    position: 'absolute',
+    right: standardPadding * 1.5,
+    bottom: 0,
+    paddingHorizontal: standardPadding,
+    paddingVertical: standardPadding / 2,
+  },
+});
