@@ -14,7 +14,7 @@ export function Chart({percent}: {percent: number}) {
         chartConfig={{
           backgroundGradientFromOpacity: 0,
           backgroundGradientToOpacity: 0,
-          color: (opacity = 1) => `rgba(0, 197, 117, ${opacity})`,
+          color: (opacity = 1) => `rgba(254, 163, 79, ${opacity})`,
         }}
         hideLegend
       />
