@@ -140,7 +140,7 @@ function TipDetailScreen({route}: ScreenProps) {
             />
           );
         }}
-        ListEmptyComponent={<EmptyView height={200}>{`There are not tippers yet`}</EmptyView>}
+        ListEmptyComponent={<EmptyView height={200}>{`There are no tippers yet`}</EmptyView>}
         showsVerticalScrollIndicator={false}
       />
     </SafeView>
