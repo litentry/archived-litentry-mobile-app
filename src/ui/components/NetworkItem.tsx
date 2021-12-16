@@ -1,17 +1,21 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Text} from '@ui-kitten/components';
 import {NetworkType} from 'src/types';
-import {standardPadding} from '@ui/styles';
+import {Icon, Text} from '@ui/library';
+import {useTheme} from 'context/ThemeContext';
+import {Padder} from '@ui/components/Padder';
 
 type PropTypes = {item: NetworkType; isConnected: boolean};
 
 function NetworkItem(props: PropTypes) {
+  const {colors} = useTheme();
   const {item, isConnected} = props;
+
   return (
     <View style={styles.container}>
-      <Text category="label">{item.name}</Text>
-      <View style={[styles.connectionIndicator, isConnected ? styles.connected : styles.notConnected]} />
+      <Icon name={isConnected ? 'web' : 'earth-off'} size={16} color={colors.accent} />
+      <Padder scale={0.3} />
+      <Text style={{color: colors.accent}}>{item.name}</Text>
     </View>
   );
 }
@@ -19,26 +23,7 @@ function NetworkItem(props: PropTypes) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    alignItems: 'center',
-  },
-  connectionIndicator: {
-    marginLeft: standardPadding / 2,
-    marginTop: 2,
-    width: 4,
-    height: 4,
-    borderRadius: 10,
-  },
-  connectedText: {
-    color: 'green',
-  },
-  notConnectedText: {
-    color: 'red',
-  },
-  connected: {
-    backgroundColor: 'green',
-  },
-  notConnected: {
-    backgroundColor: 'red',
+    alignItems: 'flex-end',
   },
 });
 
