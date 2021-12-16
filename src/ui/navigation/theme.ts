@@ -1,27 +1,28 @@
 import {Theme} from '@react-navigation/native';
 import {light, dark} from '@eva-design/material';
+import {themeDark, themeLight} from '@ui/library/theme';
 
 export const darkTheme: Theme = {
   dark: true,
   colors: {
-    primary: dark['color-basic-100'],
-    background: dark['color-basic-800'],
-    card: dark['color-basic-800'],
-    text: dark['color-basic-100'],
-    border: dark['color-basic-800'],
-    notification: dark['color-basic-800'],
+    primary: themeDark.colors.primary,
+    background: themeDark.colors.background,
+    card: themeDark.colors.surface,
+    text: themeDark.colors.text,
+    border: themeDark.colors.disabled,
+    notification: themeDark.colors.notification,
   },
 };
 
 export const lightTheme: Theme = {
   dark: false,
   colors: {
-    primary: light['color-basic-800'],
-    background: light['color-basic-100'],
-    card: light['color-basic-100'],
-    text: light['color-basic-800'],
-    border: light['color-basic-100'],
-    notification: light['color-basic-100'],
+    primary: themeLight.colors.primary,
+    background: themeLight.colors.background,
+    card: themeLight.colors.surface,
+    text: themeLight.colors.text,
+    border: themeLight.colors.disabled,
+    notification: themeLight.colors.notification,
   },
 };
 
