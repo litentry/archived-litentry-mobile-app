@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {Calendar} from 'react-native-calendars';
@@ -34,8 +34,8 @@ function useEvents() {
   const {firstEventDate, lastEventDate} = eventsMock.reduce<{lastEventDate?: string; firstEventDate?: string}>(
     (acc, event) => {
       return {
-        firstEventDate: moment(event.date).isBefore(acc.firstEventDate) ? event.date : acc.firstEventDate,
-        lastEventDate: moment(event.date).isAfter(acc.lastEventDate) ? event.date : acc.lastEventDate,
+        firstEventDate: dayjs(event.date).isBefore(acc.firstEventDate) ? event.date : acc.firstEventDate,
+        lastEventDate: dayjs(event.date).isAfter(acc.lastEventDate) ? event.date : acc.lastEventDate,
       };
     },
     {lastEventDate: undefined, firstEventDate: undefined},
@@ -48,13 +48,13 @@ export function CalendarScreen() {
   const [date, setDate] = React.useState(() => new Date());
 
   const {lastEventDate, firstEventDate, events} = useEvents();
-  const daysEvents = events.filter((event) => moment(event.date).isSame(date, 'day'));
+  const daysEvents = events.filter((event) => dayjs(event.date).isSame(date, 'day'));
 
   const markedDates = {
-    [moment(date).format('yyyy-MM-DD')]: {selected: true},
+    [dayjs(date).format('yyyy-MM-DD')]: {selected: true},
     ...events.reduce((acc, event) => {
-      const dateString = moment(event.date).format(CALENDAR_FORMAT);
-      acc[dateString] = {marked: true, selected: dateString === moment(date).format(CALENDAR_FORMAT)};
+      const dateString = dayjs(event.date).format(CALENDAR_FORMAT);
+      acc[dateString] = {marked: true, selected: dateString === dayjs(date).format(CALENDAR_FORMAT)};
       return acc;
     }, {} as {[key: string]: {marked: boolean; selected?: boolean}}),
   };
@@ -70,7 +70,7 @@ export function CalendarScreen() {
         />
       </Card>
       <Padder scale={2} />
-      <EventsDisplay headline={moment(date).format('DD MMMM yyyy')} events={daysEvents} />
+      <EventsDisplay headline={dayjs(date).format('DD MMMM yyyy')} events={daysEvents} />
     </ScrollView>
   );
 }
@@ -102,7 +102,7 @@ function EventsDisplay({events, headline}: {events: Event[]; headline: string}) 
         {events.length === 0 && <Caption style={styles.noEventsText}>No events scheduled for this day</Caption>}
         {events.map((event, index) => (
           <View key={index} style={styles.eventRow}>
-            <Text style={{color: colors.accent}}>{moment(event.date).format('HH:mm')}</Text>
+            <Text style={{color: colors.accent}}>{dayjs(event.date).format('HH:mm')}</Text>
             <Padder scale={2} />
             <View>
               <Text>{event.title}</Text>

@@ -2,7 +2,7 @@ import React from 'react';
 import {Linking, StyleSheet, TouchableOpacity, View, FlatList} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {Text, useTheme} from '@ui-kitten/components';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import Icon from '@ui/components/Icon';
 import {Label} from '@ui/components/Label';
 import LoadingView from '@ui/components/LoadingView';
@@ -38,7 +38,7 @@ export function PolkassemblyDiscussionDetail({
               <Text category="c2">{post.author?.username ?? ''} </Text>
               <Text category="c1">posted in </Text>
               <Label text={post.topic.name} />
-              <Text category="c1"> {moment(post.created_at).fromNow()}</Text>
+              <Text category="c1"> {dayjs(post.created_at).fromNow()}</Text>
             </View>
             <View style={styles.content}>
               <Text style={styles.contentText} category="c1">
@@ -82,7 +82,7 @@ export function PolkassemblyDiscussionDetail({
                   {comment.author?.username ?? ''}
                 </Text>
                 <Text category="c1"> commented </Text>
-                <Text category="c2">{moment(comment.created_at).fromNow()}</Text>
+                <Text category="c2">{dayjs(comment.created_at).fromNow()}</Text>
               </View>
               <Padder scale={0.5} />
               <Text category="c1">{comment.content.trim()}</Text>

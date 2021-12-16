@@ -2,7 +2,7 @@ import {NavigationProp} from '@react-navigation/native';
 import {Button, Card, Divider, Icon, MenuItem, OverflowMenu, Text, useTheme} from '@ui-kitten/components';
 import AddressInlineTeaser from '@ui/components/AddressInlineTeaser';
 import {flatten} from 'lodash';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import {Label} from '@ui/components/Label';
 import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -156,7 +156,7 @@ export function PolkassemblyDiscussions({
                   )}
                 </View>
                 <Text category="label" appearance="hint">
-                  {moment(item.created_at).fromNow()}
+                  {dayjs(item.created_at).fromNow()}
                 </Text>
                 <Padder scale={0.2} />
                 <Label text={item.topic.name} />
@@ -187,7 +187,7 @@ export function PolkassemblyDiscussions({
                     <Icon name="undo-outline" style={globalStyles.icon15} fill="#ccc" animation="pulse" />
                     <Padder scale={0.3} />
                     <Text category="label" appearance="hint">
-                      commented {moment(item.last_update.last_update).fromNow()}
+                      commented {dayjs(item.last_update.last_update).fromNow()}
                     </Text>
                   </View>
                 ) : null}

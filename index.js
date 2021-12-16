@@ -7,8 +7,14 @@ import {AppRegistry} from 'react-native';
 import App from './src/App';
 import {name as appName} from './app.json';
 import {LogBox} from 'react-native';
+import dayjs from 'dayjs';
 
 const SentryApp = Sentry.wrap(App);
+
+// setup dayjs
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const relativeTime = require('dayjs/plugin/relativeTime');
+dayjs.extend(relativeTime);
 
 /**
  * ignore warning about long period timers on android
