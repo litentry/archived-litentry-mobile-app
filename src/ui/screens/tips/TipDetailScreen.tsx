@@ -1,5 +1,5 @@
 import React, {useContext, useMemo} from 'react';
-import {FlatList, Image, StyleSheet, View} from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {BlockNumber, OpenTip} from '@polkadot/types/interfaces';
 import {formatNumber} from '@polkadot/util';
@@ -8,7 +8,6 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {Card, Divider, ListItem, Text} from '@ui-kitten/components';
 import {useAccounts} from 'context/AccountsContext';
 import {ChainApiContext} from 'context/ChainApiContext';
-import NoDataImage from 'image/no_data.png';
 import AddressInlineTeaser from '@ui/components/AddressInlineTeaser';
 import {BlockTime} from '@ui/components/BlockTime';
 import {TipReason} from '@ui/components/tips/TipReason';
@@ -22,6 +21,7 @@ import {useCall} from '@hooks/useCall';
 import {Account} from '@ui/components/Account';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
+import {EmptyView} from '@ui/components/EmptyView';
 
 type ScreenProps = {
   navigation: StackNavigationProp<DashboardStackParamList>;
@@ -97,17 +97,6 @@ function TipDetailContent({tip, bestNumber}: TipDetailContentProps) {
   );
 }
 
-function EmptyTippers() {
-  return (
-    <Card style={styles.emptyTippersContainer} disabled>
-      <Image source={NoDataImage} style={styles.emptyTippersImage} />
-      <Text category="c2" style={styles.emptyTippersText}>
-        There are no tippers yet.
-      </Text>
-    </Card>
-  );
-}
-
 function TipDetailScreen({route}: ScreenProps) {
   const formatBalance = useFormatBalance();
   const {api} = useContext(ChainApiContext);
@@ -151,7 +140,7 @@ function TipDetailScreen({route}: ScreenProps) {
             />
           );
         }}
-        ListEmptyComponent={<EmptyTippers />}
+        ListEmptyComponent={<EmptyView height={200}>{`There are not tippers yet`}</EmptyView>}
         showsVerticalScrollIndicator={false}
       />
     </SafeView>
@@ -203,6 +192,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     alignSelf: 'center',
+    resizeMode: 'contain',
   },
   emptyTippersText: {
     fontFamily: monofontFamily,
