@@ -84,7 +84,7 @@ export function DashboardAppBar({navigation}: {navigation: StackNavigationProp<P
   }, [navigation]);
 
   return (
-    <AppHeader>
+    <AppHeader style={{backgroundColor: colors.primary}}>
       <AppBar.Action onPress={onActionLeftPress} icon={'menu'} color={'white'} />
       <AppBar.Content
         style={styles.contentContainer}

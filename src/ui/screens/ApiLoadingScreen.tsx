@@ -32,7 +32,7 @@ export function ApiLoadingScreen({navigation}: PropTypes) {
 
   return (
     <Layout style={styles.container}>
-      <AppHeader>
+      <AppHeader style={{backgroundColor: colors.primary}}>
         <AppBar.Action icon="menu" color="transparent" onPress={noop} />
         <AppBar.Content
           style={styles.contentContainer}
