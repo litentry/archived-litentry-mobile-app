@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {ProgressChart} from '@ui/library';
+import {StyleSheet, View} from 'react-native';
+import {ProgressChart, Text} from '@ui/library';
 
 export function Chart({percent}: {percent: number}) {
   return (
