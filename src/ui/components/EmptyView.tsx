@@ -16,6 +16,7 @@ type Props = {
 export function EmptyView({children = DEFAULT_TEXT, height = 400}: Props) {
   return (
     <View style={styles.container}>
+      <Padder scale={2} />
       <Image source={EmptyState} style={{height}} resizeMode="contain" />
       <Padder scale={2} />
       {isString(children) ? <Subheading>{children}</Subheading> : children}
