@@ -17,7 +17,6 @@ export const themeLight = {
     primary: '#85A3F2',
     accent: '#FEA34F',
     success: 'green',
-    backdrop: '#eeeeee',
     error: '#E55047',
   },
 };
