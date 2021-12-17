@@ -14,6 +14,7 @@ import {Padder} from '@ui/components/Padder';
 import {ErrorText} from '@ui/components/ErrorText';
 import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
 import zxcvbn from 'zxcvbn';
+import {SecureKeychain} from 'src/service/SecureKeychain';
 
 type Account = {
   title: string;
@@ -65,6 +66,7 @@ export function ImportAccountScreen({navigation}: {navigation: NavigationProp<Ac
       };
 
       addAccount(newAcc);
+      SecureKeychain.setGenericPassword(account.password, 'BIOMETRICS', address);
       navigation.navigate(accountsScreen, {reload: true});
     }
   };

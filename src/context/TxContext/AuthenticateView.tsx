@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Dimensions, StyleSheet} from 'react-native';
 import {Icon, IconProps, Layout, Input, Button, Text} from '@ui-kitten/components';
 import ModalTitle from '@ui/components/ModalTitle';
 import {Padder} from '@ui/components/Padder';
 import SubstrateSign from 'react-native-substrate-sign';
 import {Account, InternalAccount, useAccounts} from 'context/AccountsContext';
+import {SecureKeychain} from 'src/service/SecureKeychain';
 
 const {height} = Dimensions.get('window');
 
@@ -32,6 +33,15 @@ export function AuthenticateView({onAuthenticate, address}: Props) {
   const {accounts} = useAccounts();
   const account = accounts[address];
   const encoded = account && isInternal(account) ? account.encoded : null;
+
+  useEffect(() => {
+    (async () => {
+      const credentials = await SecureKeychain.getGenericPassword(address);
+      if (credentials) {
+        setPassword(credentials.password);
+      }
+    })();
+  }, [address]);
 
   const onPressUnlock = async () => {
     if (!encoded) {

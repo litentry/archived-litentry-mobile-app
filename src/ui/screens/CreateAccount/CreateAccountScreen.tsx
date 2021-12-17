@@ -16,6 +16,7 @@ import {useTheme} from '@ui/library';
 import {ErrorText} from '@ui/components/ErrorText';
 import {Padder} from '@ui/components/Padder';
 import globalStyles from '@ui/styles';
+import {SecureKeychain} from 'src/service/SecureKeychain';
 
 type Account = {
   title: string;
@@ -75,6 +76,7 @@ export function CreateAccountScreen({
       };
 
       addAccount(newAcc);
+      SecureKeychain.setGenericPassword(account.password, 'BIOMETRICS', _address);
 
       navigation.navigate(accountsScreen, {reload: true});
     }
@@ -90,7 +92,7 @@ export function CreateAccountScreen({
             description={address}
           />
           <Padder scale={1} />
-          <TextInput autoComplete={false} label={'Mnemonic seed'} value={mnemonic} disabled multiline />
+          <TextInput autoComplete="off" label={'Mnemonic seed'} value={mnemonic} disabled multiline />
           <Caption>
             {`Please write down the mnemonic seed and keep it in a safe place. The mnemonic can be used to restore your account. keep it carefully to not lose your assets.`}
           </Caption>
