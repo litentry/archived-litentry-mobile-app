@@ -1,16 +1,14 @@
+import React, {useContext} from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {ParamListBase, Route} from '@react-navigation/core';
 import {DrawerNavigationOptions, DrawerNavigationProp} from '@react-navigation/drawer';
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack';
 import {useApi} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
 import NetworkItem from '@ui/components/NetworkItem';
-import React, {useContext} from 'react';
 import {networkSelectionScreen} from '@ui/navigation/routeKeys';
 import {AppBar, AppHeader, Title} from '@ui/library';
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
-import logo from 'image/logo.png';
 import {standardPadding} from '@ui/styles';
-import {Padder} from '@ui/components/Padder';
 import {useTheme} from 'context/ThemeContext';
 
 export function MainDrawerAppBar({
@@ -22,8 +20,10 @@ export function MainDrawerAppBar({
   options: DrawerNavigationOptions;
   navigation: DrawerNavigationProp<ParamListBase>;
 }) {
+  const {colors} = useTheme();
+
   return (
-    <AppHeader>
+    <AppHeader style={{backgroundColor: colors.background}}>
       <AppBar.Action onPress={navigation.openDrawer} icon={'menu'} />
       <AppBar.Content title={options.title ?? route.name} />
     </AppHeader>
@@ -41,6 +41,8 @@ export function MainStackAppBar({
   options: StackNavigationOptions;
   navigation: StackNavigationProp<ParamListBase>;
 }) {
+  const {colors} = useTheme();
+
   const openDrawer = () => {
     if (navigationSupportsDrawer(navigation)) {
       navigation.openDrawer();
@@ -48,7 +50,7 @@ export function MainStackAppBar({
   };
 
   return (
-    <AppHeader>
+    <AppHeader style={{backgroundColor: colors.background}}>
       {options.headerLeft ? (
         options.headerLeft({onPress: openDrawer})
       ) : back ? (
@@ -83,20 +85,18 @@ export function DashboardAppBar({navigation}: {navigation: StackNavigationProp<P
 
   return (
     <AppHeader>
-      <AppBar.Action onPress={onActionLeftPress} icon={'menu'} />
+      <AppBar.Action onPress={onActionLeftPress} icon={'menu'} color={'white'} />
       <AppBar.Content
-        style={styles.headerContent}
+        style={styles.contentContainer}
         title={
-          <View style={styles.logo}>
-            <Image source={logo} style={styles.logoImage} />
-            <Padder scale={0.5} />
-            <Title>Litentry</Title>
+          <View style={styles.titleContainer}>
+            <Title style={styles.title}>Litentry</Title>
           </View>
         }
       />
       <TouchableOpacity
         onPress={() => navigation.navigate(networkSelectionScreen)}
-        style={[styles.networkSwitch, {backgroundColor: colors.backdrop}]}>
+        style={[styles.networkSwitch, {backgroundColor: colors.background}]}>
         {currentNetwork ? (
           <NetworkItem item={currentNetwork} isConnected={status === 'connected' || status === 'ready'} />
         ) : undefined}
@@ -106,14 +106,15 @@ export function DashboardAppBar({navigation}: {navigation: StackNavigationProp<P
 }
 
 const styles = StyleSheet.create({
-  headerContent: {
-    marginRight: 50,
+  contentContainer: {
+    marginRight: '12%',
   },
-  logo: {
+  titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
+  title: {color: 'white'},
   logoImage: {width: 30, height: 30},
   networkSwitch: {
     position: 'absolute',
@@ -121,5 +122,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     paddingHorizontal: standardPadding,
     paddingVertical: standardPadding / 2,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    height: 30,
+    justifyContent: 'center',
   },
 });

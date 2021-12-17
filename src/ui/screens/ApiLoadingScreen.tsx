@@ -2,14 +2,13 @@ import React, {useContext} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {CompositeNavigationProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {Icon, Text} from '@ui-kitten/components';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
 import {noop} from 'lodash';
 import NetworkItem from '@ui/components/NetworkItem';
 import {ApiLoadingStackParamList, RootStackParamList} from '@ui/navigation/navigation';
 import {appStack, networkSelectionScreen} from '@ui/navigation/routeKeys';
-import {AppBar, AppHeader, ActivityIndicator, useTheme} from '@ui/library';
+import {AppBar, AppHeader, ActivityIndicator, Title, Text, Icon, useTheme} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
 
@@ -36,17 +35,22 @@ export function ApiLoadingScreen({navigation}: PropTypes) {
       <AppHeader>
         <AppBar.Action icon="menu" color="transparent" onPress={noop} />
         <AppBar.Content
+          style={styles.contentContainer}
           title={
-            <TouchableOpacity onPress={() => navigation.navigate(networkSelectionScreen)} style={styles.titleContainer}>
-              <Text category="s1">Litentry</Text>
-              {currentNetwork ? <NetworkItem item={currentNetwork} isConnected={status === 'ready'} /> : null}
-            </TouchableOpacity>
+            <View style={styles.titleContainer}>
+              <Title style={styles.title}>Litentry</Title>
+            </View>
           }
         />
+        <TouchableOpacity
+          onPress={() => navigation.navigate(networkSelectionScreen)}
+          style={[styles.networkSwitch, {backgroundColor: colors.background}]}>
+          {currentNetwork ? <NetworkItem item={currentNetwork} isConnected={status === 'ready'} /> : null}
+        </TouchableOpacity>
       </AppHeader>
       <View style={globalStyles.centeredContainer}>
         <View style={styles.textContainer}>
-          <Icon style={[globalStyles.inlineIconDimension, {color: colors.accent}]} name="planet" pack="ionic" />
+          <Icon color={colors.accent} name="wan" />
           <Text style={styles.text}>
             {`${inProgress ? 'Connecting' : 'Connected'}`} to {currentNetwork?.name ?? ''}
           </Text>
@@ -61,6 +65,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  contentContainer: {
+    marginRight: '12%',
+  },
+  title: {color: 'white'},
   textContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -72,4 +80,15 @@ const styles = StyleSheet.create({
     marginLeft: standardPadding,
   },
   titleContainer: {alignItems: 'center'},
+  networkSwitch: {
+    position: 'absolute',
+    right: standardPadding * 1.5,
+    bottom: 0,
+    paddingHorizontal: standardPadding,
+    paddingVertical: standardPadding / 2,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    height: 30,
+    justifyContent: 'center',
+  },
 });
