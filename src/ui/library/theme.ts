@@ -11,7 +11,6 @@ declare global {
 
 export const themeLight = {
   ...PaperDefaultTheme,
-
   colors: {
     ...PaperDefaultTheme.colors,
     primary: '#85A3F2',

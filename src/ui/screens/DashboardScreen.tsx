@@ -49,7 +49,7 @@ function DashboardScreen({navigation}: PropTypes) {
 
 const styles = StyleSheet.create({
   scrollView: {
-    padding: standardPadding * 2,
+    paddingTop: standardPadding * 2,
     paddingBottom: standardPadding * 6,
   },
   container: {

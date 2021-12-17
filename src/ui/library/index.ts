@@ -5,7 +5,6 @@
 export {
   Provider,
   List,
-  Card,
   Text,
   Title,
   Caption,
@@ -33,7 +32,6 @@ export type {IconSource} from 'react-native-paper/lib/typescript/components/Icon
 
 export {Icon} from './Icon';
 export {ProgressChart} from 'react-native-chart-kit';
-
 export {AppHeader} from './AppHeader';
-
 export {Modal} from './Modal';
+export {Card} from './Card';
