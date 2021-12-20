@@ -39,7 +39,7 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
           isExternal: false,
         };
         addAccount(newAcc);
-        SecureKeychain.setGenericPassword(password, 'BIOMETRICS', parsedJson.address);
+        SecureKeychain.setPasswordByServiceId(password, 'BIOMETRICS', parsedJson.address);
 
         navigation.navigate(accountsScreen, {reload: true});
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

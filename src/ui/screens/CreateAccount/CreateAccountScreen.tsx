@@ -76,7 +76,7 @@ export function CreateAccountScreen({
       };
 
       addAccount(newAcc);
-      SecureKeychain.setGenericPassword(account.password, 'BIOMETRICS', _address);
+      SecureKeychain.setPasswordByServiceId(account.password, 'BIOMETRICS', _address);
 
       navigation.navigate(accountsScreen, {reload: true});
     }

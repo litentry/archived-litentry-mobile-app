@@ -36,7 +36,7 @@ export function AuthenticateView({onAuthenticate, address}: Props) {
 
   useEffect(() => {
     (async () => {
-      const credentials = await SecureKeychain.getGenericPassword(address);
+      const credentials = await SecureKeychain.getPasswordByServiceId(address);
       if (credentials) {
         setPassword(credentials.password);
       }

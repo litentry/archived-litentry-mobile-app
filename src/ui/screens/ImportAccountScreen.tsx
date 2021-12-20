@@ -66,7 +66,7 @@ export function ImportAccountScreen({navigation}: {navigation: NavigationProp<Ac
       };
 
       addAccount(newAcc);
-      SecureKeychain.setGenericPassword(account.password, 'BIOMETRICS', address);
+      SecureKeychain.setPasswordByServiceId(account.password, 'BIOMETRICS', address);
       navigation.navigate(accountsScreen, {reload: true});
     }
   };
