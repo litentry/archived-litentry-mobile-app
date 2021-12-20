@@ -7,9 +7,8 @@ import {useApi} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
 import NetworkItem from '@ui/components/NetworkItem';
 import {networkSelectionScreen} from '@ui/navigation/routeKeys';
-import {AppBar, AppHeader, Title} from '@ui/library';
+import {AppBar, AppHeader, Title, useTheme} from '@ui/library';
 import {standardPadding} from '@ui/styles';
-import {useTheme} from 'context/ThemeContext';
 
 export function MainDrawerAppBar({
   navigation,

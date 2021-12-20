@@ -1,6 +1,6 @@
 import React from 'react';
 import MaterialCommunityIcons, {default as VectorIcon} from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useTheme} from 'react-native-paper';
+import {useTheme} from '@ui/library';
 
 type IconProps = {
   name: typeof MaterialCommunityIcons['name'];
