@@ -22,8 +22,8 @@ const defaultOptions = {
   fingerprintPromptCancel: 'Cancel',
 };
 
-function getCompleteService(service: string) {
-  return `${BASE_SERVICE}-${service}`;
+function getKeychainService(accountId: string) {
+  return `${BASE_SERVICE}-${accountId}`;
 }
 
 function encryptPassword(password: string) {
@@ -44,8 +44,8 @@ async function resetGenericPassword(service: string) {
   return Keychain.resetGenericPassword({service});
 }
 
-async function getGenericPassword(passwordIdentifier: string) {
-  const userCredentials = await Keychain.getGenericPassword({service: getCompleteService(passwordIdentifier)});
+async function getGenericPassword(accountId: string) {
+  const userCredentials = await Keychain.getGenericPassword({service: getKeychainService(accountId)});
 
   if (!userCredentials) {
     return null;
@@ -57,11 +57,11 @@ async function getGenericPassword(passwordIdentifier: string) {
   return userCredentials;
 }
 
-async function setGenericPassword(password: string, type: keyof typeof accessControlTypes, passwordIdentifier: string) {
+async function setGenericPassword(password: string, type: keyof typeof accessControlTypes, accountId: string) {
   const authOptions: Keychain.Options = {
     accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
   };
-  const service = getCompleteService(passwordIdentifier);
+  const service = getKeychainService(accountId);
 
   if (type === accessControlTypes.BIOMETRICS) {
     authOptions.accessControl = Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET;
@@ -86,7 +86,7 @@ async function setGenericPassword(password: string, type: keyof typeof accessCon
     // If the user enables biometrics, we're trying to read the password
     // immediately so we get the permission prompt
     if (Platform.OS === 'ios') {
-      await getGenericPassword(service);
+      await getGenericPassword(accountId);
     }
   } else if (type === accessControlTypes.PASSCODE) {
     mmkvStorage.set(SELECTED_ACCESS_CONTROL, accessControlTypes.PASSCODE);
