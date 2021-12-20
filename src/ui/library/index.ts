@@ -5,7 +5,6 @@
 export {
   Provider,
   List,
-  Card,
   Text,
   Title,
   Caption,
@@ -25,15 +24,14 @@ export {
   ThemeProvider,
   Appbar as AppBar,
   Snackbar,
-  useTheme,
   Menu,
+  useTheme,
 } from 'react-native-paper';
 
 export type {IconSource} from 'react-native-paper/lib/typescript/components/Icon';
 
 export {Icon} from './Icon';
 export {ProgressChart} from 'react-native-chart-kit';
-
 export {AppHeader} from './AppHeader';
-
 export {Modal} from './Modal';
+export {Card} from './Card';

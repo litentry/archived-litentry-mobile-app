@@ -1,7 +1,6 @@
 import React from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
-import {Button} from '@ui-kitten/components';
 import {MemoizedTipTeaser} from '@ui/components/tips/TipTeaser';
 import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
@@ -10,6 +9,7 @@ import {useTips} from 'src/api/hooks/useTips';
 import {tipDetailScreen} from '@ui/navigation/routeKeys';
 import {proposeTipScreen} from '@ui/navigation/routeKeys';
 import globalStyles from '@ui/styles';
+import {Button} from '@ui/library';
 
 function TipsScreen() {
   const {data: tips, isLoading} = useTips();
@@ -29,7 +29,7 @@ function TipsScreen() {
             ListHeaderComponent={() => {
               return (
                 <View style={styles.proposeTipContainer}>
-                  <Button onPress={() => navigation.navigate(proposeTipScreen)} appearance="outline">
+                  <Button mode="outlined" uppercase={false} onPress={() => navigation.navigate(proposeTipScreen)}>
                     Propose Tip
                   </Button>
                 </View>
