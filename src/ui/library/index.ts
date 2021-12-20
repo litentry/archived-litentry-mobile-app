@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-imports */
 /**
  *  This is the entry point for third party libraries (UI).
  *  All components from a third party library should be exported here.
