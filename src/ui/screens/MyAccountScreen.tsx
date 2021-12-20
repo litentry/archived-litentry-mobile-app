@@ -7,7 +7,7 @@ import Identicon from '@polkadot/reactnative-identicon';
 import {useAccounts} from 'context/AccountsContext';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {Button, Caption, IconButton, IconSource, Card, Snackbar} from '@ui/library';
+import {Button, Caption, IconButton, IconSource, Card, Snackbar, useTheme} from '@ui/library';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useAccountInfo} from 'src/api/hooks/useAccountInfo';
@@ -23,7 +23,6 @@ import {
   sendFundScreen,
 } from '@ui/navigation/routeKeys';
 import {standardPadding} from '@ui/styles';
-import {useTheme} from 'context/ThemeContext';
 
 export function MyAccountScreen({
   navigation,

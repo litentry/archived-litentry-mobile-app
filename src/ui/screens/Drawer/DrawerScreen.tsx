@@ -1,7 +1,7 @@
 import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View, ScrollView} from 'react-native';
 import {DrawerContentComponentProps} from '@react-navigation/drawer';
-import {useTheme} from 'context/ThemeContext';
+import {useToggleTheme} from 'context/ThemeContext';
 import logo from 'image/logo.png';
 import SafeView from '@ui/components/SafeView';
 import {useIsParachainAvailable} from 'src/api/hooks/useIsParachainAvailable';
@@ -25,7 +25,7 @@ import {getCurrentYear} from 'src/utils/date';
 import {Drawer, Switch, Text, Divider} from '@ui/library';
 
 function DrawerScreen({navigation}: DrawerContentComponentProps) {
-  const {theme, toggleTheme} = useTheme();
+  const {theme, toggleTheme} = useToggleTheme();
   const isParachainAvailable = useIsParachainAvailable();
   const [activeScreen, setActiveScreen] = React.useState<string>(dashboardScreen);
 
