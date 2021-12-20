@@ -82,7 +82,7 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
           </>
         )}
         <TextInput
-          autoComplete={false}
+          autoComplete="off"
           secureTextEntry={!isPasswordVisible}
           label={'Password'}
           value={password}

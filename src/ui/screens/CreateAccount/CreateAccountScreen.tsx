@@ -99,7 +99,7 @@ export function CreateAccountScreen({
           <Padder scale={2} />
           <TextInput
             mode="outlined"
-            autoComplete
+            autoComplete="off"
             label={'Descriptive name for the account'}
             value={account.title}
             onChangeText={(text) => setAccount({...account, title: text})}
@@ -120,7 +120,7 @@ export function CreateAccountScreen({
               />
             }
             mode="outlined"
-            autoComplete={false}
+            autoComplete="off"
             error={Boolean(account.password) && passwordStrength < 3}
           />
           <View style={styles.passwordMeter}>
@@ -134,7 +134,7 @@ export function CreateAccountScreen({
             value={account.confirmPassword}
             onChangeText={(text) => setAccount({...account, confirmPassword: text})}
             error={Boolean(account.confirmPassword) && account.password !== account.confirmPassword}
-            autoComplete={false}
+            autoComplete="off"
           />
           <Padder scale={2} />
           {error ? (

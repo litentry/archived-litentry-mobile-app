@@ -75,7 +75,7 @@ export function ImportAccountScreen({navigation}: {navigation: NavigationProp<Ac
     <SafeView edges={noTopEdges}>
       <View style={styles.container}>
         <TextInput
-          autoComplete={false}
+          autoComplete="off"
           label={'EXISTING 12 WORD MNEMONIC SEED'}
           numberOfLines={4}
           multiline={true}
@@ -92,7 +92,7 @@ export function ImportAccountScreen({navigation}: {navigation: NavigationProp<Ac
         <Padder scale={1} />
         <TextInput
           mode="outlined"
-          autoComplete={false}
+          autoComplete="off"
           label={'Descriptive name for the account'}
           value={account.title}
           onChangeText={(text) => setAccount({...account, title: text})}
@@ -100,7 +100,7 @@ export function ImportAccountScreen({navigation}: {navigation: NavigationProp<Ac
         <Padder scale={1} />
         <TextInput
           mode="outlined"
-          autoComplete={false}
+          autoComplete="off"
           secureTextEntry={!isPasswordVisible}
           label={'New password for the account'}
           value={account.password}
@@ -121,7 +121,7 @@ export function ImportAccountScreen({navigation}: {navigation: NavigationProp<Ac
         </View>
         <Padder scale={1} />
         <TextInput
-          autoComplete={false}
+          autoComplete="off"
           mode="outlined"
           secureTextEntry={!isPasswordVisible}
           label={'Confirm password'}
