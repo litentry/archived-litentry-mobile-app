@@ -29,7 +29,7 @@ export function MnemonicScreen({navigation}: {navigation: NavigationProp<Account
     <SafeView edges={noTopEdges}>
       <View style={[globalStyles.paddedContainer, globalStyles.flex]}>
         <TextInput
-          autoComplete={false}
+          autoComplete="off"
           label={'Generated mnemonic seed'}
           style={styles.input}
           value={mnemonic}

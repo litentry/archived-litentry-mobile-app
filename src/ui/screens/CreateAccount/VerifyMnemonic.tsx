@@ -76,7 +76,7 @@ export function VerifyMnemonicScreen({
           value={selectedMnemonic}
           disabled
           multiline
-          autoComplete={false}
+          autoComplete="off"
           mode={'outlined'}
           style={styles.mnemonic}
         />
