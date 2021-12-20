@@ -2,7 +2,6 @@ import React, {useReducer, useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {RouteProp} from '@react-navigation/native';
-import {Button, Card, Icon, Layout, Modal} from '@ui-kitten/components';
 import {useApi} from 'context/ChainApiContext';
 import AddressInlineTeaser from '@ui/components/AddressInlineTeaser';
 import {EmptyView} from '@ui/components/EmptyView';
@@ -18,7 +17,8 @@ import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {referendumScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {useAccounts} from 'context/AccountsContext';
-import {Caption, Headline, List, Text} from '@ui/library';
+import {Button, Caption, Card, Headline, Icon, List, Modal, Text} from '@ui/library';
+import {Layout} from '@ui/components/Layout';
 
 export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
   const {networkAccounts} = useAccounts();
@@ -98,11 +98,7 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
                 }}>
                 <Text>{activeProposal.seconds.length}</Text>
 
-                <Icon
-                  name={secondsOpen ? 'chevron-up-outline' : 'chevron-down-outline'}
-                  style={globalStyles.icon25}
-                  fill="grey"
-                />
+                <Icon name={secondsOpen ? 'chevron-up' : 'chevron-down'} size={25} color="grey" />
               </TouchableOpacity>
 
               {secondsOpen && (
@@ -119,13 +115,13 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
             </View>
           </View>
           <Padder scale={2} />
-          <Button status="basic" onPress={() => dispatch({type: 'OPEN'})}>
+          <Button mode="outlined" onPress={() => dispatch({type: 'OPEN'})}>
             Second
           </Button>
           <Padder scale={2} />
           <View style={styles.row}>
             <View style={styles.infoIcon}>
-              <Icon fill="grey" name="info-outline" style={globalStyles.icon} />
+              <Icon color="grey" name="information-outline" size={25} />
             </View>
             <View style={globalStyles.flex}>
               <Caption>
@@ -138,54 +134,50 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
           </View>
         </ScrollView>
 
-        <Modal
-          visible={state.open}
-          backdropStyle={globalStyles.backdrop}
-          onBackdropPress={() => dispatch({type: 'RESET'})}>
-          <Card disabled={true} style={styles.modalCard}>
-            <Text>Vote with account</Text>
-            <Padder scale={0.5} />
-            <SelectAccount
-              accounts={networkAccounts}
-              selected={state.account}
-              onSelect={(account) => {
-                dispatch({type: 'SELECT_ACCOUNT', payload: account});
-              }}
-            />
-            <Padder scale={1.5} />
+        <Modal visible={state.open} onDismiss={() => dispatch({type: 'RESET'})}>
+          <Text>Vote with account</Text>
+          <Padder scale={0.5} />
+          <SelectAccount
+            accounts={networkAccounts}
+            selected={state.account}
+            onSelect={(account) => {
+              dispatch({type: 'SELECT_ACCOUNT', payload: account});
+            }}
+          />
+          <Padder scale={1.5} />
 
-            <Text>Deposit required:</Text>
-            <Padder scale={0.5} />
-            <Text>
-              {api &&
-                formatBalance(activeProposal.balance ? activeProposal.balance : api.consts.democracy.minimumDeposit)}
-            </Text>
-            <Padder scale={0.5} />
+          <Text>Deposit required:</Text>
+          <Padder scale={0.5} />
+          <Text>
+            {api &&
+              formatBalance(activeProposal.balance ? activeProposal.balance : api.consts.democracy.minimumDeposit)}
+          </Text>
+          <Padder scale={1.5} />
 
-            <View style={[styles.row, globalStyles.centeredContainer]}>
-              <Button onPress={() => dispatch({type: 'RESET'})} appearance="ghost" status="basic">
-                CANCEL
-              </Button>
-              <Padder scale={1} />
-              <Button
-                disabled={!state.account}
-                onPress={() => {
-                  if (state.account) {
-                    startTx({
-                      address: state.account,
-                      txMethod: 'democracy.second',
-                      params:
-                        api?.tx.democracy.second.meta.args.length === 2
-                          ? [activeProposal.index, activeProposal.seconds.length]
-                          : [activeProposal.index],
-                    });
-                    dispatch({type: 'RESET'});
-                  }
-                }}>
-                Second
-              </Button>
-            </View>
-          </Card>
+          <View style={globalStyles.spaceBetweenRowContainer}>
+            <Button onPress={() => dispatch({type: 'RESET'})} mode="outlined">
+              CANCEL
+            </Button>
+            <Padder scale={1} />
+            <Button
+              mode="outlined"
+              disabled={!state.account}
+              onPress={() => {
+                if (state.account) {
+                  startTx({
+                    address: state.account,
+                    txMethod: 'democracy.second',
+                    params:
+                      api?.tx.democracy.second.meta.args.length === 2
+                        ? [activeProposal.index, activeProposal.seconds.length]
+                        : [activeProposal.index],
+                  });
+                  dispatch({type: 'RESET'});
+                }
+              }}>
+              Second
+            </Button>
+          </View>
         </Modal>
       </SafeView>
     </Layout>
