@@ -1,9 +1,10 @@
 import React from 'react';
 import {View, StyleSheet, ScrollView} from 'react-native';
-import {Input, Button, Icon, IconProps} from '@ui-kitten/components';
+import {Input, Icon, IconProps} from '@ui-kitten/components';
 import {WHITESPACE, validateFormField} from 'src/utils/form';
 import FormLabel from '@ui/components/FormLabel';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
+import {Button} from '@ui/library';
 
 export type IdentityPayload = {
   display: {raw: string} | {none: null};
@@ -114,7 +115,7 @@ function IdentityInfoForm({onSubmit, identity}: IdentityInfoFormProps): React.Re
         />
       </View>
       <View style={styles.submitButtonContainer}>
-        <Button status="success" onPress={onSubmitPress} disabled={!formStatus.isFormValid}>
+        <Button mode="contained" onPress={onSubmitPress} disabled={!formStatus.isFormValid}>
           Submit
         </Button>
       </View>

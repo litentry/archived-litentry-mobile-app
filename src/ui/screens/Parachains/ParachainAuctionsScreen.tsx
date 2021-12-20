@@ -17,7 +17,7 @@ import {ActivityIndicator, Caption, DataTable, Text} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
 import {useTheme} from '@ui/library';
-import globalStyles, {colorGreen, standardPadding} from '@ui/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 
 export function ParachainsAuctionsScreen() {
   const {data, isLoading: auctionInfoIsLoading, isError: auctionIsError} = useAuctionInfo();
@@ -192,7 +192,7 @@ const DataTableComp = (props: DataTableProps) => {
 
       {loading ? (
         <View style={globalStyles.paddedContainer}>
-          <ActivityIndicator color={colorGreen} animating />
+          <ActivityIndicator animating />
         </View>
       ) : (
         pageItems.map((item) => (
