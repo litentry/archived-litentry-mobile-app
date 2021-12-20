@@ -2,7 +2,7 @@ import React, {useReducer, useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {RouteProp} from '@react-navigation/native';
-import {Button, Card, Icon, Layout, Modal, Text} from '@ui-kitten/components';
+import {Button, Card, Icon, Layout, Modal} from '@ui-kitten/components';
 import {useApi} from 'context/ChainApiContext';
 import AddressInlineTeaser from '@ui/components/AddressInlineTeaser';
 import {EmptyView} from '@ui/components/EmptyView';
@@ -18,6 +18,7 @@ import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {referendumScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {useAccounts} from 'context/AccountsContext';
+import {Caption, Headline, List, Text} from '@ui/library';
 
 export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
   const {networkAccounts} = useAccounts();
@@ -39,37 +40,31 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
 
   const proposal = activeProposal.image?.proposal;
   const {method, section} = proposal?.registry.findMetaCall(proposal.callIndex) ?? {};
+  const title = proposal ? `${method}.${section}` : `preimage`;
 
   return (
     <Layout style={globalStyles.flex}>
       <SafeView edges={noTopEdges}>
-        <ScrollView style={styles.container}>
-          <View style={styles.row}>
-            <Text category="h3" style={styles.index}>
-              {route.params.index}
-            </Text>
-            {proposal ? (
-              <View style={globalStyles.paddedContainer}>
-                <Text category={'c1'}>{`${section}.${method}`}</Text>
-                <ProposalInfo proposal={proposal} />
-              </View>
-            ) : (
-              <View style={globalStyles.paddedContainer}>
-                <Text appearance={'hint'}>Preimage</Text>
-                <Text category={'c1'} numberOfLines={1} ellipsizeMode="middle">
-                  {String(activeProposal?.imageHash)}
-                </Text>
-              </View>
-            )}
-          </View>
-          <Padder scale={1} />
-          <Text appearance={'hint'}>Proposal Hash:</Text>
-          <Text category={'c1'}>{String(proposal?.hash)}</Text>
+        <ScrollView contentContainerStyle={styles.container}>
+          <List.Item title={title} disabled left={() => <Headline>{route.params.index}</Headline>} />
+          {proposal ? (
+            <ProposalInfo proposal={proposal} />
+          ) : (
+            <View>
+              <Caption>Preimage:</Caption>
+              <Text numberOfLines={1} ellipsizeMode="middle">
+                {String(activeProposal?.imageHash)}
+              </Text>
+            </View>
+          )}
+          <Padder scale={3} />
+          <Caption>Proposal Hash:</Caption>
+          <Text>{String(proposal?.hash)}</Text>
 
           <Padder scale={2} />
           <View style={styles.row}>
             <View style={styles.listLeft}>
-              <Text appearance={'hint'}>Proposer:</Text>
+              <Caption>Proposer:</Caption>
             </View>
             <View style={styles.listRight}>
               <AddressInlineTeaser address={activeProposal.proposer.toString()} />
@@ -81,7 +76,7 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
           {activeProposal.balance ? (
             <View style={styles.row}>
               <View style={styles.listLeft}>
-                <Text appearance={'hint'}>Locked:</Text>
+                <Caption>Locked:</Caption>
               </View>
               <View style={styles.listRight}>
                 <Text>{formatBalance(activeProposal.balance)}</Text>
@@ -93,7 +88,7 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
 
           <View style={styles.row}>
             <View style={styles.listLeft}>
-              <Text appearance={'hint'}>Seconds:</Text>
+              <Caption>Seconds:</Caption>
             </View>
             <View style={styles.listRight}>
               <TouchableOpacity
@@ -133,12 +128,12 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
               <Icon fill="grey" name="info-outline" style={globalStyles.icon} />
             </View>
             <View style={globalStyles.flex}>
-              <Text category="c1">
+              <Caption>
                 The proposal is in the queue for future referendums. One proposal from this list will move forward to
                 voting.
-              </Text>
+              </Caption>
               <Padder scale={0.5} />
-              <Text category="c1">Seconding a proposal that indicates your backing for the proposal.</Text>
+              <Caption>Seconding a proposal that indicates your backing for the proposal.</Caption>
             </View>
           </View>
         </ScrollView>
