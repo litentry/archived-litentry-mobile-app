@@ -1,14 +1,16 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {ExtrinsicPayload} from '@polkadot/types/interfaces';
-import {Button, Divider, Icon, IconProps, Layout} from '@ui-kitten/components';
-import globalStyles, {standardPadding} from '@ui/styles';
+import {standardPadding} from '@ui/styles';
 import {SignerPayloadJSON} from '@polkadot/types/types';
 import {createFrames, QrCode} from 'src/utils/qrCode';
 import {createSignPayload} from 'src/utils/signer';
 import {CMD_HASH, CMD_MORTAL} from 'src/constants';
 import ModalTitle from './ModalTitle';
 import {ChainApiContext} from 'context/ChainApiContext';
+import {Button, Divider, useTheme} from '@ui/library';
+import {Padder} from '@ui/components/Padder';
+import {Layout} from '@ui/components/Layout';
 
 const TX_SIZE_LIMIT = 5000;
 
@@ -21,6 +23,7 @@ type PropTypes = {
 function TxPayloadQr({payload, onConfirm, onCancel}: PropTypes): React.ReactElement {
   const {api} = useContext(ChainApiContext);
   const [imageUri, setImageUri] = useState<string>();
+  const {colors} = useTheme();
 
   useEffect(() => {
     if (!api) {
@@ -48,9 +51,9 @@ function TxPayloadQr({payload, onConfirm, onCancel}: PropTypes): React.ReactElem
   }, [api, payload]);
 
   return (
-    <Layout style={styles.container} level="1">
+    <Layout style={styles.container}>
       <ModalTitle title="Authorization required" />
-      <Divider style={globalStyles.dividerPlain} />
+      <Divider />
       <View style={styles.content}>
         <View style={styles.qrContainer}>
           <Image
@@ -61,18 +64,15 @@ function TxPayloadQr({payload, onConfirm, onCancel}: PropTypes): React.ReactElem
             }}
           />
         </View>
-        <Layout style={styles.buttonGroup}>
-          <Button style={styles.cancel} appearance="ghost" size="small" status="warning" onPress={onCancel}>
+        <View style={styles.buttonGroup}>
+          <Button mode="outlined" color={colors.accent} onPress={onCancel}>
             Cancel
           </Button>
-          <Button
-            style={styles.submit}
-            appearance="outline"
-            onPress={onConfirm}
-            accessoryRight={(props: IconProps) => <Icon {...props} name="video-outline" />}>
+          <Padder scale={1} />
+          <Button compact mode="contained" onPress={onConfirm} icon="qrcode-scan">
             Scan Signature
           </Button>
-        </Layout>
+        </View>
       </View>
     </Layout>
   );
@@ -93,11 +93,7 @@ const styles = StyleSheet.create({
   },
   buttonGroup: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 280,
   },
-  cancel: {flex: 1},
-  submit: {flex: 2},
 });
 
 export default TxPayloadQr;

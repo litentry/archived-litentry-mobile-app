@@ -2,7 +2,7 @@ import React, {ReactNode} from 'react';
 import {StyleSheet} from 'react-native';
 import {Layout} from '@ui/components/Layout';
 import {Text, ActivityIndicator} from '@ui/library';
-import globalStyles, {standardPadding, monofontFamily, colorGreen} from '@ui/styles';
+import globalStyles, {standardPadding, monofontFamily} from '@ui/styles';
 
 type PropTypes = {
   text?: string;
@@ -20,7 +20,7 @@ function LoadingView(props: PropTypes) {
         {renderIcon && renderIcon()}
         <Text style={[styles.text, renderIcon ? styles.withIcon : {}, styles[appearance || 'primary']]}>{text}</Text>
       </Layout>
-      <ActivityIndicator size={size || 'large'} color={colorGreen} animating />
+      <ActivityIndicator size={size || 'large'} animating />
     </Layout>
   );
 }

@@ -1,8 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {NetworkType} from 'src/types';
-import {Icon, Text} from '@ui/library';
-import {useTheme} from 'context/ThemeContext';
+import {Icon, Text, useTheme} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 
 type PropTypes = {item: NetworkType; isConnected: boolean};

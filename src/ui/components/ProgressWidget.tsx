@@ -14,7 +14,7 @@ function ProgressChartWidget(props: PropTypes) {
   const {title, detail, data} = props;
 
   return (
-    <>
+    <View style={styles.container}>
       <Caption style={styles.title}>{title}</Caption>
       <View style={styles.chartContainer}>
         <Caption style={styles.chartText}>{detail}</Caption>
@@ -29,7 +29,7 @@ function ProgressChartWidget(props: PropTypes) {
             backgroundGradientToOpacity: 0,
             backgroundGradientFrom: colors.surface,
             backgroundGradientTo: colors.surface,
-            color: (opacity = 1) => `rgba(27, 197, 117, ${opacity})`,
+            color: (opacity = 1) => `rgba(254, 163, 79, ${opacity})`,
             strokeWidth: 2, // optional, default 3
             barPercentage: 0.5,
             useShadowColorFromDataset: false, // optional
@@ -37,24 +37,25 @@ function ProgressChartWidget(props: PropTypes) {
           hideLegend
         />
       </View>
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {justifyContent: 'center'},
   title: {
     textAlign: 'center',
   },
   chartContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: standardPadding * 2,
+    paddingTop: standardPadding,
   },
   chartText: {
     ...StyleSheet.absoluteFillObject,
     zIndex: 1,
     left: '39%',
-    top: '32%',
+    top: '25%',
   },
 });
 

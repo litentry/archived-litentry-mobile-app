@@ -23,6 +23,16 @@ module.exports = {
             importNames: ['formatBalance'],
             message: 'Please use useFormatBalance hook instead.',
           },
+          {
+            name: 'react-native-paper',
+            importNames: ['useTheme'],
+            message: 'Please import useTheme from @ui/library instead.',
+          },
+          {
+            name: '@react-navigation/native',
+            importNames: ['useTheme'],
+            message: 'Please import useTheme from @ui/library instead.',
+          },
         ],
       },
     ],

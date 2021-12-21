@@ -1,12 +1,12 @@
 import React from 'react';
-import {StyleSheet, Switch, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {Divider, Icon, Layout, ListItem, Text} from '@ui-kitten/components';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {usePushTopics} from '@hooks/usePushTopics';
 import {DrawerParamList} from '@ui/navigation/navigation';
+import {Text, List, Divider, Icon, Switch} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 
 type PropTypes = {
@@ -18,7 +18,7 @@ export function NotificationSettingsScreen({}: PropTypes) {
 
   return (
     <SafeView edges={noTopEdges}>
-      <Layout level="1" style={styles.container}>
+      <View style={styles.container}>
         <Text>Hi there! To stay informed choose which Push Notifications you'd like to receive.</Text>
         <Padder scale={2} />
         <Divider />
@@ -28,10 +28,10 @@ export function NotificationSettingsScreen({}: PropTypes) {
             <LoadingView />
           ) : (
             topics.map((item) => (
-              <ListItem
+              <List.Item
                 key={item.id}
                 title={item.label}
-                accessoryRight={() => (
+                right={() => (
                   <Switch value={item.selected} onValueChange={(subscribe) => toggleTopic({id: item.id, subscribe})} />
                 )}
               />
@@ -40,11 +40,12 @@ export function NotificationSettingsScreen({}: PropTypes) {
           <Padder scale={1} />
           <Divider />
         </View>
-        <ListItem
-          accessoryLeft={(p) => <Icon {...p} name={'info-outline'} />}
-          title={"Don't forget to enable notifications in your phone's settings"}
-        />
-      </Layout>
+        <View style={styles.infoContainer}>
+          <Icon name="information-outline" />
+          <Padder scale={0.5} />
+          <Text>Don't forget to enable notifications in your phone's settings</Text>
+        </View>
+      </View>
     </SafeView>
   );
 }
@@ -53,5 +54,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: standardPadding * 3,
+  },
+  infoContainer: {
+    flexDirection: 'row',
+    paddingRight: 10,
   },
 });
