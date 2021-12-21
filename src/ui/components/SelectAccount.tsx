@@ -1,34 +1,113 @@
 import React from 'react';
-import {IndexPath, Select, SelectItem} from '@ui-kitten/components';
-import {Account} from 'context/AccountsContext';
+import {View, FlatList, StyleSheet} from 'react-native';
+import {Menu, List, Caption, Icon, useTheme, Divider} from '@ui/library';
+import {Account, useAccounts} from 'context/AccountsContext';
+import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
+import {useAccountsIdentityInfo} from 'src/api/hooks/useAccountsIdentityInfo';
+import globalStyles from '@ui/styles';
+import Identicon from '@polkadot/reactnative-identicon';
+import AccountInfoInlineTeaser from './AccountInfoInlineTeaser';
+import {stringShorten} from '@polkadot/util';
 
-interface Props {
-  accounts: Account[];
-  selected?: string;
-  onSelect: (address: string) => void;
-}
+type AccountData = {
+  identity: IdentityInfo;
+  account: Account;
+};
 
-export function SelectAccount({selected, onSelect, accounts}: Props) {
-  const selectedIndex = accounts.findIndex((a) => a.address === selected);
-  const selectedIndexPath = selectedIndex > -1 ? new IndexPath(selectedIndex) : undefined;
+type Props = {
+  onSelect: (account: Account) => void;
+};
+
+export function SelectAccount({onSelect}: Props) {
+  const {colors} = useTheme();
+  const {networkAccounts, accounts} = useAccounts();
+  const {data} = useAccountsIdentityInfo(networkAccounts.map((account) => account.address));
+  const accountsData = data?.reduce<AccountData[]>((acc, current) => {
+    const account = accounts[String(current.accountId)];
+    if (!account) {
+      return acc;
+    }
+    return [...acc, {identity: current, account}];
+  }, []);
+  const [account, setAccount] = React.useState<Account>();
+  const [visible, setVisible] = React.useState(false);
+
+  const openMenu = () => setVisible(true);
+  const closeMenu = () => setVisible(false);
+
+  const selectAccount = (selectedAccount: Account) => {
+    setAccount(selectedAccount);
+    onSelect(selectedAccount);
+    closeMenu();
+  };
 
   return (
-    <Select
-      label="Account"
-      multiSelect={false}
-      value={selected}
-      selectedIndex={selectedIndexPath}
-      onSelect={(index) => {
-        if (!Array.isArray(index)) {
-          const selectedAddress = accounts[index.row]?.address;
-          if (selectedAddress) {
-            onSelect(selectedAddress);
-          }
-        }
-      }}>
-      {accounts.map((item) => (
-        <SelectItem key={item.address} title={item.address} />
-      ))}
-    </Select>
+    <Menu
+      visible={visible}
+      onDismiss={closeMenu}
+      anchor={
+        <View style={[styles.anchor, {borderColor: colors.onSurface}]}>
+          <List.Item
+            title={<Caption>{account ? stringShorten(account.address, 12) : 'Select account'}</Caption>}
+            onPress={openMenu}
+            right={() => <Icon name="chevron-down" />}
+          />
+        </View>
+      }>
+      {accountsData ? (
+        <FlatList
+          style={styles.items}
+          ItemSeparatorComponent={Divider}
+          data={accountsData}
+          keyExtractor={(item) => item.account.address}
+          renderItem={({item}) => <AccountItem onSelect={selectAccount} accountData={item} />}
+        />
+      ) : null}
+    </Menu>
   );
 }
+
+type AccountItemProps = {
+  onSelect: (account: Account) => void;
+  accountData: AccountData;
+};
+
+function AccountItem({onSelect, accountData}: AccountItemProps) {
+  const {
+    account: {
+      isExternal,
+      meta: {name},
+    },
+    identity,
+  } = accountData;
+  return (
+    <List.Item
+      style={styles.item}
+      onPress={() => onSelect(accountData.account)}
+      left={() => (
+        <View style={globalStyles.justifyCenter}>
+          <Identicon value={String(identity.accountId)} size={25} />
+        </View>
+      )}
+      title={() => (
+        <View style={globalStyles.justifyCenter}>
+          <AccountInfoInlineTeaser identity={identity} accountName={name} />
+          {isExternal && <Caption>{`External`}</Caption>}
+        </View>
+      )}
+    />
+  );
+}
+
+const styles = StyleSheet.create({
+  anchor: {
+    borderWidth: 0.5,
+    borderRadius: 5,
+  },
+  items: {
+    maxHeight: 250,
+  },
+  item: {
+    width: 300,
+  },
+});
