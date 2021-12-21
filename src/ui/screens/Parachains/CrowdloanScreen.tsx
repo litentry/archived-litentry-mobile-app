@@ -4,7 +4,6 @@ import {LinkOption} from '@polkadot/apps-config/endpoints/types';
 import type {ParaId} from '@polkadot/types/interfaces';
 import {BN, BN_ZERO} from '@polkadot/util';
 import {NavigationProp, useNavigation} from '@react-navigation/core';
-import {Button, Card, Input, Text, Modal} from '@ui-kitten/components';
 import {useAccounts} from 'context/AccountsContext';
 import {useApi} from 'context/ChainApiContext';
 import {EmptyView} from '@ui/components/EmptyView';
@@ -19,13 +18,14 @@ import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import {ParachainsStackParamList} from '@ui/navigation/navigation';
 import {crowdloanFundDetailScreen} from '@ui/navigation/routeKeys';
+import {Button, Card, Subheading, Text, Caption, Title, Modal, TextInput, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {notEmpty} from 'src/utils';
 import type {BalanceOf} from '@polkadot/types/interfaces';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {Chart} from '@ui/components/Chart';
 
-export function CrowdLoanScreen() {
+export function CrowdloanScreen() {
   const formatBalance = useFormatBalance();
   const {data, isError} = useFunds();
   const {data: leasePeriod} = useParachainsLeasePeriod();
@@ -72,42 +72,36 @@ export function CrowdLoanScreen() {
         ListHeaderComponent={() => {
           return (
             <View>
-              <View style={styles.headerRow}>
-                <View style={globalStyles.flex}>
+              <View style={styles.headerContainer}>
+                <View>
                   <View style={styles.headerTileContainer}>
                     <Chart percent={activeProgress} />
-                    <Padder scale={0.5} />
-                    <View style={globalStyles.alignCenter}>
-                      <Text category="c2" appearance="hint">
-                        Active Raised / Cap
-                      </Text>
-                      <Padder scale={0.1} />
-                      <Text numberOfLines={1} adjustsFontSizeToFit>{`${formatBalance(activeRaised, {
+                    <Padder scale={1} />
+                    <View>
+                      <Subheading>Active Raised / Cap</Subheading>
+                      <Caption numberOfLines={1} adjustsFontSizeToFit>{`${formatBalance(activeRaised, {
                         isShort: true,
-                      })} / ${formatBalance(activeCap)}`}</Text>
+                      })} / ${formatBalance(activeCap)}`}</Caption>
                     </View>
                   </View>
+                  <Padder scale={1} />
                   <View style={styles.headerTileContainer}>
                     <Chart percent={totalProgress} />
-                    <Padder scale={0.5} />
-                    <View style={globalStyles.alignCenter}>
-                      <Text category="c2" appearance="hint">
-                        Total Raised / Cap
-                      </Text>
-                      <Padder scale={0.1} />
-                      <Text numberOfLines={1} adjustsFontSizeToFit>{`${formatBalance(
+                    <Padder scale={1} />
+                    <View>
+                      <Subheading>Total Raised / Cap</Subheading>
+                      <Caption numberOfLines={1} adjustsFontSizeToFit>{`${formatBalance(
                         data.totalRaised,
-                      )} / ${formatBalance(data.totalCap)}`}</Text>
+                      )} / ${formatBalance(data.totalCap)}`}</Caption>
                     </View>
                   </View>
                 </View>
-                <View style={globalStyles.centeredContainer}>
-                  <Text category="h6" appearance="hint">
-                    Funds
-                  </Text>
-                  <Text category="h5">{data.funds?.length}</Text>
+                <View style={styles.fundsContainer}>
+                  <Subheading>Funds</Subheading>
+                  <Caption>{data.funds?.length}</Caption>
                 </View>
               </View>
+              <Padder scale={1} />
             </View>
           );
         }}
@@ -118,7 +112,7 @@ export function CrowdLoanScreen() {
           ended.length ? {key: 'Completed', data: ended} : null,
         ].filter(notEmpty)}
         SectionSeparatorComponent={() => <Padder scale={1} />}
-        renderSectionHeader={({section}) => <Text category="h5">{section.key}</Text>}
+        renderSectionHeader={({section}) => <Title>{section.key}</Title>}
         renderItem={({item, section: {key}}) => {
           return (
             <Fund
@@ -153,6 +147,7 @@ function Fund({item, active, onPressContribute}: {item: Campaign; active: boolea
   const {cap, raised} = item.info;
   const endpoints = useParaEndpoints(item.paraId);
   const navigation = useNavigation<NavigationProp<ParachainsStackParamList>>();
+  const {colors} = useTheme();
 
   const lastEndpoint = endpoints?.[endpoints.length - 1] as LinkOption;
   const text = lastEndpoint?.text ?? `#${item.paraId.toString()}`;
@@ -161,25 +156,23 @@ function Fund({item, active, onPressContribute}: {item: Campaign; active: boolea
 
   return (
     <Card
-      status={item.isSpecial ? 'success' : 'control'}
+      mode={item.isSpecial ? 'elevated' : 'outlined'}
       style={styles.fund}
       onPress={() => {
         navigation.navigate(crowdloanFundDetailScreen, {title: String(text), paraId: item.paraId});
       }}>
       <View style={[globalStyles.rowAlignCenter]}>
         <View style={styles.shrink}>
-          <Text
-            category="h6"
+          <Subheading
             numberOfLines={1}
             adjustsFontSizeToFit
-            style={styles.shrink}
-            status={item.isSpecial ? 'success' : 'basic'}>
+            style={{color: item.isSpecial ? colors.primary : colors.text}}>
             {String(text)}
-          </Text>
+          </Subheading>
           <Padder scale={0.5} />
-          <Text numberOfLines={1} adjustsFontSizeToFit category="c1">{`${formatBalance(raised, {
+          <Caption numberOfLines={1} adjustsFontSizeToFit>{`${formatBalance(raised, {
             isShort: true,
-          })} / ${formatBalance(cap, {isShort: true})}`}</Text>
+          })} / ${formatBalance(cap, {isShort: true})}`}</Caption>
         </View>
         <View style={styles.spacer} />
         <View style={styles.listItemRightSide}>
@@ -187,9 +180,10 @@ function Fund({item, active, onPressContribute}: {item: Campaign; active: boolea
           {active && (
             <Button
               style={styles.button}
-              appearance="filled"
-              status={item.isSpecial ? 'success' : 'basic'}
-              size="tiny"
+              mode="outlined"
+              uppercase={false}
+              color={item.isSpecial ? colors.primary : colors.placeholder}
+              compact
               onPress={onPressContribute}>
               + Contribute
             </Button>
@@ -202,14 +196,13 @@ function Fund({item, active, onPressContribute}: {item: Campaign; active: boolea
 
 const styles = StyleSheet.create({
   container: {flex: 1},
-  headerRow: {
+  headerContainer: {
     flexDirection: 'row',
-    paddingHorizontal: standardPadding * 3,
+    justifyContent: 'space-between',
+    padding: standardPadding,
   },
   headerTileContainer: {
-    padding: standardPadding * 2,
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
   },
   listContent: {
@@ -219,7 +212,7 @@ const styles = StyleSheet.create({
     padding: standardPadding * 2,
   },
   shrink: {flexShrink: 1},
-  fund: {marginBottom: standardPadding},
+  fund: {marginBottom: standardPadding, paddingVertical: standardPadding, padding: standardPadding * 2},
   spacer: {flex: 1, minWidth: standardPadding * 3},
   alignEnd: {
     justifyContent: 'flex-end',
@@ -238,10 +231,14 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: standardPadding,
-    width: 100,
   },
   listItemRightSide: {
     alignItems: 'center',
+  },
+  fundsContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
   },
 });
 
@@ -293,47 +290,46 @@ function ContributeBox({
   const disabled = !account || !balance || !minContribution || balance.isZero() || balance.lt(minContribution);
 
   return (
-    <Modal visible={visible} backdropStyle={globalStyles.backdrop} onBackdropPress={reset}>
-      <Card disabled={true} style={contributeBoxStyles.modalCard}>
-        <Text>Contribute with:</Text>
-        <Padder scale={0.5} />
-        <SelectAccount accounts={networkAccounts} selected={account} onSelect={setAccount} />
-        <Padder scale={1.5} />
+    <Modal visible={visible} onDismiss={reset}>
+      <Text>Contribute with:</Text>
+      <Padder scale={0.5} />
+      <SelectAccount accounts={networkAccounts} selected={account} onSelect={setAccount} />
+      <Padder scale={1} />
+      <Text>Amount:</Text>
+      <TextInput
+        style={contributeBoxStyles.textInput}
+        mode="outlined"
+        autoComplete="off"
+        placeholder="Enter amount"
+        keyboardType="decimal-pad"
+        value={amount}
+        onFocus={() => setAmount('')}
+        onChangeText={(nextValue) => setAmount(nextValue.replace(/[^(\d+).(\d+)]/g, ''))}
+      />
+      <Padder scale={0.2} />
+      <Text>{api ? formatBalance(getBalanceFromString(api, amount)) : ''}</Text>
+      <Padder scale={1.5} />
+      <Text>minimum allowed: </Text>
+      <Text>{minBalance}</Text>
 
-        <Text>Amount:</Text>
-        <Padder scale={0.5} />
-        <Input
-          placeholder="Place your Text"
-          keyboardType="decimal-pad"
-          value={amount}
-          onFocus={() => setAmount('')}
-          onChangeText={(nextValue) => setAmount(nextValue.replace(/[^(\d+).(\d+)]/g, ''))}
-        />
-        <Text>{api ? formatBalance(getBalanceFromString(api, amount)) : ''}</Text>
-        <Padder scale={1.5} />
-        <Text>minimum allowed: </Text>
-        <Text>{minBalance}</Text>
-
-        <View style={contributeBoxStyles.row}>
-          <Button onPress={reset} appearance="ghost" status="basic">
-            CANCEL
-          </Button>
-          <Button
-            disabled={disabled}
-            onPress={() => {
-              if (account) {
-                startTx({
-                  address: account,
-                  txMethod: 'crowdloan.contribute',
-                  params: [parachainId, balance, null],
-                });
-                reset();
-              }
-            }}>
-            Contribute
-          </Button>
-        </View>
-      </Card>
+      <View style={contributeBoxStyles.row}>
+        <Button onPress={reset}>CANCEL</Button>
+        <Button
+          mode="contained"
+          disabled={disabled}
+          onPress={() => {
+            if (account) {
+              startTx({
+                address: account,
+                txMethod: 'crowdloan.contribute',
+                params: [parachainId, balance, null],
+              });
+              reset();
+            }
+          }}>
+          Contribute
+        </Button>
+      </View>
     </Modal>
   );
 }
@@ -341,4 +337,5 @@ function ContributeBox({
 const contributeBoxStyles = StyleSheet.create({
   modalCard: {width: 300},
   row: {flexDirection: 'row', justifyContent: 'space-between'},
+  textInput: {height: 36},
 });

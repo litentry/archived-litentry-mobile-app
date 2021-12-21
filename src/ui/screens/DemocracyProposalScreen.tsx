@@ -2,7 +2,6 @@ import React, {useReducer, useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {RouteProp} from '@react-navigation/native';
-import {Button, Card, Icon, Layout, Modal, Text} from '@ui-kitten/components';
 import {useApi} from 'context/ChainApiContext';
 import AddressInlineTeaser from '@ui/components/AddressInlineTeaser';
 import {EmptyView} from '@ui/components/EmptyView';
@@ -18,6 +17,8 @@ import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {referendumScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {useAccounts} from 'context/AccountsContext';
+import {Button, Caption, Card, Headline, Icon, List, Modal, Text} from '@ui/library';
+import {Layout} from '@ui/components/Layout';
 
 export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
   const {networkAccounts} = useAccounts();
@@ -39,37 +40,31 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
 
   const proposal = activeProposal.image?.proposal;
   const {method, section} = proposal?.registry.findMetaCall(proposal.callIndex) ?? {};
+  const title = proposal ? `${method}.${section}` : `preimage`;
 
   return (
     <Layout style={globalStyles.flex}>
       <SafeView edges={noTopEdges}>
-        <ScrollView style={styles.container}>
-          <View style={styles.row}>
-            <Text category="h3" style={styles.index}>
-              {route.params.index}
-            </Text>
-            {proposal ? (
-              <View style={globalStyles.paddedContainer}>
-                <Text category={'c1'}>{`${section}.${method}`}</Text>
-                <ProposalInfo proposal={proposal} />
-              </View>
-            ) : (
-              <View style={globalStyles.paddedContainer}>
-                <Text appearance={'hint'}>Preimage</Text>
-                <Text category={'c1'} numberOfLines={1} ellipsizeMode="middle">
-                  {String(activeProposal?.imageHash)}
-                </Text>
-              </View>
-            )}
-          </View>
-          <Padder scale={1} />
-          <Text appearance={'hint'}>Proposal Hash:</Text>
-          <Text category={'c1'}>{String(proposal?.hash)}</Text>
+        <ScrollView contentContainerStyle={styles.container}>
+          <List.Item title={title} disabled left={() => <Headline>{route.params.index}</Headline>} />
+          {proposal ? (
+            <ProposalInfo proposal={proposal} />
+          ) : (
+            <View>
+              <Caption>Preimage:</Caption>
+              <Text numberOfLines={1} ellipsizeMode="middle">
+                {String(activeProposal?.imageHash)}
+              </Text>
+            </View>
+          )}
+          <Padder scale={3} />
+          <Caption>Proposal Hash:</Caption>
+          <Text>{String(proposal?.hash)}</Text>
 
           <Padder scale={2} />
           <View style={styles.row}>
             <View style={styles.listLeft}>
-              <Text appearance={'hint'}>Proposer:</Text>
+              <Caption>Proposer:</Caption>
             </View>
             <View style={styles.listRight}>
               <AddressInlineTeaser address={activeProposal.proposer.toString()} />
@@ -81,7 +76,7 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
           {activeProposal.balance ? (
             <View style={styles.row}>
               <View style={styles.listLeft}>
-                <Text appearance={'hint'}>Locked:</Text>
+                <Caption>Locked:</Caption>
               </View>
               <View style={styles.listRight}>
                 <Text>{formatBalance(activeProposal.balance)}</Text>
@@ -93,7 +88,7 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
 
           <View style={styles.row}>
             <View style={styles.listLeft}>
-              <Text appearance={'hint'}>Seconds:</Text>
+              <Caption>Seconds:</Caption>
             </View>
             <View style={styles.listRight}>
               <TouchableOpacity
@@ -103,11 +98,7 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
                 }}>
                 <Text>{activeProposal.seconds.length}</Text>
 
-                <Icon
-                  name={secondsOpen ? 'chevron-up-outline' : 'chevron-down-outline'}
-                  style={globalStyles.icon25}
-                  fill="grey"
-                />
+                <Icon name={secondsOpen ? 'chevron-up' : 'chevron-down'} size={25} color="grey" />
               </TouchableOpacity>
 
               {secondsOpen && (
@@ -124,73 +115,69 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
             </View>
           </View>
           <Padder scale={2} />
-          <Button status="basic" onPress={() => dispatch({type: 'OPEN'})}>
+          <Button mode="outlined" onPress={() => dispatch({type: 'OPEN'})}>
             Second
           </Button>
           <Padder scale={2} />
           <View style={styles.row}>
             <View style={styles.infoIcon}>
-              <Icon fill="grey" name="info-outline" style={globalStyles.icon} />
+              <Icon color="grey" name="information-outline" size={25} />
             </View>
             <View style={globalStyles.flex}>
-              <Text category="c1">
+              <Caption>
                 The proposal is in the queue for future referendums. One proposal from this list will move forward to
                 voting.
-              </Text>
+              </Caption>
               <Padder scale={0.5} />
-              <Text category="c1">Seconding a proposal that indicates your backing for the proposal.</Text>
+              <Caption>Seconding a proposal that indicates your backing for the proposal.</Caption>
             </View>
           </View>
         </ScrollView>
 
-        <Modal
-          visible={state.open}
-          backdropStyle={globalStyles.backdrop}
-          onBackdropPress={() => dispatch({type: 'RESET'})}>
-          <Card disabled={true} style={styles.modalCard}>
-            <Text>Vote with account</Text>
-            <Padder scale={0.5} />
-            <SelectAccount
-              accounts={networkAccounts}
-              selected={state.account}
-              onSelect={(account) => {
-                dispatch({type: 'SELECT_ACCOUNT', payload: account});
-              }}
-            />
-            <Padder scale={1.5} />
+        <Modal visible={state.open} onDismiss={() => dispatch({type: 'RESET'})}>
+          <Text>Vote with account</Text>
+          <Padder scale={0.5} />
+          <SelectAccount
+            accounts={networkAccounts}
+            selected={state.account}
+            onSelect={(account) => {
+              dispatch({type: 'SELECT_ACCOUNT', payload: account});
+            }}
+          />
+          <Padder scale={1.5} />
 
-            <Text>Deposit required:</Text>
-            <Padder scale={0.5} />
-            <Text>
-              {api &&
-                formatBalance(activeProposal.balance ? activeProposal.balance : api.consts.democracy.minimumDeposit)}
-            </Text>
-            <Padder scale={0.5} />
+          <Text>Deposit required:</Text>
+          <Padder scale={0.5} />
+          <Text>
+            {api &&
+              formatBalance(activeProposal.balance ? activeProposal.balance : api.consts.democracy.minimumDeposit)}
+          </Text>
+          <Padder scale={1.5} />
 
-            <View style={[styles.row, globalStyles.centeredContainer]}>
-              <Button onPress={() => dispatch({type: 'RESET'})} appearance="ghost" status="basic">
-                CANCEL
-              </Button>
-              <Padder scale={1} />
-              <Button
-                disabled={!state.account}
-                onPress={() => {
-                  if (state.account) {
-                    startTx({
-                      address: state.account,
-                      txMethod: 'democracy.second',
-                      params:
-                        api?.tx.democracy.second.meta.args.length === 2
-                          ? [activeProposal.index, activeProposal.seconds.length]
-                          : [activeProposal.index],
-                    });
-                    dispatch({type: 'RESET'});
-                  }
-                }}>
-                Second
-              </Button>
-            </View>
-          </Card>
+          <View style={globalStyles.spaceBetweenRowContainer}>
+            <Button onPress={() => dispatch({type: 'RESET'})} mode="outlined">
+              CANCEL
+            </Button>
+            <Padder scale={1} />
+            <Button
+              mode="outlined"
+              disabled={!state.account}
+              onPress={() => {
+                if (state.account) {
+                  startTx({
+                    address: state.account,
+                    txMethod: 'democracy.second',
+                    params:
+                      api?.tx.democracy.second.meta.args.length === 2
+                        ? [activeProposal.index, activeProposal.seconds.length]
+                        : [activeProposal.index],
+                  });
+                  dispatch({type: 'RESET'});
+                }
+              }}>
+              Second
+            </Button>
+          </View>
         </Modal>
       </SafeView>
     </Layout>

@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {ProgressChart} from '@ui/library';
+import {StyleSheet, View} from 'react-native';
+import {ProgressChart, Text} from '@ui/library';
 
 export function Chart({percent}: {percent: number}) {
   return (
@@ -14,7 +14,7 @@ export function Chart({percent}: {percent: number}) {
         chartConfig={{
           backgroundGradientFromOpacity: 0,
           backgroundGradientToOpacity: 0,
-          color: (opacity = 1) => `rgba(0, 197, 117, ${opacity})`,
+          color: (opacity = 1) => `rgba(254, 163, 79, ${opacity})`,
         }}
         hideLegend
       />

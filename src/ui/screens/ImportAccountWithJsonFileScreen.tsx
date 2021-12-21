@@ -14,6 +14,7 @@ import {Button, Caption, List, Text, TextInput, useTheme} from '@ui/library';
 import {ErrorText} from '@ui/components/ErrorText';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
+import {SecureKeychain} from 'src/service/SecureKeychain';
 
 export function ImportAccountWithJsonFileScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const theme = useTheme();
@@ -38,6 +39,8 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
           isExternal: false,
         };
         addAccount(newAcc);
+        SecureKeychain.setPasswordByServiceId(password, 'BIOMETRICS', parsedJson.address);
+
         navigation.navigate(accountsScreen, {reload: true});
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
@@ -79,7 +82,7 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
           </>
         )}
         <TextInput
-          autoComplete={false}
+          autoComplete="off"
           secureTextEntry={!isPasswordVisible}
           label={'Password'}
           value={password}

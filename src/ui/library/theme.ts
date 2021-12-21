@@ -16,7 +16,7 @@ export const themeLight = {
     primary: '#85A3F2',
     accent: '#FEA34F',
     success: 'green',
-    backdrop: '#eeeeee',
+    error: '#E55047',
   },
 };
 
@@ -24,8 +24,9 @@ export const themeDark = {
   ...PaperDarkTheme,
   colors: {
     ...PaperDarkTheme.colors,
-    primary: '#85A3F2',
+    primary: '#ABD1FB',
     accent: '#FEA34F',
     success: 'green',
+    error: '#E55047',
   },
 };

@@ -3,18 +3,17 @@
  * referenced from
  * https://github.com/polkadot-js/apps/tree/master/packages/react-params/src/Param
  */
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {useProposalCallParams} from '@hooks/useProposalCallParams';
 import {Balance, Call} from '@polkadot/types/interfaces';
-import {isU8a, u8aToString} from '@polkadot/util';
-import {Text} from '@ui-kitten/components';
+import {isAscii, isHex, isU8a, u8aToHex, u8aToString} from '@polkadot/util';
+import {Account} from '@ui/components/Account';
 import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
 import {Padder} from '@ui/components/Padder';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import {Account} from '@ui/components/Account';
-import {Card} from '@ui/library';
-import {useProposalCallParams} from '@hooks/useProposalCallParams';
+import {Card, Text} from '@ui/library';
 import globalStyles from '@ui/styles';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
+import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 
 export function ProposalCall({call}: {call: Call}) {
   const formatBalance = useFormatBalance();
@@ -24,16 +23,16 @@ export function ProposalCall({call}: {call: Call}) {
   return (
     <Card style={style.container}>
       <Card.Content>
-        <Text category={'c1'}>{`${method}.${section}():`}</Text>
+        <Text>{`${method}.${section}():`}</Text>
         <Padder scale={0.5} />
         {data.map((p, key) => {
           return (
-            <View key={key}>
+            <View key={key} style={style.param}>
               {(() => {
                 if ((p.type.type === 'AccountId' || p.type.type === 'MultiAddress') && p.value) {
                   return (
                     <View style={globalStyles.rowAlignCenter}>
-                      <Text category="label">{p.name}: </Text>
+                      <Text>{p.name}: </Text>
                       <Account id={p.value.toString()} key={key}>
                         {(identity) => {
                           return identity ? (
@@ -48,7 +47,21 @@ export function ProposalCall({call}: {call: Call}) {
                 }
 
                 if (p.type.type === 'Bytes' && p.value && isU8a(p.value)) {
-                  return <Text>{`${p.name}: ${u8aToString(p.value)}`}</Text>;
+                  const v =
+                    isU8a(p.value) && isAscii(p.value)
+                      ? u8aToString(p.value)
+                      : isHex(p.value)
+                      ? p.value
+                      : u8aToHex(p.value as Uint8Array, 256);
+
+                  return (
+                    <View>
+                      <Text>{p.name}:</Text>
+                      <Text numberOfLines={2} adjustsFontSizeToFit>
+                        {v}
+                      </Text>
+                    </View>
+                  );
                 }
 
                 if (p.type.type === 'Balance' && p.value) {
@@ -75,7 +88,7 @@ export function ProposalCall({call}: {call: Call}) {
                   );
                 }
 
-                return <Text category="c1">{`${p.name}: ${p.value}`}</Text>;
+                return <Text>{`${p.name}: ${p.value}`}</Text>;
               })()}
             </View>
           );
@@ -88,5 +101,10 @@ export function ProposalCall({call}: {call: Call}) {
 const style = StyleSheet.create({
   container: {
     marginTop: 10,
+  },
+  param: {
+    marginTop: 5,
+    padding: 5,
+    opacity: 0.8,
   },
 });

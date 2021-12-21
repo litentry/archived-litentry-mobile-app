@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Text} from '@ui-kitten/components';
+import {Text} from '@ui/library';
+import {useTheme} from '@ui/library';
 
 interface Props {
   percentage: number;
@@ -10,6 +11,7 @@ interface Props {
 export function ProgressBar(props: Props) {
   const [barW, setBarW] = useState<number>();
   const [requiredTextW, setRequiredTextW] = useState<number>();
+  const {colors} = useTheme();
 
   const {percentage, requiredAmount} = props;
 
@@ -17,12 +19,14 @@ export function ProgressBar(props: Props) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.barBG} onLayout={(e) => setBarW(e.nativeEvent.layout.width)}>
-        <View style={[styles.progressed, {width: `${percentage}%`}]} />
+      <View
+        style={[styles.barBG, {backgroundColor: colors.disabled}]}
+        onLayout={(e) => setBarW(e.nativeEvent.layout.width)}>
+        <View style={[styles.progressed, {width: `${percentage}%`, backgroundColor: colors.accent}]} />
       </View>
       <View style={[styles.requiredContainer, {left}]} onLayout={(e) => setRequiredTextW(e.nativeEvent.layout.width)}>
-        <Text status="primary">{`${requiredAmount}% required`}</Text>
-        <View style={styles.requiredLine} />
+        <Text style={{color: colors.primary}}>{`${requiredAmount}% required`}</Text>
+        <View style={[styles.requiredLine, {backgroundColor: colors.primary}]} />
       </View>
     </View>
   );
@@ -35,14 +39,11 @@ const styles = StyleSheet.create({
   },
   barBG: {
     height: 10,
-    backgroundColor: 'gray',
     borderRadius: 10,
     overflow: 'hidden',
   },
   progressed: {
-    backgroundColor: 'green',
     height: '100%',
-    borderRightColor: 'white',
   },
   requiredContainer: {
     position: 'absolute',
@@ -52,6 +53,5 @@ const styles = StyleSheet.create({
     height: 20,
     width: 3,
     borderRadius: 10,
-    backgroundColor: 'blue',
   },
 });

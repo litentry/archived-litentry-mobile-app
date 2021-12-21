@@ -1,7 +1,6 @@
 import React, {useContext} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {Button, Icon, Text} from '@ui-kitten/components';
-import globalStyles, {monofontFamily, standardPadding, colorRed} from '@ui/styles';
+import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
 import NetworkItem from '@ui/components/NetworkItem';
 import {CompositeNavigationProp} from '@react-navigation/native';
 import {apiLoadingScreen, networkSelectionScreen} from '@ui/navigation/routeKeys';
@@ -10,7 +9,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {Padder} from '@ui/components/Padder';
 import {NetworkContext} from 'context/NetworkContext';
 import {useApiReconnect} from 'context/ChainApiContext';
-import {AppBar, AppHeader} from '@ui/library';
+import {AppBar, AppHeader, Title, Icon, Button, Text, useTheme} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {noop} from 'lodash';
 
@@ -24,6 +23,7 @@ type PropTypes = {
 export function ConnectionRetryScreen({navigation}: PropTypes) {
   const {currentNetwork} = useContext(NetworkContext);
   const {reconnect} = useApiReconnect();
+  const {colors} = useTheme();
 
   const onRetry = () => {
     reconnect();
@@ -36,31 +36,30 @@ export function ConnectionRetryScreen({navigation}: PropTypes) {
 
   return (
     <Layout style={styles.container}>
-      <AppHeader>
+      <AppHeader style={{backgroundColor: colors.primary}}>
         <AppBar.Action icon="menu" color="transparent" onPress={noop} />
         <AppBar.Content
+          style={styles.contentContainer}
           title={
             <View style={styles.networkName}>
-              <Text category="s1">Litentry</Text>
-              {currentNetwork ? <NetworkItem item={currentNetwork} isConnected={false} /> : null}
+              <Title>Litentry</Title>
             </View>
           }
         />
+        <View style={[styles.networkSwitch, {backgroundColor: colors.background}]}>
+          {currentNetwork ? <NetworkItem item={currentNetwork} isConnected={false} /> : null}
+        </View>
       </AppHeader>
       <View style={globalStyles.centeredContainer}>
         <View style={styles.textContainer}>
-          <Icon
-            style={[globalStyles.inlineIconDimension, {color: colorRed}]}
-            name="cloud-offline-outline"
-            pack="ionic"
-          />
+          <Icon name="access-point-network-off" color={colors.error} />
           <Text style={styles.text}>Disconnected from {currentNetwork?.name ?? ''}</Text>
         </View>
-        <Button status="basic" onPress={onRetry}>
+        <Button mode="outlined" onPress={onRetry}>
           Retry
         </Button>
         <Padder scale={1} />
-        <Button status="basic" onPress={onChangeNetwork}>
+        <Button mode="outlined" onPress={onChangeNetwork}>
           Change Network
         </Button>
       </View>
@@ -71,6 +70,9 @@ export function ConnectionRetryScreen({navigation}: PropTypes) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  contentContainer: {
+    marginRight: '12%',
   },
   networkName: {
     alignItems: 'center',
@@ -86,4 +88,15 @@ const styles = StyleSheet.create({
     marginLeft: standardPadding,
   },
   titleContainer: {alignItems: 'center'},
+  networkSwitch: {
+    position: 'absolute',
+    right: standardPadding * 1.5,
+    bottom: 0,
+    paddingHorizontal: standardPadding,
+    paddingVertical: standardPadding / 2,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    height: 30,
+    justifyContent: 'center',
+  },
 });
