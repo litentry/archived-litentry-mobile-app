@@ -16,7 +16,7 @@ import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import {candidateScreen} from '@ui/navigation/routeKeys';
 import {Input, Text} from '@ui-kitten/components';
-import {List, Button, Divider, Modal, Card, useTheme} from '@ui/library';
+import {List, Button, Divider, Modal, useTheme} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
 import {MotionsScreen} from './MotionsScreen';
@@ -240,66 +240,64 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
 
   return (
     <Modal visible={visible} onDismiss={reset}>
-      <Card style={styles.modalCard}>
-        <View style={styles.centerAlign}>
-          <Text category="s1">Vote for council</Text>
+      <View style={styles.centerAlign}>
+        <Text category="s1">Vote for council</Text>
+      </View>
+      <Padder scale={1} />
+
+      <Text>Vote with:</Text>
+      <Padder scale={0.5} />
+      <SelectAccount accounts={networkAccounts} selected={account} onSelect={setAccount} />
+      <Padder scale={0.5} />
+
+      <Text>Vote value:</Text>
+      <Padder scale={0.5} />
+      <Input
+        placeholder="Place your Text"
+        keyboardType="decimal-pad"
+        value={amount}
+        onFocus={() => setAmount('')}
+        onChangeText={(nextValue) => setAmount(nextValue.replace(/[^(\d+).(\d+)]/g, ''))}
+      />
+
+      <Text category="s1">{api ? formatBalance(getBalanceFromString(api, amount)) : ''}</Text>
+
+      <Padder scale={1} />
+
+      <View style={styles.centerAlign}>
+        <Text category="c1">{`Select up to ${MAX_VOTES} candidates in the preferred order:`}</Text>
+      </View>
+
+      <View style={styles.candidatesContainer}>
+        <View style={styles.candidates}>
+          <ScrollView contentContainerStyle={styles.scrollView}>
+            {candidates.map((candidate) => (
+              <MemberItem
+                key={candidate}
+                accountId={candidate}
+                onSelect={onCandidateSelect}
+                isSelected={selectedCandidates.includes(candidate)}
+                order={selectedCandidates.indexOf(candidate) + 1}
+              />
+            ))}
+          </ScrollView>
         </View>
-        <Padder scale={1} />
 
-        <Text>Vote with:</Text>
-        <Padder scale={0.5} />
-        <SelectAccount accounts={networkAccounts} selected={account} onSelect={setAccount} />
-        <Padder scale={0.5} />
-
-        <Text>Vote value:</Text>
-        <Padder scale={0.5} />
-        <Input
-          placeholder="Place your Text"
-          keyboardType="decimal-pad"
-          value={amount}
-          onFocus={() => setAmount('')}
-          onChangeText={(nextValue) => setAmount(nextValue.replace(/[^(\d+).(\d+)]/g, ''))}
-        />
-
-        <Text category="s1">{api ? formatBalance(getBalanceFromString(api, amount)) : ''}</Text>
-
-        <Padder scale={1} />
-
-        <View style={styles.centerAlign}>
-          <Text category="c1">{`Select up to ${MAX_VOTES} candidates in the preferred order:`}</Text>
+        <View style={styles.votingBond}>
+          <Text category="c1">{`Voting bond`}</Text>
+          {bondValue && <Text style={styles.bondValue} category="c2">{`${formatBalance(bondValue)}`}</Text>}
         </View>
+      </View>
+      <Padder scale={1} />
 
-        <View style={styles.candidatesContainer}>
-          <View style={styles.candidates}>
-            <ScrollView contentContainerStyle={styles.scrollView}>
-              {candidates.map((candidate) => (
-                <MemberItem
-                  key={candidate}
-                  accountId={candidate}
-                  onSelect={onCandidateSelect}
-                  isSelected={selectedCandidates.includes(candidate)}
-                  order={selectedCandidates.indexOf(candidate) + 1}
-                />
-              ))}
-            </ScrollView>
-          </View>
-
-          <View style={styles.votingBond}>
-            <Text category="c1">{`Voting bond`}</Text>
-            {bondValue && <Text style={styles.bondValue} category="c2">{`${formatBalance(bondValue)}`}</Text>}
-          </View>
-        </View>
-        <Padder scale={1} />
-
-        <View style={styles.buttons}>
-          <Button onPress={reset} mode="outlined" compact>
-            Cancel
-          </Button>
-          <Button mode="contained" disabled={disabled} onPress={onVote}>
-            Vote
-          </Button>
-        </View>
-      </Card>
+      <View style={styles.buttons}>
+        <Button onPress={reset} mode="outlined" compact>
+          Cancel
+        </Button>
+        <Button mode="contained" disabled={disabled} onPress={onVote}>
+          Vote
+        </Button>
+      </View>
     </Modal>
   );
 }
@@ -354,7 +352,6 @@ const styles = StyleSheet.create({
     paddingVertical: standardPadding,
     paddingHorizontal: standardPadding * 2,
   },
-  modalCard: {paddingHorizontal: standardPadding * 2, paddingVertical: standardPadding},
   centerAlign: {alignItems: 'center'},
   candidatesContainer: {flexDirection: 'row', height: 200},
   candidates: {flex: 3, paddingVertical: standardPadding},
