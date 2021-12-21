@@ -81,7 +81,7 @@
     "react-native-screens": "^3.10.1",
     "react-native-sensitive-info": "^5.5.8",
     "react-native-share": "^7.3.2",
-    "react-native-splash-screen": "^3.2.0",
+    "react-native-splash-screen": "^3.3.0",
     "react-native-substrate-sign": "^1.1.1",
     "react-native-svg": "^12.1.1",
     "react-native-tab-view": "^3.1.1",
