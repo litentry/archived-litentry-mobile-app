@@ -3,7 +3,6 @@ import {ScrollView, TouchableOpacity, SectionList, StyleSheet, View, useWindowDi
 import Identicon from '@polkadot/reactnative-identicon';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {useNavigation} from '@react-navigation/native';
-import {useAccounts} from 'context/AccountsContext';
 import {useApi} from 'context/ChainApiContext';
 import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
@@ -200,7 +199,6 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
 
   const {api} = useApi();
   const startTx = useApiTx();
-  const {networkAccounts} = useAccounts();
   const formatBalance = useFormatBalance();
 
   const onCandidateSelect = (accountId: string, isSelected: boolean) => {
@@ -247,7 +245,7 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
 
       <Text>Vote with:</Text>
       <Padder scale={0.5} />
-      <SelectAccount accounts={networkAccounts} selected={account} onSelect={setAccount} />
+      <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.address)} />
       <Padder scale={0.5} />
 
       <Text>Vote value:</Text>

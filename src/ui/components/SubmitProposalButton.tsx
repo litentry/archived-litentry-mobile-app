@@ -8,10 +8,8 @@ import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {useAccounts} from 'context/AccountsContext';
 
 export function SubmitProposalButton() {
-  const {networkAccounts} = useAccounts();
   const {api} = useApi();
   const [state, dispatch] = React.useReducer(reducer, initialState);
   const formatBalance = useFormatBalance();
@@ -32,10 +30,8 @@ export function SubmitProposalButton() {
         <Card disabled={true} style={styles.modalCard}>
           <Padder scale={0.5} />
           <SelectAccount
-            accounts={networkAccounts}
-            selected={state.account}
             onSelect={(account) => {
-              dispatch({type: 'SELECT_ACCOUNT', payload: account});
+              dispatch({type: 'SELECT_ACCOUNT', payload: account.address});
             }}
           />
           <Padder scale={1} />

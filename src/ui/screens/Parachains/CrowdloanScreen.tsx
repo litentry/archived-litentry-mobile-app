@@ -4,7 +4,6 @@ import {LinkOption} from '@polkadot/apps-config/endpoints/types';
 import type {ParaId} from '@polkadot/types/interfaces';
 import {BN, BN_ZERO} from '@polkadot/util';
 import {NavigationProp, useNavigation} from '@react-navigation/core';
-import {useAccounts} from 'context/AccountsContext';
 import {useApi} from 'context/ChainApiContext';
 import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
@@ -275,7 +274,6 @@ function ContributeBox({
   const [account, setAccount] = React.useState<string>();
   const [amount, setAmount] = React.useState<string>('');
   const formatBalance = useFormatBalance();
-  const {networkAccounts} = useAccounts();
 
   const reset = () => {
     setAccount(undefined);
@@ -293,7 +291,7 @@ function ContributeBox({
     <Modal visible={visible} onDismiss={reset}>
       <Text>Contribute with:</Text>
       <Padder scale={0.5} />
-      <SelectAccount accounts={networkAccounts} selected={account} onSelect={setAccount} />
+      <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.address)} />
       <Padder scale={1} />
       <Text>Amount:</Text>
       <TextInput
