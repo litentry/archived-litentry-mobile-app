@@ -76,9 +76,20 @@ export const linking: LinkingOptions<CompleteNavigatorParamList> = {
           [dashboardNavigator]: {
             initialRouteName: dashboardScreen,
             screens: {
-              [treasuryScreen]: 'treasury',
+              [treasuryScreen]: {
+                screens: {
+                  [treasuryScreen]: 'treasury',
+                  [tipsScreen]: 'tips',
+                },
+              },
+              [councilScreen]: {
+                screens: {
+                  [councilScreen]: 'council',
+                  [motionsScreen]: 'motions',
+                },
+              },
               [democracyScreen]: 'democracy',
-              [tipsScreen]: 'tips',
+              [bountiesScreen]: 'bounties',
             },
           },
         },
