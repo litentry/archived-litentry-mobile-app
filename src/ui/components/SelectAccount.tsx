@@ -7,6 +7,7 @@ import {useAccountsIdentityInfo} from 'src/api/hooks/useAccountsIdentityInfo';
 import globalStyles from '@ui/styles';
 import Identicon from '@polkadot/reactnative-identicon';
 import AccountInfoInlineTeaser from './AccountInfoInlineTeaser';
+import {stringShorten} from '@polkadot/util';
 
 type AccountData = {
   identity: IdentityInfo;
@@ -47,7 +48,7 @@ export function SelectAccount({onSelect}: Props) {
       anchor={
         <View style={[styles.anchor, {borderColor: colors.onSurface}]}>
           <List.Item
-            title={<Caption>{account ? account.address : 'Select account'}</Caption>}
+            title={<Caption>{account ? stringShorten(account.address, 12) : 'Select account'}</Caption>}
             onPress={openMenu}
             right={() => <Icon name="chevron-down" />}
           />
@@ -59,7 +60,7 @@ export function SelectAccount({onSelect}: Props) {
           ItemSeparatorComponent={Divider}
           data={accountsData}
           keyExtractor={(item) => item.account.address}
-          renderItem={({item}) => <AccountItem onSelect={selectAccount} accountData={item} selected={account} />}
+          renderItem={({item}) => <AccountItem onSelect={selectAccount} accountData={item} />}
         />
       ) : null}
     </Menu>
@@ -69,13 +70,11 @@ export function SelectAccount({onSelect}: Props) {
 type AccountItemProps = {
   onSelect: (account: Account) => void;
   accountData: AccountData;
-  selected?: Account;
 };
 
-function AccountItem({onSelect, accountData, selected}: AccountItemProps) {
+function AccountItem({onSelect, accountData}: AccountItemProps) {
   const {
     account: {
-      address,
       isExternal,
       meta: {name},
     },
@@ -83,7 +82,6 @@ function AccountItem({onSelect, accountData, selected}: AccountItemProps) {
   } = accountData;
   return (
     <List.Item
-      disabled={selected && selected.address === address}
       style={styles.item}
       onPress={() => onSelect(accountData.account)}
       left={() => (
@@ -107,7 +105,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   items: {
-    height: 250,
+    maxHeight: 250,
   },
   item: {
     width: 300,
