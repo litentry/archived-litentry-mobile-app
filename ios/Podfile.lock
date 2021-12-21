@@ -300,7 +300,7 @@ PODS:
     - React
   - react-native-substrate-sign (1.1.1):
     - React
-  - react-native-webview (11.14.1):
+  - react-native-webview (11.15.0):
     - React-Core
   - React-perflogger (0.66.4)
   - React-RCTActionSheet (0.66.4):
@@ -686,7 +686,7 @@ SPEC CHECKSUMS:
   react-native-sensitive-info: 400c6e3d27945e15c8cddb5b4b92233c85ee06f8
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-substrate-sign: 77515bc7fe68e2f8bd23f1aba8ecc40ef27bb50e
-  react-native-webview: db22ab831b8c5f7697957a67f7a7ac1cecfed18d
+  react-native-webview: e89bf2dba26a04cda967814df3ed1be99f291233
   React-perflogger: 93075d8931c32cd1fce8a98c15d2d5ccc4d891bd
   React-RCTActionSheet: 7d3041e6761b4f3044a37079ddcb156575fb6d89
   React-RCTAnimation: 743e88b55ac62511ae5c2e22803d4f503f2a3a13
