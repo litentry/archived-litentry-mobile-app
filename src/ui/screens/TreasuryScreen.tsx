@@ -12,15 +12,23 @@ import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useTreasuryInfo} from 'src/api/hooks/useTreasuryInfo';
 import globalStyles, {standardPadding} from '@ui/styles';
 import TipsScreen from './tips/TipsScreen';
+import {useTheme} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 
 const Tab = createMaterialTopTabNavigator();
 
 export function TreasuryScreen() {
   const layout = useWindowDimensions();
+  const {colors} = useTheme();
 
   return (
-    <Tab.Navigator initialLayout={{width: layout.width}}>
+    <Tab.Navigator
+      initialLayout={{width: layout.width}}
+      screenOptions={{
+        tabBarLabelStyle: {color: colors.text},
+        tabBarItemStyle: {width: 200},
+        tabBarStyle: {backgroundColor: colors.background},
+      }}>
       <Tab.Screen name="Overview" component={TreasuryOverviewScreen} />
       <Tab.Screen name="Tips" component={TipsScreen} />
     </Tab.Navigator>

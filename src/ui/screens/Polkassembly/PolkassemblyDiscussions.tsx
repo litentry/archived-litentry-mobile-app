@@ -13,7 +13,7 @@ import {PolkassemblyDiscussionStackParamList} from '@ui/navigation/navigation';
 import {polkassemblyDiscussionDetail} from '@ui/navigation/routeKeys';
 import {Padder} from '@ui/components/Padder';
 import {ActivityIndicator} from '@ui/library';
-import globalStyles, {standardPadding, colorGreen} from '@ui/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 
 export function PolkassemblyDiscussions({
   navigation,
@@ -132,7 +132,7 @@ export function PolkassemblyDiscussions({
             <View style={styles.footer}>
               {hasNextPage ? (
                 isFetching || isFetchingNextPage ? (
-                  <ActivityIndicator color={colorGreen} animating />
+                  <ActivityIndicator animating />
                 ) : (
                   <Button onPress={() => fetchNextPage()}>Load more ...</Button>
                 )

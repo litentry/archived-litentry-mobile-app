@@ -1,4 +1,5 @@
-import {useWindowDimensions} from 'react-native';
+import React, {useEffect, useMemo, useState} from 'react';
+import {ScrollView, TouchableOpacity, SectionList, StyleSheet, View, useWindowDimensions} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {useNavigation} from '@react-navigation/native';
@@ -8,8 +9,6 @@ import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SelectAccount} from '@ui/components/SelectAccount';
-import React, {useEffect, useMemo, useState} from 'react';
-import {SectionList, StyleSheet, View} from 'react-native';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useCouncil} from 'src/api/hooks/useCouncil';
 import {useCouncilSummary} from 'src/api/hooks/useCouncilSummary';
@@ -17,16 +16,14 @@ import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import {candidateScreen} from '@ui/navigation/routeKeys';
 import {Input, Text} from '@ui-kitten/components';
-import {List, Button, Divider, Modal, Card} from '@ui/library';
+import {List, Button, Divider, Modal, Card, useTheme} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
 import {MotionsScreen} from './MotionsScreen';
-import {ScrollView, TouchableOpacity} from 'react-native';
 import {useModuleElections} from 'src/api/hooks/useModuleElections';
 import Badge from '@ui/components/Badge';
 import {noop} from 'lodash';
 import {useApiTx} from 'src/api/hooks/useApiTx';
-import {useTheme} from 'context/ThemeContext';
 import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 
 const MAX_VOTES = 16;
@@ -35,9 +32,16 @@ const Tab = createMaterialTopTabNavigator();
 
 export function CouncilScreen() {
   const layout = useWindowDimensions();
+  const {colors} = useTheme();
 
   return (
-    <Tab.Navigator initialLayout={{width: layout.width}}>
+    <Tab.Navigator
+      initialLayout={{width: layout.width}}
+      screenOptions={{
+        tabBarLabelStyle: {color: colors.text},
+        tabBarItemStyle: {width: 200},
+        tabBarStyle: {backgroundColor: colors.background},
+      }}>
       <Tab.Screen name="Overview" component={CouncilOverviewScreen} />
       <Tab.Screen name="Motions" component={MotionsScreen} />
     </Tab.Navigator>

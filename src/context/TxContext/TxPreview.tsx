@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {SignerPayloadJSON} from '@polkadot/types/types';
-import {Button, Divider, Icon, Layout, Text, useTheme} from '@ui-kitten/components';
+import {BN} from '@polkadot/util';
 import ModalTitle from '@ui/components/ModalTitle';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {HashBlock} from '@ui/components/HashBlock';
 import {Padder} from '@ui/components/Padder';
-import {BN} from '@polkadot/util';
+import {Button, Caption, Icon, Divider, Text, useTheme} from '@ui/library';
+import {Layout} from '@ui/components/Layout';
 
 type PropTypes = {
   transactionTitle: string;
@@ -21,12 +22,12 @@ type PropTypes = {
 
 export function TxPreview(props: PropTypes): React.ReactElement {
   const [open, setOpen] = useState(false);
-  const theme = useTheme();
+  const {colors} = useTheme();
   const {transactionTitle, transactionInfo, partialFee, txPayload, params, onConfirm, onCancel, isExternalAccount} =
     props;
 
   return (
-    <Layout style={styles.container} level="1">
+    <Layout style={styles.container}>
       <ModalTitle title="Preview" />
       <Divider style={globalStyles.dividerPlain} />
       <ScrollView style={styles.content}>
@@ -38,35 +39,24 @@ export function TxPreview(props: PropTypes): React.ReactElement {
             setOpen(!open);
           }}>
           <View style={globalStyles.flex}>
-            <Text category={'c1'}>{transactionTitle}</Text>
+            <Text>{transactionTitle}</Text>
             <Padder scale={0.3} />
-            <Text category={'c1'} style={{color: theme['color-basic-600']}}>
-              {transactionInfo}
-            </Text>
+            <Caption>{transactionInfo}</Caption>
           </View>
-          <Icon
-            name={open ? 'arrow-up-outline' : 'arrow-down-outline'}
-            style={globalStyles.icon}
-            fill={theme['color-basic-600']}
-          />
+          <Icon name={open ? 'chevron-up' : 'chevron-down'} />
         </TouchableOpacity>
-        {open ? (
-          <Text style={[styles.payload, {backgroundColor: theme['color-basic-500']}]}>{stringifyParams(params)}</Text>
-        ) : undefined}
-        <Text category={'c1'}>{`Fees of ${partialFee / 10 ** 6} micro Unit will be applied to the submission`}</Text>
+        {open ? <Text style={[styles.payload]}>{stringifyParams(params)}</Text> : undefined}
+        <Text>{`Fees of ${partialFee / 10 ** 6} micro Unit will be applied to the submission`}</Text>
         <Padder scale={1} />
-        <Layout style={styles.buttonGroup}>
-          <Button style={styles.cancel} appearance="ghost" size="small" status="warning" onPress={onCancel}>
+        <View style={styles.buttonGroup}>
+          <Button mode="outlined" onPress={onCancel} color={colors.accent}>
             Cancel
           </Button>
-          <Button
-            style={styles.submit}
-            appearance="outline"
-            onPress={onConfirm}
-            accessoryRight={isExternalAccount ? (p) => <Icon {...p} name="video-outline" /> : undefined}>
+          <Padder scale={1} />
+          <Button mode="contained" compact onPress={onConfirm} icon={isExternalAccount ? 'qrcode-scan' : undefined}>
             Continue
           </Button>
-        </Layout>
+        </View>
       </ScrollView>
     </Layout>
   );
@@ -78,11 +68,14 @@ const styles = StyleSheet.create({
     marginBottom: standardPadding * 2,
   },
   content: {padding: standardPadding * 2},
-  infoContainer: {flexDirection: 'row', alignItems: 'center', paddingVertical: standardPadding},
-  buttonGroup: {
-    paddingHorizontal: 30,
+  infoContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    paddingVertical: standardPadding,
+  },
+  buttonGroup: {
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   cancel: {flex: 1},
   submit: {flex: 2},

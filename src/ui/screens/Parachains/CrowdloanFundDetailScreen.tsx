@@ -22,7 +22,7 @@ type ScreenProps = {
   route: RouteProp<ParachainsStackParamList, 'CrowdLoanDetailScreen'>;
 };
 
-export function CrowdLoanFundDetailScreen({route}: ScreenProps) {
+export function CrowdloanFundDetailScreen({route}: ScreenProps) {
   const {paraId, title} = route.params;
   // const paraIdWithType = paraId as unknown as ParaId;
   const bestNumber = useBestNumber();

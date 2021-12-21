@@ -1,9 +1,12 @@
 import React from 'react';
 import {Appbar as AppBar} from 'react-native-paper';
-import {useTheme} from '@ui/library';
 
-export function AppHeader({children}: {children: React.ReactNode}) {
-  const theme = useTheme();
-
-  return <AppBar.Header style={{backgroundColor: theme.colors.background}}>{children}</AppBar.Header>;
+export function AppHeader({
+  children,
+  style,
+}: {
+  children: React.ReactNode;
+  style?: React.ComponentProps<typeof AppBar.Header>['style'];
+}) {
+  return <AppBar.Header style={style}>{children}</AppBar.Header>;
 }

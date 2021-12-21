@@ -6,7 +6,7 @@ import {mapping} from '@eva-design/material';
 import {usePersistedState} from '@hooks/usePersistedState';
 import customMapping from 'src/mapping.json';
 import {darkMaterialThemeOverride, lightMaterialThemeOverride} from '@ui/navigation/theme';
-import {Provider as PaperProvider, useTheme as useRNPaperTheme} from '@ui/library';
+import {Provider as PaperProvider} from '@ui/library';
 import {themeDark, themeLight} from '@ui/library/theme';
 
 type Theme = 'light' | 'dark';
@@ -52,13 +52,12 @@ export default function ThemeProvider({children}: PropTypes) {
   );
 }
 
-export function useTheme() {
-  const rnPaperTheme = useRNPaperTheme();
+export function useToggleTheme() {
   const context = useContext(ThemeContext);
 
   if (!context) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
 
-  return {...context, ...rnPaperTheme};
+  return context;
 }
