@@ -46,99 +46,97 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
 
   return (
     <SafeView edges={noTopEdges}>
-      <View>
-        <FlatList
-          ListHeaderComponent={() => (
-            <>
-              <View style={[styles.container, {borderColor: theme['border-basic-color-4']}]}>
-                <View style={styles.identityIconContainer}>
-                  <IdentityIcon value={accountId} size={60} />
-                  <Padder scale={1} />
-                  {identityInfoData && <AccountInfoInlineTeaser identity={identityInfoData} />}
-                </View>
+      <FlatList
+        ListHeaderComponent={() => (
+          <>
+            <View style={[styles.container, {borderColor: theme['border-basic-color-4']}]}>
+              <View style={styles.identityIconContainer}>
+                <IdentityIcon value={accountId} size={60} />
                 <Padder scale={1} />
-                <Divider />
-                <View>
-                  {legal ? (
-                    <ListItem
-                      title="Legal"
-                      accessoryLeft={(p) => <Icon {...p} name="award-outline" />}
-                      accessoryRight={() => (
-                        <Text selectable category="label">
-                          {legal}
-                        </Text>
-                      )}
-                    />
-                  ) : null}
-                  {email ? (
-                    <ListItem
-                      title="Email"
-                      accessoryLeft={(p) => <Icon {...p} name="email-outline" />}
-                      accessoryRight={() => (
-                        <Text selectable category="label">
-                          {email}
-                        </Text>
-                      )}
-                    />
-                  ) : null}
-                  {twitter ? (
-                    <ListItem
-                      title="Twitter"
-                      accessoryLeft={(p) => <Icon {...p} name="twitter-outline" />}
-                      accessoryRight={() => (
-                        <Text selectable category="label">
-                          {twitter}
-                        </Text>
-                      )}
-                    />
-                  ) : null}
-                  {riot ? (
-                    <ListItem
-                      title="Riot"
-                      accessoryLeft={(p) => <Icon {...p} name="message-square-outline" />}
-                      accessoryRight={() => (
-                        <Text selectable category="label">
-                          {riot}
-                        </Text>
-                      )}
-                    />
-                  ) : null}
-                  {web ? (
-                    <ListItem
-                      title="Web"
-                      accessoryLeft={(p) => <Icon {...p} name="browser-outline" />}
-                      accessoryRight={() => (
-                        <Text selectable category="label">
-                          {web}
-                        </Text>
-                      )}
-                    />
-                  ) : null}
-                </View>
-                {backing ? (
-                  <>
-                    <Divider />
-                    <Padder scale={1} />
-                    <View style={styles.backingContainer}>
-                      <Text category="label">{backing}</Text>
-                      <Text category="p2">Backing</Text>
-                    </View>
-                  </>
+                {identityInfoData && <AccountInfoInlineTeaser identity={identityInfoData} />}
+              </View>
+              <Padder scale={1} />
+              <Divider />
+              <View>
+                {legal ? (
+                  <ListItem
+                    title="Legal"
+                    accessoryLeft={(p) => <Icon {...p} name="award-outline" />}
+                    accessoryRight={() => (
+                      <Text selectable category="label">
+                        {legal}
+                      </Text>
+                    )}
+                  />
+                ) : null}
+                {email ? (
+                  <ListItem
+                    title="Email"
+                    accessoryLeft={(p) => <Icon {...p} name="email-outline" />}
+                    accessoryRight={() => (
+                      <Text selectable category="label">
+                        {email}
+                      </Text>
+                    )}
+                  />
+                ) : null}
+                {twitter ? (
+                  <ListItem
+                    title="Twitter"
+                    accessoryLeft={(p) => <Icon {...p} name="twitter-outline" />}
+                    accessoryRight={() => (
+                      <Text selectable category="label">
+                        {twitter}
+                      </Text>
+                    )}
+                  />
+                ) : null}
+                {riot ? (
+                  <ListItem
+                    title="Riot"
+                    accessoryLeft={(p) => <Icon {...p} name="message-square-outline" />}
+                    accessoryRight={() => (
+                      <Text selectable category="label">
+                        {riot}
+                      </Text>
+                    )}
+                  />
+                ) : null}
+                {web ? (
+                  <ListItem
+                    title="Web"
+                    accessoryLeft={(p) => <Icon {...p} name="browser-outline" />}
+                    accessoryRight={() => (
+                      <Text selectable category="label">
+                        {web}
+                      </Text>
+                    )}
+                  />
                 ) : null}
               </View>
-              <View>
-                <Text style={styles.votersListTitle} category="s1">
-                  Voters:
-                </Text>
-              </View>
-            </>
-          )}
-          data={councilData?.getVoters(accountId) || []}
-          renderItem={({item}) => <Voter accountId={item} />}
-          keyExtractor={(item) => item.toString()}
-          ItemSeparatorComponent={Divider}
-        />
-      </View>
+              {backing ? (
+                <>
+                  <Divider />
+                  <Padder scale={1} />
+                  <View style={styles.backingContainer}>
+                    <Text category="label">{backing}</Text>
+                    <Text category="p2">Backing</Text>
+                  </View>
+                </>
+              ) : null}
+            </View>
+            <View>
+              <Text style={styles.votersListTitle} category="s1">
+                Voters:
+              </Text>
+            </View>
+          </>
+        )}
+        data={councilData?.getVoters(accountId) || []}
+        renderItem={({item}) => <Voter accountId={item} />}
+        keyExtractor={(item) => item.toString()}
+        ItemSeparatorComponent={Divider}
+      />
     </SafeView>
   );
 }
