@@ -28,7 +28,6 @@ export function MotionTeaser(props: PropTypes) {
     if (latestMotion && latestMotion.votes) {
       navigation.navigate(motionDetailScreen, {
         hash: latestMotion.hash.toString(),
-        id: latestMotion.votes.index.toNumber(),
       });
     }
   };

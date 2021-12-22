@@ -9,7 +9,7 @@ import {TreasurySummaryTeaser} from '@ui/components/TreasurySummaryTeaser';
 import FadeInAnimatedView from '@ui/components/FadeInAnimatedView';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {useCustomBackHandler} from '@hooks/useCustomBackHandler';
-import {ApiLoadingStackParamList, DashboardStackParamList, DrawerParamList} from '@ui/navigation/navigation';
+import {DashboardStackParamList, DrawerParamList} from '@ui/navigation/navigation';
 import {bountiesScreen, councilScreen, democracyScreen, treasuryScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Layout} from '@ui/components/Layout';
@@ -17,10 +17,7 @@ import {Padder} from '@ui/components/Padder';
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
-    CompositeNavigationProp<
-      StackNavigationProp<DashboardStackParamList>,
-      StackNavigationProp<ApiLoadingStackParamList>
-    >,
+    StackNavigationProp<DashboardStackParamList>,
     DrawerNavigationProp<DrawerParamList>
   >;
 };

@@ -1,9 +1,8 @@
 import {LinkingOptions} from '@react-navigation/native';
 import {CompleteNavigatorParamList} from './navigation';
 
-export const drawerNavigatorScreen = 'Drawer' as const;
+export const drawerNavigator = 'Drawer' as const;
 export const appNavigator = 'App' as const;
-export const apiLoadingNavigatorScreen = 'ApiLoadingNavigator' as const;
 export const permissionGrantingPromptScreen = 'PermissionsGrantingPrompt' as const;
 export const dashboardNavigator = 'DashboardNavigator' as const;
 export const accountsNavigator = 'AccountsNavigator' as const;
@@ -59,20 +58,15 @@ export const polkassemblyDiscussionsNavigator = 'PolkassemblyDiscussionsNavigato
 export const polkassemblyDiscussions = 'PolkassemblyDiscussions' as const;
 export const polkassemblyDiscussionDetail = 'PolkassemblyDiscussionDetail' as const;
 
-export const apiLoadingScreen = 'ApiLoadingScreen' as const;
 export const networkSelectionScreen = 'NetworkSelectionScreen' as const;
-export const connectionRetryScreen = 'ConnectionRetryScreen' as const;
-
-export const appStack = 'AppStack' as const;
-export const apiLoadingStack = 'ApiLoadingStack' as const;
 
 export const linking: LinkingOptions<CompleteNavigatorParamList> = {
   prefixes: ['litentry://'],
 
   config: {
-    initialRouteName: appNavigator,
+    initialRouteName: drawerNavigator,
     screens: {
-      [drawerNavigatorScreen]: {
+      [drawerNavigator]: {
         screens: {
           [dashboardNavigator]: {
             initialRouteName: dashboardScreen,

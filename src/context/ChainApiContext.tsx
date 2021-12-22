@@ -3,7 +3,6 @@ import {ApiPromise, WsProvider} from '@polkadot/api';
 import {createLogger} from 'src/utils/logger';
 import {NetworkContext} from './NetworkContext';
 import {useNavigation} from '@react-navigation/core';
-import {connectionRetryScreen} from '@ui/navigation/routeKeys';
 
 const initialState: ChainApiContext = {
   status: 'unknown',
@@ -60,13 +59,11 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
     function handleDisconnect() {
       logger.debug('ChainApiContext: Api disconnected', wsAddress);
       dispatch({type: 'ON_DISCONNECT'});
-      navigation.navigate(connectionRetryScreen);
     }
 
     function handleError(error: unknown) {
       logger.debug('ChainApiContext: Api error at', wsAddress, error);
       dispatch({type: 'ON_ERROR'});
-      navigation.navigate(connectionRetryScreen);
     }
 
     apiPromise.on('connected', handleConnect);
