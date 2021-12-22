@@ -43,6 +43,7 @@ import TipDetailScreen from '@ui/screens/tips/TipDetailScreen';
 import {TreasuryScreen} from '@ui/screens/TreasuryScreen';
 import WebviewScreen from '@ui/screens/WebviewScreen';
 import {useFirebase} from '@hooks/useFirebase';
+import {useTurnOnAllNotificationsOnAppStartForAndroid} from '@hooks/useTurnOnAllNotificationsOnAppStartForAndroid';
 import {usePushAuthorizationStatus} from '@hooks/usePushNotificationsPermissions';
 import {MainAppBar, MainDrawerAppBar, MainStackAppBar} from '@ui/navigation/AppBars';
 import {
@@ -258,6 +259,7 @@ function ParachainsNavigator() {
 const AppStack = createStackNavigator<AppStackParamList>();
 
 function AppNavigator() {
+  useTurnOnAllNotificationsOnAppStartForAndroid();
   const {isPnPromptNeeded, skipPnPermission, isLoading} = usePushAuthorizationStatus();
 
   // We need this here, because otherwise PermissionGrantingPrompt

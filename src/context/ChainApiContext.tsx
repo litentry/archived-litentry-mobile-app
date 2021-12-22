@@ -32,10 +32,10 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
 
   // automatic api reconnect
   useEffect(() => {
-    if (state.status === 'disconnected') {
+    if (state.status === 'disconnected' && !state.inProgress) {
       reconnect();
     }
-  }, [state.status, reconnect]);
+  }, [state, reconnect]);
 
   useEffect(() => {
     if (!wsAddress) {
@@ -43,11 +43,9 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
     }
 
     logger.debug('ChainApiContext: trying to connect to', wsAddress);
-
     const provider = new WsProvider(wsAddress, false);
     const apiPromise = new ApiPromise({provider});
     apiPromise.connect();
-
     dispatch({type: 'CONNECT'});
 
     function handleConnect() {
