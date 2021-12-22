@@ -1,8 +1,8 @@
 import {useFocusEffect} from '@react-navigation/native';
-import {Button} from '@ui-kitten/components';
 import {Padder} from '@ui/components/Padder';
-import {Caption, Text, TextInput} from '@ui/library';
+import {Caption, Text, TextInput, Button} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
+import {noop} from 'lodash';
 import React from 'react';
 import {Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
 import {sendEmail} from 'src/utils/email';
@@ -53,7 +53,7 @@ export function FeedbackScreen() {
             placeholder="feedback..."
           />
           <Padder scale={1} />
-          <Button disabled={!body} onPress={sendFeedback}>
+          <Button mode="outlined" disabled={!body} onPress={body ? sendFeedback : noop}>
             Send Feedback
           </Button>
         </View>
