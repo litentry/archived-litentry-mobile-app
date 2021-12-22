@@ -1,10 +1,11 @@
 import {useFocusEffect} from '@react-navigation/native';
+import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
 import {Caption, Text, TextInput, Button} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {noop} from 'lodash';
 import React from 'react';
-import {Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
+import {Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import {sendEmail} from 'src/utils/email';
 
 const FEEDBACK_EMAIL = 'feedback@litentry.com';
@@ -23,25 +24,25 @@ export function FeedbackScreen() {
 
   if (status === 'SUCCESS') {
     return (
-      <View style={globalStyles.centeredContainer}>
+      <Layout style={globalStyles.centeredContainer}>
         <Text style={styles.successMessage}>Thank you for your feedback!</Text>
-      </View>
+      </Layout>
     );
   }
 
   if (status === 'ERROR') {
     return (
-      <View style={globalStyles.centeredContainer}>
+      <Layout style={globalStyles.centeredContainer}>
         <Text style={styles.errorMessage}>Sorry, there was an error sending your feedback.</Text>
         <Caption>Please email us at {FEEDBACK_EMAIL}</Caption>
-      </View>
+      </Layout>
     );
   }
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={globalStyles.flex}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.container}>
+        <Layout style={styles.container}>
           <Text>Please write down your feedback here:</Text>
           <Padder scale={1} />
           <TextInput
@@ -56,7 +57,7 @@ export function FeedbackScreen() {
           <Button mode="outlined" disabled={!body} onPress={body ? sendFeedback : noop}>
             Send Feedback
           </Button>
-        </View>
+        </Layout>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
