@@ -49,7 +49,7 @@ import {useAppBackgroundApiReconnect} from '@hooks/useAppBackgroundApiReconnect'
 import {useFirebase} from '@hooks/useFirebase';
 import {usePushAuthorizationStatus} from '@hooks/usePushNotificationsPermissions';
 import {useTurnOnAllNotificationsOnAppStartForAndroid} from '@hooks/useTurnOnAllNotificationsOnAppStartForAndroid';
-import {DashboardAppBar, MainDrawerAppBar, MainStackAppBar} from '@ui/navigation/AppBars';
+import {MainAppBar, MainDrawerAppBar, MainStackAppBar} from '@ui/navigation/AppBars';
 import {
   AccountsStackParamList,
   ApiLoadingStackParamList,
@@ -77,7 +77,7 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen
         name={routeKeys.dashboardScreen}
         component={DashboardScreen}
-        options={{header: (props) => <DashboardAppBar {...props} />}}
+        options={{header: (props) => <MainAppBar {...props} />}}
       />
       <DashboardStack.Screen name={routeKeys.motionDetailScreen} component={MotionDetailScreen} />
       <DashboardStack.Screen name={routeKeys.tipDetailScreen} component={TipDetailScreen} />
@@ -269,8 +269,8 @@ function ApiLoadingNavigator() {
     <ApiLoadingStack.Navigator
       screenOptions={{
         gestureEnabled: false,
-        headerShown: false,
         presentation: 'transparentModal',
+        header: (props) => <MainAppBar {...props} />,
       }}>
       <ApiLoadingStack.Screen name={routeKeys.apiLoadingScreen} component={ApiLoadingScreen} />
       <ApiLoadingStack.Screen name={routeKeys.networkSelectionScreen} component={NetworkSelectionScreen} />

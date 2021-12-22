@@ -8,14 +8,12 @@ import {SelectAccount} from '@ui/components/SelectAccount';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {useApiTx} from 'src/api/hooks/useApiTx';
-import {useAccounts} from 'context/AccountsContext';
 import {Padder} from '@ui/components/Padder';
 
 export function ProposeTipScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const startTx = useApiTx();
   const queryClient = useQueryClient();
-  const {networkAccounts} = useAccounts();
 
   const valid = state.account && state.beneficiary && state.reason && state.reason.length > 4;
 
@@ -30,11 +28,7 @@ export function ProposeTipScreen({navigation}: {navigation: NavigationProp<Dashb
                 <Text>Sending from</Text>
               </View>
             )}>
-            <SelectAccount
-              accounts={networkAccounts}
-              onSelect={(payload) => dispatch({type: 'SET_ACCOUNT', payload})}
-              selected={state.account}
-            />
+            <SelectAccount onSelect={(account) => dispatch({type: 'SET_ACCOUNT', payload: account.address})} />
           </Card>
 
           <Padder scale={1.5} />

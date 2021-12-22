@@ -3,7 +3,6 @@ import {ScrollView, TouchableOpacity, SectionList, StyleSheet, View, useWindowDi
 import Identicon from '@polkadot/reactnative-identicon';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {useNavigation} from '@react-navigation/native';
-import {useAccounts} from 'context/AccountsContext';
 import {useApi} from 'context/ChainApiContext';
 import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
@@ -15,8 +14,7 @@ import {useCouncilSummary} from 'src/api/hooks/useCouncilSummary';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import {candidateScreen} from '@ui/navigation/routeKeys';
-import {Input, Text} from '@ui-kitten/components';
-import {List, Button, Divider, Modal, Card, useTheme} from '@ui/library';
+import {List, Button, Divider, Modal, useTheme, Caption, Subheading, TextInput, Text} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
 import {MotionsScreen} from './MotionsScreen';
@@ -167,7 +165,7 @@ function Item({
         votes
           ? () => (
               <View style={globalStyles.justifyCenter}>
-                <Text category="p2">{votes} votes</Text>
+                <Caption>{votes} votes</Caption>
               </View>
             )
           : undefined
@@ -200,7 +198,6 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
 
   const {api} = useApi();
   const startTx = useApiTx();
-  const {networkAccounts} = useAccounts();
   const formatBalance = useFormatBalance();
 
   const onCandidateSelect = (accountId: string, isSelected: boolean) => {
@@ -240,66 +237,61 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
 
   return (
     <Modal visible={visible} onDismiss={reset}>
-      <Card style={styles.modalCard}>
-        <View style={styles.centerAlign}>
-          <Text category="s1">Vote for council</Text>
+      <View style={styles.centerAlign}>
+        <Subheading>{`Vote for council`}</Subheading>
+      </View>
+      <Padder scale={1} />
+
+      <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.address)} />
+      <Padder scale={1} />
+
+      <TextInput
+        dense
+        autoComplete="off"
+        mode="outlined"
+        placeholder="Vote value"
+        keyboardType="decimal-pad"
+        value={amount}
+        onChangeText={(nextValue) => setAmount(nextValue.replace(/[^(\d+).(\d+)]/g, ''))}
+      />
+
+      <Subheading style={{marginLeft: standardPadding}}>
+        {api ? formatBalance(getBalanceFromString(api, amount)) : ''}
+      </Subheading>
+
+      <Padder scale={1} />
+      <Caption>{`Select up to ${MAX_VOTES} candidates in the preferred order:`}</Caption>
+
+      <View style={styles.candidatesContainer}>
+        <View style={styles.candidates}>
+          <ScrollView contentContainerStyle={styles.scrollView}>
+            {candidates.map((candidate) => (
+              <MemberItem
+                key={candidate}
+                accountId={candidate}
+                onSelect={onCandidateSelect}
+                isSelected={selectedCandidates.includes(candidate)}
+                order={selectedCandidates.indexOf(candidate) + 1}
+              />
+            ))}
+          </ScrollView>
         </View>
-        <Padder scale={1} />
 
-        <Text>Vote with:</Text>
-        <Padder scale={0.5} />
-        <SelectAccount accounts={networkAccounts} selected={account} onSelect={setAccount} />
-        <Padder scale={0.5} />
-
-        <Text>Vote value:</Text>
-        <Padder scale={0.5} />
-        <Input
-          placeholder="Place your Text"
-          keyboardType="decimal-pad"
-          value={amount}
-          onFocus={() => setAmount('')}
-          onChangeText={(nextValue) => setAmount(nextValue.replace(/[^(\d+).(\d+)]/g, ''))}
-        />
-
-        <Text category="s1">{api ? formatBalance(getBalanceFromString(api, amount)) : ''}</Text>
-
-        <Padder scale={1} />
-
-        <View style={styles.centerAlign}>
-          <Text category="c1">{`Select up to ${MAX_VOTES} candidates in the preferred order:`}</Text>
+        <View style={styles.votingBond}>
+          <Caption>{`Voting bond`}</Caption>
+          {bondValue && <Text style={styles.bondValue}>{`${formatBalance(bondValue)}`}</Text>}
         </View>
+      </View>
+      <Padder scale={1} />
 
-        <View style={styles.candidatesContainer}>
-          <View style={styles.candidates}>
-            <ScrollView contentContainerStyle={styles.scrollView}>
-              {candidates.map((candidate) => (
-                <MemberItem
-                  key={candidate}
-                  accountId={candidate}
-                  onSelect={onCandidateSelect}
-                  isSelected={selectedCandidates.includes(candidate)}
-                  order={selectedCandidates.indexOf(candidate) + 1}
-                />
-              ))}
-            </ScrollView>
-          </View>
-
-          <View style={styles.votingBond}>
-            <Text category="c1">{`Voting bond`}</Text>
-            {bondValue && <Text style={styles.bondValue} category="c2">{`${formatBalance(bondValue)}`}</Text>}
-          </View>
-        </View>
-        <Padder scale={1} />
-
-        <View style={styles.buttons}>
-          <Button onPress={reset} mode="outlined" compact>
-            Cancel
-          </Button>
-          <Button mode="contained" disabled={disabled} onPress={onVote}>
-            Vote
-          </Button>
-        </View>
-      </Card>
+      <View style={styles.buttons}>
+        <Button onPress={reset} mode="outlined" compact>
+          Cancel
+        </Button>
+        <Button mode="contained" disabled={disabled} onPress={onVote}>
+          Vote
+        </Button>
+      </View>
     </Modal>
   );
 }
@@ -325,17 +317,17 @@ function MemberItem({accountId, onSelect, isSelected, order}: MemberItemProps) {
           styles.candidateItemContainer,
           // eslint-disable-next-line react-native/no-inline-styles
           {
-            backgroundColor: isSelected ? colors.background : 'transparent',
+            backgroundColor: isSelected ? colors.accent : 'transparent',
           },
         ]}>
         <View style={styles.candidateIdentity}>
           <Identicon value={accountId} size={20} />
           <Padder scale={0.3} />
-          <Text category="c1" style={styles.candidateName} ellipsizeMode="middle" numberOfLines={1}>
+          <Caption style={styles.candidateName} ellipsizeMode="middle" numberOfLines={1}>
             {identityInfo.display}
-          </Text>
+          </Caption>
         </View>
-        <View style={styles.badge}>{order > 0 && <Badge color={colors.success} text={String(order)} />}</View>
+        <View style={styles.badge}>{order > 0 && <Badge color={colors.onSurface} text={String(order)} />}</View>
       </View>
     </TouchableOpacity>
   );
@@ -354,7 +346,6 @@ const styles = StyleSheet.create({
     paddingVertical: standardPadding,
     paddingHorizontal: standardPadding * 2,
   },
-  modalCard: {paddingHorizontal: standardPadding * 2, paddingVertical: standardPadding},
   centerAlign: {alignItems: 'center'},
   candidatesContainer: {flexDirection: 'row', height: 200},
   candidates: {flex: 3, paddingVertical: standardPadding},
@@ -369,7 +360,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginVertical: 3,
     padding: 2,
-    paddingRight: 4,
+    paddingHorizontal: 4,
   },
   candidateIdentity: {flex: 3, flexDirection: 'row', alignItems: 'center'},
   candidateName: {fontFamily: monofontFamily, fontWeight: 'bold', flexShrink: 1},

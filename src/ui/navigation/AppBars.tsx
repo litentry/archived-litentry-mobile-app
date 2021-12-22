@@ -1,14 +1,15 @@
 import React, {useContext} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {ParamListBase, Route} from '@react-navigation/core';
+import {ParamListBase, Route, RouteProp} from '@react-navigation/core';
 import {DrawerNavigationOptions, DrawerNavigationProp} from '@react-navigation/drawer';
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack';
 import {useApi} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
 import NetworkItem from '@ui/components/NetworkItem';
-import {networkSelectionScreen} from '@ui/navigation/routeKeys';
+import {dashboardScreen, networkSelectionScreen} from '@ui/navigation/routeKeys';
 import {AppBar, AppHeader, Title, useTheme} from '@ui/library';
 import {standardPadding} from '@ui/styles';
+import {noop} from 'lodash';
 
 export function MainDrawerAppBar({
   navigation,
@@ -71,7 +72,15 @@ function navigationSupportsDrawer(navigation: unknown): navigation is DrawerNavi
   throw new Error('Navigation is not of expected type');
 }
 
-export function DashboardAppBar({navigation}: {navigation: StackNavigationProp<ParamListBase>}) {
+export function MainAppBar({
+  navigation,
+  route,
+}: {
+  navigation: StackNavigationProp<ParamListBase>;
+  route: RouteProp<ParamListBase>;
+}) {
+  const showMenu = route.name === dashboardScreen;
+
   const {currentNetwork} = useContext(NetworkContext);
   const {status} = useApi();
   const {colors} = useTheme();
@@ -84,7 +93,11 @@ export function DashboardAppBar({navigation}: {navigation: StackNavigationProp<P
 
   return (
     <AppHeader style={{backgroundColor: colors.primary}}>
-      <AppBar.Action onPress={onActionLeftPress} icon={'menu'} color={'white'} />
+      <AppBar.Action
+        onPress={showMenu ? onActionLeftPress : noop}
+        icon={'menu'}
+        color={showMenu ? 'white' : 'transparent'}
+      />
       <AppBar.Content
         style={styles.contentContainer}
         title={

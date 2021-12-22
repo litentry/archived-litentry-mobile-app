@@ -16,12 +16,10 @@ import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {referendumScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {useAccounts} from 'context/AccountsContext';
-import {Button, Caption, Card, Headline, Icon, List, Modal, Text} from '@ui/library';
+import {Button, Caption, Headline, Icon, List, Modal, Text} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 
 export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
-  const {networkAccounts} = useAccounts();
   const startTx = useApiTx();
   const {api} = useApi();
 
@@ -138,10 +136,8 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
           <Text>Vote with account</Text>
           <Padder scale={0.5} />
           <SelectAccount
-            accounts={networkAccounts}
-            selected={state.account}
             onSelect={(account) => {
-              dispatch({type: 'SELECT_ACCOUNT', payload: account});
+              dispatch({type: 'SELECT_ACCOUNT', payload: account.address});
             }}
           />
           <Padder scale={1.5} />
