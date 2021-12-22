@@ -49,12 +49,19 @@ export function MainStackAppBar({
     }
   };
 
+  const goBack = () => {
+    const navIndex = navigation.getState().index;
+    if (navIndex > 0) {
+      navigation.goBack();
+    }
+  };
+
   return (
     <AppHeader style={{backgroundColor: colors.background}}>
       {options.headerLeft ? (
         options.headerLeft({onPress: openDrawer})
       ) : back ? (
-        <AppBar.BackAction onPress={navigation.goBack} />
+        <AppBar.BackAction onPress={goBack} />
       ) : (
         <AppBar.Action onPress={openDrawer} icon={'menu'} />
       )}

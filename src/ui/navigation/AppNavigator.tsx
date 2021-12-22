@@ -73,7 +73,13 @@ function DashboardStackNavigator() {
   useFirebase();
 
   return (
-    <DashboardStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
+    <DashboardStack.Navigator
+      screenOptions={{
+        header: (props) => {
+          // console.log(props)
+          return <MainStackAppBar {...props} />;
+        },
+      }}>
       <DashboardStack.Screen
         name={routeKeys.dashboardScreen}
         component={DashboardScreen}
