@@ -21,7 +21,7 @@ type Props = {
 export function BountySummaryTeaser(props: Props) {
   const formatBalance = useFormatBalance();
   const bestNumber = useBestNumber();
-  const {data, isLoading} = useBountiesSummary();
+  const {data, isLoading, isIdle} = useBountiesSummary();
 
   const spendPeriod = data?.treasurySpendPeriod;
   const progress = spendPeriod && bestNumber ? bestNumber.mod(spendPeriod).iadd(BN_ONE) : BN_ZERO;
@@ -39,7 +39,7 @@ export function BountySummaryTeaser(props: Props) {
 
   return (
     <SectionTeaserContainer onPress={props.onPress} title="Bounties">
-      {isLoading ? (
+      {isLoading || isIdle ? (
         <LoadingBox />
       ) : (
         <View style={styles.boxRow}>

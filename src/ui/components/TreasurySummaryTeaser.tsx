@@ -19,7 +19,7 @@ type PropTypes = {
 
 export function TreasurySummaryTeaser(props: PropTypes) {
   const bestNumber = useBestNumber();
-  const {data: treasurySummary, isLoading} = useTreasurySummary();
+  const {data: treasurySummary, isLoading, isIdle} = useTreasurySummary();
   const total = treasurySummary?.spendPeriod || BN_ONE;
   const value = bestNumber?.mod(treasurySummary?.spendPeriod?.toBn() ?? BN_ONE);
   const angle = total.gtn(0)
@@ -36,7 +36,7 @@ export function TreasurySummaryTeaser(props: PropTypes) {
 
   return (
     <SectionTeaserContainer onPress={props.onPress} title="Treasury">
-      {isLoading ? (
+      {isLoading || isIdle ? (
         <LoadingBox />
       ) : treasurySummary ? (
         <>
