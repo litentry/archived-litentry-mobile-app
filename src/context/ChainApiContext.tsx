@@ -30,6 +30,13 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
     select({...currentNetwork});
   }, [currentNetwork, select]);
 
+  // automatic api reconnect
+  useEffect(() => {
+    if (state.status === 'disconnected') {
+      reconnect();
+    }
+  }, [state.status, reconnect]);
+
   useEffect(() => {
     if (!wsAddress) {
       return;
@@ -111,18 +118,18 @@ type ChainApiContext = {
   reconnect: () => void;
 };
 
-export function useApiReconnect() {
-  const context = useContext(ChainApiContext);
+// export function useApiReconnect() {
+//   const context = useContext(ChainApiContext);
 
-  if (!context) {
-    throw new Error('useApiReconnect must be used within a ChainApiContextProvider');
-  }
+//   if (!context) {
+//     throw new Error('useApiReconnect must be used within a ChainApiContextProvider');
+//   }
 
-  return {
-    canReconnect: context.status !== 'ready' && !context.inProgress,
-    reconnect: context.reconnect,
-  };
-}
+//   return {
+//     canReconnect: context.status !== 'ready' && !context.inProgress,
+//     reconnect: context.reconnect,
+//   };
+// }
 
 type Action =
   | {type: 'ON_CONNECT'}
