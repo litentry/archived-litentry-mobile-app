@@ -1,5 +1,7 @@
 import {ApiPromise} from '@polkadot/api';
-import {BountyStatus, BountyIndex, Bounty, AccountId, BlockNumber} from '@polkadot/types/interfaces';
+import {BountyIndex, AccountId} from '@polkadot/types/interfaces';
+import type {PalletBountiesBountyStatus, PalletBountiesBounty} from '@polkadot/types/lookup';
+import type {u32} from '@polkadot/types';
 import {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
 
 import useApiQuery from 'src/api/hooks/useApiQuery';
@@ -10,13 +12,13 @@ export interface BountyStatusInfo {
   beneficiary: AccountId | undefined;
   status: StatusName;
   curator: AccountId | undefined;
-  unlockAt: BlockNumber | undefined;
-  updateDue: BlockNumber | undefined;
+  unlockAt: u32 | undefined;
+  updateDue: u32 | undefined;
 }
 
 export type BountyData = {
   index: BountyIndex;
-  bounty: Bounty;
+  bounty: PalletBountiesBounty;
   bountyStatus: BountyStatusInfo;
   description: string;
   proposals?: DeriveCollectiveProposal[];
@@ -40,7 +42,7 @@ export function useBounties() {
   });
 }
 
-const getBountyStatus = (status: BountyStatus): BountyStatusInfo => {
+const getBountyStatus = (status: PalletBountiesBountyStatus): BountyStatusInfo => {
   const statusAsString = status.type as StatusName;
 
   let result: BountyStatusInfo = {
@@ -63,7 +65,7 @@ const getBountyStatus = (status: BountyStatus): BountyStatusInfo => {
     result = {
       ...result,
       curator: status.asActive.curator,
-      updateDue: status.asActive.updateDue,
+      updateDue: status.asActive.updateDue as unknown as u32,
     };
   }
 
@@ -73,7 +75,7 @@ const getBountyStatus = (status: BountyStatus): BountyStatusInfo => {
       beneficiary: status.asPendingPayout.beneficiary,
       status: 'PendingPayout',
       curator: status.asPendingPayout.curator,
-      unlockAt: status.asPendingPayout.unlockAt,
+      unlockAt: status.asPendingPayout.unlockAt as unknown as u32,
     };
   }
 
