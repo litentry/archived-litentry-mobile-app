@@ -1,12 +1,13 @@
 import {ApiPromise} from '@polkadot/api';
 import {Option} from '@polkadot/types';
+import {PalletIdentityIdentityInfo, PalletIdentityRegistration} from '@polkadot/types/lookup';
 import {AccountId, Registration} from '@polkadot/types/interfaces';
 import {IdentityInfo} from '@polkadot/types/interfaces/identity/types';
 
 type AccountIdentityInfo = {
   accountId: AccountId | Uint8Array | string;
-  info?: IdentityInfo;
-  registration?: Registration;
+  info?: PalletIdentityIdentityInfo | IdentityInfo;
+  registration?: PalletIdentityRegistration | Registration;
 };
 
 export async function getAccountsIdentityInfo(api: ApiPromise, accountIds: AccountId[] | string[] | Uint8Array[]) {

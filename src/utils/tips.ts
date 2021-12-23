@@ -1,14 +1,15 @@
-import {OpenTip, OpenTipTo225, AccountId, Balance} from '@polkadot/types/interfaces';
+import {OpenTipTo225, AccountId} from '@polkadot/types/interfaces';
+import type {PalletTipsOpenTip} from '@polkadot/types/lookup';
 import {BN_ZERO} from '@polkadot/util';
 
-function isCurrentTip(tip: OpenTip | OpenTipTo225): tip is OpenTip {
-  return !!(tip as OpenTip)?.findersFee;
+function isCurrentTip(tip: PalletTipsOpenTip | OpenTipTo225): tip is PalletTipsOpenTip {
+  return !!(tip as PalletTipsOpenTip)?.findersFee;
 }
 
-export function extractTipState(tip: OpenTip | OpenTipTo225, allAccounts: string[]) {
+export function extractTipState(tip: PalletTipsOpenTip | OpenTipTo225, allAccounts: string[]) {
   const closesAt = tip.closes?.unwrapOr(null);
   let finder: AccountId | null = null;
-  let deposit: Balance | null = null;
+  let deposit = null;
 
   if (isCurrentTip(tip)) {
     finder = tip.finder;

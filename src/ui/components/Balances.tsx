@@ -2,10 +2,10 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {Layout, ListItem, Text} from '@ui-kitten/components';
 import {monofontFamily} from '@ui/styles';
-import {AccountInfo} from '@polkadot/types/interfaces';
+import type {FrameSystemAccountInfo} from '@polkadot/types/lookup';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 
-type PropTypes = {balance?: AccountInfo};
+type PropTypes = {balance?: FrameSystemAccountInfo};
 
 function Balances(props: PropTypes) {
   const formatBalance = useFormatBalance();

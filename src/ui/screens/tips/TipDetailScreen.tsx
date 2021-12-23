@@ -1,7 +1,8 @@
 import React, {useContext, useMemo} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
-import {BlockNumber, OpenTip} from '@polkadot/types/interfaces';
+import {BlockNumber} from '@polkadot/types/interfaces';
+import type {PalletTipsOpenTip} from '@polkadot/types/lookup';
 import {formatNumber} from '@polkadot/util';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -29,7 +30,7 @@ type ScreenProps = {
 };
 
 type TipDetailContentProps = {
-  tip: OpenTip;
+  tip: PalletTipsOpenTip;
   bestNumber: BlockNumber | undefined;
 };
 
