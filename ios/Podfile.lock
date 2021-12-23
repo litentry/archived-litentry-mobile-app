@@ -70,7 +70,7 @@ PODS:
     - nanopb/encode (= 2.30908.0)
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
-  - Permission-Camera (3.0.5):
+  - Permission-Camera (3.2.0):
     - RNPermissions
   - PromisesObjC (2.0.0)
   - RCT-Folly (2021.06.28.00-v2):
@@ -388,7 +388,7 @@ PODS:
     - React-Core
   - RNKeychain (8.0.0):
     - React-Core
-  - RNPermissions (3.0.5):
+  - RNPermissions (3.2.0):
     - React-Core
   - RNReactNativeHapticFeedback (1.13.0):
     - React-Core
@@ -661,7 +661,7 @@ SPEC CHECKSUMS:
   MMKV: 76033b9ace2006623308910a3afcc0e25eba3140
   MMKVCore: b00e7a09ec77a1b916aef336eedd3b99ec249978
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
-  Permission-Camera: ac603073e4128e51e6ca3c39129778f05b4082fa
+  Permission-Camera: 53efcbb755b0e8bdf253dbb27cc7559ccfce8480
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   RCT-Folly: a21c126816d8025b547704b777a2ba552f3d9fa9
   RCTRequired: 4bf86c70714490bca4bf2696148638284622644b
@@ -708,7 +708,7 @@ SPEC CHECKSUMS:
   RNFS: 3ab21fa6c56d65566d1fb26c2228e2b6132e5e32
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNKeychain: 4f63aada75ebafd26f4bc2c670199461eab85d94
-  RNPermissions: 7043bacbf928eae25808275cfe73799b8f618911
+  RNPermissions: f7ebe52db07c00901127966ca080b4ec6a6ceb0a
   RNReactNativeHapticFeedback: b83bfb4b537bdd78eb4f6ffe63c6884f7b049ead
   RNReanimated: 65583befd5706cc9c86ae9a081786181ced37b93
   RNScreens: 522705f2e5c9d27efb17f24aceb2bf8335bc7b8e
