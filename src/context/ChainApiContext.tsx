@@ -116,19 +116,6 @@ type ChainApiContext = {
   reconnect: () => void;
 };
 
-// export function useApiReconnect() {
-//   const context = useContext(ChainApiContext);
-
-//   if (!context) {
-//     throw new Error('useApiReconnect must be used within a ChainApiContextProvider');
-//   }
-
-//   return {
-//     canReconnect: context.status !== 'ready' && !context.inProgress,
-//     reconnect: context.reconnect,
-//   };
-// }
-
 type Action =
   | {type: 'ON_CONNECT'}
   | {type: 'CONNECT'}
