@@ -1,9 +1,8 @@
 import React, {useRef} from 'react';
 import {StyleSheet, View, Animated} from 'react-native';
-import {useTheme} from '@ui-kitten/components';
+import {useTheme} from '@ui/library';
 
 export function LoadingBox() {
-  const theme = useTheme();
   const fadeAnim = useRef(new Animated.Value(0.2)).current;
 
   React.useEffect(() => {
@@ -16,15 +15,7 @@ export function LoadingBox() {
   }, [fadeAnim]);
 
   return (
-    <Animated.View
-      style={[
-        styles.container,
-        {
-          opacity: fadeAnim,
-          borderColor: theme['border-basic-color-2'],
-          backgroundColor: theme['background-basic-color-2'],
-        },
-      ]}>
+    <Animated.View style={[styles.container, {opacity: fadeAnim}]}>
       <LoadingItem width={50} />
       <LoadingItem width={70} />
       <LoadingItem width={60} />
@@ -34,19 +25,14 @@ export function LoadingBox() {
 }
 
 export function LoadingItem({width = 70}: {width?: number}) {
-  const theme = useTheme();
-  const textBackground = theme['text-basic-color'];
-
-  return <View style={[styles.loadingItem, {backgroundColor: textBackground, width: `${width}%`}]} />;
+  const {colors} = useTheme();
+  return <View style={[styles.loadingItem, {backgroundColor: colors.onSurface, width: `${width}%`}]} />;
 }
 
 const styles = StyleSheet.create({
   container: {
     minHeight: 100,
     opacity: 0.3,
-    borderRadius: 5,
-    borderColor: '#ccc',
-    borderWidth: 1,
     paddingHorizontal: 10,
     paddingVertical: 5,
   },
