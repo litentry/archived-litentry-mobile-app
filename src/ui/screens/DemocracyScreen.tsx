@@ -10,7 +10,7 @@ import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
 import {ProposalInfo} from '@ui/components/ProposalInfo';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {SubmitProposalButton} from '@ui/components/SubmitProposalButton';
+import {SubmitProposal} from '@ui/components/SubmitProposal';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import {useDemocracy} from 'src/api/hooks/useDemocracy';
@@ -61,7 +61,7 @@ export function DemocracyScreen() {
             ListEmptyComponent={EmptyView}
             ListFooterComponent={() => (
               <View style={styles.footer}>
-                <SubmitProposalButton />
+                <SubmitProposal />
               </View>
             )}
           />

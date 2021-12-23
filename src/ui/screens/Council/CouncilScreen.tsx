@@ -255,9 +255,7 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
         onChangeText={(nextValue) => setAmount(nextValue.replace(/[^(\d+).(\d+)]/g, ''))}
       />
 
-      <Subheading style={{marginLeft: standardPadding}}>
-        {api ? formatBalance(getBalanceFromString(api, amount)) : ''}
-      </Subheading>
+      <Subheading style={styles.voteValue}>{api ? formatBalance(getBalanceFromString(api, amount)) : ''}</Subheading>
 
       <Padder scale={1} />
       <Caption>{`Select up to ${MAX_VOTES} candidates in the preferred order:`}</Caption>
@@ -371,4 +369,5 @@ const styles = StyleSheet.create({
     right: 24,
     bottom: 32,
   },
+  voteValue: {marginLeft: standardPadding},
 });
