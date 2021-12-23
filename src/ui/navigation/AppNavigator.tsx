@@ -1,14 +1,11 @@
 import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createStackNavigator, StackNavigationOptions} from '@react-navigation/stack';
-import {ChainApiContext} from 'context/ChainApiContext';
 import {AccountsScreen} from '@ui/screens/AccountsScreen';
 import {AddAccountScreen} from '@ui/screens/AddAccountScreen/AddAccountScreen';
-import {ApiLoadingScreen} from '@ui/screens/ApiLoadingScreen';
 import {BalanceScreen} from '@ui/screens/BalanceScreen';
 import {BountiesScreen} from '@ui/screens/Bounty/BountiesScreen';
 import {BountyDetailScreen} from '@ui/screens/Bounty/BountyDetailScreen';
-import {ConnectionRetryScreen} from '@ui/screens/ConnectionRetryScreen';
 import {CandidateScreen} from '@ui/screens/Council/CandidateScreen';
 import {CouncilScreen} from '@ui/screens/Council/CouncilScreen';
 import {MotionsScreen} from '@ui/screens/Council/MotionsScreen';
@@ -45,20 +42,17 @@ import {RegisterSubIdentitiesScreen} from '@ui/screens/subIdentities/RegisterSub
 import TipDetailScreen from '@ui/screens/tips/TipDetailScreen';
 import {TreasuryScreen} from '@ui/screens/TreasuryScreen';
 import WebviewScreen from '@ui/screens/WebviewScreen';
-import {useAppBackgroundApiReconnect} from '@hooks/useAppBackgroundApiReconnect';
 import {useFirebase} from '@hooks/useFirebase';
-import {usePushAuthorizationStatus} from '@hooks/usePushNotificationsPermissions';
 import {useTurnOnAllNotificationsOnAppStartForAndroid} from '@hooks/useTurnOnAllNotificationsOnAppStartForAndroid';
+import {usePushAuthorizationStatus} from '@hooks/usePushNotificationsPermissions';
 import {MainAppBar, MainDrawerAppBar, MainStackAppBar} from '@ui/navigation/AppBars';
 import {
   AccountsStackParamList,
-  ApiLoadingStackParamList,
   AppStackParamList,
   DashboardStackParamList,
   DrawerParamList,
   ParachainsStackParamList,
   PolkassemblyDiscussionStackParamList,
-  RootStackParamList,
 } from '@ui/navigation/navigation';
 import * as routeKeys from '@ui/navigation/routeKeys';
 import {AppBar, IconButton} from '@ui/library';
@@ -262,26 +256,10 @@ function ParachainsNavigator() {
   );
 }
 
-const ApiLoadingStack = createStackNavigator<ApiLoadingStackParamList>();
-
-function ApiLoadingNavigator() {
-  return (
-    <ApiLoadingStack.Navigator
-      screenOptions={{
-        gestureEnabled: false,
-        presentation: 'transparentModal',
-        header: (props) => <MainAppBar {...props} />,
-      }}>
-      <ApiLoadingStack.Screen name={routeKeys.apiLoadingScreen} component={ApiLoadingScreen} />
-      <ApiLoadingStack.Screen name={routeKeys.networkSelectionScreen} component={NetworkSelectionScreen} />
-      <ApiLoadingStack.Screen name={routeKeys.connectionRetryScreen} component={ConnectionRetryScreen} />
-    </ApiLoadingStack.Navigator>
-  );
-}
-
 const AppStack = createStackNavigator<AppStackParamList>();
 
 function AppNavigator() {
+  useTurnOnAllNotificationsOnAppStartForAndroid();
   const {isPnPromptNeeded, skipPnPermission, isLoading} = usePushAuthorizationStatus();
 
   // We need this here, because otherwise PermissionGrantingPrompt
@@ -298,27 +276,13 @@ function AppNavigator() {
           {() => <PermissionGrantingPrompt skipPnPermission={skipPnPermission} />}
         </AppStack.Screen>
       ) : undefined}
-      <AppStack.Screen name={routeKeys.drawerNavigatorScreen} component={DrawerNavigator} />
+      <AppStack.Screen name={routeKeys.drawerNavigator} component={DrawerNavigator} />
+      <AppStack.Screen name={routeKeys.networkSelectionScreen} component={NetworkSelectionScreen} />
     </AppStack.Navigator>
   );
 }
 
-const RootStack = createStackNavigator<RootStackParamList>();
-
-function RootNavigator() {
-  useAppBackgroundApiReconnect();
-  useTurnOnAllNotificationsOnAppStartForAndroid();
-  const {status} = React.useContext(ChainApiContext);
-
-  return (
-    <RootStack.Navigator screenOptions={overlayScreenOptions}>
-      {status === 'ready' ? <RootStack.Screen name={routeKeys.appStack} component={AppNavigator} /> : undefined}
-      <RootStack.Screen name={routeKeys.apiLoadingStack} component={ApiLoadingNavigator} />
-    </RootStack.Navigator>
-  );
-}
-
-export default RootNavigator;
+export default AppNavigator;
 
 const overlayScreenOptions: StackNavigationOptions = {
   presentation: 'transparentModal',

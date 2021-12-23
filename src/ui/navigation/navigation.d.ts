@@ -8,7 +8,7 @@ import {
   dashboardNavigator,
   dashboardScreen,
   devScreen,
-  drawerNavigatorScreen,
+  drawerNavigator,
   motionDetailScreen,
   motionsScreen,
   manageIdentityScreen,
@@ -45,11 +45,7 @@ import {
   importAccountScreen,
   importAccountWithJsonFileScreen,
   exportAccountWithJsonFileScreen,
-  apiLoadingScreen,
   networkSelectionScreen,
-  connectionRetryScreen,
-  appStack,
-  apiLoadingStack,
   parachainAuctionsScreen,
   accountsGuideScreen,
   receiveFundScreen,
@@ -110,7 +106,8 @@ type PolkassemblyDiscussionStackParamList = {
 
 type AppStackParamList = {
   [permissionGrantingPromptScreen]: undefined;
-  [drawerNavigatorScreen]: undefined;
+  [drawerNavigator]: undefined;
+  [networkSelectionScreen]: undefined;
 };
 
 type AccountsStackParamList = {
@@ -132,22 +129,11 @@ type AccountsStackParamList = {
   [accountsGuideScreen]: undefined;
 };
 
-type ApiLoadingStackParamList = {
-  [apiLoadingScreen]: undefined;
-  [networkSelectionScreen]: undefined;
-  [connectionRetryScreen]: undefined;
-};
-
-type RootStackParamList = {
-  [appStack]: undefined;
-  [apiLoadingStack]: undefined;
-};
-
 type CompleteNavigatorParamList = AppStackParamList &
   DrawerParamList &
-  RootParamList &
   DashboardStackParamList &
   AccountsStackParamList &
+  ParachainsStackParamList &
   PolkassemblyDiscussionStackParamList;
 
 declare global {

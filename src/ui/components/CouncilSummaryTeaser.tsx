@@ -16,13 +16,13 @@ type PropTypes = {
 };
 
 export function CouncilSummaryTeaser(props: PropTypes) {
-  const {data: summary, isLoading} = useCouncilSummary();
+  const {data: summary, isLoading, isIdle} = useCouncilSummary();
   const {timeStringParts} = useBlockTime(summary?.termProgress.termDuration);
   const {timeStringParts: termLeft} = useBlockTime(summary?.termProgress.termLeft);
 
   return (
     <SectionTeaserContainer onPress={props.onPress} title="Council">
-      {isLoading ? (
+      {isLoading || isIdle ? (
         <LoadingBox />
       ) : summary ? (
         <View style={styles.container}>
