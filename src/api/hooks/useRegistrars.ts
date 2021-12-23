@@ -1,8 +1,8 @@
-import {RegistrarInfo} from '@polkadot/types/interfaces';
+import type {PalletIdentityRegistrarInfo} from '@polkadot/types/lookup';
 import {BN_ZERO} from '@polkadot/util';
 import useApiQuery from 'src/api/hooks/useApiQuery';
 
-interface RegistrarInfoWithIndex extends RegistrarInfo {
+interface RegistrarInfoWithIndex extends PalletIdentityRegistrarInfo {
   index: number;
 }
 

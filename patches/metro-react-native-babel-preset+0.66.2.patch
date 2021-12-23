@@ -1,0 +1,21 @@
+diff --git a/node_modules/metro-react-native-babel-preset/src/configs/main.js b/node_modules/metro-react-native-babel-preset/src/configs/main.js
+index caa45fe..481655a 100644
+--- a/node_modules/metro-react-native-babel-preset/src/configs/main.js
++++ b/node_modules/metro-react-native-babel-preset/src/configs/main.js
+@@ -124,11 +124,11 @@ const getPreset = (src, options) => {
+     extraPlugins.push([require("@babel/plugin-transform-async-to-generator")]);
+   }
+ 
+-  if (!isHermes && (isNull || src.indexOf("**") !== -1)) {
+-    extraPlugins.push([
+-      require("@babel/plugin-transform-exponentiation-operator")
+-    ]);
+-  }
++  // if (!isHermes && (isNull || src.indexOf("**") !== -1)) {
++  //   extraPlugins.push([
++  //     require("@babel/plugin-transform-exponentiation-operator")
++  //   ]);
++  // }
+ 
+   if (!isHermes && (isNull || src.indexOf("Object.assign")) !== -1) {
+     extraPlugins.push([require("@babel/plugin-transform-object-assign")]);

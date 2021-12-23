@@ -1,9 +1,9 @@
-import {Compact, getTypeDef} from '@polkadot/types';
-import {Call, ProposalIndex} from '@polkadot/types/interfaces';
-import {Codec, IExtrinsic, IMethod, TypeDef} from '@polkadot/types/types';
-import {ChainApiContext} from 'context/ChainApiContext';
 import {useContext} from 'react';
 import {useQuery} from 'react-query';
+import {Compact, getTypeDef, Option} from '@polkadot/types';
+import {Call, ProposalIndex, TreasuryProposal} from '@polkadot/types/interfaces';
+import {Codec, IExtrinsic, IMethod, TypeDef} from '@polkadot/types/types';
+import {ChainApiContext} from 'context/ChainApiContext';
 
 const METHOD_TREA = ['approveProposal', 'rejectProposal'];
 
@@ -20,7 +20,10 @@ export function useProposalCallParams(proposal: Call): Param[] {
   const proposalId = isTreasury ? (proposal.args[0] as Compact<ProposalIndex>).unwrap() : undefined;
   const {data: treasuryProposal} = useQuery(
     ['proposal', proposalId?.toString()],
-    () => (proposalId ? api?.query.treasury.proposals(proposalId).then((p) => p.unwrapOr(undefined)) : undefined),
+    () =>
+      proposalId
+        ? api?.query.treasury.proposals<Option<TreasuryProposal>>(proposalId).then((p) => p.unwrapOr(undefined))
+        : undefined,
     {
       enabled: !!proposalId,
     },
