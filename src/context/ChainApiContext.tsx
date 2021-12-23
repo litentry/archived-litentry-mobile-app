@@ -1,4 +1,5 @@
 import React, {createContext, useCallback, useContext, useEffect, useReducer} from 'react';
+import '@polkadot/api-augment';
 import {ApiPromise, WsProvider} from '@polkadot/api';
 import {createLogger} from 'src/utils/logger';
 import {NetworkContext} from './NetworkContext';
