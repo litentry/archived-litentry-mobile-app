@@ -18,6 +18,7 @@ import {
   crowdloanScreen,
   parachainsOverviewScreen,
   parachainAuctionsScreen,
+  feedbackScreen,
 } from '@ui/navigation/routeKeys';
 import {standardPadding} from '@ui/styles';
 import {appVersion} from 'src/service/Device';
@@ -155,6 +156,15 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
                 title: 'About Litentry',
                 uri: 'https://www.litentry.com',
               });
+            }}
+          />
+          <Drawer.Item
+            label="Feedback"
+            icon="comment-question-outline"
+            active={activeScreen === feedbackScreen}
+            onPress={() => {
+              setActiveScreen(feedbackScreen);
+              navigation.navigate(feedbackScreen);
             }}
           />
         </Drawer.Section>

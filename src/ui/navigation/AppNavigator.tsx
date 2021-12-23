@@ -65,6 +65,7 @@ import {AppBar, IconButton} from '@ui/library';
 import {AccountsGuideScreen} from '@ui/screens/AccountsGuideScreen';
 import {ReceiveFundScreen} from '@ui/screens/ReceiveFundScreen';
 import {SendFundScreen} from '@ui/screens/SendFundScreen';
+import {FeedbackScreen} from '@ui/screens/FeedbackScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -207,6 +208,7 @@ function DrawerNavigator() {
       />
       <Drawer.Screen name={routeKeys.devScreen} component={DevScreen} />
       <Drawer.Screen name={routeKeys.notificationSettingsScreen} component={NotificationSettingsScreen} />
+      <Drawer.Screen name={routeKeys.feedbackScreen} component={FeedbackScreen} />
     </Drawer.Navigator>
   );
 }

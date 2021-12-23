@@ -54,6 +54,7 @@ import {
   accountsGuideScreen,
   receiveFundScreen,
   sendFundScreen,
+  feedbackScreen,
 } from '@ui/navigation/routeKeys';
 
 type DashboardStackParamList = {
@@ -90,6 +91,7 @@ type DrawerParamList = {
   [polkassemblyDiscussionsNavigator]: undefined;
   [accountsNavigator]: undefined;
   [parachainsNavigator]: undefined;
+  [feedbackScreen]: undefined;
 };
 
 type ParachainsStackParamList = {
