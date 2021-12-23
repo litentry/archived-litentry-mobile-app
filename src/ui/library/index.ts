@@ -36,3 +36,4 @@ export {ProgressChart} from 'react-native-chart-kit';
 export {AppHeader} from './AppHeader';
 export {Modal} from './Modal';
 export {Card} from './Card';
+export {Select} from './Select';

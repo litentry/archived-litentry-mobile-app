@@ -1,20 +1,9 @@
 import React, {useReducer} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, ScrollView} from 'react-native';
 import {BN, BN_ONE} from '@polkadot/util';
 import {RouteProp} from '@react-navigation/native';
-import {
-  Button,
-  Card,
-  Divider,
-  Icon,
-  IndexPath,
-  Input,
-  Layout,
-  Modal,
-  Select,
-  SelectItem,
-  Text,
-} from '@ui-kitten/components';
+import {Button, Divider, Headline, Modal, Select, Subheading, Caption, TextInput} from '@ui/library';
+import {Layout} from '@ui/components/Layout';
 import {useApi} from 'context/ChainApiContext';
 import {ProgressBar} from '@ui/components/ProgressBar';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -22,7 +11,7 @@ import {SelectAccount} from '@ui/components/SelectAccount';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
-import {useConvictions} from 'src/api/hooks/useConvictions';
+import {useConvictions, Conviction} from 'src/api/hooks/useConvictions';
 import {useDemocracy} from 'src/api/hooks/useDemocracy';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {getBalanceFromString} from 'src/api/utils/balance';
@@ -50,8 +39,6 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
   const {timeStringParts: activateTime} = useBlockTime(enactBlock);
 
   const convictions = useConvictions();
-  const selectedConviction = state.conviction && convictions[state.conviction.row];
-  const convictionDisplayValue = selectedConviction?.text;
 
   const {meta, method, section} = proposal?.registry.findMetaCall(proposal.callIndex) ?? {};
 
@@ -64,171 +51,156 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
           .toNumber() / 100
       : 0;
 
+  const reset = () => {
+    dispatch({type: 'RESET'});
+  };
+
+  const voteNo = () => {
+    dispatch({type: 'CHANGE_VOTING', payload: 'NO'});
+  };
+
+  const voteYes = () => {
+    dispatch({type: 'CHANGE_VOTING', payload: 'YES'});
+  };
+
+  const vote = () => {
+    if (api && state.account && state.conviction && state.voteValue) {
+      const balance = getBalanceFromString(api, state.voteValue);
+      startTx({
+        address: state.account,
+        txMethod: 'democracy.vote',
+        params: [
+          referendum?.index,
+          {
+            Standard: {
+              balance,
+              vote: {aye: state.voting === 'YES' ? true : false, conviction: state.conviction.value},
+            },
+          },
+        ],
+      });
+      reset();
+    }
+  };
+
   return (
     <Layout style={globalStyles.flex}>
       <SafeView edges={noTopEdges}>
-        <View style={styles.container}>
-          <Text category={'h5'}>Proposal</Text>
+        <ScrollView contentContainerStyle={styles.container}>
+          <Headline>Proposal</Headline>
           <Padder scale={0.5} />
           <Divider />
-          <View style={styles.paddedBox}>
-            {proposal ? (
-              <>
-                <Text appearance={'hint'}>Proposal</Text>
-                <Text category={'c1'}>{`${section}.${method}`}</Text>
-                <Text category={'c1'}>{`${formatCallMeta(meta)}`}</Text>
-                <Padder scale={1.5} />
-                <Text appearance={'hint'}>Hash of the proposal</Text>
-                <Text category={'c1'} numberOfLines={1}>
-                  {String(proposal?.hash)}
-                </Text>
-              </>
-            ) : (
-              <>
-                <Text appearance={'hint'}>Preimage</Text>
-                <Text category={'c1'} numberOfLines={1} ellipsizeMode="middle">
-                  {String(referendum?.imageHash)}
-                </Text>
-              </>
-            )}
-            <Padder scale={1.5} />
+          {proposal ? (
+            <>
+              <Caption>{`${section}.${method}`}</Caption>
+              <Caption>{`${formatCallMeta(meta)}`}</Caption>
+              <Padder scale={1.5} />
+              <Subheading>Hash of the proposal</Subheading>
+              <Caption numberOfLines={1}>{String(proposal?.hash)}</Caption>
+            </>
+          ) : (
+            <>
+              <Subheading>Preimage</Subheading>
+              <Caption numberOfLines={1} ellipsizeMode="middle">
+                {String(referendum?.imageHash)}
+              </Caption>
+            </>
+          )}
 
-            <View style={styles.row}>
-              <View style={styles.center}>
-                <Text appearance={'hint'}>Time left to vote</Text>
-                <Text category={'c1'} adjustsFontSizeToFit={true} numberOfLines={1}>
-                  {remainingTime.slice(0, 2).join(' ')}
-                </Text>
-              </View>
-              <View style={styles.center}>
-                <Text appearance={'hint'}>Time left to activate</Text>
-                <Text category={'c1'} adjustsFontSizeToFit={true} numberOfLines={1}>
-                  {activateTime.slice(0, 2).join(' ')}
-                </Text>
-              </View>
+          <View style={styles.row}>
+            <View style={styles.center}>
+              <Caption>Time left to vote</Caption>
+              <Caption adjustsFontSizeToFit={true} numberOfLines={1}>
+                {remainingTime.slice(0, 2).join(' ')}
+              </Caption>
+            </View>
+            <View style={styles.center}>
+              <Caption>Time left to activate</Caption>
+              <Caption adjustsFontSizeToFit={true} numberOfLines={1}>
+                {activateTime.slice(0, 2).join(' ')}
+              </Caption>
             </View>
           </View>
+          <Padder scale={1} />
 
-          <Text category={'h6'}>Live Results</Text>
+          <Headline>Live Results</Headline>
           <Padder scale={0.5} />
           <Divider />
-          <View style={styles.paddedBox}>
-            <ProgressBar percentage={ayePercentage} requiredAmount={80} />
-            <View style={styles.row}>
-              <View style={styles.center}>
-                <Text category={'h6'} status={'success'}>
-                  YES
-                </Text>
-                <Text>{referendum ? formatBalance(referendum.votedAye) : undefined}</Text>
-                <Text>{`${referendum?.voteCountAye} participants`}</Text>
-              </View>
-              <View style={styles.center}>
-                <Text category={'h6'} status={'danger'}>
-                  NO
-                </Text>
-                <Text>{referendum ? formatBalance(referendum.votedNay) : undefined}</Text>
-                <Text>{`${referendum?.voteCountNay} participants`}</Text>
-              </View>
+          <Padder scale={0.5} />
+          <ProgressBar percentage={ayePercentage} requiredAmount={80} />
+          <View style={styles.row}>
+            <View style={styles.center}>
+              <Subheading>YES</Subheading>
+              <Caption>{referendum ? formatBalance(referendum.votedAye) : undefined}</Caption>
+              <Caption>{`${referendum?.voteCountAye} participants`}</Caption>
+            </View>
+            <View style={styles.center}>
+              <Subheading>NO</Subheading>
+              <Caption>{referendum ? formatBalance(referendum.votedNay) : undefined}</Caption>
+              <Caption>{`${referendum?.voteCountNay} participants`}</Caption>
             </View>
           </View>
+          <Padder scale={1} />
 
-          <Text category={'h6'}>Vote!</Text>
+          <Headline>Vote!</Headline>
           <Padder scale={0.5} />
           <Divider />
-          <View style={styles.paddedBox}>
-            <View style={styles.row}>
-              <Button
-                accessoryLeft={(p) => <Icon {...p} name={'alert-circle-outline'} />}
-                onPress={() => dispatch({type: 'CHANGE_VOTING', payload: 'NO'})}>
-                Vote No
-              </Button>
-              <Button
-                accessoryLeft={(p) => <Icon {...p} name={'checkmark-circle-2-outline'} />}
-                onPress={() => {
-                  dispatch({type: 'CHANGE_VOTING', payload: 'YES'});
-                }}>
-                Vote Yes
-              </Button>
-            </View>
+          <View style={styles.row}>
+            <Button mode="contained" icon="alert-circle-outline" onPress={voteNo}>
+              {`Vote No`}
+            </Button>
+            <Button mode="contained" icon="check" onPress={voteYes}>
+              {`Vote Yes`}
+            </Button>
           </View>
-        </View>
+        </ScrollView>
 
-        <Modal
-          visible={state.voting !== undefined}
-          backdropStyle={globalStyles.backdrop}
-          onBackdropPress={() => dispatch({type: 'RESET'})}>
-          <Card disabled={true} style={styles.modalCard}>
-            <Text>Vote with account</Text>
-            <Padder scale={0.5} />
-            <SelectAccount
-              onSelect={(account) => {
-                dispatch({type: 'SELECT_ACCOUNT', payload: account.address});
-              }}
-            />
-            <Padder scale={1.5} />
+        <Modal visible={state.voting !== undefined} onDismiss={() => dispatch({type: 'RESET'})}>
+          <Caption>Vote with account</Caption>
+          <SelectAccount
+            onSelect={(account) => {
+              dispatch({type: 'SELECT_ACCOUNT', payload: account.address});
+            }}
+          />
+          <Padder scale={1} />
 
-            <Text>Vote Value</Text>
-            <Padder scale={0.5} />
-            <Input
-              placeholder="Place your Text"
-              keyboardType="decimal-pad"
-              value={state.voteValue}
-              onFocus={() => dispatch({type: 'SET_VOTE_VALUE', payload: ''})}
-              onChangeText={(nextValue) =>
-                dispatch({type: 'SET_VOTE_VALUE', payload: nextValue.replace(/[^(\d+).(\d+)]/g, '')})
-              }
-            />
-            <Text>{api && formatBalance(getBalanceFromString(api, state.voteValue))}</Text>
-            <Padder scale={1.5} />
+          <Caption>Vote Value</Caption>
+          <TextInput
+            dense
+            mode="outlined"
+            autoComplete="off"
+            placeholder="Place your Text"
+            keyboardType="decimal-pad"
+            value={state.voteValue}
+            onChangeText={(nextValue) =>
+              dispatch({type: 'SET_VOTE_VALUE', payload: nextValue.replace(/[^(\d+).(\d+)]/g, '')})
+            }
+          />
+          <Subheading style={styles.marginLeft}>
+            {api && formatBalance(getBalanceFromString(api, state.voteValue))}
+          </Subheading>
+          <Padder scale={1} />
 
-            <Text>Conviction</Text>
-            <Padder scale={0.5} />
-            <Select
-              selectedIndex={state.conviction}
-              value={convictionDisplayValue}
-              onSelect={(index) => {
-                if (!Array.isArray(index)) {
-                  dispatch({type: 'SELECT_CONVICTION', payload: index});
-                }
-              }}>
-              {convictions.map((conviction) => {
-                return <SelectItem key={conviction.value} title={conviction.text} />;
-              })}
-            </Select>
-            <Padder scale={0.5} />
+          <Caption>Conviction</Caption>
+          <Padder scale={0.5} />
 
-            <View style={styles.row}>
-              <Button
-                onPress={() => {
-                  dispatch({type: 'RESET'});
-                }}
-                appearance="ghost"
-                status="basic">
-                CANCEL
-              </Button>
-              <Button
-                disabled={!state.account || !selectedConviction}
-                onPress={() => {
-                  if (api && state.account && selectedConviction) {
-                    const balance = getBalanceFromString(api, state.voteValue);
-                    startTx({
-                      address: state.account,
-                      txMethod: 'democracy.vote',
-                      params: [
-                        referendum?.index,
-                        {
-                          Standard: {
-                            balance,
-                            vote: {aye: state.voting === 'YES' ? true : false, conviction: selectedConviction.value},
-                          },
-                        },
-                      ],
-                    });
-                    dispatch({type: 'RESET'});
-                  }
-                }}>{`VOTE ${state.voting}`}</Button>
-            </View>
-          </Card>
+          <Select
+            items={convictions}
+            onSelect={(selectedItem) => {
+              dispatch({type: 'SELECT_CONVICTION', payload: selectedItem});
+            }}
+          />
+          <Padder scale={0.5} />
+
+          <View style={styles.row}>
+            <Button mode="outlined" onPress={reset}>
+              {`Cancel`}
+            </Button>
+            <Button
+              mode="outlined"
+              disabled={!state.account || !state.conviction}
+              onPress={vote}>{`VOTE ${state.voting}`}</Button>
+          </View>
         </Modal>
       </SafeView>
     </Layout>
@@ -236,28 +208,41 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
 }
 
 const styles = StyleSheet.create({
-  container: {padding: standardPadding * 2},
-  row: {flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', padding: standardPadding * 2},
-  center: {alignItems: 'center'},
-  paddedBox: {padding: standardPadding * 2},
-  modalCard: {width: 300},
+  container: {
+    padding: standardPadding * 2,
+    marginHorizontal: standardPadding,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    marginTop: standardPadding * 2,
+  },
+  center: {
+    alignItems: 'center',
+  },
+  marginLeft: {
+    marginLeft: standardPadding,
+  },
 });
 
-const initialState: State = {voteValue: '0.0000'};
+const initialState: State = {
+  voteValue: '',
+};
 
 type State = {
   voting?: 'YES' | 'NO';
   account?: string;
   voteValue: string;
-  conviction?: IndexPath;
+  conviction?: Conviction;
 };
 
 type Action =
   | {type: 'RESET'}
-  | {type: 'CHANGE_VOTING'; payload: 'YES' | 'NO' | undefined}
+  | {type: 'CHANGE_VOTING'; payload: 'YES' | 'NO'}
   | {type: 'SET_VOTE_VALUE'; payload: string}
   | {type: 'SELECT_ACCOUNT'; payload: string}
-  | {type: 'SELECT_CONVICTION'; payload: IndexPath};
+  | {type: 'SELECT_CONVICTION'; payload: Conviction};
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
