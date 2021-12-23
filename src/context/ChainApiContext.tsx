@@ -3,7 +3,6 @@ import {ApiPromise, WsProvider} from '@polkadot/api';
 import {createLogger} from 'src/utils/logger';
 import {NetworkContext} from './NetworkContext';
 import {useNavigation} from '@react-navigation/core';
-import {connectionRetryScreen} from '@ui/navigation/routeKeys';
 
 const initialState: ChainApiContext = {
   status: 'unknown',
@@ -31,17 +30,22 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
     select({...currentNetwork});
   }, [currentNetwork, select]);
 
+  // automatic api reconnect
+  useEffect(() => {
+    if (state.status === 'disconnected' && !state.inProgress) {
+      reconnect();
+    }
+  }, [state, reconnect]);
+
   useEffect(() => {
     if (!wsAddress) {
       return;
     }
 
     logger.debug('ChainApiContext: trying to connect to', wsAddress);
-
     const provider = new WsProvider(wsAddress, false);
     const apiPromise = new ApiPromise({provider});
     apiPromise.connect();
-
     dispatch({type: 'CONNECT'});
 
     function handleConnect() {
@@ -60,13 +64,11 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
     function handleDisconnect() {
       logger.debug('ChainApiContext: Api disconnected', wsAddress);
       dispatch({type: 'ON_DISCONNECT'});
-      navigation.navigate(connectionRetryScreen);
     }
 
     function handleError(error: unknown) {
       logger.debug('ChainApiContext: Api error at', wsAddress, error);
       dispatch({type: 'ON_ERROR'});
-      navigation.navigate(connectionRetryScreen);
     }
 
     apiPromise.on('connected', handleConnect);
@@ -113,19 +115,6 @@ type ChainApiContext = {
   wsConnectionIndex: number;
   reconnect: () => void;
 };
-
-export function useApiReconnect() {
-  const context = useContext(ChainApiContext);
-
-  if (!context) {
-    throw new Error('useApiReconnect must be used within a ChainApiContextProvider');
-  }
-
-  return {
-    canReconnect: context.status !== 'ready' && !context.inProgress,
-    reconnect: context.reconnect,
-  };
-}
 
 type Action =
   | {type: 'ON_CONNECT'}

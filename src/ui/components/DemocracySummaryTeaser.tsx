@@ -17,7 +17,7 @@ type Props = {
 };
 
 export function DemocracySummaryTeaser(props: Props) {
-  const {data, isLoading} = useDemocracySummary();
+  const {data, isLoading, isIdle} = useDemocracySummary();
   const bestNumber = useBestNumber();
 
   const total = data?.launchPeriod;
@@ -35,7 +35,7 @@ export function DemocracySummaryTeaser(props: Props) {
 
   return (
     <SectionTeaserContainer onPress={props.onPress} title="Democracy">
-      {isLoading ? (
+      {isLoading || isIdle ? (
         <LoadingBox />
       ) : (
         <View style={styles.boxRow}>

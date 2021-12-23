@@ -132,7 +132,7 @@ export function MyAccountScreen({
                   text: 'Delete',
                   onPress: () => {
                     removeAccount(address);
-                    navigation.navigate(accountsScreen);
+                    navigation.navigate(accountsScreen, {});
                   },
                   style: 'destructive',
                 },
