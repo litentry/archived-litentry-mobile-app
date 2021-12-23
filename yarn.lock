@@ -8485,10 +8485,10 @@ react-native-haptic-feedback@^1.13.0:
   resolved "https://registry.yarnpkg.com/react-native-haptic-feedback/-/react-native-haptic-feedback-1.13.0.tgz#e4974fc465a38548be262748e73098dc9dd3a0fb"
   integrity sha512-g8G5QURitDeC/zRlobDvUXLxKYfMlIM2HQNWJKbHPSu61qfs0djnK4s1NZuQzihkeAO0KJ4AS2XWvKBzUmlXtA==
 
-react-native-in-app-message@^1.0.32:
-  version "1.0.32"
-  resolved "https://registry.yarnpkg.com/react-native-in-app-message/-/react-native-in-app-message-1.0.32.tgz#58c6e5ef19b6666d326803a3592b39528ff9a703"
-  integrity sha512-azlPYZka0kNtJwvtxFTNHeggXuT72UBDcGooJyiVBX/cKx88tv47Wct5/VgLnO1jOIpcxhICR/ZLVnsN/jWioA==
+react-native-in-app-message@^1.0.33:
+  version "1.0.33"
+  resolved "https://registry.yarnpkg.com/react-native-in-app-message/-/react-native-in-app-message-1.0.33.tgz#fc89ba08df3924805d83cf919325792b18e45645"
+  integrity sha512-8rJaRQ05jLVhLcXoUdkBqrySTkyLBO8bEa0Wi1Y5tPdV9GxpzMJV5AY0e/KeRWwxC+uBMOnm345UYh3HIu9GLw==
 
 react-native-iphone-x-helper@^1.3.1:
   version "1.3.1"
