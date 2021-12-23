@@ -1,5 +1,5 @@
 import React, {useReducer} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, ScrollView} from 'react-native';
 import {BN, BN_ONE} from '@polkadot/util';
 import {RouteProp} from '@react-navigation/native';
 import {Button, Divider, Headline, Modal, Select, Subheading, Caption, TextInput} from '@ui/library';
@@ -86,7 +86,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
   return (
     <Layout style={globalStyles.flex}>
       <SafeView edges={noTopEdges}>
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
           <Headline>Proposal</Headline>
           <Padder scale={0.5} />
           <Divider />
@@ -153,7 +153,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
               {`Vote Yes`}
             </Button>
           </View>
-        </View>
+        </ScrollView>
 
         <Modal visible={state.voting !== undefined} onDismiss={() => dispatch({type: 'RESET'})}>
           <Caption>Vote with account</Caption>
@@ -208,7 +208,10 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
 }
 
 const styles = StyleSheet.create({
-  container: {padding: standardPadding * 2},
+  container: {
+    padding: standardPadding * 2,
+    marginHorizontal: standardPadding,
+  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
