@@ -1463,15 +1463,15 @@
   dependencies:
     "@babel/runtime" "^7.16.3"
 
-"@polkadot/reactnative-identicon@0.85.4":
-  version "0.85.4"
-  resolved "https://registry.yarnpkg.com/@polkadot/reactnative-identicon/-/reactnative-identicon-0.85.4.tgz#44b0d64bfd8e37ee3f7df9326616574d3587e3b7"
-  integrity sha512-/+67NHoLFIdnu9J6sZq++7z9db7+lrh3ZvAthQ4mnRX7u2ESKzGF6FwO+mm3myvnz1k72fbv1ai5TqBmaw6KJQ==
+"@polkadot/reactnative-identicon@0.87.6":
+  version "0.87.6"
+  resolved "https://registry.yarnpkg.com/@polkadot/reactnative-identicon/-/reactnative-identicon-0.87.6.tgz#029fdf25d84fa2211c94dc375059f2deb21708e8"
+  integrity sha512-urAT22eeu8g89xWFsQydhyfXc1L12rL4WCHZuzkfu9IE012k97/b4qEZkHS0hjltM6LJsdGs8L+pO9P4zkVBJQ==
   dependencies:
-    "@babel/runtime" "^7.15.4"
-    "@polkadot/ui-shared" "0.85.4"
-    "@polkadot/util" "^7.4.1"
-    "@polkadot/util-crypto" "^7.4.1"
+    "@babel/runtime" "^7.16.5"
+    "@polkadot/ui-shared" "0.87.6"
+    "@polkadot/util" "^8.2.2"
+    "@polkadot/util-crypto" "^8.2.2"
     react-native-svg "^12.2.0"
 
 "@polkadot/rpc-augment@7.0.2":
@@ -1640,15 +1640,15 @@
     eventemitter3 "^4.0.7"
     store "^2.0.12"
 
-"@polkadot/ui-shared@0.85.4":
-  version "0.85.4"
-  resolved "https://registry.yarnpkg.com/@polkadot/ui-shared/-/ui-shared-0.85.4.tgz#f815b1d8b4ab8206d1fa97bf834a96069c9e7735"
-  integrity sha512-Wpwj2P0/Ibrq4Dt6B6FiAKgvZaugE36Yj7k1TzKNVbzczCMmH9lVE6Q1Y+K239mtqljvKGdz3e8IJ/E6z/G/OQ==
+"@polkadot/ui-shared@0.87.6":
+  version "0.87.6"
+  resolved "https://registry.yarnpkg.com/@polkadot/ui-shared/-/ui-shared-0.87.6.tgz#b8af0368ff4632946a6c3f72ab1238b576f0386a"
+  integrity sha512-LxYXK9xAa1MTL4RxryC4f0T27yfz24FT2Ist6eYG+cTq4oKnsmFZATh4kwKVRH1nESz7aXUtM8ks6M10dPcasw==
   dependencies:
-    "@babel/runtime" "^7.15.4"
+    "@babel/runtime" "^7.16.5"
     color "^3.2.1"
 
-"@polkadot/util-crypto@6.11.1", "@polkadot/util-crypto@6.6.1", "@polkadot/util-crypto@7.8.2", "@polkadot/util-crypto@8.2.2", "@polkadot/util-crypto@^7.4.1", "@polkadot/util-crypto@^7.8.2", "@polkadot/util-crypto@^8.2.2":
+"@polkadot/util-crypto@6.11.1", "@polkadot/util-crypto@6.6.1", "@polkadot/util-crypto@7.8.2", "@polkadot/util-crypto@8.2.2", "@polkadot/util-crypto@^7.8.2", "@polkadot/util-crypto@^8.2.2":
   version "8.2.2"
   resolved "https://registry.yarnpkg.com/@polkadot/util-crypto/-/util-crypto-8.2.2.tgz#ccc5e5abec2431622dd5a2a885286633c2deb371"
   integrity sha512-bKFE6j1q2Dnz1o1QFvhX2QzkMLi9QHU4a5T7+El5J7OsOxGqssMAVHAmB+YoAuSLqPSQBmZa9CN23IiuJnfsbw==
@@ -1665,7 +1665,7 @@
     micro-base "^0.10.0"
     tweetnacl "^1.0.3"
 
-"@polkadot/util@6.0.5", "@polkadot/util@6.11.1", "@polkadot/util@7.8.2", "@polkadot/util@8.2.2", "@polkadot/util@^7.4.1", "@polkadot/util@^7.7.1", "@polkadot/util@^7.8.2", "@polkadot/util@^8.2.2":
+"@polkadot/util@6.0.5", "@polkadot/util@6.11.1", "@polkadot/util@7.8.2", "@polkadot/util@8.2.2", "@polkadot/util@^7.7.1", "@polkadot/util@^7.8.2", "@polkadot/util@^8.2.2":
   version "8.2.2"
   resolved "https://registry.yarnpkg.com/@polkadot/util/-/util-8.2.2.tgz#e3b30b90ade18032a28ac237dfa939adce43f2f4"
   integrity sha512-tiHe0rcQvofd3vUVCRmvfULAv9yBG7s/huv1ZLVY/JGT1JBDonc1HWU3Vdb5MvWpx2R+HHv19ORHyD/LiROE9A==
