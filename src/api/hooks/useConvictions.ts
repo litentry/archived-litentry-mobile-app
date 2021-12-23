@@ -10,7 +10,12 @@ import {BN_THOUSAND} from '@polkadot/util';
 const CONVICTIONS: number[] = [1, 2, 4, 8, 16, 32];
 const SEC_DAY = 60 * 60 * 24;
 
-export function useConvictions(): {text: string; value: number}[] {
+export type Conviction = {
+  text: string;
+  value: number;
+};
+
+export function useConvictions(): Conviction[] {
   const {api} = useApi();
   const {blockTime} = useBlockTime();
 
