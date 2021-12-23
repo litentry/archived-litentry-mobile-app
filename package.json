@@ -26,7 +26,7 @@
     "@eva-design/material": "^2.1.1",
     "@polkadot/api": "^7.0.2",
     "@polkadot/apps-config": "^0.98.2-84",
-    "@polkadot/reactnative-identicon": "0.85.4",
+    "@polkadot/reactnative-identicon": "0.87.6",
     "@polkadot/ui-settings": "^0.87.6",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/clipboard": "^1.5.1",
