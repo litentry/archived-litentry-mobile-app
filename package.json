@@ -102,7 +102,7 @@
     "@types/jest": "^27.0.3",
     "@types/lodash": "^4.14.178",
     "@types/react": "^17.0.38",
-    "@types/react-native": "^0.66.9",
+    "@types/react-native": "^0.66.10",
     "@types/react-native-vector-icons": "^6.4.10",
     "@types/react-test-renderer": "^17.0.1",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
