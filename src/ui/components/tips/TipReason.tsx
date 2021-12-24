@@ -1,16 +1,16 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
 import {Hash} from '@polkadot/types/interfaces';
-import {Text} from '@ui-kitten/components';
 import {useTipReason} from 'src/api/hooks/useTipReason';
 import {LoadingItem} from '@ui/components/LoadingBox';
-import {monofontFamily} from '@ui/styles';
+import {Subheading, Caption, useTheme} from '@ui/library';
+import HyperLink from 'react-native-hyperlink';
 
 type Props = {
   reasonHash: Hash;
 };
 
 export function TipReason({reasonHash}: Props) {
+  const {colors} = useTheme();
   const {data, isLoading} = useTipReason(reasonHash);
 
   if (isLoading) {
@@ -18,31 +18,11 @@ export function TipReason({reasonHash}: Props) {
   }
 
   return (
-    <View>
-      <View style={styles.titleContainer}>
-        <Text category="c1" style={styles.title}>{`Reason`}</Text>
-      </View>
-      <Text category="c1" style={styles.tipReasonText}>
-        {data}
-      </Text>
-    </View>
+    <>
+      <Subheading>{`Reason`}</Subheading>
+      <HyperLink linkStyle={{color: colors.primary}} linkDefault>
+        <Caption selectable>{data}</Caption>
+      </HyperLink>
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  tipReasonText: {
-    color: '#99a7a3',
-    textAlign: 'justify',
-  },
-  row: {
-    marginTop: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  title: {
-    fontFamily: monofontFamily,
-  },
-  titleContainer: {
-    marginBottom: 5,
-  },
-});

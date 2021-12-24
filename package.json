@@ -65,6 +65,7 @@
     "react-native-fs": "^2.18.0",
     "react-native-gesture-handler": "^1.8.0",
     "react-native-haptic-feedback": "^1.13.0",
+    "react-native-hyperlink": "^0.0.19",
     "react-native-in-app-message": "^1.0.33",
     "react-native-keychain": "^8.0.0",
     "react-native-linear-gradient": "^2.5.6",
