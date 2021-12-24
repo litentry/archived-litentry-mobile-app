@@ -1,4 +1,5 @@
 import React from 'react';
+import {StyleSheet} from 'react-native';
 import {Hash} from '@polkadot/types/interfaces';
 import {useTipReason} from 'src/api/hooks/useTipReason';
 import {LoadingItem} from '@ui/components/LoadingBox';
@@ -21,8 +22,16 @@ export function TipReason({reasonHash}: Props) {
     <>
       <Subheading>{`Reason`}</Subheading>
       <HyperLink linkStyle={{color: colors.primary}} linkDefault>
-        <Caption selectable>{data}</Caption>
+        <Caption selectable style={styles.tipReasonText}>
+          {data}
+        </Caption>
       </HyperLink>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  tipReasonText: {
+    textAlign: 'justify',
+  },
+});
