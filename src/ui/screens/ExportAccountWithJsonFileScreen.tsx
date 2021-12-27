@@ -55,6 +55,7 @@ export function ExportAccountWithJsonFileScreen({route, navigation}: ScreenProps
       });
       snackbar('Account successfully exported!');
       navigation.goBack();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       if ('message' in e && e.message !== 'User did not share') {
         setError(e.message);
