@@ -1,14 +1,13 @@
 import React from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {RouteProp} from '@react-navigation/core';
-import {Icon, Input, Text, ListItem, useTheme, Button} from '@ui-kitten/components';
-import FormLabel from '@ui/components/FormLabel';
+import {List, Button, TextInput, Subheading, useTheme} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {exportAccountWithJsonFileScreen} from '@ui/navigation/routeKeys';
-import {monofontFamily, standardPadding} from '@ui/styles';
+import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
 import Share from 'react-native-share';
 import {useAccounts} from 'context/AccountsContext';
 
@@ -17,7 +16,7 @@ export function ExportAccountWithJsonFileScreen({
 }: {
   route: RouteProp<AccountsStackParamList, typeof exportAccountWithJsonFileScreen>;
 }) {
-  const theme = useTheme();
+  const {colors} = useTheme();
   const {address} = route.params;
   const {accounts} = useAccounts();
   const account = accounts[address];
@@ -54,34 +53,37 @@ export function ExportAccountWithJsonFileScreen({
   return (
     <SafeView edges={noTopEdges}>
       <View style={styles.container}>
-        <ListItem
+        <List.Item
           title={account?.meta.name}
-          accessoryLeft={() => <IdentityIcon value={address} size={40} />}
+          left={() => (
+            <View style={globalStyles.justifyCenter}>
+              <IdentityIcon value={address} size={40} />
+            </View>
+          )}
           description={address}
         />
         <Padder scale={1} />
-        <Input
+
+        <TextInput
           secureTextEntry={!isPasswordVisible}
-          label={() => <FormLabel text="password" />}
-          style={styles.input}
+          label={'Password'}
           value={password}
           onChangeText={setPassword}
-          accessoryRight={() => (
-            <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
-              <Icon
-                name={`${isPasswordVisible ? 'eye' : 'eye-off'}-outline`}
-                fill={theme['color-basic-600']}
-                style={styles.icon}
-              />
-            </TouchableOpacity>
-          )}
-          status={password ? 'success' : 'basic'}
+          right={
+            <TextInput.Icon
+              onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+              name={`${isPasswordVisible ? 'eye' : 'eye-off'}-outline`}
+            />
+          }
+          mode="outlined"
+          autoComplete="off"
         />
+
         <Padder scale={1} />
-        {error ? <Text status="danger">{error}</Text> : null}
+        {error ? <Subheading style={{color: colors.error}}>{error}</Subheading> : null}
         <Padder scale={1} />
-        <Button disabled={!password} onPress={() => _doBackup()}>
-          <Text>export</Text>
+        <Button mode="outlined" onPress={_doBackup}>
+          Export
         </Button>
       </View>
     </SafeView>

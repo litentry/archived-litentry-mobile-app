@@ -61,7 +61,11 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
         {parsedJson ? (
           <List.Item
             title={parsedJson.meta.name as string}
-            left={() => <IdentityIcon value={parsedJson.address} size={40} />}
+            left={() => (
+              <View style={globalStyles.justifyCenter}>
+                <IdentityIcon value={parsedJson.address} size={40} />
+              </View>
+            )}
             description={parsedJson.address}
           />
         ) : (
