@@ -10,6 +10,8 @@ import {exportAccountWithJsonFileScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
 import Share from 'react-native-share';
 import {useAccounts} from 'context/AccountsContext';
+import SubstrateSign from 'react-native-substrate-sign';
+import {useSnackbar} from 'context/SnackbarContext';
 
 export function ExportAccountWithJsonFileScreen({
   route,
@@ -20,10 +22,21 @@ export function ExportAccountWithJsonFileScreen({
   const {address} = route.params;
   const {accounts} = useAccounts();
   const account = accounts[address];
+  const showSnackbar = useSnackbar();
 
   const [password, setPassword] = React.useState('');
   const [error, setError] = React.useState('');
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
+
+  const verifyPassword = async () => {
+    try {
+      if (!account?.isExternal && account?.encoded) {
+        await SubstrateSign.decryptData(account.encoded, password);
+      }
+    } catch (e) {
+      throw new Error('Incorrect password');
+    }
+  };
 
   const _doBackup = async () => {
     setError('');
@@ -32,6 +45,7 @@ export function ExportAccountWithJsonFileScreen({
         throw new Error('Account not found');
       }
 
+      await verifyPassword();
       const blob = new Blob([JSON.stringify(account)], {type: 'application/json', lastModified: Date.now()});
       await Share.open({
         title: address,
@@ -41,6 +55,7 @@ export function ExportAccountWithJsonFileScreen({
         saveToFiles: true,
         url: await blobToBase64(blob),
       });
+      showSnackbar('Account successfully exported!');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       if ('message' in e) {
