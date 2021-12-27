@@ -100,7 +100,7 @@ export function ExportAccountWithJsonFileScreen({route, navigation}: ScreenProps
         <Padder scale={1} />
         {error ? <Subheading style={{color: colors.error}}>{error}</Subheading> : null}
         <Padder scale={1} />
-        <Button mode="outlined" onPress={_doBackup}>
+        <Button disabled={!password} mode="outlined" onPress={_doBackup}>
           Export
         </Button>
       </View>
