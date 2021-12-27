@@ -30,11 +30,9 @@ export function ExportAccountWithJsonFileScreen({route, navigation}: ScreenProps
   const [error, setError] = React.useState('');
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
 
-  const verifyPassword = async () => {
+  const verifyPassword = async (encoded: string) => {
     try {
-      if (!account?.isExternal && account?.encoded) {
-        await SubstrateSign.decryptData(account.encoded, password);
-      }
+      await SubstrateSign.decryptData(encoded, password);
     } catch (e) {
       throw new Error('Incorrect password');
     }
@@ -42,26 +40,23 @@ export function ExportAccountWithJsonFileScreen({route, navigation}: ScreenProps
 
   const _doBackup = async () => {
     setError('');
+    if (!account || account.isExternal) {
+      throw new Error('Account not found');
+    }
     try {
-      if (!account || account.isExternal) {
-        throw new Error('Account not found');
-      }
-
-      await verifyPassword();
+      await verifyPassword(account.encoded);
       const blob = new Blob([JSON.stringify(account)], {type: 'application/json', lastModified: Date.now()});
       await Share.open({
         title: address,
         filename: `${address}.json`,
         type: 'application/json',
-        failOnCancel: false,
         saveToFiles: true,
         url: await blobToBase64(blob),
       });
       snackbar('Account successfully exported!');
       navigation.goBack();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
-      if ('message' in e) {
+      if ('message' in e && e.message !== 'User did not share') {
         setError(e.message);
       }
       console.warn(e);
