@@ -12,17 +12,19 @@ import Share from 'react-native-share';
 import {useAccounts} from 'context/AccountsContext';
 import SubstrateSign from 'react-native-substrate-sign';
 import {useSnackbar} from 'context/SnackbarContext';
+import {NavigationProp} from '@react-navigation/core';
 
-export function ExportAccountWithJsonFileScreen({
-  route,
-}: {
+type ScreenProps = {
   route: RouteProp<AccountsStackParamList, typeof exportAccountWithJsonFileScreen>;
-}) {
+  navigation: NavigationProp<AccountsStackParamList, typeof exportAccountWithJsonFileScreen>;
+};
+
+export function ExportAccountWithJsonFileScreen({route, navigation}: ScreenProps) {
   const {colors} = useTheme();
   const {address} = route.params;
   const {accounts} = useAccounts();
   const account = accounts[address];
-  const showSnackbar = useSnackbar();
+  const snackbar = useSnackbar();
 
   const [password, setPassword] = React.useState('');
   const [error, setError] = React.useState('');
@@ -55,7 +57,8 @@ export function ExportAccountWithJsonFileScreen({
         saveToFiles: true,
         url: await blobToBase64(blob),
       });
-      showSnackbar('Account successfully exported!');
+      snackbar('Account successfully exported!');
+      navigation.goBack();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       if ('message' in e) {

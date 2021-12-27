@@ -7,7 +7,7 @@ import Identicon from '@polkadot/reactnative-identicon';
 import {useAccounts} from 'context/AccountsContext';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {Button, Caption, IconButton, IconSource, Card, Snackbar, useTheme} from '@ui/library';
+import {Button, Caption, IconButton, IconSource, Card, useTheme} from '@ui/library';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useAccountInfo} from 'src/api/hooks/useAccountInfo';
@@ -23,6 +23,7 @@ import {
   sendFundScreen,
 } from '@ui/navigation/routeKeys';
 import {standardPadding} from '@ui/styles';
+import {useSnackbar} from 'context/SnackbarContext';
 
 export function MyAccountScreen({
   navigation,
@@ -40,10 +41,10 @@ export function MyAccountScreen({
   const {accounts, removeAccount} = useAccounts();
   const account = accounts[address];
 
-  const [visible, setVisible] = React.useState(false);
+  const snackbar = useSnackbar();
   const copyToClipboard = () => {
     Clipboard.setString(address);
-    setVisible(true);
+    snackbar('Address copied to clipboard!');
   };
 
   if (!account) {
@@ -153,14 +154,6 @@ export function MyAccountScreen({
           ) : null}
         </View>
       </ScrollView>
-      <Snackbar
-        visible={visible}
-        onDismiss={() => {
-          setVisible(false);
-        }}
-        duration={3000}>
-        Address copied to clipboard!
-      </Snackbar>
     </SafeView>
   );
 }
