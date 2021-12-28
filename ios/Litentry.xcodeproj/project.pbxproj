@@ -340,6 +340,7 @@
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 56HKVS2886;
 						LastSwiftMigration = 1250;
+						ProvisioningStyle = Manual;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -790,6 +791,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Litentry/Litentry.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 56HKVS2886;
 				ENABLE_BITCODE = NO;
@@ -803,6 +806,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.litentry.governance;
 				PRODUCT_NAME = Litentry;
+				PROVISIONING_PROFILE_SPECIFIER = development_profile;
 				SWIFT_OBJC_BRIDGING_HEADER = "Litentry-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -817,6 +821,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Litentry/Litentry.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 56HKVS2886;
 				ENABLE_BITCODE = NO;
@@ -830,6 +836,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.litentry.governance;
 				PRODUCT_NAME = Litentry;
+				PROVISIONING_PROFILE_SPECIFIER = "Bitrise ios app-store - (com.litentry.governance)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Litentry-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
