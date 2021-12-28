@@ -3,7 +3,6 @@ import {Alert, StyleSheet, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Button, Divider, Icon, IconProps, Layout, ListItem, MenuGroup, MenuItem, Text} from '@ui-kitten/components';
-import BN from 'bn.js';
 import {NetworkContext} from 'context/NetworkContext';
 import RegistrarSelectionModal from '@ui/components/RegistrarSelectionModal';
 import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
@@ -23,6 +22,7 @@ import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {manageIdentityScreen, registerSubIdentitiesScreen} from '@ui/navigation/routeKeys';
 import {buildAddressDetailUrl} from 'src/service/Polkasembly';
 import {standardPadding} from '@ui/styles';
+import {RegistrarInfoWithIndex} from 'src/api/hooks/useRegistrars';
 
 function ManageIdentity({
   navigation,
@@ -63,18 +63,16 @@ function ManageIdentity({
   );
 
   const handleRequestJudgement = useCallback(
-    (index: number, fee?: BN) => {
-      if (fee) {
-        setRegistrarSelectionOpen(false);
-        startTx({address, txMethod: 'identity.requestJudgement', params: [index, fee]})
-          .then(() => {
-            queryClient.invalidateQueries(['account_identity', address]);
-          })
-          .catch((e) => {
-            Alert.alert('Something went wrong!');
-            console.error(e);
-          });
-      }
+    ({index, fee}: RegistrarInfoWithIndex) => {
+      setRegistrarSelectionOpen(false);
+      startTx({address, txMethod: 'identity.requestJudgement', params: [index, fee]})
+        .then(() => {
+          queryClient.invalidateQueries(['account_identity', address]);
+        })
+        .catch((e) => {
+          Alert.alert('Something went wrong!');
+          console.error(e);
+        });
     },
     [startTx, address, queryClient],
   );

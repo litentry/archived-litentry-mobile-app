@@ -42,7 +42,7 @@ function DevScreen() {
             <Divider />
             <RegistrarSelectionModal
               onClose={() => setVisible(false)}
-              onSelect={(index, fee) => console.log(index, fee)}
+              onSelect={(registrar) => console.log(registrar)}
               visible={visible}
             />
             <ListItem
