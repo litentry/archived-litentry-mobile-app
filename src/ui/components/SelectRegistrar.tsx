@@ -17,6 +17,7 @@ export function SelectRegistrar({onSelect}: Props) {
   const registrars = useRegistrars();
   const [registrar, setRegistrar] = React.useState<RegistrarInfoWithIndex>();
   const [visible, setVisible] = React.useState(false);
+  const {data: identity} = useAccountIdentityInfo(registrar?.account.toString());
 
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
@@ -35,10 +36,29 @@ export function SelectRegistrar({onSelect}: Props) {
         <View style={[styles.anchor, {borderColor: colors.onSurface}]}>
           <List.Item
             title={
-              <Caption>{registrar ? stringShorten(registrar.account.toString(), 12) : 'Select registrar'}</Caption>
+              registrar ? (
+                identity ? (
+                  <Caption>
+                    {identity.hasIdentity ? identity.display : stringShorten(identity.accountId.toString(), 11)}
+                  </Caption>
+                ) : null
+              ) : (
+                <Caption>{'Select registrar'}</Caption>
+              )
+            }
+            left={() =>
+              registrar ? (
+                <View style={styles.justifyCenter}>
+                  <Identicon value={registrar?.account.toString()} size={20} />
+                </View>
+              ) : null
             }
             onPress={openMenu}
-            right={() => <Icon name="chevron-down" />}
+            right={() => (
+              <View style={styles.justifyCenter}>
+                <Icon name="chevron-down" />
+              </View>
+            )}
           />
         </View>
       }>
