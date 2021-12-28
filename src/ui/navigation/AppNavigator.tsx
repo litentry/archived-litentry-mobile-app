@@ -18,8 +18,7 @@ import {DemocracyScreen} from '@ui/screens/DemocracyScreen';
 import DevScreen from '@ui/screens/DevScreen';
 import DrawerScreen from '@ui/screens/Drawer/DrawerScreen';
 import {ExportAccountWithJsonFileScreen} from '@ui/screens/ExportAccountWithJsonFileScreen';
-import {ImportAccountScreen, ImportScreenHeaderRight} from '@ui/screens/ImportAccountScreen';
-import {ImportAccountWithJsonFileScreen} from '@ui/screens/ImportAccountWithJsonFileScreen';
+import {ImportAccountScreen} from '@ui/screens/ImportAccountScreen';
 import {MotionDetailScreen} from '@ui/screens/MotionDetailScreen';
 import {MyAccountScreen} from '@ui/screens/MyAccountScreen';
 import {IdentityGuideScreen} from '@ui/screens/MyIdentityScreen/IdentityGuideScreen';
@@ -113,15 +112,7 @@ function AccountsNavigator() {
       <AccountsStack.Screen name={routeKeys.mnemonicScreen} component={MnemonicScreen} />
       <AccountsStack.Screen name={routeKeys.verifyMnemonicScreen} component={VerifyMnemonicScreen} />
       <AccountsStack.Screen name={routeKeys.createAccountScreen} component={CreateAccountScreen} />
-      <AccountsStack.Screen
-        name={routeKeys.importAccountScreen}
-        component={ImportAccountScreen}
-        options={{headerRight: () => <ImportScreenHeaderRight />}}
-      />
-      <AccountsStack.Screen
-        name={routeKeys.importAccountWithJsonFileScreen}
-        component={ImportAccountWithJsonFileScreen}
-      />
+      <AccountsStack.Screen name={routeKeys.importAccountScreen} component={ImportAccountScreen} />
       <AccountsStack.Screen
         name={routeKeys.exportAccountWithJsonFileScreen}
         component={ExportAccountWithJsonFileScreen}
