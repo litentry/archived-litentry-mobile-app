@@ -8,7 +8,7 @@ import React from 'react';
 import {Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import {sendEmail} from 'src/utils/email';
 
-const FEEDBACK_EMAIL = 'feedback@litentry.com';
+const FEEDBACK_EMAIL = 'app-feedback@litentry.com';
 
 export function FeedbackScreen() {
   const [body, setBody] = React.useState('');
