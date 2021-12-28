@@ -28,7 +28,7 @@ platform :ios do
       filename: "provisioning.mobileprovision" # Rename the local provisioning profile
     )
     update_project_provisioning( # Set the project provisioning profile (related in Xcode to the General > Signing Release section)
-      xcodeproj: "Boilerplate.xcodeproj",
+      xcodeproj: "Litentry.xcodeproj",
       target_filter: "Litentry", # Name of your project
       profile: "./builds/provisioning.mobileprovision",
       build_configuration: "Release"

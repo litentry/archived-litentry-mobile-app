@@ -745,6 +745,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 56HKVS2886;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -770,6 +771,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 56HKVS2886;
 				INFOPLIST_FILE = LitentryTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -780,6 +782,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "f25db238-51a5-40df-8d8a-00b428582cd2";
+				PROVISIONING_PROFILE_SPECIFIER = "com.litentry.governance AppStore";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Litentry.app/Litentry";
 			};
 			name = Release;
@@ -793,7 +797,7 @@
 				CODE_SIGN_ENTITLEMENTS = Litentry/Litentry.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 56HKVS2886;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Litentry/Info.plist;
@@ -823,7 +827,7 @@
 				CODE_SIGN_ENTITLEMENTS = Litentry/Litentry.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 56HKVS2886;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Litentry/Info.plist;
@@ -836,7 +840,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.litentry.governance;
 				PRODUCT_NAME = Litentry;
-				PROVISIONING_PROFILE_SPECIFIER = "Bitrise ios app-store - (com.litentry.governance)";
+				PROVISIONING_PROFILE = "f25db238-51a5-40df-8d8a-00b428582cd2";
+				PROVISIONING_PROFILE_SPECIFIER = "com.litentry.governance AppStore";
 				SWIFT_OBJC_BRIDGING_HEADER = "Litentry-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -854,6 +859,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 56HKVS2886;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "Litentry-tvOS/Info.plist";
@@ -883,6 +889,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 56HKVS2886;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "Litentry-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -893,6 +900,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.Litentry-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "f25db238-51a5-40df-8d8a-00b428582cd2";
+				PROVISIONING_PROFILE_SPECIFIER = "com.litentry.governance AppStore";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 10.0;
@@ -909,6 +918,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 56HKVS2886;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "Litentry-tvOSTests/Info.plist";
@@ -937,6 +947,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 56HKVS2886;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "Litentry-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -947,6 +958,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.Litentry-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "f25db238-51a5-40df-8d8a-00b428582cd2";
+				PROVISIONING_PROFILE_SPECIFIER = "com.litentry.governance AppStore";
 				SDKROOT = appletvos;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Litentry-tvOS.app/Litentry-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
