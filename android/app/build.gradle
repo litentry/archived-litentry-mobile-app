@@ -81,6 +81,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 project.ext.react = [
     enableHermes: false,
+    nodeExecutableAndArgs: ["node", "--max-old-space-size=8192"],
 ]
 
 project.ext.vectoricons = [
