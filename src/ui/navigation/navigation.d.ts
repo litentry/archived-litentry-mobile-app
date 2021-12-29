@@ -43,7 +43,6 @@ import {
   verifyMnemonicScreen,
   createAccountScreen,
   importAccountScreen,
-  importAccountWithJsonFileScreen,
   exportAccountWithJsonFileScreen,
   networkSelectionScreen,
   parachainAuctionsScreen,
@@ -119,7 +118,6 @@ type AccountsStackParamList = {
   [myAccountScreen]: {address: string};
   [registerSubIdentitiesScreen]: {address: string};
   [importAccountScreen]: undefined;
-  [importAccountWithJsonFileScreen]: undefined;
   [exportAccountWithJsonFileScreen]: {address: string};
   [receiveFundScreen]: {address: string};
   [sendFundScreen]: {address: string};

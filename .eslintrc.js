@@ -33,6 +33,11 @@ module.exports = {
             importNames: ['useTheme'],
             message: 'Please import useTheme from @ui/library instead.',
           },
+          {
+            name: '@ui/library',
+            importNames: ['Snackbar'],
+            message: 'Please use useSnackbar from context/SnackbarContext instead.',
+          },
         ],
       },
     ],

@@ -13,6 +13,7 @@ import AppNavigator from '@ui/navigation/AppNavigator';
 import ThemeProvider from 'context/ThemeContext';
 import {IonicIconsPack} from './Ionic-icons';
 import {NavigationContainer} from 'context/NavigationContainer';
+import SnackbarProvider from 'context/SnackbarContext';
 
 // init type registry
 import 'src/typeRegistry';
@@ -33,7 +34,9 @@ export default function App() {
                     <InAppNotificationContextProvider>
                       <ErrorBoundary>
                         <TxContextProvider>
-                          <AppNavigator />
+                          <SnackbarProvider>
+                            <AppNavigator />
+                          </SnackbarProvider>
                         </TxContextProvider>
                       </ErrorBoundary>
                     </InAppNotificationContextProvider>
