@@ -8,9 +8,10 @@ import {Modalize} from 'react-native-modalize';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {receiveFundScreen} from '@ui/navigation/routeKeys';
-import {Caption, Headline, IconButton, Snackbar} from '@ui/library';
+import {Caption, Headline, IconButton} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
+import {useSnackbar} from 'context/SnackbarContext';
 
 type Props = {
   navigation: NavigationProp<AccountsStackParamList, typeof receiveFundScreen>;
@@ -20,7 +21,7 @@ type Props = {
 export function ReceiveFundScreen({navigation, route}: Props) {
   const {address} = route.params;
   const ref = useRef<Modalize>(null);
-  const [visible, setVisible] = React.useState(false);
+  const snackbar = useSnackbar();
 
   useEffect(() => {
     ref.current?.open();
@@ -30,7 +31,7 @@ export function ReceiveFundScreen({navigation, route}: Props) {
 
   const copyToClipboard = () => {
     Clipboard.setString(address);
-    setVisible(true);
+    snackbar('Address copied to clipboard!');
   };
 
   return (
@@ -50,14 +51,6 @@ export function ReceiveFundScreen({navigation, route}: Props) {
           </Caption>
         </View>
       </SafeView>
-      <Snackbar
-        visible={visible}
-        onDismiss={() => {
-          setVisible(false);
-        }}
-        duration={3000}>
-        Address copied to clipboard!
-      </Snackbar>
     </Modalize>
   );
 }

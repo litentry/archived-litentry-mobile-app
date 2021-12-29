@@ -1,20 +1,22 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, useWindowDimensions, View} from 'react-native';
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {NavigationProp} from '@react-navigation/native';
 import {useAccounts} from 'context/AccountsContext';
 import {NetworkContext} from 'context/NetworkContext';
 import {ProgressBar} from '@ui/components/ProgressBar';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import SubstrateSign from 'react-native-substrate-sign';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
-import {accountsScreen, importAccountWithJsonFileScreen} from '@ui/navigation/routeKeys';
-import {AppBar, Button, List, TextInput, useTheme} from '@ui/library';
+import {accountsScreen} from '@ui/navigation/routeKeys';
+import {Button, List, TextInput, useTheme} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {ErrorText} from '@ui/components/ErrorText';
 import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
 import zxcvbn from 'zxcvbn';
 import {SecureKeychain} from 'src/service/SecureKeychain';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {ImportAccountWithJsonFileScreen} from './ImportAccountWithJsonFileScreen';
 
 type Account = {
   title: string;
@@ -22,7 +24,27 @@ type Account = {
   confirmPassword: string;
 };
 
-export function ImportAccountScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
+const Tab = createMaterialTopTabNavigator();
+
+export function ImportAccountScreen() {
+  const layout = useWindowDimensions();
+  const {colors} = useTheme();
+
+  return (
+    <Tab.Navigator
+      initialLayout={{width: layout.width}}
+      screenOptions={{
+        tabBarLabelStyle: {color: colors.text},
+        tabBarItemStyle: {width: 200},
+        tabBarStyle: {backgroundColor: colors.background},
+      }}>
+      <Tab.Screen name="Import seed" component={ImportAccount} />
+      <Tab.Screen name="Import json" component={ImportAccountWithJsonFileScreen} />
+    </Tab.Navigator>
+  );
+}
+
+function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const theme = useTheme();
   const {currentNetwork} = React.useContext(NetworkContext);
   const [account, setAccountState] = React.useState<Account>({title: '', password: '', confirmPassword: ''});
@@ -193,9 +215,4 @@ function useParseSeed() {
   }, [currentNetwork.ss58Format, seed]);
 
   return {seed, setSeed, address, isSeedValid: Boolean(address)};
-}
-
-export function ImportScreenHeaderRight() {
-  const navigation = useNavigation();
-  return <AppBar.Action icon="plus" onPress={() => navigation.navigate(importAccountWithJsonFileScreen)} />;
 }
