@@ -1,0 +1,37 @@
+name: Deploy to App Store
+on:
+  # Enable manual run
+  workflow_dispatch:
+    inputs:
+      lane:
+        description: 'Fastlane lane to use (beta OR promote_to_production OR production)'
+        required: true
+        default: 'beta'
+  
+  push:
+    branches: [ develop, feature/fastlane ]
+
+jobs:
+  fastlane-deploy:
+    runs-on: macOS-latest
+
+    steps:
+      - name: install packages
+        uses: actions/checkout@v2
+      - run: yarn
+
+
+      # Setup Ruby, Bundler, and Gemfile dependencies
+      - name: Setup Fastlane
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '2.6'
+          bundler-cache: true
+          working-directory: ios 
+
+      # Build and deploy with Fastlane (by default, to beta track) 🚀.
+      # Naturally, promote_to_production only deploys.
+      - run: bundle exec fastlane ${{ github.event.inputs.lane || 'beta' }}
+        env:
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+        working-directory: ios
