@@ -21,6 +21,10 @@ jobs:
       - run: yarn
 
 
+      - name: install pods
+        run: pod install
+        working-directory: ios
+
       # Setup Ruby, Bundler, and Gemfile dependencies
       - name: Setup Fastlane
         uses: ruby/setup-ruby@v1
