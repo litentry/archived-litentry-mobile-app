@@ -1,136 +1,78 @@
 import React, {useCallback, useState} from 'react';
-import BN from 'bn.js';
-import {StyleSheet, Dimensions, View} from 'react-native';
-import {Select, SelectItem, Modal, Card, Text, Button, IndexPath, Input, Icon, IconProps} from '@ui-kitten/components';
-import {useRegistrars} from 'src/api/hooks/useRegistrars';
-import {BN_ZERO} from '@polkadot/util';
-import {standardPadding, monofontFamily} from '@ui/styles';
-import Identicon from '@polkadot/reactnative-identicon';
+import {StyleSheet, View} from 'react-native';
+import {Modal, Button, TextInput, Subheading, Caption, Icon} from '@ui/library';
+import {RegistrarInfoWithIndex} from 'src/api/hooks/useRegistrars';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-
-const {height, width} = Dimensions.get('window');
+import {SelectRegistrar} from '@ui/components/SelectRegistrar';
 
 type PropTypes = {
   visible: boolean;
   onClose: () => void;
-  onSelect: (index: number, fee?: BN) => void;
+  onSelect: (registrar: RegistrarInfoWithIndex) => void;
 };
 
 function RegistrarSelectionModal({onSelect, visible, onClose}: PropTypes) {
   const formatBalance = useFormatBalance();
-  const registrars = useRegistrars();
-
-  const [selectedRegistrar, setSelectedRegistrar] = useState<IndexPath | IndexPath[]>();
-  const registrar =
-    selectedRegistrar && !Array.isArray(selectedRegistrar) ? registrars[selectedRegistrar.row] : undefined;
+  const [registrar, setRegistrar] = useState<RegistrarInfoWithIndex>();
 
   const handleSelect = useCallback(() => {
-    const index = (selectedRegistrar as IndexPath).row;
-
     if (registrar) {
-      onSelect(index, registrar.fee);
+      onSelect(registrar);
     }
-  }, [onSelect, registrar, selectedRegistrar]);
+  }, [onSelect, registrar]);
+
+  const handleClose = () => {
+    setRegistrar(undefined);
+    onClose();
+  };
 
   const feeDisplay = registrar ? formatBalance(registrar.fee) : '';
-  const selectedRegistrarDisplay = selectedRegistrar ? `Registrar #${(selectedRegistrar as IndexPath).row}` : undefined;
-
-  if (!registrars) {
-    return null;
-  }
 
   return (
-    <Modal visible={visible} style={styles.container} backdropStyle={styles.backdrop} onBackdropPress={onClose}>
-      <Card
-        disabled={true}
-        header={(props) => (
-          <>
-            <Text {...props} style={[props?.style, styles.headerStyleOverwrite]} category="h6">
-              Choose registrar
-            </Text>
-            <Text {...props} style={[props?.style, styles.subHeaderOverwrite]} category="s2">
-              Select a registrar and specify fee
-            </Text>
-          </>
-        )}
-        footer={(props) => (
-          <View {...props} style={[props?.style, styles.footerContainer]}>
-            <Button style={styles.footerControl} appearance="ghost" size="small" onPress={onClose} status="danger">
-              Cancel
-            </Button>
-            <Button style={styles.footerControl} size="small" onPress={handleSelect}>
-              Submit
-            </Button>
-          </View>
-        )}>
-        <Select
-          label="Registrar"
-          multiSelect={false}
-          selectedIndex={selectedRegistrar}
-          value={selectedRegistrarDisplay}
-          onSelect={setSelectedRegistrar}>
-          {registrars.map((_registrar, index) => {
-            return (
-              <SelectItem
-                disabled={_registrar.fee.eq(BN_ZERO)}
-                key={_registrar.account.toString()}
-                accessoryLeft={() => {
-                  return <Identicon value={_registrar.account.toString()} size={20} />;
-                }}
-                title={`#${index}`}
-                accessoryRight={() => <Text style={styles.indexText}>{formatBalance(_registrar.fee)}</Text>}
-              />
-            );
-          })}
-        </Select>
-        <Padder scale={0.5} />
-        <Input
-          disabled
-          value={feeDisplay}
-          label="Fee"
-          placeholder="Fee for judgement"
-          caption="Fee paid to Registrar for providing the Judgement"
-          accessoryRight={(props: IconProps) => <Icon {...props} name="alert-circle-outline" />}
-        />
-      </Card>
+    <Modal visible={visible} onDismiss={onClose}>
+      <View style={globalStyles.alignCenter}>
+        <Subheading>{`Choose registrar`}</Subheading>
+      </View>
+      <Padder scale={1} />
+      <SelectRegistrar
+        onSelect={(selectedRegistrar) => {
+          setRegistrar(selectedRegistrar);
+        }}
+      />
+      <Padder scale={1} />
+      <TextInput mode="outlined" dense disabled value={feeDisplay} placeholder="Fee for judgement" />
+      <Padder scale={0.5} />
+      <View style={styles.info}>
+        <Icon name="alert-circle-outline" size={20} />
+        <Caption style={styles.caption}>{`Fee paid to registrar to provide Judgement`}</Caption>
+      </View>
+      <Padder scale={2} />
+      <View style={styles.buttons}>
+        <Button onPress={handleClose} mode="outlined">
+          Cancel
+        </Button>
+        <Button mode="contained" disabled={!registrar} onPress={handleSelect}>
+          Submit
+        </Button>
+      </View>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    width: width * 0.8,
-    minHeight: height * 0.5,
-  },
-  subHeaderOverwrite: {
-    paddingTop: standardPadding / 2,
-  },
-  headerStyleOverwrite: {
-    paddingBottom: 0,
-  },
-  backdrop: {
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-  },
-  footerContainer: {
+  buttons: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-around',
+    marginBottom: standardPadding,
   },
-  footerControl: {
-    marginHorizontal: 2,
+  caption: {
+    marginTop: 0,
+    marginLeft: 3,
   },
-  previewContainer: {
+  info: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    overflow: 'hidden',
-  },
-  addressText: {
-    paddingLeft: standardPadding,
-  },
-  indexText: {
-    paddingLeft: standardPadding,
-    fontFamily: monofontFamily,
   },
 });
 
