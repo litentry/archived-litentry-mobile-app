@@ -1,5 +1,5 @@
 app_identifier("com.litentry.governance") # The bundle identifier of your app
-apple_id("amir@litentry.com") # Your Apple email address
+# apple_id("amir@litentry.com") # Your Apple email address
 
 itc_team_id("122483344") # App Store Connect Team ID
 team_id("56HKVS2886") # Developer Portal Team ID

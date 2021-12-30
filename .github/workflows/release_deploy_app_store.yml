@@ -9,7 +9,7 @@ on:
         default: 'beta'
   
   push:
-    branches: [ develop, feature/fastlane ]
+    branches: [ develop ]
 
 jobs:
   fastlane-deploy:
@@ -37,5 +37,9 @@ jobs:
       # Naturally, promote_to_production only deploys.
       - run: bundle exec fastlane ${{ github.event.inputs.lane || 'beta' }}
         env:
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          # More info: https://sarunw.com/posts/using-app-store-connect-api-with-fastlane-match/
+          ASCAPI_KEY_ID: ${{ secrets.ASCAPI_KEY_ID }}
+          ASCAPI_ISSUER_ID: ${{ secrets.ASCAPI_ISSUER_ID }}
+          ASCAPI_KEY_CONTENT: ${{ secrets.ASCAPI_KEY_CONTENT }}
+
         working-directory: ios

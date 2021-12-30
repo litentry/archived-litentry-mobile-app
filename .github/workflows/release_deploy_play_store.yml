@@ -9,7 +9,7 @@ on:
         default: 'beta'
   
   push:
-    branches: [ develop, feature/fastlane ]
+    branches: [ develop ]
 
 jobs:
   fastlane-deploy:
@@ -36,6 +36,8 @@ jobs:
           echo "storePassword=$KEYSTORE_STORE_PASSWORD" >> key.properties
           echo "keyPassword=$KEYSTORE_KEY_PASSWORD" >> key.properties
         env:
+          # We need to encode uploadKey.keystore to base64 and put its content to the secret in github
+          # use this command: openssl base64 < path_to_uploadKey.keystore | tr -d '\n' 
           PLAY_STORE_UPLOAD_KEY: ${{ secrets.PLAY_STORE_UPLOAD_KEY }}
           KEYSTORE_KEY_ALIAS: ${{ secrets.KEYSTORE_KEY_ALIAS }}
           KEYSTORE_KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
