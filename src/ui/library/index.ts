@@ -27,6 +27,7 @@ export {
   Snackbar,
   Menu,
   useTheme,
+  RadioButton,
 } from 'react-native-paper';
 
 export type {IconSource} from 'react-native-paper/lib/typescript/components/Icon';

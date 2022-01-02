@@ -1,20 +1,14 @@
 import React, {useContext, useRef} from 'react';
-import {StyleSheet} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import NetworkSelectionList from '@ui/components/NetworkSelectionList';
-import globalStyles, {standardPadding} from '@ui/styles';
-import {Button, Divider, Layout} from '@ui-kitten/components';
+import globalStyles from '@ui/styles';
+import {Button, Divider} from '@ui/library';
+import {Layout} from '@ui/components/Layout';
 import {NetworkContext} from 'context/NetworkContext';
 import {NetworkType} from 'src/types';
 import {NavigationProp} from '@react-navigation/native';
 import {CompleteNavigatorParamList} from '@ui/navigation/navigation';
-
-export type InjectedPropTypes = {
-  networkSelection: {
-    selectNetwork: () => void;
-    currentNetwork: NetworkType | undefined;
-  };
-};
+import {Padder} from '@ui/components/Padder';
 
 export function NetworkSelectionScreen({navigation}: {navigation: NavigationProp<CompleteNavigatorParamList>}) {
   const modalRef = useRef<Modalize>(null);
@@ -33,24 +27,16 @@ export function NetworkSelectionScreen({navigation}: {navigation: NavigationProp
       ref={modalRef}
       threshold={250}
       adjustToContentHeight
-      scrollViewProps={{style: {overflow: 'hidden'}}}
       closeOnOverlayTap={false}
       panGestureEnabled={false}
       tapGestureEnabled={false}>
-      <Layout style={styles.networkModal}>
+      <Layout style={globalStyles.paddedContainer}>
         <NetworkSelectionList items={availableNetworks} selected={currentNetwork} onSelect={changeNetwork} />
-        <Divider style={globalStyles.divider} />
-        <Button appearance="ghost" onPress={navigation.goBack}>
-          Close
-        </Button>
+        <Divider />
+        <Padder scale={1} />
+        <Button onPress={navigation.goBack}>{`Close`}</Button>
+        <Padder scale={1} />
       </Layout>
     </Modalize>
   );
 }
-
-const styles = StyleSheet.create({
-  networkModal: {
-    paddingVertical: standardPadding * 3,
-    paddingHorizontal: standardPadding * 2,
-  },
-});
