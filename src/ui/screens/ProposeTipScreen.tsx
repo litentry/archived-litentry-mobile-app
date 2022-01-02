@@ -2,7 +2,7 @@ import React, {useReducer} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useQueryClient} from 'react-query';
 import {NavigationProp} from '@react-navigation/native';
-import {Button, Card, Input, Text} from '@ui-kitten/components';
+import {Subheading, TextInput, Caption, useTheme, Button} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
@@ -11,67 +11,67 @@ import {useApiTx} from 'src/api/hooks/useApiTx';
 import {Padder} from '@ui/components/Padder';
 
 export function ProposeTipScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
+  const {colors} = useTheme();
   const [state, dispatch] = useReducer(reducer, initialState);
   const startTx = useApiTx();
   const queryClient = useQueryClient();
 
   const valid = state.account && state.beneficiary && state.reason && state.reason.length > 4;
 
+  const submit = () => {
+    if (state.account) {
+      startTx({
+        address: state.account,
+        txMethod: 'tips.reportAwesome',
+        params: [state.reason, state.beneficiary],
+      })
+        .then(() => {
+          queryClient.invalidateQueries('tips');
+          navigation.goBack();
+        })
+        .catch((e: Error) => {
+          if (e.message.includes('failed on who')) {
+            dispatch({type: 'SET_ERROR', payload: 'beneficiary_error'});
+          }
+          console.warn(e);
+        });
+    }
+  };
+
   return (
     <SafeView edges={noTopEdges}>
       <View style={styles.container}>
         <View style={globalStyles.flex}>
-          <Card
-            disabled
-            header={(p) => (
-              <View {...p}>
-                <Text>Sending from</Text>
-              </View>
-            )}>
-            <SelectAccount onSelect={(account) => dispatch({type: 'SET_ACCOUNT', payload: account.address})} />
-          </Card>
-
-          <Padder scale={1.5} />
-          <Text>beneficiary</Text>
+          <Subheading>{`Sending from`}</Subheading>
           <Padder scale={0.5} />
-          <Input
-            placeholder={'beneficiary'}
+          <SelectAccount onSelect={(account) => dispatch({type: 'SET_ACCOUNT', payload: account.address})} />
+          <Padder scale={1.5} />
+
+          <Subheading>{`Beneficiary`}</Subheading>
+          <TextInput
+            mode="outlined"
+            placeholder={'Beneficiary'}
+            multiline
+            numberOfLines={2}
             value={state.beneficiary}
             onChangeText={(payload) => dispatch({type: 'SET_BENEFICIARY', payload})}
           />
-          {state.error === 'beneficiary_error' && <Text status="danger">{'Please enter a valid beneficiary!'}</Text>}
+          {state.error === 'beneficiary_error' && (
+            <Caption style={{color: colors.error}}>{'Please enter a valid beneficiary!'}</Caption>
+          )}
           <Padder scale={1.5} />
-          <Text>Tip reason</Text>
-          <Padder scale={0.5} />
-          <Input
+
+          <Subheading>{`Tip reason`}</Subheading>
+          <TextInput
+            mode="outlined"
             placeholder={'Tip reason'}
             value={state.reason}
             onChangeText={(payload) => dispatch({type: 'SET_REASON', payload})}
           />
         </View>
 
-        <Button
-          disabled={!valid}
-          onPress={() => {
-            if (state.account) {
-              startTx({
-                address: state.account,
-                txMethod: 'tips.reportAwesome',
-                params: [state.reason, state.beneficiary],
-              })
-                .then(() => {
-                  queryClient.invalidateQueries('tips');
-                  navigation.goBack();
-                })
-                .catch((e: Error) => {
-                  if (e.message.includes('failed on who')) {
-                    dispatch({type: 'SET_ERROR', payload: 'beneficiary_error'});
-                  }
-                  console.warn(e);
-                });
-            }
-          }}>
-          Sign and Submit
+        <Button mode="contained" disabled={!valid} onPress={submit}>
+          {`Sign and Submit`}
         </Button>
       </View>
     </SafeView>
