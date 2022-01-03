@@ -28,6 +28,7 @@ export {
   Menu,
   useTheme,
   RadioButton,
+  Chip,
 } from 'react-native-paper';
 
 export type {IconSource} from 'react-native-paper/lib/typescript/components/Icon';

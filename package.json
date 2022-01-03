@@ -42,6 +42,7 @@
     "@ui-kitten/components": "^5.0.0",
     "@ui-kitten/eva-icons": "^5.0.0",
     "console-browserify": "^1.2.0",
+    "dayjs": "^1.10.7",
     "events": "^3.3.0",
     "fast-text-encoding": "^1.0.3",
     "graphql": "^16.2.0",

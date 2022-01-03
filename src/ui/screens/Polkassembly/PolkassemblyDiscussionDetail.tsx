@@ -1,10 +1,8 @@
 import React from 'react';
 import {Linking, StyleSheet, TouchableOpacity, View, FlatList} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
-import {Text, useTheme} from '@ui-kitten/components';
-import moment from 'moment';
-import Icon from '@ui/components/Icon';
-import {Label} from '@ui/components/Label';
+import {Icon, Headline, Caption, Chip, Text, useTheme, Subheading} from '@ui/library';
+import * as dateUtils from 'src/utils/date';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -18,7 +16,7 @@ export function PolkassemblyDiscussionDetail({
 }: {
   route: RouteProp<PolkassemblyDiscussionStackParamList, typeof polkassemblyDiscussionDetail>;
 }) {
-  const theme = useTheme();
+  const {colors} = useTheme();
   const id = route.params.id;
   const {data} = usePolkassemblyDiscussionDetail(id);
 
@@ -33,37 +31,29 @@ export function PolkassemblyDiscussionDetail({
       <FlatList
         ListHeaderComponent={() => (
           <View style={styles.header}>
-            <Text category="h6">{post.title ?? ''}</Text>
+            <Headline>{post.title ?? ''}</Headline>
             <View style={styles.postDetailRow}>
-              <Text category="c2">{post.author?.username ?? ''} </Text>
-              <Text category="c1">posted in </Text>
-              <Label text={post.topic.name} />
-              <Text category="c1"> {moment(post.created_at).fromNow()}</Text>
+              <Caption>{post.author?.username ?? ''} </Caption>
+              <Caption>posted in </Caption>
+              <Chip>{post.topic.name}</Chip>
             </View>
+            <Caption> {dateUtils.fromNow(post.created_at)}</Caption>
             <View style={styles.content}>
-              <Text style={styles.contentText} category="c1">
-                {post.content?.trim() ?? ''}
-              </Text>
+              <Text>{post.content?.trim() ?? ''}</Text>
             </View>
             <View style={styles.reactionRow}>
               {post.comments.length ? (
                 <>
                   <View style={globalStyles.rowAlignCenter}>
-                    <Icon name="message-circle-outline" style={globalStyles.icon15} fill="#ccc" animation="pulse" />
+                    <Icon name="message-outline" size={15} />
                     <Padder scale={0.3} />
-                    <Text category="label" appearance="hint">
-                      {post.comments.length} comments
-                    </Text>
+                    <Caption>{post.comments.length} comments</Caption>
                   </View>
                   <Padder scale={1} />
                 </>
               ) : null}
-              <Text category="c1" appearance="hint">
-                {`👍 ${post.likes.aggregate.count} `}
-              </Text>
-              <Text category="c1" appearance="hint">
-                {` 👎 ${post.dislikes.aggregate.count}`}
-              </Text>
+              <Caption>{`👍 ${post.likes.aggregate.count} `}</Caption>
+              <Caption>{` 👎 ${post.dislikes.aggregate.count}`}</Caption>
             </View>
           </View>
         )}
@@ -71,47 +61,34 @@ export function PolkassemblyDiscussionDetail({
         keyExtractor={(item) => item.id}
         renderItem={({item: comment}) => (
           <View style={styles.comment}>
-            <View style={[styles.commentAuthorIcon, {backgroundColor: theme['text-basic-color']}]}>
-              <Text category="h6" appearance="alternative">
-                {comment.author?.username?.substr(0, 1).toUpperCase()}
-              </Text>
+            <View style={[styles.commentAuthorIcon, {backgroundColor: colors.accent}]}>
+              <Subheading>{comment.author?.username?.[0]?.toUpperCase()}</Subheading>
             </View>
             <View style={styles.commentRightSide}>
               <View style={styles.commentHeader}>
-                <Text category="c2" numberOfLines={1} style={styles.commentAuthor}>
-                  {comment.author?.username ?? ''}
-                </Text>
-                <Text category="c1"> commented </Text>
-                <Text category="c2">{moment(comment.created_at).fromNow()}</Text>
+                <Caption>{comment.author?.username ?? ''}</Caption>
+                <Caption> commented </Caption>
+                <Caption>{dateUtils.fromNow(comment.created_at)}</Caption>
               </View>
               <Padder scale={0.5} />
-              <Text category="c1">{comment.content.trim()}</Text>
+              <Text>{comment.content.trim()}</Text>
               <Padder scale={0.5} />
               <View style={globalStyles.rowAlignCenter}>
-                <Text category="c1" appearance="hint">
-                  {`👍 ${comment.likes.aggregate.count} `}
-                </Text>
-                <Text category="c1" appearance="hint">
-                  {` 👎 ${comment.dislikes.aggregate.count}`}
-                </Text>
+                <Caption>{`👍 ${comment.likes.aggregate.count} `}</Caption>
+                <Caption>{` 👎 ${comment.dislikes.aggregate.count}`}</Caption>
               </View>
             </View>
           </View>
         )}
         ListFooterComponent={() => (
           <View style={styles.footer}>
-            <Icon style={globalStyles.icon15} name="info-outline" fill={theme['text-hint-color']} />
-            <Text appearance="hint" category="c1">
-              {` To comment, like or subscribe please `}
-            </Text>
+            <Icon name="information-outline" size={20} />
+            <Caption>{` To comment, like or subscribe please `}</Caption>
             <TouchableOpacity onPress={() => Linking.openURL(externalURL)}>
-              <Text status="primary" category="c2" style={styles.textUnderline}>
-                login
-              </Text>
+              <Caption style={[styles.textUnderline, {color: colors.primary}]}>login</Caption>
             </TouchableOpacity>
           </View>
         )}
-        style={styles.container}
         contentContainerStyle={styles.contentContainer}
       />
     </SafeView>
@@ -119,11 +96,8 @@ export function PolkassemblyDiscussionDetail({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   header: {
-    marginBottom: standardPadding * 3,
+    marginBottom: standardPadding * 2,
   },
   contentContainer: {
     padding: standardPadding * 2,
@@ -134,11 +108,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   content: {
-    marginTop: standardPadding * 4,
+    marginTop: standardPadding * 2,
     marginBottom: standardPadding * 2,
-  },
-  contentText: {
-    opacity: 0.7,
   },
   reactionRow: {
     flexDirection: 'row',
@@ -158,7 +129,6 @@ const styles = StyleSheet.create({
     marginTop: standardPadding * 2,
     marginRight: standardPadding,
   },
-
   commentRightSide: {
     borderLeftWidth: 1,
     borderLeftColor: '#ccc',
@@ -169,9 +139,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-  },
-  commentAuthor: {
-    maxWidth: '50%',
   },
   footer: {
     flexDirection: 'row',
