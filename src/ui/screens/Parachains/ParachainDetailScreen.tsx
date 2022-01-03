@@ -3,12 +3,12 @@ import {View, StyleSheet, SectionList, Linking} from 'react-native';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {RouteProp} from '@react-navigation/native';
 import {ParachainsStackParamList} from '@ui/navigation/navigation';
-import {Text, Divider, useTheme, ListItem, Icon, Button} from '@ui-kitten/components';
+import {Card, Subheading, Paragraph, List, Divider, Icon, Button, Text} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {BlockTime} from '@ui/components/BlockTime';
 import {useParachainEvents} from 'src/api/hooks/useParachainEvents';
 import {formatNumber, hexToBn} from '@polkadot/util';
-import {monofontFamily, standardPadding} from '@ui/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {useParachainValidators} from 'src/api/hooks/useParachainValidators';
 import type {
   AccountId,
@@ -73,8 +73,6 @@ function getNonVoters(validators?: AccountId[], pendingAvail?: CandidatePendingA
 
 export function ParachainDetailScreen({route}: ScreenProps) {
   const {id, name, period, blocks} = route.params;
-  const theme = useTheme();
-
   const events = useParachainEvents();
   const {data: parachainValidators} = useParachainValidators();
   const {data: parachainInfo} = useParachainInfo(id as unknown as ParaId);
@@ -103,83 +101,65 @@ export function ParachainDetailScreen({route}: ScreenProps) {
     <SafeView edges={noTopEdges}>
       <SectionList
         ListHeaderComponent={() => (
-          <>
-            <View style={[styles.container, {borderColor: theme['border-basic-color-4']}]}>
-              <Padder scale={1} />
-              <View style={styles.parachainNameContainer}>
-                <Text category="s1" style={styles.text}>
-                  {name}
-                </Text>
-                <Text category="s1" style={styles.text}>{`#${id}`}</Text>
-                <Padder scale={1} />
-                <View style={styles.eventsContainer}>
-                  <View style={styles.event}>
-                    <Text style={styles.text}>{`Included`}</Text>
-                    {events.lastIncluded[id] ? (
-                      <Text style={styles.text}>{formatNumber(events.lastIncluded[id]?.blockNumber)}</Text>
-                    ) : null}
-                  </View>
-                  <View style={styles.event}>
-                    <Text style={styles.text}>{`Backed`}</Text>
-                    {events.lastBacked[id] ? (
-                      <Text style={styles.text}>{formatNumber(events.lastBacked[id]?.blockNumber)}</Text>
-                    ) : null}
-                  </View>
-                </View>
+          <Card>
+            <Card.Content>
+              <Subheading style={globalStyles.textCenter}>{name}</Subheading>
+              <Paragraph style={globalStyles.textCenter}>{`#${id}`}</Paragraph>
+              <View style={globalStyles.spaceBetweenRowContainer}>
+                <List.Item
+                  style={styles.listItem}
+                  title="Included"
+                  description={formatNumber(events.lastIncluded[id]?.blockNumber)}
+                />
+                <List.Item
+                  style={styles.listItem}
+                  title="Backed"
+                  description={formatNumber(events.lastBacked[id]?.blockNumber)}
+                />
               </View>
-              <Padder scale={1} />
               <Divider />
-              <View style={styles.leaseInfo}>
-                <ListItem
-                  disabled
-                  title="Lease"
-                  accessoryLeft={() => (
-                    <Icon name="clock-outline" fill={theme['color-basic-600']} style={styles.icon} />
-                  )}
-                  accessoryRight={() => (
-                    <View style={styles.accessoryRight}>
-                      {period ? <Text style={styles.text}>{period}</Text> : null}
-                      {blocks ? <BlockTime blockNumber={hexToBn(blocks)} /> : null}
-                    </View>
-                  )}
-                />
-                <ListItem
-                  disabled
-                  title="Lifecycle"
-                  accessoryLeft={() => <Icon name="sync-outline" fill={theme['color-basic-600']} style={styles.icon} />}
-                  accessoryRight={() => (
-                    <View style={styles.accessoryRight}>
-                      <Text style={styles.text}>{parachainInfo?.lifecycle?.toString()}</Text>
-                    </View>
-                  )}
-                />
-                {homepage ? (
-                  <Button
-                    accessoryLeft={(p) => <Icon {...p} name="home-outline" />}
-                    onPress={() => {
-                      Linking.canOpenURL(homepage).then((supported) => {
-                        if (supported) {
-                          Linking.openURL(homepage);
-                        }
-                      });
-                    }}
-                    appearance="ghost">
-                    {`Homepage`}
-                  </Button>
-                ) : null}
-              </View>
-            </View>
-          </>
+              <List.Item
+                title="Lease"
+                left={() => <LeftIcon icon="clock-outline" />}
+                right={() => (
+                  <View style={styles.accessoryRight}>
+                    {period ? <Text>{period}</Text> : null}
+                    {blocks ? <BlockTime blockNumber={hexToBn(blocks)} /> : null}
+                  </View>
+                )}
+              />
+              <List.Item
+                title="Lifecycle"
+                left={() => <LeftIcon icon="sync" />}
+                right={() => (
+                  <View style={styles.accessoryRight}>
+                    <Text>{parachainInfo?.lifecycle?.toString()}</Text>
+                  </View>
+                )}
+              />
+              <Divider />
+              <Padder scale={0.5} />
+              {homepage ? (
+                <Button
+                  icon="home"
+                  onPress={() => {
+                    Linking.canOpenURL(homepage).then((supported) => {
+                      if (supported) {
+                        Linking.openURL(homepage);
+                      }
+                    });
+                  }}>
+                  {`Homepage`}
+                </Button>
+              ) : null}
+            </Card.Content>
+          </Card>
         )}
         contentContainerStyle={styles.content}
         stickySectionHeadersEnabled={false}
         sections={sections}
         renderItem={({item}) => <MemoizedValidator accountId={item.toString()} />}
-        renderSectionHeader={({section: {title}}) => (
-          <Text category={'s1'} style={styles.header}>
-            {title}
-          </Text>
-        )}
+        renderSectionHeader={({section: {title}}) => <Text style={styles.header}>{title}</Text>}
         keyExtractor={(item) => item.toString()}
         ListEmptyComponent={EmptyView}
         ItemSeparatorComponent={Divider}
@@ -189,61 +169,44 @@ export function ParachainDetailScreen({route}: ScreenProps) {
   );
 }
 
-const MemoizedValidator = React.memo(Validator);
+function LeftIcon({icon}: {icon: string}) {
+  return (
+    <View style={globalStyles.justifyCenter}>
+      <Icon name={icon} size={20} />
+    </View>
+  );
+}
 
 function Validator({accountId}: {accountId: string}) {
   const {data} = useAccountIdentityInfo(accountId.toString());
 
   return (
-    <ListItem
-      disabled
-      accessoryLeft={() => <IdentityIcon value={accountId.toString()} size={30} />}
-      title={() => (
-        <View style={styles.validatorAccountContainer}>{data && <AccountInfoInlineTeaser identity={data} />}</View>
+    <List.Item
+      left={() => (
+        <View style={globalStyles.justifyCenter}>
+          <IdentityIcon value={accountId.toString()} size={25} />
+        </View>
       )}
+      title={() => data && <AccountInfoInlineTeaser identity={data} />}
     />
   );
 }
+const MemoizedValidator = React.memo(Validator);
 
 const styles = StyleSheet.create({
   content: {
     paddingVertical: standardPadding,
     paddingHorizontal: standardPadding * 2,
   },
-  validatorAccountContainer: {
-    paddingHorizontal: 10,
-  },
-  leaseInfo: {
-    paddingHorizontal: 10,
+  listItem: {
+    width: 200,
   },
   header: {
-    padding: standardPadding,
-  },
-  container: {
-    borderWidth: 1,
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  eventsContainer: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  event: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  parachainNameContainer: {
-    alignItems: 'center',
+    marginTop: standardPadding * 3,
+    marginLeft: standardPadding,
   },
   accessoryRight: {
+    justifyContent: 'center',
     alignItems: 'flex-end',
   },
-  icon: {
-    width: 25,
-    height: 25,
-  },
-  text: {
-    fontFamily: monofontFamily,
-  },
-  button: {},
 });

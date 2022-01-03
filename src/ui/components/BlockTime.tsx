@@ -1,5 +1,5 @@
 import React from 'react';
-import {Caption} from '@ui/library';
+import {Text} from '@ui/library';
 import {BlockNumber} from '@polkadot/types/interfaces';
 import BN from 'bn.js';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
@@ -19,5 +19,5 @@ export function BlockTime({blockNumber}: Props) {
     blockTime = `${minutes || ''} ${seconds || ''}`;
   }
 
-  return <Caption>{blockTime}</Caption>;
+  return <Text>{blockTime}</Text>;
 }
