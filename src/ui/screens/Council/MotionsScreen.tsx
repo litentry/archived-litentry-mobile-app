@@ -4,7 +4,6 @@ import {useQueryClient} from 'react-query';
 import {Button, Card, Divider, ListItem, Text} from '@ui-kitten/components';
 import {formatNumber} from '@polkadot/util';
 import type {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
-
 import {ChainApiContext} from 'context/ChainApiContext';
 import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
