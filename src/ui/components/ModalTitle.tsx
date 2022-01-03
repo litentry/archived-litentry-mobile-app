@@ -1,6 +1,6 @@
 import React from 'react';
-import {View} from 'react-native';
-import globalStyles from '@ui/styles';
+import {View, StyleSheet} from 'react-native';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {Caption, Subheading} from '@ui/library';
 
 type PropTypes = {title: string; subtitle?: string};
@@ -9,7 +9,7 @@ function ModalTitle(props: PropTypes) {
   const {title, subtitle = ''} = props;
 
   return (
-    <View style={[globalStyles.rowContainer, globalStyles.centeredContainer]}>
+    <View style={[globalStyles.rowContainer, globalStyles.centeredContainer, styles.container]}>
       <Subheading numberOfLines={1} ellipsizeMode="middle" selectable>
         {title}
       </Subheading>
@@ -17,5 +17,11 @@ function ModalTitle(props: PropTypes) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    marginVertical: standardPadding,
+  },
+});
 
 export default ModalTitle;

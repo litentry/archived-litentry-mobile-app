@@ -84,7 +84,6 @@ function ManageIdentity({
           {identity?.hasIdentity ? (
             identity.hasJudgements ? (
               <SuccessDialog
-                inline
                 text={`This address has ${judgementCount} judgement${
                   judgementCount > 1 ? 's' : ''
                 } from Registrar ${judgements?.map((judgement) => `#${judgement[0]}`).join(',')}. It's all set. 🎉`}

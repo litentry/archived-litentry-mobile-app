@@ -1,20 +1,20 @@
 import React, {useCallback, useContext, useEffect, useMemo, useReducer, useRef} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
-import {Button, Divider, Icon, IconProps, Input, Layout, Tab, TabView, Text} from '@ui-kitten/components';
-import {ChainApiContext} from 'context/ChainApiContext';
+import {Divider, Button, Tabs, TabScreen, TextInput} from '@ui/library';
+import {Layout} from '@ui/components/Layout';
 import {NetworkContext} from 'context/NetworkContext';
-import ModalTitle from '@ui/components/ModalTitle';
 import {Padder} from '@ui/components/Padder';
 import QRCamera from '@ui/components/QRCamera';
 import SuccessDialog from '@ui/components/SuccessDialog';
 import {Modalize} from 'react-native-modalize';
 import AddressInfoPreview from './AddressPreview';
 import {AppStackParamList} from '@ui/navigation/navigation';
-import {default as globalStyles, monofontFamily, standardPadding} from '@ui/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {isAddressValid, parseAddress} from 'src/utils/address';
 import {useAccounts} from 'context/AccountsContext';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
+import ModalTitle from '@ui/components/ModalTitle';
 
 export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppStackParamList>}) {
   const ref = useRef<Modalize>(null);
@@ -24,7 +24,6 @@ export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppSt
 
   const {currentNetwork} = useContext(NetworkContext);
   const [state, dispatch] = useReducer(addAccountReducer, initialState);
-  const {api} = useContext(ChainApiContext);
   const {addAccount} = useAccounts();
 
   const handleInputChange = (text: string) => {
@@ -90,63 +89,53 @@ export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppSt
       closeOnOverlayTap
       panGestureEnabled={false}>
       <SafeView edges={noTopEdges}>
-        <Layout style={styles.modal}>
-          <ModalTitle title="Add External Account" />
-          <Divider />
+        <Layout>
+          <ModalTitle title="Add external account" />
           {(() => {
             switch (state.step) {
               case 'input':
                 return (
-                  <TabView
-                    shouldLoadComponent={(index) => {
-                      return state.tabIndex === index;
-                    }}
-                    indicatorStyle={styles.tabViewIndicator}
-                    style={styles.tabViewContainer}
-                    selectedIndex={state.tabIndex}
-                    onSelect={(index) => dispatch({type: 'SET_TAB_INDEX', payload: index})}>
-                    <Tab title={InputIcon}>
-                      <Layout style={styles.tabContainer}>
-                        <Input
-                          onChangeText={handleInputChange}
-                          value={state.address}
-                          multiline={true}
-                          textStyle={styles.input}
-                          placeholder="👉 Paste address here, e.g. 167r...14h"
-                        />
-                      </Layout>
-                    </Tab>
-                    <Tab title={QrIcon}>
-                      <Layout style={styles.tabContainer}>
-                        <QRCamera onRead={handleScan} />
-                      </Layout>
-                    </Tab>
-                  </TabView>
+                  <View style={styles.tabViewContainer}>
+                    <Tabs>
+                      <TabScreen label="Type in" icon="keyboard">
+                        <View style={globalStyles.paddedContainer}>
+                          <TextInput
+                            style={styles.input}
+                            mode="outlined"
+                            onChangeText={handleInputChange}
+                            value={state.address}
+                            multiline={true}
+                            numberOfLines={4}
+                            placeholder="👉 Paste address here, e.g. 167r...14h"
+                          />
+                        </View>
+                      </TabScreen>
+                      <TabScreen label="Via QR" icon="qrcode">
+                        <View style={globalStyles.paddedContainer}>
+                          <QRCamera onRead={handleScan} />
+                        </View>
+                      </TabScreen>
+                    </Tabs>
+                  </View>
                 );
               case 'preview':
-                return <AddressInfoPreview address={state.address} api={api} network={currentNetwork} />;
+                return <AddressInfoPreview address={state.address} network={currentNetwork} />;
               case 'success':
-                return (
-                  <Layout style={globalStyles.dialogMinHeight}>
-                    <SuccessDialog text="Account import success" />
-                  </Layout>
-                );
+                return <SuccessDialog text="Account import success" />;
             }
           })()}
-          <Divider style={globalStyles.divider} />
-          <Layout style={styles.btnContainer}>
+          <Divider />
+          <Padder scale={1} />
+          <View style={styles.btnContainer}>
             {state.step !== 'success' ? (
-              <>
-                <Button style={styles.btn} appearance="ghost" status="danger" onPress={navigation.goBack}>
-                  {'Cancel'}
-                </Button>
-                <View style={styles.gap20} />
-              </>
+              <Button mode="outlined" onPress={navigation.goBack}>
+                {'Cancel'}
+              </Button>
             ) : undefined}
-            <Button style={styles.btn} appearance="ghost" disabled={confirmBtnDisabled} onPress={handleConfirm}>
+            <Button mode="contained" disabled={confirmBtnDisabled} onPress={handleConfirm}>
               {state.step === 'success' ? 'Close' : 'Confirm'}
             </Button>
-          </Layout>
+          </View>
         </Layout>
       </SafeView>
     </Modalize>
@@ -154,63 +143,18 @@ export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppSt
 }
 
 const styles = StyleSheet.create({
-  modal: {
-    paddingTop: standardPadding * 2,
-    paddingBottom: standardPadding,
-  },
-  tabViewContainer: {
-    height: 410,
-  },
-  tabTitle: {
-    flexDirection: 'row',
-  },
-  tabContainer: {
-    padding: standardPadding,
-    justifyContent: 'space-between',
-  },
   input: {
-    fontSize: 16,
     minHeight: 90,
-    fontFamily: monofontFamily,
-  },
-  tabViewIndicator: {
-    height: 1,
-  },
-  networkHint: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  inlineIcon: {
-    width: 20,
-    height: 20,
-    marginRight: standardPadding / 2,
   },
   btnContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: standardPadding,
   },
-  btn: {
-    flex: 1,
-  },
-  gap20: {
-    width: 20,
+  tabViewContainer: {
+    minHeight: 400,
   },
 });
-
-const QrIcon = (props: IconProps) => (
-  <View style={styles.tabTitle}>
-    <Text category="s1">Via QR</Text>
-    <Padder scale={0.5} />
-    <Icon {...props} pack="ionic" name="qr-code-sharp" />
-  </View>
-);
-
-const InputIcon = (props: IconProps) => (
-  <View style={styles.tabTitle}>
-    <Text category="s1">Type in</Text>
-    <Padder scale={0.5} />
-    <Icon {...props} pack="ionic" name="keypad-outline" />
-  </View>
-);
 
 /**
  * Reducer
