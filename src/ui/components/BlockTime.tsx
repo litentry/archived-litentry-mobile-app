@@ -1,21 +1,12 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import {Text} from '@ui-kitten/components';
+import {Caption} from '@ui/library';
 import {BlockNumber} from '@polkadot/types/interfaces';
 import BN from 'bn.js';
-
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
-import {monofontFamily} from '@ui/styles';
 
 type Props = {
   blockNumber: BlockNumber | BN;
 };
-
-const styles = StyleSheet.create({
-  timeText: {
-    fontFamily: monofontFamily,
-  },
-});
 
 export function BlockTime({blockNumber}: Props) {
   const {timeStringParts} = useBlockTime(blockNumber);
@@ -28,5 +19,5 @@ export function BlockTime({blockNumber}: Props) {
     blockTime = `${minutes || ''} ${seconds || ''}`;
   }
 
-  return <Text style={styles.timeText}>{blockTime}</Text>;
+  return <Caption>{blockTime}</Caption>;
 }
