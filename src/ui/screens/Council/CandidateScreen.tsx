@@ -118,7 +118,7 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
                 {web ? (
                   <List.Item
                     title="Web"
-                    left={() => <LeftIcon icon="browser" />}
+                    left={() => <LeftIcon icon="earth" />}
                     right={() => (
                       <ItemRight>
                         <Caption>{web}</Caption>

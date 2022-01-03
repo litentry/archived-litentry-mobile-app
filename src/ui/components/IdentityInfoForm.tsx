@@ -1,10 +1,10 @@
 import React from 'react';
-import {View, StyleSheet, ScrollView} from 'react-native';
-import {Input, Icon, IconProps} from '@ui-kitten/components';
+import {StyleSheet, ScrollView} from 'react-native';
+import {TextInput, Button} from '@ui/library';
 import {WHITESPACE, validateFormField} from 'src/utils/form';
-import FormLabel from '@ui/components/FormLabel';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
-import {Button} from '@ui/library';
+import {Padder} from './Padder';
+import {standardPadding} from '@ui/styles';
 
 export type IdentityPayload = {
   display: {raw: string} | {none: null};
@@ -50,75 +50,73 @@ function IdentityInfoForm({onSubmit, identity}: IdentityInfoFormProps): React.Re
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.formFieldContainer}>
-        <Input
-          label={() => <FormLabel text="Display Name" />}
-          placeholder="My On-Chain Name"
-          value={display}
-          status={formStatus.isDisplayValid ? 'basic' : 'danger'}
-          onChangeText={(value) => dispatch({type: 'set_prop', value: {key: 'display', value}})}
-          accessoryLeft={(props: IconProps) => <Icon {...props} name="person-outline" />}
-        />
-      </View>
-      <View style={styles.formFieldContainer}>
-        <Input
-          label={() => <FormLabel text="Legal Name" />}
-          placeholder="Full Legal Name"
-          value={legal}
-          status={formStatus.isLegalValid ? 'basic' : 'danger'}
-          onChangeText={(value) => dispatch({type: 'set_prop', value: {key: 'legal', value}})}
-          accessoryLeft={(props: IconProps) => <Icon {...props} name="credit-card-outline" />}
-        />
-      </View>
-      <View style={styles.formFieldContainer}>
-        <Input
-          label={() => <FormLabel text="Email" />}
-          placeholder="somebody@example.com"
-          autoCapitalize="none"
-          value={email}
-          status={formStatus.isEmailValid ? 'basic' : 'danger'}
-          onChangeText={(value) => dispatch({type: 'set_prop', value: {key: 'email', value}})}
-          accessoryLeft={(props: IconProps) => <Icon {...props} name="email-outline" />}
-        />
-      </View>
-      <View style={styles.formFieldContainer}>
-        <Input
-          label={() => <FormLabel text="Web" />}
-          placeholder="https://example.com"
-          value={web}
-          autoCapitalize="none"
-          status={formStatus.isWebValid ? 'basic' : 'danger'}
-          onChangeText={(value) => dispatch({type: 'set_prop', value: {key: 'web', value}})}
-          accessoryLeft={(props: IconProps) => <Icon {...props} name="browser-outline" />}
-        />
-      </View>
-      <View style={styles.formFieldContainer}>
-        <Input
-          label={() => <FormLabel text="Twitter" />}
-          placeholder="@YourTwitterName"
-          value={twitter}
-          autoCapitalize="none"
-          status={formStatus.isTwitterValid ? 'basic' : 'danger'}
-          onChangeText={(value) => dispatch({type: 'set_prop', value: {key: 'twitter', value}})}
-          accessoryLeft={(props: IconProps) => <Icon {...props} name="twitter-outline" />}
-        />
-      </View>
-      <View style={styles.formFieldContainer}>
-        <Input
-          label={() => <FormLabel text="Riot" />}
-          placeholder="@yourname:matrix.org"
-          value={riot}
-          autoCapitalize="none"
-          status={formStatus.isRiotValid ? 'basic' : 'danger'}
-          onChangeText={(value) => dispatch({type: 'set_prop', value: {key: 'riot', value}})}
-          accessoryLeft={(props: IconProps) => <Icon {...props} name="message-square-outline" />}
-        />
-      </View>
-      <View style={styles.submitButtonContainer}>
-        <Button mode="contained" onPress={onSubmitPress} disabled={!formStatus.isFormValid}>
-          Submit
-        </Button>
-      </View>
+      <TextInput
+        mode="outlined"
+        label="Display Name"
+        placeholder="My On-Chain Name"
+        value={display}
+        error={!formStatus.isDisplayValid}
+        onChangeText={(value) => dispatch({type: 'set_prop', value: {key: 'display', value}})}
+        left={<TextInput.Icon name="account-outline" />}
+      />
+      <Padder scale={1} />
+      <TextInput
+        mode="outlined"
+        label="Legal Name"
+        placeholder="Full Legal Name"
+        value={legal}
+        error={!formStatus.isLegalValid}
+        onChangeText={(value) => dispatch({type: 'set_prop', value: {key: 'legal', value}})}
+        left={<TextInput.Icon name="card-text-outline" />}
+      />
+      <Padder scale={1} />
+      <TextInput
+        mode="outlined"
+        label="Email"
+        placeholder="somebody@example.com"
+        autoCapitalize="none"
+        value={email}
+        error={!formStatus.isEmailValid}
+        onChangeText={(value) => dispatch({type: 'set_prop', value: {key: 'email', value}})}
+        left={<TextInput.Icon name="email-outline" />}
+      />
+      <Padder scale={1} />
+      <TextInput
+        mode="outlined"
+        label="Web"
+        placeholder="https://example.com"
+        value={web}
+        autoCapitalize="none"
+        error={!formStatus.isWebValid}
+        onChangeText={(value) => dispatch({type: 'set_prop', value: {key: 'web', value}})}
+        left={<TextInput.Icon name="earth" />}
+      />
+      <Padder scale={1} />
+      <TextInput
+        mode="outlined"
+        label="Twitter"
+        placeholder="@YourTwitterName"
+        value={twitter}
+        autoCapitalize="none"
+        error={!formStatus.isTwitterValid}
+        onChangeText={(value) => dispatch({type: 'set_prop', value: {key: 'twitter', value}})}
+        left={<TextInput.Icon name="twitter" />}
+      />
+      <Padder scale={1} />
+      <TextInput
+        mode="outlined"
+        label="Riot"
+        placeholder="@yourName:matrix.org"
+        value={riot}
+        autoCapitalize="none"
+        error={!formStatus.isRiotValid}
+        onChangeText={(value) => dispatch({type: 'set_prop', value: {key: 'riot', value}})}
+        left={<TextInput.Icon name="message-outline" />}
+      />
+      <Padder scale={1} />
+      <Button mode="contained" onPress={onSubmitPress} disabled={!formStatus.isFormValid}>
+        Submit
+      </Button>
     </ScrollView>
   );
 }
@@ -127,15 +125,8 @@ export default IdentityInfoForm;
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-  },
-  formFieldContainer: {
-    paddingHorizontal: 10,
-    marginTop: 15,
-  },
-  submitButtonContainer: {
-    paddingHorizontal: 10,
-    marginVertical: 25,
+    padding: standardPadding * 2,
+    marginBottom: standardPadding * 2,
   },
 });
 
