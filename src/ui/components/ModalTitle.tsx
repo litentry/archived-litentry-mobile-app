@@ -1,7 +1,7 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import globalStyles, {standardPadding, monofontFamily} from '@ui/styles';
-import {Text} from '@ui-kitten/components';
+import {View} from 'react-native';
+import globalStyles from '@ui/styles';
+import {Caption, Subheading} from '@ui/library';
 
 type PropTypes = {title: string; subtitle?: string};
 
@@ -9,33 +9,13 @@ function ModalTitle(props: PropTypes) {
   const {title, subtitle = ''} = props;
 
   return (
-    <View style={[globalStyles.rowContainer, globalStyles.centeredContainer, styles.container]}>
-      <Text
-        numberOfLines={1}
-        ellipsizeMode="middle"
-        selectable
-        category="s1"
-        style={[styles.title, {fontFamily: monofontFamily}]}>
+    <View style={[globalStyles.rowContainer, globalStyles.centeredContainer]}>
+      <Subheading numberOfLines={1} ellipsizeMode="middle" selectable>
         {title}
-      </Text>
-      {subtitle ? (
-        <Text appearance="hint" category="c2">
-          {subtitle}
-        </Text>
-      ) : null}
+      </Subheading>
+      {subtitle ? <Caption>{subtitle}</Caption> : null}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  title: {
-    maxWidth: '50%',
-    alignSelf: 'center',
-    fontSize: 18,
-  },
-  container: {
-    paddingBottom: standardPadding * 2,
-  },
-});
 
 export default ModalTitle;
