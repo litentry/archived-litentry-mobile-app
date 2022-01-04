@@ -6,7 +6,7 @@ import type {PalletTipsOpenTip} from '@polkadot/types/lookup';
 import {formatNumber} from '@polkadot/util';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {Card, Divider, ListItem, Text} from '@ui-kitten/components';
+import {Card, Subheading, Caption, Divider, List, Text} from '@ui/library';
 import {useAccounts} from 'context/AccountsContext';
 import {ChainApiContext} from 'context/ChainApiContext';
 import AddressInlineTeaser from '@ui/components/AddressInlineTeaser';
@@ -21,8 +21,9 @@ import {useTip} from 'src/api/hooks/useTip';
 import {useCall} from '@hooks/useCall';
 import {Account} from '@ui/components/Account';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
-import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {EmptyView} from '@ui/components/EmptyView';
+import {Padder} from '@ui/components/Padder';
 
 type ScreenProps = {
   navigation: StackNavigationProp<DashboardStackParamList>;
@@ -51,50 +52,43 @@ function TipDetailContent({tip, bestNumber}: TipDetailContentProps) {
   const tippersCount = tip.tips.length;
 
   return (
-    <View style={styles.header}>
+    <>
       <Card>
-        <View style={styles.whoContainer}>
-          <View style={styles.sectionTextContainer}>
-            <Text category="s1" style={styles.sectionText}>
-              Who
-            </Text>
+        <Card.Content>
+          <View style={styles.whoContainer}>
+            <View style={styles.sectionTextContainer}>
+              <Subheading>Who</Subheading>
+            </View>
+            <View style={styles.addressContainer}>
+              <AddressInlineTeaser address={String(tip.who)} />
+            </View>
           </View>
-          <View style={styles.addressContainer}>
-            <AddressInlineTeaser address={String(tip.who)} />
+          <View style={styles.finderContainer}>
+            <View style={styles.sectionTextContainer}>
+              <Subheading>Finder</Subheading>
+            </View>
+            <View style={styles.addressContainer}>
+              <AddressInlineTeaser address={String(tip.finder)} />
+            </View>
           </View>
-        </View>
-        <View style={styles.finderContainer}>
-          <View style={styles.sectionTextContainer}>
-            <Text category="s1" style={styles.sectionText}>
-              Finder
-            </Text>
-          </View>
-          <View style={styles.addressContainer}>
-            <AddressInlineTeaser address={String(tip.finder)} />
-          </View>
-        </View>
+        </Card.Content>
       </Card>
-      <View style={styles.containerSpacing}>
-        <TipReason reasonHash={tip.reason} />
-      </View>
+      <Padder scale={1} />
+      <TipReason reasonHash={tip.reason} />
       {closesAt && bestNumber && closesAt.gt(bestNumber) ? (
         <View style={styles.closesAtContainer}>
-          <Text category="s1" style={styles.sectionText}>
-            Closes at
-          </Text>
+          <Subheading>Closes at</Subheading>
           <>
             <BlockTime blockNumber={closesAt.sub(bestNumber)} />
-            <Text style={styles.sectionText}>#{formatNumber(closesAt)}</Text>
+            <Subheading>#{formatNumber(closesAt)}</Subheading>
           </>
         </View>
       ) : null}
       <View style={styles.containerSpacing}>
-        <Text category="s1" style={styles.sectionText}>
-          Tippers {tippersCount > 0 ? `(${tippersCount})` : ''}
-        </Text>
-        {Number(median) > 0 ? <Text>{formatBalance(median ?? '')}</Text> : null}
+        <Subheading>Tippers {tippersCount > 0 ? `(${tippersCount})` : ''}</Subheading>
+        {Number(median) > 0 ? <Caption>{formatBalance(median ?? '')}</Caption> : null}
       </View>
-    </View>
+    </>
   );
 }
 
@@ -120,7 +114,7 @@ function TipDetailScreen({route}: ScreenProps) {
           const [tipper, balance] = item;
 
           return (
-            <ListItem
+            <List.Item
               title={() => {
                 return (
                   <Account id={tipper.toString()}>
@@ -130,11 +124,9 @@ function TipDetailScreen({route}: ScreenProps) {
                   </Account>
                 );
               }}
-              description={() => {
-                return <Text>{formatBalance(balance)}</Text>;
-              }}
-              accessoryLeft={() => (
-                <View style={styles.tipperIconContainer}>
+              description={() => <Caption>{formatBalance(balance)}</Caption>}
+              left={() => (
+                <View style={globalStyles.justifyCenter}>
                   <Identicon value={tipper} size={35} />
                 </View>
               )}
@@ -152,9 +144,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  header: {
-    marginBottom: standardPadding,
-  },
   whoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -162,9 +151,6 @@ const styles = StyleSheet.create({
   },
   sectionTextContainer: {
     flex: 1,
-  },
-  sectionText: {
-    fontFamily: monofontFamily,
   },
   addressContainer: {
     flex: 4,
@@ -176,7 +162,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   closesAtContainer: {
-    marginTop: 20,
+    marginTop: standardPadding * 2,
+    marginHorizontal: standardPadding,
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
@@ -184,7 +171,6 @@ const styles = StyleSheet.create({
   containerSpacing: {
     marginTop: 20,
   },
-  tipperIconContainer: {marginRight: 15},
 });
 
 export default TipDetailScreen;
