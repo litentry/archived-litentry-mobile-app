@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {Card} from '@ui/library';
 import AddressInlineTeaser from '@ui/components/AddressInlineTeaser';
-import {TipReason} from '@ui/components/tips/TipReason';
+import {TipReason} from '@ui/components/Tips/TipReason';
 import {Padder} from '@ui/components/Padder';
 import {Tip} from 'src/api/hooks/useTips';
 import {standardPadding} from '@ui/styles';

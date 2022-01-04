@@ -1,5 +1,6 @@
 import React from 'react';
-import {Button, Layout, Text} from '@ui-kitten/components';
+import {Button, Text} from '@ui/library';
+import {Layout} from '@ui/components/Layout';
 import globalStyles from '@ui/styles';
 
 export class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasError: boolean}> {

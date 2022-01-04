@@ -1,55 +1,47 @@
-import React, {useState} from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
 import {RegistrationJudgement} from '@polkadot/types/interfaces';
-import {Icon, Tooltip} from '@ui-kitten/components';
+import {Icon, useTheme, Caption} from '@ui/library';
 import {mapStatusText} from 'src/identityUtils';
-import {colorGreen} from '@ui/styles';
+import {colorGreen, colorRed, colorGray} from '@ui/styles';
+import {Popable} from 'react-native-popable';
 
 type PropTypes = {
   judgement: RegistrationJudgement;
   hasParent: boolean;
 };
 
+function getIconColor(status: string) {
+  if (status === 'good') {
+    return colorGreen;
+  } else if (status === 'bad') {
+    return colorRed;
+  }
+  return colorGray;
+}
+
 function JudgmentStatus(props: PropTypes) {
+  const {colors} = useTheme();
   const {judgement, hasParent} = props;
   const status = mapStatusText(judgement[1], hasParent);
-  const [visible, setVisible] = useState(false);
-
-  const renderIcon = () => (
-    <TouchableOpacity
-      onPress={() => {
-        setVisible(true);
-        setTimeout(() => {
-          setVisible(false);
-        }, 3000);
-      }}>
-      <Icon
-        pack="ionic"
-        name={status.icon}
-        style={[styles.icon, styles[status.category as 'good' | 'bad' | 'neutral']]}
-      />
-    </TouchableOpacity>
-  );
 
   return (
-    <Tooltip anchor={renderIcon} visible={visible} onBackdropPress={() => setVisible(false)}>
-      {`"${status.text}" provided by Registrar #${judgement[0]}`}
-    </Tooltip>
+    <Popable
+      content={
+        <View style={styles.container}>
+          <Caption>{`"${status.text}" provided by Registrar #${judgement[0]}`}</Caption>
+        </View>
+      }
+      backgroundColor={colors.accent}>
+      <Icon name={status.icon} size={20} color={getIconColor(status.category)} />
+    </Popable>
   );
 }
 
 const styles = StyleSheet.create({
-  icon: {
-    width: 20,
-    height: 20,
-    marginTop: -2,
-  },
-  good: {color: colorGreen},
-  bad: {color: 'red'},
-  neutral: {color: '#ccc'},
-  text: {
-    fontSize: 11,
-    color: 'white',
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

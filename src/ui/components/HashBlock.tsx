@@ -1,25 +1,21 @@
 import React, {useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
-import {Icon, Text, useTheme} from '@ui-kitten/components';
+import {Icon, Text, useTheme, Caption} from '@ui/library';
 import {standardPadding} from '@ui/styles';
 
 export function HashBlock({title, text}: {title: string; text: string}): React.ReactElement {
   const [numOfLines, setNumOfLines] = useState<undefined | number>(1);
-  const themeVars = useTheme();
+  const {colors} = useTheme();
 
   return (
-    <View style={[styles.container, {borderColor: themeVars['color-basic-600']}]}>
+    <View style={[styles.container, {borderColor: colors.onSurface}]}>
       <TouchableOpacity onPress={() => setNumOfLines(numOfLines ? undefined : 1)} style={styles.textContainer}>
-        <Text category={'c1'} style={{color: themeVars['color-basic-600']}}>
-          {title}
-        </Text>
-        <Text category={'c1'} numberOfLines={numOfLines}>
-          {text}
-        </Text>
+        <Text>{title}</Text>
+        <Caption numberOfLines={numOfLines}>{text}</Caption>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => Clipboard.setString(text)}>
-        <Icon name={'copy-outline'} fill={themeVars['color-basic-600']} style={styles.icon} />
+        <Icon name="content-copy" size={20} />
       </TouchableOpacity>
     </View>
   );
@@ -27,7 +23,6 @@ export function HashBlock({title, text}: {title: string; text: string}): React.R
 
 const styles = StyleSheet.create({
   container: {
-    borderColor: 'red',
     borderStyle: 'dashed',
     borderWidth: 1,
     paddingHorizontal: standardPadding * 2,
@@ -37,5 +32,4 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   textContainer: {flex: 1},
-  icon: {width: 20, height: 20, marginLeft: 10},
 });

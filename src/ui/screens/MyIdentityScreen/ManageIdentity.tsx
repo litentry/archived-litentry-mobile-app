@@ -110,10 +110,10 @@ function ManageIdentity({
                 } from Registrar ${judgements?.map((judgement) => `#${judgement[0]}`).join(',')}. It's all set. 🎉`}
               />
             ) : (
-              <InfoBanner text="There is identify data found, however no Judgement is provided." inline />
+              <InfoBanner text="There is identify data found, however no Judgement is provided." />
             )
           ) : (
-            <InfoBanner text="This address doesn't have any identity connected to it." inline />
+            <InfoBanner text="This address doesn't have any identity connected to it." />
           )}
         </View>
         <Divider />

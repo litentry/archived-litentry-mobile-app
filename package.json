@@ -23,7 +23,6 @@
     "@polkadot/util-crypto": "^8.2.2"
   },
   "dependencies": {
-    "@eva-design/material": "^2.1.1",
     "@polkadot/api": "^7.0.2",
     "@polkadot/apps-config": "^0.99.1",
     "@polkadot/reactnative-identicon": "0.87.6",
@@ -39,8 +38,6 @@
     "@react-navigation/stack": "^6.0.11",
     "@sentry/react-native": "^3.2.10",
     "@types/zxcvbn": "^4.4.1",
-    "@ui-kitten/components": "^5.0.0",
-    "@ui-kitten/eva-icons": "^5.0.0",
     "console-browserify": "^1.2.0",
     "dayjs": "^1.10.7",
     "events": "^3.3.0",
@@ -48,7 +45,6 @@
     "graphql": "^16.2.0",
     "graphql-tag": "^2.12.6",
     "lodash": "^4.17.21",
-    "moment": "^2.29.1",
     "patch-package": "^6.4.7",
     "path-to-regexp": "^6.2.0",
     "process": "^0.11.10",
@@ -77,6 +73,7 @@
     "react-native-paper": "^4.10.1",
     "react-native-paper-tabs": "^0.7.0",
     "react-native-permissions": "^3.2.0",
+    "react-native-popable": "^0.4.3",
     "react-native-qrcode-scanner": "^1.5.4",
     "react-native-randombytes": "^3.6.0",
     "react-native-reanimated": "^2.2.4",

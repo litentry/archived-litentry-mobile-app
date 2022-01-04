@@ -11,7 +11,7 @@ import {useAccounts} from 'context/AccountsContext';
 import {ChainApiContext} from 'context/ChainApiContext';
 import AddressInlineTeaser from '@ui/components/AddressInlineTeaser';
 import {BlockTime} from '@ui/components/BlockTime';
-import {TipReason} from '@ui/components/tips/TipReason';
+import {TipReason} from '@ui/components/Tips/TipReason';
 import {extractTipState} from 'src/utils/tips';
 import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
 import LoadingView from '@ui/components/LoadingView';

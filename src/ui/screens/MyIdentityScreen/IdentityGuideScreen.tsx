@@ -59,7 +59,7 @@ export function IdentityGuideScreen({navigation}: {navigation: NavigationProp<Ap
         </PagerView>
         <View style={styles.footer}>
           <Button
-            mode="text"
+            mode="outlined"
             uppercase={false}
             icon="skip-next-outline"
             onPress={() => modalRef.current?.close()}>{`Skip`}</Button>
