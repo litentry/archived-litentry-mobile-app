@@ -1,11 +1,11 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Alert, FlatList, StyleSheet, View} from 'react-native';
+import {Alert, FlatList, View} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import {useQueryClient} from 'react-query';
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {Button, Divider, IconProps, Layout, ListItem, Text, TopNavigationAction} from '@ui-kitten/components';
-import Icon from '@ui/components/Icon';
+import {Button, Caption, Subheading, List, Divider, IconButton, useTheme} from '@ui/library';
+import {Layout} from '@ui/components/Layout';
 import ModalTitle from '@ui/components/ModalTitle';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useApiTx} from 'src/api/hooks/useApiTx';
@@ -18,6 +18,8 @@ import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {EmptyView} from '@ui/components/EmptyView';
+import {Padder} from '@ui/components/Padder';
+import {stringShorten} from '@polkadot/util';
 
 type ScreenProps = {
   navigation: NavigationProp<AccountsStackParamList>;
@@ -25,6 +27,7 @@ type ScreenProps = {
 };
 
 export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
+  const {colors} = useTheme();
   const address = route.params.address;
   const modalRef = useRef<Modalize>(null);
   const {data: parentIdentityInfo} = useAccountIdentityInfo(address);
@@ -42,12 +45,7 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
 
   useEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
-        <TopNavigationAction
-          icon={(props) => <Icon {...props} name="plus-circle-outline" />}
-          onPress={onAddSubIdentityPress}
-        />
-      ),
+      headerRight: () => <IconButton size={30} icon="plus-circle-outline" onPress={onAddSubIdentityPress} />,
     });
   }, [navigation]);
 
@@ -105,40 +103,34 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
 
   return (
     <SafeView edges={noTopEdges}>
-      <View style={globalStyles.paddedContainer}>
-        <Button style={styles.setSubIdentitiesButton} onPress={onSetSubIdentitiesPress} disabled={submitSubsDisabled}>
+      <View style={[globalStyles.paddedContainer, globalStyles.flex]}>
+        <Button mode="contained" onPress={onSetSubIdentitiesPress} disabled={submitSubsDisabled}>
           Set Sub-identities
         </Button>
-        <View style={styles.hintTextContainer}>
-          <Text category="c2" appearance="hint">
-            Set sub-identities after adding/removing your accounts.
-          </Text>
-        </View>
+        <Padder scale={0.5} />
+        <Caption>Set sub-identities after adding/removing your accounts.</Caption>
+        <Padder scale={0.5} />
         <Divider />
+        <Padder scale={1} />
         <FlatList
-          ListHeaderComponent={() => (
-            <Text category="s1" style={styles.subIdentitiesListHeader}>
-              {`Sub-identities (${subIdentities?.length || 0})`}
-            </Text>
-          )}
+          ListHeaderComponent={() => <Subheading>{`Sub-identities (${subIdentities?.length || 0})`}</Subheading>}
           data={subIdentities}
           keyExtractor={(item) => String(item.accountId)}
           renderItem={({item}) => (
-            <ListItem
+            <List.Item
               disabled={true}
-              title={(p) => (
-                <View {...p}>
-                  <AccountInfoInlineTeaser identity={item} />
+              title={() => <AccountInfoInlineTeaser identity={item} />}
+              description={<Caption>{stringShorten(String(item.accountId), 12)}</Caption>}
+              left={() => (
+                <View style={globalStyles.justifyCenter}>
+                  <Identicon value={item.accountId} size={30} />
                 </View>
               )}
-              description={String(item.accountId)}
-              accessoryLeft={() => <Identicon value={item.accountId} size={30} />}
-              accessoryRight={() => (
-                <Button
+              right={() => (
+                <IconButton
+                  icon="delete-outline"
+                  color={colors.error}
                   onPress={() => onRemovePress(String(item.accountId))}
-                  accessoryLeft={RemoveIcon}
-                  status="danger"
-                  appearance="ghost"
                 />
               )}
             />
@@ -156,7 +148,7 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
         withReactModal
         useNativeDriver
         panGestureEnabled>
-        <Layout level="1" style={globalStyles.paddedContainer}>
+        <Layout>
           <ModalTitle title="Add sub-identity" />
           <AddSubIdentity onAddPress={onAddPress} subIdentities={subIdentities} />
         </Layout>
@@ -164,11 +156,3 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
     </SafeView>
   );
 }
-
-const RemoveIcon = (props: IconProps) => <Icon {...props} name="trash-2-outline" />;
-
-const styles = StyleSheet.create({
-  setSubIdentitiesButton: {marginBottom: 10, marginHorizontal: 30},
-  subIdentitiesListHeader: {paddingBottom: 10, marginTop: 10},
-  hintTextContainer: {alignItems: 'center', marginBottom: 20},
-});

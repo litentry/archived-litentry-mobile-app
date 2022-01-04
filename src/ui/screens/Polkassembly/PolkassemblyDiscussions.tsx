@@ -1,6 +1,6 @@
 import React from 'react';
 import {NavigationProp} from '@react-navigation/native';
-import {Icon, Button, Card, Caption, Text, Menu, Subheading} from '@ui/library';
+import {Icon, Button, Card, Caption, Text, Menu, Subheading, useTheme} from '@ui/library';
 import AddressInlineTeaser from '@ui/components/AddressInlineTeaser';
 import {flatten} from 'lodash';
 import * as dateUtils from 'src/utils/date';
@@ -19,6 +19,7 @@ export function PolkassemblyDiscussions({
 }: {
   navigation: NavigationProp<PolkassemblyDiscussionStackParamList>;
 }) {
+  const {colors} = useTheme();
   const [orderBy, setOrderBy] = React.useState<OrderByType>('lastCommented');
   const [topicId, setTopicId] = React.useState<number>();
   const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
@@ -49,7 +50,7 @@ export function PolkassemblyDiscussions({
           data={flatten(data?.pages)}
           stickyHeaderIndices={[0]}
           ListHeaderComponent={
-            <View style={[globalStyles.rowAlignCenter, {padding: standardPadding * 2}]}>
+            <View style={[globalStyles.rowAlignCenter, styles.menuContainer, {backgroundColor: colors.primary}]}>
               <Menu
                 visible={sortMenuVisible}
                 onDismiss={() => {
@@ -192,6 +193,10 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: standardPadding * 2,
+  },
+  menuContainer: {
+    padding: standardPadding,
+    marginBottom: standardPadding,
   },
   footer: {
     paddingTop: standardPadding * 2,
