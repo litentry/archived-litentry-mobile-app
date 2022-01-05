@@ -37,8 +37,8 @@ import {PolkassemblyDiscussions} from '@ui/screens/Polkassembly/PolkassemblyDisc
 import {ProposeTipScreen} from '@ui/screens/ProposeTipScreen';
 import {ReferendumScreen} from '@ui/screens/ReferendumScreen';
 import RegistrarListScreen from '@ui/screens/RegistrarListScreen';
-import {RegisterSubIdentitiesScreen} from '@ui/screens/subIdentities/RegisterSubIdentitiesScreen';
-import TipDetailScreen from '@ui/screens/tips/TipDetailScreen';
+import {RegisterSubIdentitiesScreen} from '@ui/screens/SubIdentities/RegisterSubIdentitiesScreen';
+import TipDetailScreen from '@ui/screens/Tips/TipDetailScreen';
 import {TreasuryScreen} from '@ui/screens/TreasuryScreen';
 import WebviewScreen from '@ui/screens/WebviewScreen';
 import {useFirebase} from '@hooks/useFirebase';

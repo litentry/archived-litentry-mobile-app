@@ -10,7 +10,7 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useTreasuryInfo} from 'src/api/hooks/useTreasuryInfo';
 import globalStyles, {standardPadding} from '@ui/styles';
-import TipsScreen from './tips/TipsScreen';
+import TipsScreen from './Tips/TipsScreen';
 import {useTheme, Card, Caption, Subheading} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
