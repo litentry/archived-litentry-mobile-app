@@ -107,7 +107,7 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
         <List.Item
           title={<Headline>{formatNumber(votes?.index)}</Headline>}
           right={() => (
-            <View>
+            <View style={globalStyles.justifyCenter}>
               <Subheading>{`Aye ${votes?.ayes.length}/${votes?.threshold} `}</Subheading>
               {(() => {
                 if (data?.isMember) {

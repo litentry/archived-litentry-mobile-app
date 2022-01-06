@@ -38,7 +38,6 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
   const screenTitle = route.params.title;
   const {data: councilData, isLoading: isLoadingCouncil} = useCouncil();
   const {data: identityInfoData, isLoading: isLoadingIdentityInfo} = useAccountIdentityInfo(accountId);
-  // const theme = useTheme();
 
   useEffect(() => {
     if (screenTitle) {
