@@ -1,17 +1,21 @@
 import React, {useCallback, useContext, useRef, useState} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
-import {Button, Divider, Layout, ListItem, Text} from '@ui-kitten/components';
+import {Divider, Button, List, Subheading, useTheme, Paragraph, Caption} from '@ui/library';
+import {Layout} from '@ui/components/Layout';
 import {useAccounts} from 'src/context/AccountsContext';
 import {InAppNotificationContent, InAppNotificationContext} from 'context/InAppNotificationContext';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Modalize} from 'react-native-modalize';
-import {standardPadding} from '@ui/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {NetworkContext} from 'context/NetworkContext';
 import RegistrarSelectionModal from '@ui/components/RegistrarSelectionModal';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
+import {stringShorten} from '@polkadot/util';
+import {Padder} from '@ui/components/Padder';
 
 function DevScreen() {
+  const {colors} = useTheme();
   const [visible, setVisible] = useState(false);
 
   const {currentNetwork} = useContext(NetworkContext);
@@ -27,156 +31,134 @@ function DevScreen() {
 
   return (
     <SafeView edges={noTopEdges}>
-      <>
-        <Layout level="1">
-          <ScrollView>
-            <ListItem
-              title="Registrar Selection Modal"
-              description="Trigger display of Registrar Selection Modal"
-              accessoryRight={() => (
-                <Button size="small" onPress={() => setVisible(true)}>
-                  Trigger
-                </Button>
-              )}
-            />
-            <Divider />
-            <RegistrarSelectionModal
-              onClose={() => setVisible(false)}
-              onSelect={(registrar) => console.log(registrar)}
-              visible={visible}
-            />
-            <ListItem
-              title={`Network: ${currentNetwork.name}`}
-              description={`Currently connected to ${currentNetwork.ws}`}
-              accessoryRight={() => <Button size="tiny">{status}</Button>}
-            />
-            <Divider />
+      <ScrollView>
+        <List.Item
+          title={`Network: ${currentNetwork.name}`}
+          description={currentNetwork.ws}
+          right={() => (
+            <ItemRight>
+              <Subheading style={{color: colors.success}}>{status}</Subheading>
+            </ItemRight>
+          )}
+        />
+        <Divider />
 
-            <ListItem
-              title="Simple Notification"
-              description="Show simple text in app PN"
-              accessoryRight={() => (
-                <Button size="small" onPress={() => trigger({type: 'TextInfo', opts: {text: 'Whatnot'}})}>
-                  Trigger
-                </Button>
-              )}
-            />
-            <Divider />
+        <List.Item
+          title="Registrar Selection Modal"
+          description="Trigger display of Registrar Selection Modal"
+          right={() => (
+            <ItemRight>
+              <Button mode="contained" onPress={() => setVisible(true)}>
+                Trigger
+              </Button>
+            </ItemRight>
+          )}
+        />
+        <Divider />
 
-            <ListItem
-              title="Show multi-lines Notification"
-              description="Show multi-lines In-App-PusNotification"
-              accessoryRight={() => (
-                <Button
-                  size="small"
-                  onPress={() =>
-                    trigger({
-                      type: 'Component',
-                      renderContent: () => (
-                        <InAppNotificationContent
-                          title="Tx detected"
-                          message="aa very long string[a very long string[a very long string[a very long string[a very long string[]]]]]a very long string[]a very long string[a very long string[a very long string[a very long string[a very long string[]]]]]a very long string[] very long string[a very long string[a very long string[a very long string[a very long string[]]]]]a very long string[]"
-                        />
-                      ),
-                    })
-                  }>
-                  Trigger
-                </Button>
+        <RegistrarSelectionModal
+          onClose={() => setVisible(false)}
+          onSelect={(registrar) => console.log(registrar)}
+          visible={visible}
+        />
+        <Divider />
+
+        <List.Item
+          title="Simple Notification"
+          description="Show simple text in app PN"
+          right={() => (
+            <ItemRight>
+              <Button mode="contained" onPress={() => trigger({type: 'TextInfo', opts: {text: 'Whatnot'}})}>
+                Trigger
+              </Button>
+            </ItemRight>
+          )}
+        />
+        <Divider />
+
+        <List.Item
+          title="Show multi-lines Notification"
+          description="Show multi-lines In-App-PusNotification"
+          right={() => (
+            <ItemRight>
+              <Button
+                mode="contained"
+                onPress={() =>
+                  trigger({
+                    type: 'Component',
+                    renderContent: () => (
+                      <InAppNotificationContent
+                        title="Tx detected"
+                        message="aa very long string[a very long string[a very long string[a very long string[a very long string[]]]]]a very long string[]a very long string[a very long string[a very long string[a very long string[a very long string[]]]]]a very long string[] very long string[a very long string[a very long string[a very long string[a very long string[]]]]]a very long string[]"
+                      />
+                    ),
+                  })
+                }>
+                Trigger
+              </Button>
+            </ItemRight>
+          )}
+        />
+        <Divider />
+
+        {Object.values(accounts).map((account) => (
+          <View key={account.address}>
+            <List.Item
+              title={<Paragraph>{`Identity of ${stringShorten(account.address)}`}</Paragraph>}
+              description="Resp of `identityOf` call of current address"
+              right={() => (
+                <ItemRight>
+                  <Button
+                    mode="contained"
+                    onPress={() => {
+                      if (account) {
+                        api?.query.identity?.identityOf(account.address).then((data) => {
+                          showDebugModal(JSON.stringify(data, null, 4));
+                        });
+                      } else {
+                        Alert.alert('Error', 'No Account connected');
+                      }
+                    }}>
+                    Trigger
+                  </Button>
+                </ItemRight>
               )}
             />
             <Divider />
-            {Object.values(accounts).map((account) => (
-              <View key={account.address}>
-                {/* <ListItem
-                  title={`Remove account ${account.address}`}
-                  description="Reset current stored accounts"
-                  accessoryRight={() => (
-                    <Button
-                      size="small"
-                      onPress={() => {
-                        removeAccount(account.address);
-                        Alert.alert('Info', 'Account is reset');
-                      }}>
-                      Trigger
-                    </Button>
-                  )}
-                /> */}
-                <Divider />
-              </View>
-            ))}
-            {Object.values(accounts).map((account) => (
-              <View key={account.address}>
-                <ListItem
-                  title={`Identity of ${account.address}`}
-                  description="Resp of `identityOf` call of current address"
-                  accessoryRight={() => (
-                    <Button
-                      size="small"
-                      onPress={() => {
-                        if (account) {
-                          api?.query.identity?.identityOf(account.address).then((data) => {
-                            showDebugModal(JSON.stringify(data, null, 4));
-                          });
-                        } else {
-                          Alert.alert('Error', 'No Account connected');
-                        }
-                      }}>
-                      Trigger
-                    </Button>
-                  )}
-                />
-                <Divider />
-              </View>
-            ))}
-            {/* <ListItem
-              title="Set Address"
-              description="Manually set address"
-              accessoryRight={() => (
-                <Button
-                  size="small"
-                  onPress={() => {
-                    addAccount(currentNetwork.key, {
-                      name: 'Manu. set Acct',
-                      address: '167rjWHghVwBJ52mz8sNkqr5bKu5vpchbc9CBoieBhVX714h',
-                      isFavorite: false,
-                      isInternal: false,
-                    });
-                    Alert.alert('Done');
-                  }}>
-                  Trigger
-                </Button>
-              )}
-            /> */}
-            <Divider />
+          </View>
+        ))}
+      </ScrollView>
+
+      <Modalize
+        ref={modalRef}
+        threshold={250}
+        scrollViewProps={{showsVerticalScrollIndicator: false}}
+        adjustToContentHeight
+        handlePosition="outside"
+        closeOnOverlayTap
+        panGestureEnabled>
+        <Layout style={styles.devModal}>
+          <Subheading>Debug Info</Subheading>
+          <Padder scale={0.5} />
+          <Divider />
+          <ScrollView style={styles.scrollView}>
+            <Caption>{debugInfo}</Caption>
           </ScrollView>
         </Layout>
-
-        <Modalize
-          ref={modalRef}
-          threshold={250}
-          scrollViewProps={{showsVerticalScrollIndicator: false}}
-          adjustToContentHeight
-          handlePosition="outside"
-          closeOnOverlayTap
-          panGestureEnabled>
-          <Layout style={styles.devModal}>
-            <Text category="s1" style={styles.debugHeader}>
-              Debug Info
-            </Text>
-            <Divider />
-            <ScrollView style={styles.scrollView}>
-              <Text>{debugInfo}</Text>
-            </ScrollView>
-          </Layout>
-        </Modalize>
-      </>
+      </Modalize>
     </SafeView>
   );
 }
+
+function ItemRight({children}: {children: React.ReactNode}) {
+  return <View style={globalStyles.justifyCenter}>{children}</View>;
+}
+
 const styles = StyleSheet.create({
   devModal: {
     maxHeight: 400,
     height: 400,
+    padding: standardPadding,
   },
   debugHeader: {
     paddingVertical: standardPadding * 2,

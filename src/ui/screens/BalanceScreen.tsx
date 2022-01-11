@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useRef} from 'react';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {Button, Divider, Layout} from '@ui-kitten/components';
+import {Divider, Button} from '@ui/library';
+import {Layout} from '@ui/components/Layout';
 import Balances from '@ui/components/Balances';
 import ModalTitle from '@ui/components/ModalTitle';
 import {Modalize} from 'react-native-modalize';
@@ -10,6 +11,7 @@ import {balanceScreen} from '@ui/navigation/routeKeys';
 import globalStyles from '@ui/styles';
 import {NetworkContext} from 'src/context/NetworkContext';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
+import {Padder} from '@ui/components/Padder';
 
 export function BalanceScreen({
   navigation,
@@ -44,14 +46,13 @@ export function BalanceScreen({
       closeOnOverlayTap
       panGestureEnabled>
       {accountInfo && (
-        <Layout level="1" style={globalStyles.paddedContainer}>
+        <Layout style={globalStyles.paddedContainer}>
           <ModalTitle title={currentAccount.meta.name} subtitle={` (@${currentNetwork.name})`} />
           <Divider />
           <Balances balance={accountInfo} />
-          <Divider style={globalStyles.divider} />
-          <Button appearance="ghost" onPress={() => modalRef.current?.close()}>
-            Close
-          </Button>
+          <Divider />
+          <Button onPress={() => modalRef.current?.close()}>Close</Button>
+          <Padder scale={1} />
         </Layout>
       )}
     </Modalize>

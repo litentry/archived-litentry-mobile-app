@@ -2,11 +2,11 @@ import {default as React, useContext, useRef} from 'react';
 import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {AccountId} from '@polkadot/types/interfaces';
 import {RouteProp} from '@react-navigation/native';
-import {Card, Icon, Layout, Text} from '@ui-kitten/components';
+import {Card, Icon, Caption, Subheading, Paragraph, Text} from '@ui/library';
+import {Layout} from '@ui/components/Layout';
 import {NetworkContext} from 'context/NetworkContext';
 import AddressInlineTeaser from '@ui/components/AddressInlineTeaser';
 import _ from 'lodash';
-import Badge from '@ui/components/Badge';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -19,7 +19,7 @@ import {useMotionDetail} from 'src/api/hooks/useMotionDetail';
 import {useVotingStatus} from 'src/api/hooks/useVotingStatus';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {buildMotionDetailUrl} from 'src/service/Polkasembly';
-import globalStyles, {colorGreen, colorRed, monofontFamily, standardPadding} from '@ui/styles';
+import globalStyles, {colorGreen, colorRed, standardPadding} from '@ui/styles';
 
 const {height} = Dimensions.get('window');
 
@@ -29,11 +29,10 @@ type PropTypes = {
 
 function VoteItem({vote, type = 'aye', emptyText}: {vote?: AccountId; type?: 'aye' | 'nay'; emptyText?: string}) {
   return (
-    <View style={[globalStyles.rowContainer, globalStyles.rowAlignCenter]}>
+    <View style={globalStyles.rowAlignCenter}>
       <Icon
-        pack="ionic"
-        name={type === 'aye' ? 'thumbs-up-outline' : 'thumbs-down-outline'}
-        style={[globalStyles.icon, {color: type === 'aye' ? colorGreen : colorRed}]}
+        name={type === 'aye' ? 'thumb-up-outline' : 'thumb-down-outline'}
+        color={type === 'aye' ? colorGreen : colorRed}
       />
       <Padder scale={1} />
       {emptyText ? <Text>{emptyText}</Text> : vote && <AddressInlineTeaser address={vote.toString()} />}
@@ -64,61 +63,57 @@ export function MotionDetailScreen(props: PropTypes) {
   return (
     <SafeView edges={noTopEdges}>
       <ScrollView style={[globalStyles.paddedContainer, styles.container]}>
-        <View style={styles.rowContainer}>
-          <Card style={[styles.item, styles.left]} disabled>
+        <Card>
+          <Card.Content>
             <View style={globalStyles.spaceBetweenRowContainer}>
-              <StatInfoBlock title="#ID">{String(motion.votes?.index)}</StatInfoBlock>
-              <StatInfoBlock title="#Detail">
+              <StatInfoBlock title="ID">{String(motion.votes?.index)}</StatInfoBlock>
+              <StatInfoBlock title="Detail">
                 {['kusama', 'polkadot'].includes(currentNetwork.key) ? (
                   <TouchableOpacity onPress={() => modalRef.current?.open()}>
-                    <View style={[globalStyles.rowContainer, globalStyles.rowAlignCenter]}>
-                      <Text style={[styles.stats, styles.small, styles.hackPolkassemblyTextWidth]} numberOfLines={1}>
-                        on Polkassembly
-                      </Text>
+                    <View style={globalStyles.rowAlignCenter}>
+                      <Caption numberOfLines={1}>on Polkassembly</Caption>
                       <Padder scale={0.3} />
-                      <Icon pack="ionic" name="share-outline" style={globalStyles.icon} />
+                      <Icon name="share-outline" size={20} />
                     </View>
                   </TouchableOpacity>
                 ) : null}
               </StatInfoBlock>
               <StatInfoBlock title="Status">
-                <Padder scale={0.3} />
-                <Badge text={status} />
+                <Paragraph style={{color: colorGreen}}>{status}</Paragraph>
               </StatInfoBlock>
             </View>
             <Padder scale={1} />
             <StatInfoBlock title="Proposer">
               {proposer && <AddressInlineTeaser address={proposer.toString()} />}
             </StatInfoBlock>
-          </Card>
-        </View>
+          </Card.Content>
+        </Card>
         <Padder scale={0.3} />
-        <View style={styles.rowContainer}>
-          <Card style={[styles.item, styles.left]} disabled>
-            <StatInfoBlock title="#Section">{_.capitalize(motion.proposal.section)}</StatInfoBlock>
-            <Padder scale={0.5} />
-            <StatInfoBlock title="#Method">{motion.proposal.method}</StatInfoBlock>
-          </Card>
-          <Card style={[styles.item, styles.right]} disabled>
-            <View>
-              <Text category="c1">Votes</Text>
+        <View style={globalStyles.spaceBetweenRowContainer}>
+          <Card style={[styles.item, styles.left]}>
+            <Card.Content>
+              <StatInfoBlock title="Section">{_.capitalize(motion.proposal.section)}</StatInfoBlock>
               <Padder scale={0.5} />
+              <StatInfoBlock title="Method">{motion.proposal.method}</StatInfoBlock>
+            </Card.Content>
+          </Card>
+          <Card style={[styles.item, styles.right]}>
+            <Card.Content>
               <View>
-                <Text style={globalStyles.aye}>
+                <Caption>Votes</Caption>
+                <Subheading style={globalStyles.aye}>
                   {`Aye (${motion.votes?.ayes.length}/${motion.votes?.threshold.toNumber()})`}
-                </Text>
-                <Padder scale={0.5} />
-                <Text style={globalStyles.nay}>
+                </Subheading>
+                <Subheading style={globalStyles.nay}>
                   {`Nay (${motion.votes?.nays.length}/${motion.votes?.threshold.toNumber()})`}
-                </Text>
-                <Padder scale={0.5} />
+                </Subheading>
               </View>
-            </View>
+            </Card.Content>
           </Card>
         </View>
         {motion.votes ? (
           <View style={styles.votesContainer}>
-            <Text category="h6">Votes</Text>
+            <Subheading>Votes</Subheading>
             {motion.votes.ayes.length ? (
               motion.votes.ayes.map((vote) => (
                 <View style={styles.voteContainer} key={String(vote.hash)}>
@@ -178,18 +173,6 @@ export function MotionDetailScreen(props: PropTypes) {
 
 const styles = StyleSheet.create({
   container: {flex: 1},
-  rowContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  small: {fontSize: 10},
-  stats: {
-    textAlign: 'center',
-    paddingVertical: standardPadding,
-    fontSize: 16,
-    color: '#ccc',
-    fontFamily: monofontFamily,
-  },
   item: {
     flex: 1,
   },
@@ -204,8 +187,5 @@ const styles = StyleSheet.create({
   },
   voteContainer: {
     paddingVertical: standardPadding / 2,
-  },
-  hackPolkassemblyTextWidth: {
-    width: 70,
   },
 });

@@ -2,7 +2,7 @@ import {IdentityJudgement} from '@polkadot/types/interfaces';
 
 export const mapStatusText = (judgement: IdentityJudgement, hasParent: boolean) => {
   if (judgement.isErroneous) {
-    return {text: 'Erroneous', category: 'bad', icon: 'md-alert-circle'};
+    return {text: 'Erroneous', category: 'bad', icon: 'alert-circle-outline'};
   }
 
   // if (judgement.isFeePaid) {
@@ -14,20 +14,20 @@ export const mapStatusText = (judgement: IdentityJudgement, hasParent: boolean) 
   // }
 
   if (judgement.isReasonable) {
-    return {text: 'Reasonable', category: 'good', icon: hasParent ? 'md-link-outline' : 'md-checkmark-circle'};
+    return {text: 'Reasonable', category: 'good', icon: hasParent ? 'link' : 'check-circle'};
   }
 
   if (judgement.isKnownGood) {
-    return {text: 'Known Good', category: 'good', icon: hasParent ? 'md-link-outline' : 'md-checkmark-circle'};
+    return {text: 'Known Good', category: 'good', icon: hasParent ? 'link' : 'check-circle'};
   }
 
   if (judgement.isOutOfDate) {
-    return {text: 'Out of Date', category: 'bad', icon: 'md-alert-circle'};
+    return {text: 'Out of Date', category: 'bad', icon: 'alert-circle'};
   }
 
   if (judgement.isLowQuality) {
-    return {text: 'Low Quality', category: 'bad', icon: 'md-alert-circle'};
+    return {text: 'Low Quality', category: 'bad', icon: 'alert-circle'};
   }
 
-  return {text: 'Unknown', category: 'neutral', icon: 'md-help-circle'};
+  return {text: 'Unknown', category: 'neutral', icon: 'help-circle'};
 };

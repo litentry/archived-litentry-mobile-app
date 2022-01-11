@@ -2,7 +2,8 @@ import React, {useCallback, useContext, useRef, useState} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {Button, Divider, Icon, IconProps, Layout, ListItem, MenuGroup, MenuItem, Text} from '@ui-kitten/components';
+import {Layout} from '@ui/components/Layout';
+import {Button, List, Icon, Caption, Divider} from '@ui/library';
 import {NetworkContext} from 'context/NetworkContext';
 import RegistrarSelectionModal from '@ui/components/RegistrarSelectionModal';
 import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
@@ -21,8 +22,9 @@ import {useSubIdentities} from 'src/api/hooks/useSubIdentities';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {manageIdentityScreen, registerSubIdentitiesScreen} from '@ui/navigation/routeKeys';
 import {buildAddressDetailUrl} from 'src/service/Polkasembly';
-import {standardPadding} from '@ui/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {RegistrarInfoWithIndex} from 'src/api/hooks/useRegistrars';
+import {stringShorten} from '@polkadot/util';
 
 function ManageIdentity({
   navigation,
@@ -44,12 +46,12 @@ function ManageIdentity({
   const judgements = identity?.registration?.judgements;
   const judgementCount = judgements?.length || 0;
 
-  const modalRef = useRef<Modalize>(null);
+  const identityModalRef = useRef<Modalize>(null);
   const polkascanViewRef = useRef<Modalize>(null);
 
   const onSubmitIdentityInfo = useCallback(
     async (info: IdentityPayload) => {
-      modalRef.current?.close();
+      identityModalRef.current?.close();
       await startTx({address, txMethod: 'identity.setIdentity', params: [info]})
         .then(() => {
           queryClient.invalidateQueries(['account_identity', address]);
@@ -77,6 +79,25 @@ function ManageIdentity({
     [startTx, address, queryClient],
   );
 
+  const clearIdentity = () => {
+    Alert.alert('Clear Identity', `Clear identity of account: \n ${address}`, [
+      {
+        text: 'Yes',
+        onPress: () => {
+          startTx({
+            address,
+            txMethod: 'identity.clearIdentity',
+            params: [],
+          }).then(() => {
+            queryClient.invalidateQueries(['account_identity', address]);
+          });
+        },
+        style: 'destructive',
+      },
+      {text: 'Cancel', style: 'cancel'},
+    ]);
+  };
+
   return (
     <SafeView edges={noTopEdges}>
       <ScrollView contentContainerStyle={styles.content}>
@@ -84,105 +105,102 @@ function ManageIdentity({
           {identity?.hasIdentity ? (
             identity.hasJudgements ? (
               <SuccessDialog
-                inline
                 text={`This address has ${judgementCount} judgement${
                   judgementCount > 1 ? 's' : ''
                 } from Registrar ${judgements?.map((judgement) => `#${judgement[0]}`).join(',')}. It's all set. 🎉`}
               />
             ) : (
-              <InfoBanner text="There is identify data found, however no Judgement is provided." inline />
+              <InfoBanner text="There is identify data found, however no Judgement is provided." />
             )
           ) : (
-            <InfoBanner text="This address doesn't have any identity connected to it." inline />
+            <InfoBanner text="This address doesn't have any identity connected to it." />
           )}
         </View>
         <Divider />
         <View>
           <Padder scale={1} />
-          <ListItem
-            disabled
+          <List.Item
             title="Address"
-            accessoryLeft={(p) => (
-              <View {...p}>
+            left={() => (
+              <ItemRight>
                 <Identicon value={address} size={20} />
-              </View>
+              </ItemRight>
             )}
-            accessoryRight={() => (
-              <Text selectable category="label" numberOfLines={1} style={styles.address} ellipsizeMode="middle">
-                {address}
-              </Text>
+            right={() => (
+              <ItemRight>
+                <Caption>{stringShorten(address)}</Caption>
+              </ItemRight>
             )}
           />
           {identity?.hasIdentity ? (
             <>
-              <ListItem
-                disabled
+              <List.Item
                 title="Display"
-                accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="person-outline" />}
-                accessoryRight={() => (
-                  <Text selectable category="label" numberOfLines={1} ellipsizeMode="middle">
-                    {identity?.display}
-                  </Text>
+                left={() => <LeftIcon icon="account" />}
+                right={() => (
+                  <ItemRight>
+                    <Caption>{identity.display}</Caption>
+                  </ItemRight>
                 )}
               />
-              <MenuGroup title=" Identity detail" accessoryLeft={MoreIcon}>
-                <MenuItem
+              <List.Accordion title="Identity Detail">
+                <List.Item
                   title="Legal"
-                  accessoryLeft={(props) => <Icon {...props} name="award-outline" />}
-                  accessoryRight={() => (
-                    <Text selectable category="label">
-                      {identity.registration?.legal || 'Unset'}
-                    </Text>
+                  left={() => <LeftIcon icon="medal-outline" />}
+                  right={() => (
+                    <ItemRight>
+                      <Caption>{identity.registration?.legal || 'Unset'}</Caption>
+                    </ItemRight>
                   )}
                 />
-                <MenuItem
+                <List.Item
                   title="Email"
-                  accessoryLeft={(props) => <Icon {...props} name="email-outline" />}
-                  accessoryRight={() => (
-                    <Text selectable category="label">
-                      {identity.registration?.email || 'Unset'}
-                    </Text>
+                  left={() => <LeftIcon icon="email-outline" />}
+                  right={() => (
+                    <ItemRight>
+                      <Caption>{identity.registration?.email || 'Unset'}</Caption>
+                    </ItemRight>
                   )}
                 />
-                <MenuItem
+                <List.Item
                   title="Twitter"
-                  accessoryLeft={(props) => <Icon {...props} name="twitter-outline" />}
-                  accessoryRight={() => (
-                    <Text selectable category="label">
-                      {identity.registration?.twitter || 'Unset'}
-                    </Text>
+                  left={() => <LeftIcon icon="twitter" />}
+                  right={() => (
+                    <ItemRight>
+                      <Caption>{identity.registration?.twitter || 'Unset'}</Caption>
+                    </ItemRight>
                   )}
                 />
-                <MenuItem
+                <List.Item
                   title="Riot"
-                  accessoryLeft={(props) => <Icon {...props} name="message-square-outline" />}
-                  accessoryRight={() => (
-                    <Text selectable category="label">
-                      {identity.registration?.riot || 'Unset'}
-                    </Text>
+                  left={() => <LeftIcon icon="message-outline" />}
+                  right={() => (
+                    <ItemRight>
+                      <Caption>{identity.registration?.riot || 'Unset'}</Caption>
+                    </ItemRight>
                   )}
                 />
-                <MenuItem
+                <List.Item
                   title="Web"
-                  accessoryLeft={(props) => <Icon {...props} name="browser-outline" />}
-                  accessoryRight={() => (
-                    <Text selectable category="label">
-                      {identity.registration?.web || 'Unset'}
-                    </Text>
+                  left={() => <LeftIcon icon="earth" />}
+                  right={() => (
+                    <ItemRight>
+                      <Caption>{identity.registration?.web || 'Unset'}</Caption>
+                    </ItemRight>
                   )}
                 />
-              </MenuGroup>
+              </List.Accordion>
             </>
           ) : null}
 
           <Padder scale={1} />
-          <Button onPress={() => modalRef.current?.open()} status="basic">
+          <Button onPress={() => identityModalRef.current?.open()} mode="outlined">
             {identity?.hasIdentity ? 'Update Identity' : 'Set Identity'}
           </Button>
           {identity?.hasIdentity ? (
             <>
               <Padder scale={1} />
-              <Button onPress={() => setRegistrarSelectionOpen(true)} status="basic">
+              <Button onPress={() => setRegistrarSelectionOpen(true)} mode="outlined">
                 Request Judgement
               </Button>
               <Padder scale={1} />
@@ -190,30 +208,11 @@ function ManageIdentity({
                 onPress={() => {
                   navigation.navigate(registerSubIdentitiesScreen, {address});
                 }}
-                status="basic">
+                mode="outlined">
                 Set Sub-identities
               </Button>
               <Padder scale={1} />
-              <Button
-                onPress={() => {
-                  Alert.alert('Clear Identity', `Clear identity of account: \n ${address}`, [
-                    {
-                      text: 'Yes',
-                      onPress: () => {
-                        startTx({
-                          address,
-                          txMethod: 'identity.clearIdentity',
-                          params: [],
-                        }).then(() => {
-                          queryClient.invalidateQueries(['account_identity', address]);
-                        });
-                      },
-                      style: 'destructive',
-                    },
-                    {text: 'Cancel', style: 'cancel'},
-                  ]);
-                }}
-                status="basic">
+              <Button onPress={clearIdentity} mode="outlined">
                 Clear Identity
               </Button>
             </>
@@ -222,33 +221,29 @@ function ManageIdentity({
           <Padder scale={1} />
 
           {subAccounts?.length ? (
-            <MenuGroup title={`Sub accounts (${subAccounts.length})`} accessoryLeft={SubAccountsIcon}>
+            <List.Accordion title={`Sub accounts (${subAccounts.length})`}>
               {subAccounts?.map((item) => (
-                <MenuItem
+                <List.Item
                   key={String(item.accountId)}
-                  title={(p) => (
-                    <View {...p}>
-                      <AccountInfoInlineTeaser identity={item} />
-                    </View>
-                  )}
-                  accessoryLeft={(p) => (
-                    <View {...p}>
+                  title={<AccountInfoInlineTeaser identity={item} />}
+                  left={() => (
+                    <ItemRight>
                       <Identicon value={item.accountId} size={20} />
-                    </View>
+                    </ItemRight>
                   )}
                 />
               ))}
-            </MenuGroup>
+            </List.Accordion>
           ) : null}
 
-          <ListItem
+          <List.Item
             title="View externally"
             onPress={() => polkascanViewRef.current?.open()}
-            accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="md-share" pack="ionic" />}
-            accessoryRight={() => (
-              <Text selectable category="label" numberOfLines={1} ellipsizeMode="middle">
-                Polkascan
-              </Text>
+            left={() => <LeftIcon icon="share" />}
+            right={() => (
+              <ItemRight>
+                <Caption>{`Polkascan`}</Caption>
+              </ItemRight>
             )}
           />
         </View>
@@ -259,7 +254,7 @@ function ManageIdentity({
           visible={registrarSelectionOpen}
         />
         <Modalize
-          ref={modalRef}
+          ref={identityModalRef}
           threshold={250}
           scrollViewProps={{showsVerticalScrollIndicator: false}}
           adjustToContentHeight
@@ -307,5 +302,14 @@ const styles = StyleSheet.create({
   polkascanWebView: {height: 500},
 });
 
-const MoreIcon = (props: IconProps) => <Icon {...props} pack="ionic" name="ios-apps-outline" />;
-const SubAccountsIcon = (props: IconProps) => <Icon {...props} pack="ionic" name="ios-people" />;
+function ItemRight({children}: {children: React.ReactNode}) {
+  return <View style={globalStyles.justifyCenter}>{children}</View>;
+}
+
+function LeftIcon({icon}: {icon: string}) {
+  return (
+    <View style={globalStyles.justifyCenter}>
+      <Icon name={icon} size={20} />
+    </View>
+  );
+}

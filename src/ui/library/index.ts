@@ -27,6 +27,8 @@ export {
   Snackbar,
   Menu,
   useTheme,
+  RadioButton,
+  Chip,
 } from 'react-native-paper';
 
 export type {IconSource} from 'react-native-paper/lib/typescript/components/Icon';
@@ -37,3 +39,4 @@ export {AppHeader} from './AppHeader';
 export {Modal} from './Modal';
 export {Card} from './Card';
 export {Select} from './Select';
+export {Tabs, TabScreen, useTabIndex, useTabNavigation} from 'react-native-paper-tabs';

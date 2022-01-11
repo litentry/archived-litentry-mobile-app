@@ -1,7 +1,8 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import {Layout, ListItem, Text} from '@ui-kitten/components';
-import {monofontFamily} from '@ui/styles';
+import {View} from 'react-native';
+import {List, Caption} from '@ui/library';
+import {Layout} from './Layout';
+import globalStyles from '@ui/styles';
 import type {FrameSystemAccountInfo} from '@polkadot/types/lookup';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 
@@ -18,30 +19,44 @@ function Balances(props: PropTypes) {
 
   return (
     <Layout>
-      <ListItem
+      <List.Item
         title="Total Balance"
-        accessoryRight={() => <Text style={styles.balance}>{formatBalance(data.free.add(data.reserved))}</Text>}
+        right={() => (
+          <ItemRight>
+            <Caption>{formatBalance(data.free.add(data.reserved))}</Caption>
+          </ItemRight>
+        )}
       />
-      <ListItem
+      <List.Item
         title="Transferrable"
-        accessoryRight={() => <Text style={styles.balance}>{formatBalance(data.free)}</Text>}
+        right={() => (
+          <ItemRight>
+            <Caption>{formatBalance(data.free)}</Caption>
+          </ItemRight>
+        )}
       />
-      <ListItem
+      <List.Item
         title="Reserved"
-        accessoryRight={() => <Text style={styles.balance}>{formatBalance(data.reserved)}</Text>}
+        right={() => (
+          <ItemRight>
+            <Caption>{formatBalance(data.reserved)}</Caption>
+          </ItemRight>
+        )}
       />
-      <ListItem
+      <List.Item
         title="Locked"
-        accessoryRight={() => <Text style={styles.balance}>{formatBalance(data.feeFrozen)}</Text>}
+        right={() => (
+          <ItemRight>
+            <Caption>{formatBalance(data.feeFrozen)}</Caption>
+          </ItemRight>
+        )}
       />
     </Layout>
   );
 }
 
-const styles = StyleSheet.create({
-  balance: {
-    fontFamily: monofontFamily,
-  },
-});
+function ItemRight({children}: {children: React.ReactNode}) {
+  return <View style={globalStyles.justifyCenter}>{children}</View>;
+}
 
 export default Balances;

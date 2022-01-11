@@ -1,26 +1,19 @@
 import React from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
-import {ApiPromise} from '@polkadot/api';
+import {View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
-import {Icon, IconProps, Layout, ListItem, Text} from '@ui-kitten/components';
+import {List, Icon, Caption} from '@ui/library';
 import JudgmentStatus from '@ui/components/JudgmentStatus';
 import LoadingView from '@ui/components/LoadingView';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useAccountInfo} from 'src/api/hooks/useAccountInfo';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {NetworkType} from 'src/types';
-
-const {height} = Dimensions.get('window');
+import globalStyles from '@ui/styles';
+import {stringShorten} from '@polkadot/util';
 
 type PropTypes = {
-  api?: ApiPromise;
   network: NetworkType;
   address: string;
-};
-
-const OnelineAddressStyle = {
-  numberOfLines: 1,
-  style: {width: '50%'},
 };
 
 function AddressInfoPreview(props: PropTypes) {
@@ -31,50 +24,50 @@ function AddressInfoPreview(props: PropTypes) {
   const {data: accountInfo, isLoading} = useAccountInfo(address);
 
   return (
-    <Layout style={styles.container}>
+    <View style={globalStyles.paddedContainer}>
       {isLoading ? (
         <LoadingView text="Fetching Address Info" size="small" appearance="secondary" />
       ) : (
-        <Layout>
-          <ListItem
+        <>
+          <List.Item
             title="Address"
-            accessoryLeft={() => (
-              <View style={styles.identiconContainer}>
+            left={() => (
+              <View style={globalStyles.justifyCenter}>
                 <Identicon value={address} size={20} />
               </View>
             )}
-            accessoryRight={() => (
-              <Text selectable category="label" {...OnelineAddressStyle} ellipsizeMode="middle" numberOfLines={1}>
-                {address}
-              </Text>
-            )}
+            right={() => <Caption>{stringShorten(address)}</Caption>}
           />
-          <ListItem
+          <List.Item
             title="Display"
-            accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="person-outline" />}
-            accessoryRight={() => (
-              <Text selectable category="label" numberOfLines={1} style={styles.displayText} ellipsizeMode="middle">
-                {data?.hasIdentity ? data.display : 'untitled account'}
-              </Text>
+            left={() => (
+              <View style={globalStyles.justifyCenter}>
+                <Icon name="account" size={20} />
+              </View>
             )}
+            right={() => <Caption>{data?.hasIdentity ? data.display : 'untitled account'}</Caption>}
           />
           {accountInfo?.data && (
-            <ListItem
+            <List.Item
               title="Balance"
-              accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="credit-card-outline" />}
-              accessoryRight={() => (
-                <Text selectable category="label">
-                  {formatBalance(accountInfo.data.free.add(accountInfo.data.reserved))}
-                </Text>
+              left={() => (
+                <View style={globalStyles.justifyCenter}>
+                  <Icon name="card-text-outline" size={20} />
+                </View>
               )}
+              right={() => <Caption>{formatBalance(accountInfo.data.free.add(accountInfo.data.reserved))}</Caption>}
             />
           )}
           {identity &&
             identity.judgements[0] && ( // bug
-              <ListItem
+              <List.Item
                 title="Judgment"
-                accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="ribbon-outline" pack="ionic" />}
-                accessoryRight={() =>
+                left={() => (
+                  <View style={globalStyles.justifyCenter}>
+                    <Icon name="hammer" size={20} />
+                  </View>
+                )}
+                right={() =>
                   identity?.judgements[0] ? (
                     <JudgmentStatus
                       judgement={identity.judgements[0]}
@@ -86,25 +79,19 @@ function AddressInfoPreview(props: PropTypes) {
                 }
               />
             )}
-          <ListItem
+          <List.Item
             title="Network"
-            accessoryLeft={(iconProps: IconProps) => <Icon {...iconProps} name="planet" pack="ionic" />}
-            accessoryRight={() => (
-              <Text selectable category="label">
-                {network.name}
-              </Text>
+            left={() => (
+              <View style={globalStyles.justifyCenter}>
+                <Icon name="earth" size={20} />
+              </View>
             )}
+            right={() => <Caption>{network.name}</Caption>}
           />
-        </Layout>
+        </>
       )}
-    </Layout>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {minHeight: height * 0.3},
-  displayText: {width: '50%', textAlign: 'right'},
-  identiconContainer: {paddingHorizontal: 10},
-});
 
 export default AddressInfoPreview;

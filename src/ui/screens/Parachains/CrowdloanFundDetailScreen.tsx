@@ -1,7 +1,8 @@
 import React from 'react';
 import {Linking, StyleSheet, View} from 'react-native';
 import {RouteProp} from '@react-navigation/core';
-import {Text, Button} from '@ui-kitten/components';
+import {Text, Button, Subheading, Headline} from '@ui/library';
+import {Layout} from '@ui/components/Layout';
 import {BlockTime} from '@ui/components/BlockTime';
 import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
@@ -14,9 +15,8 @@ import {ParachainsStackParamList} from '@ui/navigation/navigation';
 import {formatNumber} from '@polkadot/util';
 import AddressInlineTeaser from '@ui/components/AddressInlineTeaser';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import {standardPadding} from '@ui/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
-import Icon from '@ui/components/Icon';
 
 type ScreenProps = {
   route: RouteProp<ParachainsStackParamList, 'CrowdLoanDetailScreen'>;
@@ -24,7 +24,6 @@ type ScreenProps = {
 
 export function CrowdloanFundDetailScreen({route}: ScreenProps) {
   const {paraId, title} = route.params;
-  // const paraIdWithType = paraId as unknown as ParaId;
   const bestNumber = useBestNumber();
   const formatBalance = useFormatBalance();
   const {data: fund, isError, isLoading} = useCrowdloanFundByParaId(paraId);
@@ -64,13 +63,18 @@ export function CrowdloanFundDetailScreen({route}: ScreenProps) {
   );
   const count = <Text>{formatNumber(contributions?.contributorsHex.length)}</Text>;
   const homepage = endpoints?.length ? endpoints[0]?.homepage : undefined;
+  const toHomepage = (url: string) => {
+    Linking.canOpenURL(url).then((supported) => {
+      if (supported) {
+        Linking.openURL(url);
+      }
+    });
+  };
 
   return (
     <SafeView edges={noTopEdges}>
-      <View style={styles.container}>
-        <Text category="h5" style={styles.title} numberOfLines={1} adjustsFontSizeToFit>
-          {title}
-        </Text>
+      <Layout style={globalStyles.paddedContainer}>
+        <Headline style={styles.title}>{title}</Headline>
         <Row label={'Index'}>
           <Text>{formatNumber(paraId)}</Text>
         </Row>
@@ -88,20 +92,14 @@ export function CrowdloanFundDetailScreen({route}: ScreenProps) {
         <Row label={'Contributors'}>{count}</Row>
         {homepage ? (
           <Button
-            style={styles.button}
-            accessoryLeft={(p) => <Icon {...p} name="home-outline" />}
+            icon="home"
             onPress={() => {
-              Linking.canOpenURL(homepage).then((supported) => {
-                if (supported) {
-                  Linking.openURL(homepage);
-                }
-              });
-            }}
-            appearance="ghost">
-            Homepage
+              toHomepage(homepage);
+            }}>
+            {`Homepage`}
           </Button>
         ) : null}
-      </View>
+      </Layout>
     </SafeView>
   );
 }
@@ -109,31 +107,27 @@ export function CrowdloanFundDetailScreen({route}: ScreenProps) {
 function Row({label, children}: {label: string; children: React.ReactNode}) {
   return (
     <View style={styles.row}>
-      <Text category="h6" appearance="hint" style={styles.rowLabel}>
-        {label}:
-      </Text>
+      <Subheading style={styles.rowLabel}>{label}:</Subheading>
       <View style={styles.value}>{children}</View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  title: {
+    textAlign: 'center',
+    marginBottom: standardPadding * 3,
   },
-  title: {textAlign: 'center', padding: standardPadding * 4},
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: standardPadding * 2,
-    paddingHorizontal: standardPadding * 2,
+    alignItems: 'center',
+    marginBottom: standardPadding * 2,
   },
-  rowLabel: {width: '35%'},
+  rowLabel: {
+    width: '35%',
+  },
   value: {
     flex: 1,
-  },
-  button: {
-    marginTop: standardPadding * 2,
-    marginHorizontal: 100,
   },
 });

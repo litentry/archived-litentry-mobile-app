@@ -29,7 +29,7 @@ export function TxPreview(props: PropTypes): React.ReactElement {
   return (
     <Layout style={styles.container}>
       <ModalTitle title="Preview" />
-      <Divider style={globalStyles.dividerPlain} />
+      <Divider />
       <ScrollView style={styles.content}>
         <HashBlock text={txPayload.blockHash} title={'call hash'} />
         <Padder scale={0.5} />
@@ -77,8 +77,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
   },
-  cancel: {flex: 1},
-  submit: {flex: 2},
   payload: {fontSize: 9, padding: standardPadding, marginVertical: standardPadding},
 });
 

@@ -1,22 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {Dimensions, StyleSheet} from 'react-native';
-import {Icon, IconProps, Layout, Input, Button, Text} from '@ui-kitten/components';
+import {StyleSheet} from 'react-native';
+import {TextInput, Button, Caption, useTheme} from '@ui/library';
+import {Layout} from '@ui/components/Layout';
 import ModalTitle from '@ui/components/ModalTitle';
 import {Padder} from '@ui/components/Padder';
 import SubstrateSign from 'react-native-substrate-sign';
 import {Account, InternalAccount, useAccounts} from 'context/AccountsContext';
 import {SecureKeychain} from 'src/service/SecureKeychain';
-
-const {height} = Dimensions.get('window');
-
-const styles = StyleSheet.create({
-  container: {
-    height: height * 0.3,
-    justifyContent: 'center',
-    paddingHorizontal: 30,
-    paddingBottom: 50,
-  },
-});
+import {standardPadding} from '@ui/styles';
 
 type Props = {
   address: string;
@@ -28,6 +19,7 @@ function isInternal(a: Account): a is InternalAccount {
 }
 
 export function AuthenticateView({onAuthenticate, address}: Props) {
+  const {colors} = useTheme();
   const [password, setPassword] = useState('');
   const [isValid, setIsValid] = useState<boolean | undefined>();
   const {accounts} = useAccounts();
@@ -59,30 +51,25 @@ export function AuthenticateView({onAuthenticate, address}: Props) {
   return (
     <Layout style={styles.container}>
       <ModalTitle title="Unlock Account" />
-      <Input
+      <TextInput
+        mode="outlined"
         placeholder="Enter password"
         secureTextEntry
         value={password}
-        status={isValid === false ? 'danger' : 'basic'}
         onChangeText={setPassword}
-        accessoryLeft={(props: IconProps) => <Icon {...props} name="lock-outline" />}
-        caption={isValid === false ? IncorrectPassword : undefined}
       />
+      {isValid === false ? <Caption style={{color: colors.error}}>{`Incorrect password`}</Caption> : null}
       <Padder scale={1} />
-      <Button accessoryRight={(props) => <Icon {...props} name="unlock-outline" />} onPress={onPressUnlock}>
+      <Button onPress={onPressUnlock} mode="contained" icon="lock">
         Unlock
       </Button>
     </Layout>
   );
 }
 
-function IncorrectPassword() {
-  return (
-    <>
-      <Padder scale={0.5} />
-      <Text category="c2" status="danger">
-        Incorrect password
-      </Text>
-    </>
-  );
-}
+const styles = StyleSheet.create({
+  container: {
+    padding: standardPadding * 3,
+    marginBottom: standardPadding * 2,
+  },
+});

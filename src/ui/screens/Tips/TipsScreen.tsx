@@ -1,7 +1,7 @@
 import React from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
-import {MemoizedTipTeaser} from '@ui/components/tips/TipTeaser';
+import {MemoizedTipTeaser} from '@ui/components/Tips/TipTeaser';
 import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';

@@ -6,7 +6,8 @@ import {SubmittableExtrinsic} from '@polkadot/api/submittable/types';
 import {ExtrinsicPayload} from '@polkadot/types/interfaces';
 import {SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
 import {BN_ZERO, hexToU8a, u8aConcat, u8aToHex} from '@polkadot/util';
-import {Icon, IconProps, Layout, Text} from '@ui-kitten/components';
+import {Subheading, Caption, Icon} from '@ui/library';
+import {Layout} from '@ui/components/Layout';
 import {useAccounts} from 'context/AccountsContext';
 import {useApi} from 'context/ChainApiContext';
 import {AuthenticateView} from 'context/TxContext/AuthenticateView';
@@ -36,8 +37,6 @@ type TxContextValueType = {
 export const TxContext = createContext<TxContextValueType>({
   start: () => Promise.resolve(),
 });
-
-const AlertIcon = (props: IconProps) => <Icon fill="#ccc" {...props} name="alert-triangle-outline" />;
 
 export type StartConfig = {
   api: ApiPromise;
@@ -182,7 +181,7 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
       case 'initial_view':
         return (
           <Layout style={styles.emptyState}>
-            <Text>Preparing transaction payload...</Text>
+            <Subheading>Preparing transaction payload...</Subheading>
           </Layout>
         );
 
@@ -244,18 +243,14 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
                 });
               }}
               showMarker
-              topContent={
-                <Text style={styles.title} category="label">
-                  Scanning ...
-                </Text>
-              }
+              topContent={<Caption>Scanning ...</Caption>}
               markerStyle={styles.marker}
               cameraStyle={styles.cameraBase}
               notAuthorizedView={
                 <Layout style={styles.notAuthorized}>
                   <Layout style={styles.notAuthorizedHack}>
-                    <AlertIcon style={styles.icon} />
-                    <Text category="label">This requires your Camera permission to scan.</Text>
+                    <Icon name="alert-outline" size={30} />
+                    <Caption>This requires your Camera permission to scan.</Caption>
                   </Layout>
                 </Layout>
               }
@@ -266,10 +261,7 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
       case 'submitting_view':
         return (
           <Layout style={styles.infoContainer}>
-            <LoadingView
-              text="Submitting"
-              renderIcon={() => <Icon name="cloud-upload-outline" fill="#ccc" style={styles.iconText} />}
-            />
+            <LoadingView text="Submitting" renderIcon={() => <Icon name="upload" size={20} />} />
           </Layout>
         );
 
@@ -338,33 +330,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  resultContainer: {
-    flex: 1,
-    height: height * 0.3,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: standardPadding * 2,
-    marginBottom: standardPadding * 2,
-  },
-  buttonBlock: {flex: 1, marginLeft: standardPadding},
-  buttonGroup: {
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'space-between',
-  },
-  modal: {},
   title: {
     padding: standardPadding * 2,
     marginBottom: standardPadding * 2,
     fontSize: 14,
-  },
-  icon: {
-    width: 32,
-    height: 32,
-  },
-  iconText: {
-    width: 20,
-    height: 20,
   },
   marker: {
     borderColor: '#ccc',

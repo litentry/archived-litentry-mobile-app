@@ -88,11 +88,9 @@ const globalStyles = StyleSheet.create({
   },
   aye: {
     color: colorGreen,
-    fontFamily: monofontFamily,
   },
   nay: {
     color: colorRed,
-    fontFamily: monofontFamily,
   },
   textCenter: {
     textAlign: 'center',
