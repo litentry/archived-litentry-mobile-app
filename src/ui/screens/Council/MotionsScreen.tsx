@@ -121,7 +121,7 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
                     return (
                       <View style={globalStyles.rowAlignCenter}>
                         <Button onPress={onPressNay} color={colors.error} mode="outlined">
-                          Nye
+                          Nay
                         </Button>
                         <Button onPress={onPressAye} color={colors.success} mode="outlined">
                           Aye

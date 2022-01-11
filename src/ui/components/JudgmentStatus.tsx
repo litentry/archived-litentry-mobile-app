@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {RegistrationJudgement} from '@polkadot/types/interfaces';
 import {Icon, useTheme, Caption} from '@ui/library';
-import {mapStatusText} from 'src/identityUtils';
+import {mapStatusText} from 'src/utils/identity';
 import {colorGreen, colorRed, colorGray} from '@ui/styles';
 import {Popable} from 'react-native-popable';
 
