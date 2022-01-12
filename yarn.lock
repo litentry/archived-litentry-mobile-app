@@ -8667,10 +8667,10 @@ react-native-mmkv@^1.6.3:
   resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-1.6.3.tgz#09987d3d6aabdce1ff6efe0973c30bca1474d154"
   integrity sha512-NZyF+psSnIOjvP0VGC6rK/UgVR6ml77MzYGyxKxucZMUZR3pIt+fyc9zat8RtAxHhLJdinNhpqXPee3MZ4Izyg==
 
-react-native-modalize@^2.0.12:
-  version "2.0.12"
-  resolved "https://registry.yarnpkg.com/react-native-modalize/-/react-native-modalize-2.0.12.tgz#0e48b2e7d496deca3d241414f233b29df34f4b30"
-  integrity sha512-IKPBM4RXLNLaH1WFX8/yPHlbRei15TNcMMftQzi+juG0ibbsAPbEXkbt+KKs7O1dvmOF8sZwRH3SbWjFlcxtAw==
+react-native-modalize@^2.0.13:
+  version "2.0.13"
+  resolved "https://registry.yarnpkg.com/react-native-modalize/-/react-native-modalize-2.0.13.tgz#51517cddd726ddbc19c080d15e7721ade4ee7a66"
+  integrity sha512-BMJlpTnpeDVp5LbbE6kdO+3+yLzowRvPgcIu1QCCM+//uY7oON4VcL8ISilSgAfOYeNQc6vhaD5chVtmpTl/dw==
 
 react-native-pager-view@^5.4.9:
   version "5.4.9"
