@@ -18,7 +18,7 @@
     "assemble:android": "cd android/ && ./gradlew clean && ./gradlew assembleRelease"
   },
   "resolutions": {
-    "@polkadot/types": "^7.0.2",
+    "@polkadot/types": "^7.3.1",
     "@polkadot/util": "^8.2.2",
     "@polkadot/util-crypto": "^8.2.2"
   },
@@ -109,6 +109,7 @@
     "@typescript-eslint/parser": "^4.33.0",
     "babel-jest": "^27.4.5",
     "babel-plugin-module-resolver": "^4.1.0",
+    "babel-plugin-transform-import-meta": "^2.1.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "husky": "^7.0.4",
