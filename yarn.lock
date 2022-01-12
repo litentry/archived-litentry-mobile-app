@@ -8536,10 +8536,10 @@ react-is@^16.13.0, react-is@^16.7.0, react-is@^16.8.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
-react-native-aes-crypto@^1.3.10:
-  version "1.3.10"
-  resolved "https://registry.yarnpkg.com/react-native-aes-crypto/-/react-native-aes-crypto-1.3.10.tgz#8e7d536a19481dd087e8c40083008a843f961495"
-  integrity sha512-aQsbXCmsQEaXqjpKo8S0ot5CnK6KGN/Jx0qN1B3I8Au8Egl66BKryxD9wmorHYdjx+omctdug/mNWHKDRmDlow==
+react-native-aes-crypto@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-aes-crypto/-/react-native-aes-crypto-2.0.0.tgz#b5c684acab2e6c888c12f2e4f5627aa8bade5d13"
+  integrity sha512-ZsnvpUPaGQ7v7tI7StU40J8bplIQ6xGl7rwUUG+D31KOOIwjODRnUfMfF0hf/6+nrHxtfGd/aUV+nfVLCLI16Q==
 
 react-native-animatable@^1.3.3:
   version "1.3.3"

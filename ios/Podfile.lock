@@ -271,7 +271,7 @@ PODS:
   - React-jsinspector (0.66.4)
   - React-logger (0.66.4):
     - glog
-  - react-native-aes (1.3.10):
+  - react-native-aes (2.0.0):
     - React-Core
   - react-native-camera (4.2.1):
     - React-Core
@@ -674,7 +674,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 94ce921e1d8ce7023366873ec371f3441383b396
   React-jsinspector: d0374f7509d407d2264168b6d0fad0b54e300b85
   React-logger: 933f80c97c633ee8965d609876848148e3fef438
-  react-native-aes: c6e4e3ffcff410535e31e161fca95d50e608d4ee
+  react-native-aes: c75c46aa744bef7c2415fdf7f5b2dcb75ca4364d
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-document-picker: b0f989906fda1c1af4257cf0c7958229defe51ac
   react-native-in-app-message: 00952df970f85d162b9100f6b767ae37c6520dda
