@@ -1,10 +1,9 @@
 import React, {useContext} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {useQueryClient} from 'react-query';
-import {Button, Card, Divider, ListItem, Text} from '@ui-kitten/components';
+import {Card, List, Subheading, Button, Headline, useTheme} from '@ui/library';
 import {formatNumber} from '@polkadot/util';
 import type {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
-
 import {ChainApiContext} from 'context/ChainApiContext';
 import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
@@ -14,7 +13,7 @@ import {useCouncilMembers} from 'src/api/hooks/useCouncilMembers';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {ProposalInfo} from '@ui/components/ProposalInfo';
 import {useCouncilMotions} from 'src/api/hooks/useCouncilMotions';
-import {standardPadding} from '@ui/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {motionDetailScreen} from '@ui/navigation/routeKeys';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
@@ -37,7 +36,7 @@ export function MotionsScreen() {
           renderItem={({item}) => {
             return <Motion item={item} />;
           }}
-          ItemSeparatorComponent={Divider}
+          ItemSeparatorComponent={() => <Padder scale={1} />}
           keyExtractor={(item) => item.hash.toHex()}
           ListEmptyComponent={EmptyView}
         />
@@ -46,9 +45,8 @@ export function MotionsScreen() {
   );
 }
 
-const styles = StyleSheet.create({flatList: {padding: standardPadding * 2}});
-
 function Motion({item}: {item: DeriveCollectiveProposal}) {
+  const {colors} = useTheme();
   const navigation = useNavigation<NavigationProp<DashboardStackParamList>>();
   const {api} = useContext(ChainApiContext);
   const startTx = useApiTx();
@@ -102,39 +100,30 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
 
   return (
     <Card
-      style={motionStyle.container}
       onPress={() => {
         navigation.navigate(motionDetailScreen, {hash: String(hash)});
       }}>
-      <ListItem
-        style={motionStyle.listItem}
-        disabled
-        accessoryLeft={() => {
-          return <Text category={'h4'}>{formatNumber(votes?.index)}</Text>;
-        }}
-        accessoryRight={() => {
-          return (
-            <>
-              <Text category={'c1'}>{`Aye ${votes?.ayes.length}/${votes?.threshold} `}</Text>
-              <Padder scale={0.5} />
+      <Card.Content>
+        <List.Item
+          title={<Headline>{formatNumber(votes?.index)}</Headline>}
+          right={() => (
+            <View style={globalStyles.justifyCenter}>
+              <Subheading>{`Aye ${votes?.ayes.length}/${votes?.threshold} `}</Subheading>
               {(() => {
                 if (data?.isMember) {
                   if (isCloseable) {
                     return (
-                      <View>
-                        <Button status={'warning'} size={'tiny'} onPress={onPressClose}>
-                          Close
-                        </Button>
-                      </View>
+                      <Button onPress={onPressClose} color={colors.error} mode="outlined">
+                        Close
+                      </Button>
                     );
                   } else if (isVoteable) {
                     return (
-                      <View style={motionStyle.buttons}>
-                        <Button status={'danger'} size={'tiny'} onPress={onPressNay}>
+                      <View style={globalStyles.rowAlignCenter}>
+                        <Button onPress={onPressNay} color={colors.error} mode="outlined">
                           Nay
                         </Button>
-                        <Padder scale={0.5} />
-                        <Button status={'success'} size={'tiny'} onPress={onPressAye}>
+                        <Button onPress={onPressAye} color={colors.success} mode="outlined">
                           Aye
                         </Button>
                       </View>
@@ -142,17 +131,17 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
                   }
                 }
               })()}
-            </>
-          );
-        }}
-      />
-      <ProposalInfo proposal={proposal} />
+            </View>
+          )}
+        />
+        <ProposalInfo proposal={proposal} />
+      </Card.Content>
     </Card>
   );
 }
 
-const motionStyle = StyleSheet.create({
-  container: {marginBottom: standardPadding},
-  buttons: {display: 'flex', flexDirection: 'row'},
-  listItem: {backgroundColor: 'transparent'},
+const styles = StyleSheet.create({
+  flatList: {
+    padding: standardPadding * 2,
+  },
 });

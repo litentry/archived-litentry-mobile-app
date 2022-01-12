@@ -16,7 +16,7 @@ import {getBalanceFromString} from 'src/api/utils/balance';
 import {candidateScreen} from '@ui/navigation/routeKeys';
 import {List, Button, Divider, Modal, useTheme, Caption, Subheading, TextInput, Text} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
-import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {MotionsScreen} from './MotionsScreen';
 import {useModuleElections} from 'src/api/hooks/useModuleElections';
 import Badge from '@ui/components/Badge';
@@ -237,59 +237,61 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
 
   return (
     <Modal visible={visible} onDismiss={reset}>
-      <View style={styles.centerAlign}>
-        <Subheading>{`Vote for council`}</Subheading>
-      </View>
-      <Padder scale={1} />
-
-      <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.address)} />
-      <Padder scale={1} />
-
-      <TextInput
-        dense
-        autoComplete="off"
-        mode="outlined"
-        placeholder="Vote value"
-        keyboardType="decimal-pad"
-        value={amount}
-        onChangeText={(nextValue) => setAmount(nextValue.replace(/[^(\d+).(\d+)]/g, ''))}
-      />
-
-      <Subheading style={styles.voteValue}>{api ? formatBalance(getBalanceFromString(api, amount)) : ''}</Subheading>
-
-      <Padder scale={1} />
-      <Caption>{`Select up to ${MAX_VOTES} candidates in the preferred order:`}</Caption>
-
-      <View style={styles.candidatesContainer}>
-        <View style={styles.candidates}>
-          <ScrollView contentContainerStyle={styles.scrollView}>
-            {candidates.map((candidate) => (
-              <MemberItem
-                key={candidate}
-                accountId={candidate}
-                onSelect={onCandidateSelect}
-                isSelected={selectedCandidates.includes(candidate)}
-                order={selectedCandidates.indexOf(candidate) + 1}
-              />
-            ))}
-          </ScrollView>
+      <ScrollView>
+        <View style={styles.centerAlign}>
+          <Subheading>{`Vote for council`}</Subheading>
         </View>
+        <Padder scale={1} />
 
-        <View style={styles.votingBond}>
-          <Caption>{`Voting bond`}</Caption>
-          {bondValue && <Text style={styles.bondValue}>{`${formatBalance(bondValue)}`}</Text>}
+        <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.address)} />
+        <Padder scale={1} />
+
+        <TextInput
+          dense
+          autoComplete="off"
+          mode="outlined"
+          placeholder="Vote value"
+          keyboardType="decimal-pad"
+          value={amount}
+          onChangeText={(nextValue) => setAmount(nextValue.replace(/[^(\d+).(\d+)]/g, ''))}
+        />
+
+        <Subheading style={styles.voteValue}>{api ? formatBalance(getBalanceFromString(api, amount)) : ''}</Subheading>
+
+        <Padder scale={1} />
+        <Caption>{`Select up to ${MAX_VOTES} candidates in the preferred order:`}</Caption>
+
+        <View style={styles.candidatesContainer}>
+          <View style={styles.candidates}>
+            <ScrollView>
+              {candidates.map((candidate) => (
+                <MemberItem
+                  key={candidate}
+                  accountId={candidate}
+                  onSelect={onCandidateSelect}
+                  isSelected={selectedCandidates.includes(candidate)}
+                  order={selectedCandidates.indexOf(candidate) + 1}
+                />
+              ))}
+            </ScrollView>
+          </View>
+
+          <View style={styles.votingBond}>
+            <Caption style={globalStyles.textCenter}>{`Bond`}</Caption>
+            {bondValue && <Text style={styles.bondValue}>{`${formatBalance(bondValue)}`}</Text>}
+          </View>
         </View>
-      </View>
-      <Padder scale={1} />
+        <Padder scale={1} />
 
-      <View style={styles.buttons}>
-        <Button onPress={reset} mode="outlined" compact>
-          Cancel
-        </Button>
-        <Button mode="contained" disabled={disabled} onPress={onVote}>
-          Vote
-        </Button>
-      </View>
+        <View style={styles.buttons}>
+          <Button onPress={reset} mode="outlined" compact>
+            Cancel
+          </Button>
+          <Button mode="contained" disabled={disabled} onPress={onVote}>
+            Vote
+          </Button>
+        </View>
+      </ScrollView>
     </Modal>
   );
 }
@@ -344,14 +346,32 @@ const styles = StyleSheet.create({
     paddingVertical: standardPadding,
     paddingHorizontal: standardPadding * 2,
   },
-  centerAlign: {alignItems: 'center'},
-  candidatesContainer: {flexDirection: 'row', height: 200},
-  candidates: {flex: 3, paddingVertical: standardPadding},
-  scrollView: {marginRight: standardPadding},
-  votingBond: {flex: 1, justifyContent: 'center', alignItems: 'center'},
-  bondValue: {fontSize: 10},
-  buttons: {flexDirection: 'row', justifyContent: 'space-around', marginBottom: standardPadding},
-  voteButton: {width: 100},
+  centerAlign: {
+    alignItems: 'center',
+  },
+  candidatesContainer: {
+    flexDirection: 'row',
+    height: 250,
+  },
+  candidates: {
+    flex: 3,
+    paddingVertical: standardPadding,
+  },
+  votingBond: {
+    flex: 1.2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  bondValue: {
+    fontSize: 10,
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  voteButton: {
+    width: 100,
+  },
   candidateItemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -360,14 +380,27 @@ const styles = StyleSheet.create({
     padding: 2,
     paddingHorizontal: 4,
   },
-  candidateIdentity: {flex: 3, flexDirection: 'row', alignItems: 'center'},
-  candidateName: {fontFamily: monofontFamily, fontWeight: 'bold', flexShrink: 1},
-  badge: {flex: 1, flexDirection: 'row', justifyContent: 'flex-end'},
+  candidateIdentity: {
+    flex: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  candidateName: {
+    fontWeight: 'bold',
+    flexShrink: 1,
+  },
+  badge: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
   fab: {
     position: 'absolute',
     margin: 0,
     right: 24,
     bottom: 32,
   },
-  voteValue: {marginLeft: standardPadding},
+  voteValue: {
+    marginLeft: standardPadding,
+  },
 });

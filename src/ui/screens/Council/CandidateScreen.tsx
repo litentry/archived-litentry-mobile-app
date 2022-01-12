@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
-import {View, StyleSheet, FlatList} from 'react-native';
+import {View, FlatList} from 'react-native';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {ListItem, Text, Icon, Divider, useTheme} from '@ui-kitten/components';
+import {Divider, List, Card, Icon, Caption, Subheading, Paragraph} from '@ui/library';
 import IdentityIcon from '@polkadot/reactnative-identicon';
 import type {AccountId} from '@polkadot/types/interfaces';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -11,7 +11,7 @@ import LoadingView from '@ui/components/LoadingView';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
 import {Padder} from '@ui/components/Padder';
-import {standardPadding} from '@ui/styles';
+import globalStyles from '@ui/styles';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 
@@ -20,13 +20,24 @@ type ScreenProps = {
   route: RouteProp<DashboardStackParamList, 'Candidate'>;
 };
 
+function LeftIcon({icon}: {icon: string}) {
+  return (
+    <View style={globalStyles.justifyCenter}>
+      <Icon name={icon} size={20} />
+    </View>
+  );
+}
+
+function ItemRight({children}: {children: React.ReactNode}) {
+  return <View style={globalStyles.justifyCenter}>{children}</View>;
+}
+
 export function CandidateScreen({route, navigation}: ScreenProps) {
   const accountId = route.params.accountId;
   const backing = route.params.backing;
   const screenTitle = route.params.title;
   const {data: councilData, isLoading: isLoadingCouncil} = useCouncil();
   const {data: identityInfoData, isLoading: isLoadingIdentityInfo} = useAccountIdentityInfo(accountId);
-  const theme = useTheme();
 
   useEffect(() => {
     if (screenTitle) {
@@ -47,89 +58,87 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
   return (
     <SafeView edges={noTopEdges}>
       <FlatList
+        contentContainerStyle={globalStyles.paddedContainer}
         ListHeaderComponent={() => (
           <>
-            <View style={[styles.container, {borderColor: theme['border-basic-color-4']}]}>
-              <View style={styles.identityIconContainer}>
-                <IdentityIcon value={accountId} size={60} />
-                <Padder scale={1} />
-                {identityInfoData && <AccountInfoInlineTeaser identity={identityInfoData} />}
-              </View>
-              <Padder scale={1} />
-              <Divider />
-              <View>
+            <Card>
+              <Card.Content>
+                <View style={globalStyles.alignCenter}>
+                  <IdentityIcon value={accountId} size={30} />
+                  <Padder scale={0.5} />
+                  {identityInfoData && <AccountInfoInlineTeaser identity={identityInfoData} />}
+                </View>
+                <Padder scale={0.5} />
+                <Divider />
                 {legal ? (
-                  <ListItem
+                  <List.Item
                     title="Legal"
-                    accessoryLeft={(p) => <Icon {...p} name="award-outline" />}
-                    accessoryRight={() => (
-                      <Text selectable category="label">
-                        {legal}
-                      </Text>
+                    left={() => <LeftIcon icon="medal-outline" />}
+                    right={() => (
+                      <ItemRight>
+                        <Caption>{legal}</Caption>
+                      </ItemRight>
                     )}
                   />
                 ) : null}
                 {email ? (
-                  <ListItem
+                  <List.Item
                     title="Email"
-                    accessoryLeft={(p) => <Icon {...p} name="email-outline" />}
-                    accessoryRight={() => (
-                      <Text selectable category="label">
-                        {email}
-                      </Text>
+                    left={() => <LeftIcon icon="email-outline" />}
+                    right={() => (
+                      <ItemRight>
+                        <Caption>{email}</Caption>
+                      </ItemRight>
                     )}
                   />
                 ) : null}
                 {twitter ? (
-                  <ListItem
+                  <List.Item
                     title="Twitter"
-                    accessoryLeft={(p) => <Icon {...p} name="twitter-outline" />}
-                    accessoryRight={() => (
-                      <Text selectable category="label">
-                        {twitter}
-                      </Text>
+                    left={() => <LeftIcon icon="twitter" />}
+                    right={() => (
+                      <ItemRight>
+                        <Caption>{twitter}</Caption>
+                      </ItemRight>
                     )}
                   />
                 ) : null}
                 {riot ? (
-                  <ListItem
+                  <List.Item
                     title="Riot"
-                    accessoryLeft={(p) => <Icon {...p} name="message-square-outline" />}
-                    accessoryRight={() => (
-                      <Text selectable category="label">
-                        {riot}
-                      </Text>
+                    left={() => <LeftIcon icon="message-outline" />}
+                    right={() => (
+                      <ItemRight>
+                        <Caption>{riot}</Caption>
+                      </ItemRight>
                     )}
                   />
                 ) : null}
                 {web ? (
-                  <ListItem
+                  <List.Item
                     title="Web"
-                    accessoryLeft={(p) => <Icon {...p} name="browser-outline" />}
-                    accessoryRight={() => (
-                      <Text selectable category="label">
-                        {web}
-                      </Text>
+                    left={() => <LeftIcon icon="earth" />}
+                    right={() => (
+                      <ItemRight>
+                        <Caption>{web}</Caption>
+                      </ItemRight>
                     )}
                   />
                 ) : null}
-              </View>
-              {backing ? (
-                <>
-                  <Divider />
-                  <Padder scale={1} />
-                  <View style={styles.backingContainer}>
-                    <Text category="label">{backing}</Text>
-                    <Text category="p2">Backing</Text>
-                  </View>
-                </>
-              ) : null}
-            </View>
-            <View>
-              <Text style={styles.votersListTitle} category="s1">
-                Voters:
-              </Text>
-            </View>
+                {backing ? (
+                  <>
+                    <Divider />
+                    <Padder scale={1} />
+                    <View style={globalStyles.alignCenter}>
+                      <Paragraph>Backing</Paragraph>
+                      <Paragraph>{backing}</Paragraph>
+                    </View>
+                  </>
+                ) : null}
+              </Card.Content>
+            </Card>
+            <Padder scale={1} />
+            <Subheading style={globalStyles.textCenter}>{`Voters`}</Subheading>
           </>
         )}
         data={councilData?.getVoters(accountId) || []}
@@ -147,41 +156,15 @@ function Voter({accountId}: {accountId: AccountId}) {
   const formatBalance = useFormatBalance();
 
   return (
-    <ListItem
-      accessoryLeft={() => <IdentityIcon value={accountId.toString()} size={40} />}
-      title={() => (
-        <View style={styles.voterAccountContainer}>{data && <AccountInfoInlineTeaser identity={data} />}</View>
+    <List.Item
+      left={() => (
+        <View style={globalStyles.justifyCenter}>
+          <IdentityIcon value={accountId.toString()} size={40} />
+        </View>
       )}
-      style={styles.voterContainer}
+      title={data && <AccountInfoInlineTeaser identity={data} />}
       description={voterData?.stake ? formatBalance(voterData.stake) : ''}
       disabled
     />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    borderWidth: 1,
-    borderRadius: 10,
-    justifyContent: 'center',
-    paddingVertical: 10,
-    margin: 15,
-  },
-  identityIconContainer: {
-    alignItems: 'center',
-  },
-  voterContainer: {
-    paddingVertical: standardPadding,
-    paddingHorizontal: standardPadding * 2,
-  },
-  votersListTitle: {
-    paddingHorizontal: 20,
-    paddingTop: 15,
-    paddingBottom: 10,
-  },
-  voterAccountContainer: {paddingHorizontal: 10},
-  backingContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

@@ -98,6 +98,7 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
       <View style={styles.container}>
         <TextInput
           autoComplete="off"
+          autoCapitalize={'none'}
           label={'EXISTING 12 WORD MNEMONIC SEED'}
           numberOfLines={4}
           multiline={true}

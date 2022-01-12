@@ -4,7 +4,7 @@ import globalStyles, {standardPadding} from '@ui/styles';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {LeaseInfo, useParathreads} from 'src/api/hooks/useParaThreads';
 import {LeasePeriod, useParachainsLeasePeriod} from 'src/api/hooks/useParachainsLeasePeriod';
-import {Text, Divider, ListItem} from '@ui-kitten/components';
+import {List, Text, Divider} from '@ui/library';
 import type {ParaId} from '@polkadot/types/interfaces';
 import {formatNumber, bnToBn, BN_ONE} from '@polkadot/util';
 import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
@@ -70,30 +70,26 @@ function ParathreadItem({id, leases, leasePeriod}: ParathreadItemProps) {
   const {periodString, blocks} = parseLeases({leasePeriod, leases});
 
   return (
-    <ListItem
+    <List.Item
       onPress={() => toParathreadHomepage(parathreadData.homepage)}
-      accessoryLeft={() => (
-        <View style={styles.chainImage}>
+      left={() => (
+        <View style={globalStyles.justifyCenter}>
           {parathreadInfo?.manager && <Identicon value={parathreadInfo.manager.toString()} size={30} />}
         </View>
       )}
       title={() => <View style={styles.manager}>{manager && <AccountInfoInlineTeaser identity={manager} />}</View>}
       description={() => (
         <>
-          {parathreadData.name && (
-            <Text category="c1" appearance="hint">
-              {parathreadData.name}
-            </Text>
-          )}
-          {periodString ? (
-            <Text category="c1" appearance="hint">
-              {periodString}
-            </Text>
-          ) : null}
+          {parathreadData.name && <Text>{parathreadData.name}</Text>}
+          {periodString ? <Text>{periodString}</Text> : null}
           {blocks ? <BlockTime blockNumber={blocks} /> : null}
         </>
       )}
-      accessoryRight={() => <Text>{formatNumber(id)}</Text>}
+      right={() => (
+        <View style={globalStyles.justifyCenter}>
+          <Text>{formatNumber(id)}</Text>
+        </View>
+      )}
     />
   );
 }
@@ -126,9 +122,6 @@ const styles = StyleSheet.create({
   content: {
     paddingVertical: standardPadding * 2,
     paddingHorizontal: standardPadding * 2,
-  },
-  chainImage: {
-    marginRight: standardPadding,
   },
   manager: {
     marginRight: 20,

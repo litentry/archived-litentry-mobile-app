@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
-import {Card, Divider, ListItem, Text} from '@ui-kitten/components';
+import {Divider, Card, List, Caption, Text, Subheading} from '@ui/library';
 import {formatNumber, BN_ONE, BN_HUNDRED, bnToBn, bnToHex} from '@polkadot/util';
 import type {ParaId} from '@polkadot/types/interfaces';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -12,12 +12,11 @@ import {useParachainLeases} from 'src/api/hooks/useParachainLeases';
 import ProgressChartWidget from '@ui/components/ProgressWidget';
 import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import StatInfoBlock from '@ui/components/StatInfoBlock';
-import {standardPadding} from '@ui/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
 import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
 import {BlockTime} from '@ui/components/BlockTime';
 import LoadingView from '@ui/components/LoadingView';
-import {monofontFamily} from '@ui/styles';
 import {useNavigation} from '@react-navigation/core';
 import {parachainDetailScreen} from '@ui/navigation/routeKeys';
 import {getLeasePeriodString} from 'src/api/utils/parachainLeases';
@@ -42,17 +41,15 @@ export function ParachainsOverviewScreen() {
 
   return (
     <SafeView edges={noTopEdges}>
-      <View style={styles.container}>
-        <Overview
-          parachains={parachains || []}
-          parathreadsCount={parathreadIds?.length || 0}
-          leasePeriod={leasePeriod}
-          totalPeriod={totalPeriod}
-          periodRemainder={periodRemainder}
-          progressPercent={progressPercent || 0}
-          proposalsCount={proposalIds?.length || 0}
-        />
-      </View>
+      <Overview
+        parachains={parachains || []}
+        parathreadsCount={parathreadIds?.length || 0}
+        leasePeriod={leasePeriod}
+        totalPeriod={totalPeriod}
+        periodRemainder={periodRemainder}
+        progressPercent={progressPercent || 0}
+        proposalsCount={proposalIds?.length || 0}
+      />
     </SafeView>
   );
 }
@@ -78,42 +75,46 @@ const Overview = React.memo(function Overview({
 }: OverviewProps) {
   return (
     <FlatList
+      contentContainerStyle={globalStyles.paddedContainer}
+      showsVerticalScrollIndicator={false}
       ListHeaderComponent={() => {
         return (
           <>
-            <Card disabled>
-              <View style={styles.itemRow}>
-                <StatInfoBlock title="Parachains">{formatNumber(parachains?.length)}</StatInfoBlock>
-                <StatInfoBlock title="Parathreads">{formatNumber(parathreadsCount)}</StatInfoBlock>
-              </View>
-              {proposalsCount ? (
-                <View style={styles.itemRow}>
-                  <StatInfoBlock title="Proposals">{formatNumber(proposalsCount)}</StatInfoBlock>
+            <Card>
+              <Card.Content>
+                <View style={[styles.itemRow, styles.cardTop]}>
+                  <StatInfoBlock title="Parachains">{formatNumber(parachains?.length)}</StatInfoBlock>
+                  <StatInfoBlock title="Parathreads">{formatNumber(parathreadsCount)}</StatInfoBlock>
                 </View>
-              ) : null}
-              <Divider />
-              <Padder scale={1} />
-              {leasePeriod ? (
-                <View style={styles.itemRow}>
-                  <View style={styles.leasePeriodContainer}>
-                    <ProgressChartWidget
-                      title={`Lease Period`}
-                      detail={`\n${progressPercent}%`}
-                      data={[leasePeriod.progress.toNumber() / leasePeriod.length.toNumber()]}
-                    />
-                    <View>
-                      <StatInfoBlock title="Current lease">{formatNumber(leasePeriod?.currentPeriod)}</StatInfoBlock>
-                      <StatInfoBlock title="Total">{totalPeriod}</StatInfoBlock>
-                      <StatInfoBlock title="Remainder">{periodRemainder}</StatInfoBlock>
+                {proposalsCount ? (
+                  <View style={styles.itemRow}>
+                    <StatInfoBlock title="Proposals">{formatNumber(proposalsCount)}</StatInfoBlock>
+                  </View>
+                ) : null}
+                <Divider />
+                <Padder scale={1} />
+                {leasePeriod ? (
+                  <View style={styles.itemRow}>
+                    <View style={styles.leasePeriodContainer}>
+                      <ProgressChartWidget
+                        title={`Lease Period`}
+                        detail={`\n${progressPercent}%`}
+                        data={[leasePeriod.progress.toNumber() / leasePeriod.length.toNumber()]}
+                      />
+                      <View>
+                        <StatInfoBlock title="Current lease">{formatNumber(leasePeriod?.currentPeriod)}</StatInfoBlock>
+                        <StatInfoBlock title="Total">{totalPeriod}</StatInfoBlock>
+                        <StatInfoBlock title="Remainder">{periodRemainder}</StatInfoBlock>
+                      </View>
                     </View>
                   </View>
-                </View>
-              ) : null}
+                ) : null}
+              </Card.Content>
             </Card>
             <Padder scale={1} />
             <View style={styles.parachainsHeaderContainer}>
-              <Text category="s1">Parachains</Text>
-              <Text category="s1">Leases</Text>
+              <Subheading>Parachains</Subheading>
+              <Subheading>Leases</Subheading>
             </View>
             <Padder scale={1} />
           </>
@@ -149,7 +150,7 @@ function Parachain({id, leasePeriod}: {id: ParaId; leasePeriod?: LeasePeriod}) {
 
   return (
     <>
-      <ListItem
+      <List.Item
         onPress={() => {
           navigate(parachainDetailScreen, {
             id: id.toString(),
@@ -158,24 +159,16 @@ function Parachain({id, leasePeriod}: {id: ParaId; leasePeriod?: LeasePeriod}) {
             blocks: bnToHex(blocks),
           });
         }}
-        title={() => {
+        title={parachainName}
+        left={() => (
+          <View style={globalStyles.justifyCenter}>
+            <Caption>{formatNumber(id.toNumber())}</Caption>
+          </View>
+        )}
+        right={() => {
           return (
-            <Text style={styles.parachainName} category="s1">
-              {String(parachainName)}
-            </Text>
-          );
-        }}
-        accessoryLeft={() => {
-          return (
-            <Text style={styles.text} category="c1">
-              {formatNumber(id.toNumber())}
-            </Text>
-          );
-        }}
-        accessoryRight={() => {
-          return (
-            <View>
-              <Text style={styles.text}>{period}</Text>
+            <View style={styles.rightItem}>
+              <Text>{period}</Text>
               {blocks ? <BlockTime blockNumber={blocks} /> : null}
             </View>
           );
@@ -187,34 +180,21 @@ function Parachain({id, leasePeriod}: {id: ParaId; leasePeriod?: LeasePeriod}) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-  },
-  boxRow: {
-    flexDirection: 'row',
-  },
-  card: {
-    flex: 1,
-  },
   itemRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: standardPadding * 2,
   },
+  cardTop: {marginHorizontal: standardPadding * 2},
   leasePeriodContainer: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  text: {
-    fontFamily: monofontFamily,
-  },
-  parachainName: {
-    paddingLeft: 20,
-  },
   parachainsHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
   },
+  rightItem: {marginRight: standardPadding},
 });

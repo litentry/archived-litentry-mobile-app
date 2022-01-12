@@ -4,7 +4,7 @@ import type {DeriveProposal, DeriveReferendumExt} from '@polkadot/api-derive/typ
 import {BN_ONE} from '@polkadot/util';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {Layout} from '@ui-kitten/components';
+import {Layout} from '@ui/components/Layout';
 import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';

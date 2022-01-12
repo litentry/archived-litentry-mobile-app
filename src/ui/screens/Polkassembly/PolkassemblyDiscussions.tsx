@@ -1,12 +1,11 @@
+import React from 'react';
 import {NavigationProp} from '@react-navigation/native';
-import {Button, Card, Divider, Icon, MenuItem, OverflowMenu, Text, useTheme} from '@ui-kitten/components';
+import {Icon, Button, Card, Caption, Text, Menu, Subheading, useTheme} from '@ui/library';
 import AddressInlineTeaser from '@ui/components/AddressInlineTeaser';
 import {flatten} from 'lodash';
-import moment from 'moment';
-import {Label} from '@ui/components/Label';
+import * as dateUtils from 'src/utils/date';
 import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import * as React from 'react';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {OrderByType, topicIdMap, usePolkassemblyDiscussions} from 'src/api/hooks/usePolkassemblyDiscussions';
 import {PolkassemblyDiscussionStackParamList} from '@ui/navigation/navigation';
@@ -20,6 +19,7 @@ export function PolkassemblyDiscussions({
 }: {
   navigation: NavigationProp<PolkassemblyDiscussionStackParamList>;
 }) {
+  const {colors} = useTheme();
   const [orderBy, setOrderBy] = React.useState<OrderByType>('lastCommented');
   const [topicId, setTopicId] = React.useState<number>();
   const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
@@ -29,7 +29,15 @@ export function PolkassemblyDiscussions({
     topicId,
   });
 
-  const theme = useTheme();
+  const sortBy = (order: OrderByType) => {
+    setSortMenuVisible(false);
+    setOrderBy(order);
+  };
+
+  const filterBy = (topic: number) => {
+    setFilterMenuVisible(false);
+    setTopicId(topic);
+  };
 
   return (
     <SafeView edges={noTopEdges}>
@@ -41,158 +49,135 @@ export function PolkassemblyDiscussions({
           contentContainerStyle={styles.content}
           data={flatten(data?.pages)}
           stickyHeaderIndices={[0]}
-          ListHeaderComponent={() => (
-            <View style={[styles.header, {backgroundColor: theme['background-basic-color-1']}]}>
-              <View style={globalStyles.rowAlignCenter}>
-                <View style={globalStyles.rowAlignCenter}>
-                  <Padder scale={0.5} />
-                  <Text category="c1">Sort by</Text>
-                  <OverflowMenu
-                    anchor={() => (
-                      <TouchableOpacity
-                        onPress={() => {
-                          setSortMenuVisible(true);
-                        }}>
-                        <Icon
-                          name="arrow-ios-downward-outline"
-                          style={globalStyles.icon}
-                          fill={globalStyles.iconColor.color}
-                        />
-                      </TouchableOpacity>
-                    )}
-                    placement="bottom end"
-                    style={styles.overflowMenu}
-                    visible={sortMenuVisible}
-                    onSelect={({row}: {row: number}) => {
-                      setSortMenuVisible(false);
-                      switch (row) {
-                        case 0:
-                          setOrderBy('lastCommented');
-                          break;
-                        case 1:
-                          setOrderBy('dateAddedNewest');
-                          break;
-                        case 2:
-                          setOrderBy('dateAddedOldest');
-                          break;
-                      }
+          ListHeaderComponent={
+            <View style={[globalStyles.rowAlignCenter, styles.menuContainer, {backgroundColor: colors.primary}]}>
+              <Menu
+                visible={sortMenuVisible}
+                onDismiss={() => {
+                  setSortMenuVisible(false);
+                }}
+                anchor={
+                  <TouchableOpacity
+                    onPress={() => {
+                      setSortMenuVisible(true);
                     }}
-                    onBackdropPress={() => setSortMenuVisible(false)}>
-                    <MenuItem title="Last Commented" style={orderBy === 'lastCommented' && styles.selectedItem} />
-                    <MenuItem
-                      title="Date Added (newest)"
-                      style={orderBy === 'dateAddedNewest' && styles.selectedItem}
-                    />
-                    <MenuItem
-                      title="Date Added (oldest)"
-                      style={orderBy === 'dateAddedOldest' && styles.selectedItem}
-                    />
-                  </OverflowMenu>
-                </View>
-                <Padder scale={1} />
-                <View style={globalStyles.rowAlignCenter}>
-                  <Padder scale={0.5} />
-                  <Text category="c1">Filter</Text>
-                  <OverflowMenu
-                    anchor={() => (
-                      <TouchableOpacity
-                        onPress={() => {
-                          setFilterMenuVisible(true);
-                        }}>
-                        <Icon
-                          name="arrow-ios-downward-outline"
-                          style={globalStyles.icon}
-                          fill={globalStyles.iconColor.color}
-                        />
-                      </TouchableOpacity>
-                    )}
-                    placement="bottom end"
-                    style={styles.overflowMenu}
-                    visible={filterMenuVisible}
-                    onSelect={({row}: {row: number}) => {
-                      setFilterMenuVisible(false);
-                      if (topicId && row === topicId - 1) {
-                        setTopicId(undefined);
-                      } else {
-                        setTopicId(row + 1);
-                      }
+                    style={globalStyles.rowAlignCenter}>
+                    <Subheading>Sort by</Subheading>
+                    <Icon name="chevron-down" size={25} />
+                  </TouchableOpacity>
+                }>
+                <Menu.Item
+                  disabled={orderBy === 'lastCommented'}
+                  title="Last Commented"
+                  onPress={() => {
+                    sortBy('lastCommented');
+                  }}
+                />
+                <Menu.Item
+                  disabled={orderBy === 'dateAddedNewest'}
+                  title="Date Added (newest)"
+                  onPress={() => {
+                    sortBy('dateAddedNewest');
+                  }}
+                />
+                <Menu.Item
+                  disabled={orderBy === 'dateAddedOldest'}
+                  title="Date Added (oldest)"
+                  onPress={() => {
+                    sortBy('dateAddedOldest');
+                  }}
+                />
+              </Menu>
+              <Padder scale={1} />
+              <Menu
+                visible={filterMenuVisible}
+                onDismiss={() => {
+                  setFilterMenuVisible(false);
+                }}
+                anchor={
+                  <TouchableOpacity
+                    onPress={() => {
+                      setFilterMenuVisible(true);
                     }}
-                    onBackdropPress={() => setFilterMenuVisible(false)}>
-                    {Object.entries(topicIdMap).map(([name, id]) => (
-                      <MenuItem key={name} title={name} style={topicId === id && styles.selectedItem} />
-                    ))}
-                  </OverflowMenu>
-                </View>
-              </View>
-              <Padder scale={0.6} />
-              <Divider />
+                    style={globalStyles.rowAlignCenter}>
+                    <Subheading>Filter</Subheading>
+                    <Icon name="chevron-down" size={25} />
+                  </TouchableOpacity>
+                }>
+                {Object.entries(topicIdMap).map(([name, id]) => (
+                  <Menu.Item
+                    disabled={topicId === id}
+                    key={name}
+                    title={name}
+                    onPress={() => {
+                      filterBy(id);
+                    }}
+                  />
+                ))}
+              </Menu>
             </View>
-          )}
+          }
           ListFooterComponent={() => (
             <View style={styles.footer}>
               {hasNextPage ? (
                 isFetching || isFetchingNextPage ? (
                   <ActivityIndicator animating />
                 ) : (
-                  <Button onPress={() => fetchNextPage()}>Load more ...</Button>
+                  <Button onPress={() => fetchNextPage()}>{`Load more`}</Button>
                 )
               ) : null}
             </View>
           )}
           renderItem={({item}) => (
-            <Card onPress={() => navigation.navigate(polkassemblyDiscussionDetail, {id: item.id})}>
-              <Text category="s2" numberOfLines={1}>
-                {item.title ?? 'unknown title'}
-              </Text>
-              <Padder scale={0.4} />
-              <View style={styles.ownerRow}>
-                <Text category="c1">by</Text>
-                <Padder scale={0.2} />
-                <View style={styles.owner}>
-                  {item.author?.polkadot_default_address ? (
-                    <AddressInlineTeaser address={item.author.polkadot_default_address} />
-                  ) : (
-                    <Text category="c2">{item.author?.username || ''}</Text>
-                  )}
-                </View>
-                <Text category="label" appearance="hint">
-                  {moment(item.created_at).fromNow()}
-                </Text>
-                <Padder scale={0.2} />
-                <Label text={item.topic.name} />
-              </View>
-              <Padder scale={0.4} />
-              {item.content ? (
-                <Text numberOfLines={1} category="c1">
-                  {item.content}
-                </Text>
-              ) : null}
-              <Padder scale={0.4} />
-              <View style={globalStyles.rowAlignCenter}>
-                {item.comments_aggregate.aggregate?.count ? (
-                  <>
-                    <View style={globalStyles.rowAlignCenter}>
-                      <Icon name="message-circle-outline" style={globalStyles.icon15} fill="#ccc" animation="pulse" />
-                      <Padder scale={0.3} />
-                      <Text category="label" appearance="hint">
-                        {item.comments_aggregate.aggregate.count} comments
-                      </Text>
-                    </View>
-                    <Padder scale={1} />
-                  </>
-                ) : null}
-
-                {item.last_update?.comment_id && item.last_update.last_update ? (
+            <View>
+              <Card onPress={() => navigation.navigate(polkassemblyDiscussionDetail, {id: item.id})}>
+                <Card.Content>
+                  <Caption selectable numberOfLines={1}>
+                    {item.title}
+                  </Caption>
                   <View style={globalStyles.rowAlignCenter}>
-                    <Icon name="undo-outline" style={globalStyles.icon15} fill="#ccc" animation="pulse" />
-                    <Padder scale={0.3} />
-                    <Text category="label" appearance="hint">
-                      commented {moment(item.last_update.last_update).fromNow()}
-                    </Text>
+                    <Caption>{`By `}</Caption>
+                    {item.author?.polkadot_default_address ? (
+                      <AddressInlineTeaser address={item.author.polkadot_default_address} />
+                    ) : (
+                      <Caption>{item.author?.username || ''}</Caption>
+                    )}
                   </View>
-                ) : null}
-              </View>
-            </Card>
+                  <View style={globalStyles.rowAlignCenter}>
+                    <Caption>{`${dateUtils.fromNow(item.created_at)} in `}</Caption>
+                    <Text>{item.topic.name}</Text>
+                  </View>
+                  {item.content ? (
+                    <View style={globalStyles.justifyCenter}>
+                      <Padder scale={0.5} />
+                      <Text numberOfLines={1}>{item.content}</Text>
+                    </View>
+                  ) : null}
+
+                  <Padder scale={0.5} />
+                  <View style={globalStyles.rowAlignCenter}>
+                    {item.comments_aggregate.aggregate?.count ? (
+                      <>
+                        <View style={globalStyles.rowAlignCenter}>
+                          <Icon name="message-outline" size={15} />
+                          <Padder scale={0.3} />
+                          <Caption>{item.comments_aggregate.aggregate.count} comments</Caption>
+                        </View>
+                        <Padder scale={1} />
+                      </>
+                    ) : null}
+
+                    {item.last_update?.comment_id && item.last_update.last_update ? (
+                      <View style={globalStyles.rowAlignCenter}>
+                        <Icon name="clock-outline" size={15} />
+                        <Padder scale={0.3} />
+                        <Caption>commented {dateUtils.fromNow(item.last_update.last_update)}</Caption>
+                      </View>
+                    ) : null}
+                  </View>
+                </Card.Content>
+              </Card>
+            </View>
           )}
           ItemSeparatorComponent={() => <Padder scale={0.5} />}
           keyExtractor={(item) => String(item.id)}
@@ -203,26 +188,15 @@ export function PolkassemblyDiscussions({
 }
 
 const styles = StyleSheet.create({
-  header: {
-    paddingTop: standardPadding * 2,
-    marginBottom: standardPadding * 2,
-  },
-  container: {flex: 1},
-  content: {paddingHorizontal: standardPadding * 2},
-  ownerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  owner: {
+  container: {
     flex: 1,
-    marginRight: standardPadding * 2,
-    overflow: 'hidden',
   },
-  overflowMenu: {
-    minWidth: 200,
+  content: {
+    paddingHorizontal: standardPadding * 2,
   },
-  selectedItem: {
-    backgroundColor: '#dde',
+  menuContainer: {
+    padding: standardPadding,
+    marginBottom: standardPadding,
   },
   footer: {
     paddingTop: standardPadding * 2,

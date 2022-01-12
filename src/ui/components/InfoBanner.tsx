@@ -1,50 +1,27 @@
 import React from 'react';
-import {StyleSheet, StyleProp, TextStyle, ViewStyle} from 'react-native';
-import {Layout, Text, Icon} from '@ui-kitten/components';
-import {standardPadding, monofontFamily, colorRed, colorGray} from '@ui/styles';
+import {Icon, Paragraph} from '@ui/library';
+import {Layout} from '@ui/components/Layout';
+import globalStyles, {colorRed, colorGray} from '@ui/styles';
+import {Padder} from './Padder';
 
 type PropTypes = {
   text: string;
-  inline?: boolean;
   warning?: boolean;
-  textStyles?: StyleProp<TextStyle>;
-  containerStyle?: StyleProp<ViewStyle>;
 };
 
 function InfoBanner(props: PropTypes) {
-  const {text, warning = false, inline = false, textStyles = {}, containerStyle = {}} = props;
+  const {text, warning = false} = props;
 
   return (
-    <Layout style={[styles.container, inline ? {} : styles.flex, containerStyle]}>
-      <Layout style={styles.textContainer}>
-        <Icon style={styles.icon} fill={warning ? colorRed : colorGray} name="info-outline" />
-        <Text numberOfLines={2} style={[styles.text, styles.withIcon, textStyles]}>
-          {text}
-        </Text>
+    <>
+      <Layout style={globalStyles.rowAlignCenter}>
+        <Icon size={25} color={warning ? colorRed : colorGray} name="information-outline" />
+        <Padder scale={0.5} />
+        <Paragraph numberOfLines={3}>{text}</Paragraph>
       </Layout>
-    </Layout>
+      <Padder scale={1} />
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  flex: {flex: 1},
-  textContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  withIcon: {
-    paddingLeft: standardPadding,
-  },
-  icon: {width: 20, height: 20},
-  text: {
-    fontWeight: 'bold',
-    fontFamily: monofontFamily,
-    padding: standardPadding * 4,
-  },
-});
 
 export default InfoBanner;

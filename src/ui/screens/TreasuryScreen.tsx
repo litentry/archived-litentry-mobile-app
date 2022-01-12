@@ -1,8 +1,7 @@
 import React from 'react';
-import {SectionList, StyleSheet, View, useWindowDimensions} from 'react-native';
+import {SectionList, StyleSheet, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {u8aToString} from '@polkadot/util';
-import {Card, Layout, Text} from '@ui-kitten/components';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {Account} from '@ui/components/Account';
 import {EmptyView} from '@ui/components/EmptyView';
@@ -11,22 +10,21 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useTreasuryInfo} from 'src/api/hooks/useTreasuryInfo';
 import globalStyles, {standardPadding} from '@ui/styles';
-import TipsScreen from './tips/TipsScreen';
-import {useTheme} from '@ui/library';
+import TipsScreen from './Tips/TipsScreen';
+import {useTheme, Card, Caption, Subheading} from '@ui/library';
+import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
+import {stringShorten} from '@polkadot/util';
 
 const Tab = createMaterialTopTabNavigator();
 
 export function TreasuryScreen() {
-  const layout = useWindowDimensions();
   const {colors} = useTheme();
 
   return (
     <Tab.Navigator
-      initialLayout={{width: layout.width}}
       screenOptions={{
         tabBarLabelStyle: {color: colors.text},
-        tabBarItemStyle: {width: 200},
         tabBarStyle: {backgroundColor: colors.background},
       }}>
       <Tab.Screen name="Overview" component={TreasuryOverviewScreen} />
@@ -48,7 +46,7 @@ function TreasuryOverviewScreen() {
   return (
     <Layout style={globalStyles.flex}>
       <SafeView edges={noTopEdges}>
-        {!treasuryInfo ? (
+        {isLoading ? (
           <LoadingView />
         ) : (
           <SectionList
@@ -67,48 +65,49 @@ function TreasuryOverviewScreen() {
                 : accountInfo?.accountId.toString() ?? 'unknown';
 
               return (
-                <Card style={styles.card} disabled>
-                  <View style={styles.row}>
-                    <Identicon value={item.proposal.proposer} size={30} />
-                    <Text style={styles.name} category={'c1'} numberOfLines={1} ellipsizeMode="middle">
-                      {proposer}
-                    </Text>
-                    <View style={styles.itemRight}>
-                      <Text category={'c2'}>{formatBalance(item.proposal.value)}</Text>
+                <Card>
+                  <Card.Content>
+                    <View style={styles.row}>
+                      <Identicon value={item.proposal.proposer} size={30} />
+                      <Padder scale={0.5} />
+                      <Caption>{proposer}</Caption>
+                      <View style={styles.itemRight}>
+                        <Caption>{formatBalance(item.proposal.value)}</Caption>
+                      </View>
                     </View>
-                  </View>
-                  <View style={styles.row}>
-                    <Text category="c1">beneficiary: </Text>
-                    <Account id={item.proposal.beneficiary.toString()}>
-                      {(identity) =>
-                        identity ? (
-                          <View style={[styles.row, styles.accountsRow]}>
-                            <Identicon value={identity.accountId} size={20} />
-                            <Padder scale={0.3} />
-                            <Text numberOfLines={1} category={'c1'} ellipsizeMode="middle">
-                              {identity.display}
-                            </Text>
-                          </View>
-                        ) : (
-                          <Text>{item.proposal.beneficiary.toString()}</Text>
-                        )
-                      }
-                    </Account>
-                  </View>
-                  <View style={styles.row}>
-                    <Text category="c1">bond: </Text>
-                    <Text category={'c1'} numberOfLines={1} ellipsizeMode="middle">
-                      {formatBalance(item.proposal.bond)}
-                    </Text>
-                  </View>
+                    <View style={styles.row}>
+                      <Caption>Beneficiary: </Caption>
+                      <Account id={item.proposal.beneficiary.toString()}>
+                        {(identity) =>
+                          identity ? (
+                            <View style={[styles.row, styles.accountsRow]}>
+                              <Identicon value={identity.accountId} size={20} />
+                              <Padder scale={0.3} />
+                              <Caption numberOfLines={1} ellipsizeMode="middle">
+                                {identity.display}
+                              </Caption>
+                            </View>
+                          ) : (
+                            <Caption numberOfLines={1}>{stringShorten(item.proposal.beneficiary.toString())}</Caption>
+                          )
+                        }
+                      </Account>
+                    </View>
+                    <View style={styles.row}>
+                      <Caption>Bond: </Caption>
+                      <Caption numberOfLines={1} ellipsizeMode="middle">
+                        {formatBalance(item.proposal.bond)}
+                      </Caption>
+                    </View>
+                  </Card.Content>
                 </Card>
               );
             }}
             renderSectionHeader={({section: {title, data}}) => {
               return (
                 <View style={styles.header}>
-                  <Text category={'s1'}>{title}</Text>
-                  <Text category={'p2'}>{`${data.length}`}</Text>
+                  <Subheading>{title}</Subheading>
+                  <Caption>{`${data.length}`}</Caption>
                 </View>
               );
             }}
@@ -121,21 +120,26 @@ function TreasuryOverviewScreen() {
 }
 
 const styles = StyleSheet.create({
-  accountsRow: {flex: 1, marginRight: 20},
+  accountsRow: {
+    flex: 1,
+    marginRight: 20,
+  },
   sectionList: {
     padding: standardPadding * 2,
   },
-  card: {
-    marginBottom: standardPadding,
+  header: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    paddingVertical: standardPadding,
   },
-  beneficiary: {
-    flex: 1,
-  },
-  header: {justifyContent: 'space-between', flexDirection: 'row', paddingVertical: standardPadding},
-  name: {marginLeft: 10, flex: 1},
   row: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  itemRight: {flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingLeft: standardPadding},
+  itemRight: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingLeft: standardPadding,
+  },
 });

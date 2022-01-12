@@ -98,7 +98,9 @@ const styles = StyleSheet.create({
     marginTop: standardPadding * 3,
     marginHorizontal: standardPadding * 3,
   },
-  row: {flexDirection: 'row'},
+  row: {
+    flexDirection: 'row',
+  },
   number: {
     fontSize: 20,
     fontFamily: monofontFamily,
