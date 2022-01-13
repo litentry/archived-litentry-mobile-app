@@ -9031,10 +9031,10 @@ react-native-linear-gradient@^2.5.6:
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.6.tgz#96215cbc5ec7a01247a20890888aa75b834d44a0"
   integrity sha512-HDwEaXcQIuXXCV70O+bK1rizFong3wj+5Q/jSyifKFLg0VWF95xh8XQgfzXwtq0NggL9vNjPKXa016KuFu+VFg==
 
-react-native-logs@^3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/react-native-logs/-/react-native-logs-3.0.4.tgz#a22c26815ff26d45c4aad96c1b674768f043d79b"
-  integrity sha512-gIRuhwllXFWMg3Cq4iQv2K6t9v/gHOmQ2N5gSfsNqsJfx361Y36IkKVVzeK48LBKwa+vf9DmE70MRcJXnikAYw==
+react-native-logs@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-logs/-/react-native-logs-4.0.0.tgz#1366d340f88759098c514d936717476c5a462530"
+  integrity sha512-FMiUpVPpfI9aOCmG7dSPkvp2yhe5TmXvS6NsRh25W5xjp+DnDrDsMMYjU+QZZm/dWNXOz0J4KgjtKyLRfPTEEQ==
 
 react-native-mmkv@^1.6.3:
   version "1.6.3"
