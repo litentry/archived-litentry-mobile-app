@@ -65,7 +65,7 @@ function TreasuryOverviewScreen() {
                 : accountInfo?.accountId.toString() ?? 'unknown';
 
               return (
-                <Card>
+                <Card style={styles.item}>
                   <Card.Content>
                     <View style={styles.row}>
                       <Identicon value={item.proposal.proposer} size={30} />
@@ -135,6 +135,9 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  item: {
+    marginBottom: standardPadding,
   },
   itemRight: {
     flexDirection: 'row',
