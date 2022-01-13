@@ -56,6 +56,7 @@ platform :ios do
       key_id: ENV['ASCAPI_KEY_ID'],
       issuer_id: ENV['ASCAPI_ISSUER_ID'],
       key_content: ENV['ASCAPI_KEY_CONTENT']
+      is_key_content_base64: true
     )
   
     upload_to_testflight(
