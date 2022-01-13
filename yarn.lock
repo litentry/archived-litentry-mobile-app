@@ -1746,15 +1746,15 @@
     "@babel/runtime" "^7.16.7"
     "@polkadot/util" "8.3.1"
 
-"@polkadot/reactnative-identicon@0.87.6":
-  version "0.87.6"
-  resolved "https://registry.yarnpkg.com/@polkadot/reactnative-identicon/-/reactnative-identicon-0.87.6.tgz#029fdf25d84fa2211c94dc375059f2deb21708e8"
-  integrity sha512-urAT22eeu8g89xWFsQydhyfXc1L12rL4WCHZuzkfu9IE012k97/b4qEZkHS0hjltM6LJsdGs8L+pO9P4zkVBJQ==
+"@polkadot/reactnative-identicon@0.89.1":
+  version "0.89.1"
+  resolved "https://registry.yarnpkg.com/@polkadot/reactnative-identicon/-/reactnative-identicon-0.89.1.tgz#326a20f4c75219a02d3b7bb7ba402b40a0a64fe9"
+  integrity sha512-KxjxWdM+NUF7yEn+rCk5f0KY8N63TZcN9f59dxGDaEkZoeP8847L/fmNh4MzNKNJ7+MO+itJDDG7MxZOPOVgMA==
   dependencies:
-    "@babel/runtime" "^7.16.5"
-    "@polkadot/ui-shared" "0.87.6"
-    "@polkadot/util" "^8.2.2"
-    "@polkadot/util-crypto" "^8.2.2"
+    "@babel/runtime" "^7.16.7"
+    "@polkadot/ui-shared" "0.89.1"
+    "@polkadot/util" "^8.3.1"
+    "@polkadot/util-crypto" "^8.3.1"
     react-native-svg "^12.2.0"
 
 "@polkadot/rpc-augment@7.3.1":
@@ -1923,12 +1923,12 @@
     eventemitter3 "^4.0.7"
     store "^2.0.12"
 
-"@polkadot/ui-shared@0.87.6":
-  version "0.87.6"
-  resolved "https://registry.yarnpkg.com/@polkadot/ui-shared/-/ui-shared-0.87.6.tgz#b8af0368ff4632946a6c3f72ab1238b576f0386a"
-  integrity sha512-LxYXK9xAa1MTL4RxryC4f0T27yfz24FT2Ist6eYG+cTq4oKnsmFZATh4kwKVRH1nESz7aXUtM8ks6M10dPcasw==
+"@polkadot/ui-shared@0.89.1":
+  version "0.89.1"
+  resolved "https://registry.yarnpkg.com/@polkadot/ui-shared/-/ui-shared-0.89.1.tgz#ada2f79b073ac0d31950bf5e3ec113c3b78fb946"
+  integrity sha512-HvlSLrmzTdsUW2Xn8ORxVFrjs/tetbAYMdQDS935f2FTn+jJQrUsYvmuH9hBV8Hm3SjQkagLrqttdSqPUuFBrA==
   dependencies:
-    "@babel/runtime" "^7.16.5"
+    "@babel/runtime" "^7.16.7"
     color "^3.2.1"
 
 "@polkadot/util-crypto@6.11.1", "@polkadot/util-crypto@7.8.2", "@polkadot/util-crypto@8.3.1", "@polkadot/util-crypto@^8.1.2", "@polkadot/util-crypto@^8.2.2", "@polkadot/util-crypto@^8.3.1":
