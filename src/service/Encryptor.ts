@@ -1,4 +1,4 @@
-import Aes from 'react-native-aes-crypto';
+import {Aes} from 'react-native-aes-crypto';
 
 interface EncryptedData {
   cipher: string;
@@ -16,13 +16,13 @@ async function generateKeyFromPassword(password: string, salt: string) {
 
 async function encryptWithKey(text: string, key: string) {
   const iv = await Aes.randomKey(16);
-  const encryptedData = await Aes.encrypt(text, key, iv);
+  const encryptedData = await Aes.encrypt(text, key, iv, 'aes-256-cbc');
 
   return {cipher: encryptedData, iv};
 }
 
 async function decryptWithKey(encryptedData: EncryptedData, key: string) {
-  return Aes.decrypt(encryptedData.cipher, key, encryptedData.iv);
+  return Aes.decrypt(encryptedData.cipher, key, encryptedData.iv, 'aes-256-cbc');
 }
 
 /**
