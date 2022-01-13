@@ -8,7 +8,6 @@ import {DemocracySummaryTeaser} from '@ui/components/DemocracySummaryTeaser';
 import {TreasurySummaryTeaser} from '@ui/components/TreasurySummaryTeaser';
 import FadeInAnimatedView from '@ui/components/FadeInAnimatedView';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import {useCustomBackHandler} from '@hooks/useCustomBackHandler';
 import {DashboardStackParamList, DrawerParamList} from '@ui/navigation/navigation';
 import {bountiesScreen, councilScreen, democracyScreen, treasuryScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
@@ -23,8 +22,6 @@ type PropTypes = {
 };
 
 function DashboardScreen({navigation}: PropTypes) {
-  useCustomBackHandler();
-
   return (
     <Layout style={styles.container}>
       <FadeInAnimatedView>
