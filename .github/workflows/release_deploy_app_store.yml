@@ -9,7 +9,7 @@ on:
         default: 'beta'
   
   push:
-    branches: [ develop ]
+    branches: [ feature/fastlane ]
 
 jobs:
   fastlane-deploy:
