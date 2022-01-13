@@ -9,7 +9,13 @@ on:
         default: 'beta'
   
   push:
-    branches: [ feature/fastlane ]
+    branches: [feature/fastlane]
+
+  workflow_run:
+    workflows: ["code style & lint"]
+    branches: [feature/fastlane]
+    types:
+      - completed
 
 jobs:
   fastlane-deploy:
