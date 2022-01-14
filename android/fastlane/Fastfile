@@ -7,17 +7,15 @@ platform :android do
   desc "Submit a new Beta Build"
   lane :beta do
     gradle(task: "clean")
+
+    version_codes = google_play_track_version_codes(track: 'internal')
+    version_updated = version_codes[0].to_i + 1
+    increment_version_code(app_project_dir: "./app", version_code: version_updated.to_i)
+
     gradle(
       task: "bundleRelease",
       flags: "--no-daemon --max-workers 2"
     )
-    g = google_play_track_version_codes
-    gb = google_play_track_version_codes(track: 'beta')
-    ga = google_play_track_version_codes(track: 'alpha')
-    gi = google_play_track_version_codes(track: 'internal')
-    max_value = [g[0].to_i, gb[0].to_i, ga[0].to_i, gi[0].to_i].max
-    version_updated = max_value + 1
-    increment_version_code(app_project_dir: "./app", version_code: version_updated.to_i)
     upload_to_play_store(track: "internal")
   end
 
