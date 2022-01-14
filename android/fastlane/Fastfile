@@ -10,7 +10,7 @@ platform :android do
 
     version_codes = google_play_track_version_codes(track: 'internal')
     version_updated = version_codes[0].to_i + 1
-    increment_version_code(app_project_dir: "./app", version_code: version_updated.to_i)
+    increment_version_code(gradle_file_path: "./app/build.gradle", version_code: version_updated.to_i)
 
     gradle(
       task: "bundleRelease",
