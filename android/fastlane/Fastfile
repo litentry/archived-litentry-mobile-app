@@ -11,10 +11,7 @@ platform :android do
       task: "bundleRelease",
       flags: "--no-daemon --max-workers 2"
     )
-    upload_to_play_store(
-      track: "internal",
-      json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
-    )
+    upload_to_play_store(track: "internal")
   end
 
 end

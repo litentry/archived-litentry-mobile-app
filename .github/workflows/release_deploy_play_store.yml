@@ -57,7 +57,9 @@ jobs:
       # Build and deploy with Fastlane (by default, to beta track) 🚀.
       # Naturally, promote_to_production only deploys.
       - name: Build and Deploy
-        run: bundle exec fastlane ${{ github.event.inputs.lane || 'beta' }}
+        run: |
+          echo "$PLAY_STORE_CONFIG_JSON" > key.json
+          bundle exec fastlane ${{ github.event.inputs.lane || 'beta' }}
         env:
           PLAY_STORE_CONFIG_JSON: ${{ secrets.PLAY_STORE_CONFIG_JSON }}
         working-directory: android
