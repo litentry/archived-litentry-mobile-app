@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, useWindowDimensions, View} from 'react-native';
+import {StyleSheet, useWindowDimensions, View, ScrollView} from 'react-native';
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {NavigationProp} from '@react-navigation/native';
 import {useAccounts} from 'context/AccountsContext';
@@ -95,7 +95,7 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
 
   return (
     <SafeView edges={noTopEdges}>
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <TextInput
           autoComplete="off"
           autoCapitalize={'none'}
@@ -177,7 +177,7 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
           Import Seed
         </Button>
         <Padder scale={2} />
-      </View>
+      </ScrollView>
     </SafeView>
   );
 }
