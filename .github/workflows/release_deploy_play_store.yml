@@ -3,6 +3,7 @@ name: Deploy to Play Store
 on:
   workflow_run:
     workflows: [code-style-lint]
+    branches: [feature/fastlane]
     types:
       - completed
   # Enable manual run
