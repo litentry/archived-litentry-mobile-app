@@ -1,12 +1,11 @@
-name: code style & lint
+name: code-style-lint
 
 on:
   push:
-    branches: [ develop ]
   pull_request:
-    branches: [ develop ]
+    branches: [develop]
+  # Enable manual run
   workflow_dispatch:
-
 
 jobs:
   deploy:

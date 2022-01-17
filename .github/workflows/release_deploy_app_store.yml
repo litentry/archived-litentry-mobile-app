@@ -1,5 +1,10 @@
 name: Deploy to App Store
+
 on:
+  workflow_run:
+    workflows: [code-style-lint]
+    types:
+      - completed
   # Enable manual run
   workflow_dispatch:
     inputs:
@@ -7,30 +12,20 @@ on:
         description: 'Fastlane lane to use (beta OR promote_to_production OR production)'
         required: true
         default: 'beta'
-  
   push:
-    branches: [ feature/fastlane ]
-  
-  workflow_run:
-    workflows: ["code style & lint"]
     branches: [feature/fastlane]
-    types:
-      - completed
 
 jobs:
   fastlane-deploy:
     runs-on: macOS-latest
-
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: install packages
         uses: actions/checkout@v2
       - run: yarn
-
-
       - name: install pods
         run: pod install
         working-directory: ios
-
       # Setup Ruby, Bundler, and Gemfile dependencies
       - name: Setup Fastlane
         uses: ruby/setup-ruby@v1
@@ -38,7 +33,6 @@ jobs:
           ruby-version: '2.6'
           bundler-cache: true
           working-directory: ios 
-
       # Build and deploy with Fastlane (by default, to beta track) 🚀.
       # Naturally, promote_to_production only deploys.
       - run: bundle exec fastlane ${{ github.event.inputs.lane || 'beta' }}
@@ -47,5 +41,4 @@ jobs:
           ASCAPI_KEY_ID: ${{ secrets.ASCAPI_KEY_ID }}
           ASCAPI_ISSUER_ID: ${{ secrets.ASCAPI_ISSUER_ID }}
           ASCAPI_KEY_CONTENT: ${{ secrets.ASCAPI_KEY_CONTENT }}
-
         working-directory: ios

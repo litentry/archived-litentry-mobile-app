@@ -1,5 +1,10 @@
 name: Deploy to Play Store
+
 on:
+  workflow_run:
+    workflows: [code-style-lint]
+    types:
+      - completed
   # Enable manual run
   workflow_dispatch:
     inputs:
@@ -7,29 +12,21 @@ on:
         description: 'Fastlane lane to use (beta OR promote_to_production OR production)'
         required: true
         default: 'beta'
-  
   push:
     branches: [feature/fastlane]
-
-  workflow_run:
-    workflows: ["code style & lint"]
-    branches: [feature/fastlane]
-    types:
-      - completed
 
 jobs:
   fastlane-deploy:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: install packages
         uses: actions/checkout@v2
       - run: yarn
-
       - name: Unlock secrets
         uses: sliteteam/github-action-git-crypt-unlock@1.2.0
         env:
           GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
-
       # Setup Ruby, Bundler, and Gemfile dependencies
       - name: Setup Fastlane
         uses: ruby/setup-ruby@v1
@@ -37,7 +34,6 @@ jobs:
           ruby-version: '2.6'
           bundler-cache: true
           working-directory: android
-
       - name: Configure Keystore
         run: |
           echo "$PLAY_STORE_UPLOAD_KEY" | base64 --decode > app/upload-keystore.jks
@@ -53,7 +49,6 @@ jobs:
           KEYSTORE_KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
           KEYSTORE_STORE_PASSWORD: ${{ secrets.KEYSTORE_STORE_PASSWORD }}
         working-directory: android
-
       # Build and deploy with Fastlane (by default, to beta track) 🚀.
       # Naturally, promote_to_production only deploys.
       - name: Build and Deploy
