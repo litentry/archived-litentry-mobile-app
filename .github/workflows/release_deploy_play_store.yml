@@ -1,11 +1,11 @@
 name: Deploy to Play Store
 
 on:
-  workflow_run:
-    workflows: [code-style-lint]
-    branches: [feature/fastlane]
-    types:
-      - completed
+  # workflow_run:
+  #   workflows: [code-style-lint]
+  #   branches: [feature/fastlane]
+  #   types:
+  #     - completed
   # Enable manual run
   workflow_dispatch:
     inputs:
@@ -19,7 +19,7 @@ on:
 jobs:
   fastlane-deploy:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: install packages
         uses: actions/checkout@v2
