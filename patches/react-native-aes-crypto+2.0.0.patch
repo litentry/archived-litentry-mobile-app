@@ -1,0 +1,18 @@
+diff --git a/node_modules/react-native-aes-crypto/index.d.ts b/node_modules/react-native-aes-crypto/index.d.ts
+index df7ec35..e55c2b6 100644
+--- a/node_modules/react-native-aes-crypto/index.d.ts
++++ b/node_modules/react-native-aes-crypto/index.d.ts
+@@ -1,5 +1,5 @@
+ declare module 'react-native-aes-crypto' {
+-    namespace Aes {
++    // namespace Aes {
+         type Algorithms = 'aes-128-cbc' | 'aes-192-cbc' | 'aes-256-cbc'
+ 
+         function pbkdf2(password: string, salt: string, cost: number, length: number): Promise<string>
+@@ -11,5 +11,5 @@ declare module 'react-native-aes-crypto' {
+         function sha1(text: string): Promise<string>
+         function sha256(text: string): Promise<string>
+         function sha512(text: string): Promise<string>
+-    }
++    // }
+ }

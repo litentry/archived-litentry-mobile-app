@@ -1,4 +1,4 @@
-import {Aes} from 'react-native-aes-crypto';
+import Aes from 'react-native-aes-crypto';
 
 interface EncryptedData {
   cipher: string;
