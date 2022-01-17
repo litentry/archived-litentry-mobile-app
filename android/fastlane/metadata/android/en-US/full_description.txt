@@ -1,0 +1,7 @@
+Litentry is a mobile app to facilitate and therefore encourage on-chain governance-driven actions.
+
+Among other activities, you can now elect your representatives, vote on proposals, and keep up with the topics that animate your community all in one place.
+
+Some government-driven actions require a transaction. You can sign these transactions within the app with our native wallet. As it is a non-custodial wallet, you retain full custody of your assets at all times.
+
+Beyond the governance topic, we want to offer a gateway to the Polkadot and Kusama networks. Therefore we want to help you follow up on the important events of the ecosystem, such as Polkadot and Kusama parachains auctions.
