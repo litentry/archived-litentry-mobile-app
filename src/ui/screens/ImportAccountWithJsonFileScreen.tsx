@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, ScrollView} from 'react-native';
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {NavigationProp} from '@react-navigation/core';
 import {InternalAccount, useAccounts} from 'context/AccountsContext';
@@ -52,7 +52,7 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
 
   return (
     <SafeView edges={noTopEdges}>
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Text>Add via backup file</Text>
         <Padder scale={1} />
 
@@ -109,7 +109,7 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
           <Text>Restore</Text>
         </Button>
         <Padder scale={2} />
-      </View>
+      </ScrollView>
     </SafeView>
   );
 }
