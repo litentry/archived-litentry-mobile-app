@@ -19,13 +19,21 @@ platform :ios do
   desc "Push a new beta build to TestFlight"
   lane :beta do
     increment_build_number(xcodeproj: "Litentry.xcodeproj")
-    
+
+    api_key = app_store_connect_api_key(
+      key_id: ENV['ASCAPI_KEY_ID'],
+      issuer_id: ENV['ASCAPI_ISSUER_ID'],
+      key_content: ENV['ASCAPI_KEY_CONTENT'],
+      is_key_content_base64: true
+    )
     get_certificates( # Create or get certificate, and install it
-      output_path: "./builds" # Download certificate in the build folder (you don't need to create the folder)
+      output_path: "./builds", # Download certificate in the build folder (you don't need to create the folder)
+      api_key: api_key
     )
     get_provisioning_profile( # Create or get provisioning profile
       output_path: "./builds",  # Download provisioning profile in the build folder
-      filename: "provisioning.mobileprovision" # Rename the local provisioning profile
+      filename: "provisioning.mobileprovision", # Rename the local provisioning profile
+      api_key: api_key
     )
     update_project_provisioning( # Set the project provisioning profile (related in Xcode to the General > Signing Release section)
       xcodeproj: "Litentry.xcodeproj",
@@ -34,10 +42,8 @@ platform :ios do
       build_configuration: "Release"
     )
     update_project_team( # Set the right team on your project
-      teamid: CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
+      teamid: ENV['ASCTEAM_ID']
     )
-
-
     build_app(
       workspace: "Litentry.xcworkspace", 
       scheme: "Litentry",
@@ -51,14 +57,6 @@ platform :ios do
       build_path: "./builds",
       output_directory: "./builds"
     )
-
-    api_key = app_store_connect_api_key(
-      key_id: ENV['ASCAPI_KEY_ID'],
-      issuer_id: ENV['ASCAPI_ISSUER_ID'],
-      key_content: ENV['ASCAPI_KEY_CONTENT'],
-      is_key_content_base64: true
-    )
-  
     upload_to_testflight(
       api_key: api_key
     )
