@@ -6,11 +6,10 @@ import {BountySummaryTeaser} from '@ui/components/BountySummaryTeaser';
 import {CouncilSummaryTeaser} from '@ui/components/CouncilSummaryTeaser';
 import {DemocracySummaryTeaser} from '@ui/components/DemocracySummaryTeaser';
 import {TreasurySummaryTeaser} from '@ui/components/TreasurySummaryTeaser';
-import FadeInAnimatedView from '@ui/components/FadeInAnimatedView';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet} from 'react-native';
 import {DashboardStackParamList, DrawerParamList} from '@ui/navigation/navigation';
 import {bountiesScreen, councilScreen, democracyScreen, treasuryScreen} from '@ui/navigation/routeKeys';
-import globalStyles, {standardPadding} from '@ui/styles';
+import {standardPadding} from '@ui/styles';
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
 
@@ -24,19 +23,15 @@ type PropTypes = {
 function DashboardScreen({navigation}: PropTypes) {
   return (
     <Layout style={styles.container}>
-      <FadeInAnimatedView>
-        <View style={globalStyles.flex}>
-          <ScrollView contentContainerStyle={styles.scrollView}>
-            <DemocracySummaryTeaser onPress={() => navigation.navigate(democracyScreen)} />
-            <Padder scale={1} />
-            <CouncilSummaryTeaser onPress={() => navigation.navigate(councilScreen)} />
-            <Padder scale={1} />
-            <TreasurySummaryTeaser onPress={() => navigation.navigate(treasuryScreen)} />
-            <Padder scale={1} />
-            <BountySummaryTeaser onPress={() => navigation.navigate(bountiesScreen)} />
-          </ScrollView>
-        </View>
-      </FadeInAnimatedView>
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        <DemocracySummaryTeaser onPress={() => navigation.navigate(democracyScreen)} />
+        <Padder scale={1} />
+        <CouncilSummaryTeaser onPress={() => navigation.navigate(councilScreen)} />
+        <Padder scale={1} />
+        <TreasurySummaryTeaser onPress={() => navigation.navigate(treasuryScreen)} />
+        <Padder scale={1} />
+        <BountySummaryTeaser onPress={() => navigation.navigate(bountiesScreen)} />
+      </ScrollView>
     </Layout>
   );
 }
