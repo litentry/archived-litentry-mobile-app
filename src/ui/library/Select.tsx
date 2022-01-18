@@ -1,8 +1,9 @@
 import React from 'react';
 // eslint-disable-next-line no-restricted-imports
-import {Menu, useTheme, List, Caption, Divider} from 'react-native-paper';
+import {Menu, useTheme, List, Caption, Divider, Paragraph} from 'react-native-paper';
 import {StyleSheet, View, FlatList} from 'react-native';
 import {Icon} from './Icon';
+import {standardPadding} from '@ui/styles';
 
 type Item = {
   text: string;
@@ -46,13 +47,16 @@ export function Select({items, onSelect}: Props) {
         data={items}
         keyExtractor={(item) => String(item.value)}
         renderItem={({item}) => (
-          <List.Item
-            style={styles.item}
-            titleNumberOfLines={3}
+          <Menu.Item
+            style={styles.menuItem}
             onPress={() => {
               selectItem(item);
             }}
-            title={item.text}
+            title={
+              <View>
+                <Paragraph>{item.text}</Paragraph>
+              </View>
+            }
           />
         )}
       />
@@ -68,7 +72,7 @@ const styles = StyleSheet.create({
   items: {
     maxHeight: 250,
   },
-  item: {
-    width: 300,
+  menuItem: {
+    marginVertical: standardPadding,
   },
 });
