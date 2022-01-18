@@ -42,4 +42,5 @@ jobs:
           ASCAPI_ISSUER_ID: ${{ secrets.ASCAPI_ISSUER_ID }}
           ASCAPI_KEY_CONTENT: ${{ secrets.ASCAPI_KEY_CONTENT }}
           ASCTEAM_ID: ${{ secrets.ASCTEAM_ID }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_AUTHORIZATION }}
         working-directory: ios
