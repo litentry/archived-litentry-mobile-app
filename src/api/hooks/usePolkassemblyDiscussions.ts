@@ -149,7 +149,7 @@ export type Posts = {
   type: Post_Types;
   /** An object relationship */
   last_update?: Maybe<Post_Last_Update>;
-  /** Define the main suject of the post */
+  /** Define the main subject of the post */
   topic_id: Scalars['Int'];
   type_id: Scalars['Int'];
   updated_at: Scalars['timestamptz'];

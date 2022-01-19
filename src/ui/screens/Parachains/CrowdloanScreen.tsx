@@ -310,8 +310,11 @@ function ContributeBox({
       <Text>minimum allowed: </Text>
       <Text>{minBalance}</Text>
 
+      <Padder scale={2} />
       <View style={contributeBoxStyles.row}>
-        <Button onPress={reset}>CANCEL</Button>
+        <Button mode="outlined" onPress={reset}>
+          CANCEL
+        </Button>
         <Button
           mode="contained"
           disabled={disabled}
