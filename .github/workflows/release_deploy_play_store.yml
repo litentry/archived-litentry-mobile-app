@@ -22,7 +22,7 @@ jobs:
     steps:
       - name: install packages
         uses: actions/checkout@v2
-        run: yarn
+      - run: yarn
 
       - name: Unlock secrets
         uses: sliteteam/github-action-git-crypt-unlock@1.2.0
