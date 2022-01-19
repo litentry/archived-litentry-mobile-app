@@ -7,6 +7,8 @@ import {stringShorten} from '@polkadot/util';
 import {useRegistrars, RegistrarInfoWithIndex} from 'src/api/hooks/useRegistrars';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
+import globalStyles, {standardPadding} from '@ui/styles';
+import {Padder} from '@ui/components/Padder';
 
 type Props = {
   onSelect: (registrar: RegistrarInfoWithIndex) => void;
@@ -48,14 +50,14 @@ export function SelectRegistrar({onSelect}: Props) {
             }
             left={() =>
               registrar ? (
-                <View style={styles.justifyCenter}>
+                <View style={globalStyles.justifyCenter}>
                   <Identicon value={registrar?.account.toString()} size={20} />
                 </View>
               ) : null
             }
             onPress={openMenu}
             right={() => (
-              <View style={styles.justifyCenter}>
+              <View style={globalStyles.justifyCenter}>
                 <Icon name="chevron-down" />
               </View>
             )}
@@ -83,25 +85,18 @@ function RegistrarItem({onSelect, registrar}: RegistrarItemProps) {
   const {data: identity} = useAccountIdentityInfo(address);
   const formatBalance = useFormatBalance();
   return (
-    <List.Item
-      style={styles.item}
-      onPress={() => {
-        onSelect(registrar);
-      }}
+    <Menu.Item
+      onPress={() => onSelect(registrar)}
       title={
-        identity ? (
-          <View style={styles.row}>
-            <Caption>{`#${registrar.index} `}</Caption>
-            <AccountInfoInlineTeaser identity={identity} />
-          </View>
-        ) : null
-      }
-      description={formatBalance(registrar.fee)}
-      left={() => (
-        <View style={styles.justifyCenter}>
+        <View style={globalStyles.rowAlignCenter}>
           <Identicon value={address} size={30} />
+          <Padder scale={0.5} />
+          <View>
+            {identity ? <AccountInfoInlineTeaser identity={identity} /> : null}
+            <Caption>{formatBalance(registrar.fee)}</Caption>
+          </View>
         </View>
-      )}
+      }
     />
   );
 }
@@ -110,17 +105,12 @@ const styles = StyleSheet.create({
   anchor: {
     borderWidth: 0.5,
     borderRadius: 5,
+    height: 50,
   },
   items: {
     maxHeight: 250,
   },
-  item: {
-    width: 300,
-  },
-  justifyCenter: {
-    justifyContent: 'center',
-  },
-  row: {
-    flexDirection: 'row',
+  menuItem: {
+    marginVertical: standardPadding,
   },
 });
