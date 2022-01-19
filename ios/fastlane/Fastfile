@@ -44,7 +44,7 @@ platform :ios do
 
     match(
       type: "appstore",
-      git_basic_authorization: ENV['MATCH_GIT_AUTHORIZATION'],
+      git_basic_authorization: Base64.strict_encode64(ENV['MATCH_GIT_AUTHORIZATION']),
       api_key: api_key,
       readonly: true
     )
