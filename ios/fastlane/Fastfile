@@ -47,14 +47,11 @@ platform :ios do
       git_basic_authorization: Base64.strict_encode64(ENV['MATCH_GIT_AUTHORIZATION']),
       api_key: api_key,
       readonly: true,
-      output_path: "./builds",
-      profile_name: "provisioning.mobileprovision",
     )
 
     update_project_provisioning(
       xcodeproj: "Litentry.xcodeproj",
       target_filter: "Litentry",
-      profile: "./builds/provisioning.mobileprovision",
       build_configuration: "Release"
     )
 
