@@ -59,7 +59,7 @@ export function ParachainsAuctionsScreen() {
       return {
         blockNumber: String(formatNumber(wd.blockNumber)),
         projectID: String(formatNumber(wd.winners[0]?.paraId)),
-        projectName: String(endpoints?.find((e) => e.paraId === bnToBn(wd.winners[0]?.paraId).toNumber())?.text),
+        projectName: endpoints?.find((e) => e.paraId === wd.winners[0]?.paraId.toNumber())?.text?.toString() || '',
         value: String(formatBalance(wd.total)),
       };
     }) ?? [];
@@ -201,8 +201,10 @@ const DataTableComp = (props: DataTableProps) => {
               <Caption>#{item.blockNumber}</Caption>
             </DataTable.Cell>
             <DataTable.Cell>
-              {item.projectName + ' '}
-              <Caption>{item.projectID}</Caption>
+              <View>
+                <Caption>{item.projectID}</Caption>
+                <Caption>{item.projectName}</Caption>
+              </View>
             </DataTable.Cell>
             <DataTable.Cell numeric>{item.value}</DataTable.Cell>
           </DataTable.Row>
