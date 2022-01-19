@@ -53,6 +53,7 @@ platform :ios do
       xcodeproj: "Litentry.xcodeproj",
       target_filter: "Litentry",
       build_configuration: "Release"
+      profile: ENV["sigh_com.litentry.governance_appstore_profile-path"],
     )
 
     update_project_team(
