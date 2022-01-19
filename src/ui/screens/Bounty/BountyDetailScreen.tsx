@@ -89,9 +89,9 @@ export function BountyDetailScreen({route}: ScreenProps) {
               <AccountInfoInlineTeaser identity={curatorIdentity} />
             </View>
             <Padder scale={1} />
+            <Divider />
           </View>
         ) : null}
-        <Divider />
         <Padder scale={1} />
         <View style={styles.section}>
           <View style={styles.sectionItem}>
