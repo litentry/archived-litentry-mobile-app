@@ -1,9 +1,9 @@
 diff --git a/node_modules/@polkadot/apps-config/endpoints/index.js b/node_modules/@polkadot/apps-config/endpoints/index.js
-index 30022a8..948d438 100644
+index 91e3d2e..871b8a4 100644
 --- a/node_modules/@polkadot/apps-config/endpoints/index.js
 +++ b/node_modules/@polkadot/apps-config/endpoints/index.js
 @@ -1,6 +1,6 @@
- // Copyright 2017-2021 @polkadot/apps-config authors & contributors
+ // Copyright 2017-2022 @polkadot/apps-config authors & contributors
  // SPDX-License-Identifier: Apache-2.0
 -import { createCustom, createDev, createOwn } from "./development.js";
 +import { createCustom, createDev } from "./development.js";
