@@ -4,10 +4,11 @@ import {Menu, List, Caption, Icon, useTheme, Divider} from '@ui/library';
 import {Account, useAccounts} from 'context/AccountsContext';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 import {useAccountsIdentityInfo} from 'src/api/hooks/useAccountsIdentityInfo';
-import globalStyles from '@ui/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 import Identicon from '@polkadot/reactnative-identicon';
 import AccountInfoInlineTeaser from './AccountInfoInlineTeaser';
-import {stringShorten} from '@polkadot/util';
+import {Padder} from '@ui/components/Padder';
+import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 
 type AccountData = {
   identity: IdentityInfo;
@@ -31,6 +32,7 @@ export function SelectAccount({onSelect}: Props) {
   }, []);
   const [account, setAccount] = React.useState<Account>();
   const [visible, setVisible] = React.useState(false);
+  const {data: identity} = useAccountIdentityInfo(account?.address);
 
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
@@ -48,7 +50,15 @@ export function SelectAccount({onSelect}: Props) {
       anchor={
         <View style={[styles.anchor, {borderColor: colors.onSurface}]}>
           <List.Item
-            title={<Caption>{account ? stringShorten(account.address, 12) : 'Select account'}</Caption>}
+            title={
+              account ? (
+                identity ? (
+                  <AccountInfoInlineTeaser identity={identity} accountName={account.meta.name} />
+                ) : null
+              ) : (
+                <Caption>{'Select account'}</Caption>
+              )
+            }
             onPress={openMenu}
             right={() => <Icon name="chevron-down" />}
           />
@@ -81,20 +91,19 @@ function AccountItem({onSelect, accountData}: AccountItemProps) {
     identity,
   } = accountData;
   return (
-    <List.Item
-      style={styles.item}
+    <Menu.Item
+      style={styles.menuItem}
       onPress={() => onSelect(accountData.account)}
-      left={() => (
-        <View style={globalStyles.justifyCenter}>
+      title={
+        <View style={globalStyles.rowAlignCenter}>
           <Identicon value={String(identity.accountId)} size={25} />
+          <Padder scale={0.5} />
+          <View style={globalStyles.justifyCenter}>
+            <AccountInfoInlineTeaser identity={identity} accountName={name} />
+            {isExternal && <Caption style={styles.caption}>{`External`}</Caption>}
+          </View>
         </View>
-      )}
-      title={() => (
-        <View style={globalStyles.justifyCenter}>
-          <AccountInfoInlineTeaser identity={identity} accountName={name} />
-          {isExternal && <Caption>{`External`}</Caption>}
-        </View>
-      )}
+      }
     />
   );
 }
@@ -103,11 +112,15 @@ const styles = StyleSheet.create({
   anchor: {
     borderWidth: 0.5,
     borderRadius: 5,
+    height: 50,
   },
   items: {
     maxHeight: 250,
   },
-  item: {
-    width: 300,
+  menuItem: {
+    marginVertical: standardPadding,
+  },
+  caption: {
+    lineHeight: 0,
   },
 });
