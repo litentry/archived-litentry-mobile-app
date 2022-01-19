@@ -52,7 +52,7 @@ platform :ios do
     update_project_provisioning(
       xcodeproj: "Litentry.xcodeproj",
       target_filter: "Litentry",
-      build_configuration: "Release"
+      build_configuration: "Release",
       profile: ENV["sigh_com.litentry.governance_appstore_profile-path"],
     )
 
