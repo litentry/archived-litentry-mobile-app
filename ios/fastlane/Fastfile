@@ -14,6 +14,7 @@
 # update_fastlane
 
 default_platform(:ios)
+setup_ci(force: true)
 
 platform :ios do
 
