@@ -800,7 +800,7 @@
 				CODE_SIGN_ENTITLEMENTS = Litentry/Litentry.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 56HKVS2886;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Litentry/Info.plist;
@@ -830,7 +830,7 @@
 				CODE_SIGN_ENTITLEMENTS = Litentry/Litentry.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 56HKVS2886;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Litentry/Info.plist;
