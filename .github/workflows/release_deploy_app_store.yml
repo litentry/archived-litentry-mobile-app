@@ -1,10 +1,11 @@
 name: Deploy to App Store
 
 on:
-  # workflow_run:
-  #   workflows: [code-style-lint]
-  #   types:
-  #     - completed
+  workflow_run:
+    workflows: [code-style-lint]
+    types: [completed]
+    branches: [feature/fastlane]
+       
   # Enable manual run
   workflow_dispatch:
     inputs:
@@ -12,13 +13,13 @@ on:
         description: 'Fastlane lane to use (beta OR promote_to_production OR production)'
         required: true
         default: 'beta'
-  push:
-    branches: [feature/fastlane]
+  # push:
+  #   branches: [feature/fastlane]
 
 jobs:
   fastlane-deploy:
     runs-on: macOS-latest
-    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: install packages
         uses: actions/checkout@v2
