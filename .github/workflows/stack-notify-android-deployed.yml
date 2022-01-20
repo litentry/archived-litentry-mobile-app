@@ -17,8 +17,8 @@ jobs:
         env:
           SLACK_CHANNEL: rn-app
           SLACK_COLOR: ${{ github.event.workflow_run.conclusion }}
-          SLACK_TITLE: A new Android build is complete
-          SLACK_USERNAME: RN-Bot
-          SLACK_ICON_EMOJI: ${{ ':bell:' }}
+          SLACK_TITLE: A new Android build is complete (${{ github.event.workflow_run.conclusion }})
+          SLACK_MESSAGE: ${{ github.event.workflow_run.head_commit.message }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_FOOTER: 'GitHub Actions'
+          MSG_MINIMAL: actions url, commit
