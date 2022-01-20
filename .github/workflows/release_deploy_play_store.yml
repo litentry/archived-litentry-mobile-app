@@ -5,6 +5,8 @@ on:
     workflows: [code-style-lint]
     types:
       - completed
+    branches: [develop]
+
   # Enable manual run
   workflow_dispatch:
     inputs:
@@ -12,8 +14,6 @@ on:
         description: 'Fastlane lane to use (beta OR promote_to_production OR production)'
         required: true
         default: 'beta'
-  push:
-    branches: [develop]
 
 jobs:
   fastlane-deploy:

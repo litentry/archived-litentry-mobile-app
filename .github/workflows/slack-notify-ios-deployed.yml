@@ -5,7 +5,7 @@ on:
     workflows: [Deploy to App Store]
     types: 
       - completed
-    branches: [feature/fastlane]
+    branches: [develop]
 
 jobs:
   notify:
