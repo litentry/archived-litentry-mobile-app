@@ -21,4 +21,4 @@ jobs:
           SLACK_MESSAGE: ${{ github.event.workflow_run.head_commit.message }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_FOOTER: 'GitHub Actions'
-          MSG_MINIMAL: commit, actions url
+          MSG_MINIMAL: commit,actions url
