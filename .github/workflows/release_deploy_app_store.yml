@@ -8,12 +8,12 @@ on:
     branches: [feature/fastlane]
        
   # Enable manual run
-  workflow_dispatch:
-    inputs:
-      lane:
-        description: 'Fastlane lane to use (beta OR promote_to_production OR production)'
-        required: true
-        default: 'beta'
+  # workflow_dispatch:
+  #   inputs:
+  #     lane:
+  #       description: 'Fastlane lane to use (beta OR promote_to_production OR production)'
+  #       required: true
+  #       default: 'beta'
   # push:
   #   branches: [feature/fastlane]
 
