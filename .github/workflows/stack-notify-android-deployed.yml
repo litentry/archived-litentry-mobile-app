@@ -1,8 +1,8 @@
-name: Slack Notification IOS
+name: Slack Notification Android
 
 on: 
   workflow_run:
-    workflows: [Deploy to App Store]
+    workflows: [Deploy to Play Store]
     types: 
       - completed
     branches: [develop]
@@ -17,7 +17,7 @@ jobs:
         env:
           SLACK_CHANNEL: rn-app
           SLACK_COLOR: ${{ github.event.workflow_run.conclusion }}
-          SLACK_TITLE: A new IOS build is complete
+          SLACK_TITLE: A new Android build is complete
           SLACK_USERNAME: RN-Bot
           SLACK_ICON_EMOJI: ${{ ':bell:' }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
