@@ -1,4 +1,4 @@
-name: Slack Notification IOS
+name: Slack Notification Action [ IOS ]
 
 on: 
   workflow_run:
@@ -17,9 +17,9 @@ jobs:
         env:
           SLACK_CHANNEL: rn-app
           SLACK_COLOR: ${{ github.event.workflow_run.conclusion }}
-          SLACK_TITLE: A new IOS build is complete (${{ github.event.workflow_run.conclusion }})
+          SLACK_TITLE: New IOS build (${{ github.event.workflow_run.conclusion }})
           SLACK_MESSAGE: ${{ github.event.workflow_run.head_commit.message }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_FOOTER: 'GitHub Actions'
-          MSG_MINIMAL: actions url, commit
+          MSG_MINIMAL: commit, actions url
 
