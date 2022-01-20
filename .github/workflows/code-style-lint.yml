@@ -1,15 +1,15 @@
-name: code style & lint
+name: code-style-lint
 
 on:
   push:
-    branches: [ develop ]
+    branches: [develop]
   pull_request:
-    branches: [ develop ]
+    branches: [develop]
+  # Enable manual run
   workflow_dispatch:
 
-
 jobs:
-  deploy:
+  lint:
     runs-on: self-hosted
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:

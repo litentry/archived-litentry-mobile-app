@@ -1,0 +1,86 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+setup_ci(force: true)
+
+platform :ios do
+
+  lane :dev_certificates do
+    match(type: "development", readonly: true)
+  end
+
+  lane :adhoc_certificates do
+    match(type: "adhoc", readonly: true)
+  end
+
+  desc "Get development and adhoc certificates to build the app with xcode"
+  lane :get_local_certificates do
+    dev_certificates()
+    adhoc_certificates()
+  end
+
+  desc "Push a new beta build to TestFlight"
+  lane :beta do
+
+    api_key = app_store_connect_api_key(
+      key_id: ENV['ASCAPI_KEY_ID'],
+      issuer_id: ENV['ASCAPI_ISSUER_ID'],
+      key_content: ENV['ASCAPI_KEY_CONTENT'],
+      is_key_content_base64: true
+    )
+
+    latest_build_number = latest_testflight_build_number(
+      version: "0.1.1",
+      api_key: api_key
+    )
+    
+    increment_build_number(
+      xcodeproj: "Litentry.xcodeproj",
+      build_number: latest_build_number + 1
+    )
+
+    match(
+      type: "appstore",
+      git_basic_authorization: Base64.strict_encode64(ENV['MATCH_GIT_AUTHORIZATION']),
+      api_key: api_key,
+      readonly: true,
+    )
+
+    update_project_provisioning(
+      xcodeproj: "Litentry.xcodeproj",
+      target_filter: "Litentry",
+      build_configuration: "Release",
+      profile: ENV["sigh_com.litentry.governance_appstore_profile-path"],
+    )
+
+    update_project_team(
+      teamid: ENV['ASCTEAM_ID']
+    )
+
+    build_app(
+      workspace: "Litentry.xcworkspace", 
+      scheme: "Litentry",
+      configuration: "Release",
+      clean: true,
+      export_method: "app-store",
+    )
+
+    upload_to_testflight(
+      api_key: api_key,
+      skip_waiting_for_build_processing: true
+    )
+  end
+end

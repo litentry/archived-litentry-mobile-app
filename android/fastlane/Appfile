@@ -1,0 +1,2 @@
+package_name("com.litentry.governance") # e.g. com.krausefx.app
+json_key_file("key.json") 
