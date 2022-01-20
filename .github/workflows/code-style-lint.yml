@@ -2,7 +2,7 @@ name: code-style-lint
 
 on:
   push:
-    branches: [develop]
+    branches: [feature/fastlane]
   pull_request:
     branches: [develop]
   # Enable manual run
