@@ -1,0 +1,22 @@
+fastlane_require 'dotenv'
+
+default_platform(:android)
+
+platform :android do
+
+  desc "Submit a new Beta Build"
+  lane :beta do
+    gradle(task: "clean")
+
+    version_codes = google_play_track_version_codes(track: 'internal')
+    version_updated = version_codes[0].to_i + 1
+    increment_version_code(gradle_file_path: "./app/build.gradle", version_code: version_updated.to_i)
+
+    gradle(
+      task: "bundleRelease",
+      flags: "--no-daemon --max-workers 2"
+    )
+    upload_to_play_store(track: "internal")
+  end
+
+end

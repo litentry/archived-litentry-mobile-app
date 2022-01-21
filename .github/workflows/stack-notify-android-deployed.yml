@@ -1,0 +1,24 @@
+name: Slack Notification Action [ Android ]
+
+on: 
+  workflow_run:
+    workflows: [Deploy to Play Store]
+    types: 
+      - completed
+    branches: [develop]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: rn-app
+          SLACK_COLOR: ${{ github.event.workflow_run.conclusion }}
+          SLACK_TITLE: New Android build (${{ github.event.workflow_run.conclusion }})
+          SLACK_MESSAGE: ${{ github.event.workflow_run.head_commit.message }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_FOOTER: 'GitHub Actions'
+          MSG_MINIMAL: commit,actions url

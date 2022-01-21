@@ -1824,15 +1824,15 @@
     "@babel/runtime" "^7.16.7"
     "@polkadot/util" "8.3.2"
 
-"@polkadot/reactnative-identicon@0.87.6":
-  version "0.87.6"
-  resolved "https://registry.yarnpkg.com/@polkadot/reactnative-identicon/-/reactnative-identicon-0.87.6.tgz#029fdf25d84fa2211c94dc375059f2deb21708e8"
-  integrity sha512-urAT22eeu8g89xWFsQydhyfXc1L12rL4WCHZuzkfu9IE012k97/b4qEZkHS0hjltM6LJsdGs8L+pO9P4zkVBJQ==
+"@polkadot/reactnative-identicon@0.89.2":
+  version "0.89.2"
+  resolved "https://registry.yarnpkg.com/@polkadot/reactnative-identicon/-/reactnative-identicon-0.89.2.tgz#ecaca53cadde469b893c79bff6636fd6bf05a8d0"
+  integrity sha512-Ieu2Eup/KurKO0j4+IyRc8Flbd7eayoNEUEBFD15gMmbB+NFPO7vVT08rx7TxefXCXnzkEVG5xwFXTd1LpNSew==
   dependencies:
-    "@babel/runtime" "^7.16.5"
-    "@polkadot/ui-shared" "0.87.6"
-    "@polkadot/util" "^8.2.2"
-    "@polkadot/util-crypto" "^8.2.2"
+    "@babel/runtime" "^7.16.7"
+    "@polkadot/ui-shared" "0.89.2"
+    "@polkadot/util" "^8.3.2"
+    "@polkadot/util-crypto" "^8.3.2"
     react-native-svg "^12.2.0"
 
 "@polkadot/rpc-augment@7.3.1":
@@ -2089,12 +2089,12 @@
     eventemitter3 "^4.0.7"
     store "^2.0.12"
 
-"@polkadot/ui-shared@0.87.6":
-  version "0.87.6"
-  resolved "https://registry.yarnpkg.com/@polkadot/ui-shared/-/ui-shared-0.87.6.tgz#b8af0368ff4632946a6c3f72ab1238b576f0386a"
-  integrity sha512-LxYXK9xAa1MTL4RxryC4f0T27yfz24FT2Ist6eYG+cTq4oKnsmFZATh4kwKVRH1nESz7aXUtM8ks6M10dPcasw==
+"@polkadot/ui-shared@0.89.2":
+  version "0.89.2"
+  resolved "https://registry.yarnpkg.com/@polkadot/ui-shared/-/ui-shared-0.89.2.tgz#a4ad84cd5fb58ad2eec3e8fdaabd8f2fecff9dcc"
+  integrity sha512-gpbWE7JQ2j5I3q1ig8UOT8H7sKNevhPreiNT345ry2q8VcRDdrQlIIk7uw3AZism4ukX0eyQITxtGvTBb5KD4A==
   dependencies:
-    "@babel/runtime" "^7.16.5"
+    "@babel/runtime" "^7.16.7"
     color "^3.2.1"
 
 "@polkadot/util-crypto@6.11.1", "@polkadot/util-crypto@7.8.2", "@polkadot/util-crypto@8.3.1", "@polkadot/util-crypto@8.3.2", "@polkadot/util-crypto@^8.1.2", "@polkadot/util-crypto@^8.2.2", "@polkadot/util-crypto@^8.3.1", "@polkadot/util-crypto@^8.3.2":

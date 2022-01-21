@@ -1,6 +1,6 @@
 import React, {useCallback, useContext, useRef, useState} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
-import {Divider, Button, List, Subheading, useTheme, Paragraph, Caption} from '@ui/library';
+import {Divider, Button, List, Subheading, useTheme, Paragraph, Caption, Select} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {useAccounts} from 'src/context/AccountsContext';
 import {InAppNotificationContent, InAppNotificationContext} from 'context/InAppNotificationContext';
@@ -13,6 +13,7 @@ import RegistrarSelectionModal from '@ui/components/RegistrarSelectionModal';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {stringShorten} from '@polkadot/util';
 import {Padder} from '@ui/components/Padder';
+import {useConvictions} from 'src/api/hooks/useConvictions';
 
 function DevScreen() {
   const {colors} = useTheme();
@@ -20,6 +21,7 @@ function DevScreen() {
 
   const {currentNetwork} = useContext(NetworkContext);
   const {accounts} = useAccounts();
+  const convictions = useConvictions();
   const {trigger} = useContext(InAppNotificationContext);
   const {status, api} = useContext(ChainApiContext);
   const [debugInfo, setDebugInfo] = useState('');
@@ -42,6 +44,16 @@ function DevScreen() {
           )}
         />
         <Divider />
+
+        <View style={{padding: standardPadding * 2}}>
+          <Subheading>Conviction selection</Subheading>
+          <Select
+            items={convictions}
+            onSelect={(selectedItem) => {
+              console.log(selectedItem);
+            }}
+          />
+        </View>
 
         <List.Item
           title="Registrar Selection Modal"

@@ -30,6 +30,7 @@ local.properties
 *.iml
 *.hprof
 android/app/release
+android/key.json
 
 # Visual Studio Code
 #
