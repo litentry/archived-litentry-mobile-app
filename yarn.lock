@@ -1600,7 +1600,7 @@
     "@polkadot/util" "8.3.2"
     "@polkadot/util-crypto" "8.3.2"
 
-"@polkadot/networks@8.2.2", "@polkadot/networks@^8.1.2", "@polkadot/networks@^8.2.2":
+"@polkadot/networks@8.2.2":
   version "8.2.2"
   resolved "https://registry.yarnpkg.com/@polkadot/networks/-/networks-8.2.2.tgz#75a0f4ffd13d790a0990cdb0ff0a251377104a46"
   integrity sha512-PshHrf5wBXib63l03YISnHMf5/fS1/Jv2rEN58EgYy9VK87HBXjT7qQ1Ea/d1cFI2EmfEDvhFsP+u3i6AlejQQ==
@@ -1614,15 +1614,7 @@
   dependencies:
     "@babel/runtime" "^7.16.3"
 
-"@polkadot/networks@^8.3.1":
-  version "8.3.1"
-  resolved "https://registry.yarnpkg.com/@polkadot/networks/-/networks-8.3.1.tgz#b53342094374edb6477d868c794c089cbe667079"
-  integrity sha512-MG3ryZovtlg3lALeOWQMPEVr+Akr54aYjUMgfrarxpB4Bckw51URfCi/FhrKZRH+VkK1imKJBMDSSEhoA3Rbow==
-  dependencies:
-    "@babel/runtime" "^7.16.7"
-    "@polkadot/util" "8.3.1"
-
-"@polkadot/networks@^8.3.2":
+"@polkadot/networks@^8.1.2", "@polkadot/networks@^8.3.1", "@polkadot/networks@^8.3.2":
   version "8.3.2"
   resolved "https://registry.yarnpkg.com/@polkadot/networks/-/networks-8.3.2.tgz#e5306f5d795ea3ee9fb6389d643577817c6fb4f0"
   integrity sha512-9SDcGsasnKNjbjFrrp/WlllrR/pIxDDl3DZH1jXuRdWQ3BF+kTHCddxE9ffmu/EIlRpaX8rfu5mQyJxefc98zQ==
@@ -1884,14 +1876,14 @@
     "@polkadot/util-crypto" "^8.3.1"
     rxjs "^7.5.1"
 
-"@polkadot/ui-settings@^0.87.6":
-  version "0.87.6"
-  resolved "https://registry.yarnpkg.com/@polkadot/ui-settings/-/ui-settings-0.87.6.tgz#6af1ea19c192fa8ba92485d48e0c65b6b0f521ad"
-  integrity sha512-aSXhdNtBI2Jf+JJKnhRUFmsfEqSH3mho0kWqIK75VnMhLEIoywbcfYy/U6uw6PxOhFVKghMgNCA5tpZKJztVkg==
+"@polkadot/ui-settings@^0.89.2":
+  version "0.89.2"
+  resolved "https://registry.yarnpkg.com/@polkadot/ui-settings/-/ui-settings-0.89.2.tgz#e0da1a6f5c3554e5dc075104a6b47f957d9d2ae0"
+  integrity sha512-jEYzlzaysxL7UjDCgaZZrc6rR+GglKALwhhW1CVaUa+hGfaAS4GJrhTWfgCDzDsQ8pfyfAGS4F6fUoTBZGLDYw==
   dependencies:
-    "@babel/runtime" "^7.16.5"
-    "@polkadot/networks" "^8.2.2"
-    "@polkadot/util" "^8.2.2"
+    "@babel/runtime" "^7.16.7"
+    "@polkadot/networks" "^8.3.2"
+    "@polkadot/util" "^8.3.2"
     eventemitter3 "^4.0.7"
     store "^2.0.12"
 
