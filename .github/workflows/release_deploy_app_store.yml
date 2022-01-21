@@ -1,0 +1,58 @@
+name: Deploy to App Store
+
+on:
+  workflow_run:
+    workflows: [code-style-lint]
+    types: 
+      - completed
+    branches: [develop]
+       
+  # Enable manual run
+  workflow_dispatch:
+    inputs:
+      lane:
+        description: 'Fastlane lane to use (beta OR promote_to_production OR production)'
+        required: true
+        default: 'beta'
+
+jobs:
+  fastlane-deploy:
+    runs-on: macOS-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: install packages
+        uses: actions/checkout@v2
+      - run: yarn
+
+      - name: install pods
+        run: pod install
+        working-directory: ios
+         
+      - name: Unlock secrets
+        run: |
+          brew install git-crypt
+          echo "$GIT_CRYPT_KEY" | base64 --decode > ./git-crypt-key
+          git-crypt unlock ./git-crypt-key
+          rm ./git-crypt-key
+        env:
+          GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
+
+      # Setup Ruby, Bundler, and Gemfile dependencies
+      - name: Setup Fastlane
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '2.6'
+          bundler-cache: true
+          working-directory: ios 
+        # Build and deploy with Fastlane (by default, to beta track) 🚀.
+        # Naturally, promote_to_production only deploys.
+      - run: bundle exec fastlane ${{ github.event.inputs.lane || 'beta' }}
+        env:
+          # More info: https://sarunw.com/posts/using-app-store-connect-api-with-fastlane-match/
+          ASCAPI_KEY_ID: ${{ secrets.ASCAPI_KEY_ID }}
+          ASCAPI_ISSUER_ID: ${{ secrets.ASCAPI_ISSUER_ID }}
+          ASCAPI_KEY_CONTENT: ${{ secrets.ASCAPI_KEY_CONTENT }}
+          ASCTEAM_ID: ${{ secrets.ASCTEAM_ID }}
+          MATCH_GIT_AUTHORIZATION: ${{ secrets.MATCH_GIT_AUTHORIZATION }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        working-directory: ios
