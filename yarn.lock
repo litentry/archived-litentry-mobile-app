@@ -9152,10 +9152,10 @@ react-native@^0.66.4:
     whatwg-fetch "^3.0.0"
     ws "^6.1.4"
 
-react-query@^3.34.6:
-  version "3.34.6"
-  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.34.6.tgz#e8158da6642cd3aa47ae12d6febec11bc699821f"
-  integrity sha512-2UKldH8T2PjmLxaOzANok7yITQn9FF1pBbrZFF1hvukBjYefHtCjUur+GOVAWMhrsskcCoKRviei4hcpvj9wLQ==
+react-query@^3.34.11:
+  version "3.34.11"
+  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.34.11.tgz#314983ce13fef087d933cf1079aa2df93cb8f97c"
+  integrity sha512-vRC9J8dklE6rQ1uQHveNgoXOH4ceOn6Ww2+XUYOrEsUaSBZ76aQ/VTzDanXJn+E78lFQn0ajdSomduXP55iCwg==
   dependencies:
     "@babel/runtime" "^7.5.5"
     broadcast-channel "^3.4.1"
