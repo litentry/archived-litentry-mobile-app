@@ -37,6 +37,7 @@ export function DemocracyScreen() {
           <LoadingView />
         ) : (
           <SectionList
+            ItemSeparatorComponent={() => <Padder scale={0.5} />}
             contentContainerStyle={styles.content}
             stickySectionHeadersEnabled={false}
             refreshing={isFetching}
