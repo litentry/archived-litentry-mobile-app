@@ -1,3 +1,37 @@
+diff --git a/node_modules/react-native-aes-crypto/android/build.gradle b/node_modules/react-native-aes-crypto/android/build.gradle
+index f0105fc..f7a483b 100644
+--- a/node_modules/react-native-aes-crypto/android/build.gradle
++++ b/node_modules/react-native-aes-crypto/android/build.gradle
+@@ -20,15 +20,15 @@ buildscript {
+ }
+ 
+ apply plugin: 'com.android.library'
+-apply plugin: 'maven'
++// apply plugin: 'maven'
+ 
+ // Matches values in recent template from React Native 0.59 / 0.60
+ // https://github.com/facebook/react-native/blob/0.59-stable/template/android/build.gradle#L5-L9
+ // https://github.com/facebook/react-native/blob/0.60-stable/template/android/build.gradle#L5-L9
+-def DEFAULT_COMPILE_SDK_VERSION = 28
+-def DEFAULT_BUILD_TOOLS_VERSION = "28.0.3"
+-def DEFAULT_MIN_SDK_VERSION = 16
+-def DEFAULT_TARGET_SDK_VERSION = 28
++def DEFAULT_COMPILE_SDK_VERSION = 30
++def DEFAULT_BUILD_TOOLS_VERSION = "30.0.2"
++def DEFAULT_MIN_SDK_VERSION = 21
++def DEFAULT_TARGET_SDK_VERSION = 30
+ 
+ android {
+     compileSdkVersion safeExtGet('compileSdkVersion', DEFAULT_COMPILE_SDK_VERSION)
+@@ -45,7 +45,7 @@ android {
+ }
+ 
+ repositories {
+-    mavenLocal()
++    // mavenLocal()
+     maven {
+         // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+         url "$rootDir/../node_modules/react-native/android"
 diff --git a/node_modules/react-native-aes-crypto/index.d.ts b/node_modules/react-native-aes-crypto/index.d.ts
 index df7ec35..e55c2b6 100644
 --- a/node_modules/react-native-aes-crypto/index.d.ts
