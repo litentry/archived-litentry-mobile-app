@@ -8849,13 +8849,6 @@ react-native-aes-crypto@^2.0.0:
   resolved "https://registry.yarnpkg.com/react-native-aes-crypto/-/react-native-aes-crypto-2.0.0.tgz#b5c684acab2e6c888c12f2e4f5627aa8bade5d13"
   integrity sha512-ZsnvpUPaGQ7v7tI7StU40J8bplIQ6xGl7rwUUG+D31KOOIwjODRnUfMfF0hf/6+nrHxtfGd/aUV+nfVLCLI16Q==
 
-react-native-animatable@^1.3.3:
-  version "1.3.3"
-  resolved "https://registry.yarnpkg.com/react-native-animatable/-/react-native-animatable-1.3.3.tgz#a13a4af8258e3bb14d0a9d839917e9bb9274ec8a"
-  integrity sha512-2ckIxZQAsvWn25Ho+DK3d1mXIgj7tITkrS4pYDvx96WyOttSvzzFeQnM2od0+FUMzILbdHDsDEqZvnz1DYNQ1w==
-  dependencies:
-    prop-types "^15.7.2"
-
 react-native-camera@^4.2.1:
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/react-native-camera/-/react-native-camera-4.2.1.tgz#caf74081f055e89d7e9b0cd5108965d808c60e90"
