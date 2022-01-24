@@ -16,7 +16,6 @@ target 'Litentry' do
 
   pod 'Permission-Camera', :path => "#{permissions_path}/Camera/Permission-Camera.podspec"
 
-  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
 
   target 'LitentryTests' do
