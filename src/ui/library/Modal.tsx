@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, ScrollView} from 'react-native';
 import {Modal as RNPaperModal, Portal} from 'react-native-paper';
 import {useTheme} from '@ui/library';
 
@@ -18,7 +18,7 @@ export function Modal({visible, onDismiss, children}: ModalProps) {
         visible={visible}
         onDismiss={onDismiss}
         contentContainerStyle={[styles.modal, {backgroundColor: colors.background}]}>
-        {children}
+        <ScrollView showsVerticalScrollIndicator={false}>{children}</ScrollView>
       </RNPaperModal>
     </Portal>
   );

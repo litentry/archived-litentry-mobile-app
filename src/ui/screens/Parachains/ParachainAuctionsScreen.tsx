@@ -1,7 +1,7 @@
 import React from 'react';
 import {View} from 'react-native';
 import type {u32} from '@polkadot/types';
-import {BN, bnToBn, BN_ONE, BN_ZERO, formatNumber} from '@polkadot/util';
+import {BN, BN_ONE, BN_ZERO, formatNumber} from '@polkadot/util';
 import {BlockTime} from '@ui/components/BlockTime';
 import {Chart} from '@ui/components/Chart';
 import LoadingView from '@ui/components/LoadingView';
