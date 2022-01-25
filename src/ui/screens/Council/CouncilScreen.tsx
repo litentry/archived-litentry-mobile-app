@@ -237,61 +237,59 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
 
   return (
     <Modal visible={visible} onDismiss={reset}>
-      <ScrollView>
-        <View style={styles.centerAlign}>
-          <Subheading>{`Vote for council`}</Subheading>
+      <View style={styles.centerAlign}>
+        <Subheading>{`Vote for council`}</Subheading>
+      </View>
+      <Padder scale={1} />
+
+      <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.address)} />
+      <Padder scale={1} />
+
+      <TextInput
+        dense
+        autoComplete="off"
+        mode="outlined"
+        placeholder="Vote value"
+        keyboardType="decimal-pad"
+        value={amount}
+        onChangeText={(nextValue) => setAmount(nextValue.replace(/[^(\d+).(\d+)]/g, ''))}
+      />
+
+      <Subheading style={styles.voteValue}>{api ? formatBalance(getBalanceFromString(api, amount)) : ''}</Subheading>
+
+      <Padder scale={1} />
+      <Caption>{`Select up to ${MAX_VOTES} candidates in the preferred order:`}</Caption>
+
+      <View style={styles.candidatesContainer}>
+        <View style={styles.candidates}>
+          <ScrollView>
+            {candidates.map((candidate) => (
+              <MemberItem
+                key={candidate}
+                accountId={candidate}
+                onSelect={onCandidateSelect}
+                isSelected={selectedCandidates.includes(candidate)}
+                order={selectedCandidates.indexOf(candidate) + 1}
+              />
+            ))}
+          </ScrollView>
         </View>
-        <Padder scale={1} />
 
-        <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.address)} />
-        <Padder scale={1} />
-
-        <TextInput
-          dense
-          autoComplete="off"
-          mode="outlined"
-          placeholder="Vote value"
-          keyboardType="decimal-pad"
-          value={amount}
-          onChangeText={(nextValue) => setAmount(nextValue.replace(/[^(\d+).(\d+)]/g, ''))}
-        />
-
-        <Subheading style={styles.voteValue}>{api ? formatBalance(getBalanceFromString(api, amount)) : ''}</Subheading>
-
-        <Padder scale={1} />
-        <Caption>{`Select up to ${MAX_VOTES} candidates in the preferred order:`}</Caption>
-
-        <View style={styles.candidatesContainer}>
-          <View style={styles.candidates}>
-            <ScrollView>
-              {candidates.map((candidate) => (
-                <MemberItem
-                  key={candidate}
-                  accountId={candidate}
-                  onSelect={onCandidateSelect}
-                  isSelected={selectedCandidates.includes(candidate)}
-                  order={selectedCandidates.indexOf(candidate) + 1}
-                />
-              ))}
-            </ScrollView>
-          </View>
-
-          <View style={styles.votingBond}>
-            <Caption style={globalStyles.textCenter}>{`Bond`}</Caption>
-            {bondValue && <Text style={styles.bondValue}>{`${formatBalance(bondValue)}`}</Text>}
-          </View>
+        <View style={styles.votingBond}>
+          <Caption style={globalStyles.textCenter}>{`Bond`}</Caption>
+          {bondValue && <Text style={styles.bondValue}>{`${formatBalance(bondValue)}`}</Text>}
         </View>
-        <Padder scale={1} />
+      </View>
+      <Padder scale={1} />
 
-        <View style={styles.buttons}>
-          <Button onPress={reset} mode="outlined" compact>
-            Cancel
-          </Button>
-          <Button mode="contained" disabled={disabled} onPress={onVote}>
-            Vote
-          </Button>
-        </View>
-      </ScrollView>
+      <View style={styles.buttons}>
+        <Button onPress={reset} mode="outlined" compact>
+          Cancel
+        </Button>
+        <Button mode="contained" disabled={disabled} onPress={onVote}>
+          Vote
+        </Button>
+      </View>
     </Modal>
   );
 }

@@ -62,7 +62,9 @@ function TreasuryOverviewScreen() {
               );
               const proposer = accountInfo?.info
                 ? u8aToString(accountInfo.info.display.asRaw)
-                : accountInfo?.accountId.toString() ?? 'unknown';
+                : accountInfo?.accountId
+                ? stringShorten(accountInfo.accountId.toString())
+                : 'unknown';
 
               return (
                 <Card style={styles.item}>
