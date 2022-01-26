@@ -15,7 +15,8 @@
     "postinstall": "npm run nodeify && patch-package",
     "prepare": "husky install",
     "bundle:android": "cd android/ && ./gradlew bundleRelease",
-    "assemble:android": "cd android/ && ./gradlew clean && ./gradlew assembleRelease"
+    "assemble:android": "cd android/ && ./gradlew clean && ./gradlew assembleRelease",
+    "ios-certificates:dev": "fastlane match development --readonly"
   },
   "resolutions": {
     "@polkadot/types": "^7.3.1",
