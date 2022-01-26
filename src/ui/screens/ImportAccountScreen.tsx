@@ -130,13 +130,13 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
           onChangeText={(text) => {
             setAccount({...account, password: text});
           }}
-          right={() => (
+          right={
             <TextInput.Icon
               onPress={() => setIsPasswordVisible(!isPasswordVisible)}
               name={`${isPasswordVisible ? 'eye' : 'eye-off'}-outline`}
               color={theme.colors.disabled}
             />
-          )}
+          }
           outlineColor={account.password ? (passwordStrength >= 3 ? 'success' : 'danger') : 'basic'}
         />
         <View style={styles.progressBar}>
