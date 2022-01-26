@@ -39,12 +39,12 @@ const availableNetworks = [
   PolkadotNetwork,
   KusamaNetwork,
   // EthereumNetwork,
-  LitentryNetworkTest,
+  ...(__DEV__ ? [LitentryNetworkTest] : []),
 ];
 
 export const NetworkContext = createContext<NetworkContextValueType>({
   currentNetwork: PolkadotNetwork,
-  availableNetworks: availableNetworks,
+  availableNetworks,
   select: noop,
 });
 
