@@ -81,8 +81,8 @@ function createAddress(paraId: ParaId): Uint8Array {
 }
 
 const optFundMulti = {
-  transform: (paraIds: ParaId[], optFunds: Option<FundInfo>[], network: string): Campaign[] => {
-    return paraIds
+  transform: (paraIds: ParaId[], optFunds: Option<FundInfo>[], network: string): Campaign[] =>
+    paraIds
       .map((paraId, i): [ParaId, FundInfo | null] => [paraId, optFunds?.[i]?.unwrapOr(null) ?? null])
       .filter((v): v is [ParaId, FundInfo] => !!v[1])
       .map(([paraId, info]): Campaign => {
@@ -112,8 +112,7 @@ const optFundMulti = {
           a.info.lastPeriod.cmp(b.info.lastPeriod) ||
           a.paraId.cmp(b.paraId)
         );
-      });
-  },
+      }),
   withParamsTransform: true,
 };
 
