@@ -61,7 +61,7 @@ async function getFunds(paraIds: ParaId[], bestNumber: BlockNumber, api: ApiProm
     api.query.slots?.leases?.multi<any>(paraIds),
   ]);
 
-  const funds = rawFunds ? optFundMulti.transform(paraIds, rawFunds) : [];
+  const funds = rawFunds ? optFundMulti.transform(paraIds, rawFunds, api.runtimeChain.toString()) : [];
   const leases = optLeaseMulti.transform(paraIds, rawLeases ?? []);
 
   const minContribution = api?.consts.crowdloan?.minContribution as BlockNumber;
@@ -80,27 +80,27 @@ function createAddress(paraId: ParaId): Uint8Array {
   return u8aConcat(CROWD_PREFIX, paraId.toU8a(), EMPTY_U8A).subarray(0, 32);
 }
 
-const LITENTRY_PARACHAIN_KEY = '2013';
-const LITMUS_PARACHAIN_KEY = '2106';
-
 const optFundMulti = {
-  transform: (paraIds: ParaId[], optFunds: Option<FundInfo>[]): Campaign[] =>
-    paraIds
+  transform: (paraIds: ParaId[], optFunds: Option<FundInfo>[], network: string): Campaign[] => {
+    return paraIds
       .map((paraId, i): [ParaId, FundInfo | null] => [paraId, optFunds?.[i]?.unwrapOr(null) ?? null])
       .filter((v): v is [ParaId, FundInfo] => !!v[1])
-      .map(
-        ([paraId, info]): Campaign => ({
+      .map(([paraId, info]): Campaign => {
+        const key = paraId.toString();
+        const isLitentryParachain = network === 'Polkadot' && key === '2013';
+        const isLitmusParachain = network === 'Kusama' && key === '2106';
+        return {
           accountId: encodeAddress(createAddress(paraId)),
           firstSlot: info.firstPeriod,
           info,
           isCrowdloan: true,
-          key: paraId.toString(),
+          key,
           lastSlot: info.lastPeriod,
           paraId,
           value: info.raised,
-          isSpecial: paraId.toString() === LITENTRY_PARACHAIN_KEY || paraId.toString() === LITMUS_PARACHAIN_KEY,
-        }),
-      )
+          isSpecial: isLitentryParachain || isLitmusParachain,
+        };
+      })
       .sort((a, b) => {
         if (a.isSpecial || b.isSpecial) {
           return a.isSpecial && b.isSpecial ? 0 : b.isSpecial ? 1 : -1;
@@ -112,7 +112,8 @@ const optFundMulti = {
           a.info.lastPeriod.cmp(b.info.lastPeriod) ||
           a.paraId.cmp(b.paraId)
         );
-      }),
+      });
+  },
   withParamsTransform: true,
 };
 
