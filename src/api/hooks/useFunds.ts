@@ -61,7 +61,7 @@ async function getFunds(paraIds: ParaId[], bestNumber: BlockNumber, api: ApiProm
     api.query.slots?.leases?.multi<any>(paraIds),
   ]);
 
-  const funds = rawFunds ? optFundMulti.transform(paraIds, rawFunds) : [];
+  const funds = rawFunds ? optFundMulti.transform(paraIds, rawFunds, api.runtimeChain.toString()) : [];
   const leases = optLeaseMulti.transform(paraIds, rawLeases ?? []);
 
   const minContribution = api?.consts.crowdloan?.minContribution as BlockNumber;
@@ -80,25 +80,27 @@ function createAddress(paraId: ParaId): Uint8Array {
   return u8aConcat(CROWD_PREFIX, paraId.toU8a(), EMPTY_U8A).subarray(0, 32);
 }
 
-const LITENTRY_CROWDLOAN_ACCOUNT_ID = '152deMvsN7wxMbSmdApsds6LWNNNGgsJ8TTpZLTD2ipEHNg3';
 const optFundMulti = {
-  transform: (paraIds: ParaId[], optFunds: Option<FundInfo>[]): Campaign[] =>
+  transform: (paraIds: ParaId[], optFunds: Option<FundInfo>[], network: string): Campaign[] =>
     paraIds
       .map((paraId, i): [ParaId, FundInfo | null] => [paraId, optFunds?.[i]?.unwrapOr(null) ?? null])
       .filter((v): v is [ParaId, FundInfo] => !!v[1])
-      .map(
-        ([paraId, info]): Campaign => ({
+      .map(([paraId, info]): Campaign => {
+        const key = paraId.toString();
+        const isLitentryParachain = network === 'Polkadot' && key === '2013';
+        const isLitmusParachain = network === 'Kusama' && key === '2106';
+        return {
           accountId: encodeAddress(createAddress(paraId)),
           firstSlot: info.firstPeriod,
           info,
           isCrowdloan: true,
-          key: paraId.toString(),
+          key,
           lastSlot: info.lastPeriod,
           paraId,
           value: info.raised,
-          isSpecial: String(info.depositor) === LITENTRY_CROWDLOAN_ACCOUNT_ID,
-        }),
-      )
+          isSpecial: isLitentryParachain || isLitmusParachain,
+        };
+      })
       .sort((a, b) => {
         if (a.isSpecial || b.isSpecial) {
           return a.isSpecial && b.isSpecial ? 0 : b.isSpecial ? 1 : -1;
@@ -114,7 +116,7 @@ const optFundMulti = {
   withParamsTransform: true,
 };
 
-function isCrowdloadAccount(paraId: ParaId, accountId: AccountId): boolean {
+function isCrowdloanAccount(paraId: ParaId, accountId: AccountId): boolean {
   return accountId.eq(createAddress(paraId));
 }
 
@@ -125,7 +127,7 @@ const optLeaseMulti = {
         (leases[i] ?? [])
           .map((o) => o.unwrapOr(null))
           .filter((v): v is ITuple<[AccountId, BalanceOf]> => !!v)
-          .filter(([accountId]) => isCrowdloadAccount(paraId, accountId)).length !== 0,
+          .filter(([accountId]) => isCrowdloanAccount(paraId, accountId)).length !== 0,
     ),
   withParamsTransform: true,
 };
