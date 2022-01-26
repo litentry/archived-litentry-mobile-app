@@ -76,8 +76,10 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
         throw new Error('address not provided');
       }
       const encoded = await SubstrateSign.encryptData(seed, account.password);
+      const _address = await SubstrateSign.substrateAddress(seed, currentNetwork.ss58Format);
+
       const newAcc = {
-        address,
+        address: _address,
         encoded,
         meta: {
           name: account.title,
