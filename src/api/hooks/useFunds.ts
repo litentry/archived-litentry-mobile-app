@@ -80,7 +80,9 @@ function createAddress(paraId: ParaId): Uint8Array {
   return u8aConcat(CROWD_PREFIX, paraId.toU8a(), EMPTY_U8A).subarray(0, 32);
 }
 
-const LITENTRY_CROWDLOAN_ACCOUNT_ID = '152deMvsN7wxMbSmdApsds6LWNNNGgsJ8TTpZLTD2ipEHNg3';
+const LITENTRY_PARACHAIN_KEY = '2013';
+const LITMUS_PARACHAIN_KEY = '2106';
+
 const optFundMulti = {
   transform: (paraIds: ParaId[], optFunds: Option<FundInfo>[]): Campaign[] =>
     paraIds
@@ -96,7 +98,7 @@ const optFundMulti = {
           lastSlot: info.lastPeriod,
           paraId,
           value: info.raised,
-          isSpecial: String(info.depositor) === LITENTRY_CROWDLOAN_ACCOUNT_ID,
+          isSpecial: paraId.toString() === LITENTRY_PARACHAIN_KEY || paraId.toString() === LITMUS_PARACHAIN_KEY,
         }),
       )
       .sort((a, b) => {
@@ -114,7 +116,7 @@ const optFundMulti = {
   withParamsTransform: true,
 };
 
-function isCrowdloadAccount(paraId: ParaId, accountId: AccountId): boolean {
+function isCrowdloanAccount(paraId: ParaId, accountId: AccountId): boolean {
   return accountId.eq(createAddress(paraId));
 }
 
@@ -125,7 +127,7 @@ const optLeaseMulti = {
         (leases[i] ?? [])
           .map((o) => o.unwrapOr(null))
           .filter((v): v is ITuple<[AccountId, BalanceOf]> => !!v)
-          .filter(([accountId]) => isCrowdloadAccount(paraId, accountId)).length !== 0,
+          .filter(([accountId]) => isCrowdloanAccount(paraId, accountId)).length !== 0,
     ),
   withParamsTransform: true,
 };
