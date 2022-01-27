@@ -1,16 +1,18 @@
 import {useFocusEffect} from '@react-navigation/native';
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
-import {Caption, Text, TextInput, Button} from '@ui/library';
+import {Caption, Text, TextInput, Button, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {noop} from 'lodash';
 import React from 'react';
 import {Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import {sendEmail} from 'src/utils/email';
+import HyperLink from 'react-native-hyperlink';
 
 const FEEDBACK_EMAIL = 'app-feedback@litentry.com';
 
 export function FeedbackScreen() {
+  const {colors} = useTheme();
   const [body, setBody] = React.useState('');
 
   const [status, setStatus] = React.useState<'INITIAL' | 'ERROR' | 'SUCCESS'>('INITIAL');
@@ -33,8 +35,10 @@ export function FeedbackScreen() {
   if (status === 'ERROR') {
     return (
       <Layout style={globalStyles.centeredContainer}>
-        <Text style={styles.errorMessage}>Sorry, there was an error sending your feedback.</Text>
-        <Caption>Please email us at {FEEDBACK_EMAIL}</Caption>
+        <Text style={styles.errorMessage}>{`We are having trouble trying to open your mail app.`}</Text>
+        <HyperLink linkStyle={{color: colors.primary}} linkDefault>
+          <Caption>Please email us at {FEEDBACK_EMAIL}</Caption>
+        </HyperLink>
       </Layout>
     );
   }
@@ -76,6 +80,5 @@ const styles = StyleSheet.create({
   },
   errorMessage: {
     textAlign: 'center',
-    color: 'red',
   },
 });
