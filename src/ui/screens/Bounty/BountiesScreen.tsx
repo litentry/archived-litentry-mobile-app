@@ -6,9 +6,10 @@ import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {EmptyView} from '@ui/components/EmptyView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import LoadingView from '@ui/components/LoadingView';
-import {Text, Caption, Card, Headline} from '@ui/library';
+import {Text, Caption, Card, Headline, List} from '@ui/library';
 import {bountyDetailScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
+import {Padder} from '@ui/components/Padder';
 
 export function BountiesScreen() {
   const {data, isLoading} = useBounties();
@@ -38,6 +39,7 @@ export function BountiesScreen() {
               />
             );
           }}
+          ItemSeparatorComponent={() => <Padder scale={0.5} />}
           ListEmptyComponent={EmptyView}
         />
       )}
@@ -51,21 +53,21 @@ function BountyItem({bounty, description, index, bountyStatus}: BountyData) {
   const {value} = bounty;
 
   return (
-    <Card
-      onPress={() => navigation.navigate(bountyDetailScreen, {index: index.toString()})}
-      style={styles.itemContainer}>
-      <Card.Content style={styles.itemContent}>
-        <View style={styles.itemRight}>
-          <View style={styles.bountyIndexContainer}>
+    <Card onPress={() => navigation.navigate(bountyDetailScreen, {index: index.toString()})}>
+      <List.Item
+        left={() => (
+          <View style={globalStyles.justifyCenter}>
             <Headline>{index.toString()}</Headline>
           </View>
-          <Text>{description}</Text>
-        </View>
-        <View style={styles.itemLeft}>
-          <Text>{formatBalance(value)}</Text>
-          <Caption>{bountyStatus.status}</Caption>
-        </View>
-      </Card.Content>
+        )}
+        title={<Text>{bountyStatus.status}</Text>}
+        description={<Caption>{description}</Caption>}
+        right={() => (
+          <View style={globalStyles.justifyCenter}>
+            <Text>{formatBalance(value)}</Text>
+          </View>
+        )}
+      />
     </Card>
   );
 }
