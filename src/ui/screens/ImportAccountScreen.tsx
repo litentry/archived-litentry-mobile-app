@@ -64,9 +64,6 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
   const isDisabled = !isSeedValid || !account.password || !(account.password === account.confirmPassword);
 
   const onSubmit = async () => {
-    if (!address) {
-      throw new Error('address not provided');
-    }
     const encoded = await SubstrateSign.encryptData(seed, account.password);
     const _address = await SubstrateSign.substrateAddress(seed, currentNetwork.ss58Format);
     const newAcc = {
@@ -80,7 +77,7 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
       isExternal: false,
     };
     addAccount(newAcc);
-    SecureKeychain.setPasswordByServiceId(account.password, 'BIOMETRICS', address);
+    SecureKeychain.setPasswordByServiceId(account.password, 'BIOMETRICS', _address);
     navigation.navigate(accountsScreen, {reload: true});
   };
 
