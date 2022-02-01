@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, KeyboardAvoidingView} from 'react-native';
+import {View, StyleSheet, KeyboardAvoidingView, Platform} from 'react-native';
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -14,8 +14,9 @@ import {accountsScreen, createAccountScreen} from '@ui/navigation/routeKeys';
 import {Button, Caption, List, Text, TextInput, HelperText} from '@ui/library';
 import {useTheme} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
-import globalStyles from '@ui/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {SecureKeychain} from 'src/service/SecureKeychain';
+import {useKeyboard} from 'src/hooks/useKeyboard';
 
 type Account = {
   title: string;
@@ -33,6 +34,7 @@ export function CreateAccountScreen({
   const {mnemonic} = route.params;
 
   const theme = useTheme();
+  const isKeyboardVisible = useKeyboard();
   const {currentNetwork} = React.useContext(NetworkContext);
   const {addAccount} = useAccounts();
 
@@ -76,8 +78,8 @@ export function CreateAccountScreen({
 
   return (
     <SafeView edges={noTopEdges}>
-      <KeyboardAvoidingView behavior={'position'} style={styles.keyboardAvoidingViewContainer}>
-        <ScrollView style={globalStyles.paddedContainer}>
+      <KeyboardAvoidingView style={globalStyles.flex} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <ScrollView style={styles.container}>
           <List.Item
             title={() => <Text>{account.title}</Text>}
             left={() => <IdentityIcon value={address} size={40} />}
@@ -138,6 +140,7 @@ export function CreateAccountScreen({
           <Button mode="outlined" onPress={onSubmit} disabled={isDisabled}>
             Submit
           </Button>
+          <Padder scale={isKeyboardVisible ? 9 : 2} />
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeView>
@@ -145,6 +148,10 @@ export function CreateAccountScreen({
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: standardPadding * 2,
+  },
   passwordMeter: {
     marginTop: 5,
   },
