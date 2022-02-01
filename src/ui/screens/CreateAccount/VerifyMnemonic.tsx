@@ -7,7 +7,6 @@ import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {createAccountScreen, verifyMnemonicScreen} from '@ui/navigation/routeKeys';
 import {Button, Text, TextInput} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
-import {ErrorText} from '@ui/components/ErrorText';
 import {useTheme} from '@ui/library';
 import globalStyles from '@ui/styles';
 
@@ -28,8 +27,6 @@ export function VerifyMnemonicScreen({
 
   const [isMnemonicVerified, setIsMnemonicVerified] = React.useState(false);
   const [selectedMnemonic, setSelectedMnemonic] = React.useState(' ');
-
-  const invalidMnemonic = selectedMnemonic.length === mnemonic.length && selectedMnemonic !== mnemonic;
 
   const [words, setWords] = React.useState<Word[]>(() => {
     return shuffle(mnemonic.split(' ')).map((word, index) => ({
@@ -83,12 +80,6 @@ export function VerifyMnemonicScreen({
         <Padder scale={2} />
         <WordSelector words={words} onSelect={onSelect} />
         <Padder scale={2} />
-        {invalidMnemonic && (
-          <>
-            <ErrorText>The mnemonic seed you entered is invalid. Please try again.</ErrorText>
-            <Padder scale={2} />
-          </>
-        )}
         <View style={globalStyles.flex} />
         <View style={styles.buttons}>
           <Button mode="outlined" icon={'repeat'} onPress={onReset}>

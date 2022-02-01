@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, KeyboardAvoidingView} from 'react-native';
+import {View, StyleSheet, KeyboardAvoidingView, Platform} from 'react-native';
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -11,12 +11,12 @@ import {ProgressBar} from '@ui/components/ProgressBar';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {accountsScreen, createAccountScreen} from '@ui/navigation/routeKeys';
-import {Button, Caption, List, Text, TextInput} from '@ui/library';
+import {Button, Caption, List, Text, TextInput, HelperText} from '@ui/library';
 import {useTheme} from '@ui/library';
-import {ErrorText} from '@ui/components/ErrorText';
 import {Padder} from '@ui/components/Padder';
-import globalStyles from '@ui/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {SecureKeychain} from 'src/service/SecureKeychain';
+import {useKeyboardStatus} from 'src/hooks/useKeyboardStatus';
 
 type Account = {
   title: string;
@@ -34,13 +34,13 @@ export function CreateAccountScreen({
   const {mnemonic} = route.params;
 
   const theme = useTheme();
+  const {status: keyboardStatus} = useKeyboardStatus();
   const {currentNetwork} = React.useContext(NetworkContext);
   const {addAccount} = useAccounts();
 
   const [account, setAccountState] = React.useState<Account>({title: '', password: '', confirmPassword: ''});
   const setAccount = (acc: Account) => {
     setAccountState(acc);
-    setError(null);
   };
 
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
@@ -51,41 +51,35 @@ export function CreateAccountScreen({
   }, [mnemonic, currentNetwork.ss58Format]);
 
   const passwordStrength = zxcvbn(account.password).score;
+  const isDisabled = !account.password || !(account.password === account.confirmPassword);
 
-  const [error, setError] = React.useState<string | null>(null);
+  const passwordError = Boolean(account.password) && passwordStrength < 3;
+  const confirmPasswordError = Boolean(account.confirmPassword) && !(account.password === account.confirmPassword);
 
   const onSubmit = async () => {
-    if (passwordStrength < 3) {
-      setError('Password is too weak');
-    } else if (account.password !== account.confirmPassword) {
-      setError('Passwords do not match');
-    } else if (!account.title) {
-      setError('Account title is required');
-    } else {
-      const _address = await SubstrateSign.substrateAddress(mnemonic, currentNetwork.ss58Format);
-      const encoded = await SubstrateSign.encryptData(mnemonic, account.password);
-      const newAcc = {
-        address: _address,
-        encoded,
-        meta: {
-          name: account.title,
-          network: currentNetwork.key,
-          isFavorite: false,
-        },
-        isExternal: false,
-      };
+    const _address = await SubstrateSign.substrateAddress(mnemonic, currentNetwork.ss58Format);
+    const encoded = await SubstrateSign.encryptData(mnemonic, account.password);
+    const newAcc = {
+      address: _address,
+      encoded,
+      meta: {
+        name: account.title,
+        network: currentNetwork.key,
+        isFavorite: false,
+      },
+      isExternal: false,
+    };
 
-      addAccount(newAcc);
-      SecureKeychain.setPasswordByServiceId(account.password, 'BIOMETRICS', _address);
+    addAccount(newAcc);
+    SecureKeychain.setPasswordByServiceId(account.password, 'BIOMETRICS', _address);
 
-      navigation.navigate(accountsScreen, {reload: true});
-    }
+    navigation.navigate(accountsScreen, {reload: true});
   };
 
   return (
     <SafeView edges={noTopEdges}>
-      <KeyboardAvoidingView behavior={'position'} style={styles.keyboardAvoidingViewContainer}>
-        <ScrollView style={globalStyles.paddedContainer}>
+      <KeyboardAvoidingView style={globalStyles.flex} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <ScrollView style={styles.container}>
           <List.Item
             title={() => <Text>{account.title}</Text>}
             left={() => <IdentityIcon value={address} size={40} />}
@@ -123,6 +117,9 @@ export function CreateAccountScreen({
             autoComplete="off"
             error={Boolean(account.password) && passwordStrength < 3}
           />
+          <HelperText type="error" visible={passwordError}>
+            {`Password is too weak`}
+          </HelperText>
           <View style={styles.passwordMeter}>
             <ProgressBar percentage={passwordStrength * 25} requiredAmount={75} />
           </View>
@@ -136,16 +133,14 @@ export function CreateAccountScreen({
             error={Boolean(account.confirmPassword) && account.password !== account.confirmPassword}
             autoComplete="off"
           />
+          <HelperText type="error" visible={confirmPasswordError}>
+            {`Confirm password doesn't match`}
+          </HelperText>
           <Padder scale={2} />
-          {error ? (
-            <>
-              <ErrorText>{error}</ErrorText>
-              <Padder scale={2} />
-            </>
-          ) : null}
-          <Button mode="outlined" onPress={onSubmit}>
+          <Button mode="outlined" onPress={onSubmit} disabled={isDisabled}>
             Submit
           </Button>
+          <Padder scale={keyboardStatus === 'visible' ? 9 : 2} />
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeView>
@@ -153,6 +148,10 @@ export function CreateAccountScreen({
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: standardPadding * 2,
+  },
   passwordMeter: {
     marginTop: 5,
   },

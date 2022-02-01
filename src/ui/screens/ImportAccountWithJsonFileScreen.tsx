@@ -92,14 +92,13 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
           value={password}
           onChangeText={setPassword}
           mode="outlined"
-          right={() => (
+          right={
             <TextInput.Icon
               onPress={() => setIsPasswordVisible(!isPasswordVisible)}
               name={`${isPasswordVisible ? 'eye' : 'eye-off'}-outline`}
               color={theme.colors.disabled}
-              style={styles.icon}
             />
-          )}
+          }
         />
         <Padder scale={1} />
         <ErrorText>{error}</ErrorText>
