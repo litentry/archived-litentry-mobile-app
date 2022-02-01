@@ -22,6 +22,7 @@ export {
   Switch,
   Divider,
   TextInput,
+  HelperText,
   ThemeProvider,
   Appbar as AppBar,
   Snackbar,

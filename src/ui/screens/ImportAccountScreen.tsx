@@ -9,7 +9,7 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import SubstrateSign from 'react-native-substrate-sign';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {accountsScreen} from '@ui/navigation/routeKeys';
-import {Button, List, TextInput, useTheme} from '@ui/library';
+import {Button, List, TextInput, useTheme, HelperText} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {ErrorText} from '@ui/components/ErrorText';
 import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
@@ -60,39 +60,31 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
 
   const passwordStrength = zxcvbn(account.password).score;
 
+  const seedError = Boolean(seed) && !isSeedValid;
+  const passwordError = Boolean(account.password) && passwordStrength < 3;
+  const confirmPasswordError = Boolean(account.confirmPassword) && !(account.password === account.confirmPassword);
+
+  const isDisabled = !isSeedValid || !account.password || !(account.password === account.confirmPassword);
+
   const onSubmit = async () => {
-    if (!isSeedValid) {
-      setError('The seed appears to be invalid');
-    } else if (!address) {
-      setError('Could not parse the address from the seed');
-    } else if (!account.password) {
-      setError('Please enter a password');
-    } else if (account.password !== account.confirmPassword) {
-      setError('Passwords do not match');
-    } else if (passwordStrength < 3) {
-      setError('Password is too weak');
-    } else {
-      if (!address) {
-        throw new Error('address not provided');
-      }
-      const encoded = await SubstrateSign.encryptData(seed, account.password);
-      const _address = await SubstrateSign.substrateAddress(seed, currentNetwork.ss58Format);
-
-      const newAcc = {
-        address: _address,
-        encoded,
-        meta: {
-          name: account.title,
-          network: currentNetwork.key,
-          isFavorite: false,
-        },
-        isExternal: false,
-      };
-
-      addAccount(newAcc);
-      SecureKeychain.setPasswordByServiceId(account.password, 'BIOMETRICS', address);
-      navigation.navigate(accountsScreen, {reload: true});
+    if (!address) {
+      throw new Error('address not provided');
     }
+    const encoded = await SubstrateSign.encryptData(seed, account.password);
+    const _address = await SubstrateSign.substrateAddress(seed, currentNetwork.ss58Format);
+    const newAcc = {
+      address: _address,
+      encoded,
+      meta: {
+        name: account.title,
+        network: currentNetwork.key,
+        isFavorite: false,
+      },
+      isExternal: false,
+    };
+    addAccount(newAcc);
+    SecureKeychain.setPasswordByServiceId(account.password, 'BIOMETRICS', address);
+    navigation.navigate(accountsScreen, {reload: true});
   };
 
   return (
@@ -101,7 +93,7 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
         <TextInput
           autoComplete="off"
           autoCapitalize={'none'}
-          label={'EXISTING 12 WORD MNEMONIC SEED'}
+          label={'Existing mnemonic seed'}
           numberOfLines={4}
           multiline={true}
           value={seed}
@@ -109,11 +101,13 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
             setSeed(_seed);
             setError(null);
           }}
-          editable
           mode="outlined"
-          outlineColor={seed.length ? (isSeedValid ? 'success' : 'danger') : 'basic'}
+          error={seedError}
           style={styles.seedInput}
         />
+        <HelperText type="error" visible={seedError}>
+          {`The seed appears to be invalid`}
+        </HelperText>
         <Padder scale={1} />
         <TextInput
           mode="outlined"
@@ -139,8 +133,11 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
               color={theme.colors.disabled}
             />
           }
-          outlineColor={account.password ? (passwordStrength >= 3 ? 'success' : 'danger') : 'basic'}
+          error={passwordError}
         />
+        <HelperText type="error" visible={passwordError}>
+          {`Password is too weak`}
+        </HelperText>
         <View style={styles.progressBar}>
           <ProgressBar percentage={passwordStrength * 25} requiredAmount={75} />
         </View>
@@ -153,10 +150,11 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
           style={styles.input}
           value={account.confirmPassword}
           onChangeText={(text) => setAccount({...account, confirmPassword: text})}
-          outlineColor={
-            account.confirmPassword ? (account.password === account.confirmPassword ? 'success' : 'danger') : 'basic'
-          }
+          error={confirmPasswordError}
         />
+        <HelperText type="error" visible={confirmPasswordError}>
+          {`Confirm password doesn't match`}
+        </HelperText>
         <Padder scale={2} />
         {address && (
           <>
@@ -175,7 +173,7 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
           </>
         ) : null}
         <View style={globalStyles.flex} />
-        <Button mode="outlined" icon={'download'} onPress={onSubmit}>
+        <Button mode="outlined" icon={'download'} onPress={onSubmit} disabled={isDisabled}>
           Import Seed
         </Button>
         <Padder scale={2} />
@@ -203,8 +201,9 @@ const styles = StyleSheet.create({
 
 function useParseSeed() {
   const {currentNetwork} = React.useContext(NetworkContext);
-  const [seed, setSeed] = React.useState(' ');
+  const [seed, setSeed] = React.useState('');
   const [address, setAddress] = React.useState<string>();
+  const [isSeedValid, setIsSeedValid] = React.useState(false);
 
   React.useEffect(() => {
     (async () => {
@@ -212,10 +211,13 @@ function useParseSeed() {
         if (seed) {
           const _address = await SubstrateSign.substrateAddress(seed.trim(), currentNetwork.ss58Format);
           setAddress(_address);
+          setIsSeedValid(true);
         }
-      } catch (e) {}
+      } catch (e) {
+        setIsSeedValid(false);
+      }
     })();
   }, [currentNetwork.ss58Format, seed]);
 
-  return {seed, setSeed, address, isSeedValid: Boolean(address)};
+  return {seed, setSeed, address, isSeedValid};
 }
