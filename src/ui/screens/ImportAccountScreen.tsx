@@ -11,7 +11,6 @@ import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {accountsScreen} from '@ui/navigation/routeKeys';
 import {Button, List, TextInput, useTheme, HelperText} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
-import {ErrorText} from '@ui/components/ErrorText';
 import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
 import zxcvbn from 'zxcvbn';
 import {SecureKeychain} from 'src/service/SecureKeychain';
@@ -50,13 +49,11 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
   const [account, setAccountState] = React.useState<Account>({title: '', password: '', confirmPassword: ''});
   const setAccount = (_account: Account) => {
     setAccountState(_account);
-    setError('');
   };
 
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
   const {seed, setSeed, address, isSeedValid} = useParseSeed();
   const {addAccount} = useAccounts();
-  const [error, setError] = React.useState<null | string>(null);
 
   const passwordStrength = zxcvbn(account.password).score;
 
@@ -97,10 +94,7 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
           numberOfLines={4}
           multiline={true}
           value={seed}
-          onChangeText={(_seed) => {
-            setSeed(_seed);
-            setError(null);
-          }}
+          onChangeText={(_seed) => setSeed(_seed)}
           mode="outlined"
           error={seedError}
           style={styles.seedInput}
@@ -166,12 +160,6 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
             <Padder scale={1} />
           </>
         )}
-        {error ? (
-          <>
-            <ErrorText> {error}</ErrorText>
-            <Padder scale={1} />
-          </>
-        ) : null}
         <View style={globalStyles.flex} />
         <Button mode="outlined" icon={'download'} onPress={onSubmit} disabled={isDisabled}>
           Import Seed
