@@ -11,9 +11,8 @@ import {ProgressBar} from '@ui/components/ProgressBar';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {accountsScreen, createAccountScreen} from '@ui/navigation/routeKeys';
-import {Button, Caption, List, Text, TextInput} from '@ui/library';
+import {Button, Caption, List, Text, TextInput, HelperText} from '@ui/library';
 import {useTheme} from '@ui/library';
-import {ErrorText} from '@ui/components/ErrorText';
 import {Padder} from '@ui/components/Padder';
 import globalStyles from '@ui/styles';
 import {SecureKeychain} from 'src/service/SecureKeychain';
@@ -40,7 +39,6 @@ export function CreateAccountScreen({
   const [account, setAccountState] = React.useState<Account>({title: '', password: '', confirmPassword: ''});
   const setAccount = (acc: Account) => {
     setAccountState(acc);
-    setError(null);
   };
 
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
@@ -51,35 +49,29 @@ export function CreateAccountScreen({
   }, [mnemonic, currentNetwork.ss58Format]);
 
   const passwordStrength = zxcvbn(account.password).score;
+  const isDisabled = !account.password || !(account.password === account.confirmPassword);
 
-  const [error, setError] = React.useState<string | null>(null);
+  const passwordError = Boolean(account.password) && passwordStrength < 3;
+  const confirmPasswordError = Boolean(account.confirmPassword) && !(account.password === account.confirmPassword);
 
   const onSubmit = async () => {
-    if (passwordStrength < 3) {
-      setError('Password is too weak');
-    } else if (account.password !== account.confirmPassword) {
-      setError('Passwords do not match');
-    } else if (!account.title) {
-      setError('Account title is required');
-    } else {
-      const _address = await SubstrateSign.substrateAddress(mnemonic, currentNetwork.ss58Format);
-      const encoded = await SubstrateSign.encryptData(mnemonic, account.password);
-      const newAcc = {
-        address: _address,
-        encoded,
-        meta: {
-          name: account.title,
-          network: currentNetwork.key,
-          isFavorite: false,
-        },
-        isExternal: false,
-      };
+    const _address = await SubstrateSign.substrateAddress(mnemonic, currentNetwork.ss58Format);
+    const encoded = await SubstrateSign.encryptData(mnemonic, account.password);
+    const newAcc = {
+      address: _address,
+      encoded,
+      meta: {
+        name: account.title,
+        network: currentNetwork.key,
+        isFavorite: false,
+      },
+      isExternal: false,
+    };
 
-      addAccount(newAcc);
-      SecureKeychain.setPasswordByServiceId(account.password, 'BIOMETRICS', _address);
+    addAccount(newAcc);
+    SecureKeychain.setPasswordByServiceId(account.password, 'BIOMETRICS', _address);
 
-      navigation.navigate(accountsScreen, {reload: true});
-    }
+    navigation.navigate(accountsScreen, {reload: true});
   };
 
   return (
@@ -123,6 +115,9 @@ export function CreateAccountScreen({
             autoComplete="off"
             error={Boolean(account.password) && passwordStrength < 3}
           />
+          <HelperText type="error" visible={passwordError}>
+            {`Password is too weak`}
+          </HelperText>
           <View style={styles.passwordMeter}>
             <ProgressBar percentage={passwordStrength * 25} requiredAmount={75} />
           </View>
@@ -136,14 +131,11 @@ export function CreateAccountScreen({
             error={Boolean(account.confirmPassword) && account.password !== account.confirmPassword}
             autoComplete="off"
           />
+          <HelperText type="error" visible={confirmPasswordError}>
+            {`Confirm password doesn't match`}
+          </HelperText>
           <Padder scale={2} />
-          {error ? (
-            <>
-              <ErrorText>{error}</ErrorText>
-              <Padder scale={2} />
-            </>
-          ) : null}
-          <Button mode="outlined" onPress={onSubmit}>
+          <Button mode="outlined" onPress={onSubmit} disabled={isDisabled}>
             Submit
           </Button>
         </ScrollView>
