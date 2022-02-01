@@ -16,7 +16,7 @@ import zxcvbn from 'zxcvbn';
 import {SecureKeychain} from 'src/service/SecureKeychain';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {ImportAccountWithJsonFileScreen} from './ImportAccountWithJsonFileScreen';
-import {useKeyboard} from 'src/hooks/useKeyboard';
+import {useKeyboardStatus} from 'src/hooks/useKeyboardStatus';
 
 type Account = {
   title: string;
@@ -46,7 +46,7 @@ export function ImportAccountScreen() {
 
 function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const theme = useTheme();
-  const isKeyboardVisible = useKeyboard();
+  const {status: keyboardStatus} = useKeyboardStatus();
   const {currentNetwork} = React.useContext(NetworkContext);
   const [account, setAccountState] = React.useState<Account>({title: '', password: '', confirmPassword: ''});
   const setAccount = (_account: Account) => {
@@ -164,7 +164,7 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
           <Button mode="outlined" icon={'download'} onPress={onSubmit} disabled={isDisabled}>
             Import Seed
           </Button>
-          <Padder scale={isKeyboardVisible ? 12 : 2} />
+          <Padder scale={keyboardStatus === 'visible' ? 12 : 2} />
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeView>

@@ -16,7 +16,7 @@ import {useTheme} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {SecureKeychain} from 'src/service/SecureKeychain';
-import {useKeyboard} from 'src/hooks/useKeyboard';
+import {useKeyboardStatus} from 'src/hooks/useKeyboardStatus';
 
 type Account = {
   title: string;
@@ -34,7 +34,7 @@ export function CreateAccountScreen({
   const {mnemonic} = route.params;
 
   const theme = useTheme();
-  const isKeyboardVisible = useKeyboard();
+  const {status: keyboardStatus} = useKeyboardStatus();
   const {currentNetwork} = React.useContext(NetworkContext);
   const {addAccount} = useAccounts();
 
@@ -140,7 +140,7 @@ export function CreateAccountScreen({
           <Button mode="outlined" onPress={onSubmit} disabled={isDisabled}>
             Submit
           </Button>
-          <Padder scale={isKeyboardVisible ? 9 : 2} />
+          <Padder scale={keyboardStatus === 'visible' ? 9 : 2} />
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeView>
