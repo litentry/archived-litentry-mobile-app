@@ -24,6 +24,7 @@
     "@polkadot/util-crypto": "^8.2.2"
   },
   "dependencies": {
+    "@apollo/client": "^3.5.8",
     "@polkadot/api": "^7.3.1",
     "@polkadot/apps-config": "^0.103.1",
     "@polkadot/reactnative-identicon": "0.89.2",
@@ -39,11 +40,12 @@
     "@react-navigation/stack": "^6.0.11",
     "@sentry/react-native": "^3.2.10",
     "@types/zxcvbn": "^4.4.1",
+    "apollo3-cache-persist": "^0.13.0",
     "console-browserify": "^1.2.0",
     "dayjs": "^1.10.7",
     "events": "^3.3.0",
     "fast-text-encoding": "^1.0.3",
-    "graphql": "^16.2.0",
+    "graphql": "^16.3.0",
     "graphql-tag": "^2.12.6",
     "lodash": "^4.17.21",
     "patch-package": "^6.4.7",
