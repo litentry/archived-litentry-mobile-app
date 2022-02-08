@@ -48,6 +48,7 @@ import {MainAppBar, MainDrawerAppBar, MainStackAppBar} from '@ui/navigation/AppB
 import {
   AccountsStackParamList,
   AppStackParamList,
+  CrowdloansStackParamList,
   DashboardStackParamList,
   DrawerParamList,
   ParachainsStackParamList,
@@ -167,11 +168,20 @@ function DrawerNavigator() {
       />
       <Drawer.Screen name={routeKeys.accountsNavigator} component={AccountsNavigator} options={{headerShown: false}} />
       <Drawer.Screen name={routeKeys.registrarListScreen} component={RegistrarListScreen} />
+
       <Drawer.Screen
         name={routeKeys.parachainsNavigator}
         component={ParachainsNavigator}
         options={{headerShown: false}}
       />
+      <Drawer.Screen
+        name={routeKeys.crowdloansNavigator}
+        component={CrowdloansNavigator}
+        options={{headerShown: false}}
+      />
+      <Drawer.Screen name={routeKeys.parathreadsScreen} component={ParathreadsScreen} />
+      <Drawer.Screen name={routeKeys.parachainAuctionsScreen} component={ParachainsAuctionsScreen} />
+
       <Drawer.Screen
         name={routeKeys.polkassemblyDiscussionsNavigator}
         component={PolkassemblyDiscussionsNavigator}
@@ -201,30 +211,25 @@ function ParachainsNavigator() {
           headerLeft: (props) => <AppBar.Action icon="menu" {...props} />,
         }}
       />
-      <ParachainsStack.Screen
+      <ParachainsStack.Screen name={routeKeys.parachainDetailScreen} component={ParachainDetailScreen} />
+    </ParachainsStack.Navigator>
+  );
+}
+
+const CrowdloansStack = createStackNavigator<CrowdloansStackParamList>();
+
+function CrowdloansNavigator() {
+  return (
+    <CrowdloansStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
+      <CrowdloansStack.Screen
         name={routeKeys.crowdloanScreen}
         component={CrowdloanScreen}
         options={{
           headerLeft: (props) => <AppBar.Action icon="menu" {...props} />,
         }}
       />
-      <ParachainsStack.Screen
-        options={{
-          headerLeft: (props) => <AppBar.Action icon="menu" {...props} />,
-        }}
-        name={routeKeys.parathreadsScreen}
-        component={ParathreadsScreen}
-      />
-      <ParachainsStack.Screen
-        options={{
-          headerLeft: (props) => <AppBar.Action icon="menu" {...props} />,
-        }}
-        name={routeKeys.parachainAuctionsScreen}
-        component={ParachainsAuctionsScreen}
-      />
-      <ParachainsStack.Screen name={routeKeys.parachainDetailScreen} component={ParachainDetailScreen} />
-      <ParachainsStack.Screen name={routeKeys.crowdloanFundDetailScreen} component={CrowdloanFundDetailScreen} />
-    </ParachainsStack.Navigator>
+      <CrowdloansStack.Screen name={routeKeys.crowdloanFundDetailScreen} component={CrowdloanFundDetailScreen} />
+    </CrowdloansStack.Navigator>
   );
 }
 

@@ -15,7 +15,7 @@ import {Campaign, useFunds} from 'src/api/hooks/useFunds';
 import {LeasePeriod, useParachainsLeasePeriod} from 'src/api/hooks/useParachainsLeasePeriod';
 import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
 import {getBalanceFromString} from 'src/api/utils/balance';
-import {ParachainsStackParamList} from '@ui/navigation/navigation';
+import {CrowdloansStackParamList} from '@ui/navigation/navigation';
 import {crowdloanFundDetailScreen} from '@ui/navigation/routeKeys';
 import {Button, Card, Subheading, Text, Caption, Title, Modal, TextInput, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
@@ -145,7 +145,7 @@ function Fund({item, active, onPressContribute}: {item: Campaign; active: boolea
   const formatBalance = useFormatBalance();
   const {cap, raised} = item.info;
   const endpoints = useParaEndpoints(item.paraId);
-  const navigation = useNavigation<NavigationProp<ParachainsStackParamList>>();
+  const navigation = useNavigation<NavigationProp<CrowdloansStackParamList>>();
   const {colors} = useTheme();
 
   const lastEndpoint = endpoints?.[endpoints.length - 1] as LinkOption;

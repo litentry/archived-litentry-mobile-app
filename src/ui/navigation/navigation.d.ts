@@ -37,6 +37,7 @@ import {
   parachainsOverviewScreen,
   parachainDetailScreen,
   parachainsNavigator,
+  crowdloansNavigator,
   crowdloanScreen,
   crowdloanFundDetailScreen,
   mnemonicScreen,
@@ -86,16 +87,20 @@ type DrawerParamList = {
   [polkassemblyDiscussionsNavigator]: undefined;
   [accountsNavigator]: undefined;
   [parachainsNavigator]: undefined;
+  [crowdloansNavigator]: undefined;
   [feedbackScreen]: undefined;
+  [parathreadsScreen]: undefined;
+  [parachainAuctionsScreen]: undefined;
 };
 
 type ParachainsStackParamList = {
   [parachainsOverviewScreen]: undefined;
   [parachainDetailScreen]: {id: string; name: string; period?: string; blocks?: string};
+};
+
+type CrowdloansStackParamList = {
   [crowdloanScreen]: undefined;
   [crowdloanFundDetailScreen]: {title: string; paraId: ParaId};
-  [parathreadsScreen]: undefined;
-  [parachainAuctionsScreen]: undefined;
 };
 
 type PolkassemblyDiscussionStackParamList = {
@@ -132,6 +137,7 @@ type CompleteNavigatorParamList = AppStackParamList &
   DashboardStackParamList &
   AccountsStackParamList &
   ParachainsStackParamList &
+  CrowdloansStackParamList &
   PolkassemblyDiscussionStackParamList;
 
 declare global {
