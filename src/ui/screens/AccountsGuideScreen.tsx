@@ -17,12 +17,17 @@ export function AccountsGuideScreen({navigation}: {navigation: NavigationProp<Ap
   return (
     <Modalize ref={modalRef} adjustToContentHeight onClose={navigation.goBack} panGestureEnabled={false}>
       <Layout style={styles.container}>
-        <Headline>Internal Accounts</Headline>
-        <Caption>This account allows you to hold and sign transactions within our app.</Caption>
+        <Headline>Import account</Headline>
+        <Caption>
+          Import an existing account through your mnemonics seed or a json file and sign transactions within the app
+        </Caption>
         <Padder scale={2} />
-        <Headline>Other accounts (external)</Headline>
-        <Caption>To sign transactions with these accounts you'll have to go through Parity Signer.</Caption>
-        <Padder scale={5} />
+        <Headline>Add external account</Headline>
+        <Caption>Add your public Polkadot account and sign transactions with Parity signer</Caption>
+        <Padder scale={2} />
+        <Headline>Create new account</Headline>
+        <Caption>Generate a new seed and sign transactions within the app</Caption>
+        <Padder scale={2} />
       </Layout>
     </Modalize>
   );
