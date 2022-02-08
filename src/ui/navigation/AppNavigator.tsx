@@ -13,7 +13,7 @@ import {CreateAccountScreen} from '@ui/screens/CreateAccount/CreateAccountScreen
 import {MnemonicScreen} from '@ui/screens/CreateAccount/MnemonicScreen';
 import {VerifyMnemonicScreen} from '@ui/screens/CreateAccount/VerifyMnemonic';
 import DashboardScreen from '@ui/screens/DashboardScreen';
-import {DemocracyProposalScreen} from '@ui/screens/DemocracyProposalScreen';
+import {ProposalScreen} from '@ui/screens/ProposalScreen';
 import {DemocracyScreen} from '@ui/screens/DemocracyScreen';
 import DevScreen from '@ui/screens/DevScreen';
 import DrawerScreen from '@ui/screens/Drawer/DrawerScreen';
@@ -81,11 +81,7 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.motionsScreen} component={MotionsScreen} />
       <DashboardStack.Screen name={routeKeys.democracyScreen} component={DemocracyScreen} />
       <DashboardStack.Screen name={routeKeys.referendumScreen} component={ReferendumScreen} />
-      <DashboardStack.Screen
-        name={routeKeys.democracyProposalScreen}
-        component={DemocracyProposalScreen}
-        options={{title: 'Proposal'}}
-      />
+      <DashboardStack.Screen name={routeKeys.democracyProposalScreen} component={ProposalScreen} />
       <DashboardStack.Screen name={routeKeys.bountiesScreen} component={BountiesScreen} />
       <DashboardStack.Screen name={routeKeys.bountyDetailScreen} component={BountyDetailScreen} />
     </DashboardStack.Navigator>
@@ -148,15 +144,10 @@ const DiscussionNavigator = createStackNavigator<PolkassemblyDiscussionStackPara
 function PolkassemblyDiscussionsNavigator() {
   return (
     <DiscussionNavigator.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
-      <DiscussionNavigator.Screen
-        name={routeKeys.polkassemblyDiscussions}
-        component={PolkassemblyDiscussions}
-        options={{title: 'Discussions'}}
-      />
+      <DiscussionNavigator.Screen name={routeKeys.polkassemblyDiscussions} component={PolkassemblyDiscussions} />
       <DiscussionNavigator.Screen
         name={routeKeys.polkassemblyDiscussionDetail}
         component={PolkassemblyDiscussionDetail}
-        options={{title: 'Discussion'}}
       />
     </DiscussionNavigator.Navigator>
   );
@@ -207,7 +198,6 @@ function ParachainsNavigator() {
         name={routeKeys.parachainsOverviewScreen}
         component={ParachainsOverviewScreen}
         options={{
-          title: 'Overview',
           headerLeft: (props) => <AppBar.Action icon="menu" {...props} />,
         }}
       />
@@ -227,22 +217,13 @@ function ParachainsNavigator() {
       />
       <ParachainsStack.Screen
         options={{
-          title: 'Auctions',
           headerLeft: (props) => <AppBar.Action icon="menu" {...props} />,
         }}
         name={routeKeys.parachainAuctionsScreen}
         component={ParachainsAuctionsScreen}
       />
-      <ParachainsStack.Screen
-        name={routeKeys.parachainDetailScreen}
-        component={ParachainDetailScreen}
-        options={{title: 'Parachain'}}
-      />
-      <ParachainsStack.Screen
-        name={routeKeys.crowdloanFundDetailScreen}
-        component={CrowdloanFundDetailScreen}
-        options={{title: 'Fund details'}}
-      />
+      <ParachainsStack.Screen name={routeKeys.parachainDetailScreen} component={ParachainDetailScreen} />
+      <ParachainsStack.Screen name={routeKeys.crowdloanFundDetailScreen} component={CrowdloanFundDetailScreen} />
     </ParachainsStack.Navigator>
   );
 }

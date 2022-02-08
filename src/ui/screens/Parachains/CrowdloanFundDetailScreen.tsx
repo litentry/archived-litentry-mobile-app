@@ -19,7 +19,7 @@ import globalStyles, {standardPadding} from '@ui/styles';
 import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
 
 type ScreenProps = {
-  route: RouteProp<ParachainsStackParamList, 'CrowdLoanDetailScreen'>;
+  route: RouteProp<ParachainsStackParamList, 'Fund Detail'>;
 };
 
 export function CrowdloanFundDetailScreen({route}: ScreenProps) {

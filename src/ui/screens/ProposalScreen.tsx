@@ -19,7 +19,7 @@ import globalStyles, {standardPadding} from '@ui/styles';
 import {Button, Caption, Headline, Icon, List, Modal, Text} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 
-export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
+export function ProposalScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
   const startTx = useApiTx();
   const {api} = useApi();
 
