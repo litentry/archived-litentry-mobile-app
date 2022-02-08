@@ -10,8 +10,8 @@ import {ErrorBoundary} from '@ui/components/ErrorBoundary';
 import AppNavigator from '@ui/navigation/AppNavigator';
 import {NavigationContainer} from '@ui/navigation/NavigationContainer';
 import ThemeProvider from 'context/ThemeContext';
-import {NavigationContainer} from 'context/NavigationContainer';
 import SnackbarProvider from 'context/SnackbarContext';
+import {LitentryApiClientProvider} from 'context/LitentryApiContext';
 
 // init type registry
 import 'src/typeRegistry';
@@ -21,27 +21,29 @@ const queryClient = new QueryClient();
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <NavigationContainer>
-        <NetworkContextProvider>
-          <ChainApiContextProvider>
-            <AccountsProvider>
-              <SafeAreaProvider>
-                <ThemeProvider>
-                  <InAppNotificationContextProvider>
-                    <ErrorBoundary>
-                      <TxContextProvider>
-                        <SnackbarProvider>
-                          <AppNavigator />
-                        </SnackbarProvider>
-                      </TxContextProvider>
-                    </ErrorBoundary>
-                  </InAppNotificationContextProvider>
-                </ThemeProvider>
-              </SafeAreaProvider>
-            </AccountsProvider>
-          </ChainApiContextProvider>
-        </NetworkContextProvider>
-      </NavigationContainer>
+      <NetworkContextProvider>
+        <LitentryApiClientProvider>
+          <NavigationContainer>
+            <ChainApiContextProvider>
+              <AccountsProvider>
+                <SafeAreaProvider>
+                  <ThemeProvider>
+                    <InAppNotificationContextProvider>
+                      <ErrorBoundary>
+                        <TxContextProvider>
+                          <SnackbarProvider>
+                            <AppNavigator />
+                          </SnackbarProvider>
+                        </TxContextProvider>
+                      </ErrorBoundary>
+                    </InAppNotificationContextProvider>
+                  </ThemeProvider>
+                </SafeAreaProvider>
+              </AccountsProvider>
+            </ChainApiContextProvider>
+          </NavigationContainer>
+        </LitentryApiClientProvider>
+      </NetworkContextProvider>
     </QueryClientProvider>
   );
 }
