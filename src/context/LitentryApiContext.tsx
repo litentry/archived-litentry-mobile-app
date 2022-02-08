@@ -26,11 +26,12 @@ export function LitentryApiClientProvider({children}: {children: React.ReactNode
   useEffect(() => {
     const init = async () => {
       const cache = new InMemoryCache();
-      const storage = new MMKV({id: 'apollo-cache'});
+      const storage = new MMKV({id: `apollo-cache-${currentNetwork.key}`});
       const cachePersistor = new CachePersistor({
         cache,
         storage: new MMKVWrapper(storage),
         debug: __DEV__,
+        key: `persistor-key-${currentNetwork.key}`,
       });
       await cachePersistor.restore();
 
