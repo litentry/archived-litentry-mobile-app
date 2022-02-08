@@ -8,6 +8,7 @@ import InAppNotificationContextProvider from 'context/InAppNotificationContext';
 import NetworkContextProvider from 'context/NetworkContext';
 import {ErrorBoundary} from '@ui/components/ErrorBoundary';
 import AppNavigator from '@ui/navigation/AppNavigator';
+import {NavigationContainer} from '@ui/navigation/NavigationContainer';
 import ThemeProvider from 'context/ThemeContext';
 import {NavigationContainer} from 'context/NavigationContainer';
 import SnackbarProvider from 'context/SnackbarContext';
