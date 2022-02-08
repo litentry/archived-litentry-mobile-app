@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     flexDirection: 'row',
-    paddingRight: 10,
+    paddingHorizontal: 20,
+    width: '90%',
   },
 });
