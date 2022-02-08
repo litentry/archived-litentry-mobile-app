@@ -25,7 +25,7 @@ import {IdentityGuideScreen} from '@ui/screens/MyIdentityScreen/IdentityGuideScr
 import ManageIdentityScreen from '@ui/screens/MyIdentityScreen/ManageIdentity';
 import {NetworkSelectionScreen} from '@ui/screens/NetworkSelectionScreen';
 import {NotificationSettingsScreen} from '@ui/screens/NotificationSettingsScreen';
-import {ParachainsAuctionsScreen} from '@ui/screens/Parachains/ParachainAuctionsScreen';
+import {AuctionsScreen} from '@ui/screens/Parachains/AuctionsScreen';
 import {CrowdloanFundDetailScreen} from '@ui/screens/Parachains/CrowdloanFundDetailScreen';
 import {CrowdloanScreen} from '@ui/screens/Parachains/CrowdloanScreen';
 import {ParachainsOverviewScreen} from '@ui/screens/Parachains/OverviewScreen';
@@ -180,7 +180,7 @@ function DrawerNavigator() {
         options={{headerShown: false}}
       />
       <Drawer.Screen name={routeKeys.parathreadsScreen} component={ParathreadsScreen} />
-      <Drawer.Screen name={routeKeys.parachainAuctionsScreen} component={ParachainsAuctionsScreen} />
+      <Drawer.Screen name={routeKeys.parachainAuctionsScreen} component={AuctionsScreen} />
 
       <Drawer.Screen
         name={routeKeys.polkassemblyDiscussionsNavigator}
