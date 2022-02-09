@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, FlatList} from 'react-native';
+import {View, FlatList, Linking, StyleSheet} from 'react-native';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Divider, List, Card, Icon, Caption, Subheading, Paragraph} from '@ui/library';
 import IdentityIcon from '@polkadot/reactnative-identicon';
@@ -87,7 +87,7 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
                     left={() => <LeftIcon icon="email-outline" />}
                     right={() => (
                       <ItemRight>
-                        <Caption>{email}</Caption>
+                        <Caption selectable>{email}</Caption>
                       </ItemRight>
                     )}
                   />
@@ -98,7 +98,11 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
                     left={() => <LeftIcon icon="twitter" />}
                     right={() => (
                       <ItemRight>
-                        <Caption>{twitter}</Caption>
+                        <Caption
+                          style={styles.twitter}
+                          onPress={() => Linking.openURL('https://twitter.com/' + twitter)}>
+                          {twitter}
+                        </Caption>
                       </ItemRight>
                     )}
                   />
@@ -109,7 +113,9 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
                     left={() => <LeftIcon icon="message-outline" />}
                     right={() => (
                       <ItemRight>
-                        <Caption>{riot}</Caption>
+                        <Caption style={styles.matrix} onPress={() => Linking.openURL('https://matrix.to/#/' + riot)}>
+                          {riot}
+                        </Caption>
                       </ItemRight>
                     )}
                   />
@@ -120,7 +126,9 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
                     left={() => <LeftIcon icon="earth" />}
                     right={() => (
                       <ItemRight>
-                        <Caption>{web}</Caption>
+                        <Caption style={styles.web} onPress={() => Linking.openURL(web)}>
+                          {web}
+                        </Caption>
                       </ItemRight>
                     )}
                   />
@@ -168,3 +176,15 @@ function Voter({accountId}: {accountId: AccountId}) {
     />
   );
 }
+
+const styles = StyleSheet.create({
+  twitter: {
+    color: '#1DA1F2',
+  },
+  matrix: {
+    color: '#238cf5',
+  },
+  web: {
+    textDecorationLine: 'underline',
+  },
+});
