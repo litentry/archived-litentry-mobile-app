@@ -13,7 +13,7 @@ import {CreateAccountScreen} from '@ui/screens/CreateAccount/CreateAccountScreen
 import {MnemonicScreen} from '@ui/screens/CreateAccount/MnemonicScreen';
 import {VerifyMnemonicScreen} from '@ui/screens/CreateAccount/VerifyMnemonic';
 import DashboardScreen from '@ui/screens/DashboardScreen';
-import {ProposalScreen} from '@ui/screens/ProposalScreen';
+import {DemocracyProposalScreen} from '@ui/screens/DemocracyProposalScreen';
 import {DemocracyScreen} from '@ui/screens/DemocracyScreen';
 import DevScreen from '@ui/screens/DevScreen';
 import DrawerScreen from '@ui/screens/Drawer/DrawerScreen';
@@ -82,7 +82,7 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.motionsScreen} component={MotionsScreen} />
       <DashboardStack.Screen name={routeKeys.democracyScreen} component={DemocracyScreen} />
       <DashboardStack.Screen name={routeKeys.referendumScreen} component={ReferendumScreen} />
-      <DashboardStack.Screen name={routeKeys.democracyProposalScreen} component={ProposalScreen} />
+      <DashboardStack.Screen name={routeKeys.democracyProposalScreen} component={DemocracyProposalScreen} />
       <DashboardStack.Screen name={routeKeys.bountiesScreen} component={BountiesScreen} />
       <DashboardStack.Screen name={routeKeys.bountyDetailScreen} component={BountyDetailScreen} />
     </DashboardStack.Navigator>
