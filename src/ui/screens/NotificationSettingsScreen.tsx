@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     flexDirection: 'row',
-    paddingHorizontal: 20,
+    alignItems: 'center',
     width: '90%',
   },
 });
