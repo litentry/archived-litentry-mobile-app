@@ -4,7 +4,8 @@ import {CachePersistor, MMKVWrapper} from 'apollo3-cache-persist';
 import {MMKV} from 'react-native-mmkv';
 import {NetworkContext} from 'context/NetworkContext';
 
-const LITENTRY_API_URI = 'https://api-gateway.litentry.io/graphql';
+// const LITENTRY_API_URI = 'https://api-gateway.litentry.io/graphql';
+const LITENTRY_API_URI = 'http://localhost:3377/graphql';
 
 type LitentryApiContextType = {
   clearCache: () => void;
@@ -45,6 +46,11 @@ export function LitentryApiClientProvider({children}: {children: React.ReactNode
             },
           }),
           cache,
+          defaultOptions: {
+            watchQuery: {
+              fetchPolicy: 'cache-and-network',
+            },
+          },
         }),
       );
     };
