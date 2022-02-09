@@ -11,7 +11,7 @@ import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import {useContributions} from 'src/api/hooks/useContributions';
 import {useCrowdloanFundByParaId} from 'src/api/hooks/useFunds';
 import {useParachainsLeasePeriod} from 'src/api/hooks/useParachainsLeasePeriod';
-import {ParachainsStackParamList} from '@ui/navigation/navigation';
+import {CrowdloansStackParamList} from '@ui/navigation/navigation';
 import {formatNumber} from '@polkadot/util';
 import AddressInlineTeaser from '@ui/components/AddressInlineTeaser';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
@@ -19,7 +19,7 @@ import globalStyles, {standardPadding} from '@ui/styles';
 import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
 
 type ScreenProps = {
-  route: RouteProp<ParachainsStackParamList, 'CrowdLoanDetailScreen'>;
+  route: RouteProp<CrowdloansStackParamList, 'Fund Detail'>;
 };
 
 export function CrowdloanFundDetailScreen({route}: ScreenProps) {
