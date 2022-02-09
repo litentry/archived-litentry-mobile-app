@@ -14,6 +14,7 @@ import {Padder} from '@ui/components/Padder';
 import globalStyles from '@ui/styles';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
+import {useTheme} from '@ui/library';
 
 type ScreenProps = {
   navigation: NavigationProp<DashboardStackParamList>;
@@ -38,6 +39,7 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
   const screenTitle = route.params.title;
   const {data: councilData, isLoading: isLoadingCouncil} = useCouncil();
   const {data: identityInfoData, isLoading: isLoadingIdentityInfo} = useAccountIdentityInfo(accountId);
+  const {colors} = useTheme();
 
   useEffect(() => {
     if (screenTitle) {
@@ -99,8 +101,8 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
                     right={() => (
                       <ItemRight>
                         <Caption
-                          style={styles.twitter}
-                          onPress={() => Linking.openURL('https://twitter.com/' + twitter)}>
+                          style={{color: colors.primary}}
+                          onPress={() => Linking.openURL(`https://twitter.com/${twitter}`)}>
                           {twitter}
                         </Caption>
                       </ItemRight>
@@ -113,7 +115,9 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
                     left={() => <LeftIcon icon="message-outline" />}
                     right={() => (
                       <ItemRight>
-                        <Caption style={styles.matrix} onPress={() => Linking.openURL('https://matrix.to/#/' + riot)}>
+                        <Caption
+                          style={{color: colors.primary}}
+                          onPress={() => Linking.openURL(`https://matrix.to/#/${riot}`)}>
                           {riot}
                         </Caption>
                       </ItemRight>
@@ -178,12 +182,6 @@ function Voter({accountId}: {accountId: AccountId}) {
 }
 
 const styles = StyleSheet.create({
-  twitter: {
-    color: '#1DA1F2',
-  },
-  matrix: {
-    color: '#238cf5',
-  },
   web: {
     textDecorationLine: 'underline',
   },
