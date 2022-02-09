@@ -7,7 +7,7 @@ import {stringShorten} from '@polkadot/util';
 import {useRegistrars, RegistrarInfoWithIndex} from 'src/api/hooks/useRegistrars';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import globalStyles, {standardPadding} from '@ui/styles';
+import globalStyles from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
 
 type Props = {
@@ -86,6 +86,7 @@ function RegistrarItem({onSelect, registrar}: RegistrarItemProps) {
   const formatBalance = useFormatBalance();
   return (
     <Menu.Item
+      style={styles.menuItem}
       onPress={() => onSelect(registrar)}
       title={
         <View style={globalStyles.rowAlignCenter}>
@@ -93,7 +94,8 @@ function RegistrarItem({onSelect, registrar}: RegistrarItemProps) {
           <Padder scale={0.5} />
           <View>
             {identity ? <AccountInfoInlineTeaser identity={identity} /> : null}
-            <Caption>{formatBalance(registrar.fee)}</Caption>
+            <Caption>{`Index: ${registrar.index}`}</Caption>
+            <Caption>{`Fee: ${formatBalance(registrar.fee)}`}</Caption>
           </View>
         </View>
       }
@@ -111,6 +113,6 @@ const styles = StyleSheet.create({
     maxHeight: 250,
   },
   menuItem: {
-    marginVertical: standardPadding,
+    height: 90,
   },
 });
