@@ -42,7 +42,7 @@ export function NotificationSettingsScreen({}: PropTypes) {
         </View>
         <View style={styles.infoContainer}>
           <Icon name="information-outline" />
-          <Padder scale={0.5} />
+          <Padder scale={1} />
           <Text>Don't forget to enable notifications in your phone's settings</Text>
         </View>
       </View>
