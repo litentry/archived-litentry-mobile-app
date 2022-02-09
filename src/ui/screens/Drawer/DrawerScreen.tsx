@@ -10,7 +10,6 @@ import {
   dashboardScreen,
   devScreen,
   notificationSettingsScreen,
-  parachainsNavigator,
   polkassemblyDiscussionsNavigator,
   registrarListScreen,
   webviewScreen,
@@ -19,6 +18,8 @@ import {
   parachainsOverviewScreen,
   parachainAuctionsScreen,
   feedbackScreen,
+  parachainsNavigator,
+  crowdloansNavigator,
 } from '@ui/navigation/routeKeys';
 import {standardPadding} from '@ui/styles';
 import {appVersion} from 'src/service/Device';
@@ -95,7 +96,7 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
               active={activeScreen === parathreadsScreen}
               onPress={() => {
                 setActiveScreen(parathreadsScreen);
-                navigation.navigate(parachainsNavigator, {screen: parathreadsScreen});
+                navigation.navigate(parathreadsScreen);
               }}
             />
             <Drawer.Item
@@ -104,7 +105,7 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
               active={activeScreen === parachainAuctionsScreen}
               onPress={() => {
                 setActiveScreen(parachainAuctionsScreen);
-                navigation.navigate(parachainsNavigator, {screen: parachainAuctionsScreen});
+                navigation.navigate(parachainAuctionsScreen);
               }}
             />
             <Drawer.Item
@@ -113,7 +114,7 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
               active={activeScreen === crowdloanScreen}
               onPress={() => {
                 setActiveScreen(crowdloanScreen);
-                navigation.navigate(parachainsNavigator, {screen: crowdloanScreen});
+                navigation.navigate(crowdloansNavigator, {screen: crowdloanScreen});
               }}
             />
           </Drawer.Section>
