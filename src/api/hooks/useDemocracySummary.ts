@@ -1,20 +1,29 @@
-import useApiQuery from 'src/api/hooks/useApiQuery';
+import {gql, useQuery} from '@apollo/client';
+import {ProxyDemocracySummary} from 'src/generated/litentryGraphQLTypes';
+
+export type DemocracySummary = ProxyDemocracySummary;
+
+const DEMOCRACY_SUMMARY_QUERY = gql`
+  query getDemocracySummary {
+    proxyDemocracySummary {
+      activeProposals
+      proposals
+      referendums
+      activeReferendums
+      launchPeriodInfo {
+        progressPercent
+        timeLeft
+        timeLeftParts
+      }
+    }
+  }
+`;
 
 export function useDemocracySummary() {
-  return useApiQuery(['democracy_summary'], async (api) => {
-    const [referendumIds, activeProposals, publicPropCount, referendumTotal] = await Promise.all([
-      api.derive.democracy.referendumIds(),
-      api.derive.democracy.proposals(),
-      api.query.democracy.publicPropCount(),
-      api.query.democracy.referendumCount(),
-    ]);
+  const {data, ...rest} = useQuery<{proxyDemocracySummary: DemocracySummary}>(DEMOCRACY_SUMMARY_QUERY);
 
-    return {
-      activeProposalsCount: activeProposals.length,
-      publicPropCount,
-      referendumTotal,
-      referenda: referendumIds.length,
-      launchPeriod: api.consts.democracy.launchPeriod,
-    };
-  });
+  return {
+    data: data?.proxyDemocracySummary,
+    ...rest,
+  };
 }
