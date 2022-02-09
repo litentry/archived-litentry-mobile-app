@@ -1,0 +1,9 @@
+overwrite: true
+schema: "https://api-gateway.litentry.io/graphql"
+generates:
+  src/generated/litentryGraphQLTypes.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+      - "fragment-matcher"
