@@ -3,11 +3,8 @@ import {StyleSheet, View} from 'react-native';
 import {SectionTeaserContainer} from '@ui/components/SectionTeaserContainer';
 import StatInfoBlock from '@ui/components/StatInfoBlock';
 import {useDemocracySummary} from 'src/api/hooks/useDemocracySummary';
-import {formatNumber, BN_ONE, BN_ZERO, BN_HUNDRED} from '@polkadot/util';
 import {Padder} from '@ui/components/Padder';
-import {useBestNumber} from 'src/api/hooks/useBestNumber';
 import ProgressChartWidget from '@ui/components/ProgressWidget';
-import {useBlockTime} from 'src/api/hooks/useBlockTime';
 import {standardPadding} from '@ui/styles';
 import {LoadingBox} from '@ui/components/LoadingBox';
 import {Card} from '@ui/library';
@@ -17,45 +14,33 @@ type Props = {
 };
 
 export function DemocracySummaryTeaser(props: Props) {
-  const {data, isLoading, isIdle} = useDemocracySummary();
-  const bestNumber = useBestNumber();
-
-  const total = data?.launchPeriod;
-  const progress = total && bestNumber ? bestNumber.mod(total).iadd(BN_ONE) : BN_ZERO;
-  const timeLeft = total?.sub(progress);
-  const {timeStringParts} = useBlockTime(timeLeft);
-
-  const progressPercent = progress
-    .mul(BN_HUNDRED)
-    .div(total ?? BN_ONE)
-    .toNumber();
-
-  const firstTwoNoneEmptyTimeParts = timeStringParts.filter(Boolean).slice(0, 2);
-  const timeLeftString = firstTwoNoneEmptyTimeParts.join('\n');
+  const {data, loading} = useDemocracySummary();
+  const firstTwoNoneEmptyTimeParts = data?.launchPeriodInfo?.timeLeftParts.filter(Boolean).slice(0, 2);
+  const timeLeftString = firstTwoNoneEmptyTimeParts?.join('\n') ?? '';
 
   return (
     <SectionTeaserContainer onPress={props.onPress} title="Democracy">
-      {isLoading || isIdle ? (
+      {loading ? (
         <LoadingBox />
       ) : (
         <View style={styles.boxRow}>
           <Card mode="outlined" style={styles.card}>
             <View style={styles.itemRow}>
-              <StatInfoBlock title="Proposals">{formatNumber(data?.activeProposalsCount)}</StatInfoBlock>
-              <StatInfoBlock title="Total">{formatNumber(data?.publicPropCount)}</StatInfoBlock>
+              <StatInfoBlock title="Proposals">{String(data?.activeProposals ?? 0)}</StatInfoBlock>
+              <StatInfoBlock title="Total">{String(data?.proposals ?? 0)}</StatInfoBlock>
             </View>
             <View style={styles.itemRow}>
-              <StatInfoBlock title="Referenda">{formatNumber(data?.referenda)}</StatInfoBlock>
-              <StatInfoBlock title="Total">{formatNumber(data?.referendumTotal)}</StatInfoBlock>
+              <StatInfoBlock title="Referenda">{String(data?.activeReferendums ?? 0)}</StatInfoBlock>
+              <StatInfoBlock title="Total">{String(data?.referendums ?? 0)}</StatInfoBlock>
             </View>
           </Card>
           <Padder scale={0.2} />
           <Card mode="outlined" style={styles.card}>
-            {data?.launchPeriod && bestNumber && (
+            {data?.launchPeriodInfo && (
               <ProgressChartWidget
                 title={`Launch period`}
-                detail={`${progressPercent}%\n${timeLeftString}`}
-                data={[progressPercent / 100]}
+                detail={`${data?.launchPeriodInfo.progressPercent}%\n${timeLeftString}`}
+                data={[data?.launchPeriodInfo.progressPercent / 100]}
               />
             )}
           </Card>
