@@ -19,7 +19,7 @@ import {Padder} from '@ui/components/Padder';
 import {useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 
-export function ParachainsAuctionsScreen() {
+export function AuctionsScreen() {
   const {data, isLoading: auctionInfoIsLoading, isError: auctionIsError} = useAuctionInfo();
   const {data: winningData, isLoading: winningDataIsLoading, isError: winningDataIsError} = useWinningData(data);
   const {data: totalIssuance, isLoading: issuanceIsLoading, isError: issuanceIsError} = useTotalIssuance();

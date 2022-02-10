@@ -26,7 +26,7 @@ import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
 import {notEmpty} from 'src/utils';
 
 type ScreenProps = {
-  route: RouteProp<ParachainsStackParamList, 'parachainDetail'>;
+  route: RouteProp<ParachainsStackParamList, 'Parachain'>;
 };
 
 type ParachainValidators = {
