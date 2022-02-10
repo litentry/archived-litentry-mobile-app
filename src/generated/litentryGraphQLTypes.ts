@@ -682,13 +682,21 @@ export type ProxyBalanceData = {
   reserved: Scalars['Float'];
 };
 
+export type ProxyBeneficiary = {
+  __typename?: 'ProxyBeneficiary';
+  account: ProxyAccount;
+  address: Scalars['String'];
+};
+
 export type ProxyBountiesSummary = {
   __typename?: 'ProxyBountiesSummary';
-  activeBounties: Scalars['Int'];
+  activeBounties: Scalars['String'];
   bountyCount: Scalars['String'];
+  formattedTotalValue: Scalars['String'];
   pastBounties: Scalars['String'];
+  progressPercent: Scalars['Int'];
+  timeLeft: Array<Scalars['String']>;
   totalValue: Scalars['String'];
-  treasurySpendPeriod: Scalars['String'];
 };
 
 export type ProxyBounty = {
@@ -698,18 +706,24 @@ export type ProxyBounty = {
   curatorDeposit: Scalars['String'];
   description: Scalars['String'];
   fee: Scalars['String'];
+  formattedBond: Scalars['String'];
+  formattedCuratorDeposit: Scalars['String'];
+  formattedFee: Scalars['String'];
+  formattedValue: Scalars['String'];
   index: Scalars['String'];
-  proposer: Scalars['String'];
+  proposer: ProxyProposer;
   value: Scalars['String'];
 };
 
 export type ProxyBountyStatus = {
   __typename?: 'ProxyBountyStatus';
-  beneficiary?: Maybe<Scalars['String']>;
-  curator?: Maybe<Scalars['String']>;
+  beneficiary?: Maybe<ProxyBeneficiary>;
+  curator?: Maybe<ProxyCurator>;
   status?: Maybe<Scalars['String']>;
   unlockAt?: Maybe<Scalars['String']>;
+  unlockAtTime?: Maybe<Array<Scalars['String']>>;
   updateDue?: Maybe<Scalars['String']>;
+  updateDueTime?: Maybe<Array<Scalars['String']>>;
 };
 
 export type ProxyChainInfo = {
@@ -807,6 +821,12 @@ export type ProxyCrowdloanSummary = {
   totalFunds: Scalars['Int'];
   totalProgress: Scalars['Float'];
   totalRaised: Scalars['String'];
+};
+
+export type ProxyCurator = {
+  __typename?: 'ProxyCurator';
+  account: ProxyAccount;
+  address: Scalars['String'];
 };
 
 export type ProxyDemocracySummary = {

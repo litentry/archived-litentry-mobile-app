@@ -1,20 +1,25 @@
-import useApiQuery from 'src/api/hooks/useApiQuery';
-import {BN} from '@polkadot/util';
+import {gql, useQuery} from '@apollo/client';
+import {ProxyBountiesSummary} from 'src/generated/litentryGraphQLTypes';
+
+const BOUNTIES_SUMMARY_QUERY = gql`
+  query getBountiesSummary {
+    proxyBountiesSummary {
+      activeBounties
+      pastBounties
+      bountyCount
+      totalValue
+      formattedTotalValue
+      timeLeft
+      progressPercent
+    }
+  }
+`;
 
 export function useBountiesSummary() {
-  return useApiQuery('bounties_summary', async (api) => {
-    const deriveBounties = await api.derive.bounties.bounties();
-    const bountyIndex = await (api.query.bounties || api.query.treasury).bountyCount();
-    const activeBounties = deriveBounties.length;
-    const pastBounties = bountyIndex.subn(activeBounties);
-    const totalValue = (deriveBounties || []).reduce((total, {bounty: {value}}) => total.iadd(value), new BN(0));
+  const {data, ...rest} = useQuery<{proxyBountiesSummary: ProxyBountiesSummary}>(BOUNTIES_SUMMARY_QUERY);
 
-    return {
-      bountyIndex,
-      activeBounties,
-      pastBounties,
-      totalValue,
-      treasurySpendPeriod: api.consts.treasury.spendPeriod,
-    };
-  });
+  return {
+    data: data?.proxyBountiesSummary,
+    ...rest,
+  };
 }
