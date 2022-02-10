@@ -5,18 +5,25 @@ import {Caption, Text, TextInput, Button, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {noop} from 'lodash';
 import React from 'react';
-import {Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TouchableWithoutFeedback} from 'react-native';
+import {KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View} from 'react-native';
 import {sendEmail} from 'src/utils/email';
 import HyperLink from 'react-native-hyperlink';
+import SafeView, {noTopEdges} from '@ui/components/SafeView';
+import {useKeyboardStatus} from 'src/hooks/useKeyboardStatus';
 
 const FEEDBACK_EMAIL = 'app-feedback@litentry.com';
 
 export function FeedbackScreen() {
   const {colors} = useTheme();
   const [body, setBody] = React.useState('');
-
+  const {status: keyboardStatus} = useKeyboardStatus();
   const [status, setStatus] = React.useState<'INITIAL' | 'ERROR' | 'SUCCESS'>('INITIAL');
-  useFocusEffect(React.useCallback(() => setStatus('INITIAL'), []));
+  useFocusEffect(
+    React.useCallback(() => {
+      setStatus('INITIAL');
+      setBody('');
+    }, []),
+  );
 
   const sendFeedback = async () => {
     sendEmail({to: FEEDBACK_EMAIL, subject: 'Litentry Feedback', body})
@@ -44,26 +51,30 @@ export function FeedbackScreen() {
   }
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={globalStyles.flex}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <Layout style={styles.container}>
-          <Text>Please write down your feedback here:</Text>
-          <Padder scale={1} />
-          <TextInput
-            multiline={true}
-            style={styles.input}
-            numberOfLines={5}
-            onChangeText={setBody}
-            autoComplete={'off'}
-            placeholder="feedback..."
-          />
-          <Padder scale={1} />
-          <Button mode="outlined" disabled={!body} onPress={body ? sendFeedback : noop}>
-            Send Feedback
-          </Button>
-        </Layout>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+    <SafeView edges={noTopEdges}>
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={globalStyles.flex}>
+        <ScrollView style={styles.container}>
+          <View>
+            <Text>Please write down your feedback here:</Text>
+            <Padder scale={1} />
+            <TextInput
+              multiline={true}
+              style={styles.input}
+              numberOfLines={10}
+              onChangeText={setBody}
+              autoComplete={'off'}
+              placeholder="feedback..."
+              value={body}
+            />
+            <Padder scale={1} />
+            <Button mode="outlined" disabled={!body} onPress={body ? sendFeedback : noop}>
+              Send Feedback
+            </Button>
+          </View>
+        </ScrollView>
+        <Padder scale={keyboardStatus === 'visible' ? 6 : 0} />
+      </KeyboardAvoidingView>
+    </SafeView>
   );
 }
 
@@ -74,6 +85,7 @@ const styles = StyleSheet.create({
   },
   input: {
     minHeight: 200,
+    maxHeight: '75%',
   },
   successMessage: {
     textAlign: 'center',
