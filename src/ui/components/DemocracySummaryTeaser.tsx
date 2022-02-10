@@ -22,30 +22,30 @@ export function DemocracySummaryTeaser(props: Props) {
     <SectionTeaserContainer onPress={props.onPress} title="Democracy">
       {loading ? (
         <LoadingBox />
-      ) : (
+      ) : data ? (
         <View style={styles.boxRow}>
           <Card mode="outlined" style={styles.card}>
             <View style={styles.itemRow}>
-              <StatInfoBlock title="Proposals">{String(data?.activeProposals ?? 0)}</StatInfoBlock>
-              <StatInfoBlock title="Total">{String(data?.proposals ?? 0)}</StatInfoBlock>
+              <StatInfoBlock title="Proposals">{String(data.activeProposals)}</StatInfoBlock>
+              <StatInfoBlock title="Total">{String(data.proposals)}</StatInfoBlock>
             </View>
             <View style={styles.itemRow}>
-              <StatInfoBlock title="Referenda">{String(data?.activeReferendums ?? 0)}</StatInfoBlock>
-              <StatInfoBlock title="Total">{String(data?.referendums ?? 0)}</StatInfoBlock>
+              <StatInfoBlock title="Referenda">{String(data.activeReferendums)}</StatInfoBlock>
+              <StatInfoBlock title="Total">{String(data.referendums)}</StatInfoBlock>
             </View>
           </Card>
           <Padder scale={0.2} />
           <Card mode="outlined" style={styles.card}>
-            {data?.launchPeriodInfo && (
+            {data.launchPeriodInfo && (
               <ProgressChartWidget
                 title={`Launch period`}
-                detail={`${data?.launchPeriodInfo.progressPercent}%\n${timeLeftString}`}
-                data={[data?.launchPeriodInfo.progressPercent / 100]}
+                detail={`${data.launchPeriodInfo.progressPercent}%\n${timeLeftString}`}
+                data={[data.launchPeriodInfo.progressPercent / 100]}
               />
             )}
           </Card>
         </View>
-      )}
+      ) : null}
     </SectionTeaserContainer>
   );
 }
