@@ -31,6 +31,7 @@ export type Bep20Account = {
   lastTransferInTimestamp?: Maybe<Scalars['BigInt']>;
   lastTransferOutBlockNumber?: Maybe<Scalars['BigInt']>;
   lastTransferOutTimestamp?: Maybe<Scalars['BigInt']>;
+  totalTransfers: Scalars['BigInt'];
   transfersFrom?: Maybe<Array<Bep20Transfer>>;
   transfersTo?: Maybe<Array<Bep20Transfer>>;
 };
@@ -146,6 +147,14 @@ export type Bep20Account_Filter = {
   lastTransferOutTimestamp_lte?: InputMaybe<Scalars['BigInt']>;
   lastTransferOutTimestamp_not?: InputMaybe<Scalars['BigInt']>;
   lastTransferOutTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  totalTransfers?: InputMaybe<Scalars['BigInt']>;
+  totalTransfers_gt?: InputMaybe<Scalars['BigInt']>;
+  totalTransfers_gte?: InputMaybe<Scalars['BigInt']>;
+  totalTransfers_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  totalTransfers_lt?: InputMaybe<Scalars['BigInt']>;
+  totalTransfers_lte?: InputMaybe<Scalars['BigInt']>;
+  totalTransfers_not?: InputMaybe<Scalars['BigInt']>;
+  totalTransfers_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
 };
 
 export enum Bep20Account_OrderBy {
@@ -160,6 +169,7 @@ export enum Bep20Account_OrderBy {
   LastTransferInTimestamp = 'lastTransferInTimestamp',
   LastTransferOutBlockNumber = 'lastTransferOutBlockNumber',
   LastTransferOutTimestamp = 'lastTransferOutTimestamp',
+  TotalTransfers = 'totalTransfers',
   TransfersFrom = 'transfersFrom',
   TransfersTo = 'transfersTo',
 }
@@ -169,10 +179,12 @@ export type Bep20Transfer = {
   amount: Scalars['BigInt'];
   blockNumber: Scalars['BigInt'];
   from: Bep20Account;
+  fromAccountBalanceAtBlock: Scalars['BigInt'];
   gas: Scalars['BigInt'];
   id: Scalars['ID'];
   timestamp: Scalars['BigInt'];
   to: Bep20Account;
+  toAccountBalanceAtBlock: Scalars['BigInt'];
 };
 
 export type Bep20Transfer_Filter = {
@@ -193,6 +205,14 @@ export type Bep20Transfer_Filter = {
   blockNumber_not?: InputMaybe<Scalars['BigInt']>;
   blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   from?: InputMaybe<Scalars['String']>;
+  fromAccountBalanceAtBlock?: InputMaybe<Scalars['BigInt']>;
+  fromAccountBalanceAtBlock_gt?: InputMaybe<Scalars['BigInt']>;
+  fromAccountBalanceAtBlock_gte?: InputMaybe<Scalars['BigInt']>;
+  fromAccountBalanceAtBlock_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  fromAccountBalanceAtBlock_lt?: InputMaybe<Scalars['BigInt']>;
+  fromAccountBalanceAtBlock_lte?: InputMaybe<Scalars['BigInt']>;
+  fromAccountBalanceAtBlock_not?: InputMaybe<Scalars['BigInt']>;
+  fromAccountBalanceAtBlock_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   from_contains?: InputMaybe<Scalars['String']>;
   from_ends_with?: InputMaybe<Scalars['String']>;
   from_gt?: InputMaybe<Scalars['String']>;
@@ -231,6 +251,14 @@ export type Bep20Transfer_Filter = {
   timestamp_not?: InputMaybe<Scalars['BigInt']>;
   timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   to?: InputMaybe<Scalars['String']>;
+  toAccountBalanceAtBlock?: InputMaybe<Scalars['BigInt']>;
+  toAccountBalanceAtBlock_gt?: InputMaybe<Scalars['BigInt']>;
+  toAccountBalanceAtBlock_gte?: InputMaybe<Scalars['BigInt']>;
+  toAccountBalanceAtBlock_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  toAccountBalanceAtBlock_lt?: InputMaybe<Scalars['BigInt']>;
+  toAccountBalanceAtBlock_lte?: InputMaybe<Scalars['BigInt']>;
+  toAccountBalanceAtBlock_not?: InputMaybe<Scalars['BigInt']>;
+  toAccountBalanceAtBlock_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   to_contains?: InputMaybe<Scalars['String']>;
   to_ends_with?: InputMaybe<Scalars['String']>;
   to_gt?: InputMaybe<Scalars['String']>;
@@ -250,10 +278,12 @@ export enum Bep20Transfer_OrderBy {
   Amount = 'amount',
   BlockNumber = 'blockNumber',
   From = 'from',
+  FromAccountBalanceAtBlock = 'fromAccountBalanceAtBlock',
   Gas = 'gas',
   Id = 'id',
   Timestamp = 'timestamp',
   To = 'to',
+  ToAccountBalanceAtBlock = 'toAccountBalanceAtBlock',
 }
 
 export type Block_Height = {
@@ -275,6 +305,7 @@ export type Erc20Account = {
   lastTransferInTimestamp?: Maybe<Scalars['BigInt']>;
   lastTransferOutBlockNumber?: Maybe<Scalars['BigInt']>;
   lastTransferOutTimestamp?: Maybe<Scalars['BigInt']>;
+  totalTransfers: Scalars['BigInt'];
   transfersFrom?: Maybe<Array<Erc20Transfer>>;
   transfersTo?: Maybe<Array<Erc20Transfer>>;
 };
@@ -390,6 +421,14 @@ export type Erc20Account_Filter = {
   lastTransferOutTimestamp_lte?: InputMaybe<Scalars['BigInt']>;
   lastTransferOutTimestamp_not?: InputMaybe<Scalars['BigInt']>;
   lastTransferOutTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  totalTransfers?: InputMaybe<Scalars['BigInt']>;
+  totalTransfers_gt?: InputMaybe<Scalars['BigInt']>;
+  totalTransfers_gte?: InputMaybe<Scalars['BigInt']>;
+  totalTransfers_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  totalTransfers_lt?: InputMaybe<Scalars['BigInt']>;
+  totalTransfers_lte?: InputMaybe<Scalars['BigInt']>;
+  totalTransfers_not?: InputMaybe<Scalars['BigInt']>;
+  totalTransfers_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
 };
 
 export enum Erc20Account_OrderBy {
@@ -404,6 +443,7 @@ export enum Erc20Account_OrderBy {
   LastTransferInTimestamp = 'lastTransferInTimestamp',
   LastTransferOutBlockNumber = 'lastTransferOutBlockNumber',
   LastTransferOutTimestamp = 'lastTransferOutTimestamp',
+  TotalTransfers = 'totalTransfers',
   TransfersFrom = 'transfersFrom',
   TransfersTo = 'transfersTo',
 }
@@ -413,10 +453,12 @@ export type Erc20Transfer = {
   amount: Scalars['BigInt'];
   blockNumber: Scalars['BigInt'];
   from: Erc20Account;
+  fromAccountBalanceAtBlock: Scalars['BigInt'];
   gas: Scalars['BigInt'];
   id: Scalars['ID'];
   timestamp: Scalars['BigInt'];
   to: Erc20Account;
+  toAccountBalanceAtBlock: Scalars['BigInt'];
 };
 
 export type Erc20Transfer_Filter = {
@@ -437,6 +479,14 @@ export type Erc20Transfer_Filter = {
   blockNumber_not?: InputMaybe<Scalars['BigInt']>;
   blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   from?: InputMaybe<Scalars['String']>;
+  fromAccountBalanceAtBlock?: InputMaybe<Scalars['BigInt']>;
+  fromAccountBalanceAtBlock_gt?: InputMaybe<Scalars['BigInt']>;
+  fromAccountBalanceAtBlock_gte?: InputMaybe<Scalars['BigInt']>;
+  fromAccountBalanceAtBlock_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  fromAccountBalanceAtBlock_lt?: InputMaybe<Scalars['BigInt']>;
+  fromAccountBalanceAtBlock_lte?: InputMaybe<Scalars['BigInt']>;
+  fromAccountBalanceAtBlock_not?: InputMaybe<Scalars['BigInt']>;
+  fromAccountBalanceAtBlock_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   from_contains?: InputMaybe<Scalars['String']>;
   from_ends_with?: InputMaybe<Scalars['String']>;
   from_gt?: InputMaybe<Scalars['String']>;
@@ -475,6 +525,14 @@ export type Erc20Transfer_Filter = {
   timestamp_not?: InputMaybe<Scalars['BigInt']>;
   timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   to?: InputMaybe<Scalars['String']>;
+  toAccountBalanceAtBlock?: InputMaybe<Scalars['BigInt']>;
+  toAccountBalanceAtBlock_gt?: InputMaybe<Scalars['BigInt']>;
+  toAccountBalanceAtBlock_gte?: InputMaybe<Scalars['BigInt']>;
+  toAccountBalanceAtBlock_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  toAccountBalanceAtBlock_lt?: InputMaybe<Scalars['BigInt']>;
+  toAccountBalanceAtBlock_lte?: InputMaybe<Scalars['BigInt']>;
+  toAccountBalanceAtBlock_not?: InputMaybe<Scalars['BigInt']>;
+  toAccountBalanceAtBlock_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   to_contains?: InputMaybe<Scalars['String']>;
   to_ends_with?: InputMaybe<Scalars['String']>;
   to_gt?: InputMaybe<Scalars['String']>;
@@ -494,10 +552,12 @@ export enum Erc20Transfer_OrderBy {
   Amount = 'amount',
   BlockNumber = 'blockNumber',
   From = 'from',
+  FromAccountBalanceAtBlock = 'fromAccountBalanceAtBlock',
   Gas = 'gas',
   Id = 'id',
   Timestamp = 'timestamp',
   To = 'to',
+  ToAccountBalanceAtBlock = 'toAccountBalanceAtBlock',
 }
 
 export type Erc1155Token = {
@@ -666,15 +726,30 @@ export type ProxyCollectiveProposal = {
   votes: ProxyProposalVotes;
 };
 
+export type ProxyContribution = {
+  __typename?: 'ProxyContribution';
+  contribution: ProxyCrowdloanContribution;
+  paraId: Scalars['String'];
+};
+
+export type ProxyConviction = {
+  __typename?: 'ProxyConviction';
+  text: Scalars['String'];
+  value: Scalars['Int'];
+};
+
 export type ProxyCouncil = {
   __typename?: 'ProxyCouncil';
   candidates: Array<ProxyCouncilCandidate>;
-  desiredRunnersUp?: Maybe<Scalars['Int']>;
-  desiredSeats?: Maybe<Scalars['Int']>;
+  desiredRunnersUp: Scalars['Int'];
+  desiredSeats: Scalars['Int'];
   members: Array<ProxyCouncilMember>;
   primeMember?: Maybe<ProxyCouncilMember>;
   runnersUp: Array<ProxyCouncilMember>;
   termProgress: ProxyTermProgress;
+  totalCandidates: Scalars['Int'];
+  totalMembers: Scalars['Int'];
+  totalRunnersUp: Scalars['Int'];
 };
 
 export type ProxyCouncilCandidate = {
@@ -698,6 +773,27 @@ export type ProxyCouncilMotion = {
   votes?: Maybe<ProxyMotionVotes>;
 };
 
+export type ProxyCrowdloan = {
+  __typename?: 'ProxyCrowdloan';
+  cap: Scalars['String'];
+  contribution: ProxyContribution;
+  depositor: ProxyDepositor;
+  ending: Array<Scalars['String']>;
+  firstPeriod: Scalars['String'];
+  formattedCap: Scalars['String'];
+  formattedRaised: Scalars['String'];
+  lastPeriod: Scalars['String'];
+  paraId: Scalars['String'];
+  raised: Scalars['String'];
+  status: Scalars['String'];
+};
+
+export type ProxyCrowdloanContribution = {
+  __typename?: 'ProxyCrowdloanContribution';
+  contributorsCount: Scalars['String'];
+  paraId: Scalars['String'];
+};
+
 export type ProxyCrowdloanSummary = {
   __typename?: 'ProxyCrowdloanSummary';
   activeCap: Scalars['String'];
@@ -717,9 +813,15 @@ export type ProxyDemocracySummary = {
   __typename?: 'ProxyDemocracySummary';
   activeProposals: Scalars['Int'];
   activeReferendums: Scalars['Int'];
-  launchPeriod: Scalars['String'];
+  launchPeriodInfo?: Maybe<ProxyLaunchPeriodInfo>;
   proposals: Scalars['String'];
   referendums: Scalars['String'];
+};
+
+export type ProxyDepositor = {
+  __typename?: 'ProxyDepositor';
+  account: ProxyAccount;
+  address: Scalars['String'];
 };
 
 export type ProxyDeriveAccountRegistration = {
@@ -744,6 +846,12 @@ export type ProxyEvent = {
   title: Scalars['String'];
 };
 
+export type ProxyFinder = {
+  __typename?: 'ProxyFinder';
+  account: ProxyAccount;
+  address: Scalars['String'];
+};
+
 export type ProxyIdentityJudgement = {
   __typename?: 'ProxyIdentityJudgement';
   isErroneous?: Maybe<Scalars['Boolean']>;
@@ -753,6 +861,13 @@ export type ProxyIdentityJudgement = {
   isOutOfDate?: Maybe<Scalars['Boolean']>;
   isReasonable?: Maybe<Scalars['Boolean']>;
   isUnknown?: Maybe<Scalars['Boolean']>;
+};
+
+export type ProxyLaunchPeriodInfo = {
+  __typename?: 'ProxyLaunchPeriodInfo';
+  progressPercent: Scalars['Int'];
+  timeLeft: Scalars['String'];
+  timeLeftParts: Array<Scalars['String']>;
 };
 
 export type ProxyLease = {
@@ -859,7 +974,7 @@ export type ProxyProposalVotes = {
 
 export type ProxyProposer = {
   __typename?: 'ProxyProposer';
-  account?: Maybe<ProxyAccount>;
+  account: ProxyAccount;
   address: Scalars['String'];
 };
 
@@ -899,19 +1014,32 @@ export type ProxyTermProgress = {
   __typename?: 'ProxyTermProgress';
   percentage?: Maybe<Scalars['Int']>;
   termDuration?: Maybe<Scalars['String']>;
+  termDurationParts: Array<Scalars['String']>;
   termLeft?: Maybe<Scalars['String']>;
+  termLeftParts?: Maybe<Array<Scalars['String']>>;
 };
 
 export type ProxyTip = {
   __typename?: 'ProxyTip';
   closes?: Maybe<Scalars['String']>;
   deposit?: Maybe<Scalars['String']>;
-  finder?: Maybe<Scalars['String']>;
+  finder?: Maybe<ProxyFinder>;
+  formattedMedian?: Maybe<Scalars['String']>;
   /** id: Tip Hash */
   id: Scalars['String'];
   median?: Maybe<Scalars['String']>;
   reason: Scalars['String'];
-  who?: Maybe<Scalars['String']>;
+  tippers: Array<ProxyTipper>;
+  tippersCount: Scalars['Int'];
+  who: ProxyWho;
+};
+
+export type ProxyTipper = {
+  __typename?: 'ProxyTipper';
+  account: ProxyAccount;
+  address: Scalars['String'];
+  balance: Scalars['String'];
+  formattedBalance: Scalars['String'];
 };
 
 export type ProxyTreasury = {
@@ -954,6 +1082,12 @@ export type ProxyValidatorsGroup = {
   validators?: Maybe<Array<ProxyAccountInfo>>;
 };
 
+export type ProxyWho = {
+  __typename?: 'ProxyWho';
+  account: ProxyAccount;
+  address: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
   /** Access to subgraph metadata */
@@ -970,19 +1104,24 @@ export type Query = {
   erc1155Tokens: Array<Erc1155Token>;
   ipfsexampleQuery?: Maybe<IpfsExample>;
   proxyAccount?: Maybe<ProxyAccount>;
+  proxyActiveCrowdloans: Array<ProxyCrowdloan>;
   proxyBalance: ProxyBalance;
   proxyBounties: Array<ProxyBounty>;
   proxyBountiesSummary: ProxyBountiesSummary;
   proxyBounty?: Maybe<ProxyBounty>;
   proxyChainInfo: ProxyChainInfo;
+  proxyConvictions?: Maybe<Array<ProxyConviction>>;
   proxyCouncil: ProxyCouncil;
   proxyCouncilMotions: Array<ProxyCouncilMotion>;
+  proxyCrowdloan?: Maybe<ProxyCrowdloan>;
+  proxyCrowdloanContribution: ProxyCrowdloanContribution;
   proxyCrowdloanSummary: ProxyCrowdloanSummary;
   proxyDemocracyProposal?: Maybe<ProxyProposal>;
   proxyDemocracyProposals: Array<ProxyProposal>;
   proxyDemocracyReferendum?: Maybe<ProxyReferendum>;
   proxyDemocracyReferendums: Array<ProxyReferendum>;
   proxyDemocracySummary: ProxyDemocracySummary;
+  proxyEndedCrowdloans: Array<ProxyCrowdloan>;
   proxyEvents: Array<ProxyEvent>;
   proxyModuleElection: ProxyModuleElection;
   proxyParachain?: Maybe<ProxyParachain>;
@@ -1120,6 +1259,14 @@ export type QueryProxyBalanceArgs = {
 
 export type QueryProxyBountyArgs = {
   index: Scalars['String'];
+};
+
+export type QueryProxyCrowdloanArgs = {
+  paraId: Scalars['String'];
+};
+
+export type QueryProxyCrowdloanContributionArgs = {
+  paraId: Scalars['String'];
 };
 
 export type QueryProxyDemocracyProposalArgs = {
