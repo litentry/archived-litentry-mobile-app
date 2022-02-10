@@ -7,8 +7,8 @@ const COUNCIL_SUMMARY_QUERY = gql`
   query getCouncilSummary {
     proxyCouncil {
       primeMember {
-        address
         account {
+          address
           display
           registration {
             displayParent
@@ -30,6 +30,7 @@ const COUNCIL_SUMMARY_QUERY = gql`
       desiredSeats
       totalMembers
       totalRunnersUp
+      totalCandidates
       desiredRunnersUp
       termProgress {
         termDurationParts
