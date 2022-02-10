@@ -702,7 +702,7 @@ export type ProxyBountiesSummary = {
 export type ProxyBounty = {
   __typename?: 'ProxyBounty';
   bond: Scalars['String'];
-  bountyStatus?: Maybe<ProxyBountyStatus>;
+  bountyStatus: ProxyBountyStatus;
   curatorDeposit: Scalars['String'];
   description: Scalars['String'];
   fee: Scalars['String'];
