@@ -71,8 +71,8 @@ export function FeedbackScreen() {
               Send Feedback
             </Button>
           </View>
+          <Padder scale={keyboardStatus === 'visible' ? 6 : 2} />
         </ScrollView>
-        <Padder scale={keyboardStatus === 'visible' ? 6 : 0} />
       </KeyboardAvoidingView>
     </SafeView>
   );
@@ -85,7 +85,6 @@ const styles = StyleSheet.create({
   },
   input: {
     minHeight: 200,
-    maxHeight: '75%',
   },
   successMessage: {
     textAlign: 'center',
