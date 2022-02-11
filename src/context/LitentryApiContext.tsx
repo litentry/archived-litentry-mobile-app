@@ -45,6 +45,11 @@ export function LitentryApiClientProvider({children}: {children: React.ReactNode
             },
           }),
           cache,
+          defaultOptions: {
+            watchQuery: {
+              fetchPolicy: 'cache-and-network',
+            },
+          },
         }),
       );
     };
