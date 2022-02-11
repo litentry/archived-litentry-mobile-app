@@ -15,8 +15,12 @@ const BOUNTIES_SUMMARY_QUERY = gql`
   }
 `;
 
+const oneMinute = 60 * 1000;
+
 export function useBountiesSummary() {
-  const {data, ...rest} = useQuery<{proxyBountiesSummary: ProxyBountiesSummary}>(BOUNTIES_SUMMARY_QUERY);
+  const {data, ...rest} = useQuery<{proxyBountiesSummary: ProxyBountiesSummary}>(BOUNTIES_SUMMARY_QUERY, {
+    pollInterval: oneMinute,
+  });
 
   return {
     data: data?.proxyBountiesSummary,
