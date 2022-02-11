@@ -1,5 +1,5 @@
 import {gql, useQuery} from '@apollo/client';
-import {ProxyBounty} from 'src/generated/litentryGraphQLTypes';
+import type {ProxyBounty} from 'src/generated/litentryGraphQLTypes';
 import {ACCOUNT_FIELDS} from './useBounties';
 
 export type Bounty = ProxyBounty;
@@ -46,7 +46,6 @@ const BOUNTY_QUERY = gql`
 export function useBounty(index: string) {
   const {data, ...rest} = useQuery<{proxyBounty: Bounty}>(BOUNTY_QUERY, {
     variables: {index},
-    fetchPolicy: 'cache-only'
   });
 
   return {

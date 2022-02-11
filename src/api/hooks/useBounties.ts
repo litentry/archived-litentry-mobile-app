@@ -1,5 +1,5 @@
 import {gql, useQuery} from '@apollo/client';
-import {ProxyBounty} from 'src/generated/litentryGraphQLTypes';
+import type {ProxyBounty} from 'src/generated/litentryGraphQLTypes';
 
 export type Bounty = ProxyBounty;
 
