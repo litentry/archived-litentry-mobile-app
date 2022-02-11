@@ -2,14 +2,13 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import Identicon from '@polkadot/reactnative-identicon';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useBounty} from 'src/api/hooks/useBounty';
 import {Subheading, Paragraph, Text, Divider} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import LoadingView from '@ui/components/LoadingView';
-// import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
+import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 
 type ScreenProps = {
   navigation: StackNavigationProp<DashboardStackParamList>;
@@ -30,15 +29,7 @@ export function BountyDetailScreen({route}: ScreenProps) {
         {bounty?.proposer ? (
           <View style={styles.alignItemsCenter}>
             <Subheading>Proposer</Subheading>
-            <View style={styles.section}>
-              <Identicon value={bounty.proposer.address} size={35} />
-              <Padder scale={0.5} />
-              {/* @TODO:
-                Refactor AccountInfoInlineTeaser component to make it work with account info
-              */}
-              {/* <AccountInfoInlineTeaser identity={bounty.proposer.account} /> */}
-              <Paragraph>{bounty.proposer.account.display}</Paragraph>
-            </View>
+            <AccountTeaser account={bounty.proposer.account} identiconSize={40} />
             <Padder scale={1} />
           </View>
         ) : null}
@@ -65,15 +56,7 @@ export function BountyDetailScreen({route}: ScreenProps) {
         {bounty?.bountyStatus.curator ? (
           <View>
             <Subheading>Curator</Subheading>
-            <View style={styles.section}>
-              <Identicon value={bounty.bountyStatus.curator.address} size={35} />
-              <Padder scale={0.5} />
-              {/* @TODO:
-                Refactor AccountInfoInlineTeaser component to make it work with account info
-              */}
-              {/* <AccountInfoInlineTeaser identity={curatorIdentity} /> */}
-              <Paragraph>{bounty.bountyStatus.curator.account.display}</Paragraph>
-            </View>
+            <AccountTeaser account={bounty.bountyStatus.curator.account} identiconSize={30} />
             <Padder scale={1} />
             <Divider />
           </View>

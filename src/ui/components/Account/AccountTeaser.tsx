@@ -8,12 +8,13 @@ import {Account} from './Account';
 
 type Props = {
   account: ProxyAccount;
+  identiconSize?: number;
 };
 
-export function AccountTeaser({account}: Props) {
+export function AccountTeaser({account, identiconSize = 20}: Props) {
   return (
     <View style={styles.container}>
-      <Identicon value={account.address} size={20} />
+      <Identicon value={account.address} size={identiconSize} />
       <Padder scale={0.5} />
       <Account account={account} />
     </View>
