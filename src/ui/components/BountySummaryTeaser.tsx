@@ -20,7 +20,7 @@ export function BountySummaryTeaser(props: Props) {
     <SectionTeaserContainer onPress={props.onPress} title="Bounties">
       {loading ? (
         <LoadingBox />
-      ) : (
+      ) : data ? (
         <View style={styles.boxRow}>
           <Card mode="outlined" style={styles.card}>
             <View style={styles.itemRow}>
@@ -44,7 +44,7 @@ export function BountySummaryTeaser(props: Props) {
             )}
           </Card>
         </View>
-      )}
+      ) : null}
     </SectionTeaserContainer>
   );
 }
