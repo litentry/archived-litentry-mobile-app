@@ -46,6 +46,7 @@ const BOUNTY_QUERY = gql`
 export function useBounty(index: string) {
   const {data, ...rest} = useQuery<{proxyBounty: Bounty}>(BOUNTY_QUERY, {
     variables: {index},
+    fetchPolicy: 'cache-only'
   });
 
   return {
