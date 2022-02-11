@@ -741,12 +741,15 @@ export type ProxyConviction = {
 export type ProxyCouncil = {
   __typename?: 'ProxyCouncil';
   candidates: Array<ProxyCouncilCandidate>;
-  desiredRunnersUp?: Maybe<Scalars['Int']>;
-  desiredSeats?: Maybe<Scalars['Int']>;
+  desiredRunnersUp: Scalars['Int'];
+  desiredSeats: Scalars['Int'];
   members: Array<ProxyCouncilMember>;
   primeMember?: Maybe<ProxyCouncilMember>;
   runnersUp: Array<ProxyCouncilMember>;
   termProgress: ProxyTermProgress;
+  totalCandidates: Scalars['Int'];
+  totalMembers: Scalars['Int'];
+  totalRunnersUp: Scalars['Int'];
 };
 
 export type ProxyCouncilCandidate = {
@@ -841,6 +844,12 @@ export type ProxyEvent = {
   date: Scalars['String'];
   id: Scalars['ID'];
   title: Scalars['String'];
+};
+
+export type ProxyFinder = {
+  __typename?: 'ProxyFinder';
+  account: ProxyAccount;
+  address: Scalars['String'];
 };
 
 export type ProxyIdentityJudgement = {
@@ -1005,19 +1014,32 @@ export type ProxyTermProgress = {
   __typename?: 'ProxyTermProgress';
   percentage?: Maybe<Scalars['Int']>;
   termDuration?: Maybe<Scalars['String']>;
+  termDurationParts: Array<Scalars['String']>;
   termLeft?: Maybe<Scalars['String']>;
+  termLeftParts?: Maybe<Array<Scalars['String']>>;
 };
 
 export type ProxyTip = {
   __typename?: 'ProxyTip';
   closes?: Maybe<Scalars['String']>;
   deposit?: Maybe<Scalars['String']>;
-  finder?: Maybe<Scalars['String']>;
+  finder?: Maybe<ProxyFinder>;
+  formattedMedian?: Maybe<Scalars['String']>;
   /** id: Tip Hash */
   id: Scalars['String'];
   median?: Maybe<Scalars['String']>;
   reason: Scalars['String'];
-  who?: Maybe<Scalars['String']>;
+  tippers: Array<ProxyTipper>;
+  tippersCount: Scalars['Int'];
+  who: ProxyWho;
+};
+
+export type ProxyTipper = {
+  __typename?: 'ProxyTipper';
+  account: ProxyAccount;
+  address: Scalars['String'];
+  balance: Scalars['String'];
+  formattedBalance: Scalars['String'];
 };
 
 export type ProxyTreasury = {
@@ -1058,6 +1080,12 @@ export type ProxyValidatorsGroup = {
   __typename?: 'ProxyValidatorsGroup';
   groupIndex?: Maybe<Scalars['String']>;
   validators?: Maybe<Array<ProxyAccountInfo>>;
+};
+
+export type ProxyWho = {
+  __typename?: 'ProxyWho';
+  account: ProxyAccount;
+  address: Scalars['String'];
 };
 
 export type Query = {
