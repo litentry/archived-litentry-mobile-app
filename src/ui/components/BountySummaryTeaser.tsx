@@ -20,7 +20,7 @@ export function BountySummaryTeaser(props: Props) {
     <SectionTeaserContainer onPress={props.onPress} title="Bounties">
       {loading ? (
         <LoadingBox />
-      ) : (
+      ) : data ? (
         <View style={styles.boxRow}>
           <Card mode="outlined" style={styles.card}>
             <View style={styles.itemRow}>
@@ -35,16 +35,16 @@ export function BountySummaryTeaser(props: Props) {
           </Card>
           <Padder scale={0.2} />
           <Card mode="outlined" style={styles.card}>
-            {data?.progressPercent && data.timeLeft && (
+            {data.timeLeft && (
               <ProgressChartWidget
                 title={`Funding period (${data.timeLeft[0]})`}
-                detail={`${data.progressPercent}%\n${data.timeLeft.join('\n')}`}
+                detail={`${data.progressPercent ?? 0}%\n${data.timeLeft.slice(0, 2).join('\n')}`}
                 data={[data.progressPercent / 100]}
               />
             )}
           </Card>
         </View>
-      )}
+      ) : null}
     </SectionTeaserContainer>
   );
 }
