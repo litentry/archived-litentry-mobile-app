@@ -25,11 +25,11 @@ function DashboardScreen({navigation}: PropTypes) {
     <Layout style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollView}>
         <DemocracySummaryTeaser onPress={() => navigation.navigate(democracyScreen)} />
-        <Padder scale={1} />
+        <Padder scale={0.6} />
         <CouncilSummaryTeaser onPress={() => navigation.navigate(councilScreen)} />
-        <Padder scale={1} />
+        <Padder scale={0.6} />
         <TreasurySummaryTeaser onPress={() => navigation.navigate(treasuryScreen)} />
-        <Padder scale={1} />
+        <Padder scale={0.6} />
         <BountySummaryTeaser onPress={() => navigation.navigate(bountiesScreen)} />
       </ScrollView>
     </Layout>
@@ -38,7 +38,8 @@ function DashboardScreen({navigation}: PropTypes) {
 
 const styles = StyleSheet.create({
   scrollView: {
-    paddingTop: standardPadding * 2,
+    paddingTop: standardPadding * 1.5,
+    paddingHorizontal: standardPadding * 1.5,
     paddingBottom: standardPadding * 6,
   },
   container: {

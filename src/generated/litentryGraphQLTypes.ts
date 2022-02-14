@@ -702,7 +702,7 @@ export type ProxyBountiesSummary = {
 export type ProxyBounty = {
   __typename?: 'ProxyBounty';
   bond: Scalars['String'];
-  bountyStatus?: Maybe<ProxyBountyStatus>;
+  bountyStatus: ProxyBountyStatus;
   curatorDeposit: Scalars['String'];
   description: Scalars['String'];
   fee: Scalars['String'];
@@ -1030,6 +1030,14 @@ export type ProxyRegistrationJudgement = {
   judgement?: Maybe<ProxyIdentityJudgement>;
 };
 
+export type ProxySpendPeriod = {
+  __typename?: 'ProxySpendPeriod';
+  percentage: Scalars['Int'];
+  period: Scalars['String'];
+  termLeft: Scalars['String'];
+  termLeftParts: Array<Scalars['String']>;
+};
+
 export type ProxyTermProgress = {
   __typename?: 'ProxyTermProgress';
   percentage?: Maybe<Scalars['Int']>;
@@ -1090,9 +1098,9 @@ export type ProxyTreasurySummary = {
   __typename?: 'ProxyTreasurySummary';
   activeProposals: Scalars['Int'];
   approvedProposals: Scalars['Int'];
-  burn?: Maybe<Scalars['String']>;
-  proposalCount: Scalars['String'];
-  spendPeriod: Scalars['String'];
+  nextBurn: Scalars['String'];
+  spendPeriod: ProxySpendPeriod;
+  totalProposals: Scalars['Int'];
   treasuryBalance: ProxyTreasuryBalance;
 };
 
