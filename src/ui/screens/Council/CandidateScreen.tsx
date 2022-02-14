@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, FlatList} from 'react-native';
+import {View, FlatList, Linking, StyleSheet} from 'react-native';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Divider, List, Card, Icon, Caption, Subheading, Paragraph} from '@ui/library';
 import IdentityIcon from '@polkadot/reactnative-identicon';
@@ -14,6 +14,7 @@ import {Padder} from '@ui/components/Padder';
 import globalStyles from '@ui/styles';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
+import {useTheme} from '@ui/library';
 
 type ScreenProps = {
   navigation: NavigationProp<DashboardStackParamList>;
@@ -38,6 +39,7 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
   const screenTitle = route.params.title;
   const {data: councilData, isLoading: isLoadingCouncil} = useCouncil();
   const {data: identityInfoData, isLoading: isLoadingIdentityInfo} = useAccountIdentityInfo(accountId);
+  const {colors} = useTheme();
 
   useEffect(() => {
     if (screenTitle) {
@@ -87,7 +89,7 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
                     left={() => <LeftIcon icon="email-outline" />}
                     right={() => (
                       <ItemRight>
-                        <Caption>{email}</Caption>
+                        <Caption selectable>{email}</Caption>
                       </ItemRight>
                     )}
                   />
@@ -98,7 +100,11 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
                     left={() => <LeftIcon icon="twitter" />}
                     right={() => (
                       <ItemRight>
-                        <Caption>{twitter}</Caption>
+                        <Caption
+                          style={{color: colors.primary}}
+                          onPress={() => Linking.openURL(`https://twitter.com/${twitter}`)}>
+                          {twitter}
+                        </Caption>
                       </ItemRight>
                     )}
                   />
@@ -109,7 +115,11 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
                     left={() => <LeftIcon icon="message-outline" />}
                     right={() => (
                       <ItemRight>
-                        <Caption>{riot}</Caption>
+                        <Caption
+                          style={{color: colors.primary}}
+                          onPress={() => Linking.openURL(`https://matrix.to/#/${riot}`)}>
+                          {riot}
+                        </Caption>
                       </ItemRight>
                     )}
                   />
@@ -120,7 +130,9 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
                     left={() => <LeftIcon icon="earth" />}
                     right={() => (
                       <ItemRight>
-                        <Caption>{web}</Caption>
+                        <Caption style={styles.web} onPress={() => Linking.openURL(web)}>
+                          {web}
+                        </Caption>
                       </ItemRight>
                     )}
                   />
@@ -168,3 +180,9 @@ function Voter({accountId}: {accountId: AccountId}) {
     />
   );
 }
+
+const styles = StyleSheet.create({
+  web: {
+    textDecorationLine: 'underline',
+  },
+});
