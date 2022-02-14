@@ -12,7 +12,7 @@ import {bountiesScreen, councilScreen, democracyScreen, treasuryScreen} from '@u
 import {standardPadding} from '@ui/styles';
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
-import {ScrollView} from '@ui/components/ScrollView';
+import {ScrollViewRefetch} from '@ui/components/ScrollViewRefetch';
 import {DEMOCRACY_SUMMARY_QUERY} from 'src/api/hooks/useDemocracySummary';
 import {COUNCIL_SUMMARY_QUERY} from 'src/api/hooks/useCouncilSummary';
 import {BOUNTIES_SUMMARY_QUERY} from 'src/api/hooks/useBountiesSummary';
@@ -30,7 +30,7 @@ type PropTypes = {
 function DashboardScreen({navigation}: PropTypes) {
   return (
     <Layout style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollView} refetchQueries={refetchQueries}>
+      <ScrollViewRefetch contentContainerStyle={styles.scrollView} refetchQueries={refetchQueries}>
         <DemocracySummaryTeaser onPress={() => navigation.navigate(democracyScreen)} />
         <Padder scale={1} />
         <CouncilSummaryTeaser onPress={() => navigation.navigate(councilScreen)} />
@@ -38,7 +38,7 @@ function DashboardScreen({navigation}: PropTypes) {
         <TreasurySummaryTeaser onPress={() => navigation.navigate(treasuryScreen)} />
         <Padder scale={1} />
         <BountySummaryTeaser onPress={() => navigation.navigate(bountiesScreen)} />
-      </ScrollView>
+      </ScrollViewRefetch>
     </Layout>
   );
 }
