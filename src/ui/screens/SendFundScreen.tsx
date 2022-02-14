@@ -14,7 +14,7 @@ import {Button, Headline, IconButton, Text, TextInput} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {Layout} from '@ui/components/Layout';
 import {standardPadding} from '@ui/styles';
-
+import {decimalKeypad} from 'src/utils';
 type Props = {
   navigation: NavigationProp<AccountsStackParamList, typeof sendFundScreen>;
   route: RouteProp<AccountsStackParamList, typeof sendFundScreen>;
@@ -29,6 +29,7 @@ export function SendFundScreen({navigation, route}: Props) {
   const formatBalance = useFormatBalance();
   const {api} = useApi();
   const startTx = useApiTx();
+  const maxBalance = 0;
 
   useEffect(() => {
     ref.current?.open();
@@ -65,7 +66,7 @@ export function SendFundScreen({navigation, route}: Props) {
               keyboardType="decimal-pad"
               value={amount}
               onFocus={() => setAmount('')}
-              onChangeText={(nextValue) => setAmount(nextValue.replace(/[^(\d+).(\d+)]/g, ''))}
+              onChangeText={(nextValue) => setAmount(decimalKeypad(nextValue))}
               right={<TextInput.Affix text={(api && formatBalance(getBalanceFromString(api, amount))) ?? ''} />}
             />
             <Padder scale={1} />
