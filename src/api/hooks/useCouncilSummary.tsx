@@ -3,7 +3,7 @@ import {ProxyCouncil} from 'src/generated/litentryGraphQLTypes';
 
 export type CouncilSummary = Omit<ProxyCouncil, 'members' | 'runnersUp' | 'candidates'>;
 
-const COUNCIL_SUMMARY_QUERY = gql`
+export const COUNCIL_SUMMARY_QUERY = gql`
   query getCouncilSummary {
     proxyCouncil {
       primeMember {
