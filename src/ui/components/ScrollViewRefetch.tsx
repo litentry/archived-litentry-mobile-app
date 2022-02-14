@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-imports */
 import React from 'react';
 import {ScrollView as RNScrollView, RefreshControl} from 'react-native';
 import {RefetchQueries, useRefetch} from 'src/api/hooks/useRefetch';
@@ -7,7 +6,7 @@ import {useTheme} from '@ui/library';
 type RNScrollViewProps = React.ComponentProps<typeof RNScrollView>;
 
 type Props = Omit<RNScrollViewProps, 'refreshControl'> & {
-  refetchQueries: RefetchQueries;
+  refetchQueries?: RefetchQueries;
 };
 
 export function ScrollViewRefetch({children, refetchQueries, ...props}: Props) {
