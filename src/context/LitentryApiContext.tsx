@@ -25,22 +25,23 @@ export function LitentryApiClientProvider({children}: {children: React.ReactNode
 
   useEffect(() => {
     const init = async () => {
-      const cache = new InMemoryCache({
-        typePolicies: {
-          Query: {
-            fields: {
-              proxyBounty: {
-                read(_, {args, toReference}) {
-                  return toReference({
-                    __typename: 'ProxyBounty',
-                    index: args?.index,
-                  });
-                },
-              },
-            },
-          },
-        },
-      });
+      const cache = new InMemoryCache();
+      // {
+      //   typePolicies: {
+      //     Query: {
+      //       fields: {
+      //         proxyBounty: {
+      //           read(_, {args, toReference}) {
+      //             return toReference({
+      //               __typename: 'ProxyBounty',
+      //               index: args?.index,
+      //             });
+      //           },
+      //         },
+      //       },
+      //     },
+      //   },
+      // }
       const storage = new MMKV({id: `apollo-cache-${currentNetwork.key}`});
       const cachePersistor = new CachePersistor({
         cache,
