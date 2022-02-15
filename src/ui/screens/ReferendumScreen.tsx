@@ -20,6 +20,7 @@ import {referendumScreen} from '@ui/navigation/routeKeys';
 import {formatCallMeta} from 'src/utils/callMetadata';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
+import {decimalKeypad} from 'src/utils';
 
 export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
   const startTx = useApiTx();
@@ -172,9 +173,8 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
             placeholder="Place your Text"
             keyboardType="decimal-pad"
             value={state.voteValue}
-            onChangeText={(nextValue) =>
-              dispatch({type: 'SET_VOTE_VALUE', payload: nextValue.replace(/[^(\d+).(\d+)]/g, '')})
-            }
+            onChangeText={(nextValue) => dispatch({type: 'SET_VOTE_VALUE', payload: decimalKeypad(nextValue)})}
+            contextMenuHidden={true}
           />
           <Subheading style={styles.marginLeft}>
             {api && formatBalance(getBalanceFromString(api, state.voteValue))}

@@ -8,6 +8,7 @@ import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import globalStyles, {standardPadding} from '@ui/styles';
+import {decimalKeypad} from 'src/utils';
 
 export function SubmitProposal() {
   const {api} = useApi();
@@ -79,12 +80,11 @@ export function SubmitProposal() {
           dense
           autoComplete="off"
           mode="outlined"
-          placeholder="Place your Text"
+          placeholder="Place your balance"
           keyboardType="decimal-pad"
           value={state.balance}
-          onChangeText={(nextValue) =>
-            dispatch({type: 'SET_BALANCE', payload: nextValue.replace(/[^(\d+).(\d+)]/g, '')})
-          }
+          onChangeText={(nextValue) => dispatch({type: 'SET_BALANCE', payload: decimalKeypad(nextValue)})}
+          contextMenuHidden={true}
         />
 
         <Subheading style={styles.lockedBalance}>
