@@ -1,88 +1,73 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {StyleSheet, FlatList, View} from 'react-native';
-import Identicon from '@polkadot/reactnative-identicon';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {Caption, Divider, List} from '@ui/library';
-import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
-import {useRegistrars} from 'src/api/hooks/useRegistrars';
-import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
+import {useRegistrarsSummary, Registrar} from 'src/api/hooks/useRegistrarsSummary';
 import StatInfoBlock from '@ui/components/StatInfoBlock';
 import globalStyles, {standardPadding, monofontFamily} from '@ui/styles';
+import LoadingView from '@ui/components/LoadingView';
+import {Account} from '@ui/components/Account/Account';
+import Identicon from '@polkadot/reactnative-identicon';
+import {Padder} from '@ui/components/Padder';
+import {EmptyView} from '@ui/components/EmptyView';
 
 function RegistrarList() {
-  const registrars = useRegistrars();
-  const registrarsCount = registrars.length;
-  const formatBalance = useFormatBalance();
+  const {data: registrarsSummary, loading} = useRegistrarsSummary();
 
-  const sortedRegistrars = useMemo(
-    () => [...registrars].sort((a, b) => (a.fee.toNumber() > b.fee.toNumber() ? 1 : -1)),
-    [registrars],
-  );
-
-  if (registrarsCount === 0) {
-    return (
-      <View style={globalStyles.centeredContainer}>
-        <Caption>No Registrar available.</Caption>
-      </View>
-    );
+  if (loading) {
+    return <LoadingView />;
   }
 
-  const lowestFee = formatBalance(sortedRegistrars[0]?.fee ?? '');
-  const highestFee = formatBalance(sortedRegistrars[sortedRegistrars.length - 1]?.fee ?? '');
+  if (!registrarsSummary) {
+    return <EmptyView />;
+  }
+
+  const {list: registrars, registrarsCount, formattedLowestFee, formattedHighestFee} = registrarsSummary;
 
   return (
     <FlatList
       ListHeaderComponent={() => (
         <View style={styles.infoContainer}>
           <View style={globalStyles.spaceBetweenRowContainer}>
-            <StatInfoBlock title="Count">
-              <Caption style={styles.number}>{String(registrarsCount)}</Caption>
-            </StatInfoBlock>
-            <StatInfoBlock title="Lowest Fee">{lowestFee}</StatInfoBlock>
-            <StatInfoBlock title="Highest Fee">{highestFee}</StatInfoBlock>
+            <StatInfoBlock title="Count">{String(registrarsCount)}</StatInfoBlock>
+            <StatInfoBlock title="Lowest Fee">{formattedLowestFee}</StatInfoBlock>
+            <StatInfoBlock title="Highest Fee">{formattedHighestFee}</StatInfoBlock>
           </View>
+          <Padder scale={1} />
         </View>
       )}
       contentContainerStyle={styles.flatList}
       data={registrars}
-      renderItem={({item: registrar}) => (
-        <RegistrarItem
-          key={registrar.account.toString()}
-          address={registrar.account.toString()}
-          fee={formatBalance(registrar.fee)}
-          index={registrar.index}
-        />
-      )}
-      keyExtractor={(item) => item.account.toString()}
+      renderItem={({item: registrar}) => <RegistrarItem registrar={registrar} />}
+      keyExtractor={(item) => item.address}
       ItemSeparatorComponent={Divider}
     />
   );
 }
 
 type RegistrarItemProps = {
-  address: string;
-  fee?: string;
-  index: number;
+  registrar: Registrar;
+  onPress?: (registrar: Registrar) => void;
 };
 
-function RegistrarItem({address, fee, index}: RegistrarItemProps) {
-  const {data: identity} = useAccountIdentityInfo(address);
+function RegistrarItem({registrar, onPress}: RegistrarItemProps) {
+  const {account, id, formattedFee} = registrar;
+
   return (
     <List.Item
-      title={
-        identity ? (
-          <View style={styles.row}>
-            <Caption>{`#${index} `}</Caption>
-            <AccountInfoInlineTeaser identity={identity} />
-          </View>
-        ) : null
-      }
-      description={fee}
+      onPress={onPress ? () => onPress(registrar) : undefined}
       left={() => (
-        <View style={styles.justifyCenter}>
-          <Identicon value={address} size={30} />
+        <View style={globalStyles.rowAlignCenter}>
+          <Identicon value={account.address} size={30} />
         </View>
       )}
+      title={<Account account={account} />}
+      description={
+        <>
+          <Caption>{`Index: : ${id}`}</Caption>
+          <Padder scale={1} />
+          <Caption>{`Fee: ${formattedFee}`}</Caption>
+        </>
+      }
     />
   );
 }
@@ -91,15 +76,9 @@ const styles = StyleSheet.create({
   flatList: {
     marginHorizontal: standardPadding,
   },
-  justifyCenter: {
-    justifyContent: 'center',
-  },
   infoContainer: {
     marginTop: standardPadding * 3,
     marginHorizontal: standardPadding * 3,
-  },
-  row: {
-    flexDirection: 'row',
   },
   number: {
     fontSize: 20,
