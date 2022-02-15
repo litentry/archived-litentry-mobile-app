@@ -23,6 +23,7 @@ import Badge from '@ui/components/Badge';
 import {noop} from 'lodash';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
+import {decimalKeypad} from 'src/utils';
 
 const MAX_VOTES = 16;
 
@@ -252,7 +253,8 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
         placeholder="Vote value"
         keyboardType="decimal-pad"
         value={amount}
-        onChangeText={(nextValue) => setAmount(nextValue.replace(/[^(\d+).(\d+)]/g, ''))}
+        onChangeText={(nextValue) => setAmount(decimalKeypad(nextValue))}
+        contextMenuHidden={true}
       />
 
       <Subheading style={styles.voteValue}>{api ? formatBalance(getBalanceFromString(api, amount)) : ''}</Subheading>

@@ -16,6 +16,7 @@ import {Layout} from '@ui/components/Layout';
 import {standardPadding} from '@ui/styles';
 import {useAccountInfo} from 'src/api/hooks/useAccountInfo';
 import MaxBalance from '@ui/components/MaxBalance';
+import {decimalKeypad} from 'src/utils';
 
 type Props = {
   navigation: NavigationProp<AccountsStackParamList, typeof sendFundScreen>;
@@ -32,6 +33,7 @@ export function SendFundScreen({navigation, route}: Props) {
   const {api} = useApi();
   const startTx = useApiTx();
   const {data: accountInfo} = useAccountInfo(address);
+  const maxBalance = 0;
 
   useEffect(() => {
     ref.current?.open();
@@ -68,8 +70,9 @@ export function SendFundScreen({navigation, route}: Props) {
               keyboardType="decimal-pad"
               value={amount}
               onFocus={() => setAmount('')}
-              onChangeText={(nextValue) => setAmount(nextValue.replace(/[^(\d+).(\d+)]/g, ''))}
+              onChangeText={(nextValue) => setAmount(decimalKeypad(nextValue))}
               right={<TextInput.Affix text={(api && formatBalance(getBalanceFromString(api, amount))) ?? ''} />}
+              contextMenuHidden={true}
             />
             <MaxBalance address={address} />
             <Padder scale={1} />
