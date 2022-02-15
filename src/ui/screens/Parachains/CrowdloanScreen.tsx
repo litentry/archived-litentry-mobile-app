@@ -303,6 +303,7 @@ function ContributeBox({
         value={amount}
         onFocus={() => setAmount('')}
         onChangeText={(nextValue) => setAmount(decimalKeypad(nextValue))}
+        contextMenuHidden={true}
       />
       <Padder scale={0.2} />
       <Text>{api ? formatBalance(getBalanceFromString(api, amount)) : ''}</Text>

@@ -7,13 +7,7 @@ export function notEmpty<TValue>(value: TValue | null | undefined | ''): value i
 // Useful for the countries that use ,(comma) seperation for the decimal number
 // avoid two decimals in the string
 export function decimalKeypad(numericValue: string): string {
-  if (!isNaN(+numericValue)) {
-    return numericValue.replace(',', '.').replace(/[^(\d+).(\d+)]/g, '');
-  } else {
-    if (numericValue.length === 1) return '0.';
-    return numericValue
-      .replace(',', '.')
-      .replace(/[^(\d+).(\d+)]/g, '')
-      .slice(0, -1);
-  }
+  if (numericValue.length === 1 && isNaN(+numericValue)) return '0.';
+  const number = numericValue.replace(',', '.');
+  return number.split('.').length <= 2 ? number : number.slice(0, -1);
 }

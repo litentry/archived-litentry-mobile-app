@@ -68,6 +68,7 @@ export function SendFundScreen({navigation, route}: Props) {
               onFocus={() => setAmount('')}
               onChangeText={(nextValue) => setAmount(decimalKeypad(nextValue))}
               right={<TextInput.Affix text={(api && formatBalance(getBalanceFromString(api, amount))) ?? ''} />}
+              contextMenuHidden={true}
             />
             <Padder scale={1} />
             <TextInput

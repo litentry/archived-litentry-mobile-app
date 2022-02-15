@@ -84,6 +84,7 @@ export function SubmitProposal() {
           keyboardType="decimal-pad"
           value={state.balance}
           onChangeText={(nextValue) => dispatch({type: 'SET_BALANCE', payload: decimalKeypad(nextValue)})}
+          contextMenuHidden={true}
         />
 
         <Subheading style={styles.lockedBalance}>

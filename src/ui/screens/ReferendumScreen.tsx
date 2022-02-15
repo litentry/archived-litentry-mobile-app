@@ -174,6 +174,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
             keyboardType="decimal-pad"
             value={state.voteValue}
             onChangeText={(nextValue) => dispatch({type: 'SET_VOTE_VALUE', payload: decimalKeypad(nextValue)})}
+            contextMenuHidden={true}
           />
           <Subheading style={styles.marginLeft}>
             {api && formatBalance(getBalanceFromString(api, state.voteValue))}

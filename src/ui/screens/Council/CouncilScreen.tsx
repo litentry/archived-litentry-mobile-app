@@ -254,6 +254,7 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
         keyboardType="decimal-pad"
         value={amount}
         onChangeText={(nextValue) => setAmount(decimalKeypad(nextValue))}
+        contextMenuHidden={true}
       />
 
       <Subheading style={styles.voteValue}>{api ? formatBalance(getBalanceFromString(api, amount)) : ''}</Subheading>
