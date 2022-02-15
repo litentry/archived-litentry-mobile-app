@@ -19,7 +19,7 @@ import {CrowdloansStackParamList} from '@ui/navigation/navigation';
 import {crowdloanFundDetailScreen} from '@ui/navigation/routeKeys';
 import {Button, Card, Subheading, Text, Caption, Title, Modal, TextInput, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {notEmpty} from 'src/utils';
+import {decimalKeypad, notEmpty} from 'src/utils';
 import type {BalanceOf} from '@polkadot/types/interfaces';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {Chart} from '@ui/components/Chart';
@@ -302,7 +302,8 @@ function ContributeBox({
         keyboardType="decimal-pad"
         value={amount}
         onFocus={() => setAmount('')}
-        onChangeText={(nextValue) => setAmount(nextValue.replace(/[^(\d+).(\d+)]/g, ''))}
+        onChangeText={(nextValue) => setAmount(decimalKeypad(nextValue))}
+        contextMenuHidden={true}
       />
       <Padder scale={0.2} />
       <Text>{api ? formatBalance(getBalanceFromString(api, amount)) : ''}</Text>
