@@ -8,6 +8,7 @@ const LITENTRY_API_URI = 'https://graph.litentry.io/graphql';
 
 type LitentryApiContextType = {
   clearCache: () => void;
+  client: ApolloClient<NormalizedCacheObject>;
 };
 
 const LitentryApiContext = React.createContext<LitentryApiContextType | undefined>(undefined);
@@ -65,7 +66,7 @@ export function LitentryApiClientProvider({children}: {children: React.ReactNode
 
   return (
     <ApolloProvider client={client}>
-      <LitentryApiContext.Provider value={{clearCache}}>{children}</LitentryApiContext.Provider>
+      <LitentryApiContext.Provider value={{clearCache, client}}>{children}</LitentryApiContext.Provider>
     </ApolloProvider>
   );
 }
@@ -73,7 +74,15 @@ export function LitentryApiClientProvider({children}: {children: React.ReactNode
 export function useClearCache() {
   const context = useContext(LitentryApiContext);
   if (!context) {
-    throw new Error('useLitentryApiClient must be used within LitentryApiClientProvider');
+    throw new Error('useClearCache must be used within LitentryApiClientProvider');
   }
   return {clearCache: context.clearCache};
+}
+
+export function useLitentryApiClient() {
+  const context = useContext(LitentryApiContext);
+  if (!context) {
+    throw new Error('useClient must be used within LitentryApiClientProvider');
+  }
+  return {client: context.client};
 }

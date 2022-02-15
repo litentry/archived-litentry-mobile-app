@@ -1,7 +1,7 @@
 import {gql, useQuery} from '@apollo/client';
 import type {ProxyBountiesSummary} from 'src/generated/litentryGraphQLTypes';
 
-const BOUNTIES_SUMMARY_QUERY = gql`
+export const BOUNTIES_SUMMARY_QUERY = gql`
   query getBountiesSummary {
     proxyBountiesSummary {
       activeBounties

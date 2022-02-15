@@ -3,7 +3,7 @@ import {ProxyDemocracySummary} from 'src/generated/litentryGraphQLTypes';
 
 export type DemocracySummary = ProxyDemocracySummary;
 
-const DEMOCRACY_SUMMARY_QUERY = gql`
+export const DEMOCRACY_SUMMARY_QUERY = gql`
   query getDemocracySummary {
     proxyDemocracySummary {
       activeProposals
