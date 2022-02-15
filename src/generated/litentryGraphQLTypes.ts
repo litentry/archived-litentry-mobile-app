@@ -22,6 +22,8 @@ export type Bep20Account = {
   __typename?: 'Bep20Account';
   address: Scalars['String'];
   balance: Scalars['BigInt'];
+  contractAddress: Scalars['String'];
+  decimals: Scalars['Int'];
   firstTransferInBlockNumber?: Maybe<Scalars['BigInt']>;
   firstTransferInTimestamp?: Maybe<Scalars['BigInt']>;
   firstTransferOutBlockNumber?: Maybe<Scalars['BigInt']>;
@@ -31,6 +33,7 @@ export type Bep20Account = {
   lastTransferInTimestamp?: Maybe<Scalars['BigInt']>;
   lastTransferOutBlockNumber?: Maybe<Scalars['BigInt']>;
   lastTransferOutTimestamp?: Maybe<Scalars['BigInt']>;
+  symbol: Scalars['String'];
   totalTransfers: Scalars['BigInt'];
   transfersFrom?: Maybe<Array<Bep20Transfer>>;
   transfersTo?: Maybe<Array<Bep20Transfer>>;
@@ -75,6 +78,28 @@ export type Bep20Account_Filter = {
   balance_lte?: InputMaybe<Scalars['BigInt']>;
   balance_not?: InputMaybe<Scalars['BigInt']>;
   balance_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  contractAddress?: InputMaybe<Scalars['String']>;
+  contractAddress_contains?: InputMaybe<Scalars['String']>;
+  contractAddress_ends_with?: InputMaybe<Scalars['String']>;
+  contractAddress_gt?: InputMaybe<Scalars['String']>;
+  contractAddress_gte?: InputMaybe<Scalars['String']>;
+  contractAddress_in?: InputMaybe<Array<Scalars['String']>>;
+  contractAddress_lt?: InputMaybe<Scalars['String']>;
+  contractAddress_lte?: InputMaybe<Scalars['String']>;
+  contractAddress_not?: InputMaybe<Scalars['String']>;
+  contractAddress_not_contains?: InputMaybe<Scalars['String']>;
+  contractAddress_not_ends_with?: InputMaybe<Scalars['String']>;
+  contractAddress_not_in?: InputMaybe<Array<Scalars['String']>>;
+  contractAddress_not_starts_with?: InputMaybe<Scalars['String']>;
+  contractAddress_starts_with?: InputMaybe<Scalars['String']>;
+  decimals?: InputMaybe<Scalars['Int']>;
+  decimals_gt?: InputMaybe<Scalars['Int']>;
+  decimals_gte?: InputMaybe<Scalars['Int']>;
+  decimals_in?: InputMaybe<Array<Scalars['Int']>>;
+  decimals_lt?: InputMaybe<Scalars['Int']>;
+  decimals_lte?: InputMaybe<Scalars['Int']>;
+  decimals_not?: InputMaybe<Scalars['Int']>;
+  decimals_not_in?: InputMaybe<Array<Scalars['Int']>>;
   firstTransferInBlockNumber?: InputMaybe<Scalars['BigInt']>;
   firstTransferInBlockNumber_gt?: InputMaybe<Scalars['BigInt']>;
   firstTransferInBlockNumber_gte?: InputMaybe<Scalars['BigInt']>;
@@ -147,6 +172,20 @@ export type Bep20Account_Filter = {
   lastTransferOutTimestamp_lte?: InputMaybe<Scalars['BigInt']>;
   lastTransferOutTimestamp_not?: InputMaybe<Scalars['BigInt']>;
   lastTransferOutTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  symbol?: InputMaybe<Scalars['String']>;
+  symbol_contains?: InputMaybe<Scalars['String']>;
+  symbol_ends_with?: InputMaybe<Scalars['String']>;
+  symbol_gt?: InputMaybe<Scalars['String']>;
+  symbol_gte?: InputMaybe<Scalars['String']>;
+  symbol_in?: InputMaybe<Array<Scalars['String']>>;
+  symbol_lt?: InputMaybe<Scalars['String']>;
+  symbol_lte?: InputMaybe<Scalars['String']>;
+  symbol_not?: InputMaybe<Scalars['String']>;
+  symbol_not_contains?: InputMaybe<Scalars['String']>;
+  symbol_not_ends_with?: InputMaybe<Scalars['String']>;
+  symbol_not_in?: InputMaybe<Array<Scalars['String']>>;
+  symbol_not_starts_with?: InputMaybe<Scalars['String']>;
+  symbol_starts_with?: InputMaybe<Scalars['String']>;
   totalTransfers?: InputMaybe<Scalars['BigInt']>;
   totalTransfers_gt?: InputMaybe<Scalars['BigInt']>;
   totalTransfers_gte?: InputMaybe<Scalars['BigInt']>;
@@ -160,6 +199,8 @@ export type Bep20Account_Filter = {
 export enum Bep20Account_OrderBy {
   Address = 'address',
   Balance = 'balance',
+  ContractAddress = 'contractAddress',
+  Decimals = 'decimals',
   FirstTransferInBlockNumber = 'firstTransferInBlockNumber',
   FirstTransferInTimestamp = 'firstTransferInTimestamp',
   FirstTransferOutBlockNumber = 'firstTransferOutBlockNumber',
@@ -169,6 +210,7 @@ export enum Bep20Account_OrderBy {
   LastTransferInTimestamp = 'lastTransferInTimestamp',
   LastTransferOutBlockNumber = 'lastTransferOutBlockNumber',
   LastTransferOutTimestamp = 'lastTransferOutTimestamp',
+  Symbol = 'symbol',
   TotalTransfers = 'totalTransfers',
   TransfersFrom = 'transfersFrom',
   TransfersTo = 'transfersTo',
@@ -296,6 +338,8 @@ export type Erc20Account = {
   __typename?: 'Erc20Account';
   address: Scalars['String'];
   balance: Scalars['BigInt'];
+  contractAddress: Scalars['String'];
+  decimals: Scalars['Int'];
   firstTransferInBlockNumber?: Maybe<Scalars['BigInt']>;
   firstTransferInTimestamp?: Maybe<Scalars['BigInt']>;
   firstTransferOutBlockNumber?: Maybe<Scalars['BigInt']>;
@@ -305,6 +349,7 @@ export type Erc20Account = {
   lastTransferInTimestamp?: Maybe<Scalars['BigInt']>;
   lastTransferOutBlockNumber?: Maybe<Scalars['BigInt']>;
   lastTransferOutTimestamp?: Maybe<Scalars['BigInt']>;
+  symbol: Scalars['String'];
   totalTransfers: Scalars['BigInt'];
   transfersFrom?: Maybe<Array<Erc20Transfer>>;
   transfersTo?: Maybe<Array<Erc20Transfer>>;
@@ -349,6 +394,28 @@ export type Erc20Account_Filter = {
   balance_lte?: InputMaybe<Scalars['BigInt']>;
   balance_not?: InputMaybe<Scalars['BigInt']>;
   balance_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  contractAddress?: InputMaybe<Scalars['String']>;
+  contractAddress_contains?: InputMaybe<Scalars['String']>;
+  contractAddress_ends_with?: InputMaybe<Scalars['String']>;
+  contractAddress_gt?: InputMaybe<Scalars['String']>;
+  contractAddress_gte?: InputMaybe<Scalars['String']>;
+  contractAddress_in?: InputMaybe<Array<Scalars['String']>>;
+  contractAddress_lt?: InputMaybe<Scalars['String']>;
+  contractAddress_lte?: InputMaybe<Scalars['String']>;
+  contractAddress_not?: InputMaybe<Scalars['String']>;
+  contractAddress_not_contains?: InputMaybe<Scalars['String']>;
+  contractAddress_not_ends_with?: InputMaybe<Scalars['String']>;
+  contractAddress_not_in?: InputMaybe<Array<Scalars['String']>>;
+  contractAddress_not_starts_with?: InputMaybe<Scalars['String']>;
+  contractAddress_starts_with?: InputMaybe<Scalars['String']>;
+  decimals?: InputMaybe<Scalars['Int']>;
+  decimals_gt?: InputMaybe<Scalars['Int']>;
+  decimals_gte?: InputMaybe<Scalars['Int']>;
+  decimals_in?: InputMaybe<Array<Scalars['Int']>>;
+  decimals_lt?: InputMaybe<Scalars['Int']>;
+  decimals_lte?: InputMaybe<Scalars['Int']>;
+  decimals_not?: InputMaybe<Scalars['Int']>;
+  decimals_not_in?: InputMaybe<Array<Scalars['Int']>>;
   firstTransferInBlockNumber?: InputMaybe<Scalars['BigInt']>;
   firstTransferInBlockNumber_gt?: InputMaybe<Scalars['BigInt']>;
   firstTransferInBlockNumber_gte?: InputMaybe<Scalars['BigInt']>;
@@ -421,6 +488,20 @@ export type Erc20Account_Filter = {
   lastTransferOutTimestamp_lte?: InputMaybe<Scalars['BigInt']>;
   lastTransferOutTimestamp_not?: InputMaybe<Scalars['BigInt']>;
   lastTransferOutTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  symbol?: InputMaybe<Scalars['String']>;
+  symbol_contains?: InputMaybe<Scalars['String']>;
+  symbol_ends_with?: InputMaybe<Scalars['String']>;
+  symbol_gt?: InputMaybe<Scalars['String']>;
+  symbol_gte?: InputMaybe<Scalars['String']>;
+  symbol_in?: InputMaybe<Array<Scalars['String']>>;
+  symbol_lt?: InputMaybe<Scalars['String']>;
+  symbol_lte?: InputMaybe<Scalars['String']>;
+  symbol_not?: InputMaybe<Scalars['String']>;
+  symbol_not_contains?: InputMaybe<Scalars['String']>;
+  symbol_not_ends_with?: InputMaybe<Scalars['String']>;
+  symbol_not_in?: InputMaybe<Array<Scalars['String']>>;
+  symbol_not_starts_with?: InputMaybe<Scalars['String']>;
+  symbol_starts_with?: InputMaybe<Scalars['String']>;
   totalTransfers?: InputMaybe<Scalars['BigInt']>;
   totalTransfers_gt?: InputMaybe<Scalars['BigInt']>;
   totalTransfers_gte?: InputMaybe<Scalars['BigInt']>;
@@ -434,6 +515,8 @@ export type Erc20Account_Filter = {
 export enum Erc20Account_OrderBy {
   Address = 'address',
   Balance = 'balance',
+  ContractAddress = 'contractAddress',
+  Decimals = 'decimals',
   FirstTransferInBlockNumber = 'firstTransferInBlockNumber',
   FirstTransferInTimestamp = 'firstTransferInTimestamp',
   FirstTransferOutBlockNumber = 'firstTransferOutBlockNumber',
@@ -443,6 +526,7 @@ export enum Erc20Account_OrderBy {
   LastTransferInTimestamp = 'lastTransferInTimestamp',
   LastTransferOutBlockNumber = 'lastTransferOutBlockNumber',
   LastTransferOutTimestamp = 'lastTransferOutTimestamp',
+  Symbol = 'symbol',
   TotalTransfers = 'totalTransfers',
   TransfersFrom = 'transfersFrom',
   TransfersTo = 'transfersTo',
@@ -1016,12 +1100,22 @@ export type ProxyReferendum = {
 
 export type ProxyRegistrar = {
   __typename?: 'ProxyRegistrar';
-  account?: Maybe<ProxyAccount>;
-  address?: Maybe<Scalars['String']>;
-  fee?: Maybe<Scalars['String']>;
-  formattedFee?: Maybe<Scalars['String']>;
+  account: ProxyAccount;
+  address: Scalars['String'];
+  fee: Scalars['String'];
+  formattedFee: Scalars['String'];
   /** id: Registrar index */
   id: Scalars['String'];
+};
+
+export type ProxyRegistrarsSummary = {
+  __typename?: 'ProxyRegistrarsSummary';
+  formattedHighestFee: Scalars['String'];
+  formattedLowestFee: Scalars['String'];
+  highestFee: Scalars['String'];
+  list: Array<ProxyRegistrar>;
+  lowestFee: Scalars['String'];
+  registrarsCount: Scalars['Int'];
 };
 
 export type ProxyRegistrationJudgement = {
@@ -1155,7 +1249,7 @@ export type Query = {
   proxyParachain?: Maybe<ProxyParachain>;
   proxyParachains?: Maybe<Array<ProxyParachain>>;
   proxyParachainsInfo: ProxyParachainsInfo;
-  proxyRegistrars?: Maybe<Array<ProxyRegistrar>>;
+  proxyRegistrarsSummary: ProxyRegistrarsSummary;
   proxyTip?: Maybe<ProxyTip>;
   proxyTips?: Maybe<Array<ProxyTip>>;
   proxyTreasury: ProxyTreasury;
@@ -1180,6 +1274,11 @@ export type Query = {
   substrateTransferByUniqueInput?: Maybe<SubstrateTransfer>;
   substrateTransfers: Array<SubstrateTransfer>;
   substrateTransfersConnection: SubstrateTransfersConnection;
+  substrateTreasuryDepositById?: Maybe<SubstrateTreasuryDeposit>;
+  /** @deprecated Use `substrateTreasuryDepositById` */
+  substrateTreasuryDepositByUniqueInput?: Maybe<SubstrateTreasuryDeposit>;
+  substrateTreasuryDeposits: Array<SubstrateTreasuryDeposit>;
+  substrateTreasuryDepositsConnection: SubstrateTreasuryDepositsConnection;
   substrateVoteById?: Maybe<SubstrateVote>;
   /** @deprecated Use `substrateVoteById` */
   substrateVoteByUniqueInput?: Maybe<SubstrateVote>;
@@ -1399,6 +1498,28 @@ export type QuerySubstrateTransfersConnectionArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy: Array<SubstrateTransferOrderByInput>;
   where?: InputMaybe<SubstrateTransferWhereInput>;
+};
+
+export type QuerySubstrateTreasuryDepositByIdArgs = {
+  id: Scalars['ID'];
+};
+
+export type QuerySubstrateTreasuryDepositByUniqueInputArgs = {
+  where: SubstrateTreasuryDepositWhereUniqueInput;
+};
+
+export type QuerySubstrateTreasuryDepositsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<InputMaybe<SubstrateTreasuryDepositOrderByInput>>>;
+  where?: InputMaybe<SubstrateTreasuryDepositWhereInput>;
+};
+
+export type QuerySubstrateTreasuryDepositsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy: Array<SubstrateTreasuryDepositOrderByInput>;
+  where?: InputMaybe<SubstrateTreasuryDepositWhereInput>;
 };
 
 export type QuerySubstrateVoteByIdArgs = {
@@ -2283,6 +2404,132 @@ export type SubstrateTransferWhereUniqueInput = {
 export type SubstrateTransfersConnection = {
   __typename?: 'SubstrateTransfersConnection';
   edges: Array<SubstrateTransferEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type SubstrateTreasuryDeposit = {
+  __typename?: 'SubstrateTreasuryDeposit';
+  accountBalanceAtBlock: Scalars['BigInt'];
+  amount: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
+  date: Scalars['DateTime'];
+  decimals: Scalars['Int'];
+  /** network:block:index */
+  id: Scalars['ID'];
+  network: SubstrateNetwork;
+  symbol: Scalars['String'];
+};
+
+export type SubstrateTreasuryDepositEdge = {
+  __typename?: 'SubstrateTreasuryDepositEdge';
+  cursor: Scalars['String'];
+  node: SubstrateTreasuryDeposit;
+};
+
+export enum SubstrateTreasuryDepositOrderByInput {
+  AccountBalanceAtBlockAsc = 'accountBalanceAtBlock_ASC',
+  AccountBalanceAtBlockDesc = 'accountBalanceAtBlock_DESC',
+  AmountAsc = 'amount_ASC',
+  AmountDesc = 'amount_DESC',
+  BlockNumberAsc = 'blockNumber_ASC',
+  BlockNumberDesc = 'blockNumber_DESC',
+  DateAsc = 'date_ASC',
+  DateDesc = 'date_DESC',
+  DecimalsAsc = 'decimals_ASC',
+  DecimalsDesc = 'decimals_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  NetworkAsc = 'network_ASC',
+  NetworkDesc = 'network_DESC',
+  SymbolAsc = 'symbol_ASC',
+  SymbolDesc = 'symbol_DESC',
+}
+
+export type SubstrateTreasuryDepositWhereInput = {
+  AND?: InputMaybe<Array<SubstrateTreasuryDepositWhereInput>>;
+  OR?: InputMaybe<Array<SubstrateTreasuryDepositWhereInput>>;
+  accountBalanceAtBlock_eq?: InputMaybe<Scalars['BigInt']>;
+  accountBalanceAtBlock_gt?: InputMaybe<Scalars['BigInt']>;
+  accountBalanceAtBlock_gte?: InputMaybe<Scalars['BigInt']>;
+  accountBalanceAtBlock_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  accountBalanceAtBlock_lt?: InputMaybe<Scalars['BigInt']>;
+  accountBalanceAtBlock_lte?: InputMaybe<Scalars['BigInt']>;
+  accountBalanceAtBlock_not_eq?: InputMaybe<Scalars['BigInt']>;
+  accountBalanceAtBlock_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  amount_eq?: InputMaybe<Scalars['BigInt']>;
+  amount_gt?: InputMaybe<Scalars['BigInt']>;
+  amount_gte?: InputMaybe<Scalars['BigInt']>;
+  amount_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  amount_lt?: InputMaybe<Scalars['BigInt']>;
+  amount_lte?: InputMaybe<Scalars['BigInt']>;
+  amount_not_eq?: InputMaybe<Scalars['BigInt']>;
+  amount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  blockNumber_eq?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_gt?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_gte?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  blockNumber_lt?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_lte?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_not_eq?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  date_eq?: InputMaybe<Scalars['DateTime']>;
+  date_gt?: InputMaybe<Scalars['DateTime']>;
+  date_gte?: InputMaybe<Scalars['DateTime']>;
+  date_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  date_lt?: InputMaybe<Scalars['DateTime']>;
+  date_lte?: InputMaybe<Scalars['DateTime']>;
+  date_not_eq?: InputMaybe<Scalars['DateTime']>;
+  date_not_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  decimals_eq?: InputMaybe<Scalars['Int']>;
+  decimals_gt?: InputMaybe<Scalars['Int']>;
+  decimals_gte?: InputMaybe<Scalars['Int']>;
+  decimals_in?: InputMaybe<Array<Scalars['Int']>>;
+  decimals_lt?: InputMaybe<Scalars['Int']>;
+  decimals_lte?: InputMaybe<Scalars['Int']>;
+  decimals_not_eq?: InputMaybe<Scalars['Int']>;
+  decimals_not_in?: InputMaybe<Array<Scalars['Int']>>;
+  id_contains?: InputMaybe<Scalars['ID']>;
+  id_endsWith?: InputMaybe<Scalars['ID']>;
+  id_eq?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not_contains?: InputMaybe<Scalars['ID']>;
+  id_not_endsWith?: InputMaybe<Scalars['ID']>;
+  id_not_eq?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_not_startsWith?: InputMaybe<Scalars['ID']>;
+  id_startsWith?: InputMaybe<Scalars['ID']>;
+  network_eq?: InputMaybe<SubstrateNetwork>;
+  network_in?: InputMaybe<Array<SubstrateNetwork>>;
+  network_not_eq?: InputMaybe<SubstrateNetwork>;
+  network_not_in?: InputMaybe<Array<SubstrateNetwork>>;
+  symbol_contains?: InputMaybe<Scalars['String']>;
+  symbol_endsWith?: InputMaybe<Scalars['String']>;
+  symbol_eq?: InputMaybe<Scalars['String']>;
+  symbol_gt?: InputMaybe<Scalars['String']>;
+  symbol_gte?: InputMaybe<Scalars['String']>;
+  symbol_in?: InputMaybe<Array<Scalars['String']>>;
+  symbol_lt?: InputMaybe<Scalars['String']>;
+  symbol_lte?: InputMaybe<Scalars['String']>;
+  symbol_not_contains?: InputMaybe<Scalars['String']>;
+  symbol_not_endsWith?: InputMaybe<Scalars['String']>;
+  symbol_not_eq?: InputMaybe<Scalars['String']>;
+  symbol_not_in?: InputMaybe<Array<Scalars['String']>>;
+  symbol_not_startsWith?: InputMaybe<Scalars['String']>;
+  symbol_startsWith?: InputMaybe<Scalars['String']>;
+};
+
+export type SubstrateTreasuryDepositWhereUniqueInput = {
+  id: Scalars['ID'];
+};
+
+export type SubstrateTreasuryDepositsConnection = {
+  __typename?: 'SubstrateTreasuryDepositsConnection';
+  edges: Array<SubstrateTreasuryDepositEdge>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
