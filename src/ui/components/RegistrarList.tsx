@@ -18,7 +18,7 @@ function RegistrarList() {
   }
 
   if (!registrarsSummary) {
-    return <EmptyView />;
+    return null;
   }
 
   const {list: registrars, registrarsCount, formattedLowestFee, formattedHighestFee} = registrarsSummary;
@@ -40,6 +40,7 @@ function RegistrarList() {
       renderItem={({item: registrar}) => <RegistrarItem registrar={registrar} />}
       keyExtractor={(item) => item.address}
       ItemSeparatorComponent={Divider}
+      ListEmptyComponent={EmptyView}
     />
   );
 }
