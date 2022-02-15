@@ -10,10 +10,12 @@ import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {sendFundScreen} from '@ui/navigation/routeKeys';
-import {Button, Headline, IconButton, Text, TextInput} from '@ui/library';
+import {Button, Caption, Headline, IconButton, Text, TextInput} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {Layout} from '@ui/components/Layout';
 import {standardPadding} from '@ui/styles';
+import {useAccountInfo} from 'src/api/hooks/useAccountInfo';
+import MaxBalance from '@ui/components/MaxBalance';
 
 type Props = {
   navigation: NavigationProp<AccountsStackParamList, typeof sendFundScreen>;
@@ -29,6 +31,7 @@ export function SendFundScreen({navigation, route}: Props) {
   const formatBalance = useFormatBalance();
   const {api} = useApi();
   const startTx = useApiTx();
+  const {data: accountInfo} = useAccountInfo(address);
 
   useEffect(() => {
     ref.current?.open();
@@ -68,6 +71,7 @@ export function SendFundScreen({navigation, route}: Props) {
               onChangeText={(nextValue) => setAmount(nextValue.replace(/[^(\d+).(\d+)]/g, ''))}
               right={<TextInput.Affix text={(api && formatBalance(getBalanceFromString(api, amount))) ?? ''} />}
             />
+            <MaxBalance address={address} />
             <Padder scale={1} />
             <TextInput
               autoComplete="off"
