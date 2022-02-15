@@ -47,15 +47,13 @@ function RegistrarList() {
 
 type RegistrarItemProps = {
   registrar: Registrar;
-  onPress?: (registrar: Registrar) => void;
 };
 
-function RegistrarItem({registrar, onPress}: RegistrarItemProps) {
+function RegistrarItem({registrar}: RegistrarItemProps) {
   const {account, id, formattedFee} = registrar;
 
   return (
     <List.Item
-      onPress={onPress ? () => onPress(registrar) : undefined}
       left={() => (
         <View style={globalStyles.rowAlignCenter}>
           <Identicon value={account.address} size={30} />
