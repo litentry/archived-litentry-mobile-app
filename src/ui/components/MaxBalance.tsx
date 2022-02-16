@@ -5,17 +5,21 @@ import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {BN_ZERO} from '@polkadot/util';
 import {useAccountInfo} from 'src/api/hooks/useAccountInfo';
 
-type PropTypes = {address: string};
+type PropTypes = {address: string | undefined};
 
 function MaxBalance(props: PropTypes) {
-  const formatBalance = useFormatBalance();
-  const {data: accountInfo} = useAccountInfo(props.address);
   return (
     <View style={styles.balance}>
-      <Caption>MAX: {formatBalance(accountInfo?.data.free ?? BN_ZERO)}</Caption>
+      {!props.address ? <Caption>MAX: -- </Caption> : <AccountInfo address={props.address} />}
     </View>
   );
 }
+
+const AccountInfo = (props: any) => {
+  const {data: accountInfo} = useAccountInfo(props.address);
+  const formatBalance = useFormatBalance();
+  return <Caption>MAX: {formatBalance(accountInfo?.data.free ?? BN_ZERO)}</Caption>;
+};
 
 const styles = StyleSheet.create({
   balance: {

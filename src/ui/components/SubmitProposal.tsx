@@ -9,6 +9,7 @@ import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {decimalKeypad} from 'src/utils';
+import MaxBalance from './MaxBalance';
 
 export function SubmitProposal() {
   const {api} = useApi();
@@ -85,11 +86,9 @@ export function SubmitProposal() {
           value={state.balance}
           onChangeText={(nextValue) => dispatch({type: 'SET_BALANCE', payload: decimalKeypad(nextValue)})}
           contextMenuHidden={true}
+          right={<TextInput.Affix text={(api && formatBalance(getBalanceFromString(api, state.balance))) ?? ''} />}
         />
-
-        <Subheading style={styles.lockedBalance}>
-          {api && formatBalance(getBalanceFromString(api, state.balance))}
-        </Subheading>
+        <MaxBalance address={state.account} />
         <Padder scale={1} />
 
         <Caption>{`Minimum deposit: ${api && formatBalance(api.consts.democracy.minimumDeposit)}`}</Caption>

@@ -10,11 +10,10 @@ import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {sendFundScreen} from '@ui/navigation/routeKeys';
-import {Button, Caption, Headline, IconButton, Text, TextInput} from '@ui/library';
+import {Button, Headline, IconButton, Text, TextInput} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {Layout} from '@ui/components/Layout';
 import {standardPadding} from '@ui/styles';
-import {useAccountInfo} from 'src/api/hooks/useAccountInfo';
 import MaxBalance from '@ui/components/MaxBalance';
 import {decimalKeypad} from 'src/utils';
 
@@ -32,8 +31,6 @@ export function SendFundScreen({navigation, route}: Props) {
   const formatBalance = useFormatBalance();
   const {api} = useApi();
   const startTx = useApiTx();
-  const {data: accountInfo} = useAccountInfo(address);
-  const maxBalance = 0;
 
   useEffect(() => {
     ref.current?.open();
