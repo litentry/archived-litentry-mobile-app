@@ -1,10 +1,10 @@
 import {gql, useQuery} from '@apollo/client';
-import type {ProxyBounty} from 'src/generated/litentryGraphQLTypes';
+import type {SubstrateChainBounty} from 'src/generated/litentryGraphQLTypes';
 
-export type Bounty = ProxyBounty;
+export type Bounty = SubstrateChainBounty;
 
 export const ACCOUNT_FIELDS = gql`
-  fragment AccountFields on ProxyAccount {
+  fragment AccountFields on SubstrateChainAccount {
     address
     display
     registration {
@@ -36,7 +36,7 @@ export const ACCOUNT_FIELDS = gql`
 const BOUNTIES_QUERY = gql`
   ${ACCOUNT_FIELDS}
   query getBounties {
-    proxyBounties {
+    substrateChainBounties {
       index
       description
       formattedFee
@@ -73,10 +73,10 @@ const BOUNTIES_QUERY = gql`
 `;
 
 export function useBounties() {
-  const {data, ...rest} = useQuery<{proxyBounties: Bounty[]}>(BOUNTIES_QUERY);
+  const {data, ...rest} = useQuery<{substrateChainBounties: Bounty[]}>(BOUNTIES_QUERY);
 
   return {
-    data: data?.proxyBounties,
+    data: data?.substrateChainBounties,
     ...rest,
   };
 }

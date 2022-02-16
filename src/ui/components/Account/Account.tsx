@@ -1,4 +1,4 @@
-import type {ProxyAccount} from 'src/generated/litentryGraphQLTypes';
+import type {SubstrateChainAccount} from 'src/generated/litentryGraphQLTypes';
 
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -9,7 +9,7 @@ import {notEmpty} from 'src/utils';
 import {JudgmentStatus} from '@ui/components/Account/JudgmentStatus';
 
 type Props = {
-  account: ProxyAccount;
+  account: SubstrateChainAccount;
 };
 
 export function Account({account}: Props) {

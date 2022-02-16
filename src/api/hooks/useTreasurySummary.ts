@@ -1,9 +1,9 @@
 import {gql, useQuery} from '@apollo/client';
-import {ProxyTreasurySummary} from 'src/generated/litentryGraphQLTypes';
+import {SubstrateChainTreasurySummary} from 'src/generated/litentryGraphQLTypes';
 
 const TREASURY_SUMMARY_QUERY = gql`
   query getTreasurySummary {
-    proxyTreasurySummary {
+    substrateChainTreasurySummary {
       activeProposals
       totalProposals
       approvedProposals
@@ -23,12 +23,15 @@ const TREASURY_SUMMARY_QUERY = gql`
 const oneMinute = 60 * 1000;
 
 export function useTreasurySummary() {
-  const {data, ...rest} = useQuery<{proxyTreasurySummary: ProxyTreasurySummary}>(TREASURY_SUMMARY_QUERY, {
-    pollInterval: oneMinute,
-  });
+  const {data, ...rest} = useQuery<{substrateChainTreasurySummary: SubstrateChainTreasurySummary}>(
+    TREASURY_SUMMARY_QUERY,
+    {
+      pollInterval: oneMinute,
+    },
+  );
 
   return {
-    data: data?.proxyTreasurySummary,
+    data: data?.substrateChainTreasurySummary,
     ...rest,
   };
 }
