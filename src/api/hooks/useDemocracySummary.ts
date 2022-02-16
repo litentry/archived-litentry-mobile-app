@@ -19,8 +19,12 @@ export const DEMOCRACY_SUMMARY_QUERY = gql`
   }
 `;
 
+const oneMinute = 60 * 1000;
+
 export function useDemocracySummary() {
-  const {data, ...rest} = useQuery<{substrateChainDemocracySummary: DemocracySummary}>(DEMOCRACY_SUMMARY_QUERY);
+  const {data, ...rest} = useQuery<{substrateChainDemocracySummary: DemocracySummary}>(DEMOCRACY_SUMMARY_QUERY, {
+    pollInterval: oneMinute,
+  });
 
   return {
     data: data?.substrateChainDemocracySummary,
