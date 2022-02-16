@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Keyboard, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
 import {ParamListBase, Route, RouteProp} from '@react-navigation/core';
 import {DrawerNavigationOptions, DrawerNavigationProp} from '@react-navigation/drawer';
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack';
@@ -21,12 +21,19 @@ export function MainDrawerAppBar({
   navigation: DrawerNavigationProp<ParamListBase>;
 }) {
   const {colors} = useTheme();
-
+  const openDrawer = () => {
+    Keyboard.dismiss();
+    navigation.openDrawer();
+  };
   return (
-    <AppHeader style={{backgroundColor: colors.background}}>
-      <AppBar.Action onPress={navigation.openDrawer} icon={'menu'} />
-      <AppBar.Content title={options.title ?? route.name} />
-    </AppHeader>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View>
+        <AppHeader style={{backgroundColor: colors.background}}>
+          <AppBar.Action onPress={openDrawer} icon={'menu'} />
+          <AppBar.Content title={options.title ?? route.name} />
+        </AppHeader>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
