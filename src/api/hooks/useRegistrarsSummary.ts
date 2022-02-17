@@ -1,7 +1,7 @@
 import {gql, useQuery} from '@apollo/client';
-import type {ProxyRegistrarsSummary, ProxyRegistrar} from 'src/generated/litentryGraphQLTypes';
+import type {SubstrateChainRegistrarsSummary, SubstrateChainRegistrar} from 'src/generated/litentryGraphQLTypes';
 
-export type Registrar = ProxyRegistrar;
+export type Registrar = SubstrateChainRegistrar;
 
 const ACCOUNT_FIELDS = gql`
   fragment AccountFields on ProxyAccount {
@@ -56,10 +56,11 @@ const REGISTRARS_SUMMARY_QUERY = gql`
 `;
 
 export function useRegistrarsSummary() {
-  const {data, ...rest} = useQuery<{proxyRegistrarsSummary: ProxyRegistrarsSummary}>(REGISTRARS_SUMMARY_QUERY);
+  const {data, ...rest} =
+    useQuery<{substrateChainRegistrarsSummary: SubstrateChainRegistrarsSummary}>(REGISTRARS_SUMMARY_QUERY);
 
   return {
-    data: data?.proxyRegistrarsSummary,
+    data: data?.substrateChainRegistrarsSummary,
     ...rest,
   };
 }

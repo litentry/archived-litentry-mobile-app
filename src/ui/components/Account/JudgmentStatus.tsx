@@ -1,4 +1,4 @@
-import type {ProxyRegistrationJudgement} from 'src/generated/litentryGraphQLTypes';
+import type {SubstrateChainRegistrationJudgement} from 'src/generated/litentryGraphQLTypes';
 
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -8,7 +8,7 @@ import {colorGreen, colorRed, colorGray} from '@ui/styles';
 import {Popable} from 'react-native-popable';
 
 type JudgmentStatusProps = {
-  registrationJudgement: ProxyRegistrationJudgement;
+  registrationJudgement: SubstrateChainRegistrationJudgement;
   hasParent: boolean;
 };
 

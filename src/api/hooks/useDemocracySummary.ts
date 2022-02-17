@@ -1,11 +1,11 @@
 import {gql, useQuery} from '@apollo/client';
-import {ProxyDemocracySummary} from 'src/generated/litentryGraphQLTypes';
+import {SubstrateChainDemocracySummary} from 'src/generated/litentryGraphQLTypes';
 
-export type DemocracySummary = ProxyDemocracySummary;
+export type DemocracySummary = SubstrateChainDemocracySummary;
 
 export const DEMOCRACY_SUMMARY_QUERY = gql`
   query getDemocracySummary {
-    proxyDemocracySummary {
+    substrateChainDemocracySummary {
       activeProposals
       proposals
       referendums
@@ -19,11 +19,15 @@ export const DEMOCRACY_SUMMARY_QUERY = gql`
   }
 `;
 
+const oneMinute = 60 * 1000;
+
 export function useDemocracySummary() {
-  const {data, ...rest} = useQuery<{proxyDemocracySummary: DemocracySummary}>(DEMOCRACY_SUMMARY_QUERY);
+  const {data, ...rest} = useQuery<{substrateChainDemocracySummary: DemocracySummary}>(DEMOCRACY_SUMMARY_QUERY, {
+    pollInterval: oneMinute,
+  });
 
   return {
-    data: data?.proxyDemocracySummary,
+    data: data?.substrateChainDemocracySummary,
     ...rest,
   };
 }

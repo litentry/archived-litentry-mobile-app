@@ -1,9 +1,9 @@
 import {gql, useQuery} from '@apollo/client';
-import type {ProxyBountiesSummary} from 'src/generated/litentryGraphQLTypes';
+import type {SubstrateChainBountiesSummary} from 'src/generated/litentryGraphQLTypes';
 
 export const BOUNTIES_SUMMARY_QUERY = gql`
   query getBountiesSummary {
-    proxyBountiesSummary {
+    substrateChainBountiesSummary {
       activeBounties
       pastBounties
       bountyCount
@@ -18,12 +18,15 @@ export const BOUNTIES_SUMMARY_QUERY = gql`
 const oneMinute = 60 * 1000;
 
 export function useBountiesSummary() {
-  const {data, ...rest} = useQuery<{proxyBountiesSummary: ProxyBountiesSummary}>(BOUNTIES_SUMMARY_QUERY, {
-    pollInterval: oneMinute,
-  });
+  const {data, ...rest} = useQuery<{substrateChainBountiesSummary: SubstrateChainBountiesSummary}>(
+    BOUNTIES_SUMMARY_QUERY,
+    {
+      pollInterval: oneMinute,
+    },
+  );
 
   return {
-    data: data?.proxyBountiesSummary,
+    data: data?.substrateChainBountiesSummary,
     ...rest,
   };
 }

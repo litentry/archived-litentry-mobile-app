@@ -1,13 +1,17 @@
 import {gql, useQuery} from '@apollo/client';
-import type {ProxyBounty} from 'src/generated/litentryGraphQLTypes';
+import type {SubstrateChainBounty} from 'src/generated/litentryGraphQLTypes';
 import {ACCOUNT_FIELDS} from './useBounties';
 
-export type Bounty = ProxyBounty;
+export type Bounty = SubstrateChainBounty;
 
 const BOUNTY_QUERY = gql`
   ${ACCOUNT_FIELDS}
   query getBounty($index: String!) {
+<<<<<<< HEAD
     proxyBounty(index: $index) {
+=======
+    substrateChainBounty(index: $index) {
+>>>>>>> develop
       index
       description
       formattedFee
@@ -44,12 +48,12 @@ const BOUNTY_QUERY = gql`
 `;
 
 export function useBounty(index: string) {
-  const {data, ...rest} = useQuery<{proxyBounty: Bounty}>(BOUNTY_QUERY, {
+  const {data, ...rest} = useQuery<{substrateChainBounty: Bounty}>(BOUNTY_QUERY, {
     variables: {index},
   });
 
   return {
-    data: data?.proxyBounty,
+    data: data?.substrateChainBounty,
     ...rest,
   };
 }

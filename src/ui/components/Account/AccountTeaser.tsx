@@ -1,4 +1,4 @@
-import type {ProxyAccount} from 'src/generated/litentryGraphQLTypes';
+import type {SubstrateChainAccount} from 'src/generated/litentryGraphQLTypes';
 
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -7,7 +7,7 @@ import {Padder} from '@ui/components/Padder';
 import {Account} from './Account';
 
 type Props = {
-  account: ProxyAccount;
+  account: SubstrateChainAccount;
   identiconSize?: number;
 };
 

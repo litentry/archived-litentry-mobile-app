@@ -1,11 +1,11 @@
 import {gql, useQuery} from '@apollo/client';
-import {ProxyCouncil} from 'src/generated/litentryGraphQLTypes';
+import {SubstrateChainCouncil} from 'src/generated/litentryGraphQLTypes';
 
-export type CouncilSummary = Omit<ProxyCouncil, 'members' | 'runnersUp' | 'candidates'>;
+export type CouncilSummary = Omit<SubstrateChainCouncil, 'members' | 'runnersUp' | 'candidates'>;
 
 export const COUNCIL_SUMMARY_QUERY = gql`
   query getCouncilSummary {
-    proxyCouncil {
+    substrateChainCouncil {
       primeMember {
         account {
           address
@@ -44,10 +44,12 @@ export const COUNCIL_SUMMARY_QUERY = gql`
 const oneMinute = 60 * 1000;
 
 export function useCouncilSummary() {
-  const {data, ...rest} = useQuery<{proxyCouncil: CouncilSummary}>(COUNCIL_SUMMARY_QUERY, {pollInterval: oneMinute});
+  const {data, ...rest} = useQuery<{substrateChainCouncil: CouncilSummary}>(COUNCIL_SUMMARY_QUERY, {
+    pollInterval: oneMinute,
+  });
 
   return {
-    data: data?.proxyCouncil,
+    data: data?.substrateChainCouncil,
     ...rest,
   };
 }
