@@ -17,6 +17,11 @@ platform :android do
       flags: "--no-daemon --max-workers 2"
     )
     upload_to_play_store(track: "internal")
+
+    gradle(
+      task: "assembleRelease",
+      flags: "--no-daemon --max-workers 2"
+    )
   end
 
 end
