@@ -1,49 +1,106 @@
-import type {DeriveCouncilVotes} from '@polkadot/api-derive/types';
-import type {AccountId} from '@polkadot/types/interfaces';
-import {ApiPromise} from '@polkadot/api';
-import useApiQuery from 'src/api/hooks/useApiQuery';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
+import {gql, useQuery} from '@apollo/client';
+import type {
+  SubstrateChainCouncil,
+  SubstrateChainCouncilCandidate,
+  SubstrateChainCouncilMember,
+} from 'src/generated/litentryGraphQLTypes';
 
-type AccountVotesMap = Record<string, AccountId[]>;
+export type Council = SubstrateChainCouncil;
+export type CouncilMember = SubstrateChainCouncilMember;
+export type CouncilCandidate = SubstrateChainCouncilCandidate;
 
-function extractAccountVotes(entries: DeriveCouncilVotes): AccountVotesMap {
-  return entries.reduce<AccountVotesMap>((result, [voter, {votes}]) => {
-    votes.forEach((candidate) => {
-      const address = candidate.toString();
-
-      if (!result[address]) {
-        result[address] = [];
+const ACCOUNT_FIELDS = gql`
+  fragment AccountFields on SubstrateChainAccount {
+    address
+    display
+    registration {
+      display
+      displayParent
+      email
+      image
+      legal
+      pgp
+      riot
+      twitter
+      web
+      judgements {
+        index
+        judgement {
+          isUnknown
+          isFeePaid
+          isReasonable
+          isKnownGood
+          isOutOfDate
+          isLowQuality
+          isErroneous
+        }
       }
+    }
+  }
+`;
 
-      result[address]?.push(voter);
-    });
+const COUNCIL_QUERY = gql`
+  ${ACCOUNT_FIELDS}
+  query getCouncil {
+    substrateChainCouncil {
+      members {
+        address
+        account {
+          ...AccountFields
+        }
+        backing
+        formattedBacking
+        voters
+      }
+      runnersUp {
+        address
+        account {
+          ...AccountFields
+        }
+        backing
+        formattedBacking
+        voters
+      }
+      candidates {
+        address
+        account {
+          ...AccountFields
+        }
+      }
+      totalCandidates
+      primeMember {
+        address
+        account {
+          ...AccountFields
+        }
+        backing
+        formattedBacking
+        voters
+      }
+      desiredSeats
+      totalMembers
+      desiredRunnersUp
+      totalRunnersUp
+      termProgress {
+        termDuration
+        termDurationParts
+        termLeft
+        termLeftParts
+        percentage
+      }
+    }
+  }
+`;
 
-    return result;
-  }, {});
-}
+const oneMinute = 60 * 1000;
 
 export function useCouncil() {
-  const formatBalance = useFormatBalance();
-
-  return useApiQuery(['council'], async (api: ApiPromise) => {
-    const electionsInfo = await api.derive.elections.info();
-    const votes = await api.derive.council.votes();
-    const members = electionsInfo.members.map(([accountId, balance]) => ({
-      accountId,
-      backing: formatBalance(balance),
-    }));
-    const runnersUp = electionsInfo.runnersUp.map(([accountId, balance]) => ({
-      accountId,
-      backing: formatBalance(balance),
-    }));
-    const candidates = electionsInfo.candidates;
-    const accountVotesMap = extractAccountVotes(votes);
-
-    return {
-      members,
-      runnersUp,
-      candidates,
-      getVoters: (account: string) => accountVotesMap[account],
-    };
+  const {data, ...rest} = useQuery<{substrateChainCouncil: SubstrateChainCouncil}>(COUNCIL_QUERY, {
+    pollInterval: oneMinute,
   });
+
+  return {
+    data: data?.substrateChainCouncil,
+    ...rest,
+  };
 }
