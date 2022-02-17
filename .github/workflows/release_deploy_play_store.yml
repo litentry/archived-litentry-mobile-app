@@ -1,4 +1,4 @@
-name: Deploy to Play Store
+name: Deploy to Play Store && Upload APK
 
 on:
   workflow_run:
@@ -67,6 +67,5 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: release apk
-          path: app/build/outputs/apk/release/*
-          working-directory: android
+          path: android/app/build/outputs/apk/release/*
 
