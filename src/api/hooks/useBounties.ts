@@ -1,83 +1,82 @@
-import {ApiPromise} from '@polkadot/api';
-import {BountyIndex, AccountId} from '@polkadot/types/interfaces';
-import type {PalletBountiesBountyStatus, PalletBountiesBounty} from '@polkadot/types/lookup';
-import type {u32} from '@polkadot/types';
-import {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
+import {gql, useQuery} from '@apollo/client';
+import type {SubstrateChainBounty} from 'src/generated/litentryGraphQLTypes';
 
-import useApiQuery from 'src/api/hooks/useApiQuery';
+export type Bounty = SubstrateChainBounty;
 
-export type StatusName = 'Active' | 'Approved' | 'CuratorProposed' | 'Funded' | 'PendingPayout' | 'Proposed';
+export const ACCOUNT_FIELDS = gql`
+  fragment AccountFields on SubstrateChainAccount {
+    address
+    display
+    registration {
+      display
+      displayParent
+      email
+      image
+      legal
+      pgp
+      riot
+      twitter
+      web
+      judgements {
+        index
+        judgement {
+          isUnknown
+          isFeePaid
+          isReasonable
+          isKnownGood
+          isOutOfDate
+          isLowQuality
+          isErroneous
+        }
+      }
+    }
+  }
+`;
 
-export interface BountyStatusInfo {
-  beneficiary: AccountId | undefined;
-  status: StatusName;
-  curator: AccountId | undefined;
-  unlockAt: u32 | undefined;
-  updateDue: u32 | undefined;
-}
-
-export type BountyData = {
-  index: BountyIndex;
-  bounty: PalletBountiesBounty;
-  bountyStatus: BountyStatusInfo;
-  description: string;
-  proposals?: DeriveCollectiveProposal[];
-};
+const BOUNTIES_QUERY = gql`
+  ${ACCOUNT_FIELDS}
+  query getBounties {
+    substrateChainBounties {
+      index
+      description
+      formattedFee
+      formattedCuratorDeposit
+      formattedValue
+      formattedBond
+      proposer {
+        address
+        account {
+          ...AccountFields
+        }
+      }
+      bountyStatus {
+        beneficiary {
+          address
+          account {
+            ...AccountFields
+          }
+        }
+        status
+        curator {
+          address
+          account {
+            ...AccountFields
+          }
+        }
+        unlockAt
+        unlockAtTime
+        updateDue
+        updateDueTime
+      }
+    }
+  }
+`;
 
 export function useBounties() {
-  return useApiQuery('bounties', async (api: ApiPromise) => {
-    const deriveBounties = await api.derive.bounties.bounties();
-    const bounties = deriveBounties.reduce((_bounties, {bounty, description, index, proposals}) => {
-      const _bounty = {
-        index,
-        bounty,
-        bountyStatus: getBountyStatus(bounty.status),
-        description,
-        proposals,
-      };
-      return {..._bounties, [index.toString()]: _bounty};
-    }, {} as Record<string, BountyData>);
+  const {data, ...rest} = useQuery<{substrateChainBounties: Bounty[]}>(BOUNTIES_QUERY);
 
-    return bounties;
-  });
-}
-
-const getBountyStatus = (status: PalletBountiesBountyStatus): BountyStatusInfo => {
-  const statusAsString = status.type as StatusName;
-
-  let result: BountyStatusInfo = {
-    beneficiary: undefined,
-    status: statusAsString,
-    curator: undefined,
-    unlockAt: undefined,
-    updateDue: undefined,
+  return {
+    data: data?.substrateChainBounties,
+    ...rest,
   };
-
-  if (status.isCuratorProposed) {
-    result = {
-      ...result,
-      status: 'CuratorProposed',
-      curator: status.asCuratorProposed.curator,
-    };
-  }
-
-  if (status.isActive) {
-    result = {
-      ...result,
-      curator: status.asActive.curator,
-      updateDue: status.asActive.updateDue as unknown as u32,
-    };
-  }
-
-  if (status.isPendingPayout) {
-    result = {
-      ...result,
-      beneficiary: status.asPendingPayout.beneficiary,
-      status: 'PendingPayout',
-      curator: status.asPendingPayout.curator,
-      unlockAt: status.asPendingPayout.unlockAt as unknown as u32,
-    };
-  }
-
-  return result;
-};
+}

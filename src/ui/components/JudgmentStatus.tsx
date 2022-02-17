@@ -1,3 +1,5 @@
+/** @deprecated use @ui/components/Account/JudgmentStatus instead */
+
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {RegistrationJudgement} from '@polkadot/types/interfaces';

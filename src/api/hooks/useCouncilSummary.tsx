@@ -1,45 +1,55 @@
-import {BlockNumber} from '@polkadot/types/interfaces';
-import {bnToBn, formatNumber} from '@polkadot/util';
-import BN from 'bn.js';
-import useApiQuery from 'src/api/hooks/useApiQuery';
+import {gql, useQuery} from '@apollo/client';
+import {SubstrateChainCouncil} from 'src/generated/litentryGraphQLTypes';
 
-function getTermLeft(termDuration: BN, bestNumber: BlockNumber) {
-  const total = termDuration;
-  const value = bestNumber.mod(termDuration);
-  const angle = total.gtn(0)
-    ? bnToBn(value || 0)
-        .muln(36000)
-        .div(total)
-        .toNumber() / 100
-    : 0;
-  const percentage = Math.floor((angle * 100) / 360);
+export type CouncilSummary = Omit<SubstrateChainCouncil, 'members' | 'runnersUp' | 'candidates'>;
 
-  return {
-    termLeft: total.sub(value),
-    percentage,
-  };
-}
+export const COUNCIL_SUMMARY_QUERY = gql`
+  query getCouncilSummary {
+    substrateChainCouncil {
+      primeMember {
+        account {
+          address
+          display
+          registration {
+            displayParent
+            judgements {
+              index
+              judgement {
+                isUnknown
+                isFeePaid
+                isReasonable
+                isKnownGood
+                isOutOfDate
+                isLowQuality
+                isErroneous
+              }
+            }
+          }
+        }
+      }
+      desiredSeats
+      totalMembers
+      totalRunnersUp
+      totalCandidates
+      desiredRunnersUp
+      termProgress {
+        termDurationParts
+        termLeftParts
+        percentage
+      }
+    }
+  }
+`;
+
+const oneMinute = 60 * 1000;
 
 export function useCouncilSummary() {
-  return useApiQuery('council-summary', async (api) => {
-    const [electionsInfo, bestNumber, primeMember] = await Promise.all([
-      api.derive.elections.info(),
-      api.derive.chain.bestNumber(),
-      api.query.council.prime(),
-    ]);
-
-    const {termLeft, percentage} = getTermLeft(bnToBn(electionsInfo.termDuration || 0), bestNumber);
-
-    return {
-      seats: `${electionsInfo.members.length}/${formatNumber(electionsInfo.desiredSeats)}`,
-      runnersUp: `${electionsInfo.runnersUp.length}/${formatNumber(electionsInfo.desiredRunnersUp)}`,
-      candidatesCount: formatNumber(electionsInfo.candidateCount),
-      prime: primeMember.unwrapOr(undefined)?.toString(),
-      termProgress: {
-        termDuration: electionsInfo.termDuration,
-        termLeft,
-        percentage,
-      },
-    };
+  const {data, ...rest} = useQuery<{substrateChainCouncil: CouncilSummary}>(COUNCIL_SUMMARY_QUERY, {
+    pollInterval: oneMinute,
   });
+
+  return {
+    data: data?.substrateChainCouncil,
+    ...rest,
+  };
 }

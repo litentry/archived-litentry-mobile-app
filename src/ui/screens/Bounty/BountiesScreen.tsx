@@ -1,8 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {useBounties, BountyData} from 'src/api/hooks/useBounties';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
+import {useBounties, Bounty} from 'src/api/hooks/useBounties';
 import {EmptyView} from '@ui/components/EmptyView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import LoadingView from '@ui/components/LoadingView';
@@ -12,14 +11,11 @@ import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
 
 export function BountiesScreen() {
-  const {data, isLoading} = useBounties();
-  const bounties = React.useMemo(() => {
-    return data ? Object.values(data).sort((a, b) => b.index.cmp(a.index)) : [];
-  }, [data]);
+  const {data: bounties, loading} = useBounties();
 
   return (
     <SafeView edges={noTopEdges}>
-      {isLoading ? (
+      {loading ? (
         <LoadingView />
       ) : (
         <FlatList
@@ -27,18 +23,7 @@ export function BountiesScreen() {
           style={globalStyles.flex}
           contentContainerStyle={styles.listContent}
           keyExtractor={({index}) => index.toString()}
-          renderItem={({item}) => {
-            const {index, bounty, description, proposals, bountyStatus} = item;
-            return (
-              <BountyItem
-                bounty={bounty}
-                description={description}
-                index={index}
-                proposals={proposals}
-                bountyStatus={bountyStatus}
-              />
-            );
-          }}
+          renderItem={({item}) => <BountyItem bounty={item} />}
           ItemSeparatorComponent={() => <Padder scale={0.5} />}
           ListEmptyComponent={EmptyView}
         />
@@ -47,13 +32,12 @@ export function BountiesScreen() {
   );
 }
 
-function BountyItem({bounty, description, index, bountyStatus}: BountyData) {
+function BountyItem({bounty}: {bounty: Bounty}) {
   const navigation = useNavigation();
-  const formatBalance = useFormatBalance();
-  const {value} = bounty;
+  const {formattedValue, index, bountyStatus, description} = bounty;
 
   return (
-    <Card onPress={() => navigation.navigate(bountyDetailScreen, {index: index.toString()})}>
+    <Card onPress={() => navigation.navigate(bountyDetailScreen, {index})}>
       <List.Item
         left={() => (
           <View style={globalStyles.justifyCenter}>
@@ -64,7 +48,7 @@ function BountyItem({bounty, description, index, bountyStatus}: BountyData) {
         description={<Caption>{description}</Caption>}
         right={() => (
           <View style={globalStyles.justifyCenter}>
-            <Text>{formatBalance(value)}</Text>
+            <Text>{formattedValue}</Text>
           </View>
         )}
       />

@@ -10,7 +10,7 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useCouncil} from 'src/api/hooks/useCouncil';
-import {useCouncilSummary} from 'src/api/hooks/useCouncilSummary';
+import {useCouncilSummary, CouncilSummary} from 'src/api/hooks/useCouncilSummary';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import {candidateScreen} from '@ui/navigation/routeKeys';
@@ -50,7 +50,7 @@ export function CouncilScreen() {
 
 function CouncilOverviewScreen() {
   const {data: council, isLoading} = useCouncil();
-  const {data: summary} = useCouncilSummary();
+  const {data: summary} = useCouncilSummary(); // TODO: // Get everything needed in this screen from useCouncil
   const {data: moduleElection} = useModuleElections();
 
   const [councilVoteVisible, setCouncilVoteVisible] = useState(false);
@@ -104,13 +104,7 @@ function CouncilOverviewScreen() {
           renderSectionHeader={({section: {title}}) => (
             <List.Item
               style={styles.sectionHeader}
-              title={`${title} ${
-                title === 'Members'
-                  ? summary?.seats
-                  : title === 'Runners Up'
-                  ? summary?.runnersUp
-                  : summary?.candidatesCount
-              }`}
+              title={buildSectionHeaderTitle(title, summary)}
               right={() => {
                 if (title === 'Members') {
                   return (
@@ -138,6 +132,23 @@ function CouncilOverviewScreen() {
       ) : null}
     </SafeView>
   );
+}
+
+function buildSectionHeaderTitle(sectionTitle: string, councilSumamary?: CouncilSummary) {
+  if (!councilSumamary) {
+    return sectionTitle;
+  }
+
+  let title: string;
+
+  if (sectionTitle === 'Members') {
+    title = `${councilSumamary.totalMembers}/${councilSumamary.desiredSeats}`;
+  } else if (sectionTitle === 'Runners Up') {
+    title = `${councilSumamary.totalRunnersUp}/${councilSumamary.desiredRunnersUp}`;
+  } else {
+    title = String(councilSumamary.totalCandidates);
+  }
+  return `${sectionTitle} ${title}`;
 }
 
 function Item({
