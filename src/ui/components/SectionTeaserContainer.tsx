@@ -11,7 +11,7 @@ type PropTypes = {
 
 export function SectionTeaserContainer({children, title, onPress}: PropTypes) {
   return (
-    <Card onPress={onPress}>
+    <Card onPress={onPress} style={styles.container}>
       <Card.Title
         title={title}
         right={() => (
@@ -26,6 +26,9 @@ export function SectionTeaserContainer({children, title, onPress}: PropTypes) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    borderRadius: 10,
+  },
   icon: {
     marginRight: standardPadding,
   },
