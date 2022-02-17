@@ -1,7 +1,7 @@
 import React, {useCallback, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Modal, Button, TextInput, Subheading, Caption, Icon} from '@ui/library';
-import {RegistrarInfoWithIndex} from 'src/api/hooks/useRegistrars';
+import {Registrar} from 'src/api/hooks/useRegistrarsSummary';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
@@ -10,12 +10,12 @@ import {SelectRegistrar} from '@ui/components/SelectRegistrar';
 type PropTypes = {
   visible: boolean;
   onClose: () => void;
-  onSelect: (registrar: RegistrarInfoWithIndex) => void;
+  onSelect: (registrar: Registrar) => void;
 };
 
 function RegistrarSelectionModal({onSelect, visible, onClose}: PropTypes) {
   const formatBalance = useFormatBalance();
-  const [registrar, setRegistrar] = useState<RegistrarInfoWithIndex>();
+  const [registrar, setRegistrar] = useState<Registrar>();
 
   const handleSelect = useCallback(() => {
     if (registrar) {
