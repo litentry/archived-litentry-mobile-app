@@ -38,11 +38,11 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: monofontFamily,
     fontWeight: 'bold',
-    flexShrink: 1,
   },
   container: {
     flexDirection: 'row',
     alignItems: 'center',
+    flexShrink: 1,
   },
 });
 
