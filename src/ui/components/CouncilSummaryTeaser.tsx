@@ -8,14 +8,14 @@ import StatInfoBlock from '@ui/components/StatInfoBlock';
 import {LoadingBox} from '@ui/components/LoadingBox';
 import {Card} from '@ui/library';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
-import {useCouncil} from 'src/api/hooks/useCouncil';
+import {useCouncilSummary} from 'src/api/hooks/useCouncilSummary';
 
 type PropTypes = {
   onPress: () => void;
 };
 
 export function CouncilSummaryTeaser(props: PropTypes) {
-  const {data, loading} = useCouncil();
+  const {data, loading} = useCouncilSummary();
 
   return (
     <SectionTeaserContainer onPress={props.onPress} title="Council">

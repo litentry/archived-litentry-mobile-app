@@ -1,13 +1,7 @@
 import {gql, useQuery} from '@apollo/client';
-import type {
-  SubstrateChainCouncil,
-  SubstrateChainCouncilCandidate,
-  SubstrateChainCouncilMember,
-} from 'src/generated/litentryGraphQLTypes';
+import type {SubstrateChainCouncil} from 'src/generated/litentryGraphQLTypes';
 
-export type Council = SubstrateChainCouncil;
-export type CouncilMember = SubstrateChainCouncilMember;
-export type CouncilCandidate = SubstrateChainCouncilCandidate;
+export type CouncilSummary = Omit<SubstrateChainCouncil, 'members' | 'runnersUp' | 'candidates'>;
 
 const ACCOUNT_FIELDS = gql`
   fragment AccountFields on SubstrateChainAccount {
@@ -39,34 +33,10 @@ const ACCOUNT_FIELDS = gql`
   }
 `;
 
-const COUNCIL_QUERY = gql`
+export const COUNCIL_SUMMARY_QUERY = gql`
   ${ACCOUNT_FIELDS}
-  query getCouncil {
+  query getCouncilSummary {
     substrateChainCouncil {
-      members {
-        address
-        account {
-          ...AccountFields
-        }
-        backing
-        formattedBacking
-        voters
-      }
-      runnersUp {
-        address
-        account {
-          ...AccountFields
-        }
-        backing
-        formattedBacking
-        voters
-      }
-      candidates {
-        address
-        account {
-          ...AccountFields
-        }
-      }
       totalCandidates
       primeMember {
         address
@@ -92,8 +62,12 @@ const COUNCIL_QUERY = gql`
   }
 `;
 
-export function useCouncil() {
-  const {data, ...rest} = useQuery<{substrateChainCouncil: SubstrateChainCouncil}>(COUNCIL_QUERY);
+const oneMinute = 60 * 1000;
+
+export function useCouncilSummary() {
+  const {data, ...rest} = useQuery<{substrateChainCouncil: CouncilSummary}>(COUNCIL_SUMMARY_QUERY, {
+    pollInterval: oneMinute,
+  });
 
   return {
     data: data?.substrateChainCouncil,
