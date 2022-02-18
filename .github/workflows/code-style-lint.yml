@@ -18,4 +18,6 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: deploy
         run: |
-          yarn && yarn validate
+          yarn 
+          yarn codegen
+          yarn validate

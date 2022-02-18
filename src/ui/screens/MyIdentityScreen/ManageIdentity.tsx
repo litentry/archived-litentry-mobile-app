@@ -23,7 +23,7 @@ import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {manageIdentityScreen, registerSubIdentitiesScreen} from '@ui/navigation/routeKeys';
 import {buildAddressDetailUrl} from 'src/service/Polkasembly';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {RegistrarInfoWithIndex} from 'src/api/hooks/useRegistrars';
+import {Registrar} from 'src/api/hooks/useRegistrarsSummary';
 import {stringShorten} from '@polkadot/util';
 
 function ManageIdentity({
@@ -65,9 +65,9 @@ function ManageIdentity({
   );
 
   const handleRequestJudgement = useCallback(
-    ({index, fee}: RegistrarInfoWithIndex) => {
+    ({id, fee}: Registrar) => {
       setRegistrarSelectionOpen(false);
-      startTx({address, txMethod: 'identity.requestJudgement', params: [index, fee]})
+      startTx({address, txMethod: 'identity.requestJudgement', params: [id, fee]})
         .then(() => {
           queryClient.invalidateQueries(['account_identity', address]);
         })

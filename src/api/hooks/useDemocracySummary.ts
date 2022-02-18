@@ -1,20 +1,33 @@
-import useApiQuery from 'src/api/hooks/useApiQuery';
+import {gql, useQuery} from '@apollo/client';
+import {SubstrateChainDemocracySummary} from 'src/generated/litentryGraphQLTypes';
+
+export type DemocracySummary = SubstrateChainDemocracySummary;
+
+export const DEMOCRACY_SUMMARY_QUERY = gql`
+  query getDemocracySummary {
+    substrateChainDemocracySummary {
+      activeProposals
+      proposals
+      referendums
+      activeReferendums
+      launchPeriodInfo {
+        progressPercent
+        timeLeft
+        timeLeftParts
+      }
+    }
+  }
+`;
+
+const oneMinute = 60 * 1000;
 
 export function useDemocracySummary() {
-  return useApiQuery(['democracy_summary'], async (api) => {
-    const [referendumIds, activeProposals, publicPropCount, referendumTotal] = await Promise.all([
-      api.derive.democracy.referendumIds(),
-      api.derive.democracy.proposals(),
-      api.query.democracy.publicPropCount(),
-      api.query.democracy.referendumCount(),
-    ]);
-
-    return {
-      activeProposalsCount: activeProposals.length,
-      publicPropCount,
-      referendumTotal,
-      referenda: referendumIds.length,
-      launchPeriod: api.consts.democracy.launchPeriod,
-    };
+  const {data, ...rest} = useQuery<{substrateChainDemocracySummary: DemocracySummary}>(DEMOCRACY_SUMMARY_QUERY, {
+    pollInterval: oneMinute,
   });
+
+  return {
+    data: data?.substrateChainDemocracySummary,
+    ...rest,
+  };
 }

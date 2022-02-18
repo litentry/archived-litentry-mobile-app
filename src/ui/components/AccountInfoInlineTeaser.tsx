@@ -1,3 +1,5 @@
+/** @deprecated use @ui/components/Account/Account instead */
+
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Caption} from '@ui/library';
@@ -36,11 +38,11 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: monofontFamily,
     fontWeight: 'bold',
-    flexShrink: 1,
   },
   container: {
     flexDirection: 'row',
     alignItems: 'center',
+    flexShrink: 1,
   },
 });
 

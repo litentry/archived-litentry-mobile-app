@@ -2,33 +2,33 @@ import React from 'react';
 import {View, FlatList, StyleSheet} from 'react-native';
 import {Menu, List, Caption, Icon, useTheme, Divider} from '@ui/library';
 import Identicon from '@polkadot/reactnative-identicon';
-import AccountInfoInlineTeaser from './AccountInfoInlineTeaser';
-import {stringShorten} from '@polkadot/util';
-import {useRegistrars, RegistrarInfoWithIndex} from 'src/api/hooks/useRegistrars';
-import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
+import {useRegistrarsSummary, Registrar} from 'src/api/hooks/useRegistrarsSummary';
 import globalStyles from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
+import {Account} from '@ui/components/Account/Account';
 
 type Props = {
-  onSelect: (registrar: RegistrarInfoWithIndex) => void;
+  onSelect: (registrar: Registrar) => void;
 };
 
 export function SelectRegistrar({onSelect}: Props) {
   const {colors} = useTheme();
-  const registrars = useRegistrars();
-  const [registrar, setRegistrar] = React.useState<RegistrarInfoWithIndex>();
+  const {data: registrarsSummary} = useRegistrarsSummary();
+  const [registrar, setRegistrar] = React.useState<Registrar>();
   const [visible, setVisible] = React.useState(false);
-  const {data: identity} = useAccountIdentityInfo(registrar?.account.toString());
 
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
 
-  const selectAccount = (selectedRegistrar: RegistrarInfoWithIndex) => {
+  const selectRegistrar = (selectedRegistrar: Registrar) => {
     setRegistrar(selectedRegistrar);
     onSelect(selectedRegistrar);
     closeMenu();
   };
+
+  if (!registrarsSummary) {
+    return null;
+  }
 
   return (
     <Menu
@@ -39,11 +39,9 @@ export function SelectRegistrar({onSelect}: Props) {
           <List.Item
             title={
               registrar ? (
-                identity ? (
-                  <Caption>
-                    {identity.hasIdentity ? identity.display : stringShorten(identity.accountId.toString(), 11)}
-                  </Caption>
-                ) : null
+                <View style={globalStyles.justifyCenter}>
+                  <Account account={registrar.account} />
+                </View>
               ) : (
                 <Caption>{'Select registrar'}</Caption>
               )
@@ -51,7 +49,7 @@ export function SelectRegistrar({onSelect}: Props) {
             left={() =>
               registrar ? (
                 <View style={globalStyles.justifyCenter}>
-                  <Identicon value={registrar?.account.toString()} size={20} />
+                  <Identicon value={registrar?.address} size={25} />
                 </View>
               ) : null
             }
@@ -67,36 +65,35 @@ export function SelectRegistrar({onSelect}: Props) {
       <FlatList
         style={styles.items}
         ItemSeparatorComponent={Divider}
-        data={registrars}
-        keyExtractor={(item) => item.account.toString()}
-        renderItem={({item}) => <RegistrarItem onSelect={selectAccount} registrar={item} />}
+        data={registrarsSummary.list}
+        keyExtractor={(item) => item.address}
+        renderItem={({item}) => <RegistrarItem onSelect={selectRegistrar} registrar={item} />}
       />
     </Menu>
   );
 }
 
 type RegistrarItemProps = {
-  onSelect: (registrar: RegistrarInfoWithIndex) => void;
-  registrar: RegistrarInfoWithIndex;
+  onSelect: (registrar: Registrar) => void;
+  registrar: Registrar;
 };
 
 function RegistrarItem({onSelect, registrar}: RegistrarItemProps) {
-  const address = registrar.account.toString();
-  const {data: identity} = useAccountIdentityInfo(address);
-  const formatBalance = useFormatBalance();
+  const {account, id, address, formattedFee} = registrar;
+
   return (
     <Menu.Item
       style={styles.menuItem}
       onPress={() => onSelect(registrar)}
       title={
-        <View style={globalStyles.rowAlignCenter}>
-          <Identicon value={address} size={30} />
-          <Padder scale={0.5} />
-          <View>
-            {identity ? <AccountInfoInlineTeaser identity={identity} /> : null}
-            <Caption>{`Index: ${registrar.index}`}</Caption>
-            <Caption>{`Fee: ${formatBalance(registrar.fee)}`}</Caption>
+        <View style={styles.fullWidth}>
+          <View style={[globalStyles.rowAlignCenter, styles.fullWidth]}>
+            <Identicon value={address} size={20} />
+            <Padder scale={0.5} />
+            <Account account={account} />
           </View>
+          <Caption>{`Index: ${id}`}</Caption>
+          <Caption>{`Fee: ${formattedFee}`}</Caption>
         </View>
       }
     />
@@ -114,5 +111,8 @@ const styles = StyleSheet.create({
   },
   menuItem: {
     height: 90,
+  },
+  fullWidth: {
+    width: '100%',
   },
 });
