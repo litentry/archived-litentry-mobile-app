@@ -60,7 +60,6 @@ const TREASURY_QUERY = gql`
 
 export function useTreasury() {
   const {data, networkStatus, ...rest} = useQuery<{substrateChainTreasury: SubstrateChainTreasury}>(TREASURY_QUERY);
-  console.log(data);
 
   return {
     data: data?.substrateChainTreasury,
