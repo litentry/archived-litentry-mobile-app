@@ -20,16 +20,19 @@ import {
   feedbackScreen,
   parachainsNavigator,
   crowdloansNavigator,
+  dashboardNavigator,
 } from '@ui/navigation/routeKeys';
 import {standardPadding} from '@ui/styles';
 import {appVersion} from 'src/service/Device';
 import {getCurrentYear} from 'src/utils/date';
 import {Drawer, Switch, Text, Divider} from '@ui/library';
 
-function DrawerScreen({navigation}: DrawerContentComponentProps) {
+function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
   const {theme, toggleTheme} = useToggleTheme();
   const isParachainAvailable = useIsParachainAvailable();
-  const [activeScreen, setActiveScreen] = React.useState<string>(dashboardScreen);
+  const currentRoute = state.routes[state.index];
+  const activeScreen = currentRoute?.name;
+  const routeParams = currentRoute?.params as any;
 
   return (
     <SafeView>
@@ -45,9 +48,8 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
           <Drawer.Item
             label="Dashboard"
             icon="view-dashboard"
-            active={activeScreen === dashboardScreen}
+            active={activeScreen === dashboardNavigator}
             onPress={() => {
-              setActiveScreen(dashboardScreen);
               navigation.navigate(dashboardScreen);
             }}
           />
@@ -56,7 +58,6 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
             icon="account-details"
             active={activeScreen === accountsNavigator}
             onPress={() => {
-              setActiveScreen(accountsNavigator);
               navigation.navigate(accountsNavigator);
             }}
           />
@@ -65,7 +66,6 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
             icon="playlist-check"
             active={activeScreen === registrarListScreen}
             onPress={() => {
-              setActiveScreen(registrarListScreen);
               navigation.navigate(registrarListScreen);
             }}
           />
@@ -74,7 +74,6 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
             icon="forum"
             active={activeScreen === polkassemblyDiscussionsNavigator}
             onPress={() => {
-              setActiveScreen(polkassemblyDiscussionsNavigator);
               navigation.navigate(polkassemblyDiscussionsNavigator);
             }}
           />
@@ -84,9 +83,8 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
             <Drawer.Item
               label="Overview"
               icon="link-variant"
-              active={activeScreen === parachainsOverviewScreen}
+              active={activeScreen === parachainsNavigator}
               onPress={() => {
-                setActiveScreen(parachainsOverviewScreen);
                 navigation.navigate(parachainsNavigator, {screen: parachainsOverviewScreen});
               }}
             />
@@ -95,7 +93,6 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
               icon="link"
               active={activeScreen === parathreadsScreen}
               onPress={() => {
-                setActiveScreen(parathreadsScreen);
                 navigation.navigate(parathreadsScreen);
               }}
             />
@@ -104,16 +101,14 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
               icon="gavel"
               active={activeScreen === parachainAuctionsScreen}
               onPress={() => {
-                setActiveScreen(parachainAuctionsScreen);
                 navigation.navigate(parachainAuctionsScreen);
               }}
             />
             <Drawer.Item
               label="Crowdloan"
               icon="bank-transfer-in"
-              active={activeScreen === crowdloanScreen}
+              active={activeScreen === crowdloansNavigator}
               onPress={() => {
-                setActiveScreen(crowdloanScreen);
                 navigation.navigate(crowdloansNavigator, {screen: crowdloanScreen});
               }}
             />
@@ -130,7 +125,6 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
             icon="bell"
             active={activeScreen === notificationSettingsScreen}
             onPress={() => {
-              setActiveScreen(notificationSettingsScreen);
               navigation.navigate(notificationSettingsScreen);
             }}
           />
@@ -140,7 +134,6 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
               icon="code-tags"
               active={activeScreen === devScreen}
               onPress={() => {
-                setActiveScreen(devScreen);
                 navigation.navigate(devScreen);
               }}
             />
@@ -150,9 +143,8 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
           <Drawer.Item
             label="About Litentry"
             icon="information-outline"
-            active={activeScreen === 'About Litentry'}
+            active={activeScreen === 'Webview' && routeParams?.title === 'About Litentry'}
             onPress={() => {
-              setActiveScreen('About Litentry');
               navigation.navigate(webviewScreen, {
                 title: 'About Litentry',
                 uri: 'https://www.litentry.com',
@@ -164,7 +156,6 @@ function DrawerScreen({navigation}: DrawerContentComponentProps) {
             icon="comment-question-outline"
             active={activeScreen === feedbackScreen}
             onPress={() => {
-              setActiveScreen(feedbackScreen);
               navigation.navigate(feedbackScreen);
             }}
           />
