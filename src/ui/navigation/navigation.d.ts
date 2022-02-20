@@ -1,5 +1,7 @@
 import type {ParaId} from '@polkadot/types/interfaces';
-import {CouncilCandidate, CouncilMember} from 'src/api/hooks/useCouncil';
+import type {CouncilCandidate, CouncilMember} from 'src/api/hooks/useCouncil';
+import type {DemocracyProposal} from 'src/api/hooks/useDemocracyProposals';
+import type {DemocracyReferendum} from 'src/api/hooks/useDemocracyReferendum';
 
 import {
   addAccountScreen,
@@ -72,8 +74,8 @@ type DashboardStackParamList = {
   [treasuryScreen]: undefined;
   [motionsScreen]: undefined;
   [democracyScreen]: undefined;
-  [referendumScreen]: {index: string};
-  [democracyProposalScreen]: {index: string};
+  [referendumScreen]: {referendum: DemocracyReferendum};
+  [democracyProposalScreen]: {proposal: DemocracyProposal};
   [bountiesScreen]: undefined;
   [bountyDetailScreen]: {index: string};
 };
