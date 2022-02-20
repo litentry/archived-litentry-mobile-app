@@ -134,6 +134,10 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
             </View>
           )}
         />
+        {/* @TODO:
+          Try to reuse components/ProposalCallInfo when fetching motions from graph
+          Possibility of retiring components/ProposalInfo and components/ProposalCall
+        */}
         <ProposalInfo proposal={proposal} />
       </Card.Content>
     </Card>
