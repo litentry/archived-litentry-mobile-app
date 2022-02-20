@@ -1,60 +1,75 @@
-import * as React from 'react';
-import {SectionList, StyleSheet, View} from 'react-native';
-import type {DeriveProposal, DeriveReferendumExt} from '@polkadot/api-derive/types';
-import {BN_ONE} from '@polkadot/util';
+import React from 'react';
+import {SectionList, StyleSheet, View, RefreshControl} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Layout} from '@ui/components/Layout';
 import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
-import {ProposalInfo} from '@ui/components/ProposalInfo';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SubmitProposal} from '@ui/components/SubmitProposal';
-import {useBestNumber} from 'src/api/hooks/useBestNumber';
-import {useBlockTime} from 'src/api/hooks/useBlockTime';
-import {useDemocracy} from 'src/api/hooks/useDemocracy';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {democracyProposalScreen, referendumScreen} from '@ui/navigation/routeKeys';
-import {Card, Headline, List, Text} from '@ui/library';
+import {Card, Headline, List, Subheading, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
+import {useDemocracyProposals, DemocracyProposal, DEMOCRACY_PROPOSALS_QUERY} from 'src/api/hooks/useDemocracyProposals';
+import {
+  useDemocracyReferendums,
+  DemocracyReferendum,
+  DEMOCRACY_REFERENDUMS_QUERY,
+} from 'src/api/hooks/useDemocracyReferendum';
+import {useRefetch} from 'src/api/hooks/useRefetch';
+import {ProposalCallInfo} from '@ui/components/ProposalCallInfo';
 
 export function DemocracyScreen() {
-  const {data, isLoading, refetch, isFetching} = useDemocracy();
+  const {data: proposals, loading: proposalsLoading} = useDemocracyProposals();
+  const {data: referendums, loading: referendumsLoading} = useDemocracyReferendums();
 
-  const groupedData: {title: string; data: Array<DeriveReferendumExt | DeriveProposal>}[] = React.useMemo(
+  const {refetch, refreshing} = useRefetch([DEMOCRACY_PROPOSALS_QUERY, DEMOCRACY_REFERENDUMS_QUERY]);
+
+  const {colors} = useTheme();
+
+  const groupedData: {title: string; data: Array<DemocracyProposal | DemocracyReferendum>}[] = React.useMemo(
     () => [
-      {title: 'Referenda', data: data?.referendums ?? []},
-      {title: 'Proposals', data: data?.activeProposals ?? []},
+      {title: 'Referenda', data: referendums ?? []},
+      {title: 'Proposals', data: proposals ?? []},
     ],
-    [data],
+    [proposals, referendums],
   );
 
   return (
     <Layout style={globalStyles.flex}>
       <SafeView edges={noTopEdges}>
-        {isLoading ? (
+        {(proposalsLoading || referendumsLoading) && !refreshing ? (
           <LoadingView />
         ) : (
           <SectionList
-            ItemSeparatorComponent={() => <Padder scale={0.5} />}
+            ItemSeparatorComponent={() => <Padder scale={1} />}
             contentContainerStyle={styles.content}
             stickySectionHeadersEnabled={false}
-            refreshing={isFetching}
+            refreshing={refreshing}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={refetch}
+                tintColor={colors.primary}
+                colors={[colors.primary]}
+              />
+            }
             onRefresh={refetch}
             sections={groupedData}
             renderItem={({item}) => {
-              if ('votes' in item) {
-                return <ReferendumListItem item={item} />;
+              if ('endPeriod' in item) {
+                return <ReferendumListItem referendum={item} />;
               } else {
-                return <ProposalListItem item={item} />;
+                return <ProposalListItem proposal={item} />;
               }
             }}
             renderSectionHeader={({section: {title}}) => {
               return (
                 <>
                   {title === 'Proposals' && <Padder scale={1.5} />}
-                  <Text style={styles.header}>{title}</Text>
+                  <Subheading style={styles.header}>{title}</Subheading>
                 </>
               );
             }}
@@ -62,6 +77,7 @@ export function DemocracyScreen() {
             ListEmptyComponent={EmptyView}
             ListFooterComponent={() => (
               <View style={styles.footer}>
+                <Padder scale={1} />
                 <SubmitProposal />
               </View>
             )}
@@ -73,83 +89,46 @@ export function DemocracyScreen() {
 }
 
 const styles = StyleSheet.create({
-  content: {paddingVertical: standardPadding, paddingHorizontal: standardPadding * 2},
-  header: {padding: standardPadding},
-  footer: {paddingVertical: standardPadding},
+  content: {
+    paddingVertical: standardPadding,
+    paddingHorizontal: standardPadding * 2,
+  },
+  header: {
+    padding: standardPadding,
+  },
+  footer: {
+    paddingVertical: standardPadding,
+  },
 });
 
-function ReferendumListItem({item}: {item: DeriveReferendumExt}) {
+function ReferendumListItem({referendum}: {referendum: DemocracyReferendum}) {
   const navigation = useNavigation<StackNavigationProp<DashboardStackParamList>>();
-  const {image: {proposal} = {proposal: undefined}} = item;
-  const bestNumber = useBestNumber();
-
-  const remainBlock = bestNumber ? item.status.end.sub(bestNumber).isub(BN_ONE) : undefined;
-  const {timeStringParts} = useBlockTime(remainBlock);
-
-  const {method, section} = proposal?.registry.findMetaCall(proposal.callIndex) ?? {};
-  const title = proposal ? `${method}.${section}` : `preimage`;
-
-  const goToReferenda = () => {
-    navigation.navigate(referendumScreen, {index: item.index.toString()});
-  };
+  const title = `${referendum.method}.${referendum.section}`;
 
   return (
-    <Card onPress={goToReferenda}>
+    <Card onPress={() => navigation.navigate(referendumScreen, {referendum})}>
       <Card.Content>
         <List.Item
-          style={referendumStyle.item}
           title={title}
-          disabled
-          left={() => <Headline>{item.index.toString()}</Headline>}
-          right={() => (
-            <View style={referendumStyle.row}>
-              <Text adjustsFontSizeToFit={true} numberOfLines={1}>
-                {timeStringParts.slice(0, 2).join(' ')}
-              </Text>
-            </View>
-          )}
+          left={() => <Headline>{referendum.index}</Headline>}
+          description={referendum.endPeriod.slice(0, 2).join(' ')}
         />
-        {proposal ? (
-          <ProposalInfo proposal={proposal} />
-        ) : (
-          <Text numberOfLines={1} ellipsizeMode="middle">
-            {String(item.imageHash)}
-          </Text>
-        )}
+        <ProposalCallInfo proposal={referendum} />
       </Card.Content>
     </Card>
   );
 }
 
-const referendumStyle = StyleSheet.create({
-  row: {flexDirection: 'row', alignItems: 'center'},
-  item: {backgroundColor: 'transparent'},
-});
-
-function ProposalListItem({item}: {item: DeriveProposal}) {
+function ProposalListItem({proposal}: {proposal: DemocracyProposal}) {
   const navigation = useNavigation<StackNavigationProp<DashboardStackParamList>>();
-  const {image: {proposal} = {proposal: undefined}} = item;
-  const {method, section} = proposal?.registry.findMetaCall(proposal.callIndex) ?? {};
-  const title = proposal ? `${method}.${section}` : `preimage`;
+  const title = `${proposal.method}.${proposal.section}`;
 
   return (
-    <Card
-      style={proposalStyle.container}
-      onPress={() => navigation.navigate(democracyProposalScreen, {index: String(item.index)})}>
+    <Card onPress={() => navigation.navigate(democracyProposalScreen, {proposal})}>
       <Card.Content>
-        <List.Item left={() => <Headline>{item.index.toString()}</Headline>} title={title} />
-        {proposal ? (
-          <ProposalInfo proposal={proposal} />
-        ) : (
-          <Text numberOfLines={1} ellipsizeMode="middle">
-            {String(item.imageHash)}
-          </Text>
-        )}
+        <List.Item left={() => <Headline>{proposal.index}</Headline>} title={title} />
+        <ProposalCallInfo proposal={proposal} />
       </Card.Content>
     </Card>
   );
 }
-
-const proposalStyle = StyleSheet.create({
-  container: {marginBottom: standardPadding},
-});
