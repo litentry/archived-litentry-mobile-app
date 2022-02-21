@@ -1,25 +1,15 @@
-import React, {useContext, useMemo} from 'react';
+import React from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
-import {BlockNumber} from '@polkadot/types/interfaces';
-import type {PalletTipsOpenTip} from '@polkadot/types/lookup';
-import {formatNumber} from '@polkadot/util';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {Card, Subheading, Caption, Divider, List, Text} from '@ui/library';
-import {useAccounts} from 'context/AccountsContext';
-import {ChainApiContext} from 'context/ChainApiContext';
-import AddressInlineTeaser from '@ui/components/AddressInlineTeaser';
-import {BlockTime} from '@ui/components/BlockTime';
+import {Card, Subheading, Caption, Divider, List} from '@ui/library';
 import {TipReason} from '@ui/components/Tips/TipReason';
-import {extractTipState} from 'src/utils/tips';
-import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
 import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import {useTip} from 'src/api/hooks/useTip';
-import {useCall} from '@hooks/useCall';
-import {Account} from '@ui/components/Account';
+import {useTip, Tip} from 'src/api/hooks/useTip';
+import {Account} from '@ui/components/Account/Account';
+import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {EmptyView} from '@ui/components/EmptyView';
@@ -31,26 +21,10 @@ type ScreenProps = {
 };
 
 type TipDetailContentProps = {
-  tip: PalletTipsOpenTip;
-  bestNumber: BlockNumber | undefined;
+  tip: Tip;
 };
 
-function TipDetailContent({tip, bestNumber}: TipDetailContentProps) {
-  const formatBalance = useFormatBalance();
-  const {accounts} = useAccounts();
-  const tipState = useMemo(() => {
-    if (tip) {
-      return extractTipState(tip, Object.keys(accounts));
-    }
-  }, [tip, accounts]);
-
-  if (!tipState) {
-    return null;
-  }
-
-  const {closesAt, median} = tipState;
-  const tippersCount = tip.tips.length;
-
+function TipDetailContent({tip}: TipDetailContentProps) {
   return (
     <>
       <Card>
@@ -60,74 +34,60 @@ function TipDetailContent({tip, bestNumber}: TipDetailContentProps) {
               <Subheading>Who</Subheading>
             </View>
             <View style={styles.addressContainer}>
-              <AddressInlineTeaser address={String(tip.who)} />
+              <AccountTeaser account={tip.who.account} />
             </View>
           </View>
-          <View style={styles.finderContainer}>
-            <View style={styles.sectionTextContainer}>
-              <Subheading>Finder</Subheading>
+          {tip.finder ? (
+            <View style={styles.finderContainer}>
+              <View style={styles.sectionTextContainer}>
+                <Subheading>Finder</Subheading>
+              </View>
+              <View style={styles.addressContainer}>
+                <AccountTeaser account={tip.finder.account} />
+              </View>
             </View>
-            <View style={styles.addressContainer}>
-              <AddressInlineTeaser address={String(tip.finder)} />
-            </View>
-          </View>
+          ) : null}
         </Card.Content>
       </Card>
       <Padder scale={1} />
-      <TipReason reasonHash={tip.reason} />
-      {closesAt && bestNumber && closesAt.gt(bestNumber) ? (
+      <TipReason reason={tip.reason} />
+      {tip.closes ? (
         <View style={styles.closesAtContainer}>
           <Subheading>Closes at</Subheading>
-          <>
-            <BlockTime blockNumber={closesAt.sub(bestNumber)} />
-            <Subheading>#{formatNumber(closesAt)}</Subheading>
-          </>
+          <Subheading>#{tip.closes}</Subheading>
         </View>
       ) : null}
       <View style={styles.containerSpacing}>
-        <Subheading>Tippers {tippersCount > 0 ? `(${tippersCount})` : ''}</Subheading>
-        {Number(median) > 0 ? <Caption>{formatBalance(median ?? '')}</Caption> : null}
+        <Subheading>Tippers {tip.tippersCount > 0 ? `(${tip.tippersCount})` : ''}</Subheading>
+        {Number(tip.median) > 0 ? <Caption>{tip.formattedMedian ?? ''}</Caption> : null}
       </View>
     </>
   );
 }
 
 function TipDetailScreen({route}: ScreenProps) {
-  const formatBalance = useFormatBalance();
-  const {api} = useContext(ChainApiContext);
-  const hash = route.params?.hash;
-  const {data: tip, isLoading} = useTip(hash);
-  const bestNumber = useCall<BlockNumber>(api?.derive.chain.bestNumber);
+  const id = route.params?.id;
+  const {data: tip, loading} = useTip(id);
 
-  if (isLoading) {
+  if (loading) {
     return <LoadingView />;
   }
 
   return (
     <SafeView edges={noTopEdges}>
       <FlatList
-        ListHeaderComponent={tip ? <TipDetailContent tip={tip} bestNumber={bestNumber} /> : null}
-        data={tip?.tips.toArray()}
+        ListHeaderComponent={tip ? <TipDetailContent tip={tip} /> : null}
+        data={tip?.tippers}
         style={[globalStyles.paddedContainer, styles.container]}
         ItemSeparatorComponent={Divider}
         renderItem={({item}) => {
-          const [tipper, balance] = item;
-
           return (
             <List.Item
-              title={() => {
-                return (
-                  <Account id={tipper.toString()}>
-                    {(identity) => {
-                      return identity ? <AccountInfoInlineTeaser identity={identity} /> : <Text>{String(tipper)}</Text>;
-                    }}
-                  </Account>
-                );
-              }}
-              description={() => <Caption>{formatBalance(balance)}</Caption>}
+              title={() => <Account account={item.account} />}
+              description={() => <Caption>{item.formattedBalance}</Caption>}
               left={() => (
                 <View style={globalStyles.justifyCenter}>
-                  <Identicon value={tipper} size={35} />
+                  <Identicon value={item.account.address} size={35} />
                 </View>
               )}
             />
