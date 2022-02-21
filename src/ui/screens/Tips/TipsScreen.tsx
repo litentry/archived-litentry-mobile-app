@@ -1,7 +1,7 @@
 import React from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
-import {MemoizedTipTeaser} from '@ui/components/Tips/TipTeaser';
+import {TipTeaser} from '@ui/components/Tips/TipTeaser';
 import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -12,17 +12,17 @@ import globalStyles from '@ui/styles';
 import {Button} from '@ui/library';
 
 function TipsScreen() {
-  const {data: tips, isLoading} = useTips();
+  const {data: tips, loading} = useTips();
   const navigation = useNavigation();
 
-  const toTipDetails = (hash: string) => {
-    navigation.navigate(tipDetailScreen, {hash});
+  const toTipDetails = (id: string) => {
+    navigation.navigate(tipDetailScreen, {id});
   };
 
   return (
     <SafeView edges={noTopEdges}>
       <View style={styles.container}>
-        {isLoading ? (
+        {loading ? (
           <LoadingView />
         ) : (
           <FlatList
@@ -37,8 +37,8 @@ function TipsScreen() {
             }}
             style={globalStyles.flex}
             data={tips}
-            renderItem={({item}) => <MemoizedTipTeaser tip={item} onPress={toTipDetails} />}
-            keyExtractor={(item) => item.toString()}
+            renderItem={({item}) => <TipTeaser tip={item} onPress={toTipDetails} />}
+            keyExtractor={(item) => item.id}
             ListEmptyComponent={EmptyView}
             showsVerticalScrollIndicator={false}
           />
