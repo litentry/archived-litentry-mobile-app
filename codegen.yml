@@ -1,5 +1,5 @@
 overwrite: true
-schema: "https://api-gateway.litentry.io/graphql"
+schema: "https://graph.litentry.io/graphql"
 generates:
   src/generated/litentryGraphQLTypes.ts:
     plugins:
