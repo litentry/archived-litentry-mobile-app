@@ -10,9 +10,10 @@ import {tipDetailScreen} from '@ui/navigation/routeKeys';
 import {proposeTipScreen} from '@ui/navigation/routeKeys';
 import globalStyles from '@ui/styles';
 import {Button} from '@ui/library';
+import {RefreshControl} from '@ui/library/RefreshControl';
 
 function TipsScreen() {
-  const {data: tips, loading} = useTips();
+  const {data: tips, loading, refetch, refetching} = useTips();
   const navigation = useNavigation();
 
   const toTipDetails = (id: string) => {
@@ -22,7 +23,7 @@ function TipsScreen() {
   return (
     <SafeView edges={noTopEdges}>
       <View style={styles.container}>
-        {loading ? (
+        {loading && !tips ? (
           <LoadingView />
         ) : (
           <FlatList
@@ -41,6 +42,7 @@ function TipsScreen() {
             keyExtractor={(item) => item.id}
             ListEmptyComponent={EmptyView}
             showsVerticalScrollIndicator={false}
+            refreshControl={<RefreshControl onRefresh={refetch} refreshing={refetching} />}
           />
         )}
       </View>
