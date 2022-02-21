@@ -14,6 +14,7 @@ import {DashboardStackParamList} from '@ui/navigation/navigation';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
+import {RefreshControl} from '@ui/library/RefreshControl';
 
 type ScreenProps = {
   navigation: StackNavigationProp<DashboardStackParamList>;
@@ -67,9 +68,9 @@ function TipDetailContent({tip}: TipDetailContentProps) {
 
 function TipDetailScreen({route}: ScreenProps) {
   const id = route.params?.id;
-  const {data: tip, loading} = useTip(id);
+  const {data: tip, loading, refetching, refetch} = useTip(id);
 
-  if (loading) {
+  if (loading && !tip) {
     return <LoadingView />;
   }
 
@@ -95,6 +96,7 @@ function TipDetailScreen({route}: ScreenProps) {
         }}
         ListEmptyComponent={<EmptyView height={200}>{`There are no tippers yet`}</EmptyView>}
         showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl onRefresh={refetch} refreshing={refetching} />}
       />
     </SafeView>
   );

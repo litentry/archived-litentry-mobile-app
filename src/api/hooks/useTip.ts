@@ -1,4 +1,4 @@
-import {gql, useQuery} from '@apollo/client';
+import {gql, useQuery, NetworkStatus} from '@apollo/client';
 import {SubstrateChainTip} from 'src/generated/litentryGraphQLTypes';
 
 export type Tip = SubstrateChainTip;
@@ -58,10 +58,13 @@ const TIP_QUERY = gql`
 `;
 
 export function useTip(id: string) {
-  const {data, ...rest} = useQuery<{substrateChainTip: SubstrateChainTip}, {id: string}>(TIP_QUERY, {variables: {id}});
+  const {data, networkStatus, ...rest} = useQuery<{substrateChainTip: SubstrateChainTip}, {id: string}>(TIP_QUERY, {
+    variables: {id},
+  });
 
   return {
     data: data?.substrateChainTip,
+    refetching: networkStatus === NetworkStatus.refetch,
     ...rest,
   };
 }
