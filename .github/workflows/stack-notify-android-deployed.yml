@@ -2,7 +2,7 @@ name: Slack Notification Action [ Android ]
 
 on: 
   workflow_run:
-    workflows: [Deploy to Play Store]
+    workflows: [Deploy to Play Store && Upload APK]
     types: 
       - completed
     branches: [develop]
