@@ -1,43 +1,41 @@
 import React, {useContext} from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {useQueryClient} from 'react-query';
 import {Card, List, Subheading, Button, Headline, useTheme} from '@ui/library';
 import {formatNumber} from '@polkadot/util';
-import type {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
 import {useAccounts} from 'context/AccountsContext';
-import {useVotingStatus} from 'src/api/hooks/useVotingStatus';
-import {useCouncilMembers} from 'src/api/hooks/useCouncilMembers';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {ProposalInfo} from '@ui/components/ProposalInfo';
-import {useCouncilMotions} from 'src/api/hooks/useCouncilMotions';
+import {CouncilMotion, useCouncilMotions} from 'src/api/hooks/useCouncilMotions';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {motionDetailScreen} from '@ui/navigation/routeKeys';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import LoadingView from '@ui/components/LoadingView';
 import {useApiTx} from 'src/api/hooks/useApiTx';
+import { ProposalCallInfo } from '@ui/components/ProposalCallInfo';
+import { CouncilMember, useCouncil } from 'src/api/hooks/useCouncil';
+import { useIsCouncilMember } from 'src/api/hooks/useIsCouncilMember';
 
 export function MotionsScreen() {
-  const {data, refetch, isLoading, isFetching} = useCouncilMotions();
-
+  const {data: motions, loading} = useCouncilMotions();
+  const {data: council} = useCouncil();
+  const isCouncil = useIsCouncilMember();
   return (
     <SafeView edges={noTopEdges}>
-      {isLoading ? (
+      {loading && !motions ? (
         <LoadingView />
       ) : (
         <FlatList
-          refreshing={isFetching}
-          onRefresh={refetch}
           style={styles.flatList}
-          data={data}
+          data={motions}
           renderItem={({item}) => {
-            return <Motion item={item} />;
+            return <Motion motion={item} isCouncilMemeber={isCouncil} />;
           }}
           ItemSeparatorComponent={() => <Padder scale={1} />}
-          keyExtractor={(item) => item.hash.toHex()}
+          keyExtractor={(item) => item.hash}
           ListEmptyComponent={EmptyView}
         />
       )}
@@ -45,7 +43,7 @@ export function MotionsScreen() {
   );
 }
 
-function Motion({item}: {item: DeriveCollectiveProposal}) {
+function Motion({motion , isCouncilMemeber}: {motion: CouncilMotion, isCouncilMemeber: boolean}) {
   const {colors} = useTheme();
   const navigation = useNavigation<NavigationProp<DashboardStackParamList>>();
   const {api} = useContext(ChainApiContext);
@@ -53,10 +51,10 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
   const {accounts} = useAccounts();
   const account = accounts?.[0];
 
-  const {votes, proposal, hash} = item;
-  const {data} = useCouncilMembers();
+  const {votes, proposal, hash} = motion;
+  const {data} = useCouncil();
   const membersCount = data?.members.length ?? 0;
-  const {isCloseable, isVoteable} = useVotingStatus(votes, membersCount, 'council');
+  // const {isCloseable, isVoteable} = useVotingStatus(votes, membersCount, 'council');
 
   const queryClient = useQueryClient();
 
@@ -101,7 +99,7 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
   return (
     <Card
       onPress={() => {
-        navigation.navigate(motionDetailScreen, {hash: String(hash)});
+        navigation.navigate(motionDetailScreen, {motion});
       }}>
       <Card.Content>
         <List.Item
@@ -109,15 +107,15 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
           right={() => (
             <View style={globalStyles.justifyCenter}>
               <Subheading>{`Aye ${votes?.ayes.length}/${votes?.threshold} `}</Subheading>
-              {(() => {
-                if (data?.isMember) {
-                  if (isCloseable) {
+               {(() => {
+                if (isCouncilMemeber) {
+                  if (motion.votingStatus?.isCloseable) {
                     return (
                       <Button onPress={onPressClose} color={colors.error} mode="outlined">
                         Close
                       </Button>
                     );
-                  } else if (isVoteable) {
+                  } else if (motion.votingStatus?.isVoteable) {
                     return (
                       <View style={globalStyles.rowAlignCenter}>
                         <Button onPress={onPressNay} color={colors.error} mode="outlined">
@@ -134,11 +132,7 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
             </View>
           )}
         />
-        {/* @TODO:
-          Try to reuse components/ProposalCallInfo when fetching motions from graph
-          Possibility of retiring components/ProposalInfo and components/ProposalCall
-        */}
-        <ProposalInfo proposal={proposal} />
+        <ProposalCallInfo proposal={proposal} />
       </Card.Content>
     </Card>
   );

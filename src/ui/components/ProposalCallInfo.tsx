@@ -4,15 +4,16 @@ import {Paragraph, Card, Caption} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import type {DemocracyProposal} from 'src/api/hooks/useDemocracyProposals';
 import type {DemocracyReferendum} from 'src/api/hooks/useDemocracyReferendum';
+import type {MotionProposal} from 'src/api/hooks/useCouncilMotions';
 
 type ProposalInfoProps = {
-  proposal: DemocracyProposal | DemocracyReferendum;
+  proposal: DemocracyProposal | DemocracyReferendum | MotionProposal;
 };
 
 export function ProposalCallInfo({proposal}: ProposalInfoProps) {
   return (
     <View>
-      <Paragraph>{proposal.meta}</Paragraph>
+      { 'meta' in proposal && <Paragraph>{proposal.meta}</Paragraph> }
       <Padder scale={1} />
       <Card>
         <Card.Content>

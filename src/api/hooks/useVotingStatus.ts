@@ -2,12 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 // from https://github.com/polkadot-js/apps/blob/master/packages/react-hooks/src/useVotingStatus.ts
 
-import type {BlockNumber, Votes} from '@polkadot/types/interfaces';
-import BN from 'bn.js';
-import {useContext, useMemo} from 'react';
 import {ApiPromise} from '@polkadot/api';
 import {isFunction} from '@polkadot/util';
+import BN from 'bn.js';
 import {ChainApiContext} from 'context/ChainApiContext';
+import {useContext, useMemo} from 'react';
 import {useBestNumber} from './useBestNumber';
 
 interface State {
@@ -30,11 +29,11 @@ const DEFAULT_STATUS = {
 
 function getStatus(
   api: ApiPromise,
-  bestNumber: BlockNumber,
-  votes: Votes,
+  bestNumber: any, // BestNumber
+  votes: any, // substrateChainMotionVotes
   numMembers: number,
   section: 'council' | 'technicalCommittee',
-): State {
+): any {
   if (!votes.end) {
     return {
       hasFailed: false,
@@ -71,13 +70,13 @@ function getStatus(
     hasPassed,
     isCloseable,
     isVoteable,
-    remainingBlocks: isEnd ? null : votes.end.sub(bestNumber),
+    // remainingBlocks: isEnd ? null : votes.end.sub(bestNumber),
     status,
   };
 }
 
 export function useVotingStatus(
-  votes: Votes | null | undefined,
+  votes: any | null | undefined,
   numMembers: number,
   section: 'council' | 'technicalCommittee',
 ): State {
@@ -87,7 +86,7 @@ export function useVotingStatus(
   }
 
   const bestNumber = useBestNumber();
-
+  console.log(bestNumber);
   return useMemo(
     () => (bestNumber && votes ? getStatus(api, bestNumber, votes, numMembers, section) : DEFAULT_STATUS),
     [api, bestNumber, numMembers, section, votes],
