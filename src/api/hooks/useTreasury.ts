@@ -1,7 +1,5 @@
-import {gql, useQuery} from '@apollo/client';
+import {gql, useQuery, NetworkStatus} from '@apollo/client';
 import type {SubstrateChainTreasury} from 'src/generated/litentryGraphQLTypes';
-
-const APOLLO_NETWORK_STATUS_REFETCH = 4;
 
 const ACCOUNT_FIELDS = gql`
   fragment AccountFields on SubstrateChainAccount {
@@ -63,7 +61,7 @@ export function useTreasury() {
 
   return {
     data: data?.substrateChainTreasury,
-    refetching: networkStatus === APOLLO_NETWORK_STATUS_REFETCH,
+    refetching: networkStatus === NetworkStatus.refetch,
     ...rest,
   };
 }
