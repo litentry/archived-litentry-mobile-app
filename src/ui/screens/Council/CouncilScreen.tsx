@@ -8,9 +8,7 @@ import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SelectAccount} from '@ui/components/SelectAccount';
-import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
-import {useCouncil} from 'src/api/hooks/useCouncil';
-import {useCouncilSummary, CouncilSummary} from 'src/api/hooks/useCouncilSummary';
+import {useCouncil, CouncilCandidate, CouncilMember, Council} from 'src/api/hooks/useCouncil';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import {candidateScreen} from '@ui/navigation/routeKeys';
@@ -48,8 +46,7 @@ export function CouncilScreen() {
 }
 
 function CouncilOverviewScreen() {
-  const {data: council, isLoading} = useCouncil();
-  const {data: summary} = useCouncilSummary(); // TODO: // Get everything needed in this screen from useCouncil
+  const {data: council, loading} = useCouncil();
   const {data: moduleElection} = useModuleElections();
 
   const [councilVoteVisible, setCouncilVoteVisible] = useState(false);
@@ -60,40 +57,34 @@ function CouncilOverviewScreen() {
       {title: 'Runners Up', data: council ? council.runnersUp : []},
       {
         title: 'Candidates',
-        data: council ? council.candidates.map((candidate) => ({accountId: candidate, backing: undefined})) : [],
+        data: council ? council.candidates : [],
       },
     ],
     [council],
   );
 
   const votingCandidates = useMemo(() => {
-    if (council != null) {
-      return council.members
-        .map((member) => member.accountId.toString())
-        .concat(council.runnersUp.map((member) => member.accountId.toString()))
-        .concat(council.candidates.map((member) => member.toString()));
+    if (council) {
+      return council.members.concat(council.runnersUp).concat(council.candidates as CouncilMember[]);
     }
     return [];
   }, [council]);
 
   return (
     <SafeView edges={noTopEdges}>
-      {isLoading ? (
+      {loading && !council ? (
         <LoadingView />
       ) : (
-        <SectionList
+        <SectionList<CouncilMember | CouncilCandidate>
           style={globalStyles.flex}
           contentContainerStyle={styles.content}
           sections={sectionsData}
-          keyExtractor={(item) => item.accountId.toString()}
+          keyExtractor={(item) => item.address}
           stickySectionHeadersEnabled={false}
           renderItem={({item, section}) => {
-            const votes = council?.getVoters(item.accountId.toString())?.length;
             return (
-              <Item
-                accountId={item.accountId.toString()}
-                backing={item.backing}
-                votes={votes}
+              <CouncilMemberItem
+                member={item}
                 sectionType={
                   section.title === 'Members' ? 'Member' : section.title === 'Runners Up' ? 'Runner Up' : 'Candidate'
                 }
@@ -103,7 +94,7 @@ function CouncilOverviewScreen() {
           renderSectionHeader={({section: {title}}) => (
             <List.Item
               style={styles.sectionHeader}
-              title={buildSectionHeaderTitle(title, summary)}
+              title={buildSectionHeaderTitle(title, council)}
               right={() => {
                 if (title === 'Members') {
                   return (
@@ -133,57 +124,50 @@ function CouncilOverviewScreen() {
   );
 }
 
-function buildSectionHeaderTitle(sectionTitle: string, councilSumamary?: CouncilSummary) {
-  if (!councilSumamary) {
+function buildSectionHeaderTitle(sectionTitle: string, council?: Council) {
+  if (!council) {
     return sectionTitle;
   }
 
   let title: string;
 
   if (sectionTitle === 'Members') {
-    title = `${councilSumamary.totalMembers}/${councilSumamary.desiredSeats}`;
+    title = `${council.totalMembers}/${council.desiredSeats}`;
   } else if (sectionTitle === 'Runners Up') {
-    title = `${councilSumamary.totalRunnersUp}/${councilSumamary.desiredRunnersUp}`;
+    title = `${council.totalRunnersUp}/${council.desiredRunnersUp}`;
   } else {
-    title = String(councilSumamary.totalCandidates);
+    title = String(council.totalCandidates);
   }
   return `${sectionTitle} ${title}`;
 }
 
-function Item({
-  accountId,
-  backing,
-  votes,
-  sectionType,
-}: {
-  accountId: string;
-  backing?: string;
-  votes?: number;
+type CouncilMemberItemProps = {
+  member: CouncilMember | CouncilCandidate;
   sectionType: string;
-}) {
+};
+
+function CouncilMemberItem({member, sectionType}: CouncilMemberItemProps) {
   const {navigate} = useNavigation();
-  const {data: identityInfo} = useAccountIdentityInfo(accountId);
-  const title = identityInfo && identityInfo.hasIdentity ? identityInfo.display : accountId;
 
   return (
     <List.Item
-      title={title}
+      title={member.account.display}
       left={() => (
         <View style={globalStyles.justifyCenter}>
-          <Identicon value={accountId} size={30} />
+          <Identicon value={member.address} size={30} />
         </View>
       )}
       right={
-        votes
+        'voters' in member
           ? () => (
               <View style={globalStyles.justifyCenter}>
-                <Caption>{votes} votes</Caption>
+                <Caption>{member.voters.length} votes</Caption>
               </View>
             )
           : undefined
       }
-      description={backing ? `Backing: ${backing?.toString()}` : ''}
-      onPress={() => navigate(candidateScreen, {accountId, backing, title: sectionType})}
+      description={'formattedBacking' in member ? `Backing: ${member.formattedBacking}` : ''}
+      onPress={() => navigate(candidateScreen, {candidate: member, title: sectionType})}
     />
   );
 }
@@ -191,7 +175,7 @@ function Item({
 type CouncilVoteProps = {
   visible: boolean;
   setVisible: (visible: boolean) => void;
-  candidates: string[];
+  candidates: CouncilMember[];
   module: string | null;
 };
 
@@ -204,7 +188,9 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
   // preselect already voted council members
   useEffect(() => {
     if (voterData != null) {
-      setSelectedCandidates(voterData.votes.map((a) => a.toString()).filter((a) => candidates.includes(a)));
+      setSelectedCandidates(
+        voterData.votes.map((a) => a.toString()).filter((a) => candidates.some((c) => c.address === a)),
+      );
     }
   }, [voterData, candidates]);
 
@@ -278,11 +264,11 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
           <ScrollView>
             {candidates.map((candidate) => (
               <MemberItem
-                key={candidate}
-                accountId={candidate}
+                key={candidate.address}
+                candidate={candidate}
                 onSelect={onCandidateSelect}
-                isSelected={selectedCandidates.includes(candidate)}
-                order={selectedCandidates.indexOf(candidate) + 1}
+                isSelected={selectedCandidates.includes(candidate.address)}
+                order={selectedCandidates.indexOf(candidate.address) + 1}
               />
             ))}
           </ScrollView>
@@ -308,21 +294,17 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
 }
 
 type MemberItemProps = {
-  accountId: string;
+  candidate: CouncilMember;
   onSelect: (accountId: string, isSelected: boolean) => void;
   isSelected: boolean;
   order: number;
 };
 
-function MemberItem({accountId, onSelect, isSelected, order}: MemberItemProps) {
+function MemberItem({candidate, onSelect, isSelected, order}: MemberItemProps) {
   const {colors} = useTheme();
-  const {data: identityInfo} = useAccountIdentityInfo(accountId);
-  if (identityInfo == null) {
-    return null;
-  }
 
   return (
-    <TouchableOpacity onPress={() => onSelect(accountId, isSelected)}>
+    <TouchableOpacity onPress={() => onSelect(candidate.address, isSelected)}>
       <View
         style={[
           styles.candidateItemContainer,
@@ -332,10 +314,10 @@ function MemberItem({accountId, onSelect, isSelected, order}: MemberItemProps) {
           },
         ]}>
         <View style={styles.candidateIdentity}>
-          <Identicon value={accountId} size={20} />
+          <Identicon value={candidate.address} size={20} />
           <Padder scale={0.3} />
           <Caption style={styles.candidateName} ellipsizeMode="middle" numberOfLines={1}>
-            {identityInfo.display}
+            {candidate.account.display}
           </Caption>
         </View>
         <View style={styles.badge}>{order > 0 && <Badge color={colors.onSurface} text={String(order)} />}</View>

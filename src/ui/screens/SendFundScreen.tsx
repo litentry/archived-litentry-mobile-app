@@ -29,7 +29,6 @@ export function SendFundScreen({navigation, route}: Props) {
   const formatBalance = useFormatBalance();
   const {api} = useApi();
   const startTx = useApiTx();
-  const maxBalance = 0;
 
   useEffect(() => {
     ref.current?.open();
