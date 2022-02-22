@@ -14,7 +14,9 @@ import {Button, Headline, IconButton, Text, TextInput} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {Layout} from '@ui/components/Layout';
 import {standardPadding} from '@ui/styles';
+import MaxBalance from '@ui/components/MaxBalance';
 import {decimalKeypad} from 'src/utils';
+
 type Props = {
   navigation: NavigationProp<AccountsStackParamList, typeof sendFundScreen>;
   route: RouteProp<AccountsStackParamList, typeof sendFundScreen>;
@@ -29,7 +31,6 @@ export function SendFundScreen({navigation, route}: Props) {
   const formatBalance = useFormatBalance();
   const {api} = useApi();
   const startTx = useApiTx();
-  const maxBalance = 0;
 
   useEffect(() => {
     ref.current?.open();
@@ -70,6 +71,7 @@ export function SendFundScreen({navigation, route}: Props) {
               right={<TextInput.Affix text={(api && formatBalance(getBalanceFromString(api, amount))) ?? ''} />}
               contextMenuHidden={true}
             />
+            <MaxBalance address={address} />
             <Padder scale={1} />
             <TextInput
               autoComplete="off"

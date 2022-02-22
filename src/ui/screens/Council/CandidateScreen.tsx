@@ -3,11 +3,8 @@ import {View, FlatList, Linking, StyleSheet} from 'react-native';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Divider, List, Card, Icon, Caption, Subheading, Paragraph} from '@ui/library';
 import IdentityIcon from '@polkadot/reactnative-identicon';
-import type {AccountId} from '@polkadot/types/interfaces';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
-import {useCouncil} from 'src/api/hooks/useCouncil';
-import LoadingView from '@ui/components/LoadingView';
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
 import {Padder} from '@ui/components/Padder';
@@ -15,6 +12,8 @@ import globalStyles from '@ui/styles';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 import {useTheme} from '@ui/library';
+import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
+import {EmptyView} from '@ui/components/EmptyView';
 
 type ScreenProps = {
   navigation: NavigationProp<DashboardStackParamList>;
@@ -34,11 +33,8 @@ function ItemRight({children}: {children: React.ReactNode}) {
 }
 
 export function CandidateScreen({route, navigation}: ScreenProps) {
-  const accountId = route.params.accountId;
-  const backing = route.params.backing;
+  const member = route.params.candidate;
   const screenTitle = route.params.title;
-  const {data: councilData, isLoading: isLoadingCouncil} = useCouncil();
-  const {data: identityInfoData, isLoading: isLoadingIdentityInfo} = useAccountIdentityInfo(accountId);
   const {colors} = useTheme();
 
   useEffect(() => {
@@ -47,15 +43,7 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
     }
   }, [navigation, screenTitle]);
 
-  if (isLoadingCouncil || isLoadingIdentityInfo) {
-    return <LoadingView />;
-  }
-
-  const legal = identityInfoData?.hasIdentity ? identityInfoData.registration.legal : undefined;
-  const email = identityInfoData?.hasIdentity ? identityInfoData.registration.email : undefined;
-  const twitter = identityInfoData?.hasIdentity ? identityInfoData.registration.twitter : undefined;
-  const riot = identityInfoData?.hasIdentity ? identityInfoData.registration.riot : undefined;
-  const web = identityInfoData?.hasIdentity ? identityInfoData.registration.web : undefined;
+  const {legal, email, twitter, riot, web} = member.account.registration;
 
   return (
     <SafeView edges={noTopEdges}>
@@ -66,9 +54,9 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
             <Card>
               <Card.Content>
                 <View style={globalStyles.alignCenter}>
-                  <IdentityIcon value={accountId} size={30} />
+                  <IdentityIcon value={member.address} size={30} />
                   <Padder scale={0.5} />
-                  {identityInfoData && <AccountInfoInlineTeaser identity={identityInfoData} />}
+                  <AccountTeaser account={member.account} />
                 </View>
                 <Padder scale={0.5} />
                 <Divider />
@@ -137,13 +125,13 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
                     )}
                   />
                 ) : null}
-                {backing ? (
+                {'formattedBacking' in member ? (
                   <>
                     <Divider />
                     <Padder scale={1} />
                     <View style={globalStyles.alignCenter}>
                       <Paragraph>Backing</Paragraph>
-                      <Paragraph>{backing}</Paragraph>
+                      <Paragraph>{member.formattedBacking}</Paragraph>
                     </View>
                   </>
                 ) : null}
@@ -153,25 +141,26 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
             <Subheading style={globalStyles.textCenter}>{`Voters`}</Subheading>
           </>
         )}
-        data={councilData?.getVoters(accountId) || []}
-        renderItem={({item}) => <Voter accountId={item} />}
-        keyExtractor={(item) => item.toString()}
+        data={'voters' in member ? member.voters : []}
+        renderItem={({item}) => <Voter account={item} />}
+        keyExtractor={(item) => item}
         ItemSeparatorComponent={Divider}
+        ListEmptyComponent={<EmptyView height={200}>{`No voters yet.`}</EmptyView>}
       />
     </SafeView>
   );
 }
 
-function Voter({accountId}: {accountId: AccountId}) {
-  const {data} = useAccountIdentityInfo(accountId.toString());
-  const {data: voterData} = useCouncilVotesOf(accountId);
+function Voter({account}: {account: string}) {
+  const {data} = useAccountIdentityInfo(account);
+  const {data: voterData} = useCouncilVotesOf(account);
   const formatBalance = useFormatBalance();
 
   return (
     <List.Item
       left={() => (
         <View style={globalStyles.justifyCenter}>
-          <IdentityIcon value={accountId.toString()} size={40} />
+          <IdentityIcon value={account} size={35} />
         </View>
       )}
       title={data && <AccountInfoInlineTeaser identity={data} />}

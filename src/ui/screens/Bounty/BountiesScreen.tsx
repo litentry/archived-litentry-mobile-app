@@ -15,7 +15,7 @@ export function BountiesScreen() {
 
   return (
     <SafeView edges={noTopEdges}>
-      {loading ? (
+      {loading && !bounties ? (
         <LoadingView />
       ) : (
         <FlatList
