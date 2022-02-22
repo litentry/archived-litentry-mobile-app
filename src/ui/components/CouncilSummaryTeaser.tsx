@@ -22,28 +22,36 @@ export function CouncilSummaryTeaser(props: PropTypes) {
       {loading ? (
         <LoadingBox />
       ) : data ? (
-        <View style={styles.container}>
-          <Card mode="outlined" style={styles.card}>
-            <View style={globalStyles.spaceBetweenRowContainer}>
-              <StatInfoBlock title="Seats">{`${data.totalMembers}/${data.desiredSeats}`}</StatInfoBlock>
-              <StatInfoBlock title="Runners up">{`${data.totalRunnersUp}/${data.desiredRunnersUp}`}</StatInfoBlock>
-            </View>
-            <Padder scale={1} />
-            <StatInfoBlock title="Prime Voter">
-              {data.primeMember && <AccountTeaser account={data.primeMember.account} />}
-            </StatInfoBlock>
-          </Card>
+        <>
+          <View style={globalStyles.spaceBetweenRowContainer}>
+            <Card mode="outlined" style={styles.card}>
+              <View style={globalStyles.spaceBetweenRowContainer}>
+                <StatInfoBlock title="Seats">{`${data.totalMembers}/${data.desiredSeats}`}</StatInfoBlock>
+                <StatInfoBlock title="Runners up">{`${data.totalRunnersUp}/${data.desiredRunnersUp}`}</StatInfoBlock>
+              </View>
+              <Padder scale={1} />
+              <StatInfoBlock title="Candidates">{`${data.totalCandidates}`}</StatInfoBlock>
+            </Card>
+            <Padder scale={0.2} />
+            <Card mode="outlined" style={styles.card}>
+              <ProgressChartWidget
+                title={`Term Progress (${data.termProgress.termDurationParts[0]})`}
+                detail={`${data.termProgress.percentage}%\n${data.termProgress.termLeftParts?.[0] || ''}${
+                  data.termProgress.termLeftParts?.[1] ? `\n${data.termProgress.termLeftParts[1]}` : ''
+                }`}
+                data={[data.termProgress.percentage ?? 0 / 100]}
+              />
+            </Card>
+          </View>
           <Padder scale={0.2} />
-          <Card mode="outlined" style={styles.card}>
-            <ProgressChartWidget
-              title={`Term Progress (${data.termProgress.termDurationParts[0]})`}
-              detail={`${data.termProgress.percentage}%\n${data.termProgress.termLeftParts?.[0] || ''}${
-                data.termProgress.termLeftParts?.[1] ? `\n${data.termProgress.termLeftParts[1]}` : ''
-              }`}
-              data={[data?.termProgress.percentage ?? 0 / 100]}
-            />
-          </Card>
-        </View>
+          {data.primeMember ? (
+            <Card mode="outlined" style={[styles.card]}>
+              <StatInfoBlock title="Prime Voter">
+                <AccountTeaser identiconSize={30} account={data.primeMember.account} />
+              </StatInfoBlock>
+            </Card>
+          ) : null}
+        </>
       ) : null}
     </SectionTeaserContainer>
   );
@@ -51,7 +59,6 @@ export function CouncilSummaryTeaser(props: PropTypes) {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
     justifyContent: 'space-between',
   },
   card: {
