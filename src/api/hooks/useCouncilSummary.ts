@@ -1,5 +1,5 @@
 import {gql, useQuery} from '@apollo/client';
-import {SubstrateChainCouncil} from 'src/generated/litentryGraphQLTypes';
+import type {SubstrateChainCouncil} from 'src/generated/litentryGraphQLTypes';
 
 export type CouncilSummary = Omit<SubstrateChainCouncil, 'members' | 'runnersUp' | 'candidates'>;
 

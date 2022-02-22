@@ -18,7 +18,7 @@ export function TreasurySummaryTeaser(props: PropTypes) {
 
   return (
     <SectionTeaserContainer onPress={props.onPress} title="Treasury">
-      {loading ? (
+      {loading && !treasurySummary ? (
         <LoadingBox />
       ) : treasurySummary ? (
         <>

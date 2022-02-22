@@ -4,7 +4,7 @@ import type {SubstrateChainRegistrarsSummary, SubstrateChainRegistrar} from 'src
 export type Registrar = SubstrateChainRegistrar;
 
 const ACCOUNT_FIELDS = gql`
-  fragment AccountFields on ProxyAccount {
+  fragment AccountFields on SubstrateChainAccount {
     address
     display
     registration {
@@ -36,7 +36,7 @@ const ACCOUNT_FIELDS = gql`
 const REGISTRARS_SUMMARY_QUERY = gql`
   ${ACCOUNT_FIELDS}
   query getRegistrarsSummary {
-    proxyRegistrarsSummary {
+    substrateChainRegistrarsSummary {
       registrarsCount
       lowestFee
       formattedLowestFee
