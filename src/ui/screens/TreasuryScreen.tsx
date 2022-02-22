@@ -1,20 +1,18 @@
-import React from 'react';
-import {SectionList, StyleSheet, View} from 'react-native';
-import Identicon from '@polkadot/reactnative-identicon';
-import {u8aToString} from '@polkadot/util';
+import React, {useContext} from 'react';
+import {SectionList, StyleSheet, View, Linking} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {Account} from '@ui/components/Account';
 import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import {useTreasuryInfo} from 'src/api/hooks/useTreasuryInfo';
+import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
+import {useTreasury} from 'src/api/hooks/useTreasury';
 import globalStyles, {standardPadding} from '@ui/styles';
 import TipsScreen from './Tips/TipsScreen';
-import {useTheme, Card, Caption, Subheading} from '@ui/library';
+import {useTheme, Card, Caption, Subheading, Text, Button, Divider} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
-import {stringShorten} from '@polkadot/util';
+import {NetworkType} from 'src/types';
+import {NetworkContext} from 'context/NetworkContext';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -34,73 +32,62 @@ export function TreasuryScreen() {
 }
 
 function TreasuryOverviewScreen() {
-  const {isLoading, data: treasuryInfo, refetch} = useTreasuryInfo();
+  const {loading, data: treasuryInfo, refetch, refetching} = useTreasury();
 
   const groupedData = [
     {title: 'Proposals', data: treasuryInfo?.proposals ?? []},
     {title: 'Approved', data: treasuryInfo?.approvals ?? []},
   ];
 
-  const formatBalance = useFormatBalance();
-
   return (
     <Layout style={globalStyles.flex}>
       <SafeView edges={noTopEdges}>
-        {isLoading ? (
+        {loading ? (
           <LoadingView />
         ) : (
           <SectionList
             stickySectionHeadersEnabled={false}
             contentContainerStyle={styles.sectionList}
-            refreshing={isLoading}
+            refreshing={refetching}
             onRefresh={refetch}
             sections={groupedData}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({item}) => {
-              const accountInfo = treasuryInfo?.accountInfos.find(
-                (i) => i.accountId.toString() === item.proposal.proposer.toString(),
-              );
-              const proposer = accountInfo?.info
-                ? u8aToString(accountInfo.info.display.asRaw)
-                : accountInfo?.accountId
-                ? stringShorten(accountInfo.accountId.toString())
-                : 'unknown';
+              const proposer = item.proposal.proposer;
+              const beneficiary = item.proposal.beneficiary;
 
               return (
                 <Card style={styles.item}>
                   <Card.Content>
                     <View style={styles.row}>
-                      <Identicon value={item.proposal.proposer} size={30} />
-                      <Padder scale={0.5} />
-                      <Caption>{proposer}</Caption>
-                      <View style={styles.itemRight}>
-                        <Caption>{formatBalance(item.proposal.value)}</Caption>
+                      <View style={styles.proposerContainer}>
+                        <Caption>Proposer</Caption>
+                        <AccountTeaser account={proposer} identiconSize={30} />
+                      </View>
+                      <Caption style={styles.proposalId}>{`# ${item.id}`}</Caption>
+                    </View>
+                    <Padder scale={0.5} />
+                    <View>
+                      <Caption>Beneficiary</Caption>
+                      <AccountTeaser account={beneficiary} identiconSize={30} />
+                    </View>
+                    <Padder scale={0.5} />
+                    <View style={styles.row}>
+                      <View style={styles.balancesRow}>
+                        <Caption>Payment:</Caption>
+                        <Padder scale={0.5} />
+                        <Text>{item.proposal.value}</Text>
+                      </View>
+                      <View style={styles.balancesRow}>
+                        <Caption>Bond: </Caption>
+                        <Padder scale={0.5} />
+                        <Text>{item.proposal.bond}</Text>
                       </View>
                     </View>
-                    <View style={styles.row}>
-                      <Caption>Beneficiary: </Caption>
-                      <Account id={item.proposal.beneficiary.toString()}>
-                        {(identity) =>
-                          identity ? (
-                            <View style={[styles.row, styles.accountsRow]}>
-                              <Identicon value={identity.accountId} size={20} />
-                              <Padder scale={0.3} />
-                              <Caption numberOfLines={1} ellipsizeMode="middle">
-                                {identity.display}
-                              </Caption>
-                            </View>
-                          ) : (
-                            <Caption numberOfLines={1}>{stringShorten(item.proposal.beneficiary.toString())}</Caption>
-                          )
-                        }
-                      </Account>
-                    </View>
-                    <View style={styles.row}>
-                      <Caption>Bond: </Caption>
-                      <Caption numberOfLines={1} ellipsizeMode="middle">
-                        {formatBalance(item.proposal.bond)}
-                      </Caption>
-                    </View>
+                    <Padder scale={0.5} />
+                    <Divider />
+                    <Padder scale={0.5} />
+                    <PolkassemblyProposal proposalId={item.id} />
                   </Card.Content>
                 </Card>
               );
@@ -121,10 +108,29 @@ function TreasuryOverviewScreen() {
   );
 }
 
+function PolkassemblyProposal({proposalId}: {proposalId: string}) {
+  const {currentNetwork} = useContext(NetworkContext);
+
+  return (
+    <Button onPress={() => openPolkassemblyProposal(currentNetwork, proposalId)} icon="open-in-new">
+      Polkassembly
+    </Button>
+  );
+}
+
+function openPolkassemblyProposal(currentNetwork: NetworkType, proposalId: string) {
+  const network = currentNetwork.key === 'kusama' ? 'kusama' : 'polkadot';
+  const url = `https://${network}.polkassembly.io/treasury/${proposalId}`;
+  Linking.canOpenURL(url).then((supported) => {
+    if (supported) {
+      Linking.openURL(url);
+    }
+  });
+}
+
 const styles = StyleSheet.create({
-  accountsRow: {
+  proposerContainer: {
     flex: 1,
-    marginRight: 20,
   },
   sectionList: {
     padding: standardPadding * 2,
@@ -136,15 +142,16 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  balancesRow: {
+    flexDirection: 'row',
     alignItems: 'center',
   },
   item: {
     marginBottom: standardPadding,
   },
-  itemRight: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingLeft: standardPadding,
+  proposalId: {
+    fontSize: 14,
   },
 });
