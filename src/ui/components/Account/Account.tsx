@@ -13,21 +13,21 @@ type Props = {
 };
 
 export function Account({account}: Props) {
-  const registrationJudgements = account.registration.judgements
-    ? account.registration.judgements.filter(notEmpty)
-    : [];
+  // const registrationJudgements = account.registration.judgements
+  //   ? account.registration.judgements.filter(notEmpty)
+  //   : [];
 
   return (
     <View style={styles.container}>
       <Caption style={styles.display}>{stringShorten(account.display, 12)}</Caption>
       <Padder scale={0.5} />
-      {registrationJudgements.map((registrationJudgement, i) => (
+      {/* {registrationJudgements.map((registrationJudgement, i) => (
         <JudgmentStatus
           key={i}
           registrationJudgement={registrationJudgement}
           hasParent={Boolean(account.registration.displayParent)}
         />
-      ))}
+      ))} */}
     </View>
   );
 }

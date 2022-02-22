@@ -28,9 +28,24 @@ const COUNCIL_MOTION_QUERY = gql`
       votes {
         index
         threshold
-        ayes
-        nays
+        ayes {
+          address
+          display
+        }
+        nays {
+          address
+          display
+        }
         end
+      }
+      votingStatus {
+        hasPassed
+        hasFailed
+        isCloseable
+        isVoteable
+        remainingBlocks
+        remainingBlocksTime
+        status
       }
     }
   }
