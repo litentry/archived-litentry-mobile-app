@@ -72,7 +72,7 @@ function CouncilOverviewScreen() {
 
   return (
     <SafeView edges={noTopEdges}>
-      {loading ? (
+      {loading && !council ? (
         <LoadingView />
       ) : (
         <SectionList<CouncilMember | CouncilCandidate>
