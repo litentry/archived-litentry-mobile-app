@@ -767,10 +767,10 @@ export type Query = {
   substrateChainCrowdloan?: Maybe<SubstrateChainCrowdloan>;
   substrateChainCrowdloanContribution: SubstrateChainCrowdloanContribution;
   substrateChainCrowdloanSummary: SubstrateChainCrowdloanSummary;
-  substrateChainDemocracyProposal?: Maybe<SubstrateChainProposal>;
-  substrateChainDemocracyProposals: Array<SubstrateChainProposal>;
-  substrateChainDemocracyReferendum?: Maybe<SubstrateChainReferendum>;
-  substrateChainDemocracyReferendums: Array<SubstrateChainReferendum>;
+  substrateChainDemocracyProposal?: Maybe<SubstrateChainDemocracyProposal>;
+  substrateChainDemocracyProposals: Array<SubstrateChainDemocracyProposal>;
+  substrateChainDemocracyReferendum?: Maybe<SubstrateChainDemocracyReferendum>;
+  substrateChainDemocracyReferendums: Array<SubstrateChainDemocracyReferendum>;
   substrateChainDemocracySummary: SubstrateChainDemocracySummary;
   substrateChainEndedCrowdloans: Array<SubstrateChainCrowdloan>;
   substrateChainEvents: Array<SubstrateChainEvent>;
@@ -1882,6 +1882,39 @@ export type SubstrateChainCurator = {
   address: Scalars['String'];
 };
 
+export type SubstrateChainDemocracyProposal = {
+  __typename?: 'SubstrateChainDemocracyProposal';
+  args: Array<SubstrateChainProposalArg>;
+  balance?: Maybe<Scalars['String']>;
+  formattedBalance?: Maybe<Scalars['String']>;
+  hash: Scalars['String'];
+  index: Scalars['String'];
+  meta: Scalars['String'];
+  method: Scalars['String'];
+  proposer: SubstrateChainProposer;
+  seconds: Array<SubstrateChainProposalSecond>;
+  section: Scalars['String'];
+};
+
+export type SubstrateChainDemocracyReferendum = {
+  __typename?: 'SubstrateChainDemocracyReferendum';
+  activatePeriod: Array<Scalars['String']>;
+  args: Array<SubstrateChainProposalArg>;
+  ayePercent: Scalars['Float'];
+  endPeriod: Array<Scalars['String']>;
+  formattedVotedAye: Scalars['String'];
+  formattedVotedNay: Scalars['String'];
+  hash: Scalars['String'];
+  index: Scalars['String'];
+  meta: Scalars['String'];
+  method: Scalars['String'];
+  section: Scalars['String'];
+  voteCountAye: Scalars['String'];
+  voteCountNay: Scalars['String'];
+  votedAye: Scalars['String'];
+  votedNay: Scalars['String'];
+};
+
 export type SubstrateChainDemocracySummary = {
   __typename?: 'SubstrateChainDemocracySummary';
   activeProposals: Scalars['Int'];
@@ -2009,23 +2042,10 @@ export type SubstrateChainParachainsInfo = {
   proposalsCount: Scalars['Int'];
 };
 
-export type SubstrateChainProposal = {
-  __typename?: 'SubstrateChainProposal';
-  args: Array<SubstrateChainProposalArg>;
-  balance?: Maybe<Scalars['String']>;
-  hash: Scalars['String'];
-  index: Scalars['String'];
-  meta: Scalars['String'];
-  method: Scalars['String'];
-  proposer: SubstrateChainProposer;
-  seconds: Array<SubstrateChainProposalSecond>;
-  section: Scalars['String'];
-};
-
 export type SubstrateChainProposalArg = {
   __typename?: 'SubstrateChainProposalArg';
   name?: Maybe<Scalars['String']>;
-  subCalls?: Maybe<Array<Maybe<SubstrateChainProposal>>>;
+  subCalls?: Maybe<Array<Maybe<SubstrateChainDemocracyProposal>>>;
   type?: Maybe<Scalars['String']>;
   value?: Maybe<Scalars['String']>;
 };
@@ -2049,22 +2069,6 @@ export type SubstrateChainProposer = {
   __typename?: 'SubstrateChainProposer';
   account: SubstrateChainAccount;
   address: Scalars['String'];
-};
-
-export type SubstrateChainReferendum = {
-  __typename?: 'SubstrateChainReferendum';
-  activatePeriod: Array<Scalars['String']>;
-  args: Array<SubstrateChainProposalArg>;
-  endPeriod: Array<Scalars['String']>;
-  hash: Scalars['String'];
-  index: Scalars['String'];
-  meta: Scalars['String'];
-  method: Scalars['String'];
-  section: Scalars['String'];
-  voteCountAye: Scalars['String'];
-  voteCountNay: Scalars['String'];
-  votedAye: Scalars['String'];
-  votedNay: Scalars['String'];
 };
 
 export type SubstrateChainRegistrar = {

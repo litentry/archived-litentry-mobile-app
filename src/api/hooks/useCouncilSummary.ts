@@ -3,58 +3,37 @@ import type {SubstrateChainCouncil} from 'src/generated/litentryGraphQLTypes';
 
 export type CouncilSummary = Omit<SubstrateChainCouncil, 'members' | 'runnersUp' | 'candidates'>;
 
-const ACCOUNT_FIELDS = gql`
-  fragment AccountFields on SubstrateChainAccount {
-    address
-    display
-    registration {
-      display
-      displayParent
-      email
-      image
-      legal
-      pgp
-      riot
-      twitter
-      web
-      judgements {
-        index
-        judgement {
-          isUnknown
-          isFeePaid
-          isReasonable
-          isKnownGood
-          isOutOfDate
-          isLowQuality
-          isErroneous
-        }
-      }
-    }
-  }
-`;
-
 export const COUNCIL_SUMMARY_QUERY = gql`
-  ${ACCOUNT_FIELDS}
   query getCouncilSummary {
     substrateChainCouncil {
-      totalCandidates
       primeMember {
-        address
         account {
-          ...AccountFields
+          address
+          display
+          registration {
+            displayParent
+            judgements {
+              index
+              judgement {
+                isUnknown
+                isFeePaid
+                isReasonable
+                isKnownGood
+                isOutOfDate
+                isLowQuality
+                isErroneous
+              }
+            }
+          }
         }
-        backing
-        formattedBacking
-        voters
       }
       desiredSeats
       totalMembers
-      desiredRunnersUp
       totalRunnersUp
+      totalCandidates
+      desiredRunnersUp
       termProgress {
-        termDuration
         termDurationParts
-        termLeft
         termLeftParts
         percentage
       }
