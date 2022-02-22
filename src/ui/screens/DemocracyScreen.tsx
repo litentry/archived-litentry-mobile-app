@@ -37,10 +37,12 @@ export function DemocracyScreen() {
     [proposals, referendums],
   );
 
+  const isLoading = (proposalsLoading || referendumsLoading) && !refreshing && !proposals && !referendums;
+
   return (
     <Layout style={globalStyles.flex}>
       <SafeView edges={noTopEdges}>
-        {(proposalsLoading || referendumsLoading) && !refreshing ? (
+        {isLoading ? (
           <LoadingView />
         ) : (
           <SectionList
