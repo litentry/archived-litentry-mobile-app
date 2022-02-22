@@ -19,7 +19,7 @@ export function CouncilSummaryTeaser(props: PropTypes) {
 
   return (
     <SectionTeaserContainer onPress={props.onPress} title="Council">
-      {loading ? (
+      {loading && !data ? (
         <LoadingBox />
       ) : data ? (
         <>
