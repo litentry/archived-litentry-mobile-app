@@ -7,11 +7,7 @@ export type Bounty = SubstrateChainBounty;
 const BOUNTY_QUERY = gql`
   ${ACCOUNT_FIELDS}
   query getBounty($index: String!) {
-<<<<<<< HEAD
-    proxyBounty(index: $index) {
-=======
     substrateChainBounty(index: $index) {
->>>>>>> develop
       index
       description
       formattedFee

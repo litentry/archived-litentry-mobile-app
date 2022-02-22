@@ -21,6 +21,7 @@ import {formatCallMeta} from 'src/utils/callMetadata';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
 import {decimalKeypad} from 'src/utils';
+import MaxBalance from '@ui/components/MaxBalance';
 
 export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
   const startTx = useApiTx();
@@ -175,10 +176,9 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
             value={state.voteValue}
             onChangeText={(nextValue) => dispatch({type: 'SET_VOTE_VALUE', payload: decimalKeypad(nextValue)})}
             contextMenuHidden={true}
+            right={<TextInput.Affix text={(api && formatBalance(getBalanceFromString(api, state.voteValue))) ?? ''} />}
           />
-          <Subheading style={styles.marginLeft}>
-            {api && formatBalance(getBalanceFromString(api, state.voteValue))}
-          </Subheading>
+          <MaxBalance address={state.account} />
           <Padder scale={1} />
 
           <Caption>Conviction</Caption>

@@ -1,4 +1,5 @@
-import {ParaId} from '@polkadot/types/interfaces';
+import type {ParaId} from '@polkadot/types/interfaces';
+import {CouncilCandidate, CouncilMember} from 'src/api/hooks/useCouncil';
 
 import {
   addAccountScreen,
@@ -60,13 +61,12 @@ type DashboardStackParamList = {
   };
   [tipsScreen]: undefined;
   [tipDetailScreen]: {
-    hash: string;
+    id: string;
   };
   [councilScreen]: undefined;
   [candidateScreen]: {
-    accountId: string;
+    candidate: CouncilCandidate | CouncilMember;
     title: string;
-    backing?: string;
   };
   [proposeTipScreen]: undefined;
   [treasuryScreen]: undefined;

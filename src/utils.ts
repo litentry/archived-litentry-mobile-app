@@ -4,7 +4,7 @@ export function notEmpty<TValue>(value: TValue | null | undefined | ''): value i
   return value !== null && value !== undefined && value !== '';
 }
 
-// Useful for the countries that use ,(comma) seperation for the decimal number
+// Useful for the countries that use ,(comma) separation for the decimal number
 // avoid two decimals in the string
 export function decimalKeypad(numericValue: string): string {
   if (numericValue.length === 1 && isNaN(+numericValue)) return '0.';

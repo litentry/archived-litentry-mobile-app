@@ -20,7 +20,7 @@ export function DemocracySummaryTeaser(props: Props) {
 
   return (
     <SectionTeaserContainer onPress={props.onPress} title="Democracy">
-      {loading ? (
+      {loading && !data ? (
         <LoadingBox />
       ) : data ? (
         <View style={styles.boxRow}>

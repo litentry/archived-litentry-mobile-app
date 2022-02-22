@@ -28,7 +28,17 @@ export function LitentryApiClientProvider({children}: {children: React.ReactNode
     const init = async () => {
       // @TODO: https://github.com/litentry/litentry-app/issues/869
       // Enable cache redirects
-      const cache = new InMemoryCache();
+      const cache = new InMemoryCache({
+        typePolicies: {
+          Query: {
+            fields: {
+              substrateChainCouncil: {
+                merge: true,
+              },
+            },
+          },
+        },
+      });
       const storage = new MMKV({id: `apollo-cache-${currentNetwork.key}`});
       const cachePersistor = new CachePersistor({
         cache,

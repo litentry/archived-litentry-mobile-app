@@ -16,9 +16,9 @@ import {ScrollViewRefetch} from '@ui/components/ScrollViewRefetch';
 import {DEMOCRACY_SUMMARY_QUERY} from 'src/api/hooks/useDemocracySummary';
 import {COUNCIL_SUMMARY_QUERY} from 'src/api/hooks/useCouncilSummary';
 import {BOUNTIES_SUMMARY_QUERY} from 'src/api/hooks/useBountiesSummary';
+import {TREASURY_SUMMARY_QUERY} from 'src/api/hooks/useTreasurySummary';
 
-// TODO: add treasury summary query when merged
-const refetchQueries = [DEMOCRACY_SUMMARY_QUERY, COUNCIL_SUMMARY_QUERY, BOUNTIES_SUMMARY_QUERY];
+const refetchQueries = [DEMOCRACY_SUMMARY_QUERY, COUNCIL_SUMMARY_QUERY, BOUNTIES_SUMMARY_QUERY, TREASURY_SUMMARY_QUERY];
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
