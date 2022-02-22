@@ -8,6 +8,11 @@ import {usePushTopics} from '@hooks/usePushTopics';
 import {DrawerParamList} from '@ui/navigation/navigation';
 import {Text, List, Divider, Icon, Switch} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
+import {
+  permissionAllowed,
+  usePushAuthorizationStatus,
+  usePushNotificationsPermissions,
+} from 'src/hooks/usePushNotificationsPermissions';
 
 type PropTypes = {
   navigation: DrawerNavigationProp<DrawerParamList>;
@@ -15,6 +20,23 @@ type PropTypes = {
 
 export function NotificationSettingsScreen({}: PropTypes) {
   const {topics, toggleTopic, isLoading} = usePushTopics();
+  const {isLoading: loading, pushAuthorizationStatus} = usePushAuthorizationStatus();
+  const {requestPermissions} = usePushNotificationsPermissions();
+  const [error, setError] = React.useState<string>();
+
+  const pushAuthorization = (id: string, subscribe: boolean) => {
+    if (loading) return;
+    if (!permissionAllowed(pushAuthorizationStatus)) {
+      requestPermissions(undefined, {
+        onError(e) {
+          console.log(e);
+          setError('Permission denied, please turn the notification on in the settings app!');
+        },
+      });
+    } else {
+      toggleTopic({id, subscribe});
+    }
+  };
 
   return (
     <SafeView edges={noTopEdges}>
@@ -32,7 +54,11 @@ export function NotificationSettingsScreen({}: PropTypes) {
                 key={item.id}
                 title={item.label}
                 right={() => (
-                  <Switch value={item.selected} onValueChange={(subscribe) => toggleTopic({id: item.id, subscribe})} />
+                  <Switch
+                    key={item.id}
+                    value={item.selected}
+                    onValueChange={(subscribe) => pushAuthorization(item.id, subscribe)}
+                  />
                 )}
               />
             ))

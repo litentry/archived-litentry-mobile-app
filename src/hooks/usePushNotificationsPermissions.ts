@@ -1,7 +1,7 @@
-import {useQueryClient, useQuery, useMutation} from 'react-query';
 import messaging, {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
-import {usePushTopics} from './usePushTopics';
+import {useMutation, useQuery, useQueryClient} from 'react-query';
 import {usePersistedState} from './usePersistedState';
+import {usePushTopics} from './usePushTopics';
 
 export function usePushNotificationsPermissions() {
   const {subscribeToAllTopics} = usePushTopics();
@@ -33,7 +33,7 @@ export function usePushNotificationsPermissions() {
   };
 }
 
-function permissionAllowed(status: FirebaseMessagingTypes.AuthorizationStatus) {
+export function permissionAllowed(status: FirebaseMessagingTypes.AuthorizationStatus | undefined) {
   return status === messaging.AuthorizationStatus.AUTHORIZED || status === messaging.AuthorizationStatus.PROVISIONAL;
 }
 
