@@ -18,7 +18,7 @@ export function BountySummaryTeaser(props: Props) {
 
   return (
     <SectionTeaserContainer onPress={props.onPress} title="Bounties">
-      {loading ? (
+      {loading && !data ? (
         <LoadingBox />
       ) : data ? (
         <View style={styles.boxRow}>

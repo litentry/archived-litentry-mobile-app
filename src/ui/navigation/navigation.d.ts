@@ -61,7 +61,7 @@ type DashboardStackParamList = {
   };
   [tipsScreen]: undefined;
   [tipDetailScreen]: {
-    hash: string;
+    id: string;
   };
   [councilScreen]: undefined;
   [candidateScreen]: {

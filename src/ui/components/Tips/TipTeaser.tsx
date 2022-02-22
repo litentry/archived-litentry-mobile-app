@@ -1,33 +1,32 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {Card} from '@ui/library';
-import AddressInlineTeaser from '@ui/components/AddressInlineTeaser';
 import {TipReason} from '@ui/components/Tips/TipReason';
 import {Padder} from '@ui/components/Padder';
 import {Tip} from 'src/api/hooks/useTips';
 import {standardPadding} from '@ui/styles';
+import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 
 type TipTeaserProps = {
   tip: Tip;
-  onPress: (hash: string) => void;
+  onPress: (id: string) => void;
 };
 
-export function TipTeaser({tip, onPress}: TipTeaserProps) {
-  const {who, reason} = tip[1];
-  const tipHash = tip[0];
+function Teaser({tip, onPress}: TipTeaserProps) {
+  const {id, who, reason} = tip;
 
   return (
-    <Card style={styles.card} onPress={() => onPress(tipHash)}>
+    <Card style={styles.card} onPress={() => onPress(id)}>
       <Card.Content>
-        <AddressInlineTeaser address={String(who)} />
+        <AccountTeaser account={who.account} />
         <Padder scale={0.5} />
-        <TipReason reasonHash={reason} />
+        <TipReason reason={reason} />
       </Card.Content>
     </Card>
   );
 }
 
-export const MemoizedTipTeaser = React.memo(TipTeaser);
+export const TipTeaser = React.memo(Teaser);
 
 const styles = StyleSheet.create({
   card: {

@@ -13,6 +13,7 @@ import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
 import {NetworkType} from 'src/types';
 import {NetworkContext} from 'context/NetworkContext';
+import {RefreshControl} from '@ui/library/RefreshControl';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -42,14 +43,13 @@ function TreasuryOverviewScreen() {
   return (
     <Layout style={globalStyles.flex}>
       <SafeView edges={noTopEdges}>
-        {loading ? (
+        {loading && !treasuryInfo ? (
           <LoadingView />
         ) : (
           <SectionList
             stickySectionHeadersEnabled={false}
             contentContainerStyle={styles.sectionList}
-            refreshing={refetching}
-            onRefresh={refetch}
+            refreshControl={<RefreshControl refreshing={refetching} onRefresh={refetch} />}
             sections={groupedData}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({item}) => {
