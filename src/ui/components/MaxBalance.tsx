@@ -15,7 +15,7 @@ function MaxBalance(props: PropTypes) {
   );
 }
 
-const AccountInfo = (props: any) => {
+const AccountInfo = (props: {address: string}) => {
   const {data: accountInfo} = useAccountInfo(props.address);
   const formatBalance = useFormatBalance();
   return <Caption>MAX: {formatBalance(accountInfo?.data.free ?? BN_ZERO)}</Caption>;
