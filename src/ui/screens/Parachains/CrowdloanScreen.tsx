@@ -25,13 +25,12 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {Chart} from '@ui/components/Chart';
 
 export function CrowdloanScreen() {
-  const formatBalance = useFormatBalance();
-  const {data, isError} = useFunds();
+  const {data, loading, error} = useFunds();
   const {data: leasePeriod} = useParachainsLeasePeriod();
 
   const [openContributeId, setOpenContributeId] = React.useState<ParaId>();
 
-  if (isError) {
+  if (error) {
     return <Text>Something bad happened!</Text>;
   }
 
@@ -39,31 +38,31 @@ export function CrowdloanScreen() {
     return <LoadingView />;
   }
 
-  if (!data.funds?.length) {
-    return <EmptyView />;
-  }
+  // if (!data.funds?.length) {
+  //   return <EmptyView />;
+  // }
 
-  const [active, ended] = extractLists(data.funds, leasePeriod);
+  // const [active, ended] = extractLists(data.funds, leasePeriod);
 
-  const [activeRaised, activeCap] = active.reduce(
-    ([par, pac], current) => {
-      return [
-        par.iadd(current.info.raised.gte(BN_ZERO) ? current.info.raised : BN_ZERO),
-        pac.iadd(current.info.cap.gte(BN_ZERO) ? current.info.cap : BN_ZERO),
-      ];
-    },
-    [new BN(0), new BN(0)],
-  );
+  // const [activeRaised, activeCap] = active.reduce(
+  //   ([par, pac], current) => {
+  //     return [
+  //       par.iadd(current.info.raised.gte(BN_ZERO) ? current.info.raised : BN_ZERO),
+  //       pac.iadd(current.info.cap.gte(BN_ZERO) ? current.info.cap : BN_ZERO),
+  //     ];
+  //   },
+  //   [new BN(0), new BN(0)],
+  // );
 
-  let activeProgress = 0,
-    totalProgress = 0;
+  // let activeProgress = 0,
+  //   totalProgress = 0;
 
-  try {
-    activeProgress = activeCap.isZero() ? 0 : activeRaised.muln(10000).div(activeCap).toNumber() / 10000;
-    totalProgress = data.totalCap.isZero() ? 0 : data.totalRaised.muln(10000).div(data.totalCap).toNumber() / 10000;
-  } catch (e) {
-    console.error('Error calculating progress');
-  }
+  // try {
+  //   activeProgress = activeCap.isZero() ? 0 : activeRaised.muln(10000).div(activeCap).toNumber() / 10000;
+  //   totalProgress = data.totalCap.isZero() ? 0 : data.totalRaised.muln(10000).div(data.totalCap).toNumber() / 10000;
+  // } catch (e) {
+  //   console.error('Error calculating progress');
+  // }
 
   return (
     <SafeView edges={noTopEdges}>
@@ -74,30 +73,30 @@ export function CrowdloanScreen() {
               <View style={styles.headerContainer}>
                 <View>
                   <View style={styles.headerTileContainer}>
-                    <Chart percent={activeProgress} />
+                    <Chart percent={data.activeProgress} />
                     <Padder scale={1} />
                     <View>
                       <Subheading>Active Raised / Cap</Subheading>
-                      <Caption numberOfLines={1} adjustsFontSizeToFit>{`${formatBalance(activeRaised, {
-                        isShort: true,
-                      })} / ${formatBalance(activeCap)}`}</Caption>
+                      <Caption
+                        numberOfLines={1}
+                        adjustsFontSizeToFit>{`${data.formattedActiveRaised} / ${data.formattedActiveCap}`}</Caption>
                     </View>
                   </View>
                   <Padder scale={1} />
                   <View style={styles.headerTileContainer}>
-                    <Chart percent={totalProgress} />
+                    <Chart percent={data.totalProgress} />
                     <Padder scale={1} />
                     <View>
                       <Subheading>Total Raised / Cap</Subheading>
-                      <Caption numberOfLines={1} adjustsFontSizeToFit>{`${formatBalance(
-                        data.totalRaised,
-                      )} / ${formatBalance(data.totalCap)}`}</Caption>
+                      <Caption
+                        numberOfLines={1}
+                        adjustsFontSizeToFit>{`${data.formattedTotalRaised} / ${data.formattedTotalCap}`}</Caption>
                     </View>
                   </View>
                 </View>
                 <View style={styles.fundsContainer}>
                   <Subheading>Funds</Subheading>
-                  <Caption>{data.funds?.length}</Caption>
+                  <Caption>{data.totalFunds}</Caption>
                 </View>
               </View>
               <Padder scale={1} />
@@ -106,12 +105,9 @@ export function CrowdloanScreen() {
         }}
         style={styles.container}
         contentContainerStyle={styles.listContent}
-        sections={[
-          active.length ? {key: 'Ongoing', data: active} : null,
-          ended.length ? {key: 'Completed', data: ended} : null,
-        ].filter(notEmpty)}
+        sections={[]}
         SectionSeparatorComponent={() => <Padder scale={1} />}
-        renderSectionHeader={({section}) => <Title>{section.key}</Title>}
+        renderSectionHeader={({section}) => <Title>{section}</Title>}
         renderItem={({item, section: {key}}) => {
           return (
             <Fund
@@ -126,7 +122,7 @@ export function CrowdloanScreen() {
         keyExtractor={(item) => item.key}
         stickySectionHeadersEnabled={false}
       />
-      {openContributeId !== undefined ? (
+      {/* {openContributeId !== undefined ? (
         <ContributeBox
           visible={true}
           setVisible={(visible) => {
@@ -136,7 +132,7 @@ export function CrowdloanScreen() {
           }}
           parachainId={openContributeId}
         />
-      ) : null}
+      ) : null} */}
     </SafeView>
   );
 }

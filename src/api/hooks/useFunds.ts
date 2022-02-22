@@ -1,3 +1,4 @@
+import {gql, useQuery} from '@apollo/client';
 import {ApiPromise} from '@polkadot/api';
 import type {Option, StorageKey} from '@polkadot/types';
 import type {
@@ -14,26 +15,38 @@ import {BN, stringToU8a, u8aConcat} from '@polkadot/util';
 import {encodeAddress} from '@polkadot/util-crypto';
 import useApiQuery from 'src/api/hooks/useApiQuery';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
+import {SubstrateChainCrowdloanSummary} from 'src/generated/litentryGraphQLTypes';
 
 export const CROWD_PREFIX = stringToU8a('modlpy/cfund');
 
 export type ChannelMap = Record<string, [HrmpChannelId, HrmpChannel][]>;
 
+export const CROWD_LOAN_SUMMARY = gql`
+  query getCrowdloanSummary {
+    substrateChainCrowdloanSummary {
+      activeRaised
+      formattedActiveRaised
+      activeCap
+      formattedActiveCap
+      totalRaised
+      formattedTotalRaised
+      totalCap
+      formattedTotalCap
+      activeProgress
+      totalProgress
+      totalFunds
+    }
+  }
+`;
+
 export function useFunds() {
-  const bestNumber = useBestNumber();
+  const {data, ...rest} =
+    useQuery<{substrateChainCrowdloanSummary: SubstrateChainCrowdloanSummary}>(CROWD_LOAN_SUMMARY);
 
-  return useApiQuery(
-    ['parachain_crowdloan_funds'],
-    async (api) => {
-      const paraIdKeys = await api.query.crowdloan?.funds?.keys<[ParaId]>();
-      const paraIds = paraIdKeys ? extractFundIds(paraIdKeys) : [];
-
-      if (bestNumber) {
-        return await getFunds(paraIds, bestNumber, api);
-      }
-    },
-    {enabled: !!bestNumber},
-  );
+  return {
+    data: data?.substrateChainCrowdloanSummary,
+    ...rest,
+  };
 }
 
 export function useCrowdloanFundByParaId(key: ParaId) {
