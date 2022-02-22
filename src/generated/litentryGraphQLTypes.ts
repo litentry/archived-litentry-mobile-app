@@ -1982,9 +1982,9 @@ export type SubstrateChainMotionVotes = {
 
 export type SubstrateChainPalletProposal = {
   __typename?: 'SubstrateChainPalletProposal';
-  beneficiary: Scalars['String'];
+  beneficiary: SubstrateChainAccount;
   bond: Scalars['String'];
-  proposer: Scalars['String'];
+  proposer: SubstrateChainAccount;
   value: Scalars['String'];
 };
 
