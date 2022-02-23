@@ -250,7 +250,7 @@ function AppNavigator() {
     <AppStack.Navigator screenOptions={overlayScreenOptions}>
       {isPnPromptNeeded ? (
         <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen}>
-          {() => <PermissionGrantingPrompt skipPnPermission={skipPnPermission} isSkip={false} />}
+          {() => <PermissionGrantingPrompt skipPnPermission={skipPnPermission} allowSkip={true} />}
         </AppStack.Screen>
       ) : undefined}
       <AppStack.Screen name={routeKeys.drawerNavigator} component={DrawerNavigator} />

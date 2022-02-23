@@ -7,10 +7,8 @@ export function useUpdatePushAuthorizationStatus(): void {
   const {didAppCameToForeground} = useAppState();
 
   useEffect(() => {
-    (async () => {
-      if (didAppCameToForeground) {
-        queryClient.invalidateQueries('push_authorization_status');
-      }
-    })();
+    if (didAppCameToForeground) {
+      queryClient.invalidateQueries('push_authorization_status');
+    }
   }, [didAppCameToForeground, queryClient]);
 }

@@ -9,10 +9,10 @@ import {Layout} from '@ui/components/Layout';
 
 type Props = {
   skipPnPermission?: () => void;
-  isSkip: boolean;
+  allowSkip?: boolean;
 };
 
-function PermissionGrantingPromptScreen({skipPnPermission, isSkip}: Props) {
+function PermissionGrantingPromptScreen({skipPnPermission, allowSkip}: Props) {
   const {colors} = useTheme();
   const {requestPermissions} = usePushNotificationsPermissions();
   const [error, setError] = React.useState<string>();
@@ -48,7 +48,7 @@ function PermissionGrantingPromptScreen({skipPnPermission, isSkip}: Props) {
             Allow Notifications
           </Button>
           <Padder scale={0.5} />
-          {!isSkip && <Button onPress={skipPnPermission}>Skip</Button>}
+          {allowSkip && <Button onPress={skipPnPermission}>Skip</Button>}
         </View>
       </SafeView>
     </Layout>
