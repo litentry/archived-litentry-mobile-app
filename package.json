@@ -79,7 +79,7 @@
     "react-native-popable": "^0.4.3",
     "react-native-qrcode-scanner": "^1.5.4",
     "react-native-randombytes": "^3.6.0",
-    "react-native-reanimated": "^2.3.1",
+    "react-native-reanimated": "^2.4.1",
     "react-native-safe-area-context": "^3.4.1",
     "react-native-screens": "^3.10.1",
     "react-native-sensitive-info": "^5.5.8",
@@ -103,6 +103,10 @@
     "@babel/preset-typescript": "^7.16.7",
     "@babel/runtime": "^7.17.2",
     "@graphql-codegen/cli": "2.5.0",
+    "@graphql-codegen/fragment-matcher": "3.2.1",
+    "@graphql-codegen/typescript": "2.4.3",
+    "@graphql-codegen/typescript-operations": "2.2.4",
+    "@graphql-codegen/typescript-react-apollo": "3.2.8",
     "@react-native-community/eslint-config": "^3.0.1",
     "@testing-library/jest-native": "^4.0.4",
     "@testing-library/react-native": "^9.0.0",
@@ -128,11 +132,7 @@
     "react-native-codegen": "^0.0.12",
     "react-test-renderer": "17.0.2",
     "ts-jest": "^27.1.2",
-    "typescript": "^4.5.4",
-    "@graphql-codegen/typescript-operations": "2.2.4",
-    "@graphql-codegen/typescript": "2.4.3",
-    "@graphql-codegen/typescript-react-apollo": "3.2.8",
-    "@graphql-codegen/fragment-matcher": "3.2.1"
+    "typescript": "^4.5.4"
   },
   "react-native": {
     "console": "console-browserify",
