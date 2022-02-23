@@ -1,5 +1,5 @@
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
@@ -8,13 +8,52 @@ import {usePushTopics} from '@hooks/usePushTopics';
 import {DrawerParamList} from '@ui/navigation/navigation';
 import {Text, List, Divider, Icon, Switch} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
+import {
+  hasPermissionsDenied,
+  hasPermissionsNotDetermined,
+  permissionAllowed,
+  usePushAuthorizationStatus,
+} from 'src/hooks/usePushNotificationsPermissions';
+import {PermissionGrantingPrompt} from './PermissionGrantingPrompt';
+import {Linking} from 'react-native';
+import {useUpdatePushAuthorizationStatus} from 'src/hooks/useUpdatePushAuthorizationStatus';
 
 type PropTypes = {
   navigation: DrawerNavigationProp<DrawerParamList>;
 };
 
 export function NotificationSettingsScreen({}: PropTypes) {
-  const {topics, toggleTopic, isLoading} = usePushTopics();
+  const {topics, toggleTopic, isLoading, unSubscribeToAllTopics} = usePushTopics();
+  const {pushAuthorizationStatus} = usePushAuthorizationStatus();
+  useUpdatePushAuthorizationStatus();
+  const [switchDisabled, setSwitchDisabled] = useState(false);
+  const openAppSetting = async () => {
+    await Linking.openSettings();
+  };
+
+  useEffect(() => {
+    if (hasPermissionsDenied(pushAuthorizationStatus)) {
+      Alert.alert('Enable notifications', "Click on OK to enable notifications on your phone's settings manually", [
+        {
+          text: 'Cancel',
+          onPress: () => {
+            unSubscribeToAllTopics().then(() => {
+              setSwitchDisabled(true);
+            });
+          },
+          style: 'cancel',
+        },
+        {text: 'OK', onPress: openAppSetting},
+      ]);
+    }
+    if (permissionAllowed(pushAuthorizationStatus)) {
+      setSwitchDisabled(false);
+    }
+  }, [pushAuthorizationStatus, unSubscribeToAllTopics]);
+
+  if (hasPermissionsNotDetermined(pushAuthorizationStatus)) {
+    return <PermissionGrantingPrompt isSkip={true} />;
+  }
 
   return (
     <SafeView edges={noTopEdges}>
@@ -32,7 +71,11 @@ export function NotificationSettingsScreen({}: PropTypes) {
                 key={item.id}
                 title={item.label}
                 right={() => (
-                  <Switch value={item.selected} onValueChange={(subscribe) => toggleTopic({id: item.id, subscribe})} />
+                  <Switch
+                    value={item.selected}
+                    onValueChange={(subscribe) => toggleTopic({id: item.id, subscribe})}
+                    disabled={switchDisabled}
+                  />
                 )}
               />
             ))
@@ -40,11 +83,18 @@ export function NotificationSettingsScreen({}: PropTypes) {
           <Padder scale={1} />
           <Divider />
         </View>
-        <View style={styles.infoContainer}>
-          <Icon name="information-outline" />
-          <Padder scale={1} />
-          <Text>Don't forget to enable notifications in your phone's settings</Text>
-        </View>
+        {!permissionAllowed(pushAuthorizationStatus) && (
+          <View style={styles.infoContainer}>
+            <Icon name="information-outline" />
+            <Padder scale={1} />
+            <TouchableOpacity activeOpacity={0.5} onPress={openAppSetting}>
+              <Text>
+                Currently, Your phone notification is disabled. Please, click here to enable notifications on your
+                phone's settings
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </SafeView>
   );
