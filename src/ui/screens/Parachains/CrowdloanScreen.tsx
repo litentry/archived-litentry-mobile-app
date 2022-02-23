@@ -11,7 +11,7 @@ import {Padder} from '@ui/components/Padder';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import {Campaign, useFunds} from 'src/api/hooks/useFunds';
+import {Campaign, useActiveCrowdloans, useEndedCrowdloans, useFunds} from 'src/api/hooks/useFunds';
 import {LeasePeriod, useParachainsLeasePeriod} from 'src/api/hooks/useParachainsLeasePeriod';
 import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
 import {getBalanceFromString} from 'src/api/utils/balance';
@@ -25,12 +25,13 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {Chart} from '@ui/components/Chart';
 
 export function CrowdloanScreen() {
-  const {data, loading, error} = useFunds();
-  const {data: leasePeriod} = useParachainsLeasePeriod();
+  const {data, error} = useFunds();
+  const {data: activeCrowdLoans, error: activeCrowdLoansError} = useActiveCrowdloans();
+  // const {data: endedCrowdLoans, error : endedCrowdLoansError } = useEndedCrowdloans()
 
   const [openContributeId, setOpenContributeId] = React.useState<ParaId>();
 
-  if (error) {
+  if (error && activeCrowdLoansError) {
     return <Text>Something bad happened!</Text>;
   }
 
@@ -38,31 +39,9 @@ export function CrowdloanScreen() {
     return <LoadingView />;
   }
 
-  // if (!data.funds?.length) {
-  //   return <EmptyView />;
-  // }
-
-  // const [active, ended] = extractLists(data.funds, leasePeriod);
-
-  // const [activeRaised, activeCap] = active.reduce(
-  //   ([par, pac], current) => {
-  //     return [
-  //       par.iadd(current.info.raised.gte(BN_ZERO) ? current.info.raised : BN_ZERO),
-  //       pac.iadd(current.info.cap.gte(BN_ZERO) ? current.info.cap : BN_ZERO),
-  //     ];
-  //   },
-  //   [new BN(0), new BN(0)],
-  // );
-
-  // let activeProgress = 0,
-  //   totalProgress = 0;
-
-  // try {
-  //   activeProgress = activeCap.isZero() ? 0 : activeRaised.muln(10000).div(activeCap).toNumber() / 10000;
-  //   totalProgress = data.totalCap.isZero() ? 0 : data.totalRaised.muln(10000).div(data.totalCap).toNumber() / 10000;
-  // } catch (e) {
-  //   console.error('Error calculating progress');
-  // }
+  if (data.totalFunds === 0) {
+    return <EmptyView />;
+  }
 
   return (
     <SafeView edges={noTopEdges}>
