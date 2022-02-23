@@ -11,19 +11,48 @@ export type MotionProposal = SubstrateChainMotionProposal;
 
 export type VotingStatus = SubstrateChainVotingStatus;
 
+const ACCOUNT_FIELDS = gql`
+  fragment AccountFields on SubstrateChainAccount {
+    address
+    display
+    registration {
+      display
+      displayParent
+      judgements {
+        index
+        judgement {
+          isUnknown
+          isFeePaid
+          isReasonable
+          isKnownGood
+          isOutOfDate
+          isLowQuality
+          isErroneous
+        }
+      }
+    }
+  }
+`;
+
 const COUNCIL_MOTION_QUERY = gql`
+  ${ACCOUNT_FIELDS}
   query getCouncilMotionSummary {
     substrateChainCouncilMotions {
       hash
       proposal {
         method
         section
+        hash
         args {
           name
           type
           value
+          subCalls {
+            proposer {
+              ...AccountFields
+            }
+          }
         }
-        hash
       }
       votes {
         index
