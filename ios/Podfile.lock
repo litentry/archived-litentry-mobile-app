@@ -423,18 +423,18 @@ PODS:
   - RNScreens (3.10.1):
     - React-Core
     - React-RCTImage
-  - RNSentry (3.2.10):
+  - RNSentry (3.2.13):
     - React-Core
-    - Sentry (= 7.7.0)
+    - Sentry (= 7.9.0)
   - RNShare (7.3.2):
     - React-Core
   - RNSVG (12.2.0):
     - React-Core
   - RNVectorIcons (9.0.0):
     - React-Core
-  - Sentry (7.7.0):
-    - Sentry/Core (= 7.7.0)
-  - Sentry/Core (7.7.0)
+  - Sentry (7.9.0):
+    - Sentry/Core (= 7.9.0)
+  - Sentry/Core (7.9.0)
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -711,11 +711,11 @@ SPEC CHECKSUMS:
   RNReactNativeHapticFeedback: b83bfb4b537bdd78eb4f6ffe63c6884f7b049ead
   RNReanimated: 1326679461fa5d2399d54c18ca1432ba3e816b9e
   RNScreens: 522705f2e5c9d27efb17f24aceb2bf8335bc7b8e
-  RNSentry: 04bb48bfdd435f5b218cf363f89e6419e9a2460c
+  RNSentry: 0aa1567f66c20390f3834637fc4f73380dcd0774
   RNShare: d76b8c9c6e6ffb38fc18f40b4338c9d867592ed3
   RNSVG: 4ecc2e8f38b6ebe7889909570c26f3abe8059767
   RNVectorIcons: 4143ba35feebab8fdbe6bc43d1e776b393d47ac8
-  Sentry: e58e062056a061ae1145e22ad3dff6e506bff177
+  Sentry: 2f7e91f247cfb05b05bd01e0b5d0692557a7687b
   Yoga: 5cbf25add73edb290e1067017690f7ebf56c5468
 
 PODFILE CHECKSUM: 781d6e6c4ac4738cae79d8a470f8447d84257500
