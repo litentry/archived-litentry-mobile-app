@@ -101,7 +101,7 @@
   "devDependencies": {
     "@babel/core": "^7.16.10",
     "@babel/preset-typescript": "^7.16.7",
-    "@babel/runtime": "^7.15.4",
+    "@babel/runtime": "^7.17.2",
     "@graphql-codegen/cli": "2.5.0",
     "@react-native-community/eslint-config": "^3.0.1",
     "@testing-library/jest-native": "^4.0.4",
