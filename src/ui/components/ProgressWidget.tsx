@@ -42,7 +42,9 @@ function ProgressChartWidget(props: PropTypes) {
 }
 
 const styles = StyleSheet.create({
-  container: {justifyContent: 'center'},
+  container: {
+    justifyContent: 'center',
+  },
   title: {
     textAlign: 'center',
   },
@@ -54,7 +56,7 @@ const styles = StyleSheet.create({
   chartText: {
     ...StyleSheet.absoluteFillObject,
     zIndex: 1,
-    left: '39%',
+    left: '37%',
     top: '25%',
   },
 });
