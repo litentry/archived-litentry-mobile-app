@@ -78,9 +78,7 @@ export function CrowdloanFundDetailScreen({route}: ScreenProps) {
         <Row label={'Index'}>
           <Text>{formatNumber(paraId)}</Text>
         </Row>
-        <Row label={'Depositor'}>
-          <AddressInlineTeaser address={String(depositor)} />
-        </Row>
+        <Row label={'Depositor'}>{/* <AddressInlineTeaser proposer={depositor} /> */}</Row>
         <Row label={'Ending'}>{timeLeft}</Row>
         <Row label={'Status'}>{status}</Row>
         <Row label={'Leases'}>{leases}</Row>

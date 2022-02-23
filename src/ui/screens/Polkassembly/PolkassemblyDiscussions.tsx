@@ -135,14 +135,14 @@ export function PolkassemblyDiscussions({
                   <Caption selectable numberOfLines={1}>
                     {item.title}
                   </Caption>
-                  <View style={globalStyles.rowAlignCenter}>
+                  {/* <View style={globalStyles.rowAlignCenter}>
                     <Caption>{`By `}</Caption>
                     {item.author?.polkadot_default_address ? (
                       <AddressInlineTeaser address={item.author.polkadot_default_address} />
                     ) : (
                       <Caption>{item.author?.username || ''}</Caption>
                     )}
-                  </View>
+                  </View> */}
                   <View style={globalStyles.rowAlignCenter}>
                     <Caption>{`${dateUtils.fromNow(item.created_at)} in `}</Caption>
                     <Text>{item.topic.name}</Text>

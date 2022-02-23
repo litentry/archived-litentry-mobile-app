@@ -4,27 +4,20 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
-import {LoadingItem} from '@ui/components/LoadingBox';
 import {Padder} from '@ui/components/Padder';
-import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
+import type {SubstrateChainAccount} from 'src/generated/litentryGraphQLTypes';
 
 type PropTypes = {
-  address: string;
+  proposer: SubstrateChainAccount;
 };
 
 function AddressInlineTeaser(props: PropTypes) {
-  const {address} = props;
-  const {data, isLoading} = useAccountIdentityInfo(address);
-
-  if (isLoading) {
-    return <LoadingItem />;
-  }
-
+  const {proposer} = props;
   return (
     <View style={styles.container}>
-      <Identicon value={address} size={20} />
+      <Identicon value={proposer.address} size={20} />
       <Padder scale={0.2} />
-      {data && <AccountInfoInlineTeaser identity={data} />}
+      {proposer && <AccountInfoInlineTeaser proposer={proposer} />}
     </View>
   );
 }

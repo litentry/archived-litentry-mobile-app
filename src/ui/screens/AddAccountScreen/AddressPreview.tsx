@@ -68,14 +68,7 @@ function AddressInfoPreview(props: PropTypes) {
                   </View>
                 )}
                 right={() =>
-                  identity?.judgements[0] ? (
-                    <JudgmentStatus
-                      judgement={identity.judgements[0]}
-                      hasParent={Boolean(data?.registration?.parent)}
-                    />
-                  ) : (
-                    <View />
-                  )
+                  identity?.judgements[0] ? <JudgmentStatus judgement={identity.judgements[0]} /> : <View />
                 }
               />
             )}

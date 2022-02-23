@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
 import {useQueryClient} from 'react-query';
 import {Card, List, Subheading, Button, Headline, useTheme} from '@ui/library';
 import {formatNumber} from '@polkadot/util';
@@ -15,13 +15,11 @@ import {motionDetailScreen} from '@ui/navigation/routeKeys';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import LoadingView from '@ui/components/LoadingView';
 import {useApiTx} from 'src/api/hooks/useApiTx';
-import { ProposalCallInfo } from '@ui/components/ProposalCallInfo';
-import { CouncilMember, useCouncil } from 'src/api/hooks/useCouncil';
-import { useIsCouncilMember } from 'src/api/hooks/useIsCouncilMember';
+import {ProposalCallInfo} from '@ui/components/ProposalCallInfo';
+import {useIsCouncilMember} from 'src/api/hooks/useIsCouncilMember';
 
 export function MotionsScreen() {
   const {data: motions, loading} = useCouncilMotions();
-  const {data: council} = useCouncil();
   const isCouncil = useIsCouncilMember();
   return (
     <SafeView edges={noTopEdges}>
@@ -43,7 +41,7 @@ export function MotionsScreen() {
   );
 }
 
-function Motion({motion , isCouncilMemeber}: {motion: CouncilMotion, isCouncilMemeber: boolean}) {
+function Motion({motion, isCouncilMemeber}: {motion: CouncilMotion; isCouncilMemeber: boolean}) {
   const {colors} = useTheme();
   const navigation = useNavigation<NavigationProp<DashboardStackParamList>>();
   const {api} = useContext(ChainApiContext);
@@ -52,9 +50,6 @@ function Motion({motion , isCouncilMemeber}: {motion: CouncilMotion, isCouncilMe
   const account = accounts?.[0];
 
   const {votes, proposal, hash} = motion;
-  const {data} = useCouncil();
-  const membersCount = data?.members.length ?? 0;
-  // const {isCloseable, isVoteable} = useVotingStatus(votes, membersCount, 'council');
 
   const queryClient = useQueryClient();
 
@@ -107,7 +102,7 @@ function Motion({motion , isCouncilMemeber}: {motion: CouncilMotion, isCouncilMe
           right={() => (
             <View style={globalStyles.justifyCenter}>
               <Subheading>{`Aye ${votes?.ayes.length}/${votes?.threshold} `}</Subheading>
-               {(() => {
+              {(() => {
                 if (isCouncilMemeber) {
                   if (motion.votingStatus?.isCloseable) {
                     return (

@@ -47,23 +47,16 @@ const COUNCIL_MOTION_QUERY = gql`
           name
           type
           value
-          subCalls {
-            proposer {
-              ...AccountFields
-            }
-          }
         }
       }
       votes {
         index
         threshold
         ayes {
-          address
-          display
+          ...AccountFields
         }
         nays {
-          address
-          display
+          ...AccountFields
         }
         end
       }
@@ -82,7 +75,6 @@ const COUNCIL_MOTION_QUERY = gql`
 
 export function useCouncilMotions() {
   const {data, ...rest} = useQuery<{substrateChainCouncilMotions: CouncilMotion[]}>(COUNCIL_MOTION_QUERY);
-  console.log(data);
   return {
     data: data?.substrateChainCouncilMotions,
     ...rest,

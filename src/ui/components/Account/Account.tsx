@@ -1,5 +1,3 @@
-import type {SubstrateChainAccount} from 'src/generated/litentryGraphQLTypes';
-
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {stringShorten} from '@polkadot/util';
@@ -7,27 +5,30 @@ import {Caption} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {notEmpty} from 'src/utils';
 import {JudgmentStatus} from '@ui/components/Account/JudgmentStatus';
+import Identicon from '@polkadot/reactnative-identicon';
+import type {SubstrateChainAccount} from 'src/generated/litentryGraphQLTypes';
 
 type Props = {
   account: SubstrateChainAccount;
 };
 
 export function Account({account}: Props) {
-  // const registrationJudgements = account.registration.judgements
-  //   ? account.registration.judgements.filter(notEmpty)
-  //   : [];
+  const registrationJudgements = account.registration.judgements
+    ? account.registration.judgements.filter(notEmpty)
+    : [];
 
   return (
     <View style={styles.container}>
+      <Identicon value={account.address} size={20} />
       <Caption style={styles.display}>{stringShorten(account.display, 12)}</Caption>
       <Padder scale={0.5} />
-      {/* {registrationJudgements.map((registrationJudgement, i) => (
+      {registrationJudgements.map((registrationJudgement, i) => (
         <JudgmentStatus
           key={i}
           registrationJudgement={registrationJudgement}
           hasParent={Boolean(account.registration.displayParent)}
         />
-      ))} */}
+      ))}
     </View>
   );
 }

@@ -2,15 +2,15 @@
 
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {RegistrationJudgement} from '@polkadot/types/interfaces';
 import {Icon, useTheme, Caption} from '@ui/library';
 import {mapStatusText} from 'src/utils/identity';
 import {colorGreen, colorRed, colorGray} from '@ui/styles';
 import {Popable} from 'react-native-popable';
+import type {SubstrateChainDeriveAccountRegistration} from 'src/generated/litentryGraphQLTypes';
 
 type PropTypes = {
-  judgement: RegistrationJudgement;
-  hasParent: boolean;
+  judgement: any; // change to SubstrateChainRegistrationJudgement
+  registration?: SubstrateChainDeriveAccountRegistration;
 };
 
 function getIconColor(status: string) {
@@ -24,14 +24,14 @@ function getIconColor(status: string) {
 
 function JudgmentStatus(props: PropTypes) {
   const {colors} = useTheme();
-  const {judgement, hasParent} = props;
-  const status = mapStatusText(judgement[1], hasParent);
+  const {judgement, registration} = props;
+  const status = mapStatusText(judgement, Boolean(registration?.displayParent));
 
   return (
     <Popable
       content={
         <View style={styles.container}>
-          <Caption>{`"${status.text}" provided by Registrar #${judgement[0]}`}</Caption>
+          <Caption>{`"${status.text}" provided by Registrar #${judgement}`}</Caption>
         </View>
       }
       backgroundColor={colors.accent}>

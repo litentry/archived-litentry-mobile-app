@@ -78,10 +78,7 @@ export function MotionDetailScreen(props: PropTypes) {
               </StatInfoBlock>
             </View>
             <Padder scale={1} />
-            <StatInfoBlock title="Proposer">
-              {/* TODO: proposer details neeed */}
-              {proposer?.display && <AddressInlineTeaser address={proposer.display} />}
-            </StatInfoBlock>
+            <StatInfoBlock title="Proposer">{proposer && <AddressInlineTeaser proposer={proposer} />}</StatInfoBlock>
           </Card.Content>
         </Card>
         <Padder scale={0.3} />
