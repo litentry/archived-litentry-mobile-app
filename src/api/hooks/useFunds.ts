@@ -19,7 +19,7 @@ import type {SubstrateChainCrowdloan, SubstrateChainCrowdloanSummary} from 'src/
 
 export type CrowdloanSummary = SubstrateChainCrowdloanSummary;
 
-export type ChainCrowdloan = SubstrateChainCrowdloan;
+export type Crowdloan = SubstrateChainCrowdloan;
 
 export const CROWD_PREFIX = stringToU8a('modlpy/cfund');
 
@@ -102,24 +102,25 @@ const CROWD_LOAN_SUMMARY = gql`
 `;
 
 const ACTIVE_CROWD_LOANS = gql`
-${CROWD_LOAN}
+  ${CROWD_LOAN}
   query getActiveCrowdloans {
     substrateChainActiveCrowdloans {
       ...CrowdloanSummary
+    }
   }
 `;
 
 const ENDED_CROWD_LOANS = gql`
-${CROWD_LOAN}
+  ${CROWD_LOAN}
   query getEndedCrowdloans {
     substrateChainEndedCrowdloans {
       ...CrowdloanSummary
+    }
   }
 `;
 
 export function useFunds() {
-  const {data, ...rest} =
-    useQuery<{substrateChainCrowdloanSummary: SubstrateChainCrowdloanSummary}>(CROWD_LOAN_SUMMARY);
+  const {data, ...rest} = useQuery<{substrateChainCrowdloanSummary: CrowdloanSummary}>(CROWD_LOAN_SUMMARY);
 
   return {
     data: data?.substrateChainCrowdloanSummary,
@@ -128,7 +129,7 @@ export function useFunds() {
 }
 
 export function useActiveCrowdloans() {
-  const {data, ...rest} = useQuery<{substrateChainActiveCrowdloans: SubstrateChainCrowdloan}>(ACTIVE_CROWD_LOANS);
+  const {data, ...rest} = useQuery<{substrateChainActiveCrowdloans: Crowdloan[]}>(ACTIVE_CROWD_LOANS);
 
   return {
     data: data?.substrateChainActiveCrowdloans,
@@ -137,7 +138,7 @@ export function useActiveCrowdloans() {
 }
 
 export function useEndedCrowdloans() {
-  const {data, ...rest} = useQuery<{substrateChainEndedCrowdloans: SubstrateChainCrowdloan}>(ENDED_CROWD_LOANS);
+  const {data, ...rest} = useQuery<{substrateChainEndedCrowdloans: Crowdloan[]}>(ENDED_CROWD_LOANS);
 
   return {
     data: data?.substrateChainEndedCrowdloans,

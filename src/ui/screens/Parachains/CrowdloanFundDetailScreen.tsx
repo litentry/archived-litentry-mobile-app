@@ -1,68 +1,24 @@
 import React from 'react';
 import {Linking, StyleSheet, View} from 'react-native';
 import {RouteProp} from '@react-navigation/core';
-import {Text, Button, Subheading, Headline} from '@ui/library';
+import {Text, Subheading, Headline, Button} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
-import {BlockTime} from '@ui/components/BlockTime';
-import {EmptyView} from '@ui/components/EmptyView';
-import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {useBestNumber} from 'src/api/hooks/useBestNumber';
-import {useContributions} from 'src/api/hooks/useContributions';
-import {useCrowdloanFundByParaId} from 'src/api/hooks/useFunds';
-import {useParachainsLeasePeriod} from 'src/api/hooks/useParachainsLeasePeriod';
 import {CrowdloansStackParamList} from '@ui/navigation/navigation';
-import {formatNumber} from '@polkadot/util';
 import AddressInlineTeaser from '@ui/components/AddressInlineTeaser';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
 
 type ScreenProps = {
   route: RouteProp<CrowdloansStackParamList, 'Fund Detail'>;
 };
 
 export function CrowdloanFundDetailScreen({route}: ScreenProps) {
-  const {paraId, title} = route.params;
-  const bestNumber = useBestNumber();
-  const formatBalance = useFormatBalance();
-  const {data: fund, isError, isLoading} = useCrowdloanFundByParaId(paraId);
-  const {data: contributions} = useContributions(paraId);
-  const {data: leasePeriod} = useParachainsLeasePeriod();
-  const endpoints = useParaEndpoints(paraId);
-
-  if (isError) {
+  const {crowdloan} = route.params;
+  const homepage = null;
+  if (!crowdloan) {
     return <Text>Something bad happened!</Text>;
   }
 
-  if (isLoading) {
-    return <LoadingView />;
-  }
-
-  if (!fund) {
-    return <EmptyView />;
-  }
-
-  const {info, isCapped, isEnded, isWinner, firstSlot} = fund;
-  const {end, firstPeriod, lastPeriod, cap, raised, depositor} = info;
-  const blocksLeft = bestNumber && end.gt(bestNumber) ? end.sub(bestNumber) : null;
-  const isOngoing = !(isCapped || isEnded || isWinner) && leasePeriod?.currentPeriod.lte(firstSlot);
-
-  const status = (
-    <Text>
-      {fund.isWinner ? 'Winner' : blocksLeft ? (fund.isCapped ? 'Capped' : isOngoing ? 'Active' : 'Past') : 'Ended'}
-    </Text>
-  );
-  const timeLeft = blocksLeft ? <BlockTime blockNumber={blocksLeft} /> : null;
-  const leases = (
-    <Text>
-      {firstPeriod.eq(lastPeriod)
-        ? formatNumber(firstPeriod)
-        : `${formatNumber(firstPeriod)} - ${formatNumber(lastPeriod)}`}
-    </Text>
-  );
-  const count = <Text>{formatNumber(contributions?.contributorsHex.length)}</Text>;
-  const homepage = endpoints?.length ? endpoints[0]?.homepage : undefined;
   const toHomepage = (url: string) => {
     Linking.canOpenURL(url).then((supported) => {
       if (supported) {
@@ -74,28 +30,41 @@ export function CrowdloanFundDetailScreen({route}: ScreenProps) {
   return (
     <SafeView edges={noTopEdges}>
       <Layout style={globalStyles.paddedContainer}>
-        <Headline style={styles.title}>{title}</Headline>
+        <Headline style={styles.title}>{crowdloan.depositor.account.display}</Headline>
         <Row label={'Index'}>
-          <Text>{formatNumber(paraId)}</Text>
+          <Text>{crowdloan.paraId}</Text>
         </Row>
         <Row label={'Depositor'}>
-          <AddressInlineTeaser address={String(depositor)} />
+          {/* TODO: Need to work on  AccountInfoInlineTeaser and AddressInlineTeaser */}
+          {/* <AddressInlineTeaser proposer={crowdloan.depositor.account} /> */}
         </Row>
-        <Row label={'Ending'}>{timeLeft}</Row>
-        <Row label={'Status'}>{status}</Row>
-        <Row label={'Leases'}>{leases}</Row>
+        <Row label={'Ending'}>
+          <View style={styles.rowContainer}>
+            {crowdloan.ending.map((end: string) => (
+              <Text>{end}</Text>
+            ))}
+          </View>
+        </Row>
+        <Row label={'Status'}>
+          <Text>{crowdloan.status}</Text>
+        </Row>
+        <Row label={'Leases'}>
+          <Text>
+            {+crowdloan.firstPeriod === +crowdloan.lastPeriod
+              ? crowdloan.firstPeriod
+              : `${crowdloan.firstPeriod} - ${crowdloan.lastPeriod}`}
+          </Text>
+        </Row>
         <Row label={'Raised'}>
-          <Text numberOfLines={1} adjustsFontSizeToFit>{`${formatBalance(raised, {
-            isShort: true,
-          })} / ${formatBalance(cap, {isShort: true})}`}</Text>
+          <Text
+            numberOfLines={1}
+            adjustsFontSizeToFit>{`${crowdloan.formattedRaised} / ${crowdloan.formattedCap}`}</Text>
         </Row>
-        <Row label={'Contributors'}>{count}</Row>
+        <Row label={'Contributors'}>
+          <Text>{crowdloan.contribution.contribution.contributorsCount}</Text>
+        </Row>
         {homepage ? (
-          <Button
-            icon="home"
-            onPress={() => {
-              toHomepage(homepage);
-            }}>
+          <Button icon="home" onPress={() => toHomepage(homepage)}>
             {`Homepage`}
           </Button>
         ) : null}
@@ -129,5 +98,10 @@ const styles = StyleSheet.create({
   },
   value: {
     flex: 1,
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '75%',
   },
 });
