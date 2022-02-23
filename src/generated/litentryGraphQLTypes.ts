@@ -1688,14 +1688,17 @@ export type SubstrateChainAuctionBid = {
   __typename?: 'SubstrateChainAuctionBid';
   amount: Scalars['String'];
   blockNumber: Scalars['String'];
+  firstSlot: Scalars['String'];
+  isCrowdloan: Scalars['Boolean'];
+  lastSlot: Scalars['String'];
   projectId: Scalars['String'];
   projectName: Scalars['String'];
 };
 
 export type SubstrateChainAuctionEndingPeriod = {
   __typename?: 'SubstrateChainAuctionEndingPeriod';
-  endingIn: Scalars['String'];
-  remaining: Scalars['String'];
+  endingIn: Array<Scalars['String']>;
+  remaining: Array<Scalars['String']>;
   remainingPercent: Scalars['Float'];
 };
 
