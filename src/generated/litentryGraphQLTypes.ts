@@ -1,9 +1,9 @@
-import { gql } from '@apollo/client';
+import {gql} from '@apollo/client';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type Exact<T extends {[key: string]: unknown}> = {[K in keyof T]: T[K]};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {[SubKey in K]?: Maybe<T[SubKey]>};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {[SubKey in K]: Maybe<T[SubKey]>};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -39,7 +39,6 @@ export type Bep20Account = {
   transfersTo?: Maybe<Array<Bep20Transfer>>;
 };
 
-
 export type Bep20AccountTransfersFromArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Bep20Transfer_OrderBy>;
@@ -47,7 +46,6 @@ export type Bep20AccountTransfersFromArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<Bep20Transfer_Filter>;
 };
-
 
 export type Bep20AccountTransfersToArgs = {
   first?: InputMaybe<Scalars['Int']>;
@@ -215,7 +213,7 @@ export enum Bep20Account_OrderBy {
   Symbol = 'symbol',
   TotalTransfers = 'totalTransfers',
   TransfersFrom = 'transfersFrom',
-  TransfersTo = 'transfersTo'
+  TransfersTo = 'transfersTo',
 }
 
 export type Bep20Transfer = {
@@ -327,7 +325,7 @@ export enum Bep20Transfer_OrderBy {
   Id = 'id',
   Timestamp = 'timestamp',
   To = 'to',
-  ToAccountBalanceAtBlock = 'toAccountBalanceAtBlock'
+  ToAccountBalanceAtBlock = 'toAccountBalanceAtBlock',
 }
 
 export type Block_Height = {
@@ -357,7 +355,6 @@ export type Erc20Account = {
   transfersTo?: Maybe<Array<Erc20Transfer>>;
 };
 
-
 export type Erc20AccountTransfersFromArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Erc20Transfer_OrderBy>;
@@ -365,7 +362,6 @@ export type Erc20AccountTransfersFromArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<Erc20Transfer_Filter>;
 };
-
 
 export type Erc20AccountTransfersToArgs = {
   first?: InputMaybe<Scalars['Int']>;
@@ -533,7 +529,7 @@ export enum Erc20Account_OrderBy {
   Symbol = 'symbol',
   TotalTransfers = 'totalTransfers',
   TransfersFrom = 'transfersFrom',
-  TransfersTo = 'transfersTo'
+  TransfersTo = 'transfersTo',
 }
 
 export type Erc20Transfer = {
@@ -645,7 +641,7 @@ export enum Erc20Transfer_OrderBy {
   Id = 'id',
   Timestamp = 'timestamp',
   To = 'to',
-  ToAccountBalanceAtBlock = 'toAccountBalanceAtBlock'
+  ToAccountBalanceAtBlock = 'toAccountBalanceAtBlock',
 }
 
 export type Erc1155Token = {
@@ -717,12 +713,12 @@ export enum Erc1155Token_OrderBy {
   Id = 'id',
   OwnerAddress = 'ownerAddress',
   Quantity = 'quantity',
-  TokenId = 'tokenId'
+  TokenId = 'tokenId',
 }
 
 export enum OrderDirection {
   Asc = 'asc',
-  Desc = 'desc'
+  Desc = 'desc',
 }
 
 export type PageInfo = {
@@ -814,18 +810,15 @@ export type Query = {
   substrateVotesConnection: SubstrateVotesConnection;
 };
 
-
 export type Query_MetaArgs = {
   block?: InputMaybe<Block_Height>;
 };
-
 
 export type QueryBep20AccountArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type QueryBep20AccountsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -837,13 +830,11 @@ export type QueryBep20AccountsArgs = {
   where?: InputMaybe<Bep20Account_Filter>;
 };
 
-
 export type QueryBep20TransferArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type QueryBep20TransfersArgs = {
   block?: InputMaybe<Block_Height>;
@@ -855,13 +846,11 @@ export type QueryBep20TransfersArgs = {
   where?: InputMaybe<Bep20Transfer_Filter>;
 };
 
-
 export type QueryErc20AccountArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type QueryErc20AccountsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -873,13 +862,11 @@ export type QueryErc20AccountsArgs = {
   where?: InputMaybe<Erc20Account_Filter>;
 };
 
-
 export type QueryErc20TransferArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type QueryErc20TransfersArgs = {
   block?: InputMaybe<Block_Height>;
@@ -891,13 +878,11 @@ export type QueryErc20TransfersArgs = {
   where?: InputMaybe<Erc20Transfer_Filter>;
 };
 
-
 export type QueryErc1155TokenArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type QueryErc1155TokensArgs = {
   block?: InputMaybe<Block_Height>;
@@ -909,16 +894,13 @@ export type QueryErc1155TokensArgs = {
   where?: InputMaybe<Erc1155Token_Filter>;
 };
 
-
 export type QuerySubstrateBalanceAccountByIdArgs = {
   id: Scalars['ID'];
 };
 
-
 export type QuerySubstrateBalanceAccountByUniqueInputArgs = {
   where: SubstrateBalanceAccountWhereUniqueInput;
 };
-
 
 export type QuerySubstrateBalanceAccountsArgs = {
   limit?: InputMaybe<Scalars['Int']>;
@@ -927,7 +909,6 @@ export type QuerySubstrateBalanceAccountsArgs = {
   where?: InputMaybe<SubstrateBalanceAccountWhereInput>;
 };
 
-
 export type QuerySubstrateBalanceAccountsConnectionArgs = {
   after?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
@@ -935,16 +916,13 @@ export type QuerySubstrateBalanceAccountsConnectionArgs = {
   where?: InputMaybe<SubstrateBalanceAccountWhereInput>;
 };
 
-
 export type QuerySubstrateBalanceTransferByIdArgs = {
   id: Scalars['ID'];
 };
 
-
 export type QuerySubstrateBalanceTransferByUniqueInputArgs = {
   where: SubstrateBalanceTransferWhereUniqueInput;
 };
-
 
 export type QuerySubstrateBalanceTransfersArgs = {
   limit?: InputMaybe<Scalars['Int']>;
@@ -953,7 +931,6 @@ export type QuerySubstrateBalanceTransfersArgs = {
   where?: InputMaybe<SubstrateBalanceTransferWhereInput>;
 };
 
-
 export type QuerySubstrateBalanceTransfersConnectionArgs = {
   after?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
@@ -961,62 +938,50 @@ export type QuerySubstrateBalanceTransfersConnectionArgs = {
   where?: InputMaybe<SubstrateBalanceTransferWhereInput>;
 };
 
-
 export type QuerySubstrateChainAccountArgs = {
   address: Scalars['String'];
 };
-
 
 export type QuerySubstrateChainBalanceArgs = {
   address: Scalars['String'];
   blockNumber?: InputMaybe<Scalars['Int']>;
 };
 
-
 export type QuerySubstrateChainBountyArgs = {
   index: Scalars['String'];
 };
-
 
 export type QuerySubstrateChainCrowdloanArgs = {
   paraId: Scalars['String'];
 };
 
-
 export type QuerySubstrateChainCrowdloanContributionArgs = {
   paraId: Scalars['String'];
 };
-
 
 export type QuerySubstrateChainDemocracyProposalArgs = {
   index: Scalars['String'];
 };
 
-
 export type QuerySubstrateChainDemocracyReferendumArgs = {
   index: Scalars['String'];
 };
-
 
 export type QuerySubstrateChainParachainArgs = {
   id: Scalars['String'];
 };
 
-
 export type QuerySubstrateChainTipArgs = {
   id: Scalars['String'];
 };
-
 
 export type QuerySubstrateCrowdloanContributionAccountByIdArgs = {
   id: Scalars['ID'];
 };
 
-
 export type QuerySubstrateCrowdloanContributionAccountByUniqueInputArgs = {
   where: SubstrateCrowdloanContributionAccountWhereUniqueInput;
 };
-
 
 export type QuerySubstrateCrowdloanContributionAccountsArgs = {
   limit?: InputMaybe<Scalars['Int']>;
@@ -1025,7 +990,6 @@ export type QuerySubstrateCrowdloanContributionAccountsArgs = {
   where?: InputMaybe<SubstrateCrowdloanContributionAccountWhereInput>;
 };
 
-
 export type QuerySubstrateCrowdloanContributionAccountsConnectionArgs = {
   after?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1033,16 +997,13 @@ export type QuerySubstrateCrowdloanContributionAccountsConnectionArgs = {
   where?: InputMaybe<SubstrateCrowdloanContributionAccountWhereInput>;
 };
 
-
 export type QuerySubstrateCrowdloanContributionByIdArgs = {
   id: Scalars['ID'];
 };
 
-
 export type QuerySubstrateCrowdloanContributionByUniqueInputArgs = {
   where: SubstrateCrowdloanContributionWhereUniqueInput;
 };
-
 
 export type QuerySubstrateCrowdloanContributionsArgs = {
   limit?: InputMaybe<Scalars['Int']>;
@@ -1051,7 +1012,6 @@ export type QuerySubstrateCrowdloanContributionsArgs = {
   where?: InputMaybe<SubstrateCrowdloanContributionWhereInput>;
 };
 
-
 export type QuerySubstrateCrowdloanContributionsConnectionArgs = {
   after?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1059,16 +1019,13 @@ export type QuerySubstrateCrowdloanContributionsConnectionArgs = {
   where?: InputMaybe<SubstrateCrowdloanContributionWhereInput>;
 };
 
-
 export type QuerySubstrateGovernanceAccountByIdArgs = {
   id: Scalars['ID'];
 };
 
-
 export type QuerySubstrateGovernanceAccountByUniqueInputArgs = {
   where: SubstrateGovernanceAccountWhereUniqueInput;
 };
-
 
 export type QuerySubstrateGovernanceAccountsArgs = {
   limit?: InputMaybe<Scalars['Int']>;
@@ -1077,7 +1034,6 @@ export type QuerySubstrateGovernanceAccountsArgs = {
   where?: InputMaybe<SubstrateGovernanceAccountWhereInput>;
 };
 
-
 export type QuerySubstrateGovernanceAccountsConnectionArgs = {
   after?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1085,16 +1041,13 @@ export type QuerySubstrateGovernanceAccountsConnectionArgs = {
   where?: InputMaybe<SubstrateGovernanceAccountWhereInput>;
 };
 
-
 export type QuerySubstrateTreasuryDepositByIdArgs = {
   id: Scalars['ID'];
 };
 
-
 export type QuerySubstrateTreasuryDepositByUniqueInputArgs = {
   where: SubstrateTreasuryDepositWhereUniqueInput;
 };
-
 
 export type QuerySubstrateTreasuryDepositsArgs = {
   limit?: InputMaybe<Scalars['Int']>;
@@ -1103,7 +1056,6 @@ export type QuerySubstrateTreasuryDepositsArgs = {
   where?: InputMaybe<SubstrateTreasuryDepositWhereInput>;
 };
 
-
 export type QuerySubstrateTreasuryDepositsConnectionArgs = {
   after?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1111,16 +1063,13 @@ export type QuerySubstrateTreasuryDepositsConnectionArgs = {
   where?: InputMaybe<SubstrateTreasuryDepositWhereInput>;
 };
 
-
 export type QuerySubstrateVoteByIdArgs = {
   id: Scalars['ID'];
 };
 
-
 export type QuerySubstrateVoteByUniqueInputArgs = {
   where: SubstrateVoteWhereUniqueInput;
 };
-
 
 export type QuerySubstrateVotesArgs = {
   limit?: InputMaybe<Scalars['Int']>;
@@ -1128,7 +1077,6 @@ export type QuerySubstrateVotesArgs = {
   orderBy?: InputMaybe<Array<InputMaybe<SubstrateVoteOrderByInput>>>;
   where?: InputMaybe<SubstrateVoteWhereInput>;
 };
-
 
 export type QuerySubstrateVotesConnectionArgs = {
   after?: InputMaybe<Scalars['String']>;
@@ -1153,18 +1101,15 @@ export type Subscription = {
   erc1155Tokens: Array<Erc1155Token>;
 };
 
-
 export type Subscription_MetaArgs = {
   block?: InputMaybe<Block_Height>;
 };
-
 
 export type SubscriptionBep20AccountArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type SubscriptionBep20AccountsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1176,13 +1121,11 @@ export type SubscriptionBep20AccountsArgs = {
   where?: InputMaybe<Bep20Account_Filter>;
 };
 
-
 export type SubscriptionBep20TransferArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type SubscriptionBep20TransfersArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1194,13 +1137,11 @@ export type SubscriptionBep20TransfersArgs = {
   where?: InputMaybe<Bep20Transfer_Filter>;
 };
 
-
 export type SubscriptionErc20AccountArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type SubscriptionErc20AccountsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1212,13 +1153,11 @@ export type SubscriptionErc20AccountsArgs = {
   where?: InputMaybe<Erc20Account_Filter>;
 };
 
-
 export type SubscriptionErc20TransferArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type SubscriptionErc20TransfersArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1230,13 +1169,11 @@ export type SubscriptionErc20TransfersArgs = {
   where?: InputMaybe<Erc20Transfer_Filter>;
 };
 
-
 export type SubscriptionErc1155TokenArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type SubscriptionErc1155TokensArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1274,7 +1211,6 @@ export type SubstrateBalanceAccount = {
   treasuryDeposits: Array<SubstrateTreasuryDeposit>;
 };
 
-
 export type SubstrateBalanceAccountTransfersFromArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -1282,14 +1218,12 @@ export type SubstrateBalanceAccountTransfersFromArgs = {
   where?: InputMaybe<SubstrateBalanceTransferWhereInput>;
 };
 
-
 export type SubstrateBalanceAccountTransfersToArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<InputMaybe<SubstrateBalanceTransferOrderByInput>>>;
   where?: InputMaybe<SubstrateBalanceTransferWhereInput>;
 };
-
 
 export type SubstrateBalanceAccountTreasuryDepositsArgs = {
   limit?: InputMaybe<Scalars['Int']>;
@@ -1336,7 +1270,7 @@ export enum SubstrateBalanceAccountOrderByInput {
   SymbolAsc = 'symbol_ASC',
   SymbolDesc = 'symbol_DESC',
   TotalTransfersAsc = 'totalTransfers_ASC',
-  TotalTransfersDesc = 'totalTransfers_DESC'
+  TotalTransfersDesc = 'totalTransfers_DESC',
 }
 
 export type SubstrateBalanceAccountWhereInput = {
@@ -1619,7 +1553,7 @@ export enum SubstrateBalanceTransferOrderByInput {
   ToSymbolAsc = 'to_symbol_ASC',
   ToSymbolDesc = 'to_symbol_DESC',
   ToTotalTransfersAsc = 'to_totalTransfers_ASC',
-  ToTotalTransfersDesc = 'to_totalTransfers_DESC'
+  ToTotalTransfersDesc = 'to_totalTransfers_DESC',
 }
 
 export type SubstrateBalanceTransferWhereInput = {
@@ -2288,7 +2222,6 @@ export type SubstrateCrowdloanContributionAccount = {
   totalCrowdloanContributions: Scalars['Int'];
 };
 
-
 export type SubstrateCrowdloanContributionAccountCrowdloanContributionsArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -2310,7 +2243,7 @@ export enum SubstrateCrowdloanContributionAccountOrderByInput {
   RootAccountAsc = 'rootAccount_ASC',
   RootAccountDesc = 'rootAccount_DESC',
   TotalCrowdloanContributionsAsc = 'totalCrowdloanContributions_ASC',
-  TotalCrowdloanContributionsDesc = 'totalCrowdloanContributions_DESC'
+  TotalCrowdloanContributionsDesc = 'totalCrowdloanContributions_DESC',
 }
 
 export type SubstrateCrowdloanContributionAccountWhereInput = {
@@ -2404,7 +2337,7 @@ export enum SubstrateCrowdloanContributionOrderByInput {
   RootAccountAsc = 'rootAccount_ASC',
   RootAccountDesc = 'rootAccount_DESC',
   SymbolAsc = 'symbol_ASC',
-  SymbolDesc = 'symbol_DESC'
+  SymbolDesc = 'symbol_DESC',
 }
 
 export type SubstrateCrowdloanContributionWhereInput = {
@@ -2521,7 +2454,6 @@ export type SubstrateGovernanceAccount = {
   votes: Array<SubstrateVote>;
 };
 
-
 export type SubstrateGovernanceAccountVotesArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -2543,7 +2475,7 @@ export enum SubstrateGovernanceAccountOrderByInput {
   RootAccountAsc = 'rootAccount_ASC',
   RootAccountDesc = 'rootAccount_DESC',
   TotalVotesAsc = 'totalVotes_ASC',
-  TotalVotesDesc = 'totalVotes_DESC'
+  TotalVotesDesc = 'totalVotes_DESC',
 }
 
 export type SubstrateGovernanceAccountWhereInput = {
@@ -2608,7 +2540,7 @@ export type SubstrateGovernanceAccountsConnection = {
 export enum SubstrateNetwork {
   Kusama = 'kusama',
   Phala = 'phala',
-  Polkadot = 'polkadot'
+  Polkadot = 'polkadot',
 }
 
 export type SubstrateTreasuryDeposit = {
@@ -2679,7 +2611,7 @@ export enum SubstrateTreasuryDepositOrderByInput {
   NetworkAsc = 'network_ASC',
   NetworkDesc = 'network_DESC',
   SymbolAsc = 'symbol_ASC',
-  SymbolDesc = 'symbol_DESC'
+  SymbolDesc = 'symbol_DESC',
 }
 
 export type SubstrateTreasuryDepositWhereInput = {
@@ -2806,7 +2738,7 @@ export enum SubstrateVoteOrderByInput {
   NetworkAsc = 'network_ASC',
   NetworkDesc = 'network_DESC',
   RootAccountAsc = 'rootAccount_ASC',
-  RootAccountDesc = 'rootAccount_DESC'
+  RootAccountDesc = 'rootAccount_DESC',
 }
 
 export type SubstrateVoteWhereInput = {
@@ -2903,17 +2835,15 @@ export enum _SubgraphErrorPolicy_ {
   /** Data will be returned even if the subgraph has indexing errors */
   Allow = 'allow',
   /** If the subgraph has indexing errors, data will be omitted. The default. */
-  Deny = 'deny'
+  Deny = 'deny',
 }
 
-
-      export interface PossibleTypesResultData {
-        possibleTypes: {
-          [key: string]: string[]
-        }
-      }
-      const result: PossibleTypesResultData = {
-  "possibleTypes": {}
+export interface PossibleTypesResultData {
+  possibleTypes: {
+    [key: string]: string[];
+  };
+}
+const result: PossibleTypesResultData = {
+  possibleTypes: {},
 };
-      export default result;
-    
+export default result;

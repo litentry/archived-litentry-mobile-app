@@ -1,7 +1,6 @@
 import type {ParaId} from '@polkadot/types/interfaces';
 import type {CouncilCandidate, CouncilMember} from 'src/api/hooks/useCouncil';
-import type {DemocracyProposal} from 'src/api/hooks/useDemocracyProposals';
-import type {DemocracyReferendum} from 'src/api/hooks/useDemocracyReferendum';
+import type {DemocracyProposal, DemocracyReferendum} from 'src/api/hooks/useDemocracy';
 
 import {
   addAccountScreen,

@@ -2,8 +2,7 @@ import React from 'react';
 import {View} from 'react-native';
 import {Paragraph, Card, Caption} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
-import type {DemocracyProposal} from 'src/api/hooks/useDemocracyProposals';
-import type {DemocracyReferendum} from 'src/api/hooks/useDemocracyReferendum';
+import type {DemocracyProposal, DemocracyReferendum} from 'src/api/hooks/useDemocracy';
 
 type ProposalInfoProps = {
   proposal: DemocracyProposal | DemocracyReferendum;
