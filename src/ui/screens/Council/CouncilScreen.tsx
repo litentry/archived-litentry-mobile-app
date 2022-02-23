@@ -22,6 +22,7 @@ import {noop} from 'lodash';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 import {decimalKeypad} from 'src/utils';
+import MaxBalance from '@ui/components/MaxBalance';
 
 const MAX_VOTES = 16;
 
@@ -252,9 +253,9 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
         value={amount}
         onChangeText={(nextValue) => setAmount(decimalKeypad(nextValue))}
         contextMenuHidden={true}
+        right={<TextInput.Affix text={(api && formatBalance(getBalanceFromString(api, amount))) ?? ''} />}
       />
-
-      <Subheading style={styles.voteValue}>{api ? formatBalance(getBalanceFromString(api, amount)) : ''}</Subheading>
+      <MaxBalance address={account} />
 
       <Padder scale={1} />
       <Caption>{`Select up to ${MAX_VOTES} candidates in the preferred order:`}</Caption>

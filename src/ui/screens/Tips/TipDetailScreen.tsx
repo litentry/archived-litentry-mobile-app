@@ -1,9 +1,9 @@
 import React from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {FlatList, StyleSheet, View, RefreshControl} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {Card, Subheading, Caption, Divider, List} from '@ui/library';
+import {Card, Subheading, Caption, Divider, List, useTheme} from '@ui/library';
 import {TipReason} from '@ui/components/Tips/TipReason';
 import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -14,7 +14,6 @@ import {DashboardStackParamList} from '@ui/navigation/navigation';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
-import {RefreshControl} from '@ui/library/RefreshControl';
 
 type ScreenProps = {
   navigation: StackNavigationProp<DashboardStackParamList>;
@@ -69,6 +68,7 @@ function TipDetailContent({tip}: TipDetailContentProps) {
 function TipDetailScreen({route}: ScreenProps) {
   const id = route.params?.id;
   const {data: tip, loading, refetching, refetch} = useTip(id);
+  const {colors} = useTheme();
 
   if (loading && !tip) {
     return <LoadingView />;
@@ -96,7 +96,14 @@ function TipDetailScreen({route}: ScreenProps) {
         }}
         ListEmptyComponent={<EmptyView height={200}>{`There are no tippers yet`}</EmptyView>}
         showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl onRefresh={refetch} refreshing={refetching} />}
+        refreshControl={
+          <RefreshControl
+            onRefresh={refetch}
+            refreshing={refetching}
+            tintColor={colors.primary}
+            colors={[colors.primary]}
+          />
+        }
       />
     </SafeView>
   );
