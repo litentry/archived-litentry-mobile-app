@@ -47,7 +47,7 @@ export function CouncilScreen() {
 
 function CouncilOverviewScreen() {
   const {data: council, loading} = useCouncil();
-  const {data: moduleElection} = useModuleElections();
+  const {module, hasElections} = useModuleElections();
 
   const [councilVoteVisible, setCouncilVoteVisible] = useState(false);
 
@@ -110,14 +110,14 @@ function CouncilOverviewScreen() {
           ListEmptyComponent={EmptyView}
         />
       )}
-      {council && moduleElection?.hasElections ? (
+      {council && hasElections ? (
         <CouncilVoteModal
           visible={councilVoteVisible}
           setVisible={(visible) => {
             setCouncilVoteVisible(visible);
           }}
           candidates={votingCandidates}
-          module={moduleElection.module}
+          module={module}
         />
       ) : null}
     </SafeView>
