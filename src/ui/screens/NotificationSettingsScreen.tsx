@@ -77,12 +77,11 @@ export function NotificationSettingsScreen({}: PropTypes) {
           {!permissionAllowed(pushAuthorizationStatus) && (
             <View style={styles.container}>
               <View style={styles.infoContainer}>
-                <View
-                  style={{...globalStyles.rowContainer, ...globalStyles.alignCenter, ...globalStyles.justifyCenter}}>
+                <View style={[globalStyles.rowContainer, globalStyles.alignCenter, globalStyles.justifyCenter]}>
                   <Headline style={styles.headline}>Turn on notifications?</Headline>
                 </View>
                 <Subheading>
-                  <Caption style={{...globalStyles.textCenter}}>
+                  <Caption style={[globalStyles.textCenter]}>
                     To get notifications from Litentry, you'll need to turn them on in your settings
                   </Caption>
                 </Subheading>
