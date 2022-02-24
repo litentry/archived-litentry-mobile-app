@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {usePushTopics} from '@hooks/usePushTopics';
 import {DrawerParamList} from '@ui/navigation/navigation';
-import {Text, List, Divider, Icon, Switch} from '@ui/library';
+import {Text, List, Divider, Switch, Headline, Subheading, Button, Caption} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {
   hasPermissionsDenied,
@@ -33,18 +33,9 @@ export function NotificationSettingsScreen({}: PropTypes) {
 
   useEffect(() => {
     if (hasPermissionsDenied(pushAuthorizationStatus)) {
-      Alert.alert('Enable notifications', "Click on OK to enable notifications on your phone's settings manually", [
-        {
-          text: 'Cancel',
-          onPress: () => {
-            unSubscribeToAllTopics().then(() => {
-              setSwitchDisabled(true);
-            });
-          },
-          style: 'cancel',
-        },
-        {text: 'OK', onPress: openAppSetting},
-      ]);
+      unSubscribeToAllTopics().then(() => {
+        setSwitchDisabled(true);
+      });
     }
     if (permissionAllowed(pushAuthorizationStatus)) {
       setSwitchDisabled(false);
@@ -83,19 +74,26 @@ export function NotificationSettingsScreen({}: PropTypes) {
           )}
           <Padder scale={1} />
           <Divider />
+          {!permissionAllowed(pushAuthorizationStatus) && (
+            <View style={styles.container}>
+              <View style={styles.infoContainer}>
+                <View
+                  style={{...globalStyles.rowContainer, ...globalStyles.alignCenter, ...globalStyles.justifyCenter}}>
+                  <Headline style={styles.headline}>Turn on notifications?</Headline>
+                </View>
+                <Subheading>
+                  <Caption style={{...globalStyles.textCenter}}>
+                    To get notifications from Litentry, you'll need to turn them on in your settings
+                  </Caption>
+                </Subheading>
+                <Padder scale={0.5} />
+                <Button onPress={openAppSetting} mode="outlined">
+                  Open Settings
+                </Button>
+              </View>
+            </View>
+          )}
         </View>
-        {!permissionAllowed(pushAuthorizationStatus) && (
-          <View style={styles.infoContainer}>
-            <Icon name="information-outline" />
-            <Padder scale={1} />
-            <TouchableOpacity activeOpacity={0.5} onPress={openAppSetting}>
-              <Text>
-                Currently, Your phone notification is disabled. Please, click here to enable notifications on your
-                phone's settings
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
       </View>
     </SafeView>
   );
@@ -107,8 +105,9 @@ const styles = StyleSheet.create({
     padding: standardPadding * 3,
   },
   infoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '90%',
+    justifyContent: 'center',
+  },
+  headline: {
+    fontWeight: 'bold',
   },
 });
