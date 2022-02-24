@@ -40,8 +40,8 @@ export function CrowdloanFundDetailScreen({route}: ScreenProps) {
         </Row>
         <Row label={'Ending'}>
           <View style={styles.rowContainer}>
-            {crowdloan.ending.map((end: string) => (
-              <Text>{end}</Text>
+            {crowdloan.ending.map((end: string, i: number) => (
+              <Text key={i}>{end}</Text>
             ))}
           </View>
         </Row>
