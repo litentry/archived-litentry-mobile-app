@@ -5,8 +5,8 @@ import {Text, Subheading, Headline, Button} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {CrowdloansStackParamList} from '@ui/navigation/navigation';
-import AddressInlineTeaser from '@ui/components/AddressInlineTeaser';
 import globalStyles, {standardPadding} from '@ui/styles';
+import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 
 type ScreenProps = {
   route: RouteProp<CrowdloansStackParamList, 'Fund Detail'>;
@@ -35,8 +35,7 @@ export function CrowdloanFundDetailScreen({route}: ScreenProps) {
           <Text>{crowdloan.paraId}</Text>
         </Row>
         <Row label={'Depositor'}>
-          {/* TODO: Need to work on  AccountInfoInlineTeaser and AddressInlineTeaser */}
-          {/* <AddressInlineTeaser proposer={crowdloan.depositor.account} /> */}
+          <AccountTeaser account={crowdloan.depositor.account} />
         </Row>
         <Row label={'Ending'}>
           <View style={styles.rowContainer}>
