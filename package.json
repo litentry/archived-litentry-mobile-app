@@ -116,7 +116,7 @@
     "@types/react-native": "^0.66.13",
     "@types/react-native-vector-icons": "^6.4.10",
     "@types/react-test-renderer": "^17.0.1",
-    "@typescript-eslint/eslint-plugin": "^5.9.1",
+    "@typescript-eslint/eslint-plugin": "^5.12.1",
     "@typescript-eslint/parser": "^5.9.1",
     "babel-jest": "^27.4.6",
     "babel-plugin-module-resolver": "^4.1.0",
