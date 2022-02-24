@@ -16,7 +16,7 @@ import {List, Button, Divider, Modal, useTheme, Caption, Subheading, TextInput, 
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {MotionsScreen} from './MotionsScreen';
-import {useModuleElections} from 'src/api/hooks/useModuleElections';
+import {useModuleElection} from 'src/api/hooks/useModuleElection';
 import Badge from '@ui/components/Badge';
 import {noop} from 'lodash';
 import {useApiTx} from 'src/api/hooks/useApiTx';
@@ -48,7 +48,7 @@ export function CouncilScreen() {
 
 function CouncilOverviewScreen() {
   const {data: council, loading} = useCouncil();
-  const {data: moduleElection} = useModuleElections();
+  const {data: moduleElection} = useModuleElection();
 
   const [councilVoteVisible, setCouncilVoteVisible] = useState(false);
 
@@ -111,7 +111,7 @@ function CouncilOverviewScreen() {
           ListEmptyComponent={EmptyView}
         />
       )}
-      {council && moduleElection?.hasElections ? (
+      {council && moduleElection?.module ? (
         <CouncilVoteModal
           visible={councilVoteVisible}
           setVisible={(visible) => {
@@ -177,7 +177,7 @@ type CouncilVoteProps = {
   visible: boolean;
   setVisible: (visible: boolean) => void;
   candidates: CouncilMember[];
-  module: string | null;
+  module: string;
 };
 
 function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVoteProps) {
@@ -224,7 +224,7 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
   };
 
   const onVote = () => {
-    if (module && account) {
+    if (account) {
       startTx({
         address: account,
         txMethod: `${module}.vote`,
