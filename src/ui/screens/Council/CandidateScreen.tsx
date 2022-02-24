@@ -56,7 +56,7 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
                 <View style={globalStyles.alignCenter}>
                   <IdentityIcon value={member.address} size={30} />
                   <Padder scale={0.5} />
-                  <AccountTeaser account={member.account} />
+                  <AccountTeaser account={member.account} identiconSize={0} />
                 </View>
                 <Padder scale={0.5} />
                 <Divider />
