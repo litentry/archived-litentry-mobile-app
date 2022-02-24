@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   chartText: {
     ...StyleSheet.absoluteFillObject,
     zIndex: 1,
-    left: '37%',
+    left: '39%',
     top: '25%',
   },
 });

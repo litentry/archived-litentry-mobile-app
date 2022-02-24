@@ -35,6 +35,10 @@ export function AuctionsScreen() {
 
   const {auctionsInfo, latestAuction} = auction;
   const {winningBid, leasePeriod, endingPeriod, raised, raisedPercent} = latestAuction;
+  const remainingPercent =
+    typeof endingPeriod?.remainingPercent === 'number' && endingPeriod.remainingPercent > 100
+      ? 100
+      : endingPeriod?.remainingPercent;
 
   const copyToClipboard = () => {
     if (winningBid?.blockNumber) {
@@ -59,8 +63,8 @@ export function AuctionsScreen() {
               {endingPeriod && (
                 <ProgressChartWidget
                   title={`Ending period`}
-                  detail={`${endingPeriod.remainingPercent}%\n${endingPeriod.remaining.slice(0, 2).join('\n')}`}
-                  data={[endingPeriod.remainingPercent / 100]}
+                  detail={`${remainingPercent}%\n${endingPeriod.endingIn.slice(0, 2).join('\n')}`}
+                  data={[100 / 100]}
                 />
               )}
             </View>
