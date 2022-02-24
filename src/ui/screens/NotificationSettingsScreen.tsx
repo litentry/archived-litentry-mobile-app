@@ -40,8 +40,7 @@ export function NotificationSettingsScreen({}: PropTypes) {
     if (permissionAllowed(pushAuthorizationStatus)) {
       setSwitchDisabled(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pushAuthorizationStatus]);
+  }, [pushAuthorizationStatus, unSubscribeToAllTopics]);
 
   if (hasPermissionsNotDetermined(pushAuthorizationStatus)) {
     return <PermissionGrantingPrompt allowSkip={false} />;
