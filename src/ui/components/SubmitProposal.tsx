@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {Button, Modal, Subheading, TextInput, Paragraph, Caption} from '@ui/library';
 import {useApi} from 'context/ChainApiContext';
 import {Padder} from '@ui/components/Padder';
@@ -10,6 +10,7 @@ import {getBalanceFromString} from 'src/api/utils/balance';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {decimalKeypad} from 'src/utils';
 import MaxBalance from './MaxBalance';
+import BalanceInput from './BalanceInput';
 
 export function SubmitProposal() {
   const {api} = useApi();

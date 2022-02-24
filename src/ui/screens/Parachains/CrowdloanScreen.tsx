@@ -17,13 +17,13 @@ import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import {CrowdloansStackParamList} from '@ui/navigation/navigation';
 import {crowdloanFundDetailScreen} from '@ui/navigation/routeKeys';
-import {Button, Card, Subheading, Text, Caption, Title, Modal, TextInput, useTheme} from '@ui/library';
+import {Button, Card, Subheading, Text, Caption, Title, Modal, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {decimalKeypad, notEmpty} from 'src/utils';
 import type {BalanceOf} from '@polkadot/types/interfaces';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {Chart} from '@ui/components/Chart';
-import MaxBalance from '@ui/components/MaxBalance';
+import BalanceInput from '@ui/components/BalanceInput';
+import {notEmpty} from 'src/utils';
 
 export function CrowdloanScreen() {
   const formatBalance = useFormatBalance();
@@ -295,7 +295,7 @@ function ContributeBox({
       <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.address)} />
       <Padder scale={1} />
       <Text>Amount:</Text>
-      <TextInput
+      {/* <TextInput
         style={contributeBoxStyles.textInput}
         mode="outlined"
         autoComplete="off"
@@ -307,9 +307,9 @@ function ContributeBox({
         contextMenuHidden={true}
         right={<TextInput.Affix text={(api && formatBalance(getBalanceFromString(api, amount))) ?? ''} />}
       />
-      <MaxBalance address={account} />
+      <MaxBalance address={account} /> */}
+      {api && account && <BalanceInput api={api} account={account} onSelectDispatch={setAmount} />}
       <Padder scale={0.2} />
-
       <Text>minimum allowed: </Text>
       <Text>{minBalance}</Text>
 

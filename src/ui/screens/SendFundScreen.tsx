@@ -16,6 +16,7 @@ import {Layout} from '@ui/components/Layout';
 import {standardPadding} from '@ui/styles';
 import MaxBalance from '@ui/components/MaxBalance';
 import {decimalKeypad} from 'src/utils';
+import BalanceInput from '@ui/components/BalanceInput';
 
 type Props = {
   navigation: NavigationProp<AccountsStackParamList, typeof sendFundScreen>;
@@ -60,18 +61,7 @@ export function SendFundScreen({navigation, route}: Props) {
           <View style={styles.container}>
             <Headline>Send</Headline>
             <Padder scale={1} />
-            <TextInput
-              autoComplete="off"
-              multiline={false}
-              placeholder="Amount"
-              keyboardType="decimal-pad"
-              value={amount}
-              onFocus={() => setAmount('')}
-              onChangeText={(nextValue) => setAmount(decimalKeypad(nextValue))}
-              right={<TextInput.Affix text={(api && formatBalance(getBalanceFromString(api, amount))) ?? ''} />}
-              contextMenuHidden={true}
-            />
-            <MaxBalance address={address} />
+            {api && address && <BalanceInput api={api} account={address} onSelectDispatch={setAmount} />}
             <Padder scale={1} />
             <TextInput
               autoComplete="off"

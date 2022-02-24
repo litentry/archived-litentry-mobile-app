@@ -21,8 +21,7 @@ import Badge from '@ui/components/Badge';
 import {noop} from 'lodash';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
-import {decimalKeypad} from 'src/utils';
-import MaxBalance from '@ui/components/MaxBalance';
+import BalanceInput from '@ui/components/BalanceInput';
 
 const MAX_VOTES = 16;
 
@@ -243,21 +242,9 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
 
       <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.address)} />
       <Padder scale={1} />
-
-      <TextInput
-        dense
-        autoComplete="off"
-        mode="outlined"
-        placeholder="Vote value"
-        keyboardType="decimal-pad"
-        value={amount}
-        onChangeText={(nextValue) => setAmount(decimalKeypad(nextValue))}
-        contextMenuHidden={true}
-        right={<TextInput.Affix text={(api && formatBalance(getBalanceFromString(api, amount))) ?? ''} />}
-      />
-      <MaxBalance address={account} />
-
+      {api && account && <BalanceInput api={api} account={account} onSelectDispatch={setAmount} />}
       <Padder scale={1} />
+      <Text>{amount}</Text>
       <Caption>{`Select up to ${MAX_VOTES} candidates in the preferred order:`}</Caption>
 
       <View style={styles.candidatesContainer}>
