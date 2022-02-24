@@ -32,6 +32,7 @@ function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
   const isParachainAvailable = useIsParachainAvailable();
   const currentRoute = state.routes[state.index];
   const activeScreen = currentRoute?.name;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const routeParams = currentRoute?.params as any;
 
   return (

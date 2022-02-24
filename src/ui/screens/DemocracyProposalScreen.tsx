@@ -3,90 +3,66 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {RouteProp} from '@react-navigation/native';
 import {useApi} from 'context/ChainApiContext';
-import AddressInlineTeaser from '@ui/components/AddressInlineTeaser';
-import {EmptyView} from '@ui/components/EmptyView';
-import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
-import {ProposalInfo} from '@ui/components/ProposalInfo';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {useApiTx} from 'src/api/hooks/useApiTx';
-import {useDemocracy} from 'src/api/hooks/useDemocracy';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
-import {referendumScreen} from '@ui/navigation/routeKeys';
+import {democracyProposalScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Button, Caption, Headline, Icon, List, Modal, Text} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
+import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
+import {ProposalCallInfo} from '@ui/components/ProposalCallInfo';
 
-export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
+export function DemocracyProposalScreen({
+  route,
+}: {
+  route: RouteProp<DashboardStackParamList, typeof democracyProposalScreen>;
+}) {
   const startTx = useApiTx();
   const {api} = useApi();
 
   const [secondsOpen, setSecondsOpen] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
-
-  const formatBalance = useFormatBalance();
-  const {data, isLoading} = useDemocracy();
-  if (isLoading) {
-    return <LoadingView />;
-  }
-  const activeProposal = data?.activeProposals.find((p) => String(p.index) === route.params.index);
-  if (!activeProposal) {
-    return <EmptyView />;
-  }
-
-  const proposal = activeProposal.image?.proposal;
-  const {method, section} = proposal?.registry.findMetaCall(proposal.callIndex) ?? {};
-  const title = proposal ? `${method}.${section}` : `preimage`;
+  const proposal = route.params.proposal;
+  const title = `${proposal.method}.${proposal.section}`;
 
   return (
     <Layout style={globalStyles.flex}>
       <SafeView edges={noTopEdges}>
         <ScrollView contentContainerStyle={styles.container}>
-          <List.Item title={title} disabled left={() => <Headline>{route.params.index}</Headline>} />
-          {proposal ? (
-            <ProposalInfo proposal={proposal} />
-          ) : (
-            <View>
-              <Caption>Preimage:</Caption>
-              <Text numberOfLines={1} ellipsizeMode="middle">
-                {String(activeProposal?.imageHash)}
-              </Text>
-            </View>
-          )}
-          <Padder scale={3} />
-          <Caption>Proposal Hash:</Caption>
-          <Text>{String(proposal?.hash)}</Text>
+          <List.Item title={title} disabled left={() => <Headline>{proposal.index}</Headline>} />
+          <ProposalCallInfo proposal={proposal} />
+          <Padder scale={1} />
+
+          <Caption>{`Proposal Hash:`}</Caption>
+          <Text selectable>{proposal.hash}</Text>
 
           <Padder scale={2} />
           <View style={styles.row}>
             <View style={styles.listLeft}>
-              <Caption>Proposer:</Caption>
+              <Caption>{`Proposer:`}</Caption>
             </View>
             <View style={styles.listRight}>
-              <AddressInlineTeaser address={activeProposal.proposer.toString()} />
+              <AccountTeaser account={proposal.proposer.account} />
             </View>
           </View>
 
           <Padder scale={2} />
-
-          {activeProposal.balance ? (
-            <View style={styles.row}>
-              <View style={styles.listLeft}>
-                <Caption>Locked:</Caption>
-              </View>
-              <View style={styles.listRight}>
-                <Text>{formatBalance(activeProposal.balance)}</Text>
-              </View>
-            </View>
-          ) : undefined}
-
-          <Padder scale={2} />
-
           <View style={styles.row}>
             <View style={styles.listLeft}>
-              <Caption>Seconds:</Caption>
+              <Caption>{`Locked:`}</Caption>
+            </View>
+            <View style={styles.listRight}>
+              <Text>{proposal.formattedBalance}</Text>
+            </View>
+          </View>
+
+          <Padder scale={2} />
+          <View style={styles.row}>
+            <View style={styles.listLeft}>
+              <Caption>{`Seconds:`}</Caption>
             </View>
             <View style={styles.listRight}>
               <TouchableOpacity
@@ -94,17 +70,15 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
                 onPress={() => {
                   setSecondsOpen(!secondsOpen);
                 }}>
-                <Text>{activeProposal.seconds.length}</Text>
-
+                <Text>{proposal.seconds.length}</Text>
                 <Icon name={secondsOpen ? 'chevron-up' : 'chevron-down'} size={25} color="grey" />
               </TouchableOpacity>
-
               {secondsOpen && (
                 <>
                   <Padder scale={0.5} />
-                  {activeProposal.seconds.map((account) => (
-                    <View key={String(account)}>
-                      <AddressInlineTeaser address={String(account)} />
+                  {proposal.seconds.map((second, index) => (
+                    <View key={`${second.address}-${index}`}>
+                      <AccountTeaser account={second.account} />
                       <Padder scale={0.5} />
                     </View>
                   ))}
@@ -112,10 +86,12 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
               )}
             </View>
           </View>
+
           <Padder scale={2} />
           <Button mode="outlined" onPress={() => dispatch({type: 'OPEN'})}>
-            Second
+            {`Second`}
           </Button>
+
           <Padder scale={2} />
           <View style={styles.row}>
             <View style={styles.infoIcon}>
@@ -123,17 +99,17 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
             </View>
             <View style={globalStyles.flex}>
               <Caption>
-                The proposal is in the queue for future referendums. One proposal from this list will move forward to
-                voting.
+                {`The proposal is in the queue for future referendums. One proposal from this list will move forward to
+                voting.`}
               </Caption>
               <Padder scale={0.5} />
-              <Caption>Seconding a proposal that indicates your backing for the proposal.</Caption>
+              <Caption>{`Seconding a proposal that indicates your backing for the proposal.`}</Caption>
             </View>
           </View>
         </ScrollView>
 
         <Modal visible={state.open} onDismiss={() => dispatch({type: 'RESET'})}>
-          <Text>Vote with account</Text>
+          <Text>{`Vote with account`}</Text>
           <Padder scale={0.5} />
           <SelectAccount
             onSelect={(account) => {
@@ -142,17 +118,14 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
           />
           <Padder scale={1.5} />
 
-          <Text>Deposit required:</Text>
+          <Text>{`Deposit required:`}</Text>
           <Padder scale={0.5} />
-          <Text>
-            {api &&
-              formatBalance(activeProposal.balance ? activeProposal.balance : api.consts.democracy.minimumDeposit)}
-          </Text>
+          <Text>{proposal.formattedBalance}</Text>
           <Padder scale={1.5} />
 
           <View style={globalStyles.spaceBetweenRowContainer}>
             <Button onPress={() => dispatch({type: 'RESET'})} mode="outlined">
-              CANCEL
+              {`Cancel`}
             </Button>
             <Padder scale={1} />
             <Button
@@ -165,13 +138,13 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
                     txMethod: 'democracy.second',
                     params:
                       api?.tx.democracy.second.meta.args.length === 2
-                        ? [activeProposal.index, activeProposal.seconds.length]
-                        : [activeProposal.index],
+                        ? [proposal.index, proposal.seconds.length]
+                        : [proposal.index],
                   });
                   dispatch({type: 'RESET'});
                 }
               }}>
-              Second
+              {`Second`}
             </Button>
           </View>
         </Modal>
@@ -182,11 +155,9 @@ export function DemocracyProposalScreen({route}: {route: RouteProp<DashboardStac
 
 const styles = StyleSheet.create({
   container: {padding: standardPadding * 2},
-  index: {paddingTop: standardPadding, paddingLeft: standardPadding},
   row: {flexDirection: 'row'},
   listLeft: {width: '30%'},
   listRight: {flex: 1},
-  modalCard: {width: 300},
   infoIcon: {paddingRight: standardPadding, paddingLeft: standardPadding},
 });
 
