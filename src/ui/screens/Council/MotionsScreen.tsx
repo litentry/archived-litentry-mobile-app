@@ -134,6 +134,11 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
             </View>
           )}
         />
+        {/* @TODO:
+          Try to reuse components/ProposalCallInfo when fetching motions from graph
+          Possibility of retiring components/ProposalInfo and components/ProposalCall
+          https://github.com/litentry/litentry-app/issues/916
+        */}
         <ProposalInfo proposal={proposal} />
       </Card.Content>
     </Card>
