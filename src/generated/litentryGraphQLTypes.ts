@@ -1838,6 +1838,7 @@ export type SubstrateChainCouncilMotion = {
   hash: Scalars['String'];
   proposal: SubstrateChainMotionProposal;
   votes?: Maybe<SubstrateChainMotionVotes>;
+  votingStatus?: Maybe<SubstrateChainVotingStatus>;
 };
 
 export type SubstrateChainCrowdloan = {
@@ -2006,10 +2007,11 @@ export type SubstrateChainMotionProposal = {
 
 export type SubstrateChainMotionVotes = {
   __typename?: 'SubstrateChainMotionVotes';
-  ayes: Array<Scalars['String']>;
+  ayes: Array<SubstrateChainAccount>;
   end: Scalars['String'];
+  endTime: Array<Scalars['String']>;
   index: Scalars['Int'];
-  nays: Array<Scalars['String']>;
+  nays: Array<SubstrateChainAccount>;
   threshold: Scalars['Int'];
 };
 
@@ -2175,6 +2177,17 @@ export type SubstrateChainValidatorsGroup = {
   __typename?: 'SubstrateChainValidatorsGroup';
   groupIndex?: Maybe<Scalars['String']>;
   validators?: Maybe<Array<SubstrateChainAccountInfo>>;
+};
+
+export type SubstrateChainVotingStatus = {
+  __typename?: 'SubstrateChainVotingStatus';
+  hasFailed: Scalars['Boolean'];
+  hasPassed: Scalars['Boolean'];
+  isCloseable: Scalars['Boolean'];
+  isVoteable: Scalars['Boolean'];
+  remainingBlocks?: Maybe<Scalars['String']>;
+  remainingBlocksTime?: Maybe<Array<Scalars['String']>>;
+  status: Scalars['String'];
 };
 
 export type SubstrateChainWho = {
