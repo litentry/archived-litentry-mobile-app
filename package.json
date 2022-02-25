@@ -20,7 +20,7 @@
     "codegen": "graphql-codegen --config codegen.yml"
   },
   "resolutions": {
-    "@polkadot/types": "^7.3.1",
+    "@polkadot/types": "^7.9.1",
     "@polkadot/util": "^8.2.2",
     "@polkadot/util-crypto": "^8.2.2"
   },
