@@ -29,7 +29,7 @@
     "@polkadot/api": "^7.9.1",
     "@polkadot/apps-config": "^0.103.1",
     "@polkadot/reactnative-identicon": "0.89.2",
-    "@polkadot/ui-settings": "^0.89.2",
+    "@polkadot/ui-settings": "^1.1.1",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/clipboard": "^1.5.1",
     "@react-native-community/masked-view": "^0.1.11",
