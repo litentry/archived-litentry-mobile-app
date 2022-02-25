@@ -1686,13 +1686,13 @@ export type SubstrateChainAuction = {
 
 export type SubstrateChainAuctionBid = {
   __typename?: 'SubstrateChainAuctionBid';
-  amount: Scalars['String'];
-  blockNumber: Scalars['String'];
-  firstSlot: Scalars['String'];
+  amount?: Maybe<Scalars['String']>;
+  blockNumber?: Maybe<Scalars['String']>;
+  firstSlot?: Maybe<Scalars['String']>;
   isCrowdloan: Scalars['Boolean'];
-  lastSlot: Scalars['String'];
-  projectId: Scalars['String'];
-  projectName: Scalars['String'];
+  lastSlot?: Maybe<Scalars['String']>;
+  projectId?: Maybe<Scalars['String']>;
+  projectName?: Maybe<Scalars['String']>;
 };
 
 export type SubstrateChainAuctionEndingPeriod = {
@@ -1982,7 +1982,7 @@ export type SubstrateChainLaunchPeriodInfo = {
 
 export type SubstrateChainLease = {
   __typename?: 'SubstrateChainLease';
-  blockTime?: Maybe<Scalars['String']>;
+  blockTime: Array<Scalars['String']>;
   period?: Maybe<Scalars['String']>;
 };
 

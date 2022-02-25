@@ -38,7 +38,7 @@ export function AuctionsScreen() {
   const remainingPercent =
     typeof endingPeriod?.remainingPercent === 'number' && endingPeriod.remainingPercent > 100
       ? 100
-      : endingPeriod?.remainingPercent;
+      : endingPeriod?.remainingPercent ?? 0;
 
   const copyToClipboard = () => {
     if (winningBid?.blockNumber) {
@@ -64,7 +64,7 @@ export function AuctionsScreen() {
                 <ProgressChartWidget
                   title={`Ending period`}
                   detail={`${remainingPercent}%\n${endingPeriod.endingIn.slice(0, 2).join('\n')}`}
-                  data={[100 / 100]}
+                  data={[remainingPercent / 100]}
                 />
               )}
             </View>
@@ -81,25 +81,32 @@ export function AuctionsScreen() {
       <Padder scale={0.5} />
       <Card style={styles.container}>
         <Subheading style={globalStyles.textCenter}>{`Winning Bid`}</Subheading>
-        <List.Item
-          title={`${winningBid?.projectName} #${winningBid?.projectId}`}
-          description={
-            <View>
-              <Padder scale={0.5} />
-              <Caption>{`Bid: ${winningBid?.amount} ${winningBid?.isCrowdloan ? '(crowdloan)' : ''}`}</Caption>
-              <Caption>
-                {`Block number: `}
-                <Caption onPress={copyToClipboard}>{winningBid?.blockNumber}</Caption>
-              </Caption>
-            </View>
-          }
-          right={() => (
-            <View style={globalStyles.justifyCenter}>
-              <Caption>{`Leases`}</Caption>
-              <Caption>{`${winningBid?.firstSlot} - ${winningBid?.lastSlot}`}</Caption>
-            </View>
-          )}
-        />
+        {auctionsInfo.active ? (
+          <List.Item
+            title={`${winningBid?.projectName} #${winningBid?.projectId}`}
+            description={
+              <View>
+                <Padder scale={0.5} />
+                <Caption>{`Bid: ${winningBid?.amount} ${winningBid?.isCrowdloan ? '(crowdloan)' : ''}`}</Caption>
+                <Caption>
+                  {`Block number: `}
+                  <Caption onPress={copyToClipboard}>{winningBid?.blockNumber}</Caption>
+                </Caption>
+              </View>
+            }
+            right={() => (
+              <View style={globalStyles.justifyCenter}>
+                <Caption>{`Leases`}</Caption>
+                <Caption>{`${winningBid?.firstSlot} - ${winningBid?.lastSlot}`}</Caption>
+              </View>
+            )}
+          />
+        ) : (
+          <>
+            <Padder scale={1} />
+            <Caption style={globalStyles.textCenter}>{`The auction is not active`}</Caption>
+          </>
+        )}
       </Card>
     </SafeView>
   );
