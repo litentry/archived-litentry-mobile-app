@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
@@ -18,14 +18,10 @@ export function BalanceInput(props: PropTypes) {
   const {api, account, dispatchType} = props;
   const [amount, setAmount] = useState<string>('');
   const formatBalance = useFormatBalance();
-  const onChangeDispatch = (nextValue: string) => {
-    setAmount(decimalKeypad(nextValue));
-    if (dispatchType) {
-      return props.onSelectDispatch({type: dispatchType, payload: amount});
-    } else {
-      return props.onSelectDispatch(amount);
-    }
-  };
+  useEffect(() => {
+    if (dispatchType) props.onSelectDispatch({type: dispatchType, payload: amount});
+    else props.onSelectDispatch(amount);
+  }, [amount, dispatchType, props]);
   return (
     <>
       <TextInput
@@ -37,7 +33,7 @@ export function BalanceInput(props: PropTypes) {
         keyboardType="decimal-pad"
         value={amount}
         onFocus={() => setAmount('')}
-        onChangeText={(nextValue: string) => onChangeDispatch(nextValue)}
+        onChangeText={(nextValue: string) => setAmount(decimalKeypad(nextValue))}
         contextMenuHidden={true}
         right={
           <TextInput.Affix
