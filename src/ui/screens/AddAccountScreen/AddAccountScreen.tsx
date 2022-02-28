@@ -64,6 +64,8 @@ export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppSt
         if (isAddressValid(currentNetwork, parsed.address)) {
           dispatch({type: 'SET_ADDRESS', payload: parsed.address});
           dispatch({type: 'SET_STEP', payload: 'preview'});
+        } else {
+          Alert.alert('Validation Failed', 'Please scan the address from the correct network');
         }
       } catch (e) {
         Alert.alert('Validation Failed', 'Address is invalid.');
