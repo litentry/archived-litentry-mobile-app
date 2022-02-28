@@ -63,7 +63,7 @@ export function AuctionsScreen() {
               {endingPeriod && (
                 <ProgressChartWidget
                   title={`Ending period`}
-                  detail={`${remainingPercent}%\n${endingPeriod.endingIn.slice(0, 2).join('\n')}`}
+                  detail={`${remainingPercent}%\n${endingPeriod.remaining.slice(0, 2).join('\n')}`}
                   data={[remainingPercent / 100]}
                 />
               )}
@@ -82,25 +82,33 @@ export function AuctionsScreen() {
       <Card style={styles.container}>
         <Subheading style={globalStyles.textCenter}>{`Winning Bid`}</Subheading>
         {auctionsInfo.active ? (
-          <List.Item
-            title={`${winningBid?.projectName} #${winningBid?.projectId}`}
-            description={
-              <View>
-                <Padder scale={0.5} />
-                <Caption>{`Bid: ${winningBid?.amount} ${winningBid?.isCrowdloan ? '(crowdloan)' : ''}`}</Caption>
-                <Caption>
-                  {`Block number: `}
-                  <Caption onPress={copyToClipboard}>{winningBid?.blockNumber}</Caption>
-                </Caption>
-              </View>
-            }
-            right={() => (
-              <View style={globalStyles.justifyCenter}>
-                <Caption>{`Leases`}</Caption>
-                <Caption>{`${winningBid?.firstSlot} - ${winningBid?.lastSlot}`}</Caption>
-              </View>
-            )}
-          />
+          winningBid ? (
+            <List.Item
+              title={winningBid?.projectName}
+              description={
+                <View>
+                  <Padder scale={0.5} />
+                  <Caption>{`ProjectID: ${winningBid?.projectId}`}</Caption>
+                  <Caption>{`Bid: ${winningBid?.amount} ${winningBid?.isCrowdloan ? '(crowdloan)' : ''}`}</Caption>
+                  <Caption>
+                    {`Block number: `}
+                    <Caption onPress={copyToClipboard}>{winningBid?.blockNumber}</Caption>
+                  </Caption>
+                </View>
+              }
+              right={() => (
+                <View style={globalStyles.justifyCenter}>
+                  <Caption>{`Leases`}</Caption>
+                  <Caption>{`${winningBid?.firstSlot} - ${winningBid?.lastSlot}`}</Caption>
+                </View>
+              )}
+            />
+          ) : (
+            <>
+              <Padder scale={1} />
+              <Caption style={globalStyles.textCenter}>{`There is no winning bid currently`}</Caption>
+            </>
+          )
         ) : (
           <>
             <Padder scale={1} />
