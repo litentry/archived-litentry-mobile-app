@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
-import {TextInput} from 'react-native-paper';
+import {TextInput, useTheme} from '@ui/library';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {decimalKeypad} from 'src/utils';
 import MaxBalance from './MaxBalance';
@@ -15,8 +15,10 @@ type PropTypes = {
 };
 
 export function BalanceInput(props: PropTypes) {
+  const {colors} = useTheme();
   const {api, account, dispatchType} = props;
   const [amount, setAmount] = useState<string>('');
+  const [isMaximum, setIsMaximum] = useState<boolean>(true);
   const formatBalance = useFormatBalance();
   useEffect(() => {
     if (dispatchType) props.onSelectDispatch({type: dispatchType, payload: amount});
@@ -27,6 +29,7 @@ export function BalanceInput(props: PropTypes) {
       <TextInput
         dense
         style={styles.textInput}
+        theme={isMaximum ? {colors: {primary: colors.primary}} : {colors: {primary: colors.error}}}
         mode="outlined"
         autoComplete="off"
         placeholder="Enter amount"

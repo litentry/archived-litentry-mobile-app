@@ -295,19 +295,6 @@ function ContributeBox({
       <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.address)} />
       <Padder scale={1} />
       <Text>Amount:</Text>
-      {/* <TextInput
-        style={contributeBoxStyles.textInput}
-        mode="outlined"
-        autoComplete="off"
-        placeholder="Enter amount"
-        keyboardType="decimal-pad"
-        value={amount}
-        onFocus={() => setAmount('')}
-        onChangeText={(nextValue) => setAmount(decimalKeypad(nextValue))}
-        contextMenuHidden={true}
-        right={<TextInput.Affix text={(api && formatBalance(getBalanceFromString(api, amount))) ?? ''} />}
-      />
-      <MaxBalance address={account} /> */}
       {api && account && <BalanceInput api={api} account={account} onSelectDispatch={setAmount} />}
       <Padder scale={0.2} />
       <Text>minimum allowed: </Text>

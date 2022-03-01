@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Button, Modal, Subheading, TextInput, Paragraph, Caption} from '@ui/library';
 import {useApi} from 'context/ChainApiContext';
 import {Padder} from '@ui/components/Padder';
@@ -8,8 +8,6 @@ import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {decimalKeypad} from 'src/utils';
-import MaxBalance from './MaxBalance';
 import BalanceInput from './BalanceInput';
 
 export function SubmitProposal() {
@@ -78,18 +76,9 @@ export function SubmitProposal() {
         <Padder scale={1} />
 
         <Paragraph>{`Locked balance:`}</Paragraph>
-        <TextInput
-          dense
-          autoComplete="off"
-          mode="outlined"
-          placeholder="Place your balance"
-          keyboardType="decimal-pad"
-          value={state.balance}
-          onChangeText={(nextValue) => dispatch({type: 'SET_BALANCE', payload: decimalKeypad(nextValue)})}
-          contextMenuHidden={true}
-          right={<TextInput.Affix text={(api && formatBalance(getBalanceFromString(api, state.balance))) ?? ''} />}
-        />
-        <MaxBalance address={state.account} />
+        {api && state.account && (
+          <BalanceInput api={api} account={state.account} dispatchType={`SET_BALANCE`} onSelectDispatch={dispatch} />
+        )}
         <Padder scale={1} />
 
         <Caption>{`Minimum deposit: ${api && formatBalance(api.consts.democracy.minimumDeposit)}`}</Caption>

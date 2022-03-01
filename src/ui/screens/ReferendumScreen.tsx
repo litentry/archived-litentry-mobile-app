@@ -1,7 +1,7 @@
 import React, {useReducer} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
-import {Button, Divider, Headline, Modal, Select, Subheading, Caption, TextInput, List, Text} from '@ui/library';
+import {Button, Divider, Headline, Modal, Select, Subheading, Caption, List, Text} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {useApi} from 'context/ChainApiContext';
 import {ProgressBar} from '@ui/components/ProgressBar';
@@ -15,15 +15,13 @@ import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {referendumScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
-import {decimalKeypad} from 'src/utils';
-import MaxBalance from '@ui/components/MaxBalance';
 import {ProposalCallInfo} from '@ui/components/ProposalCallInfo';
+import BalanceInput from '@ui/components/BalanceInput';
 
 export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
   const startTx = useApiTx();
   const {api} = useApi();
   const [state, dispatch] = useReducer(reducer, initialState);
-  const formatBalance = useFormatBalance();
   const referendum = route.params.referendum;
   const convictions = useConvictions();
 
@@ -130,18 +128,16 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
           <Padder scale={1} />
 
           <Caption>{`Vote Value`}</Caption>
-          <TextInput
-            dense
-            mode="outlined"
-            autoComplete="off"
-            placeholder="Place your Text"
-            keyboardType="decimal-pad"
-            value={state.voteValue}
-            onChangeText={(nextValue) => dispatch({type: 'SET_VOTE_VALUE', payload: decimalKeypad(nextValue)})}
-            contextMenuHidden={true}
-            right={<TextInput.Affix text={(api && formatBalance(getBalanceFromString(api, state.voteValue))) ?? ''} />}
-          />
-          <MaxBalance address={state.account} />
+
+          {api && state.account && (
+            <BalanceInput
+              api={api}
+              account={state.account}
+              dispatchType={`SET_VOTE_VALUE`}
+              onSelectDispatch={dispatch}
+            />
+          )}
+
           <Padder scale={1} />
 
           <Caption>{`Conviction`}</Caption>
