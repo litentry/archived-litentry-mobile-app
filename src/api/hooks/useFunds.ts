@@ -73,6 +73,9 @@ const CROWD_LOAN = gql`
     formattedRaised
     cap
     formattedCap
+    raisedPercentage
+    homepage
+    name
     contribution {
       paraId
       contribution {

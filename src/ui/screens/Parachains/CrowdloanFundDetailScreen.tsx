@@ -14,7 +14,6 @@ type ScreenProps = {
 
 export function CrowdloanFundDetailScreen({route}: ScreenProps) {
   const {crowdloan} = route.params;
-  const homepage = null;
   if (!crowdloan) {
     return <Text>Something bad happened!</Text>;
   }
@@ -49,7 +48,7 @@ export function CrowdloanFundDetailScreen({route}: ScreenProps) {
         </Row>
         <Row label={'Leases'}>
           <Text>
-            {+crowdloan.firstPeriod === +crowdloan.lastPeriod
+            {Number(crowdloan.firstPeriod) === Number(crowdloan.lastPeriod)
               ? crowdloan.firstPeriod
               : `${crowdloan.firstPeriod} - ${crowdloan.lastPeriod}`}
           </Text>
@@ -62,8 +61,8 @@ export function CrowdloanFundDetailScreen({route}: ScreenProps) {
         <Row label={'Contributors'}>
           <Text>{crowdloan.contribution.contribution.contributorsCount}</Text>
         </Row>
-        {homepage ? (
-          <Button icon="home" onPress={() => toHomepage(homepage)}>
+        {crowdloan.homepage ? (
+          <Button icon="home" onPress={() => toHomepage(crowdloan.homepage)}>
             {`Homepage`}
           </Button>
         ) : null}

@@ -119,7 +119,7 @@ function Fund({item, active, onPressContribute}: {item: Crowdloan; active: boole
 
   return (
     <Card
-      mode={item.status ? 'elevated' : 'outlined'} // TODO: do we need is Special in crowdloan
+      // mode={item.status ? 'elevated' : 'outlined'} // TODO: do we need is Special in crowdloan
       style={styles.fund}
       onPress={() => {
         navigation.navigate(crowdloanFundDetailScreen, {crowdloan: item});
@@ -127,16 +127,14 @@ function Fund({item, active, onPressContribute}: {item: Crowdloan; active: boole
       <View style={[globalStyles.rowAlignCenter]}>
         <View style={styles.shrink}>
           <Subheading numberOfLines={1} adjustsFontSizeToFit>
-            {String(item.depositor.account.registration.display)}
+            {String(item.name)}
           </Subheading>
           <Padder scale={0.5} />
-          {/* TODO:  formattedRaised is not formatted */}
           <Caption numberOfLines={1} adjustsFontSizeToFit>{`${item.formattedRaised} / ${item.formattedCap}`}</Caption>
         </View>
         <View style={styles.spacer} />
         <View style={styles.listItemRightSide}>
-          {/* TODO: Need percentage in  SubstrateChainCrowdloan */}
-          <Chart percent={10} />
+          <Chart percent={Number(item.raisedPercentage)} />
           {active && (
             <Button
               style={styles.button}
