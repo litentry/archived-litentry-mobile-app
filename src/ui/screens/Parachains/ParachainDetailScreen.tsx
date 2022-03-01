@@ -9,15 +9,15 @@ import globalStyles, {standardPadding} from '@ui/styles';
 import {EmptyView} from '@ui/components/EmptyView';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {SubstrateChainAccountInfo} from 'src/generated/litentryGraphQLTypes';
-import {useParachainInfo} from 'src/api/hooks/useParachainInfo';
 import LoadingView from '@ui/components/LoadingView';
+import {useParachain} from 'src/api/hooks/useParachain';
 
 type ScreenProps = {
   route: RouteProp<ParachainsStackParamList, 'Parachain'>;
 };
 
 export function ParachainDetailScreen({route}: ScreenProps) {
-  const {data: parachain, loading} = useParachainInfo(route.params.parachainId);
+  const {data: parachain, loading} = useParachain(route.params.parachainId);
 
   const sections = [
     {
