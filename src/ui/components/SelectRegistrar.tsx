@@ -86,14 +86,17 @@ function RegistrarItem({onSelect, registrar}: RegistrarItemProps) {
       style={styles.menuItem}
       onPress={() => onSelect(registrar)}
       title={
-        <View style={styles.fullWidth}>
-          <View style={[globalStyles.rowAlignCenter, styles.fullWidth]}>
+        <View style={globalStyles.justifyCenter}>
+          <View style={globalStyles.rowAlignCenter}>
             <Identicon value={address} size={20} />
             <Padder scale={0.5} />
             <Account account={account} />
           </View>
-          <Caption>{`Index: ${id}`}</Caption>
-          <Caption>{`Fee: ${formattedFee}`}</Caption>
+          <View style={globalStyles.rowAlignCenter}>
+            <Caption>{`Index: ${id}`}</Caption>
+            <Padder scale={0.5} />
+            <Caption>{`Fee: ${formattedFee}`}</Caption>
+          </View>
         </View>
       }
     />
@@ -110,7 +113,7 @@ const styles = StyleSheet.create({
     maxHeight: 250,
   },
   menuItem: {
-    height: 90,
+    height: 70,
   },
   fullWidth: {
     width: '100%',

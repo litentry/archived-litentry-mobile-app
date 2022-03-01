@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {SectionList, StyleSheet, View, Linking} from 'react-native';
+import {SectionList, StyleSheet, View, Linking, RefreshControl} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
@@ -33,6 +33,7 @@ export function TreasuryScreen() {
 
 function TreasuryOverviewScreen() {
   const {loading, data: treasuryInfo, refetch, refetching} = useTreasury();
+  const {colors} = useTheme();
 
   const groupedData = [
     {title: 'Proposals', data: treasuryInfo?.proposals ?? []},
@@ -42,14 +43,20 @@ function TreasuryOverviewScreen() {
   return (
     <Layout style={globalStyles.flex}>
       <SafeView edges={noTopEdges}>
-        {loading ? (
+        {loading && !treasuryInfo ? (
           <LoadingView />
         ) : (
           <SectionList
             stickySectionHeadersEnabled={false}
             contentContainerStyle={styles.sectionList}
-            refreshing={refetching}
-            onRefresh={refetch}
+            refreshControl={
+              <RefreshControl
+                refreshing={refetching}
+                onRefresh={refetch}
+                tintColor={colors.primary}
+                colors={[colors.primary]}
+              />
+            }
             sections={groupedData}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({item}) => {

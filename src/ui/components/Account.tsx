@@ -1,3 +1,4 @@
+/** @deprecated use @ui/components/Account/Account instead */
 import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 

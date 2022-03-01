@@ -1,11 +1,12 @@
 import React from 'react';
-import {ScrollView as RNScrollView, RefreshControl} from 'react-native';
+import {ScrollView} from 'react-native';
+import {RefreshControl} from 'react-native';
 import {RefetchQueries, useRefetch} from 'src/api/hooks/useRefetch';
 import {useTheme} from '@ui/library';
 
-type RNScrollViewProps = React.ComponentProps<typeof RNScrollView>;
+type ScrollViewProps = React.ComponentProps<typeof ScrollView>;
 
-type Props = Omit<RNScrollViewProps, 'refreshControl'> & {
+type Props = Omit<ScrollViewProps, 'refreshControl'> & {
   refetchQueries?: RefetchQueries;
 };
 
@@ -18,8 +19,8 @@ export function ScrollViewRefetch({children, refetchQueries, ...props}: Props) {
   );
 
   return (
-    <RNScrollView {...props} refreshControl={refreshControl}>
+    <ScrollView {...props} refreshControl={refreshControl}>
       {children}
-    </RNScrollView>
+    </ScrollView>
   );
 }

@@ -1,7 +1,7 @@
 import {gql, useQuery} from '@apollo/client';
 import {SubstrateChainTreasurySummary} from 'src/generated/litentryGraphQLTypes';
 
-const TREASURY_SUMMARY_QUERY = gql`
+export const TREASURY_SUMMARY_QUERY = gql`
   query getTreasurySummary {
     substrateChainTreasurySummary {
       activeProposals

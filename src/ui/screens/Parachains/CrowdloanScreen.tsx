@@ -23,6 +23,7 @@ import {decimalKeypad, notEmpty} from 'src/utils';
 import type {BalanceOf} from '@polkadot/types/interfaces';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {Chart} from '@ui/components/Chart';
+import MaxBalance from '@ui/components/MaxBalance';
 
 export function CrowdloanScreen() {
   const {data, loading, error} = useFunds();
@@ -300,10 +301,11 @@ function ContributeBox({
         onFocus={() => setAmount('')}
         onChangeText={(nextValue) => setAmount(decimalKeypad(nextValue))}
         contextMenuHidden={true}
+        right={<TextInput.Affix text={(api && formatBalance(getBalanceFromString(api, amount))) ?? ''} />}
       />
+      <MaxBalance address={account} />
       <Padder scale={0.2} />
-      <Text>{api ? formatBalance(getBalanceFromString(api, amount)) : ''}</Text>
-      <Padder scale={1.5} />
+
       <Text>minimum allowed: </Text>
       <Text>{minBalance}</Text>
 
