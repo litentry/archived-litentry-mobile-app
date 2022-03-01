@@ -101,7 +101,7 @@ type ParachainsStackParamList = {
 
 type CrowdloansStackParamList = {
   [crowdloanScreen]: undefined;
-  [crowdloanFundDetailScreen]: {title: string; paraId: ParaId};
+  [crowdloanFundDetailScreen]: {title: string; paraId: string};
 };
 
 type PolkassemblyDiscussionStackParamList = {
