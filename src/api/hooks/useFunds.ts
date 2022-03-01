@@ -15,13 +15,78 @@ import {BN, stringToU8a, u8aConcat} from '@polkadot/util';
 import {encodeAddress} from '@polkadot/util-crypto';
 import useApiQuery from 'src/api/hooks/useApiQuery';
 import {useBestNumber} from 'src/api/hooks/useBestNumber';
-import {SubstrateChainCrowdloanSummary} from 'src/generated/litentryGraphQLTypes';
+import type {SubstrateChainCrowdloan, SubstrateChainCrowdloanSummary} from 'src/generated/litentryGraphQLTypes';
+
+export type CrowdloanSummary = SubstrateChainCrowdloanSummary;
+
+export type Crowdloan = SubstrateChainCrowdloan;
 
 export const CROWD_PREFIX = stringToU8a('modlpy/cfund');
 
 export type ChannelMap = Record<string, [HrmpChannelId, HrmpChannel][]>;
 
-export const CROWD_LOAN_SUMMARY = gql`
+const ACCOUNT_FIELDS = gql`
+  fragment AccountFields on SubstrateChainAccount {
+    address
+    display
+    registration {
+      display
+      displayParent
+      email
+      image
+      legal
+      pgp
+      riot
+      twitter
+      web
+      judgements {
+        index
+        judgement {
+          isUnknown
+          isFeePaid
+          isReasonable
+          isKnownGood
+          isOutOfDate
+          isLowQuality
+          isErroneous
+        }
+      }
+    }
+  }
+`;
+
+const CROWD_LOAN = gql`
+  ${ACCOUNT_FIELDS}
+  fragment CrowdloanSummary on SubstrateChainCrowdloan {
+    paraId
+    depositor {
+      address
+      account {
+        ...AccountFields
+      }
+    }
+    ending
+    status
+    firstPeriod
+    lastPeriod
+    raised
+    formattedRaised
+    cap
+    formattedCap
+    raisedPercentage
+    homepage
+    name
+    contribution {
+      paraId
+      contribution {
+        paraId
+        contributorsCount
+      }
+    }
+  }
+`;
+
+const CROWD_LOAN_SUMMARY = gql`
   query getCrowdloanSummary {
     substrateChainCrowdloanSummary {
       activeRaised
@@ -39,12 +104,47 @@ export const CROWD_LOAN_SUMMARY = gql`
   }
 `;
 
+const ACTIVE_CROWD_LOANS = gql`
+  ${CROWD_LOAN}
+  query getActiveCrowdloans {
+    substrateChainActiveCrowdloans {
+      ...CrowdloanSummary
+    }
+  }
+`;
+
+const ENDED_CROWD_LOANS = gql`
+  ${CROWD_LOAN}
+  query getEndedCrowdloans {
+    substrateChainEndedCrowdloans {
+      ...CrowdloanSummary
+    }
+  }
+`;
+
 export function useFunds() {
-  const {data, ...rest} =
-    useQuery<{substrateChainCrowdloanSummary: SubstrateChainCrowdloanSummary}>(CROWD_LOAN_SUMMARY);
+  const {data, ...rest} = useQuery<{substrateChainCrowdloanSummary: CrowdloanSummary}>(CROWD_LOAN_SUMMARY);
 
   return {
     data: data?.substrateChainCrowdloanSummary,
+    ...rest,
+  };
+}
+
+export function useActiveCrowdloans() {
+  const {data, ...rest} = useQuery<{substrateChainActiveCrowdloans: Crowdloan[]}>(ACTIVE_CROWD_LOANS);
+
+  return {
+    data: data?.substrateChainActiveCrowdloans,
+    ...rest,
+  };
+}
+
+export function useEndedCrowdloans() {
+  const {data, ...rest} = useQuery<{substrateChainEndedCrowdloans: Crowdloan[]}>(ENDED_CROWD_LOANS);
+
+  return {
+    data: data?.substrateChainEndedCrowdloans,
     ...rest,
   };
 }

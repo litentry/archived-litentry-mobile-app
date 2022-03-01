@@ -1,8 +1,5 @@
 import React from 'react';
 import {SectionList, StyleSheet, View} from 'react-native';
-import {LinkOption} from '@polkadot/apps-config/endpoints/types';
-import type {ParaId} from '@polkadot/types/interfaces';
-import {BN, BN_ZERO} from '@polkadot/util';
 import {NavigationProp, useNavigation} from '@react-navigation/core';
 import {useApi} from 'context/ChainApiContext';
 import {EmptyView} from '@ui/components/EmptyView';
@@ -11,9 +8,7 @@ import {Padder} from '@ui/components/Padder';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import {Campaign, useFunds} from 'src/api/hooks/useFunds';
-import {LeasePeriod, useParachainsLeasePeriod} from 'src/api/hooks/useParachainsLeasePeriod';
-import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
+import {Crowdloan, useActiveCrowdloans, useEndedCrowdloans, useFunds} from 'src/api/hooks/useFunds';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import {CrowdloansStackParamList} from '@ui/navigation/navigation';
 import {crowdloanFundDetailScreen} from '@ui/navigation/routeKeys';
@@ -26,10 +21,10 @@ import {Chart} from '@ui/components/Chart';
 import MaxBalance from '@ui/components/MaxBalance';
 
 export function CrowdloanScreen() {
-  const {data, loading, error} = useFunds();
-  const {data: leasePeriod} = useParachainsLeasePeriod();
-
-  const [openContributeId, setOpenContributeId] = React.useState<ParaId>();
+  const {data, error} = useFunds();
+  const {data: activeCrowdLoans, error: activeCrowdLoansError} = useActiveCrowdloans();
+  const {data: endedCrowdLoans, error: endedCrowdLoansError} = useEndedCrowdloans();
+  const [openContributeId, setOpenContributeId] = React.useState<string>();
 
   if (error) {
     return <Text>Something bad happened!</Text>;
@@ -39,31 +34,9 @@ export function CrowdloanScreen() {
     return <LoadingView />;
   }
 
-  // if (!data.funds?.length) {
-  //   return <EmptyView />;
-  // }
-
-  // const [active, ended] = extractLists(data.funds, leasePeriod);
-
-  // const [activeRaised, activeCap] = active.reduce(
-  //   ([par, pac], current) => {
-  //     return [
-  //       par.iadd(current.info.raised.gte(BN_ZERO) ? current.info.raised : BN_ZERO),
-  //       pac.iadd(current.info.cap.gte(BN_ZERO) ? current.info.cap : BN_ZERO),
-  //     ];
-  //   },
-  //   [new BN(0), new BN(0)],
-  // );
-
-  // let activeProgress = 0,
-  //   totalProgress = 0;
-
-  // try {
-  //   activeProgress = activeCap.isZero() ? 0 : activeRaised.muln(10000).div(activeCap).toNumber() / 10000;
-  //   totalProgress = data.totalCap.isZero() ? 0 : data.totalRaised.muln(10000).div(data.totalCap).toNumber() / 10000;
-  // } catch (e) {
-  //   console.error('Error calculating progress');
-  // }
+  if (data.totalFunds === 0) {
+    return <EmptyView />;
+  }
 
   return (
     <SafeView edges={noTopEdges}>
@@ -106,9 +79,12 @@ export function CrowdloanScreen() {
         }}
         style={styles.container}
         contentContainerStyle={styles.listContent}
-        sections={[]}
+        sections={[
+          activeCrowdLoans?.length ? {key: 'Ongoing', data: activeCrowdLoans} : null,
+          endedCrowdLoans?.length ? {key: 'Completed', data: endedCrowdLoans} : null,
+        ].filter(notEmpty)}
         SectionSeparatorComponent={() => <Padder scale={1} />}
-        renderSectionHeader={({section}) => <Title>{section}</Title>}
+        renderSectionHeader={({section}) => <Title>{section.key}</Title>}
         renderItem={({item, section: {key}}) => {
           return (
             <Fund
@@ -120,10 +96,10 @@ export function CrowdloanScreen() {
             />
           );
         }}
-        keyExtractor={(item) => item.key}
+        keyExtractor={(item) => item.paraId}
         stickySectionHeadersEnabled={false}
       />
-      {/* {openContributeId !== undefined ? (
+      {openContributeId !== undefined ? (
         <ContributeBox
           visible={true}
           setVisible={(visible) => {
@@ -133,52 +109,39 @@ export function CrowdloanScreen() {
           }}
           parachainId={openContributeId}
         />
-      ) : null} */}
+      ) : null}
     </SafeView>
   );
 }
 
-function Fund({item, active, onPressContribute}: {item: Campaign; active: boolean; onPressContribute: () => void}) {
-  const formatBalance = useFormatBalance();
-  const {cap, raised} = item.info;
-  const endpoints = useParaEndpoints(item.paraId);
+function Fund({item, active, onPressContribute}: {item: Crowdloan; active: boolean; onPressContribute: () => void}) {
   const navigation = useNavigation<NavigationProp<CrowdloansStackParamList>>();
   const {colors} = useTheme();
 
-  const lastEndpoint = endpoints?.[endpoints.length - 1] as LinkOption;
-  const text = lastEndpoint?.text ?? `#${item.paraId.toString()}`;
-
-  const percentage = cap.isZero() ? 100 : raised.muln(10000).div(cap).toNumber() / 10000;
-
   return (
     <Card
-      mode={item.isSpecial ? 'elevated' : 'outlined'}
+      // mode={item.status ? 'elevated' : 'outlined'} // TODO: do we need is Special in crowdloan
       style={styles.fund}
       onPress={() => {
-        navigation.navigate(crowdloanFundDetailScreen, {title: String(text), paraId: item.paraId});
+        navigation.navigate(crowdloanFundDetailScreen, {crowdloan: item});
       }}>
       <View style={[globalStyles.rowAlignCenter]}>
         <View style={styles.shrink}>
-          <Subheading
-            numberOfLines={1}
-            adjustsFontSizeToFit
-            style={{color: item.isSpecial ? colors.primary : colors.text}}>
-            {String(text)}
+          <Subheading numberOfLines={1} adjustsFontSizeToFit>
+            {String(item.name)}
           </Subheading>
           <Padder scale={0.5} />
-          <Caption numberOfLines={1} adjustsFontSizeToFit>{`${formatBalance(raised, {
-            isShort: true,
-          })} / ${formatBalance(cap, {isShort: true})}`}</Caption>
+          <Caption numberOfLines={1} adjustsFontSizeToFit>{`${item.formattedRaised} / ${item.formattedCap}`}</Caption>
         </View>
         <View style={styles.spacer} />
         <View style={styles.listItemRightSide}>
-          <Chart percent={percentage} />
+          <Chart percent={Number(item.raisedPercentage)} />
           {active && (
             <Button
               style={styles.button}
               mode="outlined"
               uppercase={false}
-              color={item.isSpecial ? colors.primary : colors.placeholder}
+              color={item.status ? colors.primary : colors.placeholder}
               compact
               onPress={onPressContribute}>
               + Contribute
@@ -238,25 +201,6 @@ const styles = StyleSheet.create({
   },
 });
 
-function extractLists(value: Campaign[] | null, leasePeriod?: LeasePeriod): [Campaign[], Campaign[], ParaId[] | null] {
-  const currentPeriod = leasePeriod?.currentPeriod;
-  let active: Campaign[] = [];
-  let ended: Campaign[] = [];
-  let allIds: ParaId[] | null = null;
-
-  if (value && currentPeriod) {
-    active = value.filter(
-      ({firstSlot, isCapped, isEnded, isWinner}) => !(isCapped || isEnded || isWinner) && currentPeriod.lte(firstSlot),
-    );
-    ended = value.filter(
-      ({firstSlot, isCapped, isEnded, isWinner}) => isCapped || isEnded || isWinner || currentPeriod.gt(firstSlot),
-    );
-    allIds = value.map(({paraId}) => paraId);
-  }
-
-  return [active, ended, allIds];
-}
-
 function ContributeBox({
   visible,
   setVisible,
@@ -264,7 +208,7 @@ function ContributeBox({
 }: {
   visible: boolean;
   setVisible: (_visible: boolean) => void;
-  parachainId: ParaId;
+  parachainId: string;
 }) {
   const startTx = useApiTx();
   const {api} = useApi();
