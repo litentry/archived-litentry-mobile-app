@@ -53,7 +53,6 @@ import {
 } from '@ui/navigation/routeKeys';
 import type {CouncilCandidate, CouncilMember} from 'src/api/hooks/useCouncil';
 import type {DemocracyProposal, DemocracyReferendum} from 'src/api/hooks/useDemocracy';
-import type {Parachain} from 'src/api/hooks/useParachainsOverview';
 
 type DashboardStackParamList = {
   [dashboardScreen]: undefined;
@@ -96,7 +95,7 @@ type DrawerParamList = {
 
 type ParachainsStackParamList = {
   [parachainsOverviewScreen]: undefined;
-  [parachainDetailScreen]: {parachain: Parachain};
+  [parachainDetailScreen]: {parachainId: string};
 };
 
 type CrowdloansStackParamList = {

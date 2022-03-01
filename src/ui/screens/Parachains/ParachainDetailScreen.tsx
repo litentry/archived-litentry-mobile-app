@@ -7,31 +7,32 @@ import {Card, Subheading, Paragraph, List, Divider, Icon, Button, Text} from '@u
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {EmptyView} from '@ui/components/EmptyView';
-import {AccountInfo} from 'src/api/hooks/useParachainsOverview';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
+import {SubstrateChainAccountInfo} from 'src/generated/litentryGraphQLTypes';
+import {useParachainInfo} from 'src/api/hooks/useParachainInfo';
+import LoadingView from '@ui/components/LoadingView';
 
 type ScreenProps = {
   route: RouteProp<ParachainsStackParamList, 'Parachain'>;
 };
 
 export function ParachainDetailScreen({route}: ScreenProps) {
-  const {id, name, lastIncludedBlock, lastBackedBlock, lease, lifecycle, homepage, nonVoters, validators} =
-    route.params.parachain;
+  const {data: parachain, loading} = useParachainInfo(route.params.parachainId);
 
   const sections = [
     {
-      title: `Val. Group (${validators?.validators?.length || 0})`,
-      data: validators?.validators || [],
+      title: `Val. Group (${parachain?.validators?.validators.length || 0})`,
+      data: parachain?.validators?.validators || [],
     },
     {
-      title: `Non-Voters (${nonVoters.length || 0})`,
-      data: nonVoters || [],
+      title: `Non-Voters (${parachain?.nonVoters.length || 0})`,
+      data: parachain?.nonVoters || [],
     },
   ];
 
-  if (!route.params.parachain) {
-    return <EmptyView />;
-  }
+  if (loading) return <LoadingView />;
+
+  if (!parachain) return <EmptyView />;
 
   return (
     <SafeView edges={noTopEdges}>
@@ -39,11 +40,11 @@ export function ParachainDetailScreen({route}: ScreenProps) {
         ListHeaderComponent={() => (
           <Card>
             <Card.Content>
-              <Subheading style={globalStyles.textCenter}>{name}</Subheading>
-              <Paragraph style={globalStyles.textCenter}>{`#${id}`}</Paragraph>
+              <Subheading style={globalStyles.textCenter}>{parachain.name}</Subheading>
+              <Paragraph style={globalStyles.textCenter}>{`#${parachain.id}`}</Paragraph>
               <View style={globalStyles.spaceBetweenRowContainer}>
-                <List.Item style={styles.listItem} title="Included" description={lastIncludedBlock} />
-                <List.Item style={styles.listItem} title="Backed" description={`${lastBackedBlock || 0}`} />
+                <List.Item style={styles.listItem} title="Included" description={parachain.lastIncludedBlock} />
+                <List.Item style={styles.listItem} title="Backed" description={`${parachain.lastBackedBlock || 0}`} />
               </View>
               <Divider />
               <List.Item
@@ -51,10 +52,12 @@ export function ParachainDetailScreen({route}: ScreenProps) {
                 left={() => <LeftIcon icon="clock-outline" />}
                 right={() => (
                   <View style={styles.accessoryRight}>
-                    {lease ? <Text>{lease?.period}</Text> : null}
+                    {parachain.lease ? <Text>{parachain.lease?.period}</Text> : null}
                     <Text style={globalStyles.rowContainer}>
-                      {lease?.blockTime
-                        ? lease.blockTime.slice(0, 2).map((block: string, i: number) => <Text key={i}>{block} </Text>)
+                      {parachain.lease?.blockTime
+                        ? parachain.lease.blockTime
+                            .slice(0, 2)
+                            .map((block: string, i: number) => <Text key={i}>{block} </Text>)
                         : null}
                     </Text>
                   </View>
@@ -65,19 +68,19 @@ export function ParachainDetailScreen({route}: ScreenProps) {
                 left={() => <LeftIcon icon="sync" />}
                 right={() => (
                   <View style={styles.accessoryRight}>
-                    <Text>{lifecycle}</Text>
+                    <Text>{parachain.lifecycle}</Text>
                   </View>
                 )}
               />
-              {homepage ? <Divider /> : null}
+              {parachain.homepage ? <Divider /> : null}
               <Padder scale={0.5} />
-              {homepage ? (
+              {parachain?.homepage ? (
                 <Button
                   icon="home"
                   onPress={() => {
-                    Linking.canOpenURL(homepage).then((supported) => {
+                    Linking.canOpenURL(String(parachain.homepage)).then((supported) => {
                       if (supported) {
-                        Linking.openURL(homepage);
+                        Linking.openURL(String(parachain.homepage));
                       }
                     });
                   }}>
@@ -109,7 +112,7 @@ function LeftIcon({icon}: {icon: string}) {
   );
 }
 
-function Validator({account}: {account: AccountInfo}) {
+function Validator({account}: {account: SubstrateChainAccountInfo}) {
   return <List.Item title={() => account && <AccountTeaser account={account.account} />} />;
 }
 const MemoizedValidator = React.memo(Validator);

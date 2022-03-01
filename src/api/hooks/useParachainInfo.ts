@@ -1,20 +1,79 @@
-import {ApiPromise} from '@polkadot/api';
-import useApiQuery from 'src/api/hooks/useApiQuery';
-import type {Option} from '@polkadot/types';
-import type {ParaId, ParaLifecycle, CandidatePendingAvailability} from '@polkadot/types/interfaces';
+import {useQuery} from '@apollo/client';
+import gql from 'graphql-tag';
+import type {SubstrateChainParachain} from 'src/generated/litentryGraphQLTypes';
 
-export function useParachainInfo(id: ParaId) {
-  return useApiQuery(['parachainInfo', id], async (api: ApiPromise) => {
-    const [optLifecycle, optPending] = await Promise.all([
-      api.query.paras?.paraLifecycles?.<Option<ParaLifecycle>>(id),
-      (api.query.parasInclusion || api.query.paraInclusion || api.query.inclusion)?.pendingAvailability?.<
-        Option<CandidatePendingAvailability>
-      >(id),
-    ]);
+export type Parachain = SubstrateChainParachain;
 
-    return {
-      lifecycle: optLifecycle?.unwrap(),
-      pendingAvail: optPending?.unwrap(),
-    };
+const ACCOUNT_FIELDS = gql`
+  fragment AccountFields on SubstrateChainAccount {
+    address
+    display
+    registration {
+      display
+      displayParent
+      email
+      image
+      legal
+      pgp
+      riot
+      twitter
+      web
+      judgements {
+        index
+        judgement {
+          isUnknown
+          isFeePaid
+          isReasonable
+          isKnownGood
+          isOutOfDate
+          isLowQuality
+          isErroneous
+        }
+      }
+    }
+  }
+`;
+
+const PARACHAIN_INFO = gql`
+  ${ACCOUNT_FIELDS}
+  query getParaChainByID($id: String!) {
+    substrateChainParachain(id: $id) {
+      id
+      name
+      lease {
+        period
+        blockTime
+      }
+      lifecycle
+      lastIncludedBlock
+      lastBackedBlock
+      homepage
+      validators {
+        groupIndex
+        validators {
+          address
+          account {
+            ...AccountFields
+          }
+        }
+      }
+      nonVoters {
+        address
+        account {
+          ...AccountFields
+        }
+      }
+    }
+  }
+`;
+
+export function useParachainInfo(id: string) {
+  const {data, ...rest} = useQuery<{substrateChainParachain: Parachain}>(PARACHAIN_INFO, {
+    variables: {id},
   });
+
+  return {
+    data: data?.substrateChainParachain,
+    ...rest,
+  };
 }

@@ -9,32 +9,30 @@ import {Padder} from '@ui/components/Padder';
 import LoadingView from '@ui/components/LoadingView';
 import {useNavigation} from '@react-navigation/core';
 import {parachainDetailScreen} from '@ui/navigation/routeKeys';
-import {Parachain, useParachains, useParachainsInfo} from 'src/api/hooks/useParachainsOverview';
 import {EmptyView} from '@ui/components/EmptyView';
+import {Parachain, useParachainsOverview} from 'src/api/hooks/useParachainsOverview';
 
 export function ParachainsOverviewScreen() {
-  const {data: parachainDetail, loading: isLeasePeriodLoading} = useParachainsInfo();
-  const {data: parachains, loading: isLoadingParachains} = useParachains();
-
-  if (isLeasePeriodLoading || isLoadingParachains) {
+  const {parachainsInfo, parachains, loading} = useParachainsOverview();
+  if (loading) {
     return <LoadingView />;
   }
 
-  if (!parachainDetail || !parachains) {
+  if (!parachainsInfo || !parachains) {
     return <EmptyView />;
   }
 
   return (
     <SafeView edges={noTopEdges}>
       <Overview
-        parachainsCount={parachainDetail.parachainsCount || 0}
-        parathreadsCount={parachainDetail.parathreadsCount || 0}
-        proposalsCount={parachainDetail.proposalsCount || 0}
+        parachainsCount={parachainsInfo?.parachainsCount || 0}
+        parathreadsCount={parachainsInfo?.parathreadsCount || 0}
+        proposalsCount={parachainsInfo?.proposalsCount || 0}
         parachains={parachains}
-        currentLeasePeriod={Number(parachainDetail.leasePeriod.currentLease) || 0}
-        totalPeriod={parachainDetail?.leasePeriod.totalPeriod}
-        periodRemainder={parachainDetail.leasePeriod.remainder}
-        progressPercent={parachainDetail.leasePeriod.progressPercent || 0}
+        currentLeasePeriod={Number(parachainsInfo?.leasePeriod.currentLease) || 0}
+        totalPeriod={parachainsInfo?.leasePeriod.totalPeriod}
+        periodRemainder={parachainsInfo?.leasePeriod.remainder}
+        progressPercent={parachainsInfo?.leasePeriod.progressPercent || 0}
       />
     </SafeView>
   );
@@ -123,7 +121,7 @@ function ParachainItem({item}: {item: Parachain}) {
         key={item.id.toString()}
         onPress={() => {
           navigate(parachainDetailScreen, {
-            parachain: item,
+            parachainId: item.id,
           });
         }}
         left={() => (
