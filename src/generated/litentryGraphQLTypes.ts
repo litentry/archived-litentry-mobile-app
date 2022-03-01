@@ -328,9 +328,19 @@ export enum Bep20Transfer_OrderBy {
   ToAccountBalanceAtBlock = 'toAccountBalanceAtBlock',
 }
 
+/** The block at which the query should be executed. */
 export type Block_Height = {
+  /** Value containing a block hash */
   hash?: InputMaybe<Scalars['Bytes']>;
+  /** Value containing a block number */
   number?: InputMaybe<Scalars['Int']>;
+  /**
+   * Value containing the minimum block number.
+   * In the case of `number_gte`, the query will be executed on the latest block only if
+   * the subgraph has progressed to or past the minimum block number.
+   * Defaults to the latest block when omitted.
+   *
+   */
   number_gte?: InputMaybe<Scalars['Int']>;
 };
 
@@ -716,6 +726,7 @@ export enum Erc1155Token_OrderBy {
   TokenId = 'tokenId',
 }
 
+/** Defines the order direction, either ascending or descending */
 export enum OrderDirection {
   Asc = 'asc',
   Desc = 'desc',
@@ -729,8 +740,28 @@ export type PageInfo = {
   startCursor: Scalars['String'];
 };
 
+export type PoapCredentialEvent = {
+  __typename?: 'PoapCredentialEvent';
+  id: Scalars['String'];
+};
+
+export type PoapCredentialTokenData = {
+  __typename?: 'PoapCredentialTokenData';
+  id: Scalars['String'];
+  tokens: Array<Maybe<PoapCredentialTokens>>;
+  tokensOwned: Scalars['String'];
+};
+
+export type PoapCredentialTokens = {
+  __typename?: 'PoapCredentialTokens';
+  created: Scalars['String'];
+  event: PoapCredentialEvent;
+  id: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
+  PoapCredentialTokensByAddress: PoapCredentialTokenData;
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
   bep20Account?: Maybe<Bep20Account>;
@@ -808,6 +839,10 @@ export type Query = {
   substrateVoteByUniqueInput?: Maybe<SubstrateVote>;
   substrateVotes: Array<SubstrateVote>;
   substrateVotesConnection: SubstrateVotesConnection;
+};
+
+export type QueryPoapCredentialTokensByAddressArgs = {
+  address: Scalars['String'];
 };
 
 export type Query_MetaArgs = {
@@ -1686,16 +1721,19 @@ export type SubstrateChainAuction = {
 
 export type SubstrateChainAuctionBid = {
   __typename?: 'SubstrateChainAuctionBid';
-  amount: Scalars['String'];
-  blockNumber: Scalars['String'];
-  projectId: Scalars['String'];
-  projectName: Scalars['String'];
+  amount?: Maybe<Scalars['String']>;
+  blockNumber?: Maybe<Scalars['String']>;
+  firstSlot?: Maybe<Scalars['String']>;
+  isCrowdloan: Scalars['Boolean'];
+  lastSlot?: Maybe<Scalars['String']>;
+  projectId?: Maybe<Scalars['String']>;
+  projectName?: Maybe<Scalars['String']>;
 };
 
 export type SubstrateChainAuctionEndingPeriod = {
   __typename?: 'SubstrateChainAuctionEndingPeriod';
-  endingIn: Scalars['String'];
-  remaining: Scalars['String'];
+  endingIn: Array<Scalars['String']>;
+  remaining: Array<Scalars['String']>;
   remainingPercent: Scalars['Float'];
 };
 
@@ -1979,7 +2017,7 @@ export type SubstrateChainLaunchPeriodInfo = {
 
 export type SubstrateChainLease = {
   __typename?: 'SubstrateChainLease';
-  blockTime?: Maybe<Scalars['String']>;
+  blockTime: Array<Scalars['String']>;
   period?: Maybe<Scalars['String']>;
 };
 
@@ -2032,7 +2070,7 @@ export type SubstrateChainParachain = {
   lease?: Maybe<SubstrateChainLease>;
   lifecycle: Scalars['String'];
   name?: Maybe<Scalars['String']>;
-  nonVoters?: Maybe<Array<SubstrateChainAccountInfo>>;
+  nonVoters: Array<SubstrateChainAccountInfo>;
   validators?: Maybe<SubstrateChainValidatorsGroup>;
 };
 
@@ -2176,7 +2214,7 @@ export type SubstrateChainTreasurySummary = {
 export type SubstrateChainValidatorsGroup = {
   __typename?: 'SubstrateChainValidatorsGroup';
   groupIndex?: Maybe<Scalars['String']>;
-  validators?: Maybe<Array<SubstrateChainAccountInfo>>;
+  validators: Array<SubstrateChainAccountInfo>;
 };
 
 export type SubstrateChainVotingStatus = {
