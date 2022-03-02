@@ -1,9 +1,7 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Caption} from '@ui/library';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import {BN_ZERO} from '@polkadot/util';
-import {useAccountInfo} from 'src/api/hooks/useAccountInfo';
+import {useAccount} from 'src/api/hooks/useAccount';
 
 type PropTypes = {address: string | undefined};
 
@@ -16,9 +14,8 @@ function MaxBalance(props: PropTypes) {
 }
 
 const AccountInfo = (props: {address: string}) => {
-  const {data: accountInfo} = useAccountInfo(props.address);
-  const formatBalance = useFormatBalance();
-  return <Caption>MAX: {formatBalance(accountInfo?.data.free ?? BN_ZERO)}</Caption>;
+  const {data: accountInfo} = useAccount(props.address);
+  return <Caption>MAX: {accountInfo?.balance.formattedFree}</Caption>;
 };
 
 const styles = StyleSheet.create({
