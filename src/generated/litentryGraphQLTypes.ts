@@ -1721,13 +1721,13 @@ export type SubstrateChainAuction = {
 
 export type SubstrateChainAuctionBid = {
   __typename?: 'SubstrateChainAuctionBid';
-  amount?: Maybe<Scalars['String']>;
-  blockNumber?: Maybe<Scalars['String']>;
-  firstSlot?: Maybe<Scalars['String']>;
+  amount: Scalars['String'];
+  blockNumber: Scalars['String'];
+  firstSlot: Scalars['String'];
   isCrowdloan: Scalars['Boolean'];
-  lastSlot?: Maybe<Scalars['String']>;
-  projectId?: Maybe<Scalars['String']>;
-  projectName?: Maybe<Scalars['String']>;
+  lastSlot: Scalars['String'];
+  projectId: Scalars['String'];
+  projectName: Scalars['String'];
 };
 
 export type SubstrateChainAuctionEndingPeriod = {

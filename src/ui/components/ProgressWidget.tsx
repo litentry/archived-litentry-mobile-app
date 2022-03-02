@@ -42,7 +42,9 @@ function ProgressChartWidget(props: PropTypes) {
 }
 
 const styles = StyleSheet.create({
-  container: {justifyContent: 'center'},
+  container: {
+    justifyContent: 'center',
+  },
   title: {
     textAlign: 'center',
   },
