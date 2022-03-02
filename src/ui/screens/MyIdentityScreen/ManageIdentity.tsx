@@ -6,7 +6,6 @@ import {Layout} from '@ui/components/Layout';
 import {Button, List, Icon, Caption, Divider} from '@ui/library';
 import {NetworkContext} from 'context/NetworkContext';
 import RegistrarSelectionModal from '@ui/components/RegistrarSelectionModal';
-import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
 import IdentityInfoForm, {IdentityPayload} from '@ui/components/IdentityInfoForm';
 import InfoBanner from '@ui/components/InfoBanner';
 import {Padder} from '@ui/components/Padder';
@@ -16,15 +15,15 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {Modalize} from 'react-native-modalize';
 import WebView from 'react-native-webview';
 import {useQueryClient} from 'react-query';
-import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {useApiTx} from 'src/api/hooks/useApiTx';
-import {useSubIdentities} from 'src/api/hooks/useSubIdentities';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {manageIdentityScreen, registerSubIdentitiesScreen} from '@ui/navigation/routeKeys';
 import {buildAddressDetailUrl} from 'src/service/Polkasembly';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Registrar} from 'src/api/hooks/useRegistrarsSummary';
 import {stringShorten} from '@polkadot/util';
+import {Account} from '@ui/components/Account/Account';
+import {useSubAccounts} from 'src/api/hooks/useSubAccounts';
 
 function ManageIdentity({
   navigation,
@@ -37,14 +36,14 @@ function ManageIdentity({
 }) {
   const startTx = useApiTx();
   const queryClient = useQueryClient();
-  const {data: identity} = useAccountIdentityInfo(address);
-  const {data: subAccounts} = useSubIdentities(address);
+  const {data: accountInfo} = useSubAccounts(address);
 
   const {currentNetwork} = useContext(NetworkContext);
   const [registrarSelectionOpen, setRegistrarSelectionOpen] = useState(false);
 
-  const judgements = identity?.registration?.judgements;
+  const judgements = accountInfo?.registration.judgements;
   const judgementCount = judgements?.length || 0;
+  const hasJudgements = judgements && judgementCount > 0;
 
   const identityModalRef = useRef<Modalize>(null);
   const polkascanViewRef = useRef<Modalize>(null);
@@ -102,12 +101,14 @@ function ManageIdentity({
     <SafeView edges={noTopEdges}>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
-          {identity?.hasIdentity ? (
-            identity.hasJudgements ? (
+          {accountInfo?.hasIdentity ? (
+            hasJudgements ? (
               <SuccessDialog
                 text={`This address has ${judgementCount} judgement${
                   judgementCount > 1 ? 's' : ''
-                } from Registrar ${judgements?.map((judgement) => `#${judgement[0]}`).join(',')}. It's all set. 🎉`}
+                } from Registrar ${judgements
+                  ?.map((judgement) => `#${judgement?.registrarIndex}`)
+                  .join(', ')}. It's all set. 🎉`}
               />
             ) : (
               <InfoBanner text="There is identify data found, however no Judgement is provided." />
@@ -132,14 +133,14 @@ function ManageIdentity({
               </ItemRight>
             )}
           />
-          {identity?.hasIdentity ? (
+          {accountInfo?.hasIdentity ? (
             <>
               <List.Item
                 title="Display"
                 left={() => <LeftIcon icon="account" />}
                 right={() => (
                   <ItemRight>
-                    <Caption>{identity.display}</Caption>
+                    <Caption>{accountInfo.display}</Caption>
                   </ItemRight>
                 )}
               />
@@ -149,7 +150,7 @@ function ManageIdentity({
                   left={() => <LeftIcon icon="medal-outline" />}
                   right={() => (
                     <ItemRight>
-                      <Caption>{identity.registration?.legal || 'Unset'}</Caption>
+                      <Caption>{accountInfo.registration?.legal || 'Unset'}</Caption>
                     </ItemRight>
                   )}
                 />
@@ -158,7 +159,7 @@ function ManageIdentity({
                   left={() => <LeftIcon icon="email-outline" />}
                   right={() => (
                     <ItemRight>
-                      <Caption>{identity.registration?.email || 'Unset'}</Caption>
+                      <Caption>{accountInfo.registration?.email || 'Unset'}</Caption>
                     </ItemRight>
                   )}
                 />
@@ -167,7 +168,7 @@ function ManageIdentity({
                   left={() => <LeftIcon icon="twitter" />}
                   right={() => (
                     <ItemRight>
-                      <Caption>{identity.registration?.twitter || 'Unset'}</Caption>
+                      <Caption>{accountInfo.registration?.twitter || 'Unset'}</Caption>
                     </ItemRight>
                   )}
                 />
@@ -176,7 +177,7 @@ function ManageIdentity({
                   left={() => <LeftIcon icon="message-outline" />}
                   right={() => (
                     <ItemRight>
-                      <Caption>{identity.registration?.riot || 'Unset'}</Caption>
+                      <Caption>{accountInfo.registration?.riot || 'Unset'}</Caption>
                     </ItemRight>
                   )}
                 />
@@ -185,7 +186,7 @@ function ManageIdentity({
                   left={() => <LeftIcon icon="earth" />}
                   right={() => (
                     <ItemRight>
-                      <Caption>{identity.registration?.web || 'Unset'}</Caption>
+                      <Caption>{accountInfo.registration?.web || 'Unset'}</Caption>
                     </ItemRight>
                   )}
                 />
@@ -195,9 +196,9 @@ function ManageIdentity({
 
           <Padder scale={1} />
           <Button onPress={() => identityModalRef.current?.open()} mode="outlined">
-            {identity?.hasIdentity ? 'Update Identity' : 'Set Identity'}
+            {accountInfo?.hasIdentity ? 'Update Identity' : 'Set Identity'}
           </Button>
-          {identity?.hasIdentity ? (
+          {accountInfo?.hasIdentity ? (
             <>
               <Padder scale={1} />
               <Button onPress={() => setRegistrarSelectionOpen(true)} mode="outlined">
@@ -220,15 +221,15 @@ function ManageIdentity({
 
           <Padder scale={1} />
 
-          {subAccounts?.length ? (
-            <List.Accordion title={`Sub accounts (${subAccounts.length})`}>
-              {subAccounts?.map((item) => (
+          {accountInfo?.subAccounts?.length ? (
+            <List.Accordion title={`Sub accounts (${accountInfo.subAccounts.length})`}>
+              {accountInfo.subAccounts?.map((subAccount) => (
                 <List.Item
-                  key={String(item.accountId)}
-                  title={<AccountInfoInlineTeaser identity={item} />}
+                  key={String(subAccount.account.address)}
+                  title={<Account account={subAccount.account} />}
                   left={() => (
                     <ItemRight>
-                      <Identicon value={item.accountId} size={20} />
+                      <Identicon value={subAccount.account.address} size={20} />
                     </ItemRight>
                   )}
                 />
@@ -264,7 +265,7 @@ function ManageIdentity({
           useNativeDriver
           panGestureEnabled>
           <Layout>
-            <IdentityInfoForm onSubmit={onSubmitIdentityInfo} identity={identity} />
+            <IdentityInfoForm onSubmit={onSubmitIdentityInfo} accountInfo={accountInfo} />
           </Layout>
         </Modalize>
 
