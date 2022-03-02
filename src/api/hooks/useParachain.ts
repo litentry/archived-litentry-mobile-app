@@ -19,7 +19,7 @@ const ACCOUNT_FIELDS = gql`
       twitter
       web
       judgements {
-        index
+        registrarIndex
         judgement {
           isUnknown
           isFeePaid
@@ -36,7 +36,7 @@ const ACCOUNT_FIELDS = gql`
 
 const PARACHAIN_INFO = gql`
   ${ACCOUNT_FIELDS}
-  query getParaChainByID($id: String!) {
+  query getParaChainById($id: String!) {
     substrateChainParachain(id: $id) {
       id
       name
@@ -67,11 +67,10 @@ const PARACHAIN_INFO = gql`
   }
 `;
 
-export function useParachain(id: string) {
+export function useParaChainById(id: string) {
   const {data, ...rest} = useQuery<{substrateChainParachain: Parachain}>(PARACHAIN_INFO, {
     variables: {id},
   });
-
   return {
     data: data?.substrateChainParachain,
     ...rest,

@@ -14,7 +14,7 @@ import {Parachain, useParachainsOverview} from 'src/api/hooks/useParachainsOverv
 
 export function ParachainsOverviewScreen() {
   const {parachainsInfo, parachains, loading} = useParachainsOverview();
-  if (loading) {
+  if (loading && !parachainsInfo) {
     return <LoadingView />;
   }
 
@@ -105,8 +105,8 @@ const Overview = React.memo(function Overview({
         );
       }}
       data={parachains}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={(item) => <ParachainItem item={item.item} key={item.item.id.toString()} />}
+      keyExtractor={(item) => item.id}
+      renderItem={(item) => <ParachainItem item={item.item} key={item.item.id} />}
     />
   );
 });
@@ -114,11 +114,13 @@ const Overview = React.memo(function Overview({
 function ParachainItem({item}: {item: Parachain}) {
   const {navigate} = useNavigation();
   const {lease} = item;
+  const [days, hours] = lease?.blockTime || [];
+
   return (
     <>
       <List.Item
         title={item.name}
-        key={item.id.toString()}
+        key={item.id}
         onPress={() => {
           navigate(parachainDetailScreen, {
             parachainId: item.id,
@@ -133,11 +135,7 @@ function ParachainItem({item}: {item: Parachain}) {
           return (
             <View style={styles.rightItem}>
               <Text>{lease?.period}</Text>
-              <Text style={globalStyles.rowContainer}>
-                {lease?.blockTime
-                  ? lease.blockTime.slice(0, 2).map((block: string, i: number) => <Text key={i}>{block} </Text>)
-                  : null}
-              </Text>
+              <Text style={globalStyles.rowContainer}>{days || hours ? `${days || ''} ${hours || ''}` : null}</Text>
             </View>
           );
         }}

@@ -10,15 +10,15 @@ import {EmptyView} from '@ui/components/EmptyView';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {SubstrateChainAccountInfo} from 'src/generated/litentryGraphQLTypes';
 import LoadingView from '@ui/components/LoadingView';
-import {useParachain} from 'src/api/hooks/useParachain';
+import {useParaChainById} from 'src/api/hooks/useParachain';
 
 type ScreenProps = {
   route: RouteProp<ParachainsStackParamList, 'Parachain'>;
 };
 
 export function ParachainDetailScreen({route}: ScreenProps) {
-  const {data: parachain, loading} = useParachain(route.params.parachainId);
-
+  const {data: parachain, loading} = useParaChainById(route.params.parachainId);
+  const [days, hours] = parachain?.lease?.blockTime || [];
   const sections = [
     {
       title: `Val. Group (${parachain?.validators?.validators.length || 0})`,
@@ -30,7 +30,7 @@ export function ParachainDetailScreen({route}: ScreenProps) {
     },
   ];
 
-  if (loading) return <LoadingView />;
+  if (loading && !parachain) return <LoadingView />;
 
   if (!parachain) return <EmptyView />;
 
@@ -54,11 +54,7 @@ export function ParachainDetailScreen({route}: ScreenProps) {
                   <View style={styles.accessoryRight}>
                     {parachain.lease ? <Text>{parachain.lease?.period}</Text> : null}
                     <Text style={globalStyles.rowContainer}>
-                      {parachain.lease?.blockTime
-                        ? parachain.lease.blockTime
-                            .slice(0, 2)
-                            .map((block: string, i: number) => <Text key={i}>{block} </Text>)
-                        : null}
+                      {days || hours ? `${days || ''} ${hours || ''}` : null}
                     </Text>
                   </View>
                 )}
@@ -95,7 +91,7 @@ export function ParachainDetailScreen({route}: ScreenProps) {
         sections={sections}
         renderItem={({item}) => <MemoizedValidator account={item} />}
         renderSectionHeader={({section: {title}}) => <Text style={styles.header}>{title}</Text>}
-        keyExtractor={(item) => item.address.toString()}
+        keyExtractor={(item) => item.address}
         ListEmptyComponent={EmptyView}
         ItemSeparatorComponent={Divider}
         removeClippedSubviews={true}
