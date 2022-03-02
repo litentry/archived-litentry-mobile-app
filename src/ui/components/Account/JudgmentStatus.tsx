@@ -26,7 +26,7 @@ export function JudgmentStatus(props: JudgmentStatusProps) {
     <Popable
       content={
         <View style={styles.container}>
-          <Caption>{`"${status.text}" provided by Registrar #${registrationJudgement.index}`}</Caption>
+          <Caption>{`"${status.text}" provided by Registrar #${registrationJudgement.registrarIndex}`}</Caption>
         </View>
       }
       backgroundColor={colors.accent}>

@@ -13,7 +13,7 @@ export const COUNCIL_SUMMARY_QUERY = gql`
           registration {
             displayParent
             judgements {
-              index
+              registrarIndex
               judgement {
                 isUnknown
                 isFeePaid
