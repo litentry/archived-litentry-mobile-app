@@ -23,6 +23,9 @@ type Props = {
   navigation: NavigationProp<CompleteNavigatorParamList, typeof accountsScreen>;
 };
 
+// @TODO: Add sorting options
+// https://github.com/litentry/litentry-app/issues/942
+
 // type SortBy = 'name' | 'favorites';
 
 export function AccountsScreen({navigation}: Props) {
