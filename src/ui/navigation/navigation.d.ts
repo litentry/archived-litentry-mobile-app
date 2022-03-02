@@ -1,59 +1,58 @@
 import type {ParaId} from '@polkadot/types/interfaces';
-import type {CouncilCandidate, CouncilMember} from 'src/api/hooks/useCouncil';
-import type {DemocracyProposal, DemocracyReferendum} from 'src/api/hooks/useDemocracy';
-
 import {
+  accountsGuideScreen,
+  accountsNavigator,
+  accountsScreen,
   addAccountScreen,
   balanceScreen,
-  councilScreen,
+  bountiesScreen,
+  bountyDetailScreen,
   candidateScreen,
+  councilScreen,
+  createAccountScreen,
+  crowdloanFundDetailScreen,
+  crowdloanScreen,
+  crowdloansNavigator,
   dashboardNavigator,
   dashboardScreen,
+  democracyProposalScreen,
+  democracyScreen,
   devScreen,
   drawerNavigator,
+  exportAccountWithJsonFileScreen,
+  feedbackScreen,
+  identityGuideScreen,
+  importAccountScreen,
+  manageIdentityScreen,
+  mnemonicScreen,
   motionDetailScreen,
   motionsScreen,
-  manageIdentityScreen,
+  myAccountScreen,
+  networkSelectionScreen,
   notificationSettingsScreen,
-  democracyScreen,
+  parachainAuctionsScreen,
+  parachainDetailScreen,
+  parachainsNavigator,
+  parachainsOverviewScreen,
+  parathreadsScreen,
   permissionGrantingPromptScreen,
-  registrarListScreen,
+  polkassemblyDiscussionDetail,
+  polkassemblyDiscussions,
+  polkassemblyDiscussionsNavigator,
   proposeTipScreen,
+  receiveFundScreen,
+  referendumScreen,
+  registerSubIdentitiesScreen,
+  registrarListScreen,
+  sendFundScreen,
   tipDetailScreen,
   tipsScreen,
   treasuryScreen,
-  webviewScreen,
-  referendumScreen,
-  democracyProposalScreen,
-  polkassemblyDiscussions,
-  polkassemblyDiscussionDetail,
-  polkassemblyDiscussionsNavigator,
-  registerSubIdentitiesScreen,
-  accountsScreen,
-  accountsNavigator,
-  identityGuideScreen,
-  myAccountScreen,
-  bountiesScreen,
-  bountyDetailScreen,
-  parathreadsScreen,
-  parachainsOverviewScreen,
-  parachainDetailScreen,
-  parachainsNavigator,
-  crowdloansNavigator,
-  crowdloanScreen,
-  crowdloanFundDetailScreen,
-  mnemonicScreen,
   verifyMnemonicScreen,
-  createAccountScreen,
-  importAccountScreen,
-  exportAccountWithJsonFileScreen,
-  networkSelectionScreen,
-  parachainAuctionsScreen,
-  accountsGuideScreen,
-  receiveFundScreen,
-  sendFundScreen,
-  feedbackScreen,
+  webviewScreen,
 } from '@ui/navigation/routeKeys';
+import type {CouncilCandidate, CouncilMember} from 'src/api/hooks/useCouncil';
+import type {DemocracyProposal, DemocracyReferendum} from 'src/api/hooks/useDemocracy';
 
 type DashboardStackParamList = {
   [dashboardScreen]: undefined;
@@ -96,7 +95,7 @@ type DrawerParamList = {
 
 type ParachainsStackParamList = {
   [parachainsOverviewScreen]: undefined;
-  [parachainDetailScreen]: {id: string; name: string; period?: string; blocks?: string};
+  [parachainDetailScreen]: {parachainId: string};
 };
 
 type CrowdloansStackParamList = {
