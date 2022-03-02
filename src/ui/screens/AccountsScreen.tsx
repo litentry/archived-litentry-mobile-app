@@ -17,6 +17,7 @@ import globalStyles, {standardPadding} from '@ui/styles';
 import {EmptyView} from '@ui/components/EmptyView';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {Account} from '@ui/components/Account/Account';
+import {Padder} from '@ui/components/Padder';
 
 type Props = {
   navigation: NavigationProp<CompleteNavigatorParamList, typeof accountsScreen>;
@@ -42,6 +43,7 @@ export function AccountsScreen({navigation}: Props) {
 
   return (
     <SafeView edges={noTopEdges}>
+      <Padder scale={1} />
       <FlatList
         style={styles.container}
         contentContainerStyle={styles.content}
