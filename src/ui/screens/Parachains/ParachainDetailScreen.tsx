@@ -10,14 +10,14 @@ import {EmptyView} from '@ui/components/EmptyView';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {SubstrateChainAccountInfo} from 'src/generated/litentryGraphQLTypes';
 import LoadingView from '@ui/components/LoadingView';
-import {useParaChainById} from 'src/api/hooks/useParachain';
+import {useParaChain} from 'src/api/hooks/useParachain';
 
 type ScreenProps = {
   route: RouteProp<ParachainsStackParamList, 'Parachain'>;
 };
 
 export function ParachainDetailScreen({route}: ScreenProps) {
-  const {data: parachain, loading} = useParaChainById(route.params.parachainId);
+  const {data: parachain, loading} = useParaChain(route.params.parachainId);
   const [days, hours] = parachain?.lease?.blockTime || [];
   const sections = [
     {

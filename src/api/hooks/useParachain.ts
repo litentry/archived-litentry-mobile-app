@@ -67,7 +67,7 @@ const PARACHAIN_INFO = gql`
   }
 `;
 
-export function useParaChainById(id: string) {
+export function useParaChain(id: string) {
   const {data, ...rest} = useQuery<{substrateChainParachain: Parachain}>(PARACHAIN_INFO, {
     variables: {id},
   });
