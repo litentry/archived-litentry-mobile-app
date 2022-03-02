@@ -1700,8 +1700,23 @@ export type SubstrateBalanceTransfersConnection = {
 export type SubstrateChainAccount = {
   __typename?: 'SubstrateChainAccount';
   address: Scalars['String'];
+  balance: SubstrateChainAccountBalance;
   display: Scalars['String'];
+  hasIdentity: Scalars['Boolean'];
   registration: SubstrateChainDeriveAccountRegistration;
+  subAccounts?: Maybe<Array<SubstrateChainSubAccount>>;
+};
+
+export type SubstrateChainAccountBalance = {
+  __typename?: 'SubstrateChainAccountBalance';
+  formattedFree: Scalars['String'];
+  formattedFreeFrozen: Scalars['String'];
+  formattedReserved: Scalars['String'];
+  formattedTotal: Scalars['String'];
+  free: Scalars['String'];
+  freeFrozen: Scalars['String'];
+  reserved: Scalars['String'];
+  total: Scalars['String'];
 };
 
 export type SubstrateChainAccountInfo = {
@@ -1888,9 +1903,12 @@ export type SubstrateChainCrowdloan = {
   firstPeriod: Scalars['String'];
   formattedCap: Scalars['String'];
   formattedRaised: Scalars['String'];
+  homepage?: Maybe<Scalars['String']>;
   lastPeriod: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
   paraId: Scalars['String'];
   raised: Scalars['String'];
+  raisedPercentage: Scalars['String'];
   status: Scalars['String'];
 };
 
@@ -2133,8 +2151,8 @@ export type SubstrateChainRegistrarsSummary = {
 
 export type SubstrateChainRegistrationJudgement = {
   __typename?: 'SubstrateChainRegistrationJudgement';
-  index?: Maybe<Scalars['Int']>;
   judgement?: Maybe<SubstrateChainIdentityJudgement>;
+  registrarIndex?: Maybe<Scalars['Int']>;
 };
 
 export type SubstrateChainSpendPeriod = {
@@ -2143,6 +2161,12 @@ export type SubstrateChainSpendPeriod = {
   period: Scalars['String'];
   termLeft: Scalars['String'];
   termLeftParts: Array<Scalars['String']>;
+};
+
+export type SubstrateChainSubAccount = {
+  __typename?: 'SubstrateChainSubAccount';
+  account: SubstrateChainAccount;
+  address: Scalars['String'];
 };
 
 export type SubstrateChainTermProgress = {
