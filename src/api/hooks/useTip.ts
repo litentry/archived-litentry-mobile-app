@@ -11,7 +11,7 @@ const ACCOUNT_FIELDS = gql`
       display
       displayParent
       judgements {
-        index
+        registrarIndex
         judgement {
           isUnknown
           isFeePaid
