@@ -24,7 +24,7 @@ const ACCOUNT_FIELDS = gql`
       twitter
       web
       judgements {
-        index
+        registrarIndex
         judgement {
           isUnknown
           isFeePaid

@@ -7,7 +7,7 @@ const ACCOUNT_FIELDS = gql`
     display
     registration {
       judgements {
-        index
+        registrarIndex
         judgement {
           isUnknown
           isFeePaid
