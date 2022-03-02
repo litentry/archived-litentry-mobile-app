@@ -10,16 +10,19 @@ import {JudgmentStatus} from '@ui/components/Account/JudgmentStatus';
 
 type Props = {
   account: SubstrateChainAccount;
+  name?: string;
 };
 
-export function Account({account}: Props) {
+export function Account({account, name}: Props) {
   const registrationJudgements = account.registration.judgements
     ? account.registration.judgements.filter(notEmpty)
     : [];
 
+  const display = name || stringShorten(account.display, 12);
+
   return (
     <View style={styles.container}>
-      <Caption style={styles.display}>{stringShorten(account.display, 12)}</Caption>
+      <Caption style={styles.display}>{display}</Caption>
       <Padder scale={0.5} />
       {registrationJudgements.map((registrationJudgement, i) => (
         <JudgmentStatus
