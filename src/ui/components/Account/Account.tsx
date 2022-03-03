@@ -1,5 +1,3 @@
-import type {SubstrateChainAccount} from 'src/generated/litentryGraphQLTypes';
-
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {stringShorten} from '@polkadot/util';
@@ -7,9 +5,10 @@ import {Caption} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {notEmpty} from 'src/utils';
 import {JudgmentStatus} from '@ui/components/Account/JudgmentStatus';
+import type {Account as AccountType} from 'src/api/hooks/useAccount';
 
 type Props = {
-  account: SubstrateChainAccount;
+  account: AccountType;
   name?: string;
 };
 

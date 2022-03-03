@@ -8,7 +8,7 @@ import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {EmptyView} from '@ui/components/EmptyView';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
-import {SubstrateChainAccountInfo} from 'src/generated/litentryGraphQLTypes';
+import type {Account} from 'src/api/hooks/useAccount';
 import LoadingView from '@ui/components/LoadingView';
 import {useParaChain} from 'src/api/hooks/useParachain';
 
@@ -89,7 +89,7 @@ export function ParachainDetailScreen({route}: ScreenProps) {
         contentContainerStyle={styles.content}
         stickySectionHeadersEnabled={false}
         sections={sections}
-        renderItem={({item}) => <MemoizedValidator account={item} />}
+        renderItem={({item}) => <MemoizedValidator account={item.account} />}
         renderSectionHeader={({section: {title}}) => <Text style={styles.header}>{title}</Text>}
         keyExtractor={(item) => item.address}
         ListEmptyComponent={EmptyView}
@@ -108,8 +108,8 @@ function LeftIcon({icon}: {icon: string}) {
   );
 }
 
-function Validator({account}: {account: SubstrateChainAccountInfo}) {
-  return <List.Item title={() => account && <AccountTeaser account={account.account} />} />;
+function Validator({account}: {account: Account}) {
+  return <List.Item title={() => account && <AccountTeaser account={account} />} />;
 }
 const MemoizedValidator = React.memo(Validator);
 

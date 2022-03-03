@@ -4,12 +4,14 @@ import type {
   SubstrateChainAccountBalance,
   SubstrateChainRegistrationJudgement,
   SubstrateChainDeriveAccountRegistration,
+  SubstrateChainIdentityJudgement,
 } from 'src/generated/litentryGraphQLTypes';
 
 export type Account = SubstrateChainAccount;
 export type AccountBalance = SubstrateChainAccountBalance;
 export type RegistrationJudgment = SubstrateChainRegistrationJudgement;
 export type AccountRegistration = SubstrateChainDeriveAccountRegistration;
+export type AccountIdentityJudgment = SubstrateChainIdentityJudgement;
 
 export const ACCOUNT_FIELDS_FRAGMENT = gql`
   fragment AccountFields on SubstrateChainAccount {
