@@ -23,10 +23,6 @@ export function ParathreadsScreen() {
     return <LoadingView />;
   }
 
-  if (!parathreads) {
-    return <EmptyView />;
-  }
-
   return (
     <SafeView edges={noTopEdges}>
       {parathreads ? (
