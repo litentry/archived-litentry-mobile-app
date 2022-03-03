@@ -63,9 +63,12 @@ const ACCOUNT_QUERY = gql`
   }
 `;
 
+const oneMinute = 60 * 1000;
+
 export function useAccount(address?: string) {
   const {data, ...rest} = useQuery<{substrateChainAccount: Account}>(ACCOUNT_QUERY, {
     variables: {address},
+    pollInterval: oneMinute,
   });
 
   return {
