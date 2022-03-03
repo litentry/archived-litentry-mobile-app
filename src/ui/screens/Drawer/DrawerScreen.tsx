@@ -21,6 +21,7 @@ import {
   parachainsNavigator,
   crowdloansNavigator,
   dashboardNavigator,
+  calendarScreen,
 } from '@ui/navigation/routeKeys';
 import {standardPadding} from '@ui/styles';
 import {appVersion} from 'src/service/Device';
@@ -76,6 +77,14 @@ function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
             active={activeScreen === polkassemblyDiscussionsNavigator}
             onPress={() => {
               navigation.navigate(polkassemblyDiscussionsNavigator);
+            }}
+          />
+          <Drawer.Item
+            label="Events Calendar"
+            icon="calendar"
+            active={activeScreen === calendarScreen}
+            onPress={() => {
+              navigation.navigate(calendarScreen);
             }}
           />
         </Drawer.Section>
