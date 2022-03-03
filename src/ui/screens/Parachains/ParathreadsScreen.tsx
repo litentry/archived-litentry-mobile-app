@@ -65,6 +65,13 @@ type ParathreadItemProps = {
 function ParathreadItem({id, leases, leasePeriod}: ParathreadItemProps) {
   const {data: parathreadInfo} = useParathreadInfo(id);
   const parathreadData = useParathreadData(id);
+
+  /**
+   * @TODO
+   * Remove the `useAccount` hook when working on following
+   * https://github.com/litentry/litentry-app/issues/889
+   * The manager information will come from the Litentry graph with parathread info
+   */
   const {data: manager} = useAccount(parathreadInfo?.manager?.toString());
 
   const {periodString, blocks} = parseLeases({leasePeriod, leases});
