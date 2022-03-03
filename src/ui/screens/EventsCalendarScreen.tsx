@@ -2,10 +2,10 @@ import React from 'react';
 import {StyleSheet, Text} from 'react-native';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 
-export function CalendarScreen() {
+export function EventsCalendarScreen() {
   return (
     <SafeView edges={noTopEdges}>
-      <Text>Calendar</Text>
+      <Text>Events Calendar</Text>
     </SafeView>
   );
 }
