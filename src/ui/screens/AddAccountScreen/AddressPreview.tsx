@@ -25,7 +25,7 @@ function AddressInfoPreview(props: PropTypes) {
 
   return (
     <View style={globalStyles.paddedContainer}>
-      {loading ? (
+      {loading && !accountInfo ? (
         <LoadingView text="Fetching Address Info" size="small" appearance="secondary" />
       ) : (
         <>
