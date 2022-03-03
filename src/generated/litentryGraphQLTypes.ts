@@ -1719,6 +1719,18 @@ export type SubstrateChainAccountBalance = {
   total: Scalars['String'];
 };
 
+export type SubstrateChainAccountBalance = {
+  __typename?: 'SubstrateChainAccountBalance';
+  formattedFree: Scalars['String'];
+  formattedFreeFrozen: Scalars['String'];
+  formattedReserved: Scalars['String'];
+  formattedTotal: Scalars['String'];
+  free: Scalars['String'];
+  freeFrozen: Scalars['String'];
+  reserved: Scalars['String'];
+  total: Scalars['String'];
+};
+
 export type SubstrateChainAccountInfo = {
   __typename?: 'SubstrateChainAccountInfo';
   account: SubstrateChainAccount;
