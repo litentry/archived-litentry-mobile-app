@@ -12,11 +12,11 @@ import {useParathreadInfo} from 'src/api/hooks/useParathreadInfo';
 import Identicon from '@polkadot/reactnative-identicon';
 import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
-import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
-import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {notEmpty} from 'src/utils';
 import {BlockTime} from '@ui/components/BlockTime';
 import {getLeasePeriodString} from 'src/api/utils/parachainLeases';
+import {useAccount} from 'src/api/hooks/useAccount';
+import {Account} from '@ui/components/Account/Account';
 
 type ParathreadData = {
   name?: string;
@@ -65,7 +65,14 @@ type ParathreadItemProps = {
 function ParathreadItem({id, leases, leasePeriod}: ParathreadItemProps) {
   const {data: parathreadInfo} = useParathreadInfo(id);
   const parathreadData = useParathreadData(id);
-  const {data: manager} = useAccountIdentityInfo(parathreadInfo?.manager?.toString());
+
+  /**
+   * @TODO
+   * Remove the `useAccount` hook when working on following
+   * https://github.com/litentry/litentry-app/issues/889
+   * The manager information will come from the Litentry graph with parathread info
+   */
+  const {data: manager} = useAccount(parathreadInfo?.manager?.toString());
 
   const {periodString, blocks} = parseLeases({leasePeriod, leases});
 
@@ -77,7 +84,7 @@ function ParathreadItem({id, leases, leasePeriod}: ParathreadItemProps) {
           {parathreadInfo?.manager && <Identicon value={parathreadInfo.manager.toString()} size={30} />}
         </View>
       )}
-      title={() => <View style={styles.manager}>{manager && <AccountInfoInlineTeaser identity={manager} />}</View>}
+      title={() => <View style={styles.manager}>{manager && <Account account={manager} />}</View>}
       description={() => (
         <>
           {parathreadData.name && <Text>{parathreadData.name}</Text>}

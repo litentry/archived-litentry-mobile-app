@@ -2,14 +2,13 @@ import React from 'react';
 import {View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {List, Icon, Caption} from '@ui/library';
-import JudgmentStatus from '@ui/components/JudgmentStatus';
+import {JudgmentStatus} from '@ui/components/Account/JudgmentStatus';
 import LoadingView from '@ui/components/LoadingView';
-import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
-import {useAccountInfo} from 'src/api/hooks/useAccountInfo';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
+import {useAccount} from 'src/api/hooks/useAccount';
 import {NetworkType} from 'src/types';
 import globalStyles from '@ui/styles';
 import {stringShorten} from '@polkadot/util';
+import {notEmpty} from 'src/utils';
 
 type PropTypes = {
   network: NetworkType;
@@ -18,14 +17,15 @@ type PropTypes = {
 
 function AddressInfoPreview(props: PropTypes) {
   const {address, network} = props;
-  const formatBalance = useFormatBalance();
-  const {data} = useAccountIdentityInfo(address);
-  const identity = data?.hasIdentity ? data.registration : undefined;
-  const {data: accountInfo, isLoading} = useAccountInfo(address);
+  const {data: accountInfo, loading} = useAccount(address);
+
+  const registrationJudgements = accountInfo?.registration.judgements
+    ? accountInfo?.registration.judgements.filter(notEmpty)
+    : [];
 
   return (
     <View style={globalStyles.paddedContainer}>
-      {isLoading ? (
+      {loading && !accountInfo ? (
         <LoadingView text="Fetching Address Info" size="small" appearance="secondary" />
       ) : (
         <>
@@ -45,9 +45,9 @@ function AddressInfoPreview(props: PropTypes) {
                 <Icon name="account" size={20} />
               </View>
             )}
-            right={() => <Caption>{data?.hasIdentity ? data.display : 'untitled account'}</Caption>}
+            right={() => <Caption>{accountInfo?.display ?? 'Untitled account'}</Caption>}
           />
-          {accountInfo?.data && (
+          {accountInfo?.balance && (
             <List.Item
               title="Balance"
               left={() => (
@@ -55,30 +55,28 @@ function AddressInfoPreview(props: PropTypes) {
                   <Icon name="card-text-outline" size={20} />
                 </View>
               )}
-              right={() => <Caption>{formatBalance(accountInfo.data.free.add(accountInfo.data.reserved))}</Caption>}
+              right={() => <Caption>{accountInfo.balance.formattedFree}</Caption>}
             />
           )}
-          {identity &&
-            identity.judgements[0] && ( // bug
-              <List.Item
-                title="Judgment"
-                left={() => (
-                  <View style={globalStyles.justifyCenter}>
-                    <Icon name="hammer" size={20} />
-                  </View>
-                )}
-                right={() =>
-                  identity?.judgements[0] ? (
-                    <JudgmentStatus
-                      judgement={identity.judgements[0]}
-                      hasParent={Boolean(data?.registration?.parent)}
-                    />
-                  ) : (
-                    <View />
-                  )
-                }
-              />
+          <List.Item
+            title="Judgment"
+            left={() => (
+              <View style={globalStyles.justifyCenter}>
+                <Icon name="hammer" size={20} />
+              </View>
             )}
+            right={() =>
+              registrationJudgements.map((judgment, i) => {
+                return (
+                  <JudgmentStatus
+                    key={i}
+                    registrationJudgement={judgment}
+                    hasParent={Boolean(accountInfo?.registration.displayParent)}
+                  />
+                );
+              })
+            }
+          />
           <List.Item
             title="Network"
             left={() => (

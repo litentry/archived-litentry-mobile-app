@@ -1,7 +1,7 @@
 import React from 'react';
 import {Alert, StyleSheet, TouchableOpacity, View, Share} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
-import {BN_ZERO, stringShorten} from '@polkadot/util';
+import {stringShorten} from '@polkadot/util';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {useAccounts} from 'context/AccountsContext';
@@ -9,9 +9,7 @@ import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {Button, Caption, IconButton, IconSource, Card, useTheme} from '@ui/library';
 import {ScrollView} from 'react-native-gesture-handler';
-import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
-import {useAccountInfo} from 'src/api/hooks/useAccountInfo';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
+import {useAccount} from 'src/api/hooks/useAccount';
 import {AccountsStackParamList, CompleteNavigatorParamList} from '@ui/navigation/navigation';
 import {
   accountsScreen,
@@ -34,10 +32,7 @@ export function MyAccountScreen({
   navigation: NavigationProp<CompleteNavigatorParamList>;
   route: RouteProp<AccountsStackParamList, typeof manageIdentityScreen>;
 }) {
-  const {data: accountIdentityInfo} = useAccountIdentityInfo(address);
-  const formatBalance = useFormatBalance();
-  const {data: accountInfo} = useAccountInfo(address);
-
+  const {data: accountInfo} = useAccount(address);
   const {accounts, removeAccount} = useAccounts();
   const account = accounts[address];
 
@@ -47,16 +42,12 @@ export function MyAccountScreen({
     snackbar('Address copied to clipboard!');
   };
 
-  if (!account) {
-    return null;
-  }
-
   return (
     <SafeView edges={noTopEdges}>
       <ScrollView style={styles.container}>
         <Card style={styles.card}>
           <View style={styles.centerAlign}>
-            {account.meta.name ? (
+            {account?.meta.name ? (
               <>
                 <Caption>{account.meta.name}</Caption>
                 <Padder scale={0.5} />
@@ -93,16 +84,12 @@ export function MyAccountScreen({
           </InfoItem>
 
           <InfoItem title="IDENTITY">
-            <Caption>
-              {accountIdentityInfo?.hasIdentity ? accountIdentityInfo.display : 'No Identity Data Found'}
-            </Caption>
-            {accountIdentityInfo?.hasIdentity && accountIdentityInfo.hasJudgements ? (
-              <Caption>{`${accountIdentityInfo.registration.judgements.length} Judgements`}</Caption>
-            ) : null}
+            <Caption>{accountInfo?.hasIdentity ? accountInfo.display : 'No Identity Data Found'}</Caption>
+            <Caption>{`${accountInfo?.registration.judgements?.length} Judgements`}</Caption>
           </InfoItem>
 
           <InfoItem title="BALANCE">
-            <Caption>{formatBalance(accountInfo?.data.free ?? BN_ZERO)}</Caption>
+            <Caption>{accountInfo?.balance.formattedFree}</Caption>
           </InfoItem>
         </Card>
 
@@ -116,7 +103,7 @@ export function MyAccountScreen({
             mode="text"
             onPress={() => {
               navigation.navigate(manageIdentityScreen, {address});
-              if (account.isExternal) {
+              if (account?.isExternal) {
                 navigation.navigate(identityGuideScreen);
               }
             }}>
@@ -141,7 +128,7 @@ export function MyAccountScreen({
             }}>
             Remove account
           </Button>
-          {!account.isExternal ? (
+          {!account?.isExternal ? (
             <>
               <Padder scale={1} />
               <Button

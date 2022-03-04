@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, ScrollView} from 'react-native';
 import {TextInput, Button} from '@ui/library';
 import {WHITESPACE, validateFormField} from 'src/utils/form';
-import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
+import {Account} from 'src/api/hooks/useAccount';
 import {Padder} from './Padder';
 import {standardPadding} from '@ui/styles';
 
@@ -16,7 +16,7 @@ export type IdentityPayload = {
 };
 
 type IdentityInfoFormProps = {
-  identity?: IdentityInfo;
+  accountInfo?: Account;
   onSubmit: (identityPayload: IdentityPayload) => void;
 };
 
@@ -25,16 +25,17 @@ type FormStatus = Record<
   boolean
 >;
 
-function IdentityInfoForm({onSubmit, identity}: IdentityInfoFormProps): React.ReactElement {
+function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps): React.ReactElement {
   const [state, dispatch] = React.useReducer(reducer, {
-    display: identity?.registration?.display ?? '',
-    legal: identity?.registration?.legal ?? '',
-    email: identity?.registration?.email ?? '',
-    riot: identity?.registration?.riot ?? '',
-    twitter: identity?.registration?.twitter ?? '',
-    web: identity?.registration?.web ?? '',
+    display: accountInfo?.registration?.display ?? '',
+    legal: accountInfo?.registration?.legal ?? '',
+    email: accountInfo?.registration?.email ?? '',
+    riot: accountInfo?.registration?.riot ?? '',
+    twitter: accountInfo?.registration?.twitter ?? '',
+    web: accountInfo?.registration?.web ?? '',
   });
   const {display, legal, email, riot, twitter, web} = state;
+  console.log(accountInfo?.display);
   const formStatus = validateForm(state);
 
   const onSubmitPress = () => {

@@ -9,17 +9,21 @@ import {Layout} from '@ui/components/Layout';
 import ModalTitle from '@ui/components/ModalTitle';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useApiTx} from 'src/api/hooks/useApiTx';
-import {useSubIdentities} from 'src/api/hooks/useSubIdentities';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {registerSubIdentitiesScreen} from '@ui/navigation/routeKeys';
 import globalStyles from '@ui/styles';
 import {AddSubIdentity} from './AddSubIdentity';
-import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
-import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
-import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
 import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
 import {stringShorten} from '@polkadot/util';
+import {useSubAccounts} from 'src/api/hooks/useSubAccounts';
+import {Account} from '@ui/components/Account/Account';
+import type {Account as AccountType, AccountBalance, AccountRegistration} from 'src/api/hooks/useAccount';
+
+export type SubIdentity = {
+  address: string;
+  display: string;
+};
 
 type ScreenProps = {
   navigation: NavigationProp<AccountsStackParamList>;
@@ -30,18 +34,17 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
   const {colors} = useTheme();
   const address = route.params.address;
   const modalRef = useRef<Modalize>(null);
-  const {data: parentIdentityInfo} = useAccountIdentityInfo(address);
-  const {data: subIdentitiesData} = useSubIdentities(address);
-  const [subIdentities, setSubIdentities] = useState(subIdentitiesData || []);
+  const {data: accountInfo} = useSubAccounts(address);
+  const [subIdentities, setSubIdentities] = useState<AccountType[]>();
   const [submitSubsDisabled, setSubmitSubsDisabled] = useState(true);
   const queryClient = useQueryClient();
   const startTx = useApiTx();
 
   useEffect(() => {
-    if (subIdentitiesData?.length) {
-      setSubIdentities(subIdentitiesData);
+    if (accountInfo?.subAccounts?.length) {
+      setSubIdentities(accountInfo.subAccounts.map((subAccount) => subAccount.account));
     }
-  }, [subIdentitiesData, setSubIdentities]);
+  }, [accountInfo, setSubIdentities]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -57,7 +60,7 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
     startTx({
       address,
       txMethod: 'identity.setSubs',
-      params: [subIdentities.map((sub) => [sub.accountId, {raw: sub.registration?.display}])],
+      params: [subIdentities?.map((sub) => [sub.address, {raw: sub.registration?.display}])],
     })
       .then(() => {
         queryClient.invalidateQueries(['sub_accounts', {address}]);
@@ -69,11 +72,22 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
       });
   };
 
-  const onAddPress = (subIdentity: IdentityInfo) => {
-    setSubIdentities((prevInfos) => [
-      ...prevInfos,
-      {...subIdentity, display: `${parentIdentityInfo?.registration?.display}/${subIdentity.registration?.display}`},
-    ]);
+  const onAddPress = (subIdentity: SubIdentity) => {
+    setSubIdentities((prevInfos) => {
+      if (prevInfos) {
+        return [
+          ...prevInfos,
+          {
+            address: subIdentity.address,
+            display: subIdentity.display,
+            hasIdentity: false,
+            registration: [] as AccountRegistration,
+            balance: {} as AccountBalance,
+          },
+        ];
+      }
+      return prevInfos;
+    });
     setSubmitSubsDisabled(false);
     modalRef.current?.close();
   };
@@ -87,7 +101,7 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
           text: 'Yes',
           onPress: () => {
             setSubIdentities((prevInfos) => {
-              return prevInfos.filter((info) => info.accountId !== accountId);
+              return prevInfos?.filter((info) => info.address !== accountId);
             });
             setSubmitSubsDisabled(false);
           },
@@ -115,23 +129,19 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
         <FlatList
           ListHeaderComponent={() => <Subheading>{`Sub-identities (${subIdentities?.length || 0})`}</Subheading>}
           data={subIdentities}
-          keyExtractor={(item) => String(item.accountId)}
+          keyExtractor={(account) => account.address}
           renderItem={({item}) => (
             <List.Item
               disabled={true}
-              title={() => <AccountInfoInlineTeaser identity={item} />}
-              description={<Caption>{stringShorten(String(item.accountId), 12)}</Caption>}
+              title={() => <Account account={item} />}
+              description={<Caption>{stringShorten(item.address, 12)}</Caption>}
               left={() => (
                 <View style={globalStyles.justifyCenter}>
-                  <Identicon value={item.accountId} size={30} />
+                  <Identicon value={item.address} size={30} />
                 </View>
               )}
               right={() => (
-                <IconButton
-                  icon="delete-outline"
-                  color={colors.error}
-                  onPress={() => onRemovePress(String(item.accountId))}
-                />
+                <IconButton icon="delete-outline" color={colors.error} onPress={() => onRemovePress(item.address)} />
               )}
             />
           )}

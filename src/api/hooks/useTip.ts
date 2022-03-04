@@ -1,33 +1,11 @@
 import {gql, useQuery, NetworkStatus} from '@apollo/client';
 import {SubstrateChainTip} from 'src/generated/litentryGraphQLTypes';
+import {ACCOUNT_FIELDS_FRAGMENT} from 'src/api/hooks/useAccount';
 
 export type Tip = SubstrateChainTip;
 
-const ACCOUNT_FIELDS = gql`
-  fragment AccountFields on SubstrateChainAccount {
-    address
-    display
-    registration {
-      display
-      displayParent
-      judgements {
-        registrarIndex
-        judgement {
-          isUnknown
-          isFeePaid
-          isReasonable
-          isKnownGood
-          isOutOfDate
-          isLowQuality
-          isErroneous
-        }
-      }
-    }
-  }
-`;
-
 const TIP_QUERY = gql`
-  ${ACCOUNT_FIELDS}
+  ${ACCOUNT_FIELDS_FRAGMENT}
   query getTip($id: String!) {
     substrateChainTip(id: $id) {
       id

@@ -1,8 +1,8 @@
 import {IdentityJudgement} from '@polkadot/types/interfaces';
-import {SubstrateChainIdentityJudgement} from 'src/generated/litentryGraphQLTypes';
+import {AccountIdentityJudgment} from 'src/api/hooks/useAccount';
 
 // TODO: remove IdentityJudgement after replacing @polkadot/api with the litentry-graph
-export const mapStatusText = (judgement: IdentityJudgement | SubstrateChainIdentityJudgement, hasParent: boolean) => {
+export const mapStatusText = (judgement: IdentityJudgement | AccountIdentityJudgment, hasParent: boolean) => {
   if (judgement.isErroneous) {
     return {text: 'Erroneous', category: 'bad', icon: 'alert-circle-outline'};
   }

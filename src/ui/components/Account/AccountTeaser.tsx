@@ -1,13 +1,12 @@
-import type {SubstrateChainAccount} from 'src/generated/litentryGraphQLTypes';
-
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {Padder} from '@ui/components/Padder';
 import {Account} from './Account';
+import type {Account as AccountType} from 'src/api/hooks/useAccount';
 
 type Props = {
-  account: SubstrateChainAccount;
+  account: AccountType;
   identiconSize?: number;
 };
 
