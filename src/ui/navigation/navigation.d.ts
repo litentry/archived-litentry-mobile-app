@@ -49,7 +49,7 @@ import {
   treasuryScreen,
   verifyMnemonicScreen,
   webviewScreen,
-  calendarScreen,
+  eventsCalendarScreen,
 } from '@ui/navigation/routeKeys';
 import type {CouncilCandidate, CouncilMember} from 'src/api/hooks/useCouncil';
 import type {DemocracyProposal, DemocracyReferendum} from 'src/api/hooks/useDemocracy';
@@ -91,7 +91,7 @@ type DrawerParamList = {
   [feedbackScreen]: undefined;
   [parathreadsScreen]: undefined;
   [parachainAuctionsScreen]: undefined;
-  [calendarScreen]: undefined;
+  [eventsCalendarScreen]: undefined;
 };
 
 type ParachainsStackParamList = {

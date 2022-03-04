@@ -21,7 +21,7 @@ import {
   parachainsNavigator,
   crowdloansNavigator,
   dashboardNavigator,
-  calendarScreen,
+  eventsCalendarScreen,
 } from '@ui/navigation/routeKeys';
 import {standardPadding} from '@ui/styles';
 import {appVersion} from 'src/service/Device';
@@ -80,11 +80,11 @@ function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
             }}
           />
           <Drawer.Item
-            label="Events Calendar"
+            label="Events"
             icon="calendar"
-            active={activeScreen === calendarScreen}
+            active={activeScreen === eventsCalendarScreen}
             onPress={() => {
-              navigation.navigate(calendarScreen);
+              navigation.navigate(eventsCalendarScreen);
             }}
           />
         </Drawer.Section>

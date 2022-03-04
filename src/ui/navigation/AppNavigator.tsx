@@ -196,7 +196,7 @@ function DrawerNavigator() {
       <Drawer.Screen name={routeKeys.devScreen} component={DevScreen} />
       <Drawer.Screen name={routeKeys.notificationSettingsScreen} component={NotificationSettingsScreen} />
       <Drawer.Screen name={routeKeys.feedbackScreen} component={FeedbackScreen} />
-      <Drawer.Screen name={routeKeys.calendarScreen} component={EventsCalendarScreen} />
+      <Drawer.Screen name={routeKeys.eventsCalendarScreen} component={EventsCalendarScreen} />
     </Drawer.Navigator>
   );
 }
