@@ -15,7 +15,7 @@ export function ProposalCallInfo({proposal}: ProposalInfoProps) {
       <Padder scale={1} />
       <Card>
         <Card.Content>
-          {proposal.args.map((arg) => (
+          {proposal.args?.map((arg) => (
             <Caption key={arg.name}>{`${arg.name}: ${arg.value}`}</Caption>
           ))}
         </Card.Content>

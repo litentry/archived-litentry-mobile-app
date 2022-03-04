@@ -8,6 +8,7 @@ export const dashboardNavigator = 'DashboardNavigator' as const;
 export const accountsNavigator = 'AccountsNavigator' as const;
 export const parachainsNavigator = 'ParachainsNavigator' as const;
 export const crowdloansNavigator = 'CrowdloansNavigator' as const;
+export const eventsCalendarScreen = 'Events ' as const;
 
 export const deeplinkNavigatorScreen = 'DeeplinkNavigatorScreen' as const;
 export const addAccountScreen = 'Add Account' as const;
