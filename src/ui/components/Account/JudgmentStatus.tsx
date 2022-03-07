@@ -1,20 +1,18 @@
-import type {SubstrateChainRegistrationJudgement} from 'src/generated/litentryGraphQLTypes';
-
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Icon, useTheme, Caption} from '@ui/library';
 import {mapStatusText} from 'src/utils/identity';
 import {colorGreen, colorRed, colorGray} from '@ui/styles';
 import {Popable} from 'react-native-popable';
+import type {RegistrationJudgment} from 'src/api/hooks/useAccount';
 
-type JudgmentStatusProps = {
-  registrationJudgement: SubstrateChainRegistrationJudgement;
+type Props = {
+  registrationJudgement: RegistrationJudgment;
   hasParent: boolean;
 };
 
-export function JudgmentStatus(props: JudgmentStatusProps) {
+export function JudgmentStatus({registrationJudgement, hasParent}: Props) {
   const {colors} = useTheme();
-  const {registrationJudgement, hasParent} = props;
 
   if (!registrationJudgement.judgement) {
     return null;
@@ -26,7 +24,7 @@ export function JudgmentStatus(props: JudgmentStatusProps) {
     <Popable
       content={
         <View style={styles.container}>
-          <Caption>{`"${status.text}" provided by Registrar #${registrationJudgement.index}`}</Caption>
+          <Caption>{`"${status.text}" provided by Registrar #${registrationJudgement.registrarIndex}`}</Caption>
         </View>
       }
       backgroundColor={colors.accent}>

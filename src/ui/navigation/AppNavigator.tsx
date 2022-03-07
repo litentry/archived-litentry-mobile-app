@@ -7,6 +7,7 @@ import {BalanceScreen} from '@ui/screens/BalanceScreen';
 import {BountiesScreen} from '@ui/screens/Bounty/BountiesScreen';
 import {BountyDetailScreen} from '@ui/screens/Bounty/BountyDetailScreen';
 import {CandidateScreen} from '@ui/screens/Council/CandidateScreen';
+import {EventsCalendarScreen} from '@ui/screens/EventsCalendarScreen';
 import {CouncilScreen} from '@ui/screens/Council/CouncilScreen';
 import {MotionsScreen} from '@ui/screens/Council/MotionsScreen';
 import {CreateAccountScreen} from '@ui/screens/CreateAccount/CreateAccountScreen';
@@ -195,6 +196,7 @@ function DrawerNavigator() {
       <Drawer.Screen name={routeKeys.devScreen} component={DevScreen} />
       <Drawer.Screen name={routeKeys.notificationSettingsScreen} component={NotificationSettingsScreen} />
       <Drawer.Screen name={routeKeys.feedbackScreen} component={FeedbackScreen} />
+      <Drawer.Screen name={routeKeys.eventsCalendarScreen} component={EventsCalendarScreen} />
     </Drawer.Navigator>
   );
 }

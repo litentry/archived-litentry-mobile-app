@@ -3,17 +3,18 @@ import {Alert, StyleSheet, View} from 'react-native';
 import {TextInput, Button, Tabs, TabScreen} from '@ui/library';
 import {NetworkContext} from 'context/NetworkContext';
 import QRCamera from '@ui/components/QRCamera';
-import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {isAddressValid, parseAddress} from 'src/utils/address';
+import type {Account} from 'src/api/hooks/useAccount';
+import type {SubIdentity} from './RegisterSubIdentitiesScreen';
 
 export function AddSubIdentity({
   onAddPress,
   subIdentities,
 }: {
-  onAddPress: (subIdentity: IdentityInfo) => void;
-  subIdentities: IdentityInfo[];
+  onAddPress: (subIdentity: SubIdentity) => void;
+  subIdentities?: Account[];
 }) {
   const {currentNetwork} = useContext(NetworkContext);
   const [subAddress, setSubAddress] = useState('');
@@ -26,18 +27,15 @@ export function AddSubIdentity({
 
   const addSubIdentity = () => {
     if (isAddressValid(currentNetwork, subAddress)) {
-      if (subIdentities.some((sub) => sub.accountId === subAddress)) {
+      if (subIdentities?.some((sub) => sub.address === subAddress)) {
         Alert.alert(
           'Validation Failed',
           'The account is already registered. Remove the account first if you want to change its name',
         );
       } else {
         onAddPress({
-          accountId: subAddress,
-          display: subAddress,
-          registration: {display: subName, judgements: []},
-          hasJudgements: false,
-          hasIdentity: true,
+          address: subAddress,
+          display: subName,
         });
       }
     } else {

@@ -5,7 +5,7 @@ import {Layout} from '@ui/components/Layout';
 import Balances from '@ui/components/Balances';
 import ModalTitle from '@ui/components/ModalTitle';
 import {Modalize} from 'react-native-modalize';
-import {useAccountInfo} from 'src/api/hooks/useAccountInfo';
+import {useAccount} from 'src/api/hooks/useAccount';
 import {useAccounts} from 'src/context/AccountsContext';
 import {balanceScreen} from '@ui/navigation/routeKeys';
 import globalStyles from '@ui/styles';
@@ -33,7 +33,7 @@ export function BalanceScreen({
     throw new Error("Couldn't find the account ");
   }
 
-  const {data: accountInfo} = useAccountInfo(currentAccount.address);
+  const {data: accountInfo} = useAccount(currentAccount.address);
 
   return (
     <Modalize
@@ -49,7 +49,7 @@ export function BalanceScreen({
         <Layout style={globalStyles.paddedContainer}>
           <ModalTitle title={currentAccount.meta.name} subtitle={` (@${currentNetwork.name})`} />
           <Divider />
-          <Balances balance={accountInfo} />
+          <Balances balance={accountInfo.balance} />
           <Divider />
           <Button onPress={() => modalRef.current?.close()}>Close</Button>
           <Padder scale={1} />

@@ -3,27 +3,20 @@ import {View} from 'react-native';
 import {List, Caption} from '@ui/library';
 import {Layout} from './Layout';
 import globalStyles from '@ui/styles';
-import type {FrameSystemAccountInfo} from '@polkadot/types/lookup';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
+import {AccountBalance} from 'src/api/hooks/useAccount';
 
-type PropTypes = {balance?: FrameSystemAccountInfo};
+type Props = {
+  balance: AccountBalance;
+};
 
-function Balances(props: PropTypes) {
-  const formatBalance = useFormatBalance();
-  const {balance} = props;
-
-  if (!balance) {
-    return null;
-  }
-  const {data} = balance;
-
+function Balances({balance}: Props) {
   return (
     <Layout>
       <List.Item
         title="Total Balance"
         right={() => (
           <ItemRight>
-            <Caption>{formatBalance(data.free.add(data.reserved))}</Caption>
+            <Caption>{balance.formattedTotal}</Caption>
           </ItemRight>
         )}
       />
@@ -31,7 +24,7 @@ function Balances(props: PropTypes) {
         title="Transferrable"
         right={() => (
           <ItemRight>
-            <Caption>{formatBalance(data.free)}</Caption>
+            <Caption>{balance.formattedFree}</Caption>
           </ItemRight>
         )}
       />
@@ -39,7 +32,7 @@ function Balances(props: PropTypes) {
         title="Reserved"
         right={() => (
           <ItemRight>
-            <Caption>{formatBalance(data.reserved)}</Caption>
+            <Caption>{balance.formattedReserved}</Caption>
           </ItemRight>
         )}
       />
@@ -47,7 +40,7 @@ function Balances(props: PropTypes) {
         title="Locked"
         right={() => (
           <ItemRight>
-            <Caption>{formatBalance(data.feeFrozen)}</Caption>
+            <Caption>{balance.formattedFreeFrozen}</Caption>
           </ItemRight>
         )}
       />

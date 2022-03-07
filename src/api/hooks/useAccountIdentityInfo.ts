@@ -1,3 +1,5 @@
+/** @deprecated use src/api/hooks/useAccount instead */
+
 import {ApiPromise} from '@polkadot/api';
 import useApiQuery from 'src/api/hooks/useApiQuery';
 import {getAccountIdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
