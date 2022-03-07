@@ -796,6 +796,7 @@ export type Query = {
   substrateChainConvictions?: Maybe<Array<SubstrateChainConviction>>;
   substrateChainCouncil: SubstrateChainCouncil;
   substrateChainCouncilMotions: Array<SubstrateChainCouncilMotion>;
+  substrateChainCouncilVote: SubstrateChainCouncilVote;
   substrateChainCrowdloan?: Maybe<SubstrateChainCrowdloan>;
   substrateChainCrowdloanContribution: SubstrateChainCrowdloanContribution;
   substrateChainCrowdloanSummary: SubstrateChainCrowdloanSummary;
@@ -1000,6 +1001,10 @@ export type QuerySubstrateChainBalanceArgs = {
 
 export type QuerySubstrateChainBountyArgs = {
   index: Scalars['String'];
+};
+
+export type QuerySubstrateChainCouncilVoteArgs = {
+  address: Scalars['String'];
 };
 
 export type QuerySubstrateChainCrowdloanArgs = {
@@ -1783,7 +1788,6 @@ export type SubstrateChainAccount = {
   __typename?: 'SubstrateChainAccount';
   address: Scalars['String'];
   balance: SubstrateChainAccountBalance;
-  councilVote?: Maybe<SubstrateChainCouncilVote>;
   display: Scalars['String'];
   hasIdentity: Scalars['Boolean'];
   registration: SubstrateChainDeriveAccountRegistration;
@@ -1990,7 +1994,7 @@ export type SubstrateChainCouncilVote = {
   __typename?: 'SubstrateChainCouncilVote';
   formattedStake: Scalars['String'];
   stake: Scalars['String'];
-  votes: Array<SubstrateChainVoter>;
+  votes: Array<SubstrateChainVote>;
 };
 
 export type SubstrateChainCrowdloan = {
@@ -2348,8 +2352,8 @@ export type SubstrateChainValidatorsGroup = {
   validators: Array<SubstrateChainAccountInfo>;
 };
 
-export type SubstrateChainVoter = {
-  __typename?: 'SubstrateChainVoter';
+export type SubstrateChainVote = {
+  __typename?: 'SubstrateChainVote';
   account: SubstrateChainAccount;
   address: Scalars['String'];
 };

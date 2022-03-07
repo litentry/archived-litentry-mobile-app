@@ -12,6 +12,7 @@ import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {EmptyView} from '@ui/components/EmptyView';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {Account} from '@ui/components/Account/Account';
+import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 
 type ScreenProps = {
   navigation: NavigationProp<DashboardStackParamList>;
@@ -151,6 +152,9 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
 
 function Voter({account}: {account: string}) {
   const {data: accountInfo} = useAccount(account);
+  const {data: councilVote} = useCouncilVotesOf(account);
+
+  console.log(councilVote);
 
   return (
     <List.Item
@@ -160,7 +164,7 @@ function Voter({account}: {account: string}) {
         </View>
       )}
       title={accountInfo && <Account account={accountInfo} />}
-      description={accountInfo?.councilVote?.formattedStake || ''}
+      description={councilVote?.formattedStake || ''}
       disabled
     />
   );
