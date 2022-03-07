@@ -1,14 +1,10 @@
 import React from 'react';
-import {FlatList, View, TouchableOpacity, StyleSheet} from 'react-native';
+import {FlatList, View, StyleSheet} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp} from '@react-navigation/native';
-import {Account, useAccounts} from 'context/index';
-import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
-import LoadingView from '@ui/components/LoadingView';
-import {useTheme, Divider, IconButton, List, FAB, Caption, Menu, Subheading, Icon} from '@ui/library';
+import {Account as AccountType, useAccounts} from 'context/index';
+import {useTheme, Divider, IconButton, List, FAB, Caption} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {useAccountsIdentityInfo} from 'src/api/hooks/useAccountsIdentityInfo';
-import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
 import {CompleteNavigatorParamList} from '@ui/navigation/navigation';
 import {
   accountsScreen,
@@ -19,95 +15,85 @@ import {
 } from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {EmptyView} from '@ui/components/EmptyView';
-
-type CombinedData = {
-  identity: IdentityInfo;
-  account: Account;
-};
+import {useAccount} from 'src/api/hooks/useAccount';
+import {Account} from '@ui/components/Account/Account';
+import {Padder} from '@ui/components/Padder';
 
 type Props = {
   navigation: NavigationProp<CompleteNavigatorParamList, typeof accountsScreen>;
 };
 
-type SortBy = 'name' | 'favorites';
+// @TODO: Add sorting options
+// https://github.com/litentry/litentry-app/issues/942
+
+// type SortBy = 'name' | 'favorites';
 
 export function AccountsScreen({navigation}: Props) {
-  const {accounts, networkAccounts, toggleFavorite} = useAccounts();
-  const {data, isLoading} = useAccountsIdentityInfo(networkAccounts.map((account) => account.address));
-  const combinedData = data?.reduce<CombinedData[]>((acc, current) => {
-    const account = accounts[String(current.accountId)];
-    if (!account) {
-      return acc;
-    }
-    return [...acc, {identity: current, account}];
-  }, []);
+  const {networkAccounts, toggleFavorite} = useAccounts();
 
-  const [sortBy, setSortBy] = React.useState<SortBy>('name');
-  const sortByFunction = sortBy === 'name' ? sortByDisplayName : sortByIsFavorite;
-  const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
+  // const [sortBy, setSortBy] = React.useState<SortBy>('name');
+  // const sortByFunction = sortBy === 'name' ? sortByDisplayName : sortByIsFavorite;
+  // const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
 
   const toAccountDetail = (address: string) => {
     navigation.navigate(myAccountScreen, {address});
   };
 
-  const sortAccounts = (sort: SortBy) => {
-    setSortBy(sort);
-    setSortMenuVisible(false);
-  };
+  // const sortAccounts = (sort: SortBy) => {
+  //   setSortBy(sort);
+  //   setSortMenuVisible(false);
+  // };
 
   return (
     <SafeView edges={noTopEdges}>
-      {isLoading ? (
-        <LoadingView />
-      ) : (
-        <FlatList
-          style={styles.container}
-          contentContainerStyle={styles.content}
-          data={combinedData?.sort(sortByFunction)}
-          showsVerticalScrollIndicator
-          keyExtractor={(item) => item.account.address}
-          renderItem={({item}) => (
-            <AccountItem accountData={item} toggleFavorite={toggleFavorite} onPress={toAccountDetail} />
-          )}
-          ListHeaderComponent={
-            <View style={styles.sortBy}>
-              <Menu
-                visible={sortMenuVisible}
-                onDismiss={() => {
-                  setSortMenuVisible(false);
-                }}
-                anchor={
-                  <TouchableOpacity
-                    onPress={() => {
-                      setSortMenuVisible(true);
-                    }}
-                    style={globalStyles.rowAlignCenter}>
-                    <Subheading>Sort by</Subheading>
-                    <Icon name="chevron-down" size={25} />
-                  </TouchableOpacity>
-                }>
-                <Menu.Item
-                  disabled={sortBy === 'name'}
-                  onPress={() => {
-                    sortAccounts('name');
-                  }}
-                  title="Name"
-                />
-                <Divider />
-                <Menu.Item
-                  disabled={sortBy === 'favorites'}
-                  onPress={() => {
-                    sortAccounts('favorites');
-                  }}
-                  title="Favorite"
-                />
-              </Menu>
-            </View>
-          }
-          ItemSeparatorComponent={Divider}
-          ListEmptyComponent={EmptyView}
-        />
-      )}
+      <Padder scale={1} />
+      <FlatList
+        style={styles.container}
+        contentContainerStyle={styles.content}
+        data={networkAccounts}
+        showsVerticalScrollIndicator
+        keyExtractor={(item) => item.address}
+        renderItem={({item}) => (
+          <AccountItem account={item} toggleFavorite={toggleFavorite} onPress={toAccountDetail} />
+        )}
+        // ListHeaderComponent={
+        //   <View style={styles.sortBy}>
+        //     <Menu
+        //       visible={sortMenuVisible}
+        //       onDismiss={() => {
+        //         setSortMenuVisible(false);
+        //       }}
+        //       anchor={
+        //         <TouchableOpacity
+        //           onPress={() => {
+        //             setSortMenuVisible(true);
+        //           }}
+        //           style={globalStyles.rowAlignCenter}>
+        //           <Subheading>Sort by</Subheading>
+        //           <Icon name="chevron-down" size={25} />
+        //         </TouchableOpacity>
+        //       }>
+        //       <Menu.Item
+        //         disabled={sortBy === 'name'}
+        //         onPress={() => {
+        //           sortAccounts('name');
+        //         }}
+        //         title="Name"
+        //       />
+        //       <Divider />
+        //       <Menu.Item
+        //         disabled={sortBy === 'favorites'}
+        //         onPress={() => {
+        //           sortAccounts('favorites');
+        //         }}
+        //         title="Favorite"
+        //       />
+        //     </Menu>
+        //   </View>
+        // }
+        ItemSeparatorComponent={Divider}
+        ListEmptyComponent={EmptyView}
+      />
       <Buttons navigation={navigation} />
     </SafeView>
   );
@@ -127,43 +113,42 @@ const styles = StyleSheet.create({
   emptyText: {fontWeight: 'normal'},
 });
 
-function sortByDisplayName(a: CombinedData, b: CombinedData) {
-  return a.identity.display.localeCompare(b.identity.display);
-}
+// function sortByDisplayName(a: Account, b: Account) {
+//   return a.identity.display.localeCompare(b.identity.display);
+// }
 
-function sortByIsFavorite(a: CombinedData, b: CombinedData) {
-  return a.account.meta.isFavorite ? -1 : b.account.meta.isFavorite ? 1 : 0;
-}
+// function sortByIsFavorite(a: CombinedData, b: CombinedData) {
+//   return a.account.meta.isFavorite ? -1 : b.account.meta.isFavorite ? 1 : 0;
+// }
 
 function AccountItem({
-  accountData,
+  account,
   toggleFavorite,
   onPress,
 }: {
-  accountData: CombinedData;
+  account: AccountType;
   toggleFavorite: (address: string) => void;
   onPress: (address: string) => void;
 }) {
   const theme = useTheme();
   const {
-    account: {
-      isExternal,
-      address,
-      meta: {isFavorite, name},
-    },
-    identity,
-  } = accountData;
+    address,
+    isExternal,
+    meta: {isFavorite, name},
+  } = account;
+  const {data: accountInfo} = useAccount(address);
+
   return (
     <List.Item
       onPress={() => onPress(address)}
       left={() => (
         <View style={globalStyles.justifyCenter}>
-          <Identicon value={String(identity.accountId)} size={25} />
+          <Identicon value={address} size={25} />
         </View>
       )}
       title={() => (
         <View style={globalStyles.justifyCenter}>
-          <AccountInfoInlineTeaser identity={identity} accountName={name} />
+          {accountInfo && <Account account={accountInfo} name={name} />}
           {isExternal && <Caption>External</Caption>}
         </View>
       )}

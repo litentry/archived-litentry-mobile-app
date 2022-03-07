@@ -35,6 +35,9 @@ export function LitentryApiClientProvider({children}: {children: React.ReactNode
               substrateChainCouncil: {
                 merge: true,
               },
+              substrateChainAccount: {
+                merge: true,
+              },
             },
           },
         },

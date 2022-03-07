@@ -1,11 +1,11 @@
 import {gql, useQuery} from '@apollo/client';
 import type {SubstrateChainBounty} from 'src/generated/litentryGraphQLTypes';
-import {ACCOUNT_FIELDS} from './useBounties';
+import {ACCOUNT_FIELDS_FRAGMENT} from 'src/api/hooks/useAccount';
 
 export type Bounty = SubstrateChainBounty;
 
 const BOUNTY_QUERY = gql`
-  ${ACCOUNT_FIELDS}
+  ${ACCOUNT_FIELDS_FRAGMENT}
   query getBounty($index: String!) {
     substrateChainBounty(index: $index) {
       index

@@ -1,11 +1,11 @@
 import {gql, useQuery} from '@apollo/client';
 import type {SubstrateChainParathread} from 'src/generated/litentryGraphQLTypes';
-import {ACCOUNT_FIELDS} from './useBounties';
+import {ACCOUNT_FIELDS_FRAGMENT} from './useAccount';
 
 export type Parathread = SubstrateChainParathread;
 
 const PARA_THREADS = gql`
-  ${ACCOUNT_FIELDS}
+  ${ACCOUNT_FIELDS_FRAGMENT}
   query getParathread {
     substrateChainParathreads {
       id

@@ -1,30 +1,16 @@
 import {gql, useQuery} from '@apollo/client';
 import type {SubstrateChainCouncil} from 'src/generated/litentryGraphQLTypes';
+import {ACCOUNT_FIELDS_FRAGMENT} from 'src/api/hooks/useAccount';
 
 export type CouncilSummary = Omit<SubstrateChainCouncil, 'members' | 'runnersUp' | 'candidates'>;
 
 export const COUNCIL_SUMMARY_QUERY = gql`
+  ${ACCOUNT_FIELDS_FRAGMENT}
   query getCouncilSummary {
     substrateChainCouncil {
       primeMember {
         account {
-          address
-          display
-          registration {
-            displayParent
-            judgements {
-              registrarIndex
-              judgement {
-                isUnknown
-                isFeePaid
-                isReasonable
-                isKnownGood
-                isOutOfDate
-                isLowQuality
-                isErroneous
-              }
-            }
-          }
+          ...AccountFields
         }
       }
       desiredSeats

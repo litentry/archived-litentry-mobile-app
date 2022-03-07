@@ -3,6 +3,7 @@ import type {
   SubstrateChainDemocracyProposal,
   SubstrateChainDemocracyReferendum,
 } from 'src/generated/litentryGraphQLTypes';
+import {ACCOUNT_FIELDS_FRAGMENT} from 'src/api/hooks/useAccount';
 
 export type DemocracyProposal = SubstrateChainDemocracyProposal;
 export type DemocracyReferendum = SubstrateChainDemocracyReferendum;
@@ -12,38 +13,8 @@ type Democracy = {
   substrateChainDemocracyReferendums: DemocracyReferendum[];
 };
 
-export const ACCOUNT_FIELDS = gql`
-  fragment AccountFields on SubstrateChainAccount {
-    address
-    display
-    registration {
-      display
-      displayParent
-      email
-      image
-      legal
-      pgp
-      riot
-      twitter
-      web
-      judgements {
-        registrarIndex
-        judgement {
-          isUnknown
-          isFeePaid
-          isReasonable
-          isKnownGood
-          isOutOfDate
-          isLowQuality
-          isErroneous
-        }
-      }
-    }
-  }
-`;
-
 export const DEMOCRACY_QUERY = gql`
-  ${ACCOUNT_FIELDS}
+  ${ACCOUNT_FIELDS_FRAGMENT}
   query getDemocracy {
     substrateChainDemocracyProposals {
       index
