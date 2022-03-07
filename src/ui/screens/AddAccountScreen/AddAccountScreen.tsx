@@ -5,7 +5,7 @@ import {Divider, Button, Tabs, TabScreen, TextInput} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {NetworkContext} from 'context/NetworkContext';
 import {Padder} from '@ui/components/Padder';
-import QRCamera from '@ui/components/QRCamera';
+import QRCamera, {QRCameraRef} from '@ui/components/QRCamera';
 import SuccessDialog from '@ui/components/SuccessDialog';
 import {Modalize} from 'react-native-modalize';
 import AddressInfoPreview from './AddressPreview';
@@ -21,7 +21,7 @@ export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppSt
   useEffect(() => {
     ref.current?.open();
   }, []);
-
+  const qrCameraRef = useRef<QRCameraRef>(null);
   const {currentNetwork} = useContext(NetworkContext);
   const [state, dispatch] = useReducer(addAccountReducer, initialState);
   const {addAccount} = useAccounts();
@@ -58,17 +58,23 @@ export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppSt
   }, [addAccount, currentNetwork, navigation, state.address, state.step]);
 
   const handleScan = useCallback(
-    ({data}) => {
+    ({data}: {data: string}) => {
       try {
         const parsed = parseAddress(data);
         if (isAddressValid(currentNetwork, parsed.address)) {
           dispatch({type: 'SET_ADDRESS', payload: parsed.address});
           dispatch({type: 'SET_STEP', payload: 'preview'});
         } else {
-          Alert.alert('Validation Failed', `The address must belong to the ${currentNetwork.name} network.`);
+          Alert.alert(
+            'Validation Failed',
+            `${parsed.address} is not a valid address for the ${currentNetwork.name} network.`,
+            [{text: 'Ok', onPress: () => qrCameraRef.current?.reactivate()}],
+          );
         }
       } catch (e) {
-        Alert.alert('Validation Failed', 'Address is invalid.');
+        Alert.alert('Validation Failed', 'Address is invalid.', [
+          {text: 'Ok', onPress: () => qrCameraRef.current?.reactivate()},
+        ]);
       }
     },
     [currentNetwork],
@@ -120,7 +126,7 @@ export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppSt
                       </TabScreen>
                       <TabScreen label="Via QR" icon="qrcode">
                         <View style={globalStyles.paddedContainer}>
-                          {tabIndex === 1 && <QRCamera onRead={handleScan} />}
+                          {tabIndex === 1 && <QRCamera onRead={handleScan} ref={qrCameraRef} />}
                         </View>
                       </TabScreen>
                     </Tabs>
