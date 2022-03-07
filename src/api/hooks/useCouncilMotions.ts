@@ -4,6 +4,7 @@ import type {
   SubstrateChainMotionProposal,
   SubstrateChainVotingStatus,
 } from 'src/generated/litentryGraphQLTypes';
+import {ACCOUNT_FIELDS_FRAGMENT} from './useAccount';
 
 export type CouncilMotion = SubstrateChainCouncilMotion;
 
@@ -11,31 +12,8 @@ export type MotionProposal = SubstrateChainMotionProposal;
 
 export type VotingStatus = SubstrateChainVotingStatus;
 
-const ACCOUNT_FIELDS = gql`
-  fragment AccountFields on SubstrateChainAccount {
-    address
-    display
-    registration {
-      display
-      displayParent
-      judgements {
-        index
-        judgement {
-          isUnknown
-          isFeePaid
-          isReasonable
-          isKnownGood
-          isOutOfDate
-          isLowQuality
-          isErroneous
-        }
-      }
-    }
-  }
-`;
-
 const COUNCIL_MOTION_QUERY = gql`
-  ${ACCOUNT_FIELDS}
+  ${ACCOUNT_FIELDS_FRAGMENT}
   query getCouncilMotionSummary {
     substrateChainCouncilMotions {
       hash

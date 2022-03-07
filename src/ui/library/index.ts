@@ -40,4 +40,5 @@ export {AppHeader} from './AppHeader';
 export {Modal} from './Modal';
 export {Card} from './Card';
 export {Select} from './Select';
+export {Calendar} from './Calendar';
 export {Tabs, TabScreen, useTabIndex, useTabNavigation} from 'react-native-paper-tabs';

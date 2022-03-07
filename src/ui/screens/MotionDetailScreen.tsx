@@ -108,7 +108,7 @@ export function MotionDetailScreen(props: PropTypes) {
           <View style={styles.votesContainer}>
             <Subheading>Votes</Subheading>
             {motion.votes.ayes.length ? (
-              motion.votes.ayes.map((vote) => (
+              motion.votes.ayes.map((vote: any) => (
                 <View style={styles.voteContainer} key={vote.address}>
                   <VoteItem vote={vote} type="aye" />
                 </View>
@@ -120,7 +120,7 @@ export function MotionDetailScreen(props: PropTypes) {
               </>
             )}
             {motion.votes.nays.length ? (
-              motion.votes.nays.map((vote) => (
+              motion.votes.nays.map((vote: any) => (
                 <View style={styles.voteContainer} key={vote.address}>
                   <VoteItem vote={vote} type="nay" />
                 </View>

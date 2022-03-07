@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {FlatList, StyleSheet, View, RefreshControl} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import {TipTeaser} from '@ui/components/Tips/TipTeaser';
 import {EmptyView} from '@ui/components/EmptyView';
@@ -9,12 +9,12 @@ import {useTips} from 'src/api/hooks/useTips';
 import {tipDetailScreen} from '@ui/navigation/routeKeys';
 import {proposeTipScreen} from '@ui/navigation/routeKeys';
 import globalStyles from '@ui/styles';
-import {Button} from '@ui/library';
-import {RefreshControl} from '@ui/library/RefreshControl';
+import {Button, useTheme} from '@ui/library';
 
 function TipsScreen() {
   const {data: tips, loading, refetch, refetching} = useTips();
   const navigation = useNavigation();
+  const {colors} = useTheme();
 
   const toTipDetails = (id: string) => {
     navigation.navigate(tipDetailScreen, {id});
@@ -42,7 +42,14 @@ function TipsScreen() {
             keyExtractor={(item) => item.id}
             ListEmptyComponent={EmptyView}
             showsVerticalScrollIndicator={false}
-            refreshControl={<RefreshControl onRefresh={refetch} refreshing={refetching} />}
+            refreshControl={
+              <RefreshControl
+                onRefresh={refetch}
+                refreshing={refetching}
+                tintColor={colors.primary}
+                colors={[colors.primary]}
+              />
+            }
           />
         )}
       </View>

@@ -1,8 +1,5 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {SectionList, StyleSheet, View} from 'react-native';
-import {LinkOption} from '@polkadot/apps-config/endpoints/types';
-import type {ParaId} from '@polkadot/types/interfaces';
-import {BN, BN_ZERO} from '@polkadot/util';
 import {NavigationProp, useNavigation} from '@react-navigation/core';
 import {useApi} from 'context/ChainApiContext';
 import {EmptyView} from '@ui/components/EmptyView';
@@ -11,93 +8,67 @@ import {Padder} from '@ui/components/Padder';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import {Campaign, useFunds} from 'src/api/hooks/useFunds';
-import {LeasePeriod, useParachainsLeasePeriod} from 'src/api/hooks/useParachainsLeasePeriod';
-import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import {CrowdloansStackParamList} from '@ui/navigation/navigation';
 import {crowdloanFundDetailScreen} from '@ui/navigation/routeKeys';
 import {Button, Card, Subheading, Text, Caption, Title, Modal, TextInput, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {decimalKeypad, notEmpty} from 'src/utils';
-import type {BalanceOf} from '@polkadot/types/interfaces';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {Chart} from '@ui/components/Chart';
+import MaxBalance from '@ui/components/MaxBalance';
+import {Crowdloan, useCrowdloans} from 'src/api/hooks/useCrowdloans';
+import {NetworkContext} from 'context/NetworkContext';
+import type {BalanceOf} from '@polkadot/types/interfaces';
 
 export function CrowdloanScreen() {
-  const formatBalance = useFormatBalance();
-  const {data, isError} = useFunds();
-  const {data: leasePeriod} = useParachainsLeasePeriod();
+  const {data, loading} = useCrowdloans();
+  const [openContributeId, setOpenContributeId] = React.useState<string>();
 
-  const [openContributeId, setOpenContributeId] = React.useState<ParaId>();
-
-  if (isError) {
-    return <Text>Something bad happened!</Text>;
-  }
-
-  if (!data) {
+  if (loading && !data) {
     return <LoadingView />;
   }
 
-  if (!data.funds?.length) {
+  if (!data.summary?.totalFunds) {
     return <EmptyView />;
-  }
-
-  const [active, ended] = extractLists(data.funds, leasePeriod);
-
-  const [activeRaised, activeCap] = active.reduce(
-    ([par, pac], current) => {
-      return [
-        par.iadd(current.info.raised.gte(BN_ZERO) ? current.info.raised : BN_ZERO),
-        pac.iadd(current.info.cap.gte(BN_ZERO) ? current.info.cap : BN_ZERO),
-      ];
-    },
-    [new BN(0), new BN(0)],
-  );
-
-  let activeProgress = 0,
-    totalProgress = 0;
-
-  try {
-    activeProgress = activeCap.isZero() ? 0 : activeRaised.muln(10000).div(activeCap).toNumber() / 10000;
-    totalProgress = data.totalCap.isZero() ? 0 : data.totalRaised.muln(10000).div(data.totalCap).toNumber() / 10000;
-  } catch (e) {
-    console.error('Error calculating progress');
   }
 
   return (
     <SafeView edges={noTopEdges}>
       <SectionList
         ListHeaderComponent={() => {
+          if (!data.summary) {
+            return null;
+          }
           return (
             <View>
               <View style={styles.headerContainer}>
                 <View>
                   <View style={styles.headerTileContainer}>
-                    <Chart percent={activeProgress} />
+                    <Chart percent={data.summary.activeProgress} />
                     <Padder scale={1} />
                     <View>
                       <Subheading>Active Raised / Cap</Subheading>
-                      <Caption numberOfLines={1} adjustsFontSizeToFit>{`${formatBalance(activeRaised, {
-                        isShort: true,
-                      })} / ${formatBalance(activeCap)}`}</Caption>
+                      <Caption numberOfLines={1} adjustsFontSizeToFit>
+                        {`${data.summary.formattedActiveRaised} / ${data.summary.formattedActiveCap}`}
+                      </Caption>
                     </View>
                   </View>
                   <Padder scale={1} />
                   <View style={styles.headerTileContainer}>
-                    <Chart percent={totalProgress} />
+                    <Chart percent={data.summary.totalProgress} />
                     <Padder scale={1} />
                     <View>
                       <Subheading>Total Raised / Cap</Subheading>
-                      <Caption numberOfLines={1} adjustsFontSizeToFit>{`${formatBalance(
-                        data.totalRaised,
-                      )} / ${formatBalance(data.totalCap)}`}</Caption>
+                      <Caption
+                        numberOfLines={1}
+                        adjustsFontSizeToFit>{`${data.summary.formattedTotalRaised} / ${data.summary.formattedTotalCap}`}</Caption>
                     </View>
                   </View>
                 </View>
                 <View style={styles.fundsContainer}>
                   <Subheading>Funds</Subheading>
-                  <Caption>{data.funds?.length}</Caption>
+                  <Caption>{data.summary.totalFunds}</Caption>
                 </View>
               </View>
               <Padder scale={1} />
@@ -107,8 +78,8 @@ export function CrowdloanScreen() {
         style={styles.container}
         contentContainerStyle={styles.listContent}
         sections={[
-          active.length ? {key: 'Ongoing', data: active} : null,
-          ended.length ? {key: 'Completed', data: ended} : null,
+          data.active?.length ? {key: 'Ongoing', data: data.active} : null,
+          data.ended?.length ? {key: 'Completed', data: data.ended} : null,
         ].filter(notEmpty)}
         SectionSeparatorComponent={() => <Padder scale={1} />}
         renderSectionHeader={({section}) => <Title>{section.key}</Title>}
@@ -123,7 +94,7 @@ export function CrowdloanScreen() {
             />
           );
         }}
-        keyExtractor={(item) => item.key}
+        keyExtractor={(item) => item.paraId}
         stickySectionHeadersEnabled={false}
       />
       {openContributeId !== undefined ? (
@@ -141,47 +112,39 @@ export function CrowdloanScreen() {
   );
 }
 
-function Fund({item, active, onPressContribute}: {item: Campaign; active: boolean; onPressContribute: () => void}) {
-  const formatBalance = useFormatBalance();
-  const {cap, raised} = item.info;
-  const endpoints = useParaEndpoints(item.paraId);
+function Fund({item, active, onPressContribute}: {item: Crowdloan; active: boolean; onPressContribute: () => void}) {
   const navigation = useNavigation<NavigationProp<CrowdloansStackParamList>>();
   const {colors} = useTheme();
+  const {currentNetwork} = useContext(NetworkContext);
 
-  const lastEndpoint = endpoints?.[endpoints.length - 1] as LinkOption;
-  const text = lastEndpoint?.text ?? `#${item.paraId.toString()}`;
-
-  const percentage = cap.isZero() ? 100 : raised.muln(10000).div(cap).toNumber() / 10000;
+  const isLitentryParachain = currentNetwork.key === 'polkadot' && item.paraId === '2013';
+  const isLitmusParachain = currentNetwork.key === 'kusama' && item.paraId === '2106';
+  const isSpecial = isLitentryParachain || isLitmusParachain;
 
   return (
     <Card
-      mode={item.isSpecial ? 'elevated' : 'outlined'}
+      mode={isSpecial ? 'elevated' : 'outlined'}
       style={styles.fund}
       onPress={() => {
-        navigation.navigate(crowdloanFundDetailScreen, {title: String(text), paraId: item.paraId});
+        navigation.navigate(crowdloanFundDetailScreen, {title: item.name ?? `# ${item.paraId}`, paraId: item.paraId});
       }}>
       <View style={[globalStyles.rowAlignCenter]}>
         <View style={styles.shrink}>
-          <Subheading
-            numberOfLines={1}
-            adjustsFontSizeToFit
-            style={{color: item.isSpecial ? colors.primary : colors.text}}>
-            {String(text)}
+          <Subheading numberOfLines={1} adjustsFontSizeToFit style={{color: isSpecial ? colors.primary : colors.text}}>
+            {item.name}
           </Subheading>
           <Padder scale={0.5} />
-          <Caption numberOfLines={1} adjustsFontSizeToFit>{`${formatBalance(raised, {
-            isShort: true,
-          })} / ${formatBalance(cap, {isShort: true})}`}</Caption>
+          <Caption numberOfLines={1} adjustsFontSizeToFit>{`${item.formattedRaised} / ${item.formattedCap}`}</Caption>
         </View>
         <View style={styles.spacer} />
         <View style={styles.listItemRightSide}>
-          <Chart percent={percentage} />
+          <Chart percent={Number(item.raisedPercentage)} />
           {active && (
             <Button
               style={styles.button}
               mode="outlined"
               uppercase={false}
-              color={item.isSpecial ? colors.primary : colors.placeholder}
+              color={isSpecial ? colors.primary : colors.placeholder}
               compact
               onPress={onPressContribute}>
               + Contribute
@@ -241,25 +204,6 @@ const styles = StyleSheet.create({
   },
 });
 
-function extractLists(value: Campaign[] | null, leasePeriod?: LeasePeriod): [Campaign[], Campaign[], ParaId[] | null] {
-  const currentPeriod = leasePeriod?.currentPeriod;
-  let active: Campaign[] = [];
-  let ended: Campaign[] = [];
-  let allIds: ParaId[] | null = null;
-
-  if (value && currentPeriod) {
-    active = value.filter(
-      ({firstSlot, isCapped, isEnded, isWinner}) => !(isCapped || isEnded || isWinner) && currentPeriod.lte(firstSlot),
-    );
-    ended = value.filter(
-      ({firstSlot, isCapped, isEnded, isWinner}) => isCapped || isEnded || isWinner || currentPeriod.gt(firstSlot),
-    );
-    allIds = value.map(({paraId}) => paraId);
-  }
-
-  return [active, ended, allIds];
-}
-
 function ContributeBox({
   visible,
   setVisible,
@@ -267,7 +211,7 @@ function ContributeBox({
 }: {
   visible: boolean;
   setVisible: (_visible: boolean) => void;
-  parachainId: ParaId;
+  parachainId: string;
 }) {
   const startTx = useApiTx();
   const {api} = useApi();
@@ -304,10 +248,11 @@ function ContributeBox({
         onFocus={() => setAmount('')}
         onChangeText={(nextValue) => setAmount(decimalKeypad(nextValue))}
         contextMenuHidden={true}
+        right={<TextInput.Affix text={(api && formatBalance(getBalanceFromString(api, amount))) ?? ''} />}
       />
+      <MaxBalance address={account} />
       <Padder scale={0.2} />
-      <Text>{api ? formatBalance(getBalanceFromString(api, amount)) : ''}</Text>
-      <Padder scale={1.5} />
+
       <Text>minimum allowed: </Text>
       <Text>{minBalance}</Text>
 

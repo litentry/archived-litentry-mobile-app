@@ -1,45 +1,34 @@
 import React from 'react';
 import {View, FlatList, StyleSheet} from 'react-native';
 import {Menu, List, Caption, Icon, useTheme, Divider} from '@ui/library';
-import {Account, useAccounts} from 'context/AccountsContext';
-import {IdentityInfo} from 'src/api/queryFunctions/getAccountIdentityInfo';
-import {useAccountsIdentityInfo} from 'src/api/hooks/useAccountsIdentityInfo';
+import {Account as AccountType, useAccounts} from 'context/AccountsContext';
 import globalStyles, {standardPadding} from '@ui/styles';
 import Identicon from '@polkadot/reactnative-identicon';
-import AccountInfoInlineTeaser from './AccountInfoInlineTeaser';
 import {Padder} from '@ui/components/Padder';
-import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
-
-type AccountData = {
-  identity: IdentityInfo;
-  account: Account;
-};
+import {useAccount, Account as SubstrateChainAccount} from 'src/api/hooks/useAccount';
+import {Account} from './Account/Account';
 
 type Props = {
-  onSelect: (account: Account) => void;
+  onSelect: (account: AccountType) => void;
+};
+
+type SelectedAccount = {
+  account: AccountType;
+  accountInfo?: SubstrateChainAccount;
 };
 
 export function SelectAccount({onSelect}: Props) {
   const {colors} = useTheme();
-  const {networkAccounts, accounts} = useAccounts();
-  const {data} = useAccountsIdentityInfo(networkAccounts.map((account) => account.address));
-  const accountsData = data?.reduce<AccountData[]>((acc, current) => {
-    const account = accounts[String(current.accountId)];
-    if (!account) {
-      return acc;
-    }
-    return [...acc, {identity: current, account}];
-  }, []);
-  const [account, setAccount] = React.useState<Account>();
+  const {networkAccounts} = useAccounts();
+  const [selectedAccount, setSelectedAccount] = React.useState<SelectedAccount>();
   const [visible, setVisible] = React.useState(false);
-  const {data: identity} = useAccountIdentityInfo(account?.address);
 
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
 
-  const selectAccount = (selectedAccount: Account) => {
-    setAccount(selectedAccount);
-    onSelect(selectedAccount);
+  const selectAccount = (accountSelected: SelectedAccount) => {
+    setSelectedAccount(accountSelected);
+    onSelect(accountSelected.account);
     closeMenu();
   };
 
@@ -51,12 +40,10 @@ export function SelectAccount({onSelect}: Props) {
         <View style={[styles.anchor, {borderColor: colors.onSurface}]}>
           <List.Item
             title={
-              account ? (
-                identity ? (
-                  <AccountInfoInlineTeaser identity={identity} accountName={account.meta.name} />
-                ) : null
+              selectedAccount?.accountInfo ? (
+                <Account account={selectedAccount.accountInfo} name={selectedAccount.account.meta.name} />
               ) : (
-                <Caption>{'Select account'}</Caption>
+                <Caption>{`Select account`}</Caption>
               )
             }
             onPress={openMenu}
@@ -64,42 +51,39 @@ export function SelectAccount({onSelect}: Props) {
           />
         </View>
       }>
-      {accountsData ? (
-        <FlatList
-          style={styles.items}
-          ItemSeparatorComponent={Divider}
-          data={accountsData}
-          keyExtractor={(item) => item.account.address}
-          renderItem={({item}) => <AccountItem onSelect={selectAccount} accountData={item} />}
-        />
-      ) : null}
+      <FlatList
+        style={styles.items}
+        ItemSeparatorComponent={Divider}
+        data={networkAccounts}
+        keyExtractor={(item) => item.address}
+        renderItem={({item}) => <AccountItem onSelect={selectAccount} account={item} />}
+      />
     </Menu>
   );
 }
 
 type AccountItemProps = {
-  onSelect: (account: Account) => void;
-  accountData: AccountData;
+  onSelect: (account: SelectedAccount) => void;
+  account: AccountType;
 };
 
-function AccountItem({onSelect, accountData}: AccountItemProps) {
+function AccountItem({onSelect, account}: AccountItemProps) {
   const {
-    account: {
-      isExternal,
-      meta: {name},
-    },
-    identity,
-  } = accountData;
+    isExternal,
+    meta: {name},
+  } = account;
+  const {data: accountInfo} = useAccount(account.address);
+
   return (
     <Menu.Item
       style={styles.menuItem}
-      onPress={() => onSelect(accountData.account)}
+      onPress={() => onSelect({account, accountInfo})}
       title={
         <View style={globalStyles.rowAlignCenter}>
-          <Identicon value={String(identity.accountId)} size={25} />
+          <Identicon value={account.address} size={25} />
           <Padder scale={0.5} />
           <View style={globalStyles.justifyCenter}>
-            <AccountInfoInlineTeaser identity={identity} accountName={name} />
+            {accountInfo && <Account account={accountInfo} name={name} />}
             {isExternal && <Caption style={styles.caption}>{`External`}</Caption>}
           </View>
         </View>

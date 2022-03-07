@@ -12,32 +12,22 @@ import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {democracyProposalScreen, referendumScreen} from '@ui/navigation/routeKeys';
 import {Card, Headline, List, Subheading, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {useDemocracyProposals, DemocracyProposal, DEMOCRACY_PROPOSALS_QUERY} from 'src/api/hooks/useDemocracyProposals';
-import {
-  useDemocracyReferendums,
-  DemocracyReferendum,
-  DEMOCRACY_REFERENDUMS_QUERY,
-} from 'src/api/hooks/useDemocracyReferendum';
-import {useRefetch} from 'src/api/hooks/useRefetch';
 import {ProposalCallInfo} from '@ui/components/ProposalCallInfo';
+import {useDemocracy, DemocracyProposal, DemocracyReferendum} from 'src/api/hooks/useDemocracy';
 
 export function DemocracyScreen() {
-  const {data: proposals, loading: proposalsLoading} = useDemocracyProposals();
-  const {data: referendums, loading: referendumsLoading} = useDemocracyReferendums();
-
-  const {refetch, refreshing} = useRefetch([DEMOCRACY_PROPOSALS_QUERY, DEMOCRACY_REFERENDUMS_QUERY]);
-
+  const {data: democracy, loading, refetch, refreshing} = useDemocracy();
   const {colors} = useTheme();
 
   const groupedData: {title: string; data: Array<DemocracyProposal | DemocracyReferendum>}[] = React.useMemo(
     () => [
-      {title: 'Referenda', data: referendums ?? []},
-      {title: 'Proposals', data: proposals ?? []},
+      {title: 'Referenda', data: democracy.proposals ?? []},
+      {title: 'Proposals', data: democracy.referendums ?? []},
     ],
-    [proposals, referendums],
+    [democracy],
   );
 
-  const isLoading = (proposalsLoading || referendumsLoading) && !refreshing && !proposals && !referendums;
+  const isLoading = loading && !democracy && !refreshing;
 
   return (
     <Layout style={globalStyles.flex}>

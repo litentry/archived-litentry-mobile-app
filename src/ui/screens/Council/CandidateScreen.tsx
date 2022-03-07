@@ -5,8 +5,6 @@ import {Divider, List, Card, Icon, Caption, Subheading, Paragraph} from '@ui/lib
 import IdentityIcon from '@polkadot/reactnative-identicon';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
-import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
-import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
 import {Padder} from '@ui/components/Padder';
 import globalStyles from '@ui/styles';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
@@ -14,6 +12,8 @@ import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 import {useTheme} from '@ui/library';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {EmptyView} from '@ui/components/EmptyView';
+import {useAccount} from 'src/api/hooks/useAccount';
+import {Account} from '@ui/components/Account/Account';
 
 type ScreenProps = {
   navigation: NavigationProp<DashboardStackParamList>;
@@ -152,7 +152,7 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
 }
 
 function Voter({account}: {account: string}) {
-  const {data} = useAccountIdentityInfo(account);
+  const {data: accountInfo} = useAccount(account);
   const {data: voterData} = useCouncilVotesOf(account);
   const formatBalance = useFormatBalance();
 
@@ -163,7 +163,7 @@ function Voter({account}: {account: string}) {
           <IdentityIcon value={account} size={35} />
         </View>
       )}
-      title={data && <AccountInfoInlineTeaser identity={data} />}
+      title={accountInfo && <Account account={accountInfo} />}
       description={voterData?.stake ? formatBalance(voterData.stake) : ''}
       disabled
     />

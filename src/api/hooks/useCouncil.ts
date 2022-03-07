@@ -4,43 +4,14 @@ import type {
   SubstrateChainCouncilCandidate,
   SubstrateChainCouncilMember,
 } from 'src/generated/litentryGraphQLTypes';
+import {ACCOUNT_FIELDS_FRAGMENT} from 'src/api/hooks/useAccount';
 
 export type Council = SubstrateChainCouncil;
 export type CouncilMember = SubstrateChainCouncilMember;
 export type CouncilCandidate = SubstrateChainCouncilCandidate;
 
-const ACCOUNT_FIELDS = gql`
-  fragment AccountFields on SubstrateChainAccount {
-    address
-    display
-    registration {
-      display
-      displayParent
-      email
-      image
-      legal
-      pgp
-      riot
-      twitter
-      web
-      judgements {
-        index
-        judgement {
-          isUnknown
-          isFeePaid
-          isReasonable
-          isKnownGood
-          isOutOfDate
-          isLowQuality
-          isErroneous
-        }
-      }
-    }
-  }
-`;
-
 const COUNCIL_QUERY = gql`
-  ${ACCOUNT_FIELDS}
+  ${ACCOUNT_FIELDS_FRAGMENT}
   query getCouncil {
     substrateChainCouncil {
       members {

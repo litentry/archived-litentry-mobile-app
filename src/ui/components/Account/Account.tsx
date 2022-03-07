@@ -5,22 +5,23 @@ import {Caption} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {notEmpty} from 'src/utils';
 import {JudgmentStatus} from '@ui/components/Account/JudgmentStatus';
-import Identicon from '@polkadot/reactnative-identicon';
-import type {SubstrateChainAccount} from 'src/generated/litentryGraphQLTypes';
+import type {Account as AccountType} from 'src/api/hooks/useAccount';
 
 type Props = {
-  account: SubstrateChainAccount;
+  account: AccountType;
+  name?: string;
 };
 
-export function Account({account}: Props) {
+export function Account({account, name}: Props) {
   const registrationJudgements = account.registration.judgements
     ? account.registration.judgements.filter(notEmpty)
     : [];
 
+  const display = name || stringShorten(account.display, 12);
+
   return (
     <View style={styles.container}>
-      <Identicon value={account.address} size={20} />
-      <Caption style={styles.display}>{stringShorten(account.display, 12)}</Caption>
+      <Caption style={styles.display}>{display}</Caption>
       <Padder scale={0.5} />
       {registrationJudgements.map((registrationJudgement, i) => (
         <JudgmentStatus

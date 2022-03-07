@@ -1,29 +1,9 @@
 import {gql, useQuery, NetworkStatus} from '@apollo/client';
 import type {SubstrateChainTreasury} from 'src/generated/litentryGraphQLTypes';
-
-const ACCOUNT_FIELDS = gql`
-  fragment AccountFields on SubstrateChainAccount {
-    address
-    display
-    registration {
-      judgements {
-        index
-        judgement {
-          isUnknown
-          isFeePaid
-          isReasonable
-          isKnownGood
-          isOutOfDate
-          isLowQuality
-          isErroneous
-        }
-      }
-    }
-  }
-`;
+import {ACCOUNT_FIELDS_FRAGMENT} from 'src/api/hooks/useAccount';
 
 const TREASURY_QUERY = gql`
-  ${ACCOUNT_FIELDS}
+  ${ACCOUNT_FIELDS_FRAGMENT}
   query getTreasury {
     substrateChainTreasury {
       approvals {

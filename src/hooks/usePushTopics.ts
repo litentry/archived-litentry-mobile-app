@@ -1,7 +1,7 @@
-import {useQueryClient, useQuery, useMutation} from 'react-query';
-import * as Storage from 'src/service/PersistedObjectStorage';
 import messaging from '@react-native-firebase/messaging';
 import {useCallback, useMemo} from 'react';
+import {useMutation, useQuery, useQueryClient} from 'react-query';
+import * as Storage from 'src/service/PersistedObjectStorage';
 
 export const PUSH_NOTIFICATION_TOPICS = [
   {id: 'treasury.Proposed', label: 'New Treasury Proposal'},
@@ -72,10 +72,17 @@ export function usePushTopics() {
     }
   }, [topics, toggleTopic]);
 
+  const unSubscribeToAllTopics = useCallback(async () => {
+    for (const topic of topics) {
+      await toggleTopic({id: topic.id, subscribe: false});
+    }
+  }, [topics, toggleTopic]);
+
   return {
     topics,
     toggleTopic,
     subscribeToAllTopics,
+    unSubscribeToAllTopics,
     isError,
     isLoading,
   };

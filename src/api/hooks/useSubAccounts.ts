@@ -1,8 +1,31 @@
-import {ApiPromise} from '@polkadot/api';
-import useApiQuery from 'src/api/hooks/useApiQuery';
+import {gql, useQuery} from '@apollo/client';
+import type {SubstrateChainAccount, SubstrateChainSubAccount} from 'src/generated/litentryGraphQLTypes';
+import {ACCOUNT_FIELDS_FRAGMENT} from 'src/api/hooks/useAccount';
 
-export function useSubAccounts(address?: string) {
-  return useApiQuery(['sub_accounts', {address}], (api: ApiPromise) => api.query.identity.subsOf(address || ''), {
-    enabled: Boolean(address),
+export type SubAccount = SubstrateChainSubAccount;
+
+const SUB_ACCOUNTS_QUERY = gql`
+  ${ACCOUNT_FIELDS_FRAGMENT}
+  query getAccount($address: String!) {
+    substrateChainAccount(address: $address) {
+      ...AccountFields
+      subAccounts {
+        address
+        account {
+          ...AccountFields
+        }
+      }
+    }
+  }
+`;
+
+export function useSubAccounts(address: string) {
+  const {data, ...rest} = useQuery<{substrateChainAccount: SubstrateChainAccount}>(SUB_ACCOUNTS_QUERY, {
+    variables: {address},
   });
+
+  return {
+    data: data?.substrateChainAccount,
+    ...rest,
+  };
 }

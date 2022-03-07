@@ -1,101 +1,38 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {View, StyleSheet, SectionList, Linking} from 'react-native';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {RouteProp} from '@react-navigation/native';
 import {ParachainsStackParamList} from '@ui/navigation/navigation';
 import {Card, Subheading, Paragraph, List, Divider, Icon, Button, Text} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
-import {BlockTime} from '@ui/components/BlockTime';
-import {useParachainEvents} from 'src/api/hooks/useParachainEvents';
-import {formatNumber, hexToBn} from '@polkadot/util';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {useParachainValidators} from 'src/api/hooks/useParachainValidators';
-import type {
-  AccountId,
-  CoreAssignment,
-  ParaValidatorIndex,
-  ParaId,
-  CandidatePendingAvailability,
-} from '@polkadot/types/interfaces';
 import {EmptyView} from '@ui/components/EmptyView';
-import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
-import {useAccountIdentityInfo} from 'src/api/hooks/useAccountIdentityInfo';
-import AccountInfoInlineTeaser from '@ui/components/AccountInfoInlineTeaser';
-import {useParachainInfo} from 'src/api/hooks/useParachainInfo';
-import {useParaEndpoints} from 'src/api/hooks/useParaEndpoints';
-import {notEmpty} from 'src/utils';
+import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
+import type {Account} from 'src/api/hooks/useAccount';
+import LoadingView from '@ui/components/LoadingView';
+import {useParaChain} from 'src/api/hooks/useParachain';
 
 type ScreenProps = {
   route: RouteProp<ParachainsStackParamList, 'Parachain'>;
 };
 
-type ParachainValidators = {
-  validators: AccountId[];
-  assignments?: CoreAssignment[];
-  validatorGroups: ParaValidatorIndex[][];
-  validatorIndices?: ParaValidatorIndex[];
-};
-
-function getValidatorInfo(id: string, parachainValidators?: ParachainValidators) {
-  const assignment = parachainValidators?.assignments?.find(({paraId}) => paraId.eq(id));
-
-  if (!assignment) {
-    return undefined;
-  }
-
-  return {
-    groupIndex: assignment.groupIdx,
-    validators: parachainValidators?.validatorGroups[assignment.groupIdx.toNumber()]
-      ?.map((indexActive) => [indexActive, parachainValidators?.validatorIndices?.[indexActive.toNumber()]])
-      .filter(([, a]) => a)
-      .map(([, indexValidator]) =>
-        indexValidator ? parachainValidators.validators[indexValidator?.toNumber()] : undefined,
-      )
-      .filter(notEmpty),
-  };
-}
-
-function getNonVoters(validators?: AccountId[], pendingAvail?: CandidatePendingAvailability) {
-  let list: AccountId[] = [];
-
-  if (validators && pendingAvail) {
-    list = pendingAvail.availabilityVotes
-      .toHuman()
-      .slice(2)
-      .replace(/_/g, '')
-      .split('')
-      .map((c, index) => (c === '0' ? validators[index] : null))
-      .filter((v, index): v is AccountId => !!v && index < validators.length);
-  }
-
-  return list;
-}
-
 export function ParachainDetailScreen({route}: ScreenProps) {
-  const {id, name, period, blocks} = route.params;
-  const events = useParachainEvents();
-  const {data: parachainValidators} = useParachainValidators();
-  const {data: parachainInfo} = useParachainInfo(id as unknown as ParaId);
-
-  const validatorInfo = useMemo(() => getValidatorInfo(id, parachainValidators), [id, parachainValidators]);
-  const nonVoters = useMemo(
-    () => getNonVoters(parachainValidators?.validators, parachainInfo?.pendingAvail),
-    [parachainValidators, parachainInfo],
-  );
-
-  const endpoints = useParaEndpoints(id as unknown as ParaId);
-  const homepage = endpoints?.length ? endpoints[0]?.homepage : undefined;
-
+  const {data: parachain, loading} = useParaChain(route.params.parachainId);
+  const [days, hours] = parachain?.lease?.blockTime || [];
   const sections = [
     {
-      title: `Val. Group ${validatorInfo?.groupIndex.toNumber() || ''} (${validatorInfo?.validators?.length || 0})`,
-      data: validatorInfo?.validators || [],
+      title: `Val. Group (${parachain?.validators?.validators.length || 0})`,
+      data: parachain?.validators?.validators || [],
     },
     {
-      title: `Non-Voters (${nonVoters.length})`,
-      data: nonVoters,
+      title: `Non-Voters (${parachain?.nonVoters.length || 0})`,
+      data: parachain?.nonVoters || [],
     },
   ];
+
+  if (loading && !parachain) return <LoadingView />;
+
+  if (!parachain) return <EmptyView />;
 
   return (
     <SafeView edges={noTopEdges}>
@@ -103,19 +40,11 @@ export function ParachainDetailScreen({route}: ScreenProps) {
         ListHeaderComponent={() => (
           <Card>
             <Card.Content>
-              <Subheading style={globalStyles.textCenter}>{name}</Subheading>
-              <Paragraph style={globalStyles.textCenter}>{`#${id}`}</Paragraph>
+              <Subheading style={globalStyles.textCenter}>{parachain.name}</Subheading>
+              <Paragraph style={globalStyles.textCenter}>{`#${parachain.id}`}</Paragraph>
               <View style={globalStyles.spaceBetweenRowContainer}>
-                <List.Item
-                  style={styles.listItem}
-                  title="Included"
-                  description={formatNumber(events.lastIncluded[id]?.blockNumber)}
-                />
-                <List.Item
-                  style={styles.listItem}
-                  title="Backed"
-                  description={formatNumber(events.lastBacked[id]?.blockNumber)}
-                />
+                <List.Item style={styles.listItem} title="Included" description={parachain.lastIncludedBlock} />
+                <List.Item style={styles.listItem} title="Backed" description={`${parachain.lastBackedBlock || 0}`} />
               </View>
               <Divider />
               <List.Item
@@ -123,8 +52,10 @@ export function ParachainDetailScreen({route}: ScreenProps) {
                 left={() => <LeftIcon icon="clock-outline" />}
                 right={() => (
                   <View style={styles.accessoryRight}>
-                    {period ? <Text>{period}</Text> : null}
-                    {blocks ? <BlockTime blockNumber={hexToBn(blocks)} /> : null}
+                    {parachain.lease ? <Text>{parachain.lease?.period}</Text> : null}
+                    <Text style={globalStyles.rowContainer}>
+                      {days || hours ? `${days || ''} ${hours || ''}` : null}
+                    </Text>
                   </View>
                 )}
               />
@@ -133,19 +64,19 @@ export function ParachainDetailScreen({route}: ScreenProps) {
                 left={() => <LeftIcon icon="sync" />}
                 right={() => (
                   <View style={styles.accessoryRight}>
-                    <Text>{parachainInfo?.lifecycle?.toString()}</Text>
+                    <Text>{parachain.lifecycle}</Text>
                   </View>
                 )}
               />
-              <Divider />
+              {parachain.homepage ? <Divider /> : null}
               <Padder scale={0.5} />
-              {homepage ? (
+              {parachain?.homepage ? (
                 <Button
                   icon="home"
                   onPress={() => {
-                    Linking.canOpenURL(homepage).then((supported) => {
+                    Linking.canOpenURL(String(parachain.homepage)).then((supported) => {
                       if (supported) {
-                        Linking.openURL(homepage);
+                        Linking.openURL(String(parachain.homepage));
                       }
                     });
                   }}>
@@ -158,9 +89,9 @@ export function ParachainDetailScreen({route}: ScreenProps) {
         contentContainerStyle={styles.content}
         stickySectionHeadersEnabled={false}
         sections={sections}
-        renderItem={({item}) => <MemoizedValidator accountId={item.toString()} />}
+        renderItem={({item}) => <MemoizedValidator account={item.account} />}
         renderSectionHeader={({section: {title}}) => <Text style={styles.header}>{title}</Text>}
-        keyExtractor={(item) => item.toString()}
+        keyExtractor={(item) => item.address}
         ListEmptyComponent={EmptyView}
         ItemSeparatorComponent={Divider}
         removeClippedSubviews={true}
@@ -177,19 +108,8 @@ function LeftIcon({icon}: {icon: string}) {
   );
 }
 
-function Validator({accountId}: {accountId: string}) {
-  const {data} = useAccountIdentityInfo(accountId.toString());
-
-  return (
-    <List.Item
-      left={() => (
-        <View style={globalStyles.justifyCenter}>
-          <IdentityIcon value={accountId.toString()} size={25} />
-        </View>
-      )}
-      title={() => data && <AccountInfoInlineTeaser identity={data} />}
-    />
-  );
+function Validator({account}: {account: Account}) {
+  return <List.Item title={() => account && <AccountTeaser account={account} />} />;
 }
 const MemoizedValidator = React.memo(Validator);
 
@@ -199,7 +119,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: standardPadding * 2,
   },
   listItem: {
-    width: 200,
+    width: '75%',
   },
   header: {
     marginTop: standardPadding * 3,

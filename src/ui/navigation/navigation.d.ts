@@ -1,4 +1,3 @@
-import type {ParaId} from '@polkadot/types/interfaces';
 import {
   accountsGuideScreen,
   accountsNavigator,
@@ -19,6 +18,7 @@ import {
   democracyScreen,
   devScreen,
   drawerNavigator,
+  eventsCalendarScreen,
   exportAccountWithJsonFileScreen,
   feedbackScreen,
   identityGuideScreen,
@@ -52,9 +52,7 @@ import {
   webviewScreen,
 } from '@ui/navigation/routeKeys';
 import type {CouncilCandidate, CouncilMember} from 'src/api/hooks/useCouncil';
-import type {CouncilMotion} from 'src/api/hooks/useCouncilMotions';
-import type {DemocracyProposal} from 'src/api/hooks/useDemocracyProposals';
-import type {DemocracyReferendum} from 'src/api/hooks/useDemocracyReferendum';
+import type {DemocracyProposal, DemocracyReferendum} from 'src/api/hooks/useDemocracy';
 
 type DashboardStackParamList = {
   [dashboardScreen]: undefined;
@@ -93,16 +91,17 @@ type DrawerParamList = {
   [feedbackScreen]: undefined;
   [parathreadsScreen]: undefined;
   [parachainAuctionsScreen]: undefined;
+  [eventsCalendarScreen]: undefined;
 };
 
 type ParachainsStackParamList = {
   [parachainsOverviewScreen]: undefined;
-  [parachainDetailScreen]: {id: string; name: string; period?: string; blocks?: string};
+  [parachainDetailScreen]: {parachainId: string};
 };
 
 type CrowdloansStackParamList = {
   [crowdloanScreen]: undefined;
-  [crowdloanFundDetailScreen]: {title: string; paraId: ParaId};
+  [crowdloanFundDetailScreen]: {title: string; paraId: string};
 };
 
 type PolkassemblyDiscussionStackParamList = {

@@ -16,12 +16,13 @@ import {List, Button, Divider, Modal, useTheme, Caption, Subheading, TextInput, 
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {MotionsScreen} from './MotionsScreen';
-import {useModuleElections} from 'src/api/hooks/useModuleElections';
+import {useModuleElection} from 'src/api/hooks/useModuleElection';
 import Badge from '@ui/components/Badge';
 import {noop} from 'lodash';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 import {decimalKeypad} from 'src/utils';
+import MaxBalance from '@ui/components/MaxBalance';
 
 const MAX_VOTES = 16;
 
@@ -47,7 +48,7 @@ export function CouncilScreen() {
 
 function CouncilOverviewScreen() {
   const {data: council, loading} = useCouncil();
-  const {module, hasElections} = useModuleElections();
+  const {data: moduleElection} = useModuleElection();
 
   const [councilVoteVisible, setCouncilVoteVisible] = useState(false);
 
@@ -110,7 +111,7 @@ function CouncilOverviewScreen() {
           ListEmptyComponent={EmptyView}
         />
       )}
-      {council && hasElections ? (
+      {council && moduleElection?.module ? (
         <CouncilVoteModal
           visible={councilVoteVisible}
           setVisible={(visible) => {
@@ -176,7 +177,7 @@ type CouncilVoteProps = {
   visible: boolean;
   setVisible: (visible: boolean) => void;
   candidates: CouncilMember[];
-  module: string | null;
+  module: NodeModule;
 };
 
 function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVoteProps) {
@@ -223,7 +224,7 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
   };
 
   const onVote = () => {
-    if (module && account) {
+    if (account) {
       startTx({
         address: account,
         txMethod: `${module}.vote`,
@@ -252,9 +253,9 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
         value={amount}
         onChangeText={(nextValue) => setAmount(decimalKeypad(nextValue))}
         contextMenuHidden={true}
+        right={<TextInput.Affix text={(api && formatBalance(getBalanceFromString(api, amount))) ?? ''} />}
       />
-
-      <Subheading style={styles.voteValue}>{api ? formatBalance(getBalanceFromString(api, amount)) : ''}</Subheading>
+      <MaxBalance address={account} />
 
       <Padder scale={1} />
       <Caption>{`Select up to ${MAX_VOTES} candidates in the preferred order:`}</Caption>
