@@ -23,6 +23,7 @@ import {useApiTx} from 'src/api/hooks/useApiTx';
 import {decimalKeypad} from 'src/utils';
 import MaxBalance from '@ui/components/MaxBalance';
 import {useAccount} from 'src/api/hooks/useAccount';
+import {useToggleTheme} from 'context/ThemeContext';
 
 const MAX_VOTES = 16;
 
@@ -185,6 +186,7 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
   const [amount, setAmount] = React.useState<string>('');
   const [selectedCandidates, setSelectedCandidates] = React.useState<Array<string>>([]);
   const {data: accountInfo} = useAccount(account);
+  const {theme} = useToggleTheme();
 
   // preselect already voted council members
   useEffect(() => {
@@ -264,7 +266,7 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
 
       <View style={styles.candidatesContainer}>
         <View style={styles.candidates}>
-          <ScrollView>
+          <ScrollView indicatorStyle={theme === 'dark' ? 'white' : 'black'}>
             {candidates.map((candidate) => (
               <MemberItem
                 key={candidate.address}
