@@ -20,6 +20,7 @@ import {Crowdloan, useCrowdloans} from 'src/api/hooks/useCrowdloans';
 import {NetworkContext} from 'context/NetworkContext';
 import type {BalanceOf} from '@polkadot/types/interfaces';
 import {notEmpty} from 'src/utils';
+import type {Account} from 'src/api/hooks/useAccount';
 
 export function CrowdloanScreen() {
   const {data, loading} = useCrowdloans();
@@ -215,7 +216,7 @@ function ContributeBox({
 }) {
   const startTx = useApiTx();
   const {api} = useApi();
-  const [account, setAccount] = React.useState<string>();
+  const [account, setAccount] = React.useState<Account>();
   const [amount, setAmount] = React.useState<string>('');
   const formatBalance = useFormatBalance();
 
@@ -235,10 +236,10 @@ function ContributeBox({
     <Modal visible={visible} onDismiss={reset}>
       <Text>Contribute with:</Text>
       <Padder scale={0.5} />
-      <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.address)} />
+      <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
       <Padder scale={1} />
       <Text>Amount:</Text>
-      {api && account && <BalanceInput api={api} account={account} onSelectDispatch={setAmount} />}
+      {api && account && <BalanceInput api={api} account={account} onChangeBalance={setAmount} />}
       <Padder scale={0.2} />
       <Text>minimum allowed: </Text>
       <Text>{minBalance}</Text>
@@ -254,7 +255,7 @@ function ContributeBox({
           onPress={() => {
             if (account) {
               startTx({
-                address: account,
+                address: account.address,
                 txMethod: 'crowdloan.contribute',
                 params: [parachainId, balance, null],
               });

@@ -9,7 +9,6 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useConvictions, Conviction} from 'src/api/hooks/useConvictions';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {referendumScreen} from '@ui/navigation/routeKeys';
@@ -17,6 +16,7 @@ import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
 import {ProposalCallInfo} from '@ui/components/ProposalCallInfo';
 import BalanceInput from '@ui/components/BalanceInput';
+import {Account} from 'src/api/hooks/useAccount';
 
 export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
   const startTx = useApiTx();
@@ -43,7 +43,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
     if (api && state.account && state.conviction && state.voteValue) {
       const balance = getBalanceFromString(api, state.voteValue);
       startTx({
-        address: state.account,
+        address: state.account.address,
         txMethod: 'democracy.vote',
         params: [
           referendum?.index,
@@ -122,20 +122,20 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
           <Caption>{`Vote with account`}</Caption>
           <SelectAccount
             onSelect={(account) => {
-              dispatch({type: 'SELECT_ACCOUNT', payload: account.address});
+              dispatch({type: 'SELECT_ACCOUNT', payload: account.accountInfo});
             }}
           />
           <Padder scale={1} />
 
-          <Caption>{`Vote Value`}</Caption>
-
           {api && state.account && (
-            <BalanceInput
-              api={api}
-              account={state.account}
-              dispatchType={`SET_VOTE_VALUE`}
-              onSelectDispatch={dispatch}
-            />
+            <>
+              <Caption>{`Vote Value`}</Caption>
+              <BalanceInput
+                api={api}
+                account={state.account}
+                onChangeBalance={(amount) => dispatch({type: `SET_VOTE_VALUE`, payload: amount})}
+              />
+            </>
           )}
 
           <Padder scale={1} />
@@ -190,7 +190,7 @@ const initialState: State = {
 
 type State = {
   voting?: 'YES' | 'NO';
-  account?: string;
+  account?: Account | undefined;
   voteValue: string;
   conviction?: Conviction;
 };
@@ -199,7 +199,7 @@ type Action =
   | {type: 'RESET'}
   | {type: 'CHANGE_VOTING'; payload: 'YES' | 'NO'}
   | {type: 'SET_VOTE_VALUE'; payload: string}
-  | {type: 'SELECT_ACCOUNT'; payload: string}
+  | {type: 'SELECT_ACCOUNT'; payload: Account | undefined}
   | {type: 'SELECT_CONVICTION'; payload: Conviction};
 
 function reducer(state: State, action: Action): State {

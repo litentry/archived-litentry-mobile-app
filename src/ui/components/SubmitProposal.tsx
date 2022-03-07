@@ -9,6 +9,7 @@ import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import globalStyles, {standardPadding} from '@ui/styles';
 import BalanceInput from './BalanceInput';
+import type {Account} from 'src/api/hooks/useAccount';
 
 export function SubmitProposal() {
   const {api} = useApi();
@@ -35,7 +36,7 @@ export function SubmitProposal() {
     if (api && state.balance && state.account) {
       const balance = getBalanceFromString(api, state.balance);
       startTx({
-        address: state.account,
+        address: state.account.address,
         txMethod: 'democracy.propose',
         params: [state.preimageHash, balance],
       });
@@ -49,7 +50,7 @@ export function SubmitProposal() {
         {`Submit proposal`}
       </Button>
 
-      <Modal visible={state.open} onDismiss={closeModal}>
+      <Modal visible={state?.open} onDismiss={closeModal}>
         <View style={globalStyles.alignCenter}>
           <Subheading>{`Submit proposal`}</Subheading>
         </View>
@@ -57,7 +58,7 @@ export function SubmitProposal() {
 
         <SelectAccount
           onSelect={(account) => {
-            dispatch({type: 'SELECT_ACCOUNT', payload: account.address});
+            dispatch({type: 'SELECT_ACCOUNT', payload: account.accountInfo});
           }}
         />
         <Padder scale={1} />
@@ -75,9 +76,17 @@ export function SubmitProposal() {
         />
         <Padder scale={1} />
 
-        <Paragraph>{`Locked balance:`}</Paragraph>
         {api && state.account && (
-          <BalanceInput api={api} account={state.account} dispatchType={`SET_BALANCE`} onSelectDispatch={dispatch} />
+          <>
+            <Paragraph>{`Locked balance:`}</Paragraph>
+            <BalanceInput
+              api={api}
+              account={state.account}
+              onChangeBalance={(amount) => {
+                dispatch({type: 'SET_BALANCE', payload: amount});
+              }}
+            />
+          </>
         )}
         <Padder scale={1} />
 
@@ -107,20 +116,20 @@ const styles = StyleSheet.create({
 
 type State = {
   open: boolean;
-  account: string;
-  preimageHash: string;
-  balance: string;
+  account?: Account | undefined;
+  preimageHash?: string;
+  balance?: string;
 };
 
 const initialState = {
-  account: '',
+  account: undefined,
   preimageHash: '',
   balance: '',
   open: false,
 };
 
 type Action =
-  | {type: 'SELECT_ACCOUNT'; payload: string}
+  | {type: 'SELECT_ACCOUNT'; payload: Account | undefined}
   | {type: 'SET_BALANCE'; payload: string}
   | {type: 'SET_HASH'; payload: string}
   | {type: 'SET_OPEN'; payload: boolean}

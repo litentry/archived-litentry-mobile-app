@@ -14,6 +14,7 @@ import {Button, Caption, Headline, Icon, List, Modal, Text} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {ProposalCallInfo} from '@ui/components/ProposalCallInfo';
+import {Account} from 'src/api/hooks/useAccount';
 
 export function DemocracyProposalScreen({
   route,
@@ -113,7 +114,7 @@ export function DemocracyProposalScreen({
           <Padder scale={0.5} />
           <SelectAccount
             onSelect={(account) => {
-              dispatch({type: 'SELECT_ACCOUNT', payload: account.address});
+              dispatch({type: 'SELECT_ACCOUNT', payload: account.accountInfo});
             }}
           />
           <Padder scale={1.5} />
@@ -134,7 +135,7 @@ export function DemocracyProposalScreen({
               onPress={() => {
                 if (state.account) {
                   startTx({
-                    address: state.account,
+                    address: state.account.address,
                     txMethod: 'democracy.second',
                     params:
                       api?.tx.democracy.second.meta.args.length === 2
@@ -163,8 +164,12 @@ const styles = StyleSheet.create({
 
 const initialState: State = {open: false};
 
-type State = {open: boolean; account?: string};
-type Action = {type: 'RESET'} | {type: 'SELECT_ACCOUNT'; payload: string} | {type: 'OPEN'} | {type: 'CLOSE'};
+type State = {open: boolean; account?: Account | undefined};
+type Action =
+  | {type: 'RESET'}
+  | {type: 'SELECT_ACCOUNT'; payload: Account | undefined}
+  | {type: 'OPEN'}
+  | {type: 'CLOSE'};
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
