@@ -51,6 +51,13 @@ export const ACCOUNT_FIELDS_FRAGMENT = gql`
       freeFrozen
       formattedFreeFrozen
     }
+    councilVote {
+      stake
+      formattedStake
+      votes {
+        address
+      }
+    }
   }
 `;
 

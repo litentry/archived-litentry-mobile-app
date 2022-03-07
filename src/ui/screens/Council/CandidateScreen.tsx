@@ -7,8 +7,6 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {Padder} from '@ui/components/Padder';
 import globalStyles from '@ui/styles';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 import {useTheme} from '@ui/library';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {EmptyView} from '@ui/components/EmptyView';
@@ -153,8 +151,6 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
 
 function Voter({account}: {account: string}) {
   const {data: accountInfo} = useAccount(account);
-  const {data: voterData} = useCouncilVotesOf(account);
-  const formatBalance = useFormatBalance();
 
   return (
     <List.Item
@@ -164,7 +160,7 @@ function Voter({account}: {account: string}) {
         </View>
       )}
       title={accountInfo && <Account account={accountInfo} />}
-      description={voterData?.stake ? formatBalance(voterData.stake) : ''}
+      description={accountInfo?.councilVote?.formattedStake || ''}
       disabled
     />
   );

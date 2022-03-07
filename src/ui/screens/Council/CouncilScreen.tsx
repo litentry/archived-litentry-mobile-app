@@ -20,9 +20,9 @@ import {useModuleElection} from 'src/api/hooks/useModuleElection';
 import Badge from '@ui/components/Badge';
 import {noop} from 'lodash';
 import {useApiTx} from 'src/api/hooks/useApiTx';
-import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 import {decimalKeypad} from 'src/utils';
 import MaxBalance from '@ui/components/MaxBalance';
+import {useAccount} from 'src/api/hooks/useAccount';
 
 const MAX_VOTES = 16;
 
@@ -184,16 +184,18 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
   const [account, setAccount] = React.useState<string>();
   const [amount, setAmount] = React.useState<string>('');
   const [selectedCandidates, setSelectedCandidates] = React.useState<Array<string>>([]);
-  const {data: voterData} = useCouncilVotesOf(account);
+  const {data: accountInfo} = useAccount(account);
 
   // preselect already voted council members
   useEffect(() => {
-    if (voterData != null) {
+    if (accountInfo?.councilVote?.votes != null) {
       setSelectedCandidates(
-        voterData.votes.map((a) => a.toString()).filter((a) => candidates.some((c) => c.address === a)),
+        accountInfo?.councilVote?.votes
+          .map((acc) => acc.address)
+          .filter((acc) => candidates.some((c) => c.address === acc)),
       );
     }
-  }, [voterData, candidates]);
+  }, [accountInfo, candidates]);
 
   const {api} = useApi();
   const startTx = useApiTx();

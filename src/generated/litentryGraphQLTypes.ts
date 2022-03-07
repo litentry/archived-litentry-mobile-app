@@ -809,6 +809,7 @@ export type Query = {
   substrateChainParachain?: Maybe<SubstrateChainParachain>;
   substrateChainParachains?: Maybe<Array<SubstrateChainParachain>>;
   substrateChainParachainsInfo: SubstrateChainParachainsInfo;
+  substrateChainParathreads: Array<SubstrateChainParathread>;
   substrateChainRegistrarsSummary: SubstrateChainRegistrarsSummary;
   substrateChainTip?: Maybe<SubstrateChainTip>;
   substrateChainTips?: Maybe<Array<SubstrateChainTip>>;
@@ -1782,6 +1783,7 @@ export type SubstrateChainAccount = {
   __typename?: 'SubstrateChainAccount';
   address: Scalars['String'];
   balance: SubstrateChainAccountBalance;
+  councilVote?: Maybe<SubstrateChainCouncilVote>;
   display: Scalars['String'];
   hasIdentity: Scalars['Boolean'];
   registration: SubstrateChainDeriveAccountRegistration;
@@ -1984,6 +1986,13 @@ export type SubstrateChainCouncilMotion = {
   votingStatus?: Maybe<SubstrateChainVotingStatus>;
 };
 
+export type SubstrateChainCouncilVote = {
+  __typename?: 'SubstrateChainCouncilVote';
+  formattedStake: Scalars['String'];
+  stake: Scalars['String'];
+  votes: Array<SubstrateChainVoter>;
+};
+
 export type SubstrateChainCrowdloan = {
   __typename?: 'SubstrateChainCrowdloan';
   cap: Scalars['String'];
@@ -2130,6 +2139,12 @@ export type SubstrateChainLeasePeriod = {
   totalPeriod: Scalars['String'];
 };
 
+export type SubstrateChainManager = {
+  __typename?: 'SubstrateChainManager';
+  account: SubstrateChainAccount;
+  address: Scalars['String'];
+};
+
 export type SubstrateChainModuleElection = {
   __typename?: 'SubstrateChainModuleElection';
   hasElections: Scalars['Boolean'];
@@ -2181,6 +2196,15 @@ export type SubstrateChainParachainsInfo = {
   parachainsCount: Scalars['Int'];
   parathreadsCount: Scalars['Int'];
   proposalsCount: Scalars['Int'];
+};
+
+export type SubstrateChainParathread = {
+  __typename?: 'SubstrateChainParathread';
+  homepage?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  lease?: Maybe<SubstrateChainLease>;
+  manager?: Maybe<SubstrateChainManager>;
+  name?: Maybe<Scalars['String']>;
 };
 
 export type SubstrateChainProposalArg = {
@@ -2322,6 +2346,12 @@ export type SubstrateChainValidatorsGroup = {
   __typename?: 'SubstrateChainValidatorsGroup';
   groupIndex?: Maybe<Scalars['String']>;
   validators: Array<SubstrateChainAccountInfo>;
+};
+
+export type SubstrateChainVoter = {
+  __typename?: 'SubstrateChainVoter';
+  account: SubstrateChainAccount;
+  address: Scalars['String'];
 };
 
 export type SubstrateChainVotingStatus = {
