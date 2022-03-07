@@ -1,6 +1,6 @@
 import React, {useContext, useCallback, useState, useRef} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
-import {TextInput, Button, Tabs, TabScreen, useTabNavigation, useTabIndex} from '@ui/library';
+import {TextInput, Button, Tabs, TabScreen, useTabNavigation, useTabIndex, useTheme} from '@ui/library';
 import {NetworkContext} from 'context/NetworkContext';
 import QRCamera, {QRCameraRef} from '@ui/components/QRCamera';
 import {Padder} from '@ui/components/Padder';
@@ -19,6 +19,7 @@ export function AddSubIdentity({
   const {currentNetwork} = useContext(NetworkContext);
   const [subAddress, setSubAddress] = useState('');
   const [subName, setSubName] = useState('');
+  const {colors} = useTheme();
 
   const addSubIdentity = () => {
     if (isAddressValid(currentNetwork, subAddress)) {
@@ -50,7 +51,7 @@ export function AddSubIdentity({
       </View>
       <Padder scale={1} />
       <View style={styles.tabViewContainer}>
-        <Tabs>
+        <Tabs style={{backgroundColor: colors.background}}>
           <TabScreen label="Type in" icon="keyboard">
             <View style={globalStyles.paddedContainer}>
               <TextInput

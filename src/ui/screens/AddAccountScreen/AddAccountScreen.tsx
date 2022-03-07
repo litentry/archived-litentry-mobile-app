@@ -1,7 +1,7 @@
 import React, {useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
-import {Divider, Button, Tabs, TabScreen, TextInput} from '@ui/library';
+import {Divider, Button, Tabs, TabScreen, TextInput, useTheme} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {NetworkContext} from 'context/NetworkContext';
 import {Padder} from '@ui/components/Padder';
@@ -25,6 +25,7 @@ export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppSt
   const {currentNetwork} = useContext(NetworkContext);
   const [state, dispatch] = useReducer(addAccountReducer, initialState);
   const {addAccount} = useAccounts();
+  const {colors} = useTheme();
 
   const handleInputChange = (text: string) => {
     dispatch({type: 'SET_ADDRESS', payload: text});
@@ -110,7 +111,7 @@ export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppSt
               case 'input':
                 return (
                   <View style={styles.tabViewContainer}>
-                    <Tabs onChangeIndex={(index) => setTabIndex(index)}>
+                    <Tabs style={{backgroundColor: colors.background}} onChangeIndex={(index) => setTabIndex(index)}>
                       <TabScreen label="Type in" icon="keyboard">
                         <View style={globalStyles.paddedContainer}>
                           <TextInput
