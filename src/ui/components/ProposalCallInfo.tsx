@@ -1,6 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
-import {Paragraph, Card, Caption} from '@ui/library';
+import {Paragraph, Card, Caption, Text} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import type {DemocracyProposal} from 'src/api/hooks/useDemocracyProposals';
 import type {DemocracyReferendum} from 'src/api/hooks/useDemocracyReferendum';
@@ -17,6 +17,7 @@ export function ProposalCallInfo({proposal}: ProposalInfoProps) {
       <Padder scale={1} />
       <Card>
         <Card.Content>
+          <Text>{`${proposal.method}.${proposal.section}():`}</Text>
           {proposal.args?.map((arg) => (
             <Caption key={arg.name}>{`${arg.name}: ${arg.value}`}</Caption>
           ))}
