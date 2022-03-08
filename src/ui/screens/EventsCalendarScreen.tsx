@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, ScrollView, View} from 'react-native';
+import {StyleSheet, ScrollView, View, Platform} from 'react-native';
 import dayjs from 'dayjs';
 import Animated, {FadeInUp, FadeOutDown} from 'react-native-reanimated';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -59,7 +59,7 @@ export function EventsCalendarScreen() {
 function Schedule({date, events}: {date: string; events: CalendarEvent[]}) {
   const {colors} = useTheme();
   return (
-    <Animated.View entering={FadeInUp} exiting={FadeOutDown} key={date}>
+    <Container key={date}>
       <Card style={styles.container}>
         <Title>{date}</Title>
         <View>
@@ -77,8 +77,24 @@ function Schedule({date, events}: {date: string; events: CalendarEvent[]}) {
           ))}
         </View>
       </Card>
-    </Animated.View>
+    </Container>
   );
+}
+
+/**
+ * Reanimated layout animations have issues on android,
+ * TODO: remove this container when fixed.
+ */
+function Container({children, key}: {children: React.ReactNode; key: string}) {
+  if (Platform.OS === 'ios') {
+    return (
+      <Animated.View entering={FadeInUp} exiting={FadeOutDown} key={key}>
+        {children}
+      </Animated.View>
+    );
+  }
+
+  return <View>{children}</View>;
 }
 
 const styles = StyleSheet.create({
