@@ -110,12 +110,12 @@ const styles = StyleSheet.create({
   emptyText: {fontWeight: 'normal'},
 });
 
-function sortByDisplayName(account: AccountType[]) {
-  return account.sort((a, b) => a.meta.name.localeCompare(b.meta.name));
+function sortByDisplayName(accounts: AccountType[]) {
+  return accounts.sort((a, b) => a.meta.name.localeCompare(b.meta.name));
 }
 
-function sortByIsFavorite(account: AccountType[]) {
-  return account.sort((a, b) => Number(b.meta.isFavorite) - Number(a.meta.isFavorite));
+function sortByIsFavorite(accounts: AccountType[]) {
+  return accounts.sort((a, b) => Number(b.meta.isFavorite) - Number(a.meta.isFavorite));
 }
 
 function AccountItem({
