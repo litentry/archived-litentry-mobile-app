@@ -59,7 +59,7 @@ export function SendFundScreen({navigation, route}: Props) {
           <View style={styles.container}>
             <Headline>Send</Headline>
             <Padder scale={1} />
-            {api && accountInfo && <BalanceInput api={api} account={accountInfo} onChangeBalance={setAmount} />}
+            <BalanceInput api={api} account={accountInfo} onChangeBalance={setAmount} />
             <Padder scale={1} />
             <TextInput
               autoComplete="off"

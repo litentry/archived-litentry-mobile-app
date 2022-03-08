@@ -76,18 +76,15 @@ export function SubmitProposal() {
         />
         <Padder scale={1} />
 
-        {api && state.account && (
-          <>
-            <Paragraph>{`Locked balance:`}</Paragraph>
-            <BalanceInput
-              api={api}
-              account={state.account}
-              onChangeBalance={(amount) => {
-                dispatch({type: 'SET_BALANCE', payload: amount});
-              }}
-            />
-          </>
-        )}
+        <Paragraph>{`Locked balance:`}</Paragraph>
+        <BalanceInput
+          api={api}
+          account={state.account}
+          onChangeBalance={(amount) => {
+            dispatch({type: 'SET_BALANCE', payload: amount});
+          }}
+        />
+
         <Padder scale={1} />
 
         <Caption>{`Minimum deposit: ${api && formatBalance(api.consts.democracy.minimumDeposit)}`}</Caption>

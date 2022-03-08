@@ -239,7 +239,7 @@ function ContributeBox({
       <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
       <Padder scale={1} />
       <Text>Amount:</Text>
-      {api && account && <BalanceInput api={api} account={account} onChangeBalance={setAmount} />}
+      <BalanceInput api={api} account={account} onChangeBalance={setAmount} />
       <Padder scale={0.2} />
       <Text>minimum allowed: </Text>
       <Text>{minBalance}</Text>

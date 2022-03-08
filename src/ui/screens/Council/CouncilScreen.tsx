@@ -242,7 +242,7 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
 
       <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
       <Padder scale={1} />
-      {api && account && <BalanceInput api={api} account={account} onChangeBalance={setAmount} />}
+      <BalanceInput api={api} account={account} onChangeBalance={setAmount} />
       <Padder scale={1} />
       <Caption>{`Select up to ${MAX_VOTES} candidates in the preferred order:`}</Caption>
 

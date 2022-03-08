@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
-import {TextInput, useTheme} from '@ui/library';
+import {TextInput} from '@ui/library';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {decimalKeypad} from 'src/utils';
 import MaxBalance from './MaxBalance';

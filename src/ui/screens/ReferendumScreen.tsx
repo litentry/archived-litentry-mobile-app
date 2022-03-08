@@ -127,16 +127,12 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
           />
           <Padder scale={1} />
 
-          {api && state.account && (
-            <>
-              <Caption>{`Vote Value`}</Caption>
-              <BalanceInput
-                api={api}
-                account={state.account}
-                onChangeBalance={(amount) => dispatch({type: `SET_VOTE_VALUE`, payload: amount})}
-              />
-            </>
-          )}
+          <Caption>{`Vote Value`}</Caption>
+          <BalanceInput
+            api={api}
+            account={state.account}
+            onChangeBalance={(amount) => dispatch({type: `SET_VOTE_VALUE`, payload: amount})}
+          />
 
           <Padder scale={1} />
 
