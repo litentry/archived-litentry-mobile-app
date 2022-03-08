@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 import {StyleSheet, Dimensions} from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {BarCodeReadEvent} from 'react-native-camera';
@@ -10,34 +10,26 @@ type PropTypes = {
   onRead: (payload: BarCodeReadEvent) => void;
 };
 
-function QRCamera(props: PropTypes) {
-  const {onRead} = props;
+export type QRCameraRef = QRCodeScanner;
 
-  const handleScannerRead = useCallback(
-    (payload: BarCodeReadEvent) => {
-      onRead(payload);
-    },
-    [onRead],
-  );
-
-  return (
-    <QRCodeScanner
-      onRead={handleScannerRead}
-      showMarker
-      markerStyle={styles.marker}
-      cameraStyle={styles.cameraBase}
-      containerStyle={styles.container}
-      notAuthorizedView={
-        <Layout style={styles.notAuthorized}>
-          <Layout style={styles.notAuthorizedHack}>
-            <Icon name="qrcode-scan" size={32} />
-            <Paragraph>This requires your Camera permission to scan.</Paragraph>
-          </Layout>
+const QRCamera = React.forwardRef<QRCodeScanner, PropTypes>((props, ref) => (
+  <QRCodeScanner
+    ref={ref}
+    onRead={props.onRead}
+    showMarker
+    markerStyle={styles.marker}
+    cameraStyle={styles.cameraBase}
+    containerStyle={styles.container}
+    notAuthorizedView={
+      <Layout style={styles.notAuthorized}>
+        <Layout style={styles.notAuthorizedHack}>
+          <Icon name="qrcode-scan" size={32} />
+          <Paragraph>This requires your Camera permission to scan.</Paragraph>
         </Layout>
-      }
-    />
-  );
-}
+      </Layout>
+    }
+  />
+));
 
 const styles = StyleSheet.create({
   container: {
