@@ -15,20 +15,19 @@ type PropTypes = {
 };
 
 export function BalanceInput(props: PropTypes) {
-  const {colors} = useTheme();
   const {api, account} = props;
   const [amount, setAmount] = useState<string>('');
-  const [isMaximum, setIsMaximum] = useState<boolean>(true);
+  const [isMaximum, setIsMaximum] = useState<boolean>(false);
   const formatBalance = useFormatBalance();
   useEffect(() => {
-    amount !== '' && Number(amount) >= Number(account?.balance.total) ? setIsMaximum(false) : setIsMaximum(true);
+    amount !== '' && Number(amount) >= Number(account?.balance.total) ? setIsMaximum(true) : setIsMaximum(false);
   }, [amount, account]);
   return (
     <>
       <TextInput
         dense
         style={styles.textInput}
-        theme={{colors: {primary: isMaximum ? colors.primary : colors.backdrop}}}
+        error={isMaximum}
         mode="outlined"
         autoComplete="off"
         placeholder="Enter amount"
