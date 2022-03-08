@@ -7,13 +7,12 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {Padder} from '@ui/components/Padder';
 import globalStyles from '@ui/styles';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 import {useTheme} from '@ui/library';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {EmptyView} from '@ui/components/EmptyView';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {Account} from '@ui/components/Account/Account';
+import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 
 type ScreenProps = {
   navigation: NavigationProp<DashboardStackParamList>;
@@ -153,8 +152,7 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
 
 function Voter({account}: {account: string}) {
   const {data: accountInfo} = useAccount(account);
-  const {data: voterData} = useCouncilVotesOf(account);
-  const formatBalance = useFormatBalance();
+  const {data: councilVote} = useCouncilVotesOf(account);
 
   return (
     <List.Item
@@ -164,7 +162,7 @@ function Voter({account}: {account: string}) {
         </View>
       )}
       title={accountInfo && <Account account={accountInfo} />}
-      description={voterData?.stake ? formatBalance(voterData.stake) : ''}
+      description={councilVote?.formattedStake || ''}
       disabled
     />
   );
