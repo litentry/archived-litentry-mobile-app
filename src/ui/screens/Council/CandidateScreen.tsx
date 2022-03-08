@@ -154,8 +154,6 @@ function Voter({account}: {account: string}) {
   const {data: accountInfo} = useAccount(account);
   const {data: councilVote} = useCouncilVotesOf(account);
 
-  console.log(councilVote);
-
   return (
     <List.Item
       left={() => (
