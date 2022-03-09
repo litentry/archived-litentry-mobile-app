@@ -9,6 +9,7 @@ import {DashboardStackParamList} from '@ui/navigation/navigation';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {Padder} from '@ui/components/Padder';
+import {Account} from 'src/api/hooks/useAccount';
 
 export function ProposeTipScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {colors} = useTheme();
@@ -21,7 +22,7 @@ export function ProposeTipScreen({navigation}: {navigation: NavigationProp<Dashb
   const submit = () => {
     if (state.account) {
       startTx({
-        address: state.account,
+        address: state.account.address,
         txMethod: 'tips.reportAwesome',
         params: [state.reason, state.beneficiary],
       })
@@ -44,7 +45,7 @@ export function ProposeTipScreen({navigation}: {navigation: NavigationProp<Dashb
         <View style={globalStyles.flex}>
           <Subheading>{`Sending from`}</Subheading>
           <Padder scale={0.5} />
-          <SelectAccount onSelect={(account) => dispatch({type: 'SET_ACCOUNT', payload: account.address})} />
+          <SelectAccount onSelect={(account) => dispatch({type: 'SET_ACCOUNT', payload: account.accountInfo})} />
           <Padder scale={1.5} />
 
           <Subheading>{`Beneficiary`}</Subheading>
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
 
 type Action =
   | {type: 'SET_BENEFICIARY'; payload: string}
-  | {type: 'SET_ACCOUNT'; payload: string}
+  | {type: 'SET_ACCOUNT'; payload: Account | undefined}
   | {
       type: 'SET_REASON';
       payload: string;
@@ -93,7 +94,7 @@ type Action =
   | {type: 'SET_ERROR'; payload: State['error']};
 
 type State = {
-  account?: string;
+  account?: Account | undefined;
   beneficiary: string;
   reason: string;
   error?: 'beneficiary_error';

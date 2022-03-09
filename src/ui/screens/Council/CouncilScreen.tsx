@@ -10,9 +10,8 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {useCouncil, CouncilCandidate, CouncilMember, Council} from 'src/api/hooks/useCouncil';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import {getBalanceFromString} from 'src/api/utils/balance';
 import {candidateScreen} from '@ui/navigation/routeKeys';
-import {List, Button, Divider, Modal, useTheme, Caption, Subheading, TextInput, Text} from '@ui/library';
+import {List, Button, Divider, Modal, useTheme, Caption, Subheading, Text} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {MotionsScreen} from './MotionsScreen';
@@ -20,9 +19,9 @@ import {useModuleElection} from 'src/api/hooks/useModuleElection';
 import Badge from '@ui/components/Badge';
 import {noop} from 'lodash';
 import {useApiTx} from 'src/api/hooks/useApiTx';
-import {decimalKeypad} from 'src/utils';
-import MaxBalance from '@ui/components/MaxBalance';
 import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
+import BalanceInput from '@ui/components/BalanceInput';
+import type {Account} from 'src/api/hooks/useAccount';
 
 const MAX_VOTES = 16;
 
@@ -181,10 +180,10 @@ type CouncilVoteProps = {
 };
 
 function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVoteProps) {
-  const [account, setAccount] = React.useState<string>();
+  const [account, setAccount] = React.useState<Account>();
   const [amount, setAmount] = React.useState<string>('');
   const [selectedCandidates, setSelectedCandidates] = React.useState<Array<string>>([]);
-  const {data: councilVote} = useCouncilVotesOf(account);
+  const {data: councilVote} = useCouncilVotesOf(account?.address);
   const {dark: isDarkTheme} = useTheme();
 
   // preselect already voted council members
@@ -227,7 +226,7 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
   const onVote = () => {
     if (account) {
       startTx({
-        address: account,
+        address: account.address,
         txMethod: `${module}.vote`,
         params: [selectedCandidates, amount],
       });
@@ -242,22 +241,9 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
       </View>
       <Padder scale={1} />
 
-      <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.address)} />
+      <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
       <Padder scale={1} />
-
-      <TextInput
-        dense
-        autoComplete="off"
-        mode="outlined"
-        placeholder="Vote value"
-        keyboardType="decimal-pad"
-        value={amount}
-        onChangeText={(nextValue) => setAmount(decimalKeypad(nextValue))}
-        contextMenuHidden={true}
-        right={<TextInput.Affix text={(api && formatBalance(getBalanceFromString(api, amount))) ?? ''} />}
-      />
-      <MaxBalance address={account} />
-
+      <BalanceInput api={api} account={account} onChangeBalance={setAmount} />
       <Padder scale={1} />
       <Caption>{`Select up to ${MAX_VOTES} candidates in the preferred order:`}</Caption>
 

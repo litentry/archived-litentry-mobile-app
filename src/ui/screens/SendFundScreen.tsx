@@ -6,7 +6,6 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {Modalize} from 'react-native-modalize';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {useApiTx} from 'src/api/hooks/useApiTx';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {sendFundScreen} from '@ui/navigation/routeKeys';
@@ -14,8 +13,8 @@ import {Button, Headline, IconButton, Text, TextInput} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {Layout} from '@ui/components/Layout';
 import {standardPadding} from '@ui/styles';
-import MaxBalance from '@ui/components/MaxBalance';
-import {decimalKeypad} from 'src/utils';
+import BalanceInput from '@ui/components/BalanceInput';
+import {useAccount} from 'src/api/hooks/useAccount';
 
 type Props = {
   navigation: NavigationProp<AccountsStackParamList, typeof sendFundScreen>;
@@ -24,11 +23,11 @@ type Props = {
 
 export function SendFundScreen({navigation, route}: Props) {
   const {address} = route.params;
+  const {data: accountInfo} = useAccount(address);
   const ref = useRef<Modalize>(null);
   const [amount, setAmount] = React.useState('');
   const [to, setTo] = React.useState<string>();
   const [scanning, setScanning] = React.useState(false);
-  const formatBalance = useFormatBalance();
   const {api} = useApi();
   const startTx = useApiTx();
 
@@ -60,18 +59,7 @@ export function SendFundScreen({navigation, route}: Props) {
           <View style={styles.container}>
             <Headline>Send</Headline>
             <Padder scale={1} />
-            <TextInput
-              autoComplete="off"
-              multiline={false}
-              placeholder="Amount"
-              keyboardType="decimal-pad"
-              value={amount}
-              onFocus={() => setAmount('')}
-              onChangeText={(nextValue) => setAmount(decimalKeypad(nextValue))}
-              right={<TextInput.Affix text={(api && formatBalance(getBalanceFromString(api, amount))) ?? ''} />}
-              contextMenuHidden={true}
-            />
-            <MaxBalance address={address} />
+            <BalanceInput api={api} account={accountInfo} onChangeBalance={setAmount} />
             <Padder scale={1} />
             <TextInput
               autoComplete="off"
