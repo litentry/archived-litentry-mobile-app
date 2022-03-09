@@ -386,8 +386,8 @@ PODS:
     - Firebase/Messaging (= 8.11.0)
     - React-Core
     - RNFBApp
-  - RNFS (2.18.0):
-    - React
+  - RNFS (2.19.0):
+    - React-Core
   - RNGestureHandler (2.2.0):
     - React-Core
   - RNKeychain (8.0.0):
@@ -708,7 +708,7 @@ SPEC CHECKSUMS:
   RNDeviceInfo: 4944cf8787b9c5bffaf301fda68cc1a2ec003341
   RNFBApp: 0d0ffe0e3aacdf9fcad35f90b79bd8a3d3a99844
   RNFBMessaging: 2a9dffb32f76274f86123644c62902e9ddc2a9ec
-  RNFS: 3ab21fa6c56d65566d1fb26c2228e2b6132e5e32
+  RNFS: fc610f78fdf8bfc89a9e5cc2f898519f4dba1002
   RNGestureHandler: bf572f552ea324acd5b5464b8d30755b2d8c1de6
   RNKeychain: 4f63aada75ebafd26f4bc2c670199461eab85d94
   RNPermissions: bcd846e8f5a7f39e921cc7ca7172e2de0e698b6f
