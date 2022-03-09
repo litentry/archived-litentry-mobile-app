@@ -1,7 +1,7 @@
 import React, {useReducer} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
-import {Button, Divider, Headline, Modal, Select, Subheading, Caption, TextInput, List, Text} from '@ui/library';
+import {Button, Divider, Headline, Modal, Select, Subheading, Caption, List, Text} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {useApi} from 'context/ChainApiContext';
 import {ProgressBar} from '@ui/components/ProgressBar';
@@ -9,21 +9,19 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useConvictions, Conviction} from 'src/api/hooks/useConvictions';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {getBalanceFromString} from 'src/api/utils/balance';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {referendumScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
-import {decimalKeypad} from 'src/utils';
-import MaxBalance from '@ui/components/MaxBalance';
 import {ProposalCallInfo} from '@ui/components/ProposalCallInfo';
+import BalanceInput from '@ui/components/BalanceInput';
+import {Account} from 'src/api/hooks/useAccount';
 
 export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
   const startTx = useApiTx();
   const {api} = useApi();
   const [state, dispatch] = useReducer(reducer, initialState);
-  const formatBalance = useFormatBalance();
   const referendum = route.params.referendum;
   const convictions = useConvictions();
 
@@ -45,7 +43,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
     if (api && state.account && state.conviction && state.voteValue) {
       const balance = getBalanceFromString(api, state.voteValue);
       startTx({
-        address: state.account,
+        address: state.account.address,
         txMethod: 'democracy.vote',
         params: [
           referendum?.index,
@@ -124,24 +122,18 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
           <Caption>{`Vote with account`}</Caption>
           <SelectAccount
             onSelect={(account) => {
-              dispatch({type: 'SELECT_ACCOUNT', payload: account.address});
+              dispatch({type: 'SELECT_ACCOUNT', payload: account.accountInfo});
             }}
           />
           <Padder scale={1} />
 
           <Caption>{`Vote Value`}</Caption>
-          <TextInput
-            dense
-            mode="outlined"
-            autoComplete="off"
-            placeholder="Place your Text"
-            keyboardType="decimal-pad"
-            value={state.voteValue}
-            onChangeText={(nextValue) => dispatch({type: 'SET_VOTE_VALUE', payload: decimalKeypad(nextValue)})}
-            contextMenuHidden={true}
-            right={<TextInput.Affix text={(api && formatBalance(getBalanceFromString(api, state.voteValue))) ?? ''} />}
+          <BalanceInput
+            api={api}
+            account={state.account}
+            onChangeBalance={(amount) => dispatch({type: `SET_VOTE_VALUE`, payload: amount})}
           />
-          <MaxBalance address={state.account} />
+
           <Padder scale={1} />
 
           <Caption>{`Conviction`}</Caption>
@@ -194,7 +186,7 @@ const initialState: State = {
 
 type State = {
   voting?: 'YES' | 'NO';
-  account?: string;
+  account?: Account | undefined;
   voteValue: string;
   conviction?: Conviction;
 };
@@ -203,7 +195,7 @@ type Action =
   | {type: 'RESET'}
   | {type: 'CHANGE_VOTING'; payload: 'YES' | 'NO'}
   | {type: 'SET_VOTE_VALUE'; payload: string}
-  | {type: 'SELECT_ACCOUNT'; payload: string}
+  | {type: 'SELECT_ACCOUNT'; payload: Account | undefined}
   | {type: 'SELECT_CONVICTION'; payload: Conviction};
 
 function reducer(state: State, action: Action): State {
