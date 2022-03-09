@@ -41,12 +41,12 @@ export function BalanceInput(props: PropTypes) {
           props.onChangeBalance(decimalKeypad(nextValue));
         }}
         contextMenuHidden={true}
-        right={
-          <TextInput.Affix
-            textStyle={styles.affix}
-            text={(api && formatBalance(getBalanceFromString(api, amount))) ?? ''}
-          />
-        }
+        // right={
+        //   <TextInput.Affix
+        //     textStyle={styles.affix}
+        //     text={(api && formatBalance(getBalanceFromString(api, amount))) ?? ''}
+        //   />
+        // }
       />
       <MaxBalance address={account} />
     </>

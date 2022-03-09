@@ -10,12 +10,14 @@ import {getBalanceFromString} from 'src/api/utils/balance';
 import globalStyles, {standardPadding} from '@ui/styles';
 import BalanceInput from './BalanceInput';
 import type {Account} from 'src/api/hooks/useAccount';
+import {useChainInfo} from 'src/api/hooks/useChainInfo';
 
 export function SubmitProposal() {
   const {api} = useApi();
   const [state, dispatch] = React.useReducer(reducer, initialState);
   const formatBalance = useFormatBalance();
   const startTx = useApiTx();
+  const {data: chainInfo} = useChainInfo();
 
   const openModal = () => {
     dispatch({type: 'SET_OPEN', payload: true});
@@ -33,8 +35,8 @@ export function SubmitProposal() {
   const isDisabled = !state.account || !state.preimageHash || !state.balance;
 
   const submit = () => {
-    if (api && state.balance && state.account) {
-      const balance = getBalanceFromString(api, state.balance);
+    if (chainInfo && state.balance && state.account) {
+      const balance = getBalanceFromString(chainInfo.registry, state.balance);
       startTx({
         address: state.account.address,
         txMethod: 'democracy.propose',

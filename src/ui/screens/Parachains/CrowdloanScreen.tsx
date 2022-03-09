@@ -21,6 +21,7 @@ import {NetworkContext} from 'context/NetworkContext';
 import type {BalanceOf} from '@polkadot/types/interfaces';
 import {notEmpty} from 'src/utils';
 import type {Account} from 'src/api/hooks/useAccount';
+import {useChainInfo} from 'src/api/hooks/useChainInfo';
 
 export function CrowdloanScreen() {
   const {data, loading} = useCrowdloans();
@@ -219,6 +220,7 @@ function ContributeBox({
   const [account, setAccount] = React.useState<Account>();
   const [amount, setAmount] = React.useState<string>('');
   const formatBalance = useFormatBalance();
+  const {data: chainInfo} = useChainInfo();
 
   const reset = () => {
     setAccount(undefined);
@@ -229,7 +231,7 @@ function ContributeBox({
   const minContribution = api?.consts.crowdloan?.minContribution as BalanceOf | undefined;
   const minBalance = minContribution ? formatBalance(minContribution) : '';
 
-  const balance = api && getBalanceFromString(api, amount);
+  const balance = chainInfo && getBalanceFromString(chainInfo.registry, amount);
   const disabled = !account || !balance || !minContribution || balance.isZero() || balance.lt(minContribution);
 
   return (

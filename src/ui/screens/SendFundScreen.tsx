@@ -15,6 +15,7 @@ import {Layout} from '@ui/components/Layout';
 import {standardPadding} from '@ui/styles';
 import BalanceInput from '@ui/components/BalanceInput';
 import {useAccount} from 'src/api/hooks/useAccount';
+import {useChainInfo} from 'src/api/hooks/useChainInfo';
 
 type Props = {
   navigation: NavigationProp<AccountsStackParamList, typeof sendFundScreen>;
@@ -30,6 +31,7 @@ export function SendFundScreen({navigation, route}: Props) {
   const [scanning, setScanning] = React.useState(false);
   const {api} = useApi();
   const startTx = useApiTx();
+  const {data: chainInfo} = useChainInfo();
 
   useEffect(() => {
     ref.current?.open();
@@ -72,8 +74,8 @@ export function SendFundScreen({navigation, route}: Props) {
             <View style={styles.buttons}>
               <Button
                 onPress={() => {
-                  if (api) {
-                    const _amountBN = getBalanceFromString(api, amount);
+                  if (chainInfo) {
+                    const _amountBN = getBalanceFromString(chainInfo.registry, amount);
                     startTx({
                       address,
                       txMethod: 'balances.transferKeepAlive',

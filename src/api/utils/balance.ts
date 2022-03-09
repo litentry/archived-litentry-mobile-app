@@ -1,21 +1,14 @@
-import {ApiPromise} from '@polkadot/api';
 import {BN, BN_TEN} from '@polkadot/util';
+import type {Registry} from 'src/api/hooks/useChainInfo';
 
-/**
- * turns a string to a Balance BN in order to send through API or
- * show the formatted version to user
- * @param api
- * @param input String (user input E.g. 2.33 or 20 or 0.33)
- * @returns BN
- */
-export function getBalanceFromString(api: ApiPromise, input: string): BN {
-  const chainDecimal = api.registry.chainDecimals[0] ?? 10;
+export function getBalanceFromString(registry: Registry, input: string): BN {
+  const chainDecimal = registry.decimals;
   const currencyPower = new BN(chainDecimal);
 
   const isDecimalValue = input.match(/^(\d+)\.(\d+)$/);
   if (isDecimalValue) {
     const integerPart = new BN(input.replace(/\.\d*$/, ''));
-    const fractionalPartString = input.replace(/^\d+\./, '').substr(0, chainDecimal);
+    const fractionalPartString = input.replace(/^\d+\./, '').substring(0, chainDecimal);
     const fractionalPart = new BN(fractionalPartString);
 
     return integerPart

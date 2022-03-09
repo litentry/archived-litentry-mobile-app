@@ -17,6 +17,7 @@ import {Padder} from '@ui/components/Padder';
 import {ProposalCallInfo} from '@ui/components/ProposalCallInfo';
 import BalanceInput from '@ui/components/BalanceInput';
 import {Account} from 'src/api/hooks/useAccount';
+import {useChainInfo} from 'src/api/hooks/useChainInfo';
 
 export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
   const startTx = useApiTx();
@@ -24,6 +25,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
   const [state, dispatch] = useReducer(reducer, initialState);
   const referendum = route.params.referendum;
   const convictions = useConvictions();
+  const {data: chainInfo} = useChainInfo();
 
   const title = `${referendum.method}.${referendum.section}`;
 
@@ -40,8 +42,8 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
   };
 
   const vote = () => {
-    if (api && state.account && state.conviction && state.voteValue) {
-      const balance = getBalanceFromString(api, state.voteValue);
+    if (chainInfo && state.account && state.conviction && state.voteValue) {
+      const balance = getBalanceFromString(chainInfo.registry, state.voteValue);
       startTx({
         address: state.account.address,
         txMethod: 'democracy.vote',

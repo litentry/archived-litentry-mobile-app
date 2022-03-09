@@ -1,5 +1,5 @@
 overwrite: true
-schema: "https://graph.litentry.io/graphql"
+schema: "http://localhost:3377/graphql"
 generates:
   src/generated/litentryGraphQLTypes.ts:
     plugins:
