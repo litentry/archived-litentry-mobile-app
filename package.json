@@ -43,7 +43,7 @@
     "@types/zxcvbn": "^4.4.1",
     "apollo3-cache-persist": "^0.13.0",
     "console-browserify": "^1.2.0",
-    "dayjs": "^1.10.7",
+    "dayjs": "^1.10.8",
     "events": "^3.3.0",
     "fast-text-encoding": "^1.0.3",
     "graphql": "^16.3.0",
