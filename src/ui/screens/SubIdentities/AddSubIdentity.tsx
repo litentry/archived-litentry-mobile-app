@@ -1,8 +1,8 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useCallback, useState, useRef} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
-import {TextInput, Button, Tabs, TabScreen} from '@ui/library';
+import {TextInput, Button, Tabs, TabScreen, useTabNavigation, useTabIndex, useTheme} from '@ui/library';
 import {NetworkContext} from 'context/NetworkContext';
-import QRCamera from '@ui/components/QRCamera';
+import QRCamera, {QRCameraRef} from '@ui/components/QRCamera';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {isAddressValid, parseAddress} from 'src/utils/address';
@@ -19,11 +19,7 @@ export function AddSubIdentity({
   const {currentNetwork} = useContext(NetworkContext);
   const [subAddress, setSubAddress] = useState('');
   const [subName, setSubName] = useState('');
-
-  const handleScan = ({data}: {data: string}) => {
-    const parsed = parseAddress(data);
-    setSubAddress(parsed.address);
-  };
+  const {colors} = useTheme();
 
   const addSubIdentity = () => {
     if (isAddressValid(currentNetwork, subAddress)) {
@@ -55,7 +51,7 @@ export function AddSubIdentity({
       </View>
       <Padder scale={1} />
       <View style={styles.tabViewContainer}>
-        <Tabs>
+        <Tabs style={{backgroundColor: colors.background}}>
           <TabScreen label="Type in" icon="keyboard">
             <View style={globalStyles.paddedContainer}>
               <TextInput
@@ -69,9 +65,7 @@ export function AddSubIdentity({
             </View>
           </TabScreen>
           <TabScreen label="Via QR" icon="qrcode">
-            <View style={globalStyles.paddedContainer}>
-              <QRCamera onRead={handleScan} />
-            </View>
+            <ScanAddressTab onScanSuccess={setSubAddress} />
           </TabScreen>
         </Tabs>
       </View>
@@ -82,6 +76,43 @@ export function AddSubIdentity({
       </View>
       <Padder scale={2} />
     </>
+  );
+}
+
+function ScanAddressTab({onScanSuccess}: {onScanSuccess: (address: string) => void}) {
+  const goToTabIndex = useTabNavigation();
+  const tabIndex = useTabIndex();
+  const qrCameraRef = useRef<QRCameraRef>(null);
+  const {currentNetwork} = useContext(NetworkContext);
+
+  const handleScan = useCallback(
+    ({data}: {data: string}) => {
+      try {
+        const parsed = parseAddress(data);
+        if (isAddressValid(currentNetwork, parsed.address)) {
+          onScanSuccess(parsed.address);
+          goToTabIndex(0);
+          qrCameraRef.current?.reactivate();
+        } else {
+          Alert.alert(
+            'Validation Failed',
+            `${parsed.address} is not a valid address for the ${currentNetwork.name} network.`,
+            [{text: 'Ok', onPress: () => qrCameraRef.current?.reactivate()}],
+          );
+        }
+      } catch (e) {
+        Alert.alert('Validation Failed', 'Address is invalid.', [
+          {text: 'Ok', onPress: () => qrCameraRef.current?.reactivate()},
+        ]);
+      }
+    },
+    [currentNetwork, onScanSuccess, goToTabIndex],
+  );
+
+  return (
+    <View style={globalStyles.paddedContainer}>
+      {tabIndex === 1 && <QRCamera onRead={handleScan} ref={qrCameraRef} />}
+    </View>
   );
 }
 
