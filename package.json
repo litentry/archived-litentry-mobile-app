@@ -38,7 +38,7 @@
     "@react-navigation/drawer": "^6.3.1",
     "@react-navigation/material-top-tabs": "^6.1.1",
     "@react-navigation/native": "^6.0.8",
-    "@react-navigation/stack": "^6.0.11",
+    "@react-navigation/stack": "^6.1.1",
     "@sentry/react-native": "^3.2.13",
     "@types/zxcvbn": "^4.4.1",
     "apollo3-cache-persist": "^0.13.0",
