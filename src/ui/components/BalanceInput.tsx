@@ -4,21 +4,18 @@ import {TextInput} from '@ui/library';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {decimalKeypad} from 'src/utils';
 import MaxBalance from './MaxBalance';
-import {getBalanceFromString} from 'src/api/utils/balance';
-import {ApiPromise} from '@polkadot/api';
 import type {Account} from 'src/api/hooks/useAccount';
 
 type PropTypes = {
-  api?: ApiPromise;
   account?: Account;
   onChangeBalance: (dispatch: string) => void;
 };
 
 export function BalanceInput(props: PropTypes) {
-  const {api, account} = props;
+  const {account} = props;
   const [amount, setAmount] = useState('');
   const [hasSufficientFunds, sethasSufficientFunds] = useState(true);
-  const formatBalance = useFormatBalance();
+  const {formatBalance, getBalanceFromString} = useFormatBalance();
   useEffect(() => {
     amount !== '' && Number(amount) >= Number(account?.balance.free)
       ? sethasSufficientFunds(false)
@@ -41,12 +38,7 @@ export function BalanceInput(props: PropTypes) {
           props.onChangeBalance(decimalKeypad(nextValue));
         }}
         contextMenuHidden={true}
-        // right={
-        //   <TextInput.Affix
-        //     textStyle={styles.affix}
-        //     text={(api && formatBalance(getBalanceFromString(api, amount))) ?? ''}
-        //   />
-        // }
+        right={<TextInput.Affix textStyle={styles.affix} text={formatBalance(getBalanceFromString(amount)) ?? ''} />}
       />
       <MaxBalance address={account} />
     </>

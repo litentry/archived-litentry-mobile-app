@@ -1,7 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {NavigationProp, RouteProp} from '@react-navigation/core';
-import {useApi} from 'context/ChainApiContext';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {Modalize} from 'react-native-modalize';
 import QRCodeScanner from 'react-native-qrcode-scanner';
@@ -29,7 +28,6 @@ export function SendFundScreen({navigation, route}: Props) {
   const [amount, setAmount] = React.useState('');
   const [to, setTo] = React.useState<string>();
   const [scanning, setScanning] = React.useState(false);
-  const {api} = useApi();
   const startTx = useApiTx();
   const {data: chainInfo} = useChainInfo();
 
@@ -61,7 +59,7 @@ export function SendFundScreen({navigation, route}: Props) {
           <View style={styles.container}>
             <Headline>Send</Headline>
             <Padder scale={1} />
-            <BalanceInput api={api} account={accountInfo} onChangeBalance={setAmount} />
+            <BalanceInput account={accountInfo} onChangeBalance={setAmount} />
             <Padder scale={1} />
             <TextInput
               autoComplete="off"

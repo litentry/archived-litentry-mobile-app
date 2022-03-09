@@ -16,7 +16,7 @@ import {StyleSheet, View} from 'react-native';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 
 export function ProposalCall({call}: {call: Call}) {
-  const formatBalance = useFormatBalance();
+  const {formatBalance} = useFormatBalance();
   const data = useProposalCallParams(call);
   const {method, section} = call.registry.findMetaCall(call.callIndex);
 

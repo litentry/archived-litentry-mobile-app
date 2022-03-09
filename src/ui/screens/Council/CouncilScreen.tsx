@@ -197,7 +197,7 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
 
   const {api} = useApi();
   const startTx = useApiTx();
-  const formatBalance = useFormatBalance();
+  const {formatBalance} = useFormatBalance();
 
   const onCandidateSelect = (accountId: string, isSelected: boolean) => {
     isSelected
@@ -243,7 +243,7 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
 
       <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
       <Padder scale={1} />
-      <BalanceInput api={api} account={account} onChangeBalance={setAmount} />
+      <BalanceInput account={account} onChangeBalance={setAmount} />
       <Padder scale={1} />
       <Caption>{`Select up to ${MAX_VOTES} candidates in the preferred order:`}</Caption>
 

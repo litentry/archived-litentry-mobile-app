@@ -1,21 +1,18 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Button, Modal, Subheading, TextInput, Paragraph, Caption} from '@ui/library';
-import {useApi} from 'context/ChainApiContext';
 import {Padder} from '@ui/components/Padder';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import {getBalanceFromString} from 'src/api/utils/balance';
 import globalStyles, {standardPadding} from '@ui/styles';
 import BalanceInput from './BalanceInput';
 import type {Account} from 'src/api/hooks/useAccount';
 import {useChainInfo} from 'src/api/hooks/useChainInfo';
 
 export function SubmitProposal() {
-  const {api} = useApi();
   const [state, dispatch] = React.useReducer(reducer, initialState);
-  const formatBalance = useFormatBalance();
+  const {formatBalance, getBalanceFromString} = useFormatBalance();
   const startTx = useApiTx();
   const {data: chainInfo} = useChainInfo();
 
@@ -35,8 +32,8 @@ export function SubmitProposal() {
   const isDisabled = !state.account || !state.preimageHash || !state.balance;
 
   const submit = () => {
-    if (chainInfo && state.balance && state.account) {
-      const balance = getBalanceFromString(chainInfo.registry, state.balance);
+    if (state.balance && state.account) {
+      const balance = getBalanceFromString(state.balance);
       startTx({
         address: state.account.address,
         txMethod: 'democracy.propose',
@@ -80,7 +77,6 @@ export function SubmitProposal() {
 
         <Paragraph>{`Locked balance:`}</Paragraph>
         <BalanceInput
-          api={api}
           account={state.account}
           onChangeBalance={(amount) => {
             dispatch({type: 'SET_BALANCE', payload: amount});
@@ -89,7 +85,7 @@ export function SubmitProposal() {
 
         <Padder scale={1} />
 
-        <Caption>{`Minimum deposit: ${api && formatBalance(api.consts.democracy.minimumDeposit)}`}</Caption>
+        <Caption>{`Minimum deposit: ${chainInfo && formatBalance(chainInfo.democracyMinimumDeposit)}`}</Caption>
         <Padder scale={1} />
 
         <View style={styles.row}>

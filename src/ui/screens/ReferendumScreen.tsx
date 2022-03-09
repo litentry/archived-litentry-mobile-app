@@ -3,7 +3,6 @@ import {StyleSheet, View, ScrollView} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {Button, Divider, Headline, Modal, Select, Subheading, Caption, List, Text} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
-import {useApi} from 'context/ChainApiContext';
 import {ProgressBar} from '@ui/components/ProgressBar';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SelectAccount} from '@ui/components/SelectAccount';
@@ -21,7 +20,6 @@ import {useChainInfo} from 'src/api/hooks/useChainInfo';
 
 export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
   const startTx = useApiTx();
-  const {api} = useApi();
   const [state, dispatch] = useReducer(reducer, initialState);
   const referendum = route.params.referendum;
   const convictions = useConvictions();
@@ -131,7 +129,6 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
 
           <Caption>{`Vote Value`}</Caption>
           <BalanceInput
-            api={api}
             account={state.account}
             onChangeBalance={(amount) => dispatch({type: `SET_VOTE_VALUE`, payload: amount})}
           />

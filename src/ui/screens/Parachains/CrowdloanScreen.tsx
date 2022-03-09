@@ -219,7 +219,7 @@ function ContributeBox({
   const {api} = useApi();
   const [account, setAccount] = React.useState<Account>();
   const [amount, setAmount] = React.useState<string>('');
-  const formatBalance = useFormatBalance();
+  const {formatBalance} = useFormatBalance();
   const {data: chainInfo} = useChainInfo();
 
   const reset = () => {
@@ -241,7 +241,7 @@ function ContributeBox({
       <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
       <Padder scale={1} />
       <Text>Amount:</Text>
-      <BalanceInput api={api} account={account} onChangeBalance={setAmount} />
+      <BalanceInput account={account} onChangeBalance={setAmount} />
       <Padder scale={0.2} />
       <Text>minimum allowed: </Text>
       <Text>{minBalance}</Text>
