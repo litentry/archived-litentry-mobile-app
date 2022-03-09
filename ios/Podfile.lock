@@ -285,7 +285,7 @@ PODS:
     - React-Core
   - react-native-in-app-message (1.0.33):
     - React
-  - react-native-mmkv (2.0.0):
+  - react-native-mmkv (2.1.2):
     - MMKV
     - React-Core
   - react-native-pager-view (5.4.11):
@@ -682,7 +682,7 @@ SPEC CHECKSUMS:
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-document-picker: 429972f7ece4463aa5bcdd789622b3a674a3c5d1
   react-native-in-app-message: 00952df970f85d162b9100f6b767ae37c6520dda
-  react-native-mmkv: 0eda0c2a8af66073f5e7067558189bb920867aee
+  react-native-mmkv: 5f6f070d2dbd0e4785aabfd94fb7fccc29b70462
   react-native-pager-view: 7f00d63688f7df9fad86dfb0154814419cc5eb8d
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 114e9a74df2643012b9d6cc1460b94f3b6a90780
