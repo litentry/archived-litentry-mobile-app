@@ -25,7 +25,7 @@ const PARACHAIN_CROWDLOAN_QUERY = gql`
           registration {
             displayParent
             judgements {
-              index
+              registrarIndex
               judgement {
                 isUnknown
                 isFeePaid
