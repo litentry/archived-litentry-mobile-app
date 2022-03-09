@@ -16,18 +16,20 @@ type PropTypes = {
 
 export function BalanceInput(props: PropTypes) {
   const {api, account} = props;
-  const [amount, setAmount] = useState<string>('');
-  const [isMaximum, setIsMaximum] = useState<boolean>(false);
+  const [amount, setAmount] = useState('');
+  const [hasSufficientFunds, sethasSufficientFunds] = useState(true);
   const formatBalance = useFormatBalance();
   useEffect(() => {
-    amount !== '' && Number(amount) >= Number(account?.balance.total) ? setIsMaximum(true) : setIsMaximum(false);
+    amount !== '' && Number(amount) >= Number(account?.balance.free)
+      ? sethasSufficientFunds(false)
+      : sethasSufficientFunds(true);
   }, [amount, account]);
   return (
     <>
       <TextInput
         dense
         style={styles.textInput}
-        error={isMaximum}
+        error={hasSufficientFunds}
         mode="outlined"
         autoComplete="off"
         placeholder="Enter amount"
