@@ -726,6 +726,143 @@ export enum Erc1155Token_OrderBy {
   TokenId = 'tokenId',
 }
 
+export enum GalaxyCredentialCampaignStatus {
+  Active = 'Active',
+  Deleted = 'Deleted',
+  Draft = 'Draft',
+  Expired = 'Expired',
+  PrivateActive = 'PrivateActive',
+  PublicActive = 'PublicActive',
+}
+
+export enum GalaxyCredentialChain {
+  Arbitrum = 'ARBITRUM',
+  ArbitrumTestnet = 'ARBITRUM_TESTNET',
+  Avalanche = 'AVALANCHE',
+  AvalancheTestnet = 'AVALANCHE_TESTNET',
+  Bsc = 'BSC',
+  BscTestnet = 'BSC_TESTNET',
+  Ethereum = 'ETHEREUM',
+  Fantom = 'FANTOM',
+  FantomTestnet = 'FANTOM_TESTNET',
+  Goerli = 'GOERLI',
+  Heco = 'HECO',
+  HecoTestnet = 'HECO_TESTNET',
+  Kovan = 'KOVAN',
+  Matic = 'MATIC',
+  Mumbai = 'MUMBAI',
+  Rinkeby = 'RINKEBY',
+  Ropsten = 'ROPSTEN',
+  Solana = 'SOLANA',
+  SolanaDevnet = 'SOLANA_DEVNET',
+  Xdai = 'XDAI',
+}
+
+export type GalaxyCredentialEligibleCredentials = {
+  __typename?: 'GalaxyCredentialEligibleCredentials';
+  list: Array<GalaxyCredentialEligibleCredentialsList>;
+  totalCount: Scalars['Int'];
+};
+
+export type GalaxyCredentialEligibleCredentialsItems = {
+  __typename?: 'GalaxyCredentialEligibleCredentialsItems';
+  list: Array<Scalars['String']>;
+};
+
+export type GalaxyCredentialEligibleCredentialsList = {
+  __typename?: 'GalaxyCredentialEligibleCredentialsList';
+  description: Scalars['String'];
+  id: Scalars['String'];
+  itemCount: Scalars['Int'];
+  items: GalaxyCredentialEligibleCredentialsItems;
+  name: Scalars['String'];
+};
+
+export enum GalaxyCredentialListNftOrderBy {
+  CreateTime = 'CreateTime',
+}
+
+export enum GalaxyCredentialListOrder {
+  Asc = 'ASC',
+  Desc = 'DESC',
+}
+
+export enum GalaxyCredentialNftStatus {
+  Alive = 'Alive',
+  Burned = 'Burned',
+}
+
+export type GalaxyCredentialNfts = {
+  __typename?: 'GalaxyCredentialNfts';
+  list: Array<GalaxyCredentialNftsList>;
+  totalCount: Scalars['Int'];
+};
+
+export type GalaxyCredentialNftsList = {
+  __typename?: 'GalaxyCredentialNftsList';
+  createdAt: Scalars['String'];
+  description: Scalars['String'];
+  id: Scalars['String'];
+  image: Scalars['String'];
+  ipfsImage?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  status: GalaxyCredentialNftStatus;
+};
+
+export enum GalaxyCredentialParticipationStatus {
+  Failed = 'Failed',
+  Generated = 'Generated',
+  Pending = 'Pending',
+  Queueing = 'Queueing',
+  Success = 'Success',
+}
+
+export type GalaxyCredentialRecentParticipation = {
+  __typename?: 'GalaxyCredentialRecentParticipation';
+  list: Array<GalaxyCredentialRecentParticipationList>;
+  totalCount: Scalars['Int'];
+};
+
+export type GalaxyCredentialRecentParticipationList = {
+  __typename?: 'GalaxyCredentialRecentParticipationList';
+  address: GalaxyCredentialRecentParticipationListAddress;
+  campaign: GalaxyCredentialRecentParticipationListCampaign;
+  id?: Maybe<Scalars['ID']>;
+  status: GalaxyCredentialParticipationStatus;
+  tx: Scalars['String'];
+};
+
+export type GalaxyCredentialRecentParticipationListAddress = {
+  __typename?: 'GalaxyCredentialRecentParticipationListAddress';
+  email: Scalars['String'];
+  id: Scalars['String'];
+  twitterUserID: Scalars['String'];
+  twitterUserName: Scalars['String'];
+};
+
+export type GalaxyCredentialRecentParticipationListCampaign = {
+  __typename?: 'GalaxyCredentialRecentParticipationListCampaign';
+  description: Scalars['String'];
+  id: Scalars['ID'];
+  info: Scalars['String'];
+  name: Scalars['String'];
+  status: GalaxyCredentialCampaignStatus;
+  thumbnail: Scalars['String'];
+};
+
+export type GalaxyCredentialUserData = {
+  __typename?: 'GalaxyCredentialUserData';
+  address: Scalars['String'];
+  avatar: Scalars['String'];
+  eligibleCredentials: GalaxyCredentialEligibleCredentials;
+  email: Scalars['String'];
+  hasEmail: Scalars['Boolean'];
+  id: Scalars['String'];
+  nfts: GalaxyCredentialNfts;
+  recentParticipation: GalaxyCredentialRecentParticipation;
+  username: Scalars['String'];
+};
+
 /** Defines the order direction, either ascending or descending */
 export enum OrderDirection {
   Asc = 'asc',
@@ -761,6 +898,7 @@ export type PoapCredentialTokens = {
 
 export type Query = {
   __typename?: 'Query';
+  GalaxyCredentialDataByAddress: GalaxyCredentialUserData;
   PoapCredentialTokensByAddress: PoapCredentialTokenData;
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
@@ -856,6 +994,11 @@ export type Query = {
   substrateTreasuryDepositByUniqueInput?: Maybe<SubstrateTreasuryDeposit>;
   substrateTreasuryDeposits: Array<SubstrateTreasuryDeposit>;
   substrateTreasuryDepositsConnection: SubstrateTreasuryDepositsConnection;
+};
+
+export type QueryGalaxyCredentialDataByAddressArgs = {
+  address: Scalars['String'];
+  chain: GalaxyCredentialChain;
 };
 
 export type QueryPoapCredentialTokensByAddressArgs = {
@@ -1932,6 +2075,7 @@ export type SubstrateChainChainInfo = {
   chain: Scalars['String'];
   nodeName: Scalars['String'];
   nodeVersion: Scalars['String'];
+  registry: SubstrateChainRegistry;
 };
 
 export type SubstrateChainCollectiveProposal = {
@@ -2264,6 +2408,12 @@ export type SubstrateChainRegistrationJudgement = {
   __typename?: 'SubstrateChainRegistrationJudgement';
   judgement?: Maybe<SubstrateChainIdentityJudgement>;
   registrarIndex?: Maybe<Scalars['Int']>;
+};
+
+export type SubstrateChainRegistry = {
+  __typename?: 'SubstrateChainRegistry';
+  decimals: Scalars['Int'];
+  token: Scalars['String'];
 };
 
 export type SubstrateChainSpendPeriod = {
