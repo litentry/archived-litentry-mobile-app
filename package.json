@@ -111,7 +111,7 @@
     "@react-native-community/eslint-config": "^3.0.1",
     "@testing-library/jest-native": "^4.0.4",
     "@testing-library/react-native": "^9.0.0",
-    "@types/jest": "^27.4.0",
+    "@types/jest": "^27.4.1",
     "@types/lodash": "^4.14.178",
     "@types/react": "^17.0.38",
     "@types/react-native": "^0.66.13",
