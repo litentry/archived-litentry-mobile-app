@@ -10,6 +10,11 @@ const CHAIN_INFO_QUERY = gql`
       chain
       nodeName
       nodeVersion
+      democracyEnactmentPeriod
+      crowdloanMinContribution
+      auctionsLeasePeriodSlot
+      democracyMinimumDeposit
+      slotsLeasePeriod
       registry {
         decimals
         token

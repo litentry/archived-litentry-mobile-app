@@ -2072,10 +2072,15 @@ export type SubstrateChainCalendarEvent = {
 
 export type SubstrateChainChainInfo = {
   __typename?: 'SubstrateChainChainInfo';
+  auctionsLeasePeriodSlot: Scalars['String'];
   chain: Scalars['String'];
+  crowdloanMinContribution: Scalars['String'];
+  democracyEnactmentPeriod: Scalars['String'];
+  democracyMinimumDeposit: Scalars['String'];
   nodeName: Scalars['String'];
   nodeVersion: Scalars['String'];
   registry: SubstrateChainRegistry;
+  slotsLeasePeriod: Scalars['String'];
 };
 
 export type SubstrateChainCollectiveProposal = {
@@ -2297,6 +2302,8 @@ export type SubstrateChainModuleElection = {
   __typename?: 'SubstrateChainModuleElection';
   hasElections: Scalars['Boolean'];
   module?: Maybe<Scalars['String']>;
+  votingBondBase: Scalars['String'];
+  votingBondFactor: Scalars['String'];
 };
 
 export type SubstrateChainMotionProposal = {
