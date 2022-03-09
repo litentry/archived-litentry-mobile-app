@@ -1,9 +1,9 @@
 import React from 'react';
-import {FlatList, View, StyleSheet} from 'react-native';
+import {FlatList, View, StyleSheet, TouchableOpacity} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp} from '@react-navigation/native';
 import {Account as AccountType, useAccounts} from 'context/index';
-import {useTheme, Divider, IconButton, List, FAB, Caption} from '@ui/library';
+import {useTheme, Divider, IconButton, List, FAB, Caption, Menu, Subheading, Icon} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {CompleteNavigatorParamList} from '@ui/navigation/navigation';
 import {
@@ -23,26 +23,23 @@ type Props = {
   navigation: NavigationProp<CompleteNavigatorParamList, typeof accountsScreen>;
 };
 
-// @TODO: Add sorting options
-// https://github.com/litentry/litentry-app/issues/942
-
-// type SortBy = 'name' | 'favorites';
+type SortBy = 'name' | 'favorites';
 
 export function AccountsScreen({navigation}: Props) {
   const {networkAccounts, toggleFavorite} = useAccounts();
 
-  // const [sortBy, setSortBy] = React.useState<SortBy>('name');
-  // const sortByFunction = sortBy === 'name' ? sortByDisplayName : sortByIsFavorite;
-  // const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
+  const [sortBy, setSortBy] = React.useState<SortBy>('name');
+  const sortByFunction = sortBy === 'name' ? sortByDisplayName : sortByIsFavorite;
+  const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
 
   const toAccountDetail = (address: string) => {
     navigation.navigate(myAccountScreen, {address});
   };
 
-  // const sortAccounts = (sort: SortBy) => {
-  //   setSortBy(sort);
-  //   setSortMenuVisible(false);
-  // };
+  const sortAccounts = (sort: SortBy) => {
+    setSortBy(sort);
+    setSortMenuVisible(false);
+  };
 
   return (
     <SafeView edges={noTopEdges}>
@@ -50,47 +47,47 @@ export function AccountsScreen({navigation}: Props) {
       <FlatList
         style={styles.container}
         contentContainerStyle={styles.content}
-        data={networkAccounts}
+        data={sortByFunction(networkAccounts)}
         showsVerticalScrollIndicator
         keyExtractor={(item) => item.address}
         renderItem={({item}) => (
           <AccountItem account={item} toggleFavorite={toggleFavorite} onPress={toAccountDetail} />
         )}
-        // ListHeaderComponent={
-        //   <View style={styles.sortBy}>
-        //     <Menu
-        //       visible={sortMenuVisible}
-        //       onDismiss={() => {
-        //         setSortMenuVisible(false);
-        //       }}
-        //       anchor={
-        //         <TouchableOpacity
-        //           onPress={() => {
-        //             setSortMenuVisible(true);
-        //           }}
-        //           style={globalStyles.rowAlignCenter}>
-        //           <Subheading>Sort by</Subheading>
-        //           <Icon name="chevron-down" size={25} />
-        //         </TouchableOpacity>
-        //       }>
-        //       <Menu.Item
-        //         disabled={sortBy === 'name'}
-        //         onPress={() => {
-        //           sortAccounts('name');
-        //         }}
-        //         title="Name"
-        //       />
-        //       <Divider />
-        //       <Menu.Item
-        //         disabled={sortBy === 'favorites'}
-        //         onPress={() => {
-        //           sortAccounts('favorites');
-        //         }}
-        //         title="Favorite"
-        //       />
-        //     </Menu>
-        //   </View>
-        // }
+        ListHeaderComponent={
+          <View style={styles.sortBy}>
+            <Menu
+              visible={sortMenuVisible}
+              onDismiss={() => {
+                setSortMenuVisible(false);
+              }}
+              anchor={
+                <TouchableOpacity
+                  onPress={() => {
+                    setSortMenuVisible(true);
+                  }}
+                  style={globalStyles.rowAlignCenter}>
+                  <Subheading>Sort by</Subheading>
+                  <Icon name="chevron-down" size={25} />
+                </TouchableOpacity>
+              }>
+              <Menu.Item
+                disabled={sortBy === 'name'}
+                onPress={() => {
+                  sortAccounts('name');
+                }}
+                title="Name"
+              />
+              <Divider />
+              <Menu.Item
+                disabled={sortBy === 'favorites'}
+                onPress={() => {
+                  sortAccounts('favorites');
+                }}
+                title="Favorite"
+              />
+            </Menu>
+          </View>
+        }
         ItemSeparatorComponent={Divider}
         ListEmptyComponent={EmptyView}
       />
@@ -113,13 +110,13 @@ const styles = StyleSheet.create({
   emptyText: {fontWeight: 'normal'},
 });
 
-// function sortByDisplayName(a: Account, b: Account) {
-//   return a.identity.display.localeCompare(b.identity.display);
-// }
+function sortByDisplayName(accounts: AccountType[]) {
+  return accounts.sort((a, b) => a.meta.name.localeCompare(b.meta.name));
+}
 
-// function sortByIsFavorite(a: CombinedData, b: CombinedData) {
-//   return a.account.meta.isFavorite ? -1 : b.account.meta.isFavorite ? 1 : 0;
-// }
+function sortByIsFavorite(accounts: AccountType[]) {
+  return accounts.sort((a, b) => Number(b.meta.isFavorite) - Number(a.meta.isFavorite));
+}
 
 function AccountItem({
   account,
