@@ -1,15 +1,27 @@
-import {ApiPromise} from '@polkadot/api';
-import type {AccountId} from '@polkadot/types/interfaces';
-import useApiQuery from 'src/api/hooks/useApiQuery';
+import {gql, useQuery} from '@apollo/client';
+import type {SubstrateChainCouncilVote} from 'src/generated/litentryGraphQLTypes';
 
-export function useCouncilVotesOf(accountId?: string | Uint8Array | AccountId) {
-  return useApiQuery(
-    ['council-votes', {accountId}],
-    async (api: ApiPromise) => {
-      if (accountId != null) {
-        return await api.derive.council.votesOf(accountId);
+export type CouncilVote = SubstrateChainCouncilVote;
+
+const COUNCIL_VOTE_QUERY = gql`
+  query getCouncilVote($address: String!) {
+    substrateChainCouncilVote(address: $address) {
+      stake
+      formattedStake
+      votes {
+        address
       }
-    },
-    {enabled: Boolean(accountId)},
-  );
+    }
+  }
+`;
+
+export function useCouncilVotesOf(address?: string) {
+  const {data, ...rest} = useQuery<{substrateChainCouncilVote: CouncilVote}>(COUNCIL_VOTE_QUERY, {
+    variables: {address},
+  });
+
+  return {
+    data: data?.substrateChainCouncilVote,
+    ...rest,
+  };
 }
