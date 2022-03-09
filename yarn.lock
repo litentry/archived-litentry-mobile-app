@@ -10639,10 +10639,10 @@ react-native-logs@^4.0.1:
   resolved "https://registry.yarnpkg.com/react-native-logs/-/react-native-logs-4.0.1.tgz#96178ff899a462bc936582fac69b96fc31ff4e4d"
   integrity sha512-SplLnxAbBOgzjVoIRcLIv7QO/wnmGhPwaGWUYu5FVg2LI9ZsBO3f3xjYH7Go2wZRhPG3BIkSgB/woBicBjwmLg==
 
-react-native-mmkv@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-2.0.0.tgz#761e6362bbfe0e81f923b3febae0225413dee228"
-  integrity sha512-Dhy3HrwpWdA7r4vNclKLaD/PgdpsLz0mTzvnNUqbQss1yh3D2ThgFVn8rVKToXHyipxs+Y5eDMLMGGDQyIOV2Q==
+react-native-mmkv@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-2.1.2.tgz#c282fd757d24c06f66e819d0cbcdcf00243ebbbc"
+  integrity sha512-l/ovSEIh7hxbYrwbWUULsiljfOm5LYQDe+0QB5/C8xiyzmlAlpy3JUt8qxNJNYJvo/HR03SM9EZunLql1VveAg==
 
 react-native-modalize@^2.0.13:
   version "2.0.13"
