@@ -9,7 +9,7 @@ import {useAccount, Account as SubstrateChainAccount} from 'src/api/hooks/useAcc
 import {Account} from './Account/Account';
 
 type Props = {
-  onSelect: (account: AccountType) => void;
+  onSelect: (account: SelectedAccount) => void;
 };
 
 type SelectedAccount = {
@@ -28,7 +28,7 @@ export function SelectAccount({onSelect}: Props) {
 
   const selectAccount = (accountSelected: SelectedAccount) => {
     setSelectedAccount(accountSelected);
-    onSelect(accountSelected.account);
+    onSelect(accountSelected);
     closeMenu();
   };
 
@@ -65,6 +65,7 @@ export function SelectAccount({onSelect}: Props) {
 type AccountItemProps = {
   onSelect: (account: SelectedAccount) => void;
   account: AccountType;
+  accountInfo?: SubstrateChainAccount;
 };
 
 function AccountItem({onSelect, account}: AccountItemProps) {

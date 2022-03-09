@@ -1,22 +1,17 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Caption} from '@ui/library';
-import {useAccount} from 'src/api/hooks/useAccount';
+import {Account} from 'src/api/hooks/useAccount';
 
-type PropTypes = {address: string | undefined};
+type PropTypes = {address: Account | undefined};
 
 function MaxBalance(props: PropTypes) {
   return (
     <View style={styles.balance}>
-      {!props.address ? <Caption>MAX: -- </Caption> : <AccountInfo address={props.address} />}
+      {!props.address ? <Caption>MAX: -- </Caption> : <Caption>MAX: {props.address?.balance.formattedFree}</Caption>}
     </View>
   );
 }
-
-const AccountInfo = (props: {address: string}) => {
-  const {data: accountInfo} = useAccount(props.address);
-  return <Caption>MAX: {accountInfo?.balance.formattedFree}</Caption>;
-};
 
 const styles = StyleSheet.create({
   balance: {
