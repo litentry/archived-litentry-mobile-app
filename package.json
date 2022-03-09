@@ -78,7 +78,7 @@
     "react-native-paper-tabs": "^0.7.0",
     "react-native-permissions": "^3.3.0",
     "react-native-popable": "^0.4.3",
-    "react-native-qrcode-scanner": "^1.5.4",
+    "react-native-qrcode-scanner": "^1.5.5",
     "react-native-randombytes": "^3.6.0",
     "react-native-reanimated": "^2.4.1",
     "react-native-safe-area-context": "^4.1.2",
