@@ -2072,15 +2072,15 @@ export type SubstrateChainCalendarEvent = {
 
 export type SubstrateChainChainInfo = {
   __typename?: 'SubstrateChainChainInfo';
-  auctionsLeasePeriodSlot: Scalars['String'];
+  auctionsLeasePeriodSlot?: Maybe<Scalars['String']>;
   chain: Scalars['String'];
-  crowdloanMinContribution: Scalars['String'];
-  democracyEnactmentPeriod: Scalars['String'];
-  democracyMinimumDeposit: Scalars['String'];
+  crowdloanMinContribution?: Maybe<Scalars['String']>;
+  democracyEnactmentPeriod?: Maybe<Scalars['String']>;
+  democracyMinimumDeposit?: Maybe<Scalars['String']>;
   nodeName: Scalars['String'];
   nodeVersion: Scalars['String'];
   registry: SubstrateChainRegistry;
-  slotsLeasePeriod: Scalars['String'];
+  slotsLeasePeriod?: Maybe<Scalars['String']>;
 };
 
 export type SubstrateChainCollectiveProposal = {
@@ -2300,6 +2300,7 @@ export type SubstrateChainManager = {
 
 export type SubstrateChainModuleElection = {
   __typename?: 'SubstrateChainModuleElection';
+  candidacyBond: Scalars['String'];
   hasElections: Scalars['Boolean'];
   module?: Maybe<Scalars['String']>;
   votingBondBase: Scalars['String'];

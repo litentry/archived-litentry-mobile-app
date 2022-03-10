@@ -85,7 +85,9 @@ export function SubmitProposal() {
 
         <Padder scale={1} />
 
-        <Caption>{`Minimum deposit: ${chainInfo && formatBalance(chainInfo.democracyMinimumDeposit)}`}</Caption>
+        <Caption>{`Minimum deposit: ${
+          chainInfo?.democracyMinimumDeposit && formatBalance(chainInfo.democracyMinimumDeposit)
+        }`}</Caption>
         <Padder scale={1} />
 
         <View style={styles.row}>
