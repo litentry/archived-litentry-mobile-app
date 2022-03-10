@@ -26,7 +26,7 @@ export function useFirebase() {
     throw new Error('InAppNotificationContext most be provided!');
   }
 
-  const handleNotifiction = useCallback(
+  const handleNotification = useCallback(
     async (message: FirebaseMessagingTypes.RemoteMessage | null) => {
       const deeplink = message?.data?.deeplink;
       if (deeplink) {
@@ -54,9 +54,9 @@ export function useFirebase() {
       .getToken()
       .then((token) => console.log(`FCM TOKEN:`, token));
 
-    messaging().getInitialNotification().then(handleNotifiction).catch(console.error);
+    messaging().getInitialNotification().then(handleNotification).catch(console.error);
 
-    const unsubscribeFromOnNotification = messaging().onNotificationOpenedApp(handleNotifiction);
+    const unsubscribeFromOnNotification = messaging().onNotificationOpenedApp(handleNotification);
 
     const unsubscribeFromOnMessage = messaging().onMessage(async (remoteMessage) => {
       console.log('onMessage', remoteMessage);
@@ -65,7 +65,7 @@ export function useFirebase() {
         renderContent: () => (
           <TouchableOpacity
             onPress={() => {
-              handleNotifiction(remoteMessage);
+              handleNotification(remoteMessage);
             }}>
             <InAppNotificationContent
               title={remoteMessage.notification?.title ?? ''}
@@ -80,5 +80,5 @@ export function useFirebase() {
       unsubscribeFromOnNotification();
       unsubscribeFromOnMessage();
     };
-  }, [handleNotifiction, trigger]);
+  }, [handleNotification, trigger]);
 }
