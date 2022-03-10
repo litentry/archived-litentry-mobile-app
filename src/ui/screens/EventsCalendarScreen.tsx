@@ -59,7 +59,7 @@ export function EventsCalendarScreen() {
 function Schedule({date, events}: {date: string; events: CalendarEvent[]}) {
   const {colors} = useTheme();
   return (
-    <Container key={date}>
+    <Container _key={date}>
       <Card style={styles.container}>
         <Title>{date}</Title>
         <View>
@@ -85,10 +85,10 @@ function Schedule({date, events}: {date: string; events: CalendarEvent[]}) {
  * Reanimated layout animations have issues on android,
  * TODO: remove this container when fixed.
  */
-function Container({children, key}: {children: React.ReactNode; key: string}) {
+function Container({children, _key}: {children: React.ReactNode; _key: string}) {
   if (Platform.OS === 'ios') {
     return (
-      <Animated.View entering={FadeInUp} exiting={FadeOutDown} key={key}>
+      <Animated.View entering={FadeInUp} exiting={FadeOutDown} key={_key}>
         {children}
       </Animated.View>
     );
