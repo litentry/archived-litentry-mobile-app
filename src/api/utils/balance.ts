@@ -3,7 +3,8 @@ import type {Registry} from 'src/api/hooks/useChainInfo';
 import {bnToBn} from '@polkadot/util';
 
 /**
- * use this method to get BN from local input strings
+ * Use this method to convert unformatted string values (Balance) to BN. 
+ *  e.g: amount entered in a TextInput
  */
 export function getBNFromLocalInputString(registry: Registry, input: string): BN {
   const chainDecimal = registry.decimals;
