@@ -3,7 +3,6 @@ import {ScrollView, TouchableOpacity, SectionList, StyleSheet, View, useWindowDi
 import Identicon from '@polkadot/reactnative-identicon';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {useNavigation} from '@react-navigation/native';
-import {useApi} from 'context/ChainApiContext';
 import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -15,13 +14,14 @@ import {List, Button, Divider, Modal, useTheme, Caption, Subheading, Text} from 
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {MotionsScreen} from './MotionsScreen';
-import {useModuleElection} from 'src/api/hooks/useModuleElection';
+import {useModuleElection, ModuleElection} from 'src/api/hooks/useModuleElection';
 import Badge from '@ui/components/Badge';
 import {noop} from 'lodash';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 import BalanceInput from '@ui/components/BalanceInput';
 import type {Account} from 'src/api/hooks/useAccount';
+import {getBNFromApiString} from 'src/api/utils/balance';
 
 const MAX_VOTES = 16;
 
@@ -117,7 +117,7 @@ function CouncilOverviewScreen() {
             setCouncilVoteVisible(visible);
           }}
           candidates={votingCandidates}
-          module={moduleElection.module}
+          moduleElection={moduleElection}
         />
       ) : null}
     </SafeView>
@@ -176,10 +176,10 @@ type CouncilVoteProps = {
   visible: boolean;
   setVisible: (visible: boolean) => void;
   candidates: CouncilMember[];
-  module: string;
+  moduleElection: ModuleElection;
 };
 
-function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVoteProps) {
+function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: CouncilVoteProps) {
   const [account, setAccount] = React.useState<Account>();
   const [amount, setAmount] = React.useState<string>('');
   const [selectedCandidates, setSelectedCandidates] = React.useState<Array<string>>([]);
@@ -195,7 +195,6 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
     }
   }, [councilVote, candidates]);
 
-  const {api} = useApi();
   const startTx = useApiTx();
   const {formatBalance} = useFormatBalance();
 
@@ -210,11 +209,14 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
   const disabled = !amount || !account || selectedCandidates.length === 0;
 
   const bondValue = useMemo(() => {
-    if (api != null) {
-      const location = api.consts.elections || api.consts.phragmenElection || api.consts.electionsPhragmen;
-      return location?.votingBondBase?.add(location.votingBondFactor.muln(selectedCandidates.length));
+    const votingBondBase = getBNFromApiString(moduleElection.votingBondBase);
+    if (selectedCandidates.length === 0) {
+      return votingBondBase;
     }
-  }, [api, selectedCandidates]);
+
+    const votingBondFactor = getBNFromApiString(moduleElection.votingBondFactor);
+    return votingBondBase.add(votingBondFactor.muln(selectedCandidates.length));
+  }, [selectedCandidates, moduleElection]);
 
   const reset = () => {
     setAccount(undefined);
@@ -227,7 +229,7 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
     if (account) {
       startTx({
         address: account.address,
-        txMethod: `${module}.vote`,
+        txMethod: `${moduleElection.module}.vote`,
         params: [selectedCandidates, amount],
       });
       reset();

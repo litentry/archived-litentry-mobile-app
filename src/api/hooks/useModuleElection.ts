@@ -10,6 +10,7 @@ const MODULE_ELECTION_QUERY = gql`
       hasElections
       votingBondBase
       votingBondFactor
+      candidacyBond
     }
   }
 `;
