@@ -5,7 +5,7 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {Modalize} from 'react-native-modalize';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {useApiTx} from 'src/api/hooks/useApiTx';
-import {getBalanceFromString} from 'src/api/utils/balance';
+import {getBNFromLocalInputString} from 'src/api/utils/balance';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {sendFundScreen} from '@ui/navigation/routeKeys';
 import {Button, Headline, IconButton, Text, TextInput} from '@ui/library';
@@ -73,7 +73,7 @@ export function SendFundScreen({navigation, route}: Props) {
               <Button
                 onPress={() => {
                   if (chainInfo) {
-                    const _amountBN = getBalanceFromString(chainInfo.registry, amount);
+                    const _amountBN = getBNFromLocalInputString(chainInfo.registry, amount);
                     startTx({
                       address,
                       txMethod: 'balances.transferKeepAlive',

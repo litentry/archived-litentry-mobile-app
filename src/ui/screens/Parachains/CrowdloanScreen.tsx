@@ -8,7 +8,6 @@ import {Padder} from '@ui/components/Padder';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import {getBalanceFromString} from 'src/api/utils/balance';
 import {CrowdloansStackParamList} from '@ui/navigation/navigation';
 import {crowdloanFundDetailScreen} from '@ui/navigation/routeKeys';
 import {Button, Card, Subheading, Text, Caption, Title, Modal, useTheme} from '@ui/library';
@@ -21,7 +20,6 @@ import {NetworkContext} from 'context/NetworkContext';
 import type {BalanceOf} from '@polkadot/types/interfaces';
 import {notEmpty} from 'src/utils';
 import type {Account} from 'src/api/hooks/useAccount';
-import {useChainInfo} from 'src/api/hooks/useChainInfo';
 
 export function CrowdloanScreen() {
   const {data, loading} = useCrowdloans();
@@ -219,8 +217,7 @@ function ContributeBox({
   const {api} = useApi();
   const [account, setAccount] = React.useState<Account>();
   const [amount, setAmount] = React.useState<string>('');
-  const {formatBalance} = useFormatBalance();
-  const {data: chainInfo} = useChainInfo();
+  const {formatBalance, getBNFromLocalInputString} = useFormatBalance();
 
   const reset = () => {
     setAccount(undefined);
@@ -231,7 +228,7 @@ function ContributeBox({
   const minContribution = api?.consts.crowdloan?.minContribution as BalanceOf | undefined;
   const minBalance = minContribution ? formatBalance(minContribution) : '';
 
-  const balance = chainInfo && getBalanceFromString(chainInfo.registry, amount);
+  const balance = getBNFromLocalInputString(amount);
   const disabled = !account || !balance || !minContribution || balance.isZero() || balance.lt(minContribution);
 
   return (

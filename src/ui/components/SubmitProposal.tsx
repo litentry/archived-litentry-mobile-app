@@ -12,7 +12,7 @@ import {useChainInfo} from 'src/api/hooks/useChainInfo';
 
 export function SubmitProposal() {
   const [state, dispatch] = React.useReducer(reducer, initialState);
-  const {formatBalance, getBalanceFromString} = useFormatBalance();
+  const {formatBalance, getBNFromLocalInputString} = useFormatBalance();
   const startTx = useApiTx();
   const {data: chainInfo} = useChainInfo();
 
@@ -33,7 +33,7 @@ export function SubmitProposal() {
 
   const submit = () => {
     if (state.balance && state.account) {
-      const balance = getBalanceFromString(state.balance);
+      const balance = getBNFromLocalInputString(state.balance);
       startTx({
         address: state.account.address,
         txMethod: 'democracy.propose',

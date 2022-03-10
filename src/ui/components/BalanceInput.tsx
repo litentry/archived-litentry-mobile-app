@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {TextInput} from '@ui/library';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {decimalKeypad} from 'src/utils';
 import MaxBalance from './MaxBalance';
 import type {Account} from 'src/api/hooks/useAccount';
+import {getBNFromApiString} from 'src/api/utils/balance';
 
 type PropTypes = {
   account?: Account;
@@ -14,19 +15,24 @@ type PropTypes = {
 export function BalanceInput(props: PropTypes) {
   const {account} = props;
   const [amount, setAmount] = useState('');
-  const [hasSufficientFunds, sethasSufficientFunds] = useState(true);
-  const {formatBalance, getBalanceFromString} = useFormatBalance();
-  useEffect(() => {
-    amount !== '' && Number(amount) >= Number(account?.balance.free)
-      ? sethasSufficientFunds(false)
-      : sethasSufficientFunds(true);
-  }, [amount, account]);
+  const {formatBalance, getBNFromLocalInputString} = useFormatBalance();
+
+  const hasEnoughBalance = useMemo(() => {
+    const amountBN = getBNFromLocalInputString(amount);
+    const freeBalance = getBNFromApiString(account?.balance.free);
+    if (amountBN) {
+      return freeBalance.gt(amountBN);
+    }
+
+    return false;
+  }, [amount, account, getBNFromLocalInputString]);
+
   return (
     <>
       <TextInput
         dense
         style={styles.textInput}
-        error={hasSufficientFunds}
+        error={!hasEnoughBalance}
         mode="outlined"
         autoComplete="off"
         placeholder="Enter amount"
@@ -38,7 +44,9 @@ export function BalanceInput(props: PropTypes) {
           props.onChangeBalance(decimalKeypad(nextValue));
         }}
         contextMenuHidden={true}
-        right={<TextInput.Affix textStyle={styles.affix} text={formatBalance(getBalanceFromString(amount)) ?? ''} />}
+        right={
+          <TextInput.Affix textStyle={styles.affix} text={formatBalance(getBNFromLocalInputString(amount)) ?? ''} />
+        }
       />
       <MaxBalance address={account} />
     </>
