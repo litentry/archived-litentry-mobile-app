@@ -1,14 +1,12 @@
 import React, {useContext} from 'react';
 import {SectionList, StyleSheet, View} from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/core';
-import {useApi} from 'context/ChainApiContext';
 import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
-import {getBalanceFromString} from 'src/api/utils/balance';
 import {CrowdloansStackParamList} from '@ui/navigation/navigation';
 import {crowdloanFundDetailScreen} from '@ui/navigation/routeKeys';
 import {Button, Card, Subheading, Text, Caption, Title, Modal, useTheme} from '@ui/library';
@@ -18,9 +16,11 @@ import {Chart} from '@ui/components/Chart';
 import BalanceInput from '@ui/components/BalanceInput';
 import {Crowdloan, useCrowdloans} from 'src/api/hooks/useCrowdloans';
 import {NetworkContext} from 'context/NetworkContext';
-import type {BalanceOf} from '@polkadot/types/interfaces';
 import {notEmpty} from 'src/utils';
 import type {Account} from 'src/api/hooks/useAccount';
+import {useChainInfo} from 'src/api/hooks/useChainInfo';
+import {BN_ZERO} from '@polkadot/util';
+import {formattedStringToBn} from 'src/api/utils/balance';
 
 export function CrowdloanScreen() {
   const {data, loading} = useCrowdloans();
@@ -215,10 +215,10 @@ function ContributeBox({
   parachainId: string;
 }) {
   const startTx = useApiTx();
-  const {api} = useApi();
   const [account, setAccount] = React.useState<Account>();
   const [amount, setAmount] = React.useState<string>('');
-  const formatBalance = useFormatBalance();
+  const {formatBalance, stringToBn} = useFormatBalance();
+  const {data: chainInfo} = useChainInfo();
 
   const reset = () => {
     setAccount(undefined);
@@ -226,10 +226,10 @@ function ContributeBox({
     setVisible(false);
   };
 
-  const minContribution = api?.consts.crowdloan?.minContribution as BalanceOf | undefined;
-  const minBalance = minContribution ? formatBalance(minContribution) : '';
-
-  const balance = api && getBalanceFromString(api, amount);
+  const minContribution = chainInfo?.crowdloanMinContribution
+    ? formattedStringToBn(chainInfo.crowdloanMinContribution)
+    : BN_ZERO;
+  const balance = stringToBn(amount);
   const disabled = !account || !balance || !minContribution || balance.isZero() || balance.lt(minContribution);
 
   return (
@@ -239,10 +239,10 @@ function ContributeBox({
       <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
       <Padder scale={1} />
       <Text>Amount:</Text>
-      <BalanceInput api={api} account={account} onChangeBalance={setAmount} />
+      <BalanceInput account={account} onChangeBalance={setAmount} />
       <Padder scale={0.2} />
       <Text>minimum allowed: </Text>
-      <Text>{minBalance}</Text>
+      <Text>{formatBalance(minContribution)}</Text>
 
       <Padder scale={2} />
       <View style={contributeBoxStyles.row}>
