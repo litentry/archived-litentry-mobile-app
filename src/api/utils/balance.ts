@@ -25,7 +25,8 @@ export function getBNFromLocalInputString(registry: Registry, input: string): BN
 }
 
 /**
- * use this method to get BN from string values incoming from API
+ * Use this method to convert formatted string values (Balance) to BN. 
+ * e.g: values coming from the litentry-graph
  */
 export function getBNFromApiString(value?: string) {
   return bnToBn(value);
