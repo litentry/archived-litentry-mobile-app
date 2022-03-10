@@ -1,12 +1,11 @@
 import React, {useEffect, useRef} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {NavigationProp, RouteProp} from '@react-navigation/core';
-import {useApi} from 'context/ChainApiContext';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {Modalize} from 'react-native-modalize';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {useApiTx} from 'src/api/hooks/useApiTx';
-import {getBalanceFromString} from 'src/api/utils/balance';
+import {stringToBn} from 'src/api/utils/balance';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {sendFundScreen} from '@ui/navigation/routeKeys';
 import {Button, Headline, IconButton, Text, TextInput} from '@ui/library';
@@ -15,6 +14,7 @@ import {Layout} from '@ui/components/Layout';
 import {standardPadding} from '@ui/styles';
 import BalanceInput from '@ui/components/BalanceInput';
 import {useAccount} from 'src/api/hooks/useAccount';
+import {useChainInfo} from 'src/api/hooks/useChainInfo';
 
 type Props = {
   navigation: NavigationProp<AccountsStackParamList, typeof sendFundScreen>;
@@ -28,8 +28,8 @@ export function SendFundScreen({navigation, route}: Props) {
   const [amount, setAmount] = React.useState('');
   const [to, setTo] = React.useState<string>();
   const [scanning, setScanning] = React.useState(false);
-  const {api} = useApi();
   const startTx = useApiTx();
+  const {data: chainInfo} = useChainInfo();
 
   useEffect(() => {
     ref.current?.open();
@@ -59,7 +59,7 @@ export function SendFundScreen({navigation, route}: Props) {
           <View style={styles.container}>
             <Headline>Send</Headline>
             <Padder scale={1} />
-            <BalanceInput api={api} account={accountInfo} onChangeBalance={setAmount} />
+            <BalanceInput account={accountInfo} onChangeBalance={setAmount} />
             <Padder scale={1} />
             <TextInput
               autoComplete="off"
@@ -72,8 +72,8 @@ export function SendFundScreen({navigation, route}: Props) {
             <View style={styles.buttons}>
               <Button
                 onPress={() => {
-                  if (api) {
-                    const _amountBN = getBalanceFromString(api, amount);
+                  if (chainInfo) {
+                    const _amountBN = stringToBn(chainInfo.registry, amount);
                     startTx({
                       address,
                       txMethod: 'balances.transferKeepAlive',

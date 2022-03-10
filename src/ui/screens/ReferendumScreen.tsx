@@ -3,13 +3,12 @@ import {StyleSheet, View, ScrollView} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {Button, Divider, Headline, Modal, Select, Subheading, Caption, List, Text} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
-import {useApi} from 'context/ChainApiContext';
 import {ProgressBar} from '@ui/components/ProgressBar';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useConvictions, Conviction} from 'src/api/hooks/useConvictions';
-import {getBalanceFromString} from 'src/api/utils/balance';
+import {stringToBn} from 'src/api/utils/balance';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {referendumScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
@@ -17,13 +16,14 @@ import {Padder} from '@ui/components/Padder';
 import {ProposalCallInfo} from '@ui/components/ProposalCallInfo';
 import BalanceInput from '@ui/components/BalanceInput';
 import {Account} from 'src/api/hooks/useAccount';
+import {useChainInfo} from 'src/api/hooks/useChainInfo';
 
 export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
   const startTx = useApiTx();
-  const {api} = useApi();
   const [state, dispatch] = useReducer(reducer, initialState);
   const referendum = route.params.referendum;
   const convictions = useConvictions();
+  const {data: chainInfo} = useChainInfo();
 
   const title = `${referendum.method}.${referendum.section}`;
 
@@ -40,8 +40,8 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
   };
 
   const vote = () => {
-    if (api && state.account && state.conviction && state.voteValue) {
-      const balance = getBalanceFromString(api, state.voteValue);
+    if (chainInfo && state.account && state.conviction && state.voteValue) {
+      const balance = stringToBn(chainInfo.registry, state.voteValue);
       startTx({
         address: state.account.address,
         txMethod: 'democracy.vote',
@@ -129,7 +129,6 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
 
           <Caption>{`Vote Value`}</Caption>
           <BalanceInput
-            api={api}
             account={state.account}
             onChangeBalance={(amount) => dispatch({type: `SET_VOTE_VALUE`, payload: amount})}
           />

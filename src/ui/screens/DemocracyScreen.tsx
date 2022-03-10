@@ -21,8 +21,8 @@ export function DemocracyScreen() {
 
   const groupedData: {title: string; data: Array<DemocracyProposal | DemocracyReferendum>}[] = React.useMemo(
     () => [
-      {title: 'Referenda', data: democracy.proposals ?? []},
-      {title: 'Proposals', data: democracy.referendums ?? []},
+      {title: 'Referenda', data: democracy.referendums ?? []},
+      {title: 'Proposals', data: democracy.proposals ?? []},
     ],
     [democracy],
   );

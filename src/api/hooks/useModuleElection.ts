@@ -8,6 +8,9 @@ const MODULE_ELECTION_QUERY = gql`
     substrateChainModuleElection {
       module
       hasElections
+      votingBondBase
+      votingBondFactor
+      candidacyBond
     }
   }
 `;

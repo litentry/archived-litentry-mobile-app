@@ -14,7 +14,7 @@ type PropTypes = {
 };
 
 function RegistrarSelectionModal({onSelect, visible, onClose}: PropTypes) {
-  const formatBalance = useFormatBalance();
+  const {formatBalance} = useFormatBalance();
   const [registrar, setRegistrar] = useState<Registrar>();
 
   const handleSelect = useCallback(() => {
