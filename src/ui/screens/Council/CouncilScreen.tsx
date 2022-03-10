@@ -22,9 +22,9 @@ import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 import BalanceInput from '@ui/components/BalanceInput';
 import type {Account} from 'src/api/hooks/useAccount';
 import {formattedStringToBn} from 'src/api/utils/balance';
-import {useApi} from 'context/ChainApiContext';
 import {Popover} from '@ui/components/Popover';
 import MaxBalance from '@ui/components/MaxBalance';
+import {useApi} from 'context/ChainApiContext';
 
 const MAX_VOTES = 16;
 
@@ -132,7 +132,7 @@ function CouncilOverviewScreen() {
           setVisible={(visible) => {
             setcouncilCandidancyVisible(visible);
           }}
-          candidacyBond={moduleElection.candidacyBond}
+          moduleElection={moduleElection}
         />
       ) : null}
     </SafeView>
@@ -197,7 +197,7 @@ type CouncilVoteProps = {
 type CouncilCandidancyProps = {
   visible: boolean;
   setVisible: (visible: boolean) => void;
-  candidacyBond: string;
+  moduleElection: ModuleElection;
 };
 
 function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: CouncilVoteProps) {
@@ -304,13 +304,30 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
   );
 }
 
-function CouncilCandidancyVisible({visible, setVisible, candidacyBond}: CouncilCandidancyProps) {
+function CouncilCandidancyVisible({visible, setVisible, moduleElection}: CouncilCandidancyProps) {
   const [account, setAccount] = React.useState<Account>();
+  const startTx = useApiTx();
   const {api} = useApi();
+  const balance = useFormatBalance();
+  const formattedBalance = balance.formatBalance(moduleElection.candidacyBond);
+  const {data: council} = useCouncil();
+
+  const onSubmitCandidacy = () => {
+    if (account) {
+      startTx({
+        address: account.address,
+        txMethod: `${moduleElection.module}.submitCandidacy`,
+        params: [api?.tx.elections.submitCandidacy.meta.args.length === 1 ? [council?.candidates.length] : []],
+      });
+      reset();
+    }
+  };
+
   const reset = () => {
     setAccount(undefined);
     setVisible(false);
   };
+
   return (
     <Modal visible={visible} onDismiss={reset}>
       <View style={styles.centerAlign}>
@@ -337,14 +354,14 @@ function CouncilCandidancyVisible({visible, setVisible, candidacyBond}: CouncilC
           iconStyle={styles.paddingTop}
         />
       </Caption>
-      <TextInput mode="outlined" disabled value={`100`} />
+      <TextInput mode="outlined" disabled value={formattedBalance} />
       <MaxBalance address={account} />
       <Padder scale={1} />
       <View style={styles.buttons}>
         <Button onPress={reset} mode="outlined" compact>
           Cancel
         </Button>
-        <Button mode="contained" disabled={true}>
+        <Button mode="contained" disabled={true} onPress={onSubmitCandidacy}>
           Submit
         </Button>
       </View>
