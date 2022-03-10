@@ -361,7 +361,7 @@ function CouncilCandidancyVisible({visible, setVisible, moduleElection}: Council
         <Button onPress={reset} mode="outlined" compact>
           Cancel
         </Button>
-        <Button mode="contained" disabled={true} onPress={onSubmitCandidacy}>
+        <Button mode="contained" disabled={!account} onPress={onSubmitCandidacy}>
           Submit
         </Button>
       </View>
