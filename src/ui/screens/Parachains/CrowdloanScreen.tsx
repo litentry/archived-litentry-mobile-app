@@ -20,7 +20,7 @@ import {notEmpty} from 'src/utils';
 import type {Account} from 'src/api/hooks/useAccount';
 import {useChainInfo} from 'src/api/hooks/useChainInfo';
 import {BN_ZERO} from '@polkadot/util';
-import {getBNFromApiString} from 'src/api/utils/balance';
+import {formattedStringToBn} from 'src/api/utils/balance';
 
 export function CrowdloanScreen() {
   const {data, loading} = useCrowdloans();
@@ -217,7 +217,7 @@ function ContributeBox({
   const startTx = useApiTx();
   const [account, setAccount] = React.useState<Account>();
   const [amount, setAmount] = React.useState<string>('');
-  const {formatBalance, getBNFromLocalInputString} = useFormatBalance();
+  const {formatBalance, stringToBn} = useFormatBalance();
   const {data: chainInfo} = useChainInfo();
 
   const reset = () => {
@@ -227,9 +227,9 @@ function ContributeBox({
   };
 
   const minContribution = chainInfo?.crowdloanMinContribution
-    ? getBNFromApiString(chainInfo.crowdloanMinContribution)
+    ? formattedStringToBn(chainInfo.crowdloanMinContribution)
     : BN_ZERO;
-  const balance = getBNFromLocalInputString(amount);
+  const balance = stringToBn(amount);
   const disabled = !account || !balance || !minContribution || balance.isZero() || balance.lt(minContribution);
 
   return (

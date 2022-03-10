@@ -21,7 +21,7 @@ import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 import BalanceInput from '@ui/components/BalanceInput';
 import type {Account} from 'src/api/hooks/useAccount';
-import {getBNFromApiString} from 'src/api/utils/balance';
+import {formattedStringToBn} from 'src/api/utils/balance';
 
 const MAX_VOTES = 16;
 
@@ -209,12 +209,12 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
   const disabled = !amount || !account || selectedCandidates.length === 0;
 
   const bondValue = useMemo(() => {
-    const votingBondBase = getBNFromApiString(moduleElection.votingBondBase);
+    const votingBondBase = formattedStringToBn(moduleElection.votingBondBase);
     if (selectedCandidates.length === 0) {
       return votingBondBase;
     }
 
-    const votingBondFactor = getBNFromApiString(moduleElection.votingBondFactor);
+    const votingBondFactor = formattedStringToBn(moduleElection.votingBondFactor);
     return votingBondBase.add(votingBondFactor.muln(selectedCandidates.length));
   }, [selectedCandidates, moduleElection]);
 

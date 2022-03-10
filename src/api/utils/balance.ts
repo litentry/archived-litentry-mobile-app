@@ -3,10 +3,10 @@ import type {Registry} from 'src/api/hooks/useChainInfo';
 import {bnToBn} from '@polkadot/util';
 
 /**
- * Use this method to convert unformatted string values (Balance) to BN. 
+ * Use this method to convert unformatted string values (Balance) to BN.
  *  e.g: amount entered in a TextInput
  */
-export function getBNFromLocalInputString(registry: Registry, input: string): BN {
+export function stringToBn(registry: Registry, input: string): BN {
   const chainDecimal = registry.decimals;
   const currencyPower = new BN(chainDecimal);
 
@@ -25,9 +25,9 @@ export function getBNFromLocalInputString(registry: Registry, input: string): BN
 }
 
 /**
- * Use this method to convert formatted string values (Balance) to BN. 
+ * Use this method to convert formatted string values (Balance) to BN.
  * e.g: values coming from the litentry-graph
  */
-export function getBNFromApiString(value?: string) {
+export function formattedStringToBn(value?: string) {
   return bnToBn(value);
 }

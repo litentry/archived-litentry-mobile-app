@@ -8,7 +8,7 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useConvictions, Conviction} from 'src/api/hooks/useConvictions';
-import {getBNFromLocalInputString} from 'src/api/utils/balance';
+import {stringToBn} from 'src/api/utils/balance';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {referendumScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
@@ -41,7 +41,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
 
   const vote = () => {
     if (chainInfo && state.account && state.conviction && state.voteValue) {
-      const balance = getBNFromLocalInputString(chainInfo.registry, state.voteValue);
+      const balance = stringToBn(chainInfo.registry, state.voteValue);
       startTx({
         address: state.account.address,
         txMethod: 'democracy.vote',

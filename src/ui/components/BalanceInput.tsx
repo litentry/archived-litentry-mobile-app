@@ -5,7 +5,7 @@ import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {decimalKeypad} from 'src/utils';
 import MaxBalance from './MaxBalance';
 import type {Account} from 'src/api/hooks/useAccount';
-import {getBNFromApiString} from 'src/api/utils/balance';
+import {formattedStringToBn} from 'src/api/utils/balance';
 
 type PropTypes = {
   account?: Account;
@@ -15,17 +15,17 @@ type PropTypes = {
 export function BalanceInput(props: PropTypes) {
   const {account} = props;
   const [amount, setAmount] = useState('');
-  const {formatBalance, getBNFromLocalInputString} = useFormatBalance();
+  const {formatBalance, stringToBn} = useFormatBalance();
 
   const hasEnoughBalance = useMemo(() => {
-    const amountBN = getBNFromLocalInputString(amount);
-    const freeBalance = getBNFromApiString(account?.balance.free);
+    const amountBN = stringToBn(amount);
+    const freeBalance = formattedStringToBn(account?.balance.free);
     if (amountBN) {
       return freeBalance.gt(amountBN);
     }
 
     return false;
-  }, [amount, account, getBNFromLocalInputString]);
+  }, [amount, account, stringToBn]);
 
   return (
     <>
@@ -44,9 +44,7 @@ export function BalanceInput(props: PropTypes) {
           props.onChangeBalance(decimalKeypad(nextValue));
         }}
         contextMenuHidden={true}
-        right={
-          <TextInput.Affix textStyle={styles.affix} text={formatBalance(getBNFromLocalInputString(amount)) ?? ''} />
-        }
+        right={<TextInput.Affix textStyle={styles.affix} text={formatBalance(stringToBn(amount)) ?? ''} />}
       />
       <MaxBalance address={account} />
     </>

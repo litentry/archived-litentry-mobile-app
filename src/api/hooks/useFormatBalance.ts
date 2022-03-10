@@ -3,7 +3,7 @@ import type BN from 'bn.js';
 // eslint-disable-next-line no-restricted-imports
 import {formatBalance} from '@polkadot/util';
 import {useChainInfo, Registry} from './useChainInfo';
-import {getBNFromLocalInputString as getBNFromLocalInputStringUtil} from 'src/api/utils/balance';
+import {stringToBn as stringToBnUtil} from 'src/api/utils/balance';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Balance = Compact<any> | BN | string | number;
@@ -20,15 +20,15 @@ export function useFormatBalance() {
     }
   };
 
-  const getBNFromLocalInputString = (input: string) => {
+  const stringToBn = (input: string) => {
     if (chainInfo) {
-      return getBNFromLocalInputStringUtil(chainInfo.registry, input);
+      return stringToBnUtil(chainInfo.registry, input);
     }
   };
 
   return {
     formatBalance,
-    getBNFromLocalInputString,
+    stringToBn,
   };
 }
 
