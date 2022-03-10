@@ -11,7 +11,7 @@ import {SelectAccount} from '@ui/components/SelectAccount';
 import {useCouncil, CouncilCandidate, CouncilMember, Council} from 'src/api/hooks/useCouncil';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {candidateScreen} from '@ui/navigation/routeKeys';
-import {List, Button, Divider, Modal, useTheme, Caption, Subheading, Text} from '@ui/library';
+import {List, Button, Divider, Modal, useTheme, Caption, Subheading, Text, TextInput} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {MotionsScreen} from './MotionsScreen';
@@ -22,6 +22,8 @@ import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 import BalanceInput from '@ui/components/BalanceInput';
 import type {Account} from 'src/api/hooks/useAccount';
+import MaxBalance from '@ui/components/MaxBalance';
+import {Popover} from '@ui/components/Popover';
 
 const MAX_VOTES = 16;
 
@@ -50,6 +52,8 @@ function CouncilOverviewScreen() {
   const {data: moduleElection} = useModuleElection();
 
   const [councilVoteVisible, setCouncilVoteVisible] = useState(false);
+
+  const [councilCandidancyVisible, setcouncilCandidancyVisible] = useState(false);
 
   const sectionsData = useMemo(
     () => [
@@ -92,19 +96,20 @@ function CouncilOverviewScreen() {
             );
           }}
           renderSectionHeader={({section: {title}}) => (
-            <List.Item
-              style={styles.sectionHeader}
-              title={buildSectionHeaderTitle(title, council)}
-              right={() => {
-                if (title === 'Members') {
-                  return (
-                    <Button icon="vote" mode="outlined" onPress={() => setCouncilVoteVisible(true)}>
-                      Vote
-                    </Button>
-                  );
-                }
-              }}
-            />
+            <>
+              <List.Item style={styles.sectionHeader} title={buildSectionHeaderTitle(title, council)} />
+              {title === 'Members' ? (
+                <View style={globalStyles.rowContainer}>
+                  <Button icon="vote" mode="outlined" onPress={() => setCouncilVoteVisible(true)}>
+                    Vote
+                  </Button>
+                  <Padder scale={1} />
+                  <Button icon="vote" mode="outlined" onPress={() => setcouncilCandidancyVisible(true)}>
+                    Submit Candidacy
+                  </Button>
+                </View>
+              ) : null}
+            </>
           )}
           ItemSeparatorComponent={Divider}
           ListEmptyComponent={EmptyView}
@@ -118,6 +123,15 @@ function CouncilOverviewScreen() {
           }}
           candidates={votingCandidates}
           module={moduleElection.module}
+        />
+      ) : null}
+      {council && moduleElection?.module ? (
+        <CouncilCandidancyVisible
+          visible={councilCandidancyVisible}
+          setVisible={(visible) => {
+            setcouncilCandidancyVisible(visible);
+          }}
+          candidacyBond={moduleElection.candidacyBond}
         />
       ) : null}
     </SafeView>
@@ -177,6 +191,12 @@ type CouncilVoteProps = {
   setVisible: (visible: boolean) => void;
   candidates: CouncilMember[];
   module: string;
+};
+
+type CouncilCandidancyProps = {
+  visible: boolean;
+  setVisible: (visible: boolean) => void;
+  candidacyBond: string;
 };
 
 function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVoteProps) {
@@ -275,6 +295,54 @@ function CouncilVoteModal({visible, setVisible, candidates, module}: CouncilVote
         </Button>
         <Button mode="contained" disabled={disabled} onPress={onVote}>
           Vote
+        </Button>
+      </View>
+    </Modal>
+  );
+}
+
+function CouncilCandidancyVisible({visible, setVisible, candidacyBond}: CouncilCandidancyProps) {
+  const [account, setAccount] = React.useState<Account>();
+  const {api} = useApi();
+  const reset = () => {
+    setAccount(undefined);
+    setVisible(false);
+  };
+  return (
+    <Modal visible={visible} onDismiss={reset}>
+      <View style={styles.centerAlign}>
+        <Subheading>{`Submit Council Candidancy`}</Subheading>
+      </View>
+      <Padder scale={1} />
+      <Caption>
+        {`Candidate account:`}
+        <Popover
+          content={'Select the account you wish to submit for candidacy.'}
+          icon={`questionmark`}
+          iconSize={15}
+          iconStyle={styles.paddingTop}
+        />
+      </Caption>
+      <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
+      <Padder scale={1} />
+      <Caption>
+        {`Candidacy bond:`}
+        <Popover
+          content={'The bond will be reserved for the duration of your candidacy and membership.'}
+          icon={`questionmark`}
+          iconSize={15}
+          iconStyle={styles.paddingTop}
+        />
+      </Caption>
+      <TextInput mode="outlined" disabled value={`100`} />
+      <MaxBalance address={account} />
+      <Padder scale={1} />
+      <View style={styles.buttons}>
+        <Button onPress={reset} mode="outlined" compact>
+          Cancel
+        </Button>
+        <Button mode="contained" disabled={true}>
+          Submit
         </Button>
       </View>
     </Modal>
@@ -384,4 +452,6 @@ const styles = StyleSheet.create({
   voteValue: {
     marginLeft: standardPadding,
   },
+  spacer: {minWidth: standardPadding * 3},
+  paddingTop: {paddingTop: 3},
 });
