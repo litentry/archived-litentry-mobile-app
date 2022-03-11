@@ -25,6 +25,7 @@ import {formattedStringToBn} from 'src/api/utils/balance';
 import {Popover} from '@ui/library/Popover';
 import MaxBalance from '@ui/components/MaxBalance';
 import {useApi} from 'context/ChainApiContext';
+import {useSnackbar} from 'context/SnackbarContext';
 
 const MAX_VOTES = 16;
 
@@ -54,7 +55,7 @@ function CouncilOverviewScreen() {
 
   const [councilVoteVisible, setCouncilVoteVisible] = useState(false);
 
-  const [submitCandidancyVisible, setSubmitCandidancyVisible] = useState(false);
+  const [submitCandidacyVisible, setSubmitCandidacyVisible] = useState(false);
 
   const sectionsData = useMemo(
     () => [
@@ -105,7 +106,7 @@ function CouncilOverviewScreen() {
                     Vote
                   </Button>
                   <Padder scale={1} />
-                  <Button icon="vote" mode="outlined" onPress={() => setSubmitCandidancyVisible(true)}>
+                  <Button icon="vote" mode="outlined" onPress={() => setSubmitCandidacyVisible(true)}>
                     Submit Candidacy
                   </Button>
                 </View>
@@ -128,9 +129,9 @@ function CouncilOverviewScreen() {
       ) : null}
       {council && moduleElection?.module ? (
         <SubmitCandidancyModel
-          visible={submitCandidancyVisible}
+          visible={submitCandidacyVisible}
           setVisible={(visible) => {
-            setSubmitCandidancyVisible(visible);
+            setSubmitCandidacyVisible(visible);
           }}
           moduleElection={moduleElection}
         />
@@ -312,6 +313,7 @@ function SubmitCandidancyModel({visible, setVisible, moduleElection}: SubmitCand
   const formattedBalance = balance.formatBalance(moduleElection.candidacyBond);
   const {data: council} = useCouncil();
   const {colors} = useTheme();
+  const snackbar = useSnackbar();
   const onSubmitCandidacy = () => {
     console.log(moduleElection.module);
     if (account && api && moduleElection.module) {
@@ -321,7 +323,13 @@ function SubmitCandidancyModel({visible, setVisible, moduleElection}: SubmitCand
         params: [
           api.tx[moduleElection.module]?.submitCandidacy?.meta.args.length === 1 ? [council?.candidates.length] : [],
         ],
-      });
+      })
+        .then((tx) => {
+          snackbar('Candidacy submitted successfully');
+        })
+        .catch((tx) => {
+          snackbar('Error while submitting candidacy');
+        });
       reset();
     }
   };
