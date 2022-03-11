@@ -313,11 +313,14 @@ function SubmitCandidancyModel({visible, setVisible, moduleElection}: SubmitCand
   const {data: council} = useCouncil();
   const {colors} = useTheme();
   const onSubmitCandidacy = () => {
-    if (account && api) {
+    console.log(moduleElection.module);
+    if (account && api && moduleElection.module) {
       startTx({
         address: account.address,
         txMethod: `${moduleElection.module}.submitCandidacy`,
-        params: [api?.tx.elections.submitCandidacy.meta.args.length === 1 ? [council?.candidates.length] : []],
+        params: [
+          api.tx[moduleElection.module]?.submitCandidacy?.meta.args.length === 1 ? [council?.candidates.length] : [],
+        ],
       });
       reset();
     }
