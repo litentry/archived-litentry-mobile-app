@@ -22,10 +22,10 @@ import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 import BalanceInput from '@ui/components/BalanceInput';
 import type {Account} from 'src/api/hooks/useAccount';
 import {formattedStringToBn} from 'src/api/utils/balance';
-import {Popover} from '@ui/library/Popover';
 import MaxBalance from '@ui/components/MaxBalance';
 import {useApi} from 'context/ChainApiContext';
 import {useSnackbar} from 'context/SnackbarContext';
+import {InputLabel} from '@ui/library/InputLabel';
 
 const MAX_VOTES = 16;
 
@@ -128,7 +128,7 @@ function CouncilOverviewScreen() {
         />
       ) : null}
       {council && moduleElection?.module ? (
-        <SubmitCandidancyModel
+        <SubmitCandidacyModel
           visible={submitCandidacyVisible}
           setVisible={(visible) => {
             setSubmitCandidacyVisible(visible);
@@ -195,7 +195,7 @@ type CouncilVoteProps = {
   moduleElection: ModuleElection;
 };
 
-type SubmitCandidancyProps = {
+type SubmitCandidacyProps = {
   visible: boolean;
   setVisible: (visible: boolean) => void;
   moduleElection: ModuleElection;
@@ -305,14 +305,14 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
   );
 }
 
-function SubmitCandidancyModel({visible, setVisible, moduleElection}: SubmitCandidancyProps) {
+function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandidacyProps) {
   const [account, setAccount] = React.useState<Account>();
   const startTx = useApiTx();
   const {api} = useApi();
   const balance = useFormatBalance();
   const formattedBalance = balance.formatBalance(moduleElection.candidacyBond);
   const {data: council} = useCouncil();
-  const {colors} = useTheme();
+
   const snackbar = useSnackbar();
   const onSubmitCandidacy = () => {
     console.log(moduleElection.module);
@@ -324,10 +324,10 @@ function SubmitCandidancyModel({visible, setVisible, moduleElection}: SubmitCand
           api.tx[moduleElection.module]?.submitCandidacy?.meta.args.length === 1 ? [council?.candidates.length] : [],
         ],
       })
-        .then((tx) => {
+        .then(() => {
           snackbar('Candidacy submitted successfully');
         })
-        .catch((tx) => {
+        .catch(() => {
           snackbar('Error while submitting candidacy');
         });
       reset();
@@ -339,52 +339,16 @@ function SubmitCandidancyModel({visible, setVisible, moduleElection}: SubmitCand
     setVisible(false);
   };
 
-  const accountPopableProps = {
-    content: 'Select the account you wish to submit for candidacy.',
-    children: null,
-    backgroundColor: colors.accent,
-  };
-
-  const candidancyBondPopableProps = {
-    content: 'Select the account you wish to submit for candidacy.',
-    children: null,
-    backgroundColor: colors.accent,
-  };
-
   return (
     <Modal visible={visible} onDismiss={reset}>
       <View style={styles.centerAlign}>
-        <Subheading>{`Submit Council Candidancy`}</Subheading>
+        <Subheading>{`Submit Council Candidacy`}</Subheading>
       </View>
       <Padder scale={1} />
-      <Caption>
-        {`Candidate account:`}
-        <Popover
-          popableProps={accountPopableProps}
-          popableContent={
-            <>
-              <View style={styles.paddingTop}>
-                <Icon name={'questionmark'} size={19} />
-              </View>
-            </>
-          }
-        />
-      </Caption>
+      <InputLabel label={'Candidate account:'} helperText={'Select the account you wish to submit for candidacy.'} />
       <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
       <Padder scale={1} />
-      <Caption>
-        {`Candidacy bond:`}
-        <Popover
-          popableProps={candidancyBondPopableProps}
-          popableContent={
-            <>
-              <View style={styles.paddingTop}>
-                <Icon name={'questionmark'} size={19} />
-              </View>
-            </>
-          }
-        />
-      </Caption>
+      <InputLabel label={'Candidacy bond:'} helperText={'The bond that is reserved.'} />
       <TextInput mode="outlined" disabled value={formattedBalance} />
       <MaxBalance address={account} />
       <Padder scale={1} />
