@@ -1,12 +1,17 @@
 import React from 'react';
+import {useTheme} from '@ui/library';
 import {Popable} from 'react-native-popable';
-import {PopableProps} from 'react-native-popable/lib/typescript/Popable';
 
 export type PopoverProps = {
-  popableProps: PopableProps;
+  popableText: string;
   popableContent?: React.ReactNode;
 };
 
-export function Popover({popableContent, popableProps}: PopoverProps) {
-  return <Popable {...popableProps}>{popableContent}</Popable>;
+export function Popover({popableContent, popableText}: PopoverProps) {
+  const {colors} = useTheme();
+  return (
+    <Popable content={popableText} backgroundColor={colors.accent}>
+      {popableContent}
+    </Popable>
+  );
 }
