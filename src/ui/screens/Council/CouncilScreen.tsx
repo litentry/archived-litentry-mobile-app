@@ -10,7 +10,7 @@ import {SelectAccount} from '@ui/components/SelectAccount';
 import {useCouncil, CouncilCandidate, CouncilMember, Council} from 'src/api/hooks/useCouncil';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {candidateScreen} from '@ui/navigation/routeKeys';
-import {List, Button, Divider, Modal, useTheme, Caption, Subheading, Text, TextInput} from '@ui/library';
+import {List, Button, Divider, Modal, useTheme, Caption, Subheading, Text, TextInput, Icon} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {MotionsScreen} from './MotionsScreen';
@@ -22,7 +22,7 @@ import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 import BalanceInput from '@ui/components/BalanceInput';
 import type {Account} from 'src/api/hooks/useAccount';
 import {formattedStringToBn} from 'src/api/utils/balance';
-import {Popover} from '@ui/components/Popover';
+import {Popover} from '@ui/library/Popover';
 import MaxBalance from '@ui/components/MaxBalance';
 import {useApi} from 'context/ChainApiContext';
 
@@ -54,7 +54,7 @@ function CouncilOverviewScreen() {
 
   const [councilVoteVisible, setCouncilVoteVisible] = useState(false);
 
-  const [councilCandidancyVisible, setcouncilCandidancyVisible] = useState(false);
+  const [submitCandidancyVisible, setSubmitCandidancyVisible] = useState(false);
 
   const sectionsData = useMemo(
     () => [
@@ -105,7 +105,7 @@ function CouncilOverviewScreen() {
                     Vote
                   </Button>
                   <Padder scale={1} />
-                  <Button icon="vote" mode="outlined" onPress={() => setcouncilCandidancyVisible(true)}>
+                  <Button icon="vote" mode="outlined" onPress={() => setSubmitCandidancyVisible(true)}>
                     Submit Candidacy
                   </Button>
                 </View>
@@ -127,10 +127,10 @@ function CouncilOverviewScreen() {
         />
       ) : null}
       {council && moduleElection?.module ? (
-        <CouncilCandidancyVisible
-          visible={councilCandidancyVisible}
+        <SubmitCandidancyModel
+          visible={submitCandidancyVisible}
           setVisible={(visible) => {
-            setcouncilCandidancyVisible(visible);
+            setSubmitCandidancyVisible(visible);
           }}
           moduleElection={moduleElection}
         />
@@ -194,7 +194,7 @@ type CouncilVoteProps = {
   moduleElection: ModuleElection;
 };
 
-type CouncilCandidancyProps = {
+type SubmitCandidancyProps = {
   visible: boolean;
   setVisible: (visible: boolean) => void;
   moduleElection: ModuleElection;
@@ -304,16 +304,16 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
   );
 }
 
-function CouncilCandidancyVisible({visible, setVisible, moduleElection}: CouncilCandidancyProps) {
+function SubmitCandidancyModel({visible, setVisible, moduleElection}: SubmitCandidancyProps) {
   const [account, setAccount] = React.useState<Account>();
   const startTx = useApiTx();
   const {api} = useApi();
   const balance = useFormatBalance();
   const formattedBalance = balance.formatBalance(moduleElection.candidacyBond);
   const {data: council} = useCouncil();
-
+  const {colors} = useTheme();
   const onSubmitCandidacy = () => {
-    if (account) {
+    if (account && api) {
       startTx({
         address: account.address,
         txMethod: `${moduleElection.module}.submitCandidacy`,
@@ -328,6 +328,18 @@ function CouncilCandidancyVisible({visible, setVisible, moduleElection}: Council
     setVisible(false);
   };
 
+  const accountPopableProps = {
+    content: 'Select the account you wish to submit for candidacy.',
+    children: null,
+    backgroundColor: colors.accent,
+  };
+
+  const candidancyBondPopableProps = {
+    content: 'Select the account you wish to submit for candidacy.',
+    children: null,
+    backgroundColor: colors.accent,
+  };
+
   return (
     <Modal visible={visible} onDismiss={reset}>
       <View style={styles.centerAlign}>
@@ -337,10 +349,14 @@ function CouncilCandidancyVisible({visible, setVisible, moduleElection}: Council
       <Caption>
         {`Candidate account:`}
         <Popover
-          content={'Select the account you wish to submit for candidacy.'}
-          icon={`questionmark`}
-          iconSize={15}
-          iconStyle={styles.paddingTop}
+          popableProps={accountPopableProps}
+          popableContent={
+            <>
+              <View style={styles.paddingTop}>
+                <Icon name={'questionmark'} size={19} />
+              </View>
+            </>
+          }
         />
       </Caption>
       <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
@@ -348,10 +364,14 @@ function CouncilCandidancyVisible({visible, setVisible, moduleElection}: Council
       <Caption>
         {`Candidacy bond:`}
         <Popover
-          content={'The bond will be reserved for the duration of your candidacy and membership.'}
-          icon={`questionmark`}
-          iconSize={15}
-          iconStyle={styles.paddingTop}
+          popableProps={candidancyBondPopableProps}
+          popableContent={
+            <>
+              <View style={styles.paddingTop}>
+                <Icon name={'questionmark'} size={19} />
+              </View>
+            </>
+          }
         />
       </Caption>
       <TextInput mode="outlined" disabled value={formattedBalance} />
