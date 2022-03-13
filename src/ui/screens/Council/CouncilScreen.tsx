@@ -10,7 +10,7 @@ import {SelectAccount} from '@ui/components/SelectAccount';
 import {useCouncil, CouncilCandidate, CouncilMember, Council} from 'src/api/hooks/useCouncil';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {candidateScreen} from '@ui/navigation/routeKeys';
-import {List, Button, Divider, Modal, useTheme, Caption, Subheading, Text, TextInput, Icon} from '@ui/library';
+import {List, Button, Divider, Modal, useTheme, Caption, Subheading, Text, TextInput} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {MotionsScreen} from './MotionsScreen';
@@ -315,7 +315,6 @@ function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandi
 
   const snackbar = useSnackbar();
   const onSubmitCandidacy = () => {
-    console.log(moduleElection.module);
     if (account && api && moduleElection.module) {
       startTx({
         address: account.address,

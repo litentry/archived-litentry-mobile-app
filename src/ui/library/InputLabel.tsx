@@ -1,6 +1,5 @@
-import globalStyles from '@ui/styles';
 import React from 'react';
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Caption} from '@ui/library';
 import {Icon} from './Icon';
 import {Popover} from './Popover';
@@ -12,11 +11,16 @@ export type InputLabelProps = {
 
 export function InputLabel({label, helperText}: InputLabelProps) {
   return (
-    <>
-      <View style={globalStyles.rowAlignCenter}>
-        <Caption>{label}</Caption>
-        {helperText && <Popover popableText={helperText} popableContent={<Icon name={`help-circle`} size={20} />} />}
-      </View>
-    </>
+    <View style={styles.rowAlignCenter}>
+      <Caption>{label}</Caption>
+      {helperText && <Popover popableText={helperText} popableContent={<Icon name={`help-circle`} size={20} />} />}
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  rowAlignCenter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+});
