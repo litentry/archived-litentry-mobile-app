@@ -1,5 +1,6 @@
 import React from 'react';
-import {useTheme} from '@ui/library';
+// eslint-disable-next-line no-restricted-imports
+import {useTheme} from 'react-native-paper';
 import {Popable} from 'react-native-popable';
 
 export type PopoverProps = {
