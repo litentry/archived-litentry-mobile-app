@@ -12,6 +12,8 @@ import {Padder} from '@ui/components/Padder';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useApi} from 'context/ChainApiContext';
 import {useSnackbar} from 'context/SnackbarContext';
+import {InputLabel} from '@ui/library/InputLabel';
+import {decimalKeypad} from 'src/utils';
 
 export function BountyCreateScreen({navigation}: {navigation: NavigationProp<AppStackParamList>}) {
   const modalRef = useRef<Modalize>(null);
@@ -52,8 +54,7 @@ export function BountyCreateScreen({navigation}: {navigation: NavigationProp<App
           <Headline>{'Add Bounty'}</Headline>
         </View>
         <View style={styles.container}>
-          {/* <InputLabel label={'Bounty Title:'} helperText={'Description of the Bounty (to be stored on-chain)'} /> */}
-          <Padder scale={1} />
+          <InputLabel label={'Bounty Title:'} helperText={'Description of the Bounty (to be stored on-chain)'} />
           <TextInput
             autoFocus
             placeholder="Bounty title"
@@ -61,20 +62,28 @@ export function BountyCreateScreen({navigation}: {navigation: NavigationProp<App
             onChangeText={(value) => SetBountyTitle(value)}
           />
           <Padder scale={1} />
-          {/* <InputLabel label={'Bounty Requested Allocation:'} helperText={'How much should be paid out for completed Bounty. Upon funding, the amount will be reserved in treasury.'} /> */}
-          <Padder scale={1} />
+          <InputLabel
+            label={'Bounty Requested Allocation:'}
+            helperText={
+              'How much should be paid out for completed Bounty. Upon funding, the amount will be reserved in treasury.'
+            }
+          />
           <TextInput
+            keyboardType="decimal-pad"
             placeholder="Bounty requested allocation"
             value={bountyAllocation}
-            onChangeText={(value) => SetBountyAllocation(value)}
+            onChangeText={(value) => {
+              SetBountyAllocation(decimalKeypad(value));
+            }}
           />
           <Padder scale={1} />
-          {/* <InputLabel label={'Bounty Bond:'} helperText={'Proposer bond depends on bounty title length.'} /> */}
-          <Padder scale={1} />
+          <InputLabel label={'Bounty Bond:'} helperText={'Proposer bond depends on bounty title length.'} />
           <TextInput placeholder="Bounty Bond" value={'1.1'} disabled />
           <Padder scale={1} />
-          {/* <InputLabel label={'Submit with account'} helperText={'This account will propose the bounty. Bond amount will be reserved on its balance.'} /> */}
-          <Padder scale={1} />
+          <InputLabel
+            label={'Submit with account'}
+            helperText={'This account will propose the bounty. Bond amount will be reserved on its balance.'}
+          />
           <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
           <Padder scale={1} />
           <View style={styles.row}>
