@@ -38,6 +38,7 @@ import {PolkassemblyDiscussions} from '@ui/screens/Polkassembly/PolkassemblyDisc
 import {ProposeTipScreen} from '@ui/screens/ProposeTipScreen';
 import {ReferendumScreen} from '@ui/screens/ReferendumScreen';
 import RegistrarListScreen from '@ui/screens/RegistrarListScreen';
+import {TechnicalCommitteeScreen} from '@ui/screens/TechnicalCommitteeScreen';
 import {RegisterSubIdentitiesScreen} from '@ui/screens/SubIdentities/RegisterSubIdentitiesScreen';
 import TipDetailScreen from '@ui/screens/Tips/TipDetailScreen';
 import {TreasuryScreen} from '@ui/screens/TreasuryScreen';
@@ -175,6 +176,7 @@ function DrawerNavigator() {
       />
       <Drawer.Screen name={routeKeys.accountsNavigator} component={AccountsNavigator} options={{headerShown: false}} />
       <Drawer.Screen name={routeKeys.registrarListScreen} component={RegistrarListScreen} />
+      <Drawer.Screen name={routeKeys.technicalCommitteeScreen} component={TechnicalCommitteeScreen} />
 
       <Drawer.Screen
         name={routeKeys.parachainsNavigator}
