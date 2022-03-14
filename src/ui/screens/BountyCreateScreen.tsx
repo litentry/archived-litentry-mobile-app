@@ -14,12 +14,14 @@ import {useApi} from 'context/ChainApiContext';
 import {useSnackbar} from 'context/SnackbarContext';
 import {InputLabel} from '@ui/library/InputLabel';
 import {decimalKeypad} from 'src/utils';
+import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 
 export function BountyCreateScreen({navigation}: {navigation: NavigationProp<AppStackParamList>}) {
   const modalRef = useRef<Modalize>(null);
   useEffect(() => {
     modalRef.current?.open();
   }, []);
+  const {formatBalance, stringToBn} = useFormatBalance();
   const [bountyTitle, SetBountyTitle] = React.useState('');
   const [bountyAllocation, SetBountyAllocation] = React.useState('');
   const [account, setAccount] = React.useState<Account>();
@@ -57,7 +59,7 @@ export function BountyCreateScreen({navigation}: {navigation: NavigationProp<App
           <InputLabel label={'Bounty Title:'} helperText={'Description of the Bounty (to be stored on-chain)'} />
           <TextInput
             autoFocus
-            placeholder="Bounty title"
+            placeholder="Enter bounty title"
             value={bountyTitle}
             onChangeText={(value) => SetBountyTitle(value)}
           />
@@ -70,11 +72,13 @@ export function BountyCreateScreen({navigation}: {navigation: NavigationProp<App
           />
           <TextInput
             keyboardType="decimal-pad"
-            placeholder="Bounty requested allocation"
+            placeholder="Enter bounty requested allocation"
             value={bountyAllocation}
             onChangeText={(value) => {
               SetBountyAllocation(decimalKeypad(value));
             }}
+            contextMenuHidden={true}
+            right={<TextInput.Affix text={formatBalance(stringToBn(bountyAllocation)) ?? ''} />}
           />
           <Padder scale={1} />
           <InputLabel label={'Bounty Bond:'} helperText={'Proposer bond depends on bounty title length.'} />
