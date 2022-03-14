@@ -36,7 +36,7 @@ export function AuctionsScreen() {
 
   const {auctionsInfo, latestAuction} = auction;
   const {winningBid, leasePeriod, endingPeriod, raised, raisedPercent} = latestAuction;
-  const raisedFormatted = formatBalance(raised) ?? '';
+  const raisedFormatted = formatBalance(raised, {isShort: true}) ?? '';
   const remainingPercent =
     typeof endingPeriod?.remainingPercent === 'number' && endingPeriod.remainingPercent > 100
       ? 100
