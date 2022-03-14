@@ -23,6 +23,7 @@ export const tipsScreen = 'Tips' as const;
 export const tipDetailScreen = 'Tip' as const;
 export const proposeTipScreen = 'Propose Tip' as const;
 export const registrarListScreen = 'Registrars' as const;
+export const technicalCommitteeScreen = 'Technical Committee' as const;
 export const motionDetailScreen = 'Motion' as const;
 export const notificationSettingsScreen = 'Notification' as const;
 export const accountsScreen = 'My Accounts' as const;

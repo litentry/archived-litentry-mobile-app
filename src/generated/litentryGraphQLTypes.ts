@@ -950,6 +950,7 @@ export type Query = {
   substrateChainParachainsInfo: SubstrateChainParachainsInfo;
   substrateChainParathreads: Array<SubstrateChainParathread>;
   substrateChainRegistrarsSummary: SubstrateChainRegistrarsSummary;
+  substrateChainTechnicalCommitteeSummary: SubstrateChainTechnicalCommitteeSummary;
   substrateChainTip?: Maybe<SubstrateChainTip>;
   substrateChainTips?: Maybe<Array<SubstrateChainTip>>;
   substrateChainTreasury: SubstrateChainTreasury;
@@ -2301,6 +2302,9 @@ export type SubstrateChainManager = {
 export type SubstrateChainModuleElection = {
   __typename?: 'SubstrateChainModuleElection';
   candidacyBond: Scalars['String'];
+  formattedCandidacyBond: Scalars['String'];
+  formattedVotingBondBase: Scalars['String'];
+  formattedVotingBondFactor: Scalars['String'];
   hasElections: Scalars['Boolean'];
   module?: Maybe<Scalars['String']>;
   votingBondBase: Scalars['String'];
@@ -2436,6 +2440,14 @@ export type SubstrateChainSubAccount = {
   __typename?: 'SubstrateChainSubAccount';
   account: SubstrateChainAccount;
   address: Scalars['String'];
+};
+
+export type SubstrateChainTechnicalCommitteeSummary = {
+  __typename?: 'SubstrateChainTechnicalCommitteeSummary';
+  activeProposalCount: Scalars['Int'];
+  memberCount: Scalars['Int'];
+  members: Array<SubstrateChainAccount>;
+  totalProposalCount: Scalars['String'];
 };
 
 export type SubstrateChainTermProgress = {
