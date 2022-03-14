@@ -12,11 +12,12 @@ import ProgressChartWidget from '@ui/components/ProgressWidget';
 import {EmptyView} from '@ui/components/EmptyView';
 import Clipboard from '@react-native-community/clipboard';
 import {useSnackbar} from 'context/SnackbarContext';
+import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 
 export function AuctionsScreen() {
   const {data: auction, loading} = useAuctionsSummary();
   const snackbar = useSnackbar();
-
+  const {formatBalance} = useFormatBalance();
   if (loading && !auction) {
     return (
       <SafeView edges={noTopEdges}>
@@ -35,6 +36,7 @@ export function AuctionsScreen() {
 
   const {auctionsInfo, latestAuction} = auction;
   const {winningBid, leasePeriod, endingPeriod, raised, raisedPercent} = latestAuction;
+  const raisedFormatted = formatBalance(raised, {isShort: true}) ?? '';
   const remainingPercent =
     typeof endingPeriod?.remainingPercent === 'number' && endingPeriod.remainingPercent > 100
       ? 100
@@ -71,7 +73,7 @@ export function AuctionsScreen() {
             <View style={globalStyles.flex}>
               <ProgressChartWidget
                 title={`Total Raised`}
-                detail={`${raisedPercent}%\n${raised.split(' ').join('\n')}`}
+                detail={`${raisedPercent}%\n${raisedFormatted.split(' ').join('\n')}`}
                 data={[raisedPercent / 100]}
               />
             </View>
