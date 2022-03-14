@@ -5,14 +5,15 @@ import {useBounties, Bounty} from 'src/api/hooks/useBounties';
 import {EmptyView} from '@ui/components/EmptyView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import LoadingView from '@ui/components/LoadingView';
-import {Text, Caption, Card, Headline, List} from '@ui/library';
+import {Text, Caption, Card, Headline, List, Button} from '@ui/library';
 import {bountyDetailScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
+import * as routeKeys from '@ui/navigation/routeKeys';
 
 export function BountiesScreen() {
   const {data: bounties, loading} = useBounties();
-
+  const navigation = useNavigation();
   return (
     <SafeView edges={noTopEdges}>
       {loading && !bounties ? (
@@ -23,6 +24,18 @@ export function BountiesScreen() {
           style={globalStyles.flex}
           contentContainerStyle={styles.listContent}
           keyExtractor={({index}) => index.toString()}
+          ListHeaderComponent={
+            <List.Item
+              title={''}
+              right={() => {
+                return (
+                  <Button icon="plus" mode="outlined" onPress={() => navigation.navigate(routeKeys.bountyCreateScreen)}>
+                    Add Bounty
+                  </Button>
+                );
+              }}
+            />
+          }
           renderItem={({item}) => <BountyItem bounty={item} />}
           ItemSeparatorComponent={() => <Padder scale={0.5} />}
           ListEmptyComponent={EmptyView}
