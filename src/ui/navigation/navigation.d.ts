@@ -5,6 +5,7 @@ import {
   addAccountScreen,
   balanceScreen,
   bountiesScreen,
+  bountyCreateScreen,
   bountyDetailScreen,
   candidateScreen,
   councilScreen,
@@ -76,6 +77,7 @@ type DashboardStackParamList = {
   [democracyProposalScreen]: {proposal: DemocracyProposal};
   [bountiesScreen]: undefined;
   [bountyDetailScreen]: {index: string};
+  [bountyCreateScreen]: undefined;
 };
 
 type DrawerParamList = {
