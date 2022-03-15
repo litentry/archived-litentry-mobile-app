@@ -1,7 +1,69 @@
-import useApiQuery from 'src/api/hooks/useApiQuery';
+import {gql, useQuery} from '@apollo/client';
+import {ACCOUNT_FIELDS_FRAGMENT} from './useAccount';
+import type {CouncilMotion} from './useCouncilMotions';
 
+const COUNCIL_MOTION_QUERY = gql`
+  ${ACCOUNT_FIELDS_FRAGMENT}
+  query getSubstrateChainCouncilMoitonDetail($hash: String!) {
+    substrateChainCouncilMotionDetail(hash: $hash) {
+      proposal {
+        index
+        meta
+        method
+        section
+        args {
+          name
+          type
+          value
+          subCalls {
+            meta
+            method
+            section
+            args {
+              name
+              type
+              value
+            }
+          }
+        }
+        hash
+        proposer {
+          ...AccountFields
+        }
+        beneficiary {
+          ...AccountFields
+        }
+        payout
+      }
+      votes {
+        threshold
+        ayes {
+          ...AccountFields
+        }
+        nays {
+          ...AccountFields
+        }
+        end
+        endTime
+      }
+      votingStatus {
+        hasFailed
+        hasPassed
+        isCloseable
+        isVoteable
+        remainingBlocks
+        remainingBlocksTime
+        status
+      }
+    }
+  }
+`;
 export function useMotionDetail({hash}: {hash: string}) {
-  return useApiQuery('motion-detail', async (api) => {
-    return api.derive.council.proposal(hash);
+  const {data, ...rest} = useQuery<{substrateChainCouncilMotionDetail: CouncilMotion}>(COUNCIL_MOTION_QUERY, {
+    variables: {hash},
   });
+  return {
+    data: data?.substrateChainCouncilMotionDetail,
+    ...rest,
+  };
 }
