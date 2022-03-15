@@ -1,4 +1,4 @@
-name: code-style-lint
+name: code-style-lint-tests
 
 on:
   push:
@@ -21,3 +21,4 @@ jobs:
           yarn 
           yarn codegen
           yarn validate
+          yarn test
