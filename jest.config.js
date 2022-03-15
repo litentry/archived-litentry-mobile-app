@@ -12,7 +12,7 @@ const config = {
   },
   transform: {
     '^.+\\.jsx$': 'babel-jest',
-    '^.+\\.tsx?$': 'ts-jest',
+    '^.+\\.tsx?$': 'babel-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect', './jest/setupTests.js'],
