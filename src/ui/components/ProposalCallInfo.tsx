@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Paragraph, Card, Caption} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import type {DemocracyProposal, DemocracyReferendum, ProposalSubCall} from 'src/api/hooks/useDemocracy';
@@ -20,17 +20,17 @@ export function ProposalCallInfo({proposal}: ProposalInfoProps) {
       )}
       <Card mode="outlined">
         <Card.Content>
-          {proposal.args?.map((arg) => (
-            <>
-              <Caption key={arg.name}>{`${arg.name}: ${arg.value}`}</Caption>
+          {proposal.args?.map((arg, index) => (
+            <View key={`${index}-${arg.name}`}>
+              <Caption>{`${arg.name}: ${arg.value}`}</Caption>
               {arg.subCalls &&
-                arg.subCalls.map((subCall) => {
+                arg.subCalls.map((subCall, subCallIndex) => {
                   if (subCall) {
-                    return <SubCall subCall={subCall} />;
+                    return <SubCall key={`${subCallIndex}-${subCall.method}`} subCall={subCall} />;
                   }
                   return null;
                 })}
-            </>
+            </View>
           ))}
         </Card.Content>
       </Card>
@@ -54,17 +54,17 @@ function SubCall({subCall}: SubCallProps) {
           </>
         )}
         <Caption>{title}</Caption>
-        {subCall.args?.map((arg) => (
-          <>
-            <Caption key={arg?.name}>{`${arg?.name}: ${arg?.value}`}</Caption>
+        {subCall.args?.map((arg, index) => (
+          <View key={`${index}-${arg?.name}`}>
+            <Caption>{`${arg?.name}: ${arg?.value}`}</Caption>
             {arg?.subCalls &&
-              arg.subCalls.map((nestedSubCall) => {
+              arg.subCalls.map((nestedSubCall, nestedSubCallIndex) => {
                 if (nestedSubCall) {
-                  return <SubCall subCall={nestedSubCall} />;
+                  return <SubCall key={`${nestedSubCallIndex}-${nestedSubCall.method}`} subCall={nestedSubCall} />;
                 }
                 return null;
               })}
-          </>
+          </View>
         ))}
       </Card.Content>
     </Card>
