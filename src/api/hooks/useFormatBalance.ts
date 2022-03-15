@@ -1,7 +1,7 @@
 import {Compact} from '@polkadot/types';
 import type BN from 'bn.js';
 // eslint-disable-next-line no-restricted-imports
-import {formatBalance} from '@polkadot/util';
+import {formatBalance as formatBalancePolkaUtil} from '@polkadot/util';
 import {useChainInfo, Registry} from './useChainInfo';
 import {stringToBn as stringToBnUtil} from 'src/api/utils/balance';
 
@@ -37,10 +37,12 @@ const M_LENGTH = 6 + 1;
 
 function format(value: Balance, options: FormatBalanceOptions & Registry): string {
   const {decimals, isShort, token} = options;
-  const [prefix = '', postfix = ''] = formatBalance(value, {decimals, forceUnit: '-', withSi: false}).split('.');
+  const [prefix = '', postfix = ''] = formatBalancePolkaUtil(value, {decimals, forceUnit: '-', withSi: false}).split(
+    '.',
+  );
 
   if (prefix.length > M_LENGTH) {
-    const [major, rest] = formatBalance(value, {decimals, withUnit: false}).split('.');
+    const [major, rest] = formatBalancePolkaUtil(value, {decimals, withUnit: false}).split('.');
     const minor = isShort ? '' : `.${rest?.substring(0, 4)}`;
     const unit = rest?.substring(4);
 

@@ -43,6 +43,7 @@ import {
   referendumScreen,
   registerSubIdentitiesScreen,
   registrarListScreen,
+  technicalCommitteeScreen,
   sendFundScreen,
   tipDetailScreen,
   tipsScreen,
@@ -81,6 +82,7 @@ type DashboardStackParamList = {
 type DrawerParamList = {
   [dashboardNavigator]: undefined;
   [registrarListScreen]: undefined;
+  [technicalCommitteeScreen]: undefined;
   [webviewScreen]: {uri: string; title: string};
   [devScreen]: undefined;
   [notificationSettingsScreen]: undefined;

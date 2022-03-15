@@ -2,11 +2,13 @@ import {gql, useQuery, NetworkStatus} from '@apollo/client';
 import type {
   SubstrateChainDemocracyProposal,
   SubstrateChainDemocracyReferendum,
+  SubstrateChainProposalSubCall,
 } from 'src/generated/litentryGraphQLTypes';
 import {ACCOUNT_FIELDS_FRAGMENT} from 'src/api/hooks/useAccount';
 
 export type DemocracyProposal = SubstrateChainDemocracyProposal;
 export type DemocracyReferendum = SubstrateChainDemocracyReferendum;
+export type ProposalSubCall = SubstrateChainProposalSubCall;
 
 type Democracy = {
   substrateChainDemocracyProposals: DemocracyProposal[];
@@ -61,6 +63,21 @@ export const DEMOCRACY_QUERY = gql`
         name
         type
         value
+        subCalls {
+          meta
+          method
+          section
+          args {
+            name
+            type
+            value
+            subCalls {
+              meta
+              method
+              section
+            }
+          }
+        }
       }
     }
   }
