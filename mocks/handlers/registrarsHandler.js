@@ -18,7 +18,7 @@ export const registrarsHandler = graphql.query('getRegistrarsSummary', (_, res, 
             account: {
               __typename: 'SubstrateChainAccount',
               address: '12j3Cz8qskCGJxmSJpVL2z2t3Fpmw3KoBaBaRGPnuibFc7o8',
-              display: 'W3F/✍️ (Test data)',
+              display: 'W3F/✍️',
               hasIdentity: true,
               registration: {
                 __typename: 'SubstrateChainDeriveAccountRegistration',
@@ -70,7 +70,7 @@ export const registrarsHandler = graphql.query('getRegistrarsSummary', (_, res, 
             account: {
               __typename: 'SubstrateChainAccount',
               address: '1Reg2TYv9rGfrQKpPREmrHRxrNsUDBQKzkYwP1UstD97wpJ',
-              display: 'Registrar #1 (Test data)',
+              display: 'Registrar #1',
               hasIdentity: true,
               registration: {
                 __typename: 'SubstrateChainDeriveAccountRegistration',
@@ -136,7 +136,7 @@ export const registrarsHandler = graphql.query('getRegistrarsSummary', (_, res, 
             account: {
               __typename: 'SubstrateChainAccount',
               address: '1EpXirnoTimS1SWq52BeYx7sitsusXNGzMyGx8WPujPd1HB',
-              display: 'Wei/📚 (Test data)',
+              display: 'Wei/📚',
               hasIdentity: true,
               registration: {
                 __typename: 'SubstrateChainDeriveAccountRegistration',
