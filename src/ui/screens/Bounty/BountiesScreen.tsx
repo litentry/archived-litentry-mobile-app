@@ -25,16 +25,15 @@ export function BountiesScreen() {
           contentContainerStyle={styles.listContent}
           keyExtractor={({index}) => index.toString()}
           ListHeaderComponent={
-            <List.Item
-              title={''}
-              right={() => {
-                return (
-                  <Button icon="plus" mode="outlined" onPress={() => navigation.navigate(routeKeys.bountyCreateScreen)}>
-                    Add Bounty
-                  </Button>
-                );
-              }}
-            />
+            <View style={styles.bounty}>
+              <Button
+                style={{}}
+                icon="plus"
+                mode="outlined"
+                onPress={() => navigation.navigate(routeKeys.addBountyScreen)}>
+                Add Bounty
+              </Button>
+            </View>
           }
           renderItem={({item}) => <BountyItem bounty={item} />}
           ItemSeparatorComponent={() => <Padder scale={0.5} />}
@@ -89,5 +88,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   itemContainer: {marginBottom: 10},
-  bountyIndexContainer: {marginRight: 15},
+  bounty: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    paddingVertical: 15,
+  },
 });
