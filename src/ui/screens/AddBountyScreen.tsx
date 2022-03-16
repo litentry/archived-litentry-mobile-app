@@ -3,9 +3,9 @@ import {StyleSheet, View} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
 import {Modalize} from 'react-native-modalize';
 import {AppStackParamList} from '@ui/navigation/navigation';
-import {Headline, TextInput, Button, Text, useTheme} from '@ui/library';
+import {Headline, TextInput, Button, Text, useTheme, HelperText} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
-import {standardPadding} from '@ui/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {Account} from 'src/api/hooks/useAccount';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {Padder} from '@ui/components/Padder';
@@ -47,9 +47,10 @@ export function AddBountyScreen({navigation}: {navigation: NavigationProp<AppSta
       );
       const bountyAllocationBN = stringToBn(bountyAllocation);
       const isBountyValid = bountyAllocationBN
-        ? formattedStringToBn(bounty.bountyValueMinimum).gt(bountyAllocationBN)
+        ? bountyAllocationBN.gt(formattedStringToBn(bounty.bountyValueMinimum))
         : false;
-      const isBountyTitleValid = Number(bounty?.maximumReasonLength) <= Number(bountyTitle.length);
+      const isBountyTitleValid =
+        Number(bountyTitle.length) <= Number(bounty.maximumReasonLength) && Number(bountyTitle.length) > 0;
       return {calculatedBountyBond: calculatedBountyBond, bountyAllocationBN, isBountyValid, isBountyTitleValid};
     }
     return {
@@ -60,7 +61,7 @@ export function AddBountyScreen({navigation}: {navigation: NavigationProp<AppSta
     };
   }, [bountyTitle, bountyAllocation, bounty, stringToBn]);
 
-  const disabled = !bountyAllocation || !account || isBountyValid || isBountyTitleValid;
+  const disabled = !bountyAllocation || !account || !isBountyValid || !isBountyTitleValid;
 
   const submitBounty = () => {
     if (account && api && bountyAllocationBN) {
@@ -82,21 +83,26 @@ export function AddBountyScreen({navigation}: {navigation: NavigationProp<AppSta
   return (
     <Modalize ref={modalRef} adjustToContentHeight onClose={navigation.goBack} panGestureEnabled={false}>
       <Layout style={styles.container}>
-        <View style={styles.header}>
+        <View style={globalStyles.alignCenter}>
           <Headline>{'Add Bounty'}</Headline>
         </View>
         <View style={styles.container}>
           <InputLabel label={'Bounty Title:'} helperText={'Description of the Bounty (to be stored on-chain)'} />
           <TextInput
-            autoFocus
+            dense
+            multiline
+            numberOfLines={4}
+            autoComplete="off"
+            mode="outlined"
             placeholder="Enter bounty title"
             value={bountyTitle}
             onChangeText={(value) => setBountyTitle(value)}
           />
-          {isBountyTitleValid && bountyTitle.length !== 0 ? (
-            <Text style={{color: colors.error}}>Exceeding maximum reasoning length</Text>
+          {!isBountyTitleValid && bountyTitle.length !== 0 ? (
+            <HelperText type="error">{`Exceeding maximum reasoning length`}</HelperText>
           ) : null}
           <Padder scale={1} />
+
           <InputLabel
             label={'Bounty Requested Allocation:'}
             helperText={
@@ -104,8 +110,10 @@ export function AddBountyScreen({navigation}: {navigation: NavigationProp<AppSta
             }
           />
           <TextInput
+            mode="outlined"
+            dense
             keyboardType="decimal-pad"
-            placeholder="Enter bounty requested allocation"
+            placeholder="Bounty requested allocation"
             value={bountyAllocation}
             onChangeText={(value) => {
               SetBountyAllocation(decimalKeypad(value));
@@ -113,17 +121,29 @@ export function AddBountyScreen({navigation}: {navigation: NavigationProp<AppSta
             contextMenuHidden={true}
             right={<TextInput.Affix text={formatBalance(stringToBn(bountyAllocation)) ?? ''} />}
           />
-          {isBountyValid ? <Text>Minimum bounty reward is: {formatBalance(bounty?.bountyValueMinimum)}</Text> : null}
+          {!isBountyValid ? (
+            <HelperText type="info">
+              {`Minimum bounty reward is: ${formatBalance(bounty?.bountyValueMinimum)}`}
+            </HelperText>
+          ) : null}
           <Padder scale={1} />
+
           <InputLabel label={'Bounty Bond:'} helperText={'Proposer bond depends on bounty title length.'} />
-          <TextInput placeholder="Bounty Bond" value={formatBalance(calculatedBountyBond)} disabled />
+          <TextInput
+            mode="outlined"
+            dense
+            placeholder="Bounty Bond"
+            value={formatBalance(calculatedBountyBond)}
+            disabled
+          />
           <Padder scale={1} />
+
           <InputLabel
-            label={'Submit with account'}
+            label={'Submit with account:'}
             helperText={'This account will propose the bounty. Bond amount will be reserved on its balance.'}
           />
           <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
-          <Padder scale={1} />
+          <Padder scale={2} />
           <View style={styles.row}>
             <Button mode="outlined" onPress={modelClose}>
               Cancel
@@ -132,6 +152,7 @@ export function AddBountyScreen({navigation}: {navigation: NavigationProp<AppSta
               Submit Bounty
             </Button>
           </View>
+          <Padder scale={1} />
         </View>
       </Layout>
     </Modalize>
@@ -147,14 +168,11 @@ function countUtf8Bytes(str: string): number {
 
 const styles = StyleSheet.create({
   container: {
-    padding: standardPadding * 2,
-  },
-  header: {
-    flex: 1,
-    textAlign: 'center',
+    paddingHorizontal: standardPadding,
+    paddingVertical: standardPadding * 2,
   },
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
   },
 });
