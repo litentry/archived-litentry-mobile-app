@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useContext, useEffect, useMemo, useRef} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {NavigationProp, RouteProp} from '@react-navigation/core';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -8,13 +8,17 @@ import {useApiTx} from 'src/api/hooks/useApiTx';
 import {stringToBn} from 'src/api/utils/balance';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {sendFundScreen} from '@ui/navigation/routeKeys';
-import {Button, Headline, IconButton, Text, TextInput} from '@ui/library';
+import {Button, Headline, IconButton, Text, TextInput, Switch} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {Layout} from '@ui/components/Layout';
 import {standardPadding} from '@ui/styles';
 import BalanceInput from '@ui/components/BalanceInput';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {useChainInfo} from 'src/api/hooks/useChainInfo';
+import {InputLabel} from '@ui/library/InputLabel';
+import {NetworkContext} from 'context/NetworkContext';
+import {isAddressValid} from 'src/utils/address';
+import SnackbarProvider, {useSnackbar} from 'context/SnackbarContext';
 
 type Props = {
   navigation: NavigationProp<AccountsStackParamList, typeof sendFundScreen>;
@@ -30,10 +34,19 @@ export function SendFundScreen({navigation, route}: Props) {
   const [scanning, setScanning] = React.useState(false);
   const startTx = useApiTx();
   const {data: chainInfo} = useChainInfo();
+  const [isKeepAlive, setisKeepAlive] = React.useState(true);
+  const {currentNetwork} = useContext(NetworkContext);
+  const snackbar = useSnackbar();
 
   useEffect(() => {
     ref.current?.open();
-  }, []);
+  }, [accountInfo]);
+
+  const isAccountValid = useMemo(() => {
+    return to ? isAddressValid(currentNetwork, to) : false;
+  }, [to, currentNetwork]);
+
+  const isSendDisabled = !amount || !to || !isAccountValid;
 
   return (
     <Modalize ref={ref} adjustToContentHeight onClose={navigation.goBack} closeOnOverlayTap>
@@ -57,10 +70,18 @@ export function SendFundScreen({navigation, route}: Props) {
           </View>
         ) : (
           <View style={styles.container}>
-            <Headline>Send</Headline>
+            <Headline>Send funds</Headline>
             <Padder scale={1} />
+            <InputLabel
+              label="Enter amount"
+              helperText="Type the amount you want to transfer. Note that you can select the unit on the right e.g sending 1 milli is equivalent to sending 0.001."
+            />
             <BalanceInput account={accountInfo} onChangeBalance={setAmount} />
             <Padder scale={1} />
+            <InputLabel
+              label="Send to address"
+              helperText="Scan a contact address or paste the address you want to send funds to."
+            />
             <TextInput
               autoComplete="off"
               placeholder="To"
@@ -69,17 +90,36 @@ export function SendFundScreen({navigation, route}: Props) {
               right={<TextInput.Icon name="qrcode" onPress={() => setScanning(true)} />}
             />
             <Padder scale={1} />
+            <InputLabel
+              label="Existential deposit"
+              helperText="The minimum amount that an account should have to be deemed active"
+            />
+            <TextInput disabled defaultValue={accountInfo?.balance.formattedExistentialDeposit} />
+            <Padder scale={1} />
+            <View style={styles.keepAlive}>
+              <View style={styles.keepAliveContainer}>
+                {isKeepAlive ? (
+                  <Text>Transfer with account keep-alive checks</Text>
+                ) : (
+                  <Text>Normal transfer without keep-alive checks</Text>
+                )}
+              </View>
+              <Switch value={isKeepAlive} onValueChange={() => setisKeepAlive(!isKeepAlive)} />
+            </View>
+            <Padder scale={1} />
             <View style={styles.buttons}>
               <Button
                 onPress={() => {
                   if (chainInfo) {
                     const _amountBN = stringToBn(chainInfo.registry, amount);
+                    const txMethod = isKeepAlive ? `balances.transferKeepAlive` : `balances?.transferKeepAlive`;
                     startTx({
                       address,
-                      txMethod: 'balances.transferKeepAlive',
+                      txMethod: txMethod,
                       params: [to, _amountBN],
                     })
                       .then(() => {
+                        snackbar('Funds transfered');
                         navigation.goBack();
                       })
                       .catch((e: Error) => {
@@ -87,11 +127,13 @@ export function SendFundScreen({navigation, route}: Props) {
                       });
                   }
                 }}
-                mode="outlined">
-                Send
+                mode="outlined"
+                disabled={isSendDisabled}
+                icon={'send-outline'}>
+                Make Transfer
               </Button>
             </View>
-            <Padder scale={3} />
+            <Padder />
           </View>
         )}
       </SafeView>
@@ -132,6 +174,15 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
     borderRadius: 10,
+  },
+  keepAlive: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    paddingVertical: 15,
+  },
+  keepAliveContainer: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
   },
 });
 
