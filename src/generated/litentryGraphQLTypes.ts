@@ -2109,6 +2109,7 @@ export type SubstrateChainAccount = {
 
 export type SubstrateChainAccountBalance = {
   __typename?: 'SubstrateChainAccountBalance';
+  formattedExistentialDeposit: Scalars['String'];
   formattedFree: Scalars['String'];
   formattedFreeFrozen: Scalars['String'];
   formattedReserved: Scalars['String'];
