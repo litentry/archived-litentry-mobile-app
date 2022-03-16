@@ -4,13 +4,10 @@ import {render, RenderOptions} from '@testing-library/react-native';
 import {ApolloProvider, ApolloClient, InMemoryCache, HttpLink} from '@apollo/client';
 import fetch from 'cross-fetch';
 
-// import {LitentryApiClientProvider} from 'context/LitentryApiContext';
 import ThemeProvider from 'context/ThemeContext';
 
 export const client = new ApolloClient({
   cache: new InMemoryCache(),
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
   link: new HttpLink({uri: 'http://localhost:3000/graphql', fetch}),
 });
 
