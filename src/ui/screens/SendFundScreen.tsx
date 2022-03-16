@@ -112,10 +112,9 @@ export function SendFundScreen({navigation, route}: Props) {
                 onPress={() => {
                   if (chainInfo) {
                     const _amountBN = stringToBn(chainInfo.registry, amount);
-                    const txMethod = isKeepAlive ? `balances.transferKeepAlive` : `balances?.transferKeepAlive`;
                     startTx({
                       address,
-                      txMethod: txMethod,
+                      txMethod: `${isKeepAlive ? `balances.transferKeepAlive` : `balances.transferKeepAlive`}`,
                       params: [to, _amountBN],
                     })
                       .then(() => {
