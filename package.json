@@ -27,7 +27,7 @@
   "dependencies": {
     "@apollo/client": "^3.5.10",
     "@polkadot/api": "^7.9.1",
-    "@polkadot/apps-config": "^0.103.1",
+    "@polkadot/apps-config": "^0.109.1",
     "@polkadot/reactnative-identicon": "0.89.2",
     "@polkadot/ui-settings": "^0.89.2",
     "@react-native-community/async-storage": "^1.12.1",
