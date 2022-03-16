@@ -16,4 +16,12 @@ const SentryApp = Sentry.wrap(App);
  **/
 LogBox.ignoreLogs(['Setting a timer']);
 
+// Use this to mock data on dev
+// if (__DEV__) {
+//   require('react-native-url-polyfill/auto');
+//   const {native} = require('./mocks/native');
+
+//   native.listen();
+// }
+
 AppRegistry.registerComponent(appName, () => SentryApp);
