@@ -66,7 +66,7 @@ export function AddBountyScreen({navigation}: {navigation: NavigationProp<AppSta
     if (account && api && bountyAllocationBN) {
       startTx({
         address: account.address,
-        txMethod: `${(api.tx.bounties || api.tx.treasury).proposeBounty}`,
+        txMethod: `${api.tx.bounties ? `bounties.proposeBounty` : `treasury.proposeBounty`}`,
         params: [bountyAllocationBN, bountyTitle],
       })
         .then(() => {
