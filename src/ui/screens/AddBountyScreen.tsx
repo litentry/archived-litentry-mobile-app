@@ -17,6 +17,7 @@ import {decimalKeypad} from 'src/utils';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useBountiesSummary} from 'src/api/hooks/useBountiesSummary';
 import type {BN} from '@polkadot/util';
+import {formattedStringToBn} from 'src/api/utils/balance';
 
 export function AddBountyScreen({navigation}: {navigation: NavigationProp<AppStackParamList>}) {
   const {colors} = useTheme();
@@ -31,53 +32,56 @@ export function AddBountyScreen({navigation}: {navigation: NavigationProp<AppSta
   const [bountyTitle, setBountyTitle] = React.useState('');
   const [bountyAllocation, SetBountyAllocation] = React.useState('');
   const [bountyBond, setBountyBond] = React.useState<BN>();
-  const [bountyBondFormatted, setbountyBondFormatted] = React.useState<string>();
-  const [dataDepositPerByte, setDataDepositPerByte] = React.useState<BN>();
-  const [dataDepositPerByteFormatted, setDataDepositPerByteFormatted] = React.useState<string>();
-  const [bountyValueMinimum, setBountyValueMinimum] = React.useState<string>();
-  const [isValueValid, setIsValueValid] = React.useState(false);
-  const [isTitleValid, setIsTitleValid] = React.useState(false);
 
   const [account, setAccount] = React.useState<Account>();
   const modelClose = () => modalRef.current?.close();
-  const disabled = !bountyTitle || !bountyAllocation || !account || isValueValid || isTitleValid;
   const startTx = useApiTx();
   const {api} = useApi();
   const snackbar = useSnackbar();
 
-  // useEffect(() => {
-  //   if (bounty) {
-  //     setBountyBond(stringToBn(bounty.bountyDepositBase));
-  //     setbountyBondFormatted(formatBalance(bounty.bountyDepositBase));
-  //     setDataDepositPerByte(stringToBn(bounty.dataDepositPerByte));
-  //     setDataDepositPerByteFormatted(formatBalance(bounty.bountyDepositBase));
-  //     setBountyValueMinimum(formatBalance(bounty.bountyValueMinimum));
-  //   }
-  // }, [bounty]);
+  useEffect(() => {
+    if (bounty) {
+      setBountyBond(formattedStringToBn(bounty.bountyDepositBase));
+    }
+  }, [bounty]);
 
-  // useMemo(() => {
-  //   if (bounty && bountyBond && dataDepositPerByte && bountyValueMinimum) {
-  //     setBountyBond(calculateBountyBond(bountyTitle, bountyBond, dataDepositPerByte));
-  //     setbountyBondFormatted(formatBalance(calculateBountyBond(bountyTitle, bountyBond, dataDepositPerByte)));
-  //     // setIsValueValid((!!stringToBn(bountyAllocation)?.gte(stringToBn(bountyValueMinimum))))
-  //   }
-  //   setIsValueValid(Number(bountyValueMinimum?.split(' ')[0]) >= Number(bountyAllocation));
-  //   setIsTitleValid(Number(bounty?.maximumReasonLength) <= Number(bountyTitle.length));
-  // }, [bountyTitle, bountyAllocation, bountyValueMinimum, bounty]);
+  const {calculatedBountyBond, bountyAllocationBN, isBountyValid, isBountyTitleValid} = useMemo(() => {
+    if (bounty && bountyBond) {
+      const calculatedBountyBond = calculateBountyBond(
+        bountyTitle,
+        bountyBond,
+        formattedStringToBn(bounty.dataDepositPerByte),
+      );
+      const bountyAllocationBN = stringToBn(bountyAllocation);
+      const isBountyValid = bountyAllocationBN
+        ? formattedStringToBn(bounty.bountyValueMinimum).gt(bountyAllocationBN)
+        : false;
+      const isBountyTitleValid = Number(bounty?.maximumReasonLength) <= Number(bountyTitle.length);
+      return {calculatedBountyBond: calculatedBountyBond, bountyAllocationBN, isBountyValid, isBountyTitleValid};
+    }
+    return {
+      calculatedBountyBond: bountyBond,
+      bountyAllocationBN: stringToBn(bountyAllocation),
+      isBountyValid: false,
+      isBountyTitleValid: bountyTitle.length < 1,
+    };
+  }, [bountyTitle, bountyAllocation, bounty, bountyBond, stringToBn]);
+
+  const disabled = !bountyAllocation || !account || isBountyValid || isBountyTitleValid;
 
   const submitBounty = () => {
-    if (account && api) {
-      console.log(api?.tx.bounties.proposeBounty);
+    if (account && api && bountyAllocationBN) {
+      console.log((api.tx.bounties || api.tx.treasury).proposeBounty);
       startTx({
         address: account.address,
-        txMethod: `${(api?.tx.bounties || api?.tx.treasury).proposeBounty}`,
-        params: [bountyAllocation, bountyTitle],
+        txMethod: `${(api.tx.bounties || api.tx.treasury).proposeBounty}`,
+        params: [bountyAllocationBN, bountyTitle],
       })
         .then(() => {
-          snackbar('New Bounty Created');
+          snackbar('New bounty created');
         })
         .catch(() => {
-          snackbar('Error while submitting Bounty');
+          snackbar('Error while submitting bounty');
         });
       modalRef.current?.close();
     }
@@ -97,7 +101,7 @@ export function AddBountyScreen({navigation}: {navigation: NavigationProp<AppSta
             value={bountyTitle}
             onChangeText={(value) => setBountyTitle(value)}
           />
-          {isTitleValid && bountyTitle.length !== 0 ? (
+          {isBountyTitleValid && bountyTitle.length !== 0 ? (
             <Text style={{color: colors.error}}>Exceeding maximum reasoning length</Text>
           ) : null}
           <Padder scale={1} />
@@ -117,10 +121,10 @@ export function AddBountyScreen({navigation}: {navigation: NavigationProp<AppSta
             contextMenuHidden={true}
             right={<TextInput.Affix text={formatBalance(stringToBn(bountyAllocation)) ?? ''} />}
           />
-          {isValueValid ? <Text>Minimum bounty reward is: {formatBalance(bounty?.bountyValueMinimum)}</Text> : null}
+          {isBountyValid ? <Text>Minimum bounty reward is: {formatBalance(bounty?.bountyValueMinimum)}</Text> : null}
           <Padder scale={1} />
           <InputLabel label={'Bounty Bond:'} helperText={'Proposer bond depends on bounty title length.'} />
-          <TextInput placeholder="Bounty Bond" value={bountyBondFormatted} disabled />
+          <TextInput placeholder="Bounty Bond" value={formatBalance(calculatedBountyBond)} disabled />
           <Padder scale={1} />
           <InputLabel
             label={'Submit with account'}
