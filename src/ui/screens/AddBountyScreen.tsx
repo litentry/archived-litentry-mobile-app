@@ -3,7 +3,7 @@ import {StyleSheet, View} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
 import {Modalize} from 'react-native-modalize';
 import {AppStackParamList} from '@ui/navigation/navigation';
-import {Headline, TextInput, Button, Text, useTheme, HelperText} from '@ui/library';
+import {Headline, TextInput, Button, HelperText} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Account} from 'src/api/hooks/useAccount';
@@ -20,7 +20,6 @@ import type {BN} from '@polkadot/util';
 import {formattedStringToBn} from 'src/api/utils/balance';
 
 export function AddBountyScreen({navigation}: {navigation: NavigationProp<AppStackParamList>}) {
-  const {colors} = useTheme();
   const modalRef = useRef<Modalize>(null);
   useEffect(() => {
     modalRef.current?.open();
@@ -51,7 +50,12 @@ export function AddBountyScreen({navigation}: {navigation: NavigationProp<AppSta
         : false;
       const isBountyTitleValid =
         Number(bountyTitle.length) <= Number(bounty.maximumReasonLength) && Number(bountyTitle.length) > 0;
-      return {calculatedBountyBond: calculatedBountyBond, bountyAllocationBN, isBountyValid, isBountyTitleValid};
+      return {
+        calculatedBountyBond,
+        bountyAllocationBN,
+        isBountyValid,
+        isBountyTitleValid,
+      };
     }
     return {
       calculatedBountyBond: formattedStringToBn(bounty?.bountyDepositBase),
