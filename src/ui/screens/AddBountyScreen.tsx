@@ -31,7 +31,6 @@ export function AddBountyScreen({navigation}: {navigation: NavigationProp<AppSta
 
   const [bountyTitle, setBountyTitle] = React.useState('');
   const [bountyAllocation, SetBountyAllocation] = React.useState('');
-  const [bountyBond, setBountyBond] = React.useState<BN>();
 
   const [account, setAccount] = React.useState<Account>();
   const modelClose = () => modalRef.current?.close();
@@ -39,17 +38,11 @@ export function AddBountyScreen({navigation}: {navigation: NavigationProp<AppSta
   const {api} = useApi();
   const snackbar = useSnackbar();
 
-  useEffect(() => {
-    if (bounty) {
-      setBountyBond(formattedStringToBn(bounty.bountyDepositBase));
-    }
-  }, [bounty]);
-
   const {calculatedBountyBond, bountyAllocationBN, isBountyValid, isBountyTitleValid} = useMemo(() => {
-    if (bounty && bountyBond) {
+    if (bounty && bounty.bountyDepositBase) {
       const calculatedBountyBond = calculateBountyBond(
         bountyTitle,
-        bountyBond,
+        formattedStringToBn(bounty.bountyDepositBase),
         formattedStringToBn(bounty.dataDepositPerByte),
       );
       const bountyAllocationBN = stringToBn(bountyAllocation);
@@ -60,18 +53,17 @@ export function AddBountyScreen({navigation}: {navigation: NavigationProp<AppSta
       return {calculatedBountyBond: calculatedBountyBond, bountyAllocationBN, isBountyValid, isBountyTitleValid};
     }
     return {
-      calculatedBountyBond: bountyBond,
+      calculatedBountyBond: formattedStringToBn(bounty?.bountyDepositBase),
       bountyAllocationBN: stringToBn(bountyAllocation),
       isBountyValid: false,
       isBountyTitleValid: bountyTitle.length < 1,
     };
-  }, [bountyTitle, bountyAllocation, bounty, bountyBond, stringToBn]);
+  }, [bountyTitle, bountyAllocation, bounty, stringToBn]);
 
   const disabled = !bountyAllocation || !account || isBountyValid || isBountyTitleValid;
 
   const submitBounty = () => {
     if (account && api && bountyAllocationBN) {
-      console.log((api.tx.bounties || api.tx.treasury).proposeBounty);
       startTx({
         address: account.address,
         txMethod: `${(api.tx.bounties || api.tx.treasury).proposeBounty}`,
