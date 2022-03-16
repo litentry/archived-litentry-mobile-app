@@ -40,7 +40,7 @@ export function SendFundScreen({navigation, route}: Props) {
 
   useEffect(() => {
     ref.current?.open();
-  }, [accountInfo]);
+  }, []);
 
   const isAccountValid = useMemo(() => {
     return to ? isAddressValid(currentNetwork, to) : false;
@@ -72,10 +72,7 @@ export function SendFundScreen({navigation, route}: Props) {
           <View style={styles.container}>
             <Headline>Send funds</Headline>
             <Padder scale={1} />
-            <InputLabel
-              label="Enter amount"
-              helperText="Type the amount you want to transfer. Note that you can select the unit on the right e.g sending 1 milli is equivalent to sending 0.001."
-            />
+            <InputLabel label="Enter amount" helperText="Type the amount you want to transfer" />
             <BalanceInput account={accountInfo} onChangeBalance={setAmount} />
             <Padder scale={1} />
             <InputLabel
