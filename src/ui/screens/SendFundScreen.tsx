@@ -8,7 +8,7 @@ import {useApiTx} from 'src/api/hooks/useApiTx';
 import {stringToBn} from 'src/api/utils/balance';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {sendFundScreen} from '@ui/navigation/routeKeys';
-import {Button, Headline, IconButton, Text, TextInput, Switch} from '@ui/library';
+import {Button, Headline, IconButton, Text, TextInput, Switch, HelperText} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {Layout} from '@ui/components/Layout';
 import {standardPadding} from '@ui/styles';
@@ -18,7 +18,7 @@ import {useChainInfo} from 'src/api/hooks/useChainInfo';
 import {InputLabel} from '@ui/library/InputLabel';
 import {NetworkContext} from 'context/NetworkContext';
 import {isAddressValid} from 'src/utils/address';
-import SnackbarProvider, {useSnackbar} from 'context/SnackbarContext';
+import {useSnackbar} from 'context/SnackbarContext';
 
 type Props = {
   navigation: NavigationProp<AccountsStackParamList, typeof sendFundScreen>;
@@ -86,19 +86,20 @@ export function SendFundScreen({navigation, route}: Props) {
               onChangeText={(nextValue) => setTo(nextValue)}
               right={<TextInput.Icon name="qrcode" onPress={() => setScanning(true)} />}
             />
+            {!isAccountValid && to ? <HelperText type={'error'}>Enter a valid address</HelperText> : null}
             <Padder scale={1} />
             <InputLabel
               label="Existential deposit"
               helperText="The minimum amount that an account should have to be deemed active"
             />
-            <TextInput disabled defaultValue={accountInfo?.balance.formattedExistentialDeposit} />
+            <TextInput dense mode="outlined" disabled defaultValue={accountInfo?.balance.formattedExistentialDeposit} />
             <Padder scale={1} />
             <View style={styles.keepAlive}>
               <View style={styles.keepAliveContainer}>
                 {isKeepAlive ? (
-                  <Text>Transfer with account keep-alive checks</Text>
+                  <HelperText type={'info'}>Transfer with account keep-alive checks</HelperText>
                 ) : (
-                  <Text>Normal transfer without keep-alive checks</Text>
+                  <HelperText type={'info'}>Normal transfer without keep-alive checks</HelperText>
                 )}
               </View>
               <Switch value={isKeepAlive} onValueChange={() => setisKeepAlive(!isKeepAlive)} />
