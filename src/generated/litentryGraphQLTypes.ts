@@ -900,6 +900,7 @@ export type Query = {
   __typename?: 'Query';
   GalaxyCredentialDataByAddress: GalaxyCredentialUserData;
   PoapCredentialTokensByAddress: PoapCredentialTokenData;
+  UniswapLiquidityProvidedByAccount: UniswapLpData;
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
   bep20Account?: Maybe<Bep20Account>;
@@ -933,6 +934,7 @@ export type Query = {
   substrateChainChainInfo: SubstrateChainChainInfo;
   substrateChainConvictions?: Maybe<Array<SubstrateChainConviction>>;
   substrateChainCouncil: SubstrateChainCouncil;
+  substrateChainCouncilMotionDetail?: Maybe<SubstrateChainCouncilMotion>;
   substrateChainCouncilMotions: Array<SubstrateChainCouncilMotion>;
   substrateChainCouncilVote: SubstrateChainCouncilVote;
   substrateChainCrowdloan?: Maybe<SubstrateChainCrowdloan>;
@@ -2028,7 +2030,11 @@ export type SubstrateChainBountiesSummary = {
   __typename?: 'SubstrateChainBountiesSummary';
   activeBounties: Scalars['String'];
   bountyCount: Scalars['String'];
+  bountyDepositBase: Scalars['String'];
+  bountyValueMinimum: Scalars['String'];
+  dataDepositPerByte: Scalars['String'];
   formattedTotalValue: Scalars['String'];
+  maximumReasonLength: Scalars['String'];
   pastBounties: Scalars['String'];
   progressPercent: Scalars['Int'];
   timeLeft: Array<Scalars['String']>;
@@ -2134,7 +2140,6 @@ export type SubstrateChainCouncilMember = {
 
 export type SubstrateChainCouncilMotion = {
   __typename?: 'SubstrateChainCouncilMotion';
-  hash: Scalars['String'];
   proposal: SubstrateChainMotionProposal;
   votes?: Maybe<SubstrateChainMotionVotes>;
   votingStatus?: Maybe<SubstrateChainVotingStatus>;
@@ -2199,7 +2204,7 @@ export type SubstrateChainDemocracyProposal = {
   formattedBalance?: Maybe<Scalars['String']>;
   hash: Scalars['String'];
   index: Scalars['String'];
-  meta: Scalars['String'];
+  meta?: Maybe<Scalars['String']>;
   method?: Maybe<Scalars['String']>;
   proposer: SubstrateChainProposer;
   seconds: Array<SubstrateChainProposalSecond>;
@@ -2216,7 +2221,7 @@ export type SubstrateChainDemocracyReferendum = {
   formattedVotedNay: Scalars['String'];
   hash: Scalars['String'];
   index: Scalars['String'];
-  meta: Scalars['String'];
+  meta?: Maybe<Scalars['String']>;
   method?: Maybe<Scalars['String']>;
   section?: Maybe<Scalars['String']>;
   voteCountAye: Scalars['String'];
@@ -2314,8 +2319,13 @@ export type SubstrateChainModuleElection = {
 export type SubstrateChainMotionProposal = {
   __typename?: 'SubstrateChainMotionProposal';
   args: Array<SubstrateChainProposalArg>;
+  beneficiary?: Maybe<SubstrateChainAccount>;
   hash: Scalars['String'];
+  index?: Maybe<Scalars['String']>;
+  meta: Scalars['String'];
   method: Scalars['String'];
+  payout?: Maybe<Scalars['String']>;
+  proposer?: Maybe<SubstrateChainAccount>;
   section: Scalars['String'];
 };
 
@@ -2324,7 +2334,6 @@ export type SubstrateChainMotionVotes = {
   ayes: Array<SubstrateChainAccount>;
   end: Scalars['String'];
   endTime: Array<Scalars['String']>;
-  index: Scalars['Int'];
   nays: Array<SubstrateChainAccount>;
   threshold: Scalars['Int'];
 };
@@ -2370,7 +2379,7 @@ export type SubstrateChainParathread = {
 export type SubstrateChainProposalArg = {
   __typename?: 'SubstrateChainProposalArg';
   name?: Maybe<Scalars['String']>;
-  subCalls?: Maybe<Array<Maybe<SubstrateChainDemocracyProposal>>>;
+  subCalls?: Maybe<Array<Maybe<SubstrateChainProposalSubCall>>>;
   type?: Maybe<Scalars['String']>;
   value?: Maybe<Scalars['String']>;
 };
@@ -2379,6 +2388,14 @@ export type SubstrateChainProposalSecond = {
   __typename?: 'SubstrateChainProposalSecond';
   account: SubstrateChainAccount;
   address: Scalars['String'];
+};
+
+export type SubstrateChainProposalSubCall = {
+  __typename?: 'SubstrateChainProposalSubCall';
+  args?: Maybe<Array<Maybe<SubstrateChainProposalArg>>>;
+  meta?: Maybe<Scalars['String']>;
+  method?: Maybe<Scalars['String']>;
+  section?: Maybe<Scalars['String']>;
 };
 
 export type SubstrateChainProposalVotes = {
@@ -3634,6 +3651,15 @@ export type SubstrateTreasuryDepositsConnection = {
   edges: Array<SubstrateTreasuryDepositEdge>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
+};
+
+export type UniswapLpData = {
+  __typename?: 'UniswapLPData';
+  address: Scalars['String'];
+  contract: Scalars['String'];
+  liquidityProvided: Scalars['Float'];
+  percentageOfPool: Scalars['Float'];
+  totalSupply: Scalars['Float'];
 };
 
 export type _Block_ = {
