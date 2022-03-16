@@ -45,7 +45,7 @@ export function ExportAccountWithJsonFileScreen({route, navigation}: ScreenProps
     }
     try {
       await verifyPassword(account.encoded);
-      const blob = new Blob([JSON.stringify(account)], {type: 'application/json', lastModified: Date.now()});
+      const blob = new Blob([JSON.stringify(account)], {type: 'application/json'});
       await Share.open({
         title: address,
         filename: `${address}.json`,

@@ -28,16 +28,22 @@ function RegistrarList() {
       ListHeaderComponent={() => (
         <View style={styles.infoContainer}>
           <View style={globalStyles.spaceBetweenRowContainer}>
-            <StatInfoBlock title="Count">{String(registrarsCount)}</StatInfoBlock>
-            <StatInfoBlock title="Lowest Fee">{formattedLowestFee}</StatInfoBlock>
-            <StatInfoBlock title="Highest Fee">{formattedHighestFee}</StatInfoBlock>
+            <StatInfoBlock title="Count" testID="registrars_count">
+              {String(registrarsCount)}
+            </StatInfoBlock>
+            <StatInfoBlock title="Lowest Fee" testID="registrars_lowest_fee">
+              {formattedLowestFee}
+            </StatInfoBlock>
+            <StatInfoBlock title="Highest Fee" testID="registrars_highest_fee">
+              {formattedHighestFee}
+            </StatInfoBlock>
           </View>
           <Padder scale={1} />
         </View>
       )}
       contentContainerStyle={styles.flatList}
       data={registrars}
-      renderItem={({item: registrar}) => <RegistrarItem registrar={registrar} />}
+      renderItem={({item: registrar}) => <RegistrarItem testID="registrar_item" registrar={registrar} />}
       keyExtractor={(item) => item.address}
       ItemSeparatorComponent={Divider}
       ListEmptyComponent={EmptyView}
@@ -46,14 +52,16 @@ function RegistrarList() {
 }
 
 type RegistrarItemProps = {
+  testID: string;
   registrar: Registrar;
 };
 
-function RegistrarItem({registrar}: RegistrarItemProps) {
+function RegistrarItem({registrar, testID}: RegistrarItemProps) {
   const {account, id, formattedFee} = registrar;
 
   return (
     <List.Item
+      testID={testID}
       left={() => (
         <View style={globalStyles.rowAlignCenter}>
           <Identicon value={account.address} size={30} />
@@ -62,7 +70,7 @@ function RegistrarItem({registrar}: RegistrarItemProps) {
       title={<Account account={account} />}
       description={
         <>
-          <Caption>{`Index: : ${id}`}</Caption>
+          <Caption>{`Index: ${id}`}</Caption>
           <Padder scale={1} />
           <Caption>{`Fee: ${formattedFee}`}</Caption>
         </>

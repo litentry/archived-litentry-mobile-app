@@ -1,5 +1,5 @@
 import React, {ReactNode} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Layout} from '@ui/components/Layout';
 import {Text, ActivityIndicator} from '@ui/library';
 import globalStyles, {standardPadding, monofontFamily} from '@ui/styles';
@@ -15,11 +15,11 @@ function LoadingView(props: PropTypes) {
   const {text, renderIcon, size, appearance} = props;
 
   return (
-    <Layout style={globalStyles.centeredContainer}>
-      <Layout style={styles.textContainer}>
+    <Layout style={globalStyles.centeredContainer} testID="loading_view">
+      <View style={styles.textContainer}>
         {renderIcon && renderIcon()}
         <Text style={[styles.text, renderIcon ? styles.withIcon : {}, styles[appearance || 'primary']]}>{text}</Text>
-      </Layout>
+      </View>
       <ActivityIndicator size={size || 'large'} animating />
     </Layout>
   );
