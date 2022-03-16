@@ -29,7 +29,7 @@ export function MotionsScreen() {
           style={styles.flatList}
           data={motions}
           renderItem={({item}) => {
-            return <Motion motion={item} isCouncilMemeber={isCouncil} />;
+            return <Motion motion={item} isCouncilMember={isCouncil} />;
           }}
           ItemSeparatorComponent={() => <Padder scale={1} />}
           keyExtractor={(item) => item.proposal.hash}
@@ -40,7 +40,7 @@ export function MotionsScreen() {
   );
 }
 
-function Motion({motion, isCouncilMemeber}: {motion: CouncilMotion; isCouncilMemeber: boolean}) {
+function Motion({motion, isCouncilMember}: {motion: CouncilMotion; isCouncilMember: boolean}) {
   const {colors} = useTheme();
   const navigation = useNavigation<NavigationProp<DashboardStackParamList>>();
   const {api} = useContext(ChainApiContext);
@@ -103,7 +103,7 @@ function Motion({motion, isCouncilMemeber}: {motion: CouncilMotion; isCouncilMem
             <View style={globalStyles.justifyCenter}>
               <Subheading>{`Aye ${votes?.ayes.length}/${votes?.threshold} `}</Subheading>
               {(() => {
-                if (isCouncilMemeber) {
+                if (isCouncilMember) {
                   if (motion.votingStatus?.isCloseable) {
                     return (
                       <Button onPress={onPressClose} color={colors.error} mode="outlined">
