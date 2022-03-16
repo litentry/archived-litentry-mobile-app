@@ -10,7 +10,7 @@ import {SelectAccount} from '@ui/components/SelectAccount';
 import {useCouncil, CouncilCandidate, CouncilMember, Council} from 'src/api/hooks/useCouncil';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {candidateScreen} from '@ui/navigation/routeKeys';
-import {List, Button, Divider, Modal, useTheme, Caption, Subheading, Text} from '@ui/library';
+import {List, Button, Divider, Modal, useTheme, Caption, Subheading, Text, TextInput} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {MotionsScreen} from './MotionsScreen';
@@ -22,6 +22,10 @@ import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 import BalanceInput from '@ui/components/BalanceInput';
 import type {Account} from 'src/api/hooks/useAccount';
 import {formattedStringToBn} from 'src/api/utils/balance';
+import MaxBalance from '@ui/components/MaxBalance';
+import {useApi} from 'context/ChainApiContext';
+import {useSnackbar} from 'context/SnackbarContext';
+import {InputLabel} from '@ui/library/InputLabel';
 
 const MAX_VOTES = 16;
 
@@ -50,6 +54,8 @@ function CouncilOverviewScreen() {
   const {data: moduleElection} = useModuleElection();
 
   const [councilVoteVisible, setCouncilVoteVisible] = useState(false);
+
+  const [submitCandidacyVisible, setSubmitCandidacyVisible] = useState(false);
 
   const sectionsData = useMemo(
     () => [
@@ -92,19 +98,20 @@ function CouncilOverviewScreen() {
             );
           }}
           renderSectionHeader={({section: {title}}) => (
-            <List.Item
-              style={styles.sectionHeader}
-              title={buildSectionHeaderTitle(title, council)}
-              right={() => {
-                if (title === 'Members') {
-                  return (
-                    <Button icon="vote" mode="outlined" onPress={() => setCouncilVoteVisible(true)}>
-                      Vote
-                    </Button>
-                  );
-                }
-              }}
-            />
+            <>
+              <List.Item style={styles.sectionHeader} title={buildSectionHeaderTitle(title, council)} />
+              {title === 'Members' ? (
+                <View style={globalStyles.rowContainer}>
+                  <Button icon="vote" mode="outlined" onPress={() => setCouncilVoteVisible(true)}>
+                    Vote
+                  </Button>
+                  <Padder scale={1} />
+                  <Button icon="vote" mode="outlined" onPress={() => setSubmitCandidacyVisible(true)}>
+                    Submit Candidacy
+                  </Button>
+                </View>
+              ) : null}
+            </>
           )}
           ItemSeparatorComponent={Divider}
           ListEmptyComponent={EmptyView}
@@ -117,6 +124,15 @@ function CouncilOverviewScreen() {
             setCouncilVoteVisible(visible);
           }}
           candidates={votingCandidates}
+          moduleElection={moduleElection}
+        />
+      ) : null}
+      {council && moduleElection?.module ? (
+        <SubmitCandidacyModel
+          visible={submitCandidacyVisible}
+          setVisible={(visible) => {
+            setSubmitCandidacyVisible(visible);
+          }}
           moduleElection={moduleElection}
         />
       ) : null}
@@ -176,6 +192,12 @@ type CouncilVoteProps = {
   visible: boolean;
   setVisible: (visible: boolean) => void;
   candidates: CouncilMember[];
+  moduleElection: ModuleElection;
+};
+
+type SubmitCandidacyProps = {
+  visible: boolean;
+  setVisible: (visible: boolean) => void;
   moduleElection: ModuleElection;
 };
 
@@ -277,6 +299,64 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
         </Button>
         <Button mode="contained" disabled={disabled} onPress={onVote}>
           Vote
+        </Button>
+      </View>
+    </Modal>
+  );
+}
+
+function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandidacyProps) {
+  const [account, setAccount] = React.useState<Account>();
+  const startTx = useApiTx();
+  const {api} = useApi();
+  const balance = useFormatBalance();
+  const formattedBalance = balance.formatBalance(moduleElection.candidacyBond);
+  const {data: council} = useCouncil();
+
+  const snackbar = useSnackbar();
+  const onSubmitCandidacy = () => {
+    if (account && api && moduleElection.module) {
+      startTx({
+        address: account.address,
+        txMethod: `${moduleElection.module}.submitCandidacy`,
+        params: [
+          api.tx[moduleElection.module]?.submitCandidacy?.meta.args.length === 1 ? [council?.candidates.length] : [],
+        ],
+      })
+        .then(() => {
+          snackbar('Candidacy submitted successfully');
+        })
+        .catch(() => {
+          snackbar('Error while submitting candidacy');
+        });
+      reset();
+    }
+  };
+
+  const reset = () => {
+    setAccount(undefined);
+    setVisible(false);
+  };
+
+  return (
+    <Modal visible={visible} onDismiss={reset}>
+      <View style={styles.centerAlign}>
+        <Subheading>{`Submit Council Candidacy`}</Subheading>
+      </View>
+      <Padder scale={1} />
+      <InputLabel label={'Candidate account:'} helperText={'Select the account you wish to submit for candidacy.'} />
+      <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
+      <Padder scale={1} />
+      <InputLabel label={'Candidacy bond:'} helperText={'The bond that is reserved.'} />
+      <TextInput mode="outlined" disabled value={formattedBalance} />
+      <MaxBalance address={account} />
+      <Padder scale={1} />
+      <View style={styles.buttons}>
+        <Button onPress={reset} mode="outlined" compact>
+          Cancel
+        </Button>
+        <Button mode="contained" disabled={!account} onPress={onSubmitCandidacy}>
+          Submit
         </Button>
       </View>
     </Modal>
@@ -386,4 +466,6 @@ const styles = StyleSheet.create({
   voteValue: {
     marginLeft: standardPadding,
   },
+  spacer: {minWidth: standardPadding * 3},
+  paddingTop: {paddingTop: 3},
 });

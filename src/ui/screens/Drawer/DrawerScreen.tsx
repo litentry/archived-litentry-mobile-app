@@ -22,6 +22,7 @@ import {
   crowdloansNavigator,
   dashboardNavigator,
   eventsCalendarScreen,
+  technicalCommitteeScreen,
 } from '@ui/navigation/routeKeys';
 import {standardPadding} from '@ui/styles';
 import {appVersion} from 'src/service/Device';
@@ -69,6 +70,14 @@ function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
             active={activeScreen === registrarListScreen}
             onPress={() => {
               navigation.navigate(registrarListScreen);
+            }}
+          />
+          <Drawer.Item
+            label="Tech. Committee"
+            icon="chip"
+            active={activeScreen === technicalCommitteeScreen}
+            onPress={() => {
+              navigation.navigate(technicalCommitteeScreen);
             }}
           />
           <Drawer.Item
