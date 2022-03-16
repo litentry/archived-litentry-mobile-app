@@ -62,7 +62,7 @@ import {AccountsGuideScreen} from '@ui/screens/AccountsGuideScreen';
 import {ReceiveFundScreen} from '@ui/screens/ReceiveFundScreen';
 import {SendFundScreen} from '@ui/screens/SendFundScreen';
 import {FeedbackScreen} from '@ui/screens/FeedbackScreen';
-import {BountyCreateScreen} from '@ui/screens/BountyCreateScreen';
+import {AddBountyScreen} from '@ui/screens/AddBountyScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
@@ -89,8 +89,8 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.bountiesScreen} component={BountiesScreen} />
       <DashboardStack.Screen name={routeKeys.bountyDetailScreen} component={BountyDetailScreen} />
       <DashboardStack.Screen
-        name={routeKeys.bountyCreateScreen}
-        component={BountyCreateScreen}
+        name={routeKeys.addBountyScreen}
+        component={AddBountyScreen}
         options={overlayScreenOptions}
       />
     </DashboardStack.Navigator>
