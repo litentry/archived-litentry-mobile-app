@@ -1,0 +1,21 @@
+name: code-style-lint-tests
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+    branches: [develop]
+  # Enable manual run
+  workflow_dispatch:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: run-checks
+        run: |
+          yarn
+          yarn codegen
+          yarn validate
+          yarn test

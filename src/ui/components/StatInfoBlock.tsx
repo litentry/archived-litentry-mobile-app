@@ -6,13 +6,14 @@ import {Caption} from '@ui/library';
 type PropTypes = {
   title: string;
   children: string | React.ReactNode;
+  testID?: string;
 };
 
 function StatInfoBlock(props: PropTypes) {
-  const {children, title} = props;
+  const {children, title, testID} = props;
 
   return (
-    <View>
+    <View testID={testID}>
       <Caption>{title}</Caption>
       {isString(children) ? <Caption style={styles.stat}>{children}</Caption> : children}
     </View>

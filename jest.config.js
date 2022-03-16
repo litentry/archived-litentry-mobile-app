@@ -12,11 +12,11 @@ const config = {
   },
   transform: {
     '^.+\\.jsx$': 'babel-jest',
-    '^.+\\.tsx?$': 'ts-jest',
+    '^.+\\.tsx?$': 'babel-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-  setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect'],
-  setupFiles: ['./node_modules/react-native-gesture-handler/jestSetup.js'],
+  setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect', './jest/setupTests.js'],
+  setupFiles: ['<rootDir>/jest/setup.js'],
   transformIgnorePatterns: [
     'node_modules/(?!(jest-)?@?react-native|@react-native-community|@react-navigation|@polkadot|@babel/runtime/helpers/esm/)',
   ],
