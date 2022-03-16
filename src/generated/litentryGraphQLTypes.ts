@@ -1008,6 +1008,11 @@ export type QueryPoapCredentialTokensByAddressArgs = {
   address: Scalars['String'];
 };
 
+export type QueryUniswapLiquidityProvidedByAccountArgs = {
+  address: Scalars['String'];
+  contract: Scalars['String'];
+};
+
 export type Query_MetaArgs = {
   block?: InputMaybe<Block_Height>;
 };
@@ -1147,6 +1152,10 @@ export type QuerySubstrateChainBalanceArgs = {
 
 export type QuerySubstrateChainBountyArgs = {
   index: Scalars['String'];
+};
+
+export type QuerySubstrateChainCouncilMotionDetailArgs = {
+  hash: Scalars['String'];
 };
 
 export type QuerySubstrateChainCouncilVoteArgs = {
