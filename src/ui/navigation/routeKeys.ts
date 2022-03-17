@@ -62,6 +62,8 @@ export const polkassemblyDiscussionDetail = 'Discussion' as const;
 
 export const networkSelectionScreen = 'Select Network' as const;
 
+export const tokenMigrationScreen = 'Token Migration' as const;
+
 export const linking: LinkingOptions<CompleteNavigatorParamList> = {
   prefixes: ['litentry://'],
 

@@ -6,10 +6,9 @@ import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/sta
 import {useApi} from 'context/ChainApiContext';
 import {NetworkContext} from 'context/NetworkContext';
 import NetworkItem from '@ui/components/NetworkItem';
-import {dashboardScreen, networkSelectionScreen} from '@ui/navigation/routeKeys';
+import {dashboardScreen, networkSelectionScreen, tokenMigrationScreen} from '@ui/navigation/routeKeys';
 import {AppBar, AppHeader, Title, useTheme} from '@ui/library';
 import {standardPadding} from '@ui/styles';
-import {noop} from 'lodash';
 
 export function MainDrawerAppBar({
   navigation,
@@ -93,7 +92,7 @@ export function MainAppBar({
   navigation: StackNavigationProp<ParamListBase>;
   route: RouteProp<ParamListBase>;
 }) {
-  const showMenu = route.name === dashboardScreen;
+  const showMenu = route.name === dashboardScreen || tokenMigrationScreen;
 
   const {currentNetwork} = useContext(NetworkContext);
   const {status} = useApi();
@@ -107,11 +106,7 @@ export function MainAppBar({
 
   return (
     <AppHeader style={{backgroundColor: colors.primary}}>
-      <AppBar.Action
-        onPress={showMenu ? onActionLeftPress : noop}
-        icon={'menu'}
-        color={showMenu ? 'white' : 'transparent'}
-      />
+      {showMenu ? <AppBar.Action onPress={onActionLeftPress} icon={'menu'} color="white" /> : null}
       <AppBar.Content
         style={styles.contentContainer}
         title={

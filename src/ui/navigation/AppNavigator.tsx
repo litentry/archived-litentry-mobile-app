@@ -93,7 +93,7 @@ function DashboardStackNavigator() {
 
 const AccountsStack = createStackNavigator<AccountsStackParamList>();
 
-function AccountsNavigator() {
+export function AccountsNavigator() {
   return (
     <AccountsStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
       <AccountsStack.Screen
@@ -265,7 +265,7 @@ function AppNavigator() {
 
 export default AppNavigator;
 
-const overlayScreenOptions: StackNavigationOptions = {
+export const overlayScreenOptions: StackNavigationOptions = {
   presentation: 'transparentModal',
   headerShown: false,
   animationEnabled: false,
