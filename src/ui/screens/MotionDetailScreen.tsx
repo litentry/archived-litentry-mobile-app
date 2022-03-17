@@ -1,11 +1,9 @@
 import {default as React, useContext, useRef} from 'react';
 import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {AccountId} from '@polkadot/types/interfaces';
 import {RouteProp} from '@react-navigation/native';
 import {Card, Icon, Caption, Subheading, Paragraph, Text} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {NetworkContext} from 'context/NetworkContext';
-import AddressInlineTeaser from '@ui/components/AddressInlineTeaser';
 import _ from 'lodash';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
@@ -14,12 +12,12 @@ import StatInfoBlock from '@ui/components/StatInfoBlock';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Modalize} from 'react-native-modalize';
 import WebView from 'react-native-webview';
-import {useCouncilMembers} from 'src/api/hooks/useCouncilMembers';
 import {useMotionDetail} from 'src/api/hooks/useMotionDetail';
-import {useVotingStatus} from 'src/api/hooks/useVotingStatus';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {buildMotionDetailUrl} from 'src/service/Polkasembly';
 import globalStyles, {colorGreen, colorRed, standardPadding} from '@ui/styles';
+import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
+import type {Account} from 'src/api/hooks/useAccount';
 
 const {height} = Dimensions.get('window');
 
@@ -27,7 +25,15 @@ type PropTypes = {
   route: RouteProp<DashboardStackParamList, 'Motion'>;
 };
 
-function VoteItem({vote, type = 'aye', emptyText}: {vote?: AccountId; type?: 'aye' | 'nay'; emptyText?: string}) {
+function VoteItem({
+  voteAccount,
+  type = 'aye',
+  emptyText,
+}: {
+  voteAccount?: Account;
+  type?: 'aye' | 'nay';
+  emptyText?: string;
+}) {
   return (
     <View style={globalStyles.rowAlignCenter}>
       <Icon
@@ -35,7 +41,7 @@ function VoteItem({vote, type = 'aye', emptyText}: {vote?: AccountId; type?: 'ay
         color={type === 'aye' ? colorGreen : colorRed}
       />
       <Padder scale={1} />
-      {emptyText ? <Text>{emptyText}</Text> : vote && <AddressInlineTeaser address={vote.toString()} />}
+      {emptyText ? <Text>{emptyText}</Text> : voteAccount && <AccountTeaser account={voteAccount} />}
     </View>
   );
 }
@@ -48,17 +54,12 @@ export function MotionDetailScreen(props: PropTypes) {
     route: {params},
   } = props;
 
-  const {data: motion} = useMotionDetail(params);
+  const {data: motion, loading} = useMotionDetail(params);
 
-  const {data} = useCouncilMembers();
-  const membersCount = data?.members.length ?? 0;
-  const {status} = useVotingStatus(motion?.votes, membersCount, 'council');
-
-  if (!motion) {
+  if (loading && !motion) {
     return <LoadingView />;
   }
-
-  const proposer = motion.votes?.ayes[0];
+  const proposer = motion?.votes?.ayes[0];
 
   return (
     <SafeView edges={noTopEdges}>
@@ -66,7 +67,7 @@ export function MotionDetailScreen(props: PropTypes) {
         <Card>
           <Card.Content>
             <View style={globalStyles.spaceBetweenRowContainer}>
-              <StatInfoBlock title="ID">{String(motion.votes?.index)}</StatInfoBlock>
+              <StatInfoBlock title="ID">{String(motion?.proposal.index)}</StatInfoBlock>
               <StatInfoBlock title="Detail">
                 {['kusama', 'polkadot'].includes(currentNetwork.key) ? (
                   <TouchableOpacity onPress={() => modalRef.current?.open()}>
@@ -79,22 +80,20 @@ export function MotionDetailScreen(props: PropTypes) {
                 ) : null}
               </StatInfoBlock>
               <StatInfoBlock title="Status">
-                <Paragraph style={{color: colorGreen}}>{status}</Paragraph>
+                <Paragraph style={{color: colorGreen}}>{motion?.votingStatus?.status}</Paragraph>
               </StatInfoBlock>
             </View>
             <Padder scale={1} />
-            <StatInfoBlock title="Proposer">
-              {proposer && <AddressInlineTeaser address={proposer.toString()} />}
-            </StatInfoBlock>
+            <StatInfoBlock title="Proposer">{proposer && <AccountTeaser account={proposer} />}</StatInfoBlock>
           </Card.Content>
         </Card>
         <Padder scale={0.3} />
         <View style={globalStyles.spaceBetweenRowContainer}>
           <Card style={[styles.item, styles.left]}>
             <Card.Content>
-              <StatInfoBlock title="Section">{_.capitalize(motion.proposal.section)}</StatInfoBlock>
+              <StatInfoBlock title="Section">{_.capitalize(motion?.proposal.section)}</StatInfoBlock>
               <Padder scale={0.5} />
-              <StatInfoBlock title="Method">{motion.proposal.method}</StatInfoBlock>
+              <StatInfoBlock title="Method">{motion?.proposal.method}</StatInfoBlock>
             </Card.Content>
           </Card>
           <Card style={[styles.item, styles.right]}>
@@ -102,22 +101,22 @@ export function MotionDetailScreen(props: PropTypes) {
               <View>
                 <Caption>Votes</Caption>
                 <Subheading style={globalStyles.aye}>
-                  {`Aye (${motion.votes?.ayes.length}/${motion.votes?.threshold.toNumber()})`}
+                  {`Aye (${motion?.votes?.ayes.length}/${motion?.votes?.threshold})`}
                 </Subheading>
                 <Subheading style={globalStyles.nay}>
-                  {`Nay (${motion.votes?.nays.length}/${motion.votes?.threshold.toNumber()})`}
+                  {`Nay (${motion?.votes?.nays.length}/${motion?.votes?.threshold})`}
                 </Subheading>
               </View>
             </Card.Content>
           </Card>
         </View>
-        {motion.votes ? (
+        {motion?.votes ? (
           <View style={styles.votesContainer}>
             <Subheading>Votes</Subheading>
             {motion.votes.ayes.length ? (
-              motion.votes.ayes.map((vote) => (
-                <View style={styles.voteContainer} key={String(vote.hash)}>
-                  <VoteItem key={vote.toString()} vote={vote} type="aye" />
+              motion.votes.ayes.map((vote: Account) => (
+                <View style={styles.voteContainer} key={String(vote.address)}>
+                  <VoteItem key={vote.toString()} voteAccount={vote} type="aye" />
                 </View>
               ))
             ) : (
@@ -127,9 +126,9 @@ export function MotionDetailScreen(props: PropTypes) {
               </>
             )}
             {motion.votes.nays.length ? (
-              motion.votes.nays.map((vote) => (
-                <View style={styles.voteContainer} key={String(vote.hash)}>
-                  <VoteItem key={vote.toString()} vote={vote} type="nay" />
+              motion.votes.nays.map((vote: Account) => (
+                <View style={styles.voteContainer} key={String(vote.address)}>
+                  <VoteItem key={vote.toString()} voteAccount={vote} type="nay" />
                 </View>
               ))
             ) : (
@@ -160,7 +159,7 @@ export function MotionDetailScreen(props: PropTypes) {
                 Array.prototype.forEach.call(footer, el => el.remove());
             })();`}
             source={{
-              uri: buildMotionDetailUrl(motion.votes?.index.toNumber() ?? 0, currentNetwork?.key || 'polkadot'),
+              uri: buildMotionDetailUrl(Number(motion?.proposal?.index) ?? 0, currentNetwork?.key || 'polkadot'),
             }}
             style={{height: height * 0.6}}
             onMessage={() => null}
