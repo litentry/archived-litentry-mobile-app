@@ -1,6 +1,11 @@
 import {trim} from 'lodash';
 import {checkAddress, isEthereumChecksum} from '@polkadot/util-crypto';
-import {ADDRESS_PREFIX_KUSAMA, ADDRESS_PREFIX_LITENTRY, ADDRESS_PREFIX_POLKADOT} from 'src/constants';
+import {
+  ADDRESS_PREFIX_KUSAMA,
+  ADDRESS_PREFIX_LITENTRY,
+  ADDRESS_PREFIX_LITMUS,
+  ADDRESS_PREFIX_POLKADOT,
+} from 'src/constants';
 import {AccountAddressType, NetworkType} from 'src/types';
 
 export function parseAddress(payload: string): AccountAddressType {
@@ -27,6 +32,8 @@ export const isAddressValid = (network: NetworkType, address: string) => {
       return checkAddress(address, ADDRESS_PREFIX_KUSAMA)[0];
     case 'litentry_test':
       return checkAddress(address, ADDRESS_PREFIX_LITENTRY)[0];
+    case 'litmus':
+      return checkAddress(address, ADDRESS_PREFIX_LITMUS)[0];
     case 'ethereum':
       return isEthereumChecksum(address); // fixme
     default:
