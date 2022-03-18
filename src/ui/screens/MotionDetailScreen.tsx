@@ -67,7 +67,7 @@ export function MotionDetailScreen(props: PropTypes) {
         <Card>
           <Card.Content>
             <View style={globalStyles.spaceBetweenRowContainer}>
-              <StatInfoBlock title="ID">{String(motion?.proposal.index)}</StatInfoBlock>
+              <StatInfoBlock title="ID">{motion?.proposal.index || ''}</StatInfoBlock>
               <StatInfoBlock title="Detail">
                 {['kusama', 'polkadot'].includes(currentNetwork.key) ? (
                   <TouchableOpacity onPress={() => modalRef.current?.open()}>
@@ -115,7 +115,7 @@ export function MotionDetailScreen(props: PropTypes) {
             <Subheading>Votes</Subheading>
             {motion.votes.ayes.length ? (
               motion.votes.ayes.map((vote: NestedAccount) => (
-                <View style={styles.voteContainer} key={String(vote.account.address)}>
+                <View style={styles.voteContainer} key={vote.account.address}>
                   <VoteItem voteAccount={vote} type="aye" />
                 </View>
               ))
@@ -127,7 +127,7 @@ export function MotionDetailScreen(props: PropTypes) {
             )}
             {motion.votes.nays.length ? (
               motion.votes.nays.map((vote: NestedAccount) => (
-                <View style={styles.voteContainer} key={String(vote.account.address)}>
+                <View style={styles.voteContainer} key={vote.account.address}>
                   <VoteItem voteAccount={vote} type="nay" />
                 </View>
               ))
