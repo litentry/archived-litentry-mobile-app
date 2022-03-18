@@ -14,9 +14,7 @@ const PARACHAIN_CROWDLOAN_QUERY = gql`
       formattedRaised
       formattedCap
       contribution {
-        contribution {
-          contributorsCount
-        }
+        contributorsCount
       }
       depositor {
         account {
