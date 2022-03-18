@@ -2,42 +2,37 @@ import React, {useContext} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {useQueryClient} from 'react-query';
 import {Card, List, Subheading, Button, Headline, useTheme} from '@ui/library';
-import {formatNumber} from '@polkadot/util';
-import type {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
 import {useAccounts} from 'context/AccountsContext';
-import {useVotingStatus} from 'src/api/hooks/useVotingStatus';
-import {useCouncilMembers} from 'src/api/hooks/useCouncilMembers';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {ProposalInfo} from '@ui/components/ProposalInfo';
-import {useCouncilMotions} from 'src/api/hooks/useCouncilMotions';
+import {CouncilMotion, useCouncilMotions} from 'src/api/hooks/useCouncilMotions';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {motionDetailScreen} from '@ui/navigation/routeKeys';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import LoadingView from '@ui/components/LoadingView';
 import {useApiTx} from 'src/api/hooks/useApiTx';
+import {useIsCouncilMember} from 'src/api/hooks/useIsCouncilMember';
+import {ProposalCallInfo} from '@ui/components/ProposalCallInfo';
 
 export function MotionsScreen() {
-  const {data, refetch, isLoading, isFetching} = useCouncilMotions();
-
+  const {data: motions, loading} = useCouncilMotions();
+  const isCouncil = useIsCouncilMember();
   return (
     <SafeView edges={noTopEdges}>
-      {isLoading ? (
+      {loading && !motions ? (
         <LoadingView />
       ) : (
         <FlatList
-          refreshing={isFetching}
-          onRefresh={refetch}
           style={styles.flatList}
-          data={data}
+          data={motions}
           renderItem={({item}) => {
-            return <Motion item={item} />;
+            return <Motion motion={item} isCouncilMember={isCouncil} />;
           }}
           ItemSeparatorComponent={() => <Padder scale={1} />}
-          keyExtractor={(item) => item.hash.toHex()}
+          keyExtractor={(item) => item.proposal.hash}
           ListEmptyComponent={EmptyView}
         />
       )}
@@ -45,26 +40,24 @@ export function MotionsScreen() {
   );
 }
 
-function Motion({item}: {item: DeriveCollectiveProposal}) {
+function Motion({motion, isCouncilMember}: {motion: CouncilMotion; isCouncilMember: boolean}) {
   const {colors} = useTheme();
   const navigation = useNavigation<NavigationProp<DashboardStackParamList>>();
   const {api} = useContext(ChainApiContext);
   const startTx = useApiTx();
   const {accounts} = useAccounts();
   const account = accounts?.[0];
-
-  const {votes, proposal, hash} = item;
-  const {data} = useCouncilMembers();
-  const membersCount = data?.members.length ?? 0;
-  const {isCloseable, isVoteable} = useVotingStatus(votes, membersCount, 'council');
-
+  const {votes, proposal} = motion;
   const queryClient = useQueryClient();
 
   const onPressClose = () => {
     if (account) {
       startTx({
         address: account.address,
-        params: api?.tx.council.close?.meta.args.length === 4 ? [hash, votes?.index, 0, 0] : [hash, votes?.index],
+        params:
+          api?.tx.council.close?.meta.args.length === 4
+            ? [proposal.hash, motion.proposal.index, 0, 0]
+            : [proposal.hash, motion.proposal.index],
         txMethod: 'council.close',
       })
         .then(() => {
@@ -78,7 +71,7 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
     if (account) {
       startTx({
         address: account.address,
-        params: [hash, votes?.index, false],
+        params: [proposal.hash, motion.proposal.index, false],
         txMethod: 'council.vote',
       })
         .then(() => queryClient.invalidateQueries('motions'))
@@ -90,7 +83,7 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
     if (account) {
       startTx({
         address: account.address,
-        params: [hash, votes?.index, true],
+        params: [proposal.hash, motion.proposal.index, true],
         txMethod: 'council.vote',
       })
         .then(() => queryClient.invalidateQueries('motions'))
@@ -101,23 +94,23 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
   return (
     <Card
       onPress={() => {
-        navigation.navigate(motionDetailScreen, {hash: String(hash)});
+        navigation.navigate(motionDetailScreen, {hash: String(proposal.hash)});
       }}>
       <Card.Content>
         <List.Item
-          title={<Headline>{formatNumber(votes?.index)}</Headline>}
+          title={<Headline>{motion.proposal.index}</Headline>}
           right={() => (
             <View style={globalStyles.justifyCenter}>
               <Subheading>{`Aye ${votes?.ayes.length}/${votes?.threshold} `}</Subheading>
               {(() => {
-                if (data?.isMember) {
-                  if (isCloseable) {
+                if (isCouncilMember) {
+                  if (motion.votingStatus?.isCloseable) {
                     return (
                       <Button onPress={onPressClose} color={colors.error} mode="outlined">
                         Close
                       </Button>
                     );
-                  } else if (isVoteable) {
+                  } else if (motion.votingStatus?.isVoteable) {
                     return (
                       <View style={globalStyles.rowAlignCenter}>
                         <Button onPress={onPressNay} color={colors.error} mode="outlined">
@@ -134,12 +127,7 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
             </View>
           )}
         />
-        {/* @TODO:
-          Try to reuse components/ProposalCallInfo when fetching motions from graph
-          Possibility of retiring components/ProposalInfo and components/ProposalCall
-          https://github.com/litentry/litentry-app/issues/916
-        */}
-        <ProposalInfo proposal={proposal} />
+        <ProposalCallInfo proposal={proposal} />
       </Card.Content>
     </Card>
   );
