@@ -11,7 +11,10 @@ export const TECHNICAL_COMMITTEE_SUMMARY_QUERY = gql`
       activeProposalCount
       totalProposalCount
       members {
-        ...AccountFields
+        address
+        account {
+          ...AccountFields
+        }
       }
     }
   }
