@@ -39,13 +39,13 @@ export function ProposalCallInfo({proposal}: ProposalInfoProps) {
           {'proposer' in proposal && proposal.proposer && (
             <View style={globalStyles.rowAlignCenter}>
               <Caption>{`Proposer: `}</Caption>
-              <Account account={proposal.proposer?.account} />
+              <Account account={proposal.proposer.account} />
             </View>
           )}
           {'beneficiary' in proposal && proposal.beneficiary && (
             <View style={globalStyles.rowAlignCenter}>
               <Caption>{`Beneficiary: `}</Caption>
-              <Account account={proposal.beneficiary?.account} />
+              <Account account={proposal.beneficiary.account} />
             </View>
           )}
           {'payout' in proposal && proposal.payout && (

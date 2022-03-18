@@ -98,7 +98,7 @@ function CouncilOverviewScreen() {
             );
           }}
           renderSectionHeader={({section: {title}}) => (
-            <View>
+            <>
               <List.Item style={styles.sectionHeader} title={buildSectionHeaderTitle(title, council)} />
               {title === 'Members' ? (
                 <View style={globalStyles.rowContainer}>
@@ -112,7 +112,7 @@ function CouncilOverviewScreen() {
                 </View>
               ) : null}
               <Padder scale={1} />
-            </View>
+            </>
           )}
           ItemSeparatorComponent={Divider}
           ListEmptyComponent={EmptyView}
@@ -250,7 +250,6 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
 
   const onVote = () => {
     if (account) {
-      console.log(selectedCandidates);
       startTx({
         address: account.address,
         txMethod: `${moduleElection.module}.vote`,
