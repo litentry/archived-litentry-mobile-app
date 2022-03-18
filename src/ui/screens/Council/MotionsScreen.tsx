@@ -26,7 +26,7 @@ export function MotionsScreen() {
         <LoadingView />
       ) : (
         <FlatList
-          style={styles.flatList}
+          contentContainerStyle={styles.containerStyle}
           data={motions}
           renderItem={({item}) => {
             return <Motion motion={item} isCouncilMember={isCouncil} />;
@@ -136,7 +136,8 @@ function Motion({motion, isCouncilMember}: {motion: CouncilMotion; isCouncilMemb
 }
 
 const styles = StyleSheet.create({
-  flatList: {
-    padding: standardPadding * 2,
+  containerStyle: {
+    marginBottom: standardPadding * 2,
+    padding: standardPadding,
   },
 });

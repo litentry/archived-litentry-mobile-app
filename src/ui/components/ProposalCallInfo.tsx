@@ -3,8 +3,9 @@ import {StyleSheet, View} from 'react-native';
 import {Paragraph, Card, Caption, Text} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import type {DemocracyProposal, DemocracyReferendum, ProposalSubCall} from 'src/api/hooks/useDemocracy';
-import {standardPadding} from '@ui/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {MotionProposal} from 'src/api/hooks/useCouncilMotions';
+import {Account} from './Account/Account';
 
 type ProposalInfoProps = {
   proposal: DemocracyProposal | DemocracyReferendum | MotionProposal;
@@ -22,6 +23,7 @@ export function ProposalCallInfo({proposal}: ProposalInfoProps) {
       <Card mode="outlined">
         <Card.Content>
           <Text>{`${proposal.method}.${proposal.section}():`}</Text>
+          <Padder scale={0.5} />
           {proposal.args?.map((arg, index) => (
             <View key={`${index}-${arg.name}`}>
               <Caption>{`${arg.name}: ${arg.value}`}</Caption>
@@ -34,6 +36,24 @@ export function ProposalCallInfo({proposal}: ProposalInfoProps) {
                 })}
             </View>
           ))}
+          {'proposer' in proposal && proposal.proposer && (
+            <View style={globalStyles.rowAlignCenter}>
+              <Caption>{`Proposer: `}</Caption>
+              <Account account={proposal.proposer?.account} />
+            </View>
+          )}
+          {'beneficiary' in proposal && proposal.beneficiary && (
+            <View style={globalStyles.rowAlignCenter}>
+              <Caption>{`Beneficiary: `}</Caption>
+              <Account account={proposal.beneficiary?.account} />
+            </View>
+          )}
+          {'payout' in proposal && proposal.payout && (
+            <View style={globalStyles.rowAlignCenter}>
+              <Caption>{`Payout: `}</Caption>
+              <Caption>{proposal.payout}</Caption>
+            </View>
+          )}
         </Card.Content>
       </Card>
     </>
