@@ -5,9 +5,11 @@ import type {
   SubstrateChainRegistrationJudgement,
   SubstrateChainDeriveAccountRegistration,
   SubstrateChainIdentityJudgement,
+  SubstrateChainNestedAccount,
 } from 'src/generated/litentryGraphQLTypes';
 
 export type Account = SubstrateChainAccount;
+export type NestedAccount = SubstrateChainNestedAccount;
 export type AccountBalance = SubstrateChainAccountBalance;
 export type RegistrationJudgment = SubstrateChainRegistrationJudgement;
 export type AccountRegistration = SubstrateChainDeriveAccountRegistration;
