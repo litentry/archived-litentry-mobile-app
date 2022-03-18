@@ -10,7 +10,6 @@ const SUB_ACCOUNTS_QUERY = gql`
     substrateChainAccount(address: $address) {
       ...AccountFields
       subAccounts {
-        address
         account {
           ...AccountFields
         }

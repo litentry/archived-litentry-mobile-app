@@ -11,7 +11,6 @@ const PARA_THREADS = gql`
       id
       name
       manager {
-        address
         account {
           ...AccountFields
         }

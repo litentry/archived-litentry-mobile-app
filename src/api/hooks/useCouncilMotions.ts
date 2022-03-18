@@ -41,13 +41,11 @@ const COUNCIL_MOTION_QUERY = gql`
         }
         hash
         proposer {
-          address
           account {
             ...AccountFields
           }
         }
         beneficiary {
-          address
           account {
             ...AccountFields
           }
@@ -57,13 +55,11 @@ const COUNCIL_MOTION_QUERY = gql`
       votes {
         threshold
         ayes {
-          address
           account {
             ...AccountFields
           }
         }
         nays {
-          address
           account {
             ...AccountFields
           }

@@ -15,7 +15,6 @@ const COUNCIL_QUERY = gql`
   query getCouncil {
     substrateChainCouncil {
       members {
-        address
         account {
           ...AccountFields
         }
@@ -24,7 +23,6 @@ const COUNCIL_QUERY = gql`
         voters
       }
       runnersUp {
-        address
         account {
           ...AccountFields
         }
@@ -33,14 +31,12 @@ const COUNCIL_QUERY = gql`
         voters
       }
       candidates {
-        address
         account {
           ...AccountFields
         }
       }
       totalCandidates
       primeMember {
-        address
         account {
           ...AccountFields
         }

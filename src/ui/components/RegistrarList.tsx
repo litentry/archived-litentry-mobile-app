@@ -44,7 +44,7 @@ function RegistrarList() {
       contentContainerStyle={styles.flatList}
       data={registrars}
       renderItem={({item: registrar}) => <RegistrarItem testID="registrar_item" registrar={registrar} />}
-      keyExtractor={(item) => item.address}
+      keyExtractor={(item) => item.account.address}
       ItemSeparatorComponent={Divider}
       ListEmptyComponent={EmptyView}
     />

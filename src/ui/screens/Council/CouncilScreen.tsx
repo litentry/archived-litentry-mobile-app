@@ -85,7 +85,7 @@ function CouncilOverviewScreen() {
           style={globalStyles.flex}
           contentContainerStyle={styles.content}
           sections={sectionsData}
-          keyExtractor={(item) => item.address}
+          keyExtractor={(item) => item.account.address}
           stickySectionHeadersEnabled={false}
           renderItem={({item, section}) => {
             return (
@@ -98,7 +98,7 @@ function CouncilOverviewScreen() {
             );
           }}
           renderSectionHeader={({section: {title}}) => (
-            <>
+            <View>
               <List.Item style={styles.sectionHeader} title={buildSectionHeaderTitle(title, council)} />
               {title === 'Members' ? (
                 <View style={globalStyles.rowContainer}>
@@ -111,7 +111,8 @@ function CouncilOverviewScreen() {
                   </Button>
                 </View>
               ) : null}
-            </>
+              <Padder scale={1} />
+            </View>
           )}
           ItemSeparatorComponent={Divider}
           ListEmptyComponent={EmptyView}
@@ -170,7 +171,7 @@ function CouncilMemberItem({member, sectionType}: CouncilMemberItemProps) {
       title={member.account.display}
       left={() => (
         <View style={globalStyles.justifyCenter}>
-          <Identicon value={member.address} size={30} />
+          <Identicon value={member.account.address} size={30} />
         </View>
       )}
       right={
@@ -212,7 +213,7 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
   useEffect(() => {
     if (councilVote?.votes != null) {
       setSelectedCandidates(
-        councilVote.votes.map((acc) => acc.address).filter((acc) => candidates.some((c) => c.address === acc)),
+        councilVote.votes.map((acc) => acc.address).filter((acc) => candidates.some((c) => c.account.address === acc)),
       );
     }
   }, [councilVote, candidates]);
@@ -249,6 +250,7 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
 
   const onVote = () => {
     if (account) {
+      console.log(selectedCandidates);
       startTx({
         address: account.address,
         txMethod: `${moduleElection.module}.vote`,
@@ -276,11 +278,11 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
           <ScrollView indicatorStyle={isDarkTheme ? 'white' : 'black'}>
             {candidates.map((candidate) => (
               <MemberItem
-                key={candidate.address}
+                key={candidate.account.address}
                 candidate={candidate}
                 onSelect={onCandidateSelect}
-                isSelected={selectedCandidates.includes(candidate.address)}
-                order={selectedCandidates.indexOf(candidate.address) + 1}
+                isSelected={selectedCandidates.includes(candidate.account.address)}
+                order={selectedCandidates.indexOf(candidate.account.address) + 1}
               />
             ))}
           </ScrollView>
@@ -374,7 +376,7 @@ function MemberItem({candidate, onSelect, isSelected, order}: MemberItemProps) {
   const {colors} = useTheme();
 
   return (
-    <TouchableOpacity onPress={() => onSelect(candidate.address, isSelected)}>
+    <TouchableOpacity onPress={() => onSelect(candidate.account.address, isSelected)}>
       <View
         style={[
           styles.candidateItemContainer,
@@ -384,7 +386,7 @@ function MemberItem({candidate, onSelect, isSelected, order}: MemberItemProps) {
           },
         ]}>
         <View style={styles.candidateIdentity}>
-          <Identicon value={candidate.address} size={20} />
+          <Identicon value={candidate.account.address} size={20} />
           <Padder scale={0.3} />
           <Caption style={styles.candidateName} ellipsizeMode="middle" numberOfLines={1}>
             {candidate.account.display}

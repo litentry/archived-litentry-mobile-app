@@ -10,7 +10,7 @@ import LoadingView from '@ui/components/LoadingView';
 import type {Parathread} from 'src/api/hooks/useParaThreads';
 import {Account} from '@ui/components/Account/Account';
 
-const toParathreadHomepage = (url?: string) => {
+const toParathreadHomepage = (url: string) => {
   if (url && Linking.canOpenURL(url)) {
     Linking.openURL(url);
   }
@@ -51,10 +51,10 @@ function ParathreadItem({parathreadInfo}: ParathreadItemProps) {
 
   return (
     <List.Item
-      onPress={() => toParathreadHomepage(parathreadInfo.homepage?.toString())}
+      onPress={parathreadInfo.homepage ? () => toParathreadHomepage(String(parathreadInfo.homepage)) : undefined}
       left={() => (
         <View style={globalStyles.justifyCenter}>
-          {parathreadInfo?.manager && <Identicon value={parathreadInfo.manager.address.toString()} size={30} />}
+          {parathreadInfo?.manager && <Identicon value={parathreadInfo.manager.account.address} size={30} />}
         </View>
       )}
       title={() => (

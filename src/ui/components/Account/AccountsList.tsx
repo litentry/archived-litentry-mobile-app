@@ -14,7 +14,7 @@ export function AccountsList({accounts, header}: Props) {
     <FlatList
       data={accounts}
       renderItem={({item}) => <AccountListItem account={item.account} />}
-      keyExtractor={(item) => item.address}
+      keyExtractor={(item) => item.account.address}
       ItemSeparatorComponent={Divider}
       ListHeaderComponent={header}
     />

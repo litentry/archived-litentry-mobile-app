@@ -115,8 +115,8 @@ export function MotionDetailScreen(props: PropTypes) {
             <Subheading>Votes</Subheading>
             {motion.votes.ayes.length ? (
               motion.votes.ayes.map((vote: NestedAccount) => (
-                <View style={styles.voteContainer} key={String(vote.address)}>
-                  <VoteItem key={vote.toString()} voteAccount={vote} type="aye" />
+                <View style={styles.voteContainer} key={String(vote.account.address)}>
+                  <VoteItem voteAccount={vote} type="aye" />
                 </View>
               ))
             ) : (
@@ -127,8 +127,8 @@ export function MotionDetailScreen(props: PropTypes) {
             )}
             {motion.votes.nays.length ? (
               motion.votes.nays.map((vote: NestedAccount) => (
-                <View style={styles.voteContainer} key={String(vote.address)}>
-                  <VoteItem key={vote.toString()} voteAccount={vote} type="nay" />
+                <View style={styles.voteContainer} key={String(vote.account.address)}>
+                  <VoteItem voteAccount={vote} type="nay" />
                 </View>
               ))
             ) : (
