@@ -7,9 +7,7 @@ import type {
 import {ACCOUNT_FIELDS_FRAGMENT} from './useAccount';
 
 export type CouncilMotion = SubstrateChainCouncilMotion;
-
 export type MotionProposal = SubstrateChainMotionProposal;
-
 export type VotingStatus = SubstrateChainVotingStatus;
 
 const COUNCIL_MOTION_QUERY = gql`
@@ -43,20 +41,32 @@ const COUNCIL_MOTION_QUERY = gql`
         }
         hash
         proposer {
-          ...AccountFields
+          address
+          account {
+            ...AccountFields
+          }
         }
         beneficiary {
-          ...AccountFields
+          address
+          account {
+            ...AccountFields
+          }
         }
         payout
       }
       votes {
         threshold
         ayes {
-          ...AccountFields
+          address
+          account {
+            ...AccountFields
+          }
         }
         nays {
-          ...AccountFields
+          address
+          account {
+            ...AccountFields
+          }
         }
         end
         endTime

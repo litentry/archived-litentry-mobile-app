@@ -17,7 +17,7 @@ import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {buildMotionDetailUrl} from 'src/service/Polkasembly';
 import globalStyles, {colorGreen, colorRed, standardPadding} from '@ui/styles';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
-import type {Account} from 'src/api/hooks/useAccount';
+import type {NestedAccount} from 'src/api/hooks/useAccount';
 
 const {height} = Dimensions.get('window');
 
@@ -30,7 +30,7 @@ function VoteItem({
   type = 'aye',
   emptyText,
 }: {
-  voteAccount?: Account;
+  voteAccount?: NestedAccount;
   type?: 'aye' | 'nay';
   emptyText?: string;
 }) {
@@ -41,7 +41,7 @@ function VoteItem({
         color={type === 'aye' ? colorGreen : colorRed}
       />
       <Padder scale={1} />
-      {emptyText ? <Text>{emptyText}</Text> : voteAccount && <AccountTeaser account={voteAccount} />}
+      {emptyText ? <Text>{emptyText}</Text> : voteAccount && <AccountTeaser account={voteAccount.account} />}
     </View>
   );
 }
@@ -84,7 +84,7 @@ export function MotionDetailScreen(props: PropTypes) {
               </StatInfoBlock>
             </View>
             <Padder scale={1} />
-            <StatInfoBlock title="Proposer">{proposer && <AccountTeaser account={proposer} />}</StatInfoBlock>
+            <StatInfoBlock title="Proposer">{proposer && <AccountTeaser account={proposer.account} />}</StatInfoBlock>
           </Card.Content>
         </Card>
         <Padder scale={0.3} />
@@ -114,7 +114,7 @@ export function MotionDetailScreen(props: PropTypes) {
           <View style={styles.votesContainer}>
             <Subheading>Votes</Subheading>
             {motion.votes.ayes.length ? (
-              motion.votes.ayes.map((vote: Account) => (
+              motion.votes.ayes.map((vote: NestedAccount) => (
                 <View style={styles.voteContainer} key={String(vote.address)}>
                   <VoteItem key={vote.toString()} voteAccount={vote} type="aye" />
                 </View>
@@ -126,7 +126,7 @@ export function MotionDetailScreen(props: PropTypes) {
               </>
             )}
             {motion.votes.nays.length ? (
-              motion.votes.nays.map((vote: Account) => (
+              motion.votes.nays.map((vote: NestedAccount) => (
                 <View style={styles.voteContainer} key={String(vote.address)}>
                   <VoteItem key={vote.toString()} voteAccount={vote} type="nay" />
                 </View>
