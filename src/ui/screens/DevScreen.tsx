@@ -21,7 +21,7 @@ function DevScreen() {
 
   const {currentNetwork} = useContext(NetworkContext);
   const {accounts} = useAccounts();
-  const convictions = useConvictions();
+  const {data: convictions} = useConvictions();
   const {trigger} = useContext(InAppNotificationContext);
   const {status, api} = useContext(ChainApiContext);
   const [debugInfo, setDebugInfo] = useState('');
@@ -48,7 +48,7 @@ function DevScreen() {
         <View style={{padding: standardPadding * 2}}>
           <Subheading>Conviction selection</Subheading>
           <Select
-            items={convictions}
+            items={convictions ?? []}
             onSelect={(selectedItem) => {
               console.log(selectedItem);
             }}
