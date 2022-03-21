@@ -2039,7 +2039,11 @@ export type SubstrateChainBountiesSummary = {
   __typename?: 'SubstrateChainBountiesSummary';
   activeBounties: Scalars['String'];
   bountyCount: Scalars['String'];
+  bountyDepositBase: Scalars['String'];
+  bountyValueMinimum: Scalars['String'];
+  dataDepositPerByte: Scalars['String'];
   formattedTotalValue: Scalars['String'];
+  maximumReasonLength: Scalars['String'];
   pastBounties: Scalars['String'];
   progressPercent: Scalars['Int'];
   timeLeft: Array<Scalars['String']>;
