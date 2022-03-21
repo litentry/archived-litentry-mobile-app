@@ -1587,6 +1587,7 @@ export type SubstrateBalanceAccountWhereInput = {
   firstTransferInBlockNumber_gt?: InputMaybe<Scalars['BigInt']>;
   firstTransferInBlockNumber_gte?: InputMaybe<Scalars['BigInt']>;
   firstTransferInBlockNumber_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  firstTransferInBlockNumber_isNull?: InputMaybe<Scalars['Boolean']>;
   firstTransferInBlockNumber_lt?: InputMaybe<Scalars['BigInt']>;
   firstTransferInBlockNumber_lte?: InputMaybe<Scalars['BigInt']>;
   firstTransferInBlockNumber_not_eq?: InputMaybe<Scalars['BigInt']>;
@@ -1595,6 +1596,7 @@ export type SubstrateBalanceAccountWhereInput = {
   firstTransferInDate_gt?: InputMaybe<Scalars['DateTime']>;
   firstTransferInDate_gte?: InputMaybe<Scalars['DateTime']>;
   firstTransferInDate_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  firstTransferInDate_isNull?: InputMaybe<Scalars['Boolean']>;
   firstTransferInDate_lt?: InputMaybe<Scalars['DateTime']>;
   firstTransferInDate_lte?: InputMaybe<Scalars['DateTime']>;
   firstTransferInDate_not_eq?: InputMaybe<Scalars['DateTime']>;
@@ -1603,6 +1605,7 @@ export type SubstrateBalanceAccountWhereInput = {
   firstTransferOutBlockNumber_gt?: InputMaybe<Scalars['BigInt']>;
   firstTransferOutBlockNumber_gte?: InputMaybe<Scalars['BigInt']>;
   firstTransferOutBlockNumber_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  firstTransferOutBlockNumber_isNull?: InputMaybe<Scalars['Boolean']>;
   firstTransferOutBlockNumber_lt?: InputMaybe<Scalars['BigInt']>;
   firstTransferOutBlockNumber_lte?: InputMaybe<Scalars['BigInt']>;
   firstTransferOutBlockNumber_not_eq?: InputMaybe<Scalars['BigInt']>;
@@ -1611,6 +1614,7 @@ export type SubstrateBalanceAccountWhereInput = {
   firstTransferOutDate_gt?: InputMaybe<Scalars['DateTime']>;
   firstTransferOutDate_gte?: InputMaybe<Scalars['DateTime']>;
   firstTransferOutDate_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  firstTransferOutDate_isNull?: InputMaybe<Scalars['Boolean']>;
   firstTransferOutDate_lt?: InputMaybe<Scalars['DateTime']>;
   firstTransferOutDate_lte?: InputMaybe<Scalars['DateTime']>;
   firstTransferOutDate_not_eq?: InputMaybe<Scalars['DateTime']>;
@@ -1633,6 +1637,7 @@ export type SubstrateBalanceAccountWhereInput = {
   lastTransferInBlockNumber_gt?: InputMaybe<Scalars['BigInt']>;
   lastTransferInBlockNumber_gte?: InputMaybe<Scalars['BigInt']>;
   lastTransferInBlockNumber_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  lastTransferInBlockNumber_isNull?: InputMaybe<Scalars['Boolean']>;
   lastTransferInBlockNumber_lt?: InputMaybe<Scalars['BigInt']>;
   lastTransferInBlockNumber_lte?: InputMaybe<Scalars['BigInt']>;
   lastTransferInBlockNumber_not_eq?: InputMaybe<Scalars['BigInt']>;
@@ -1641,6 +1646,7 @@ export type SubstrateBalanceAccountWhereInput = {
   lastTransferInDate_gt?: InputMaybe<Scalars['DateTime']>;
   lastTransferInDate_gte?: InputMaybe<Scalars['DateTime']>;
   lastTransferInDate_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  lastTransferInDate_isNull?: InputMaybe<Scalars['Boolean']>;
   lastTransferInDate_lt?: InputMaybe<Scalars['DateTime']>;
   lastTransferInDate_lte?: InputMaybe<Scalars['DateTime']>;
   lastTransferInDate_not_eq?: InputMaybe<Scalars['DateTime']>;
@@ -1649,6 +1655,7 @@ export type SubstrateBalanceAccountWhereInput = {
   lastTransferOutBlockNumber_gt?: InputMaybe<Scalars['BigInt']>;
   lastTransferOutBlockNumber_gte?: InputMaybe<Scalars['BigInt']>;
   lastTransferOutBlockNumber_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  lastTransferOutBlockNumber_isNull?: InputMaybe<Scalars['Boolean']>;
   lastTransferOutBlockNumber_lt?: InputMaybe<Scalars['BigInt']>;
   lastTransferOutBlockNumber_lte?: InputMaybe<Scalars['BigInt']>;
   lastTransferOutBlockNumber_not_eq?: InputMaybe<Scalars['BigInt']>;
@@ -1657,6 +1664,7 @@ export type SubstrateBalanceAccountWhereInput = {
   lastTransferOutDate_gt?: InputMaybe<Scalars['DateTime']>;
   lastTransferOutDate_gte?: InputMaybe<Scalars['DateTime']>;
   lastTransferOutDate_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  lastTransferOutDate_isNull?: InputMaybe<Scalars['Boolean']>;
   lastTransferOutDate_lt?: InputMaybe<Scalars['DateTime']>;
   lastTransferOutDate_lte?: InputMaybe<Scalars['DateTime']>;
   lastTransferOutDate_not_eq?: InputMaybe<Scalars['DateTime']>;
