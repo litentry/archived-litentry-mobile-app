@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     paddingVertical: standardPadding,
   },
   dateContainer: {
-    width: '10%',
+    width: '15%',
     justifyContent: 'center',
   },
   titleContainer: {
