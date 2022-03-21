@@ -5,6 +5,7 @@ import {View, FlatList, StyleSheet} from 'react-native';
 import React from 'react';
 import {Divider, Text, useTheme} from '@ui/library';
 import {standardPadding} from '@ui/styles';
+import dayjs from 'dayjs';
 
 type Props = {
   onPress: () => void;
@@ -15,8 +16,8 @@ export function EventsCalendarTeaser(props: Props) {
   const {data: events, loading} = useCalendarEvents();
   const topThreeEvents = events?.slice(0, 3);
   const formateDate = (date: string) => {
-    const formatedDate = new Date(date);
-    const [eventDate, eventMonth] = [formatedDate.getDate(), formatedDate.getMonth()];
+    const formatedDate = dayjs(date);
+    const [eventDate, eventMonth] = [formatedDate.date(), formatedDate.month()];
     return eventDate.toString().concat('/').concat(eventMonth.toString());
   };
   return (
