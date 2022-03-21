@@ -15,7 +15,7 @@ import {DashboardStackParamList} from '@ui/navigation/navigation';
 import LoadingView from '@ui/components/LoadingView';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useIsCouncilMember} from 'src/api/hooks/useIsCouncilMember';
-import {ProposalCallInfo} from '@ui/components/ProposalCallInfo';
+import {ProposalCall} from '@ui/components/ProposalCall';
 
 export function MotionsScreen() {
   const {data: motions, loading} = useCouncilMotions();
@@ -129,7 +129,7 @@ function Motion({motion, isCouncilMember}: {motion: CouncilMotion; isCouncilMemb
             </View>
           )}
         />
-        <ProposalCallInfo proposal={proposal} />
+        <ProposalCall proposal={proposal} />
       </Card.Content>
     </Card>
   );

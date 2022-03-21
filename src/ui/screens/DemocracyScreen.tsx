@@ -12,7 +12,7 @@ import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {democracyProposalScreen, referendumScreen} from '@ui/navigation/routeKeys';
 import {Card, Headline, List, Subheading, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {ProposalCallInfo} from '@ui/components/ProposalCallInfo';
+import {ProposalCall} from '@ui/components/ProposalCall';
 import {useDemocracy, DemocracyProposal, DemocracyReferendum} from 'src/api/hooks/useDemocracy';
 
 export function DemocracyScreen() {
@@ -105,7 +105,7 @@ function ReferendumListItem({referendum}: {referendum: DemocracyReferendum}) {
           left={() => <Headline>{referendum.index}</Headline>}
           description={referendum.endPeriod.slice(0, 2).join(' ')}
         />
-        <ProposalCallInfo proposal={referendum} />
+        <ProposalCall proposal={referendum} />
       </Card.Content>
     </Card>
   );
@@ -119,7 +119,7 @@ function ProposalListItem({proposal}: {proposal: DemocracyProposal}) {
     <Card onPress={() => navigation.navigate(democracyProposalScreen, {proposal})}>
       <Card.Content>
         <List.Item left={() => <Headline>{proposal.index}</Headline>} title={title} />
-        <ProposalCallInfo proposal={proposal} />
+        <ProposalCall proposal={proposal} />
       </Card.Content>
     </Card>
   );

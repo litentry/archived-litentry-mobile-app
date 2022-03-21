@@ -1,10 +1,10 @@
-import React, {useCallback, useContext, useRef, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Layout} from '@ui/components/Layout';
 import {Button, List, Icon, Caption, Divider} from '@ui/library';
-import {NetworkContext} from 'context/NetworkContext';
+import {useNetwork} from 'context/NetworkContext';
 import RegistrarSelectionModal from '@ui/components/RegistrarSelectionModal';
 import IdentityInfoForm, {IdentityPayload} from '@ui/components/IdentityInfoForm';
 import InfoBanner from '@ui/components/InfoBanner';
@@ -38,7 +38,7 @@ function ManageIdentity({
   const queryClient = useQueryClient();
   const {data: accountInfo} = useSubAccounts(address);
 
-  const {currentNetwork} = useContext(NetworkContext);
+  const {currentNetwork} = useNetwork();
   const [registrarSelectionOpen, setRegistrarSelectionOpen] = useState(false);
 
   const judgements = accountInfo?.registration.judgements;
