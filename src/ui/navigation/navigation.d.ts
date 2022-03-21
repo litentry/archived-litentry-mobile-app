@@ -3,6 +3,7 @@ import {
   accountsNavigator,
   accountsScreen,
   addAccountScreen,
+  addBountyScreen,
   balanceScreen,
   bountiesScreen,
   bountyDetailScreen,
@@ -18,6 +19,7 @@ import {
   democracyScreen,
   devScreen,
   drawerNavigator,
+  eventsCalendarScreen,
   exportAccountWithJsonFileScreen,
   feedbackScreen,
   identityGuideScreen,
@@ -43,14 +45,13 @@ import {
   referendumScreen,
   registerSubIdentitiesScreen,
   registrarListScreen,
-  technicalCommitteeScreen,
   sendFundScreen,
+  technicalCommitteeScreen,
   tipDetailScreen,
   tipsScreen,
   treasuryScreen,
   verifyMnemonicScreen,
   webviewScreen,
-  eventsCalendarScreen,
 } from '@ui/navigation/routeKeys';
 import type {CouncilCandidate, CouncilMember} from 'src/api/hooks/useCouncil';
 import type {DemocracyProposal, DemocracyReferendum} from 'src/api/hooks/useDemocracy';
@@ -77,6 +78,7 @@ type DashboardStackParamList = {
   [democracyProposalScreen]: {proposal: DemocracyProposal};
   [bountiesScreen]: undefined;
   [bountyDetailScreen]: {index: string};
+  [addBountyScreen]: undefined;
 };
 
 type DrawerParamList = {
