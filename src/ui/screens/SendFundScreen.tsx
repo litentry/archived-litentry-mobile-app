@@ -30,11 +30,11 @@ export function SendFundScreen({navigation, route}: Props) {
   const {data: accountInfo} = useAccount(address);
   const ref = useRef<Modalize>(null);
   const [amount, setAmount] = React.useState('');
-  const [to, setTo] = React.useState<string>();
+  const [toAddress, setToAddress] = React.useState<string>();
   const [scanning, setScanning] = React.useState(false);
   const startTx = useApiTx();
   const {data: chainInfo} = useChainInfo();
-  const [isKeepAlive, setisKeepAlive] = React.useState(true);
+  const [isKeepAliveActive, setIsKeepAliveActive] = React.useState(true);
   const {currentNetwork} = useContext(NetworkContext);
   const snackbar = useSnackbar();
 
@@ -42,11 +42,11 @@ export function SendFundScreen({navigation, route}: Props) {
     ref.current?.open();
   }, []);
 
-  const isAccountValid = useMemo(() => {
-    return to ? isAddressValid(currentNetwork, to) : false;
-  }, [to, currentNetwork]);
+  const isToAddressValid = useMemo(() => {
+    return toAddress ? isAddressValid(currentNetwork, toAddress) : false;
+  }, [toAddress, currentNetwork]);
 
-  const isSendDisabled = !amount || !to || !isAccountValid;
+  const isSendDisabled = !amount || !toAddress || !isToAddressValid;
 
   return (
     <Modalize ref={ref} adjustToContentHeight onClose={navigation.goBack} closeOnOverlayTap>
@@ -57,7 +57,7 @@ export function SendFundScreen({navigation, route}: Props) {
             <Padder scale={1} />
             <ScanQRCode
               onScanComplete={(_to) => {
-                setTo(_to);
+                setToAddress(_to);
                 setScanning(false);
               }}
             />
@@ -82,11 +82,11 @@ export function SendFundScreen({navigation, route}: Props) {
             <TextInput
               autoComplete="off"
               placeholder="To"
-              value={to}
-              onChangeText={(nextValue) => setTo(nextValue)}
+              value={toAddress}
+              onChangeText={(nextValue) => setToAddress(nextValue)}
               right={<TextInput.Icon name="qrcode" onPress={() => setScanning(true)} />}
             />
-            {!isAccountValid && to ? <HelperText type={'error'}>Enter a valid address</HelperText> : null}
+            {!isToAddressValid ? <HelperText type={'error'}>Enter a valid address</HelperText> : null}
             <Padder scale={1} />
             <InputLabel
               label="Existential deposit"
@@ -96,13 +96,13 @@ export function SendFundScreen({navigation, route}: Props) {
             <Padder scale={1} />
             <View style={styles.keepAlive}>
               <View style={styles.keepAliveContainer}>
-                {isKeepAlive ? (
+                {isKeepAliveActive ? (
                   <HelperText type={'info'}>Transfer with account keep-alive checks</HelperText>
                 ) : (
                   <HelperText type={'info'}>Normal transfer without keep-alive checks</HelperText>
                 )}
               </View>
-              <Switch value={isKeepAlive} onValueChange={() => setisKeepAlive(!isKeepAlive)} />
+              <Switch value={isKeepAliveActive} onValueChange={() => setIsKeepAliveActive(!isKeepAliveActive)} />
             </View>
             <Padder scale={1} />
             <View style={styles.buttons}>
@@ -112,15 +112,15 @@ export function SendFundScreen({navigation, route}: Props) {
                     const _amountBN = stringToBn(chainInfo.registry, amount);
                     startTx({
                       address,
-                      txMethod: `${isKeepAlive ? `balances.transferKeepAlive` : `balances.transferKeepAlive`}`,
-                      params: [to, _amountBN],
+                      txMethod: `${isKeepAliveActive ? `balances.transferKeepAlive` : `balances.transfer`}`,
+                      params: [toAddress, _amountBN],
                     })
                       .then(() => {
                         snackbar('Funds transfered');
                         navigation.goBack();
                       })
-                      .catch((e: Error) => {
-                        console.warn(e);
+                      .catch(() => {
+                        snackbar('Error while transferring funds');
                       });
                   }
                 }}
