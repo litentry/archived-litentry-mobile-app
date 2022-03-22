@@ -23,7 +23,7 @@ import {DEMOCRACY_SUMMARY_QUERY} from 'src/api/hooks/useDemocracySummary';
 import {COUNCIL_SUMMARY_QUERY} from 'src/api/hooks/useCouncilSummary';
 import {BOUNTIES_SUMMARY_QUERY} from 'src/api/hooks/useBountiesSummary';
 import {TREASURY_SUMMARY_QUERY} from 'src/api/hooks/useTreasurySummary';
-import {EventsCalendarTeaser} from './EventsCalendarTeaser';
+import {EventsCalendarTeaser} from '@ui/components/EventsCalendarTeaser';
 
 const refetchQueries = [DEMOCRACY_SUMMARY_QUERY, COUNCIL_SUMMARY_QUERY, BOUNTIES_SUMMARY_QUERY, TREASURY_SUMMARY_QUERY];
 

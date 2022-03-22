@@ -3,7 +3,7 @@ import {SectionTeaserContainer} from '@ui/components/SectionTeaserContainer';
 import {useCalendarEvents} from 'src/api/hooks/useCalendarEvents';
 import {View, StyleSheet, Image} from 'react-native';
 import React from 'react';
-import {Text, useTheme, Divider, Headline, Title} from '@ui/library';
+import {Text, useTheme, Divider, Subheading, Caption} from '@ui/library';
 import {standardPadding} from '@ui/styles';
 import {getFormatedDate} from 'src/utils/date';
 import EmptyList from 'image/EmptyList.png';
@@ -40,8 +40,8 @@ export function EventsCalendarTeaser(props: Props) {
             <Image source={EmptyList} resizeMode="contain" />
           </View>
           <View style={styles.emptyContainer}>
-            <Headline>No Upcoming Events</Headline>
-            <Title style={{color: colors.primary}}>Check back soon</Title>
+            <Subheading>No Upcoming Events</Subheading>
+            <Caption>Check back soon</Caption>
           </View>
         </View>
       )}
