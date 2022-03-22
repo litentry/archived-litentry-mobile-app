@@ -1,4 +1,4 @@
-import {gql, useQuery} from '@apollo/client';
+import {ApolloQueryResult, gql, useQuery} from '@apollo/client';
 import type {
   SubstrateChainCouncilMotion,
   SubstrateChainMotionProposal,
@@ -79,6 +79,12 @@ const COUNCIL_MOTION_QUERY = gql`
     }
   }
 `;
+
+export type MotionsQueryResult = Promise<
+  ApolloQueryResult<{
+    substrateChainCouncilMotions: CouncilMotion[];
+  }>
+>;
 
 export function useCouncilMotions() {
   const {data, ...rest} = useQuery<{substrateChainCouncilMotions: CouncilMotion[]}>(COUNCIL_MOTION_QUERY);

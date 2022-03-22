@@ -14,7 +14,6 @@ import SuccessDialog from '@ui/components/SuccessDialog';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Modalize} from 'react-native-modalize';
 import WebView from 'react-native-webview';
-import {useQueryClient} from 'react-query';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {manageIdentityScreen, registerSubIdentitiesScreen} from '@ui/navigation/routeKeys';
@@ -35,8 +34,7 @@ function ManageIdentity({
   route: RouteProp<AccountsStackParamList, typeof manageIdentityScreen>;
 }) {
   const startTx = useApiTx();
-  const queryClient = useQueryClient();
-  const {data: accountInfo} = useSubAccounts(address);
+  const {data: accountInfo, refetch: refetchAccount} = useSubAccounts(address);
 
   const {currentNetwork} = useNetwork();
   const [registrarSelectionOpen, setRegistrarSelectionOpen] = useState(false);
@@ -52,30 +50,26 @@ function ManageIdentity({
     async (info: IdentityPayload) => {
       identityModalRef.current?.close();
       await startTx({address, txMethod: 'identity.setIdentity', params: [info]})
-        .then(() => {
-          queryClient.invalidateQueries(['account_identity', address]);
-        })
+        .then(() => refetchAccount({address}))
         .catch((e) => {
           Alert.alert('Something went wrong!');
           console.error(e);
         });
     },
-    [address, queryClient, startTx],
+    [address, startTx, refetchAccount],
   );
 
   const handleRequestJudgement = useCallback(
     ({id, fee}: Registrar) => {
       setRegistrarSelectionOpen(false);
       startTx({address, txMethod: 'identity.requestJudgement', params: [id, fee]})
-        .then(() => {
-          queryClient.invalidateQueries(['account_identity', address]);
-        })
+        .then(() => refetchAccount({address}))
         .catch((e) => {
           Alert.alert('Something went wrong!');
           console.error(e);
         });
     },
-    [startTx, address, queryClient],
+    [startTx, address, refetchAccount],
   );
 
   const clearIdentity = () => {
@@ -87,9 +81,7 @@ function ManageIdentity({
             address,
             txMethod: 'identity.clearIdentity',
             params: [],
-          }).then(() => {
-            queryClient.invalidateQueries(['account_identity', address]);
-          });
+          }).then(() => refetchAccount({address}));
         },
         style: 'destructive',
       },
