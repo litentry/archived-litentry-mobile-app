@@ -11,9 +11,11 @@ import type {Parathread} from 'src/api/hooks/useParaThreads';
 import {Account} from '@ui/components/Account/Account';
 
 const toParathreadHomepage = (url: string) => {
-  if (url && Linking.canOpenURL(url)) {
-    Linking.openURL(url);
-  }
+  Linking.canOpenURL(url).then((supported) => {
+    if (supported) {
+      Linking.openURL(url);
+    }
+  });
 };
 
 export function ParathreadsScreen() {
@@ -51,7 +53,7 @@ function ParathreadItem({parathreadInfo}: ParathreadItemProps) {
 
   return (
     <List.Item
-      onPress={parathreadInfo.homepage ? () => toParathreadHomepage(String(parathreadInfo.homepage)) : undefined}
+      onPress={() => toParathreadHomepage(String(parathreadInfo.homepage))}
       left={() => (
         <View style={globalStyles.justifyCenter}>
           {parathreadInfo?.manager && <Identicon value={parathreadInfo.manager.account.address} size={30} />}

@@ -2164,6 +2164,7 @@ export type SubstrateChainChainInfo = {
   crowdloanMinContribution?: Maybe<Scalars['String']>;
   democracyEnactmentPeriod?: Maybe<Scalars['String']>;
   democracyMinimumDeposit?: Maybe<Scalars['String']>;
+  formattedExistentialDeposit: Scalars['String'];
   nodeName: Scalars['String'];
   nodeVersion: Scalars['String'];
   registry: SubstrateChainRegistry;
