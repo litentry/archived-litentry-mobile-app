@@ -1,11 +1,11 @@
 import React from 'react';
 import {FlatList} from 'react-native';
 import {Divider} from '@ui/library';
-import type {NestedAccount} from 'src/api/hooks/useAccount';
+import type {AccountInfo} from 'src/api/hooks/useAccount';
 import {AccountListItem} from './AccountListItem';
 
 type Props = {
-  accounts: NestedAccount[];
+  accounts: AccountInfo[];
   header?: React.ReactElement;
 };
 

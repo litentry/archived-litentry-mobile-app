@@ -1,4 +1,4 @@
-import {default as React, useContext, useRef} from 'react';
+import React, {useContext, useRef} from 'react';
 import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {Card, Icon, Caption, Subheading, Paragraph, Text} from '@ui/library';
@@ -17,7 +17,7 @@ import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {buildMotionDetailUrl} from 'src/service/Polkasembly';
 import globalStyles, {colorGreen, colorRed, standardPadding} from '@ui/styles';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
-import type {NestedAccount} from 'src/api/hooks/useAccount';
+import type {AccountInfo} from 'src/api/hooks/useAccount';
 
 const {height} = Dimensions.get('window');
 
@@ -30,7 +30,7 @@ function VoteItem({
   type = 'aye',
   emptyText,
 }: {
-  voteAccount?: NestedAccount;
+  voteAccount?: AccountInfo;
   type?: 'aye' | 'nay';
   emptyText?: string;
 }) {
@@ -114,7 +114,7 @@ export function MotionDetailScreen(props: PropTypes) {
           <View style={styles.votesContainer}>
             <Subheading>Votes</Subheading>
             {motion.votes.ayes.length ? (
-              motion.votes.ayes.map((vote: NestedAccount) => (
+              motion.votes.ayes.map((vote) => (
                 <View style={styles.voteContainer} key={vote.account.address}>
                   <VoteItem voteAccount={vote} type="aye" />
                 </View>
@@ -126,7 +126,7 @@ export function MotionDetailScreen(props: PropTypes) {
               </>
             )}
             {motion.votes.nays.length ? (
-              motion.votes.nays.map((vote: NestedAccount) => (
+              motion.votes.nays.map((vote) => (
                 <View style={styles.voteContainer} key={vote.account.address}>
                   <VoteItem voteAccount={vote} type="nay" />
                 </View>

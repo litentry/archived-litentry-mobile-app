@@ -1,14 +1,11 @@
 import {gql, useQuery} from '@apollo/client';
-import type {
-  SubstrateChainCouncil,
-  SubstrateChainNestedAccount,
-  SubstrateChainCouncilMember,
-} from 'src/generated/litentryGraphQLTypes';
+import type {SubstrateChainCouncil, SubstrateChainCouncilMember} from 'src/generated/litentryGraphQLTypes';
 import {ACCOUNT_FIELDS_FRAGMENT} from 'src/api/hooks/useAccount';
+import type {AccountInfo} from 'src/api/hooks/useAccount';
 
 export type Council = SubstrateChainCouncil;
 export type CouncilMember = SubstrateChainCouncilMember;
-export type CouncilCandidate = SubstrateChainNestedAccount;
+export type CouncilCandidate = AccountInfo;
 
 const COUNCIL_QUERY = gql`
   ${ACCOUNT_FIELDS_FRAGMENT}

@@ -1,8 +1,8 @@
 import {gql, useQuery} from '@apollo/client';
-import type {SubstrateChainAccount, SubstrateChainNestedAccount} from 'src/generated/litentryGraphQLTypes';
-import {ACCOUNT_FIELDS_FRAGMENT} from 'src/api/hooks/useAccount';
+import type {SubstrateChainAccount} from 'src/generated/litentryGraphQLTypes';
+import {ACCOUNT_FIELDS_FRAGMENT, AccountInfo} from 'src/api/hooks/useAccount';
 
-export type SubAccount = SubstrateChainNestedAccount;
+export type SubAccount = AccountInfo;
 
 const SUB_ACCOUNTS_QUERY = gql`
   ${ACCOUNT_FIELDS_FRAGMENT}
