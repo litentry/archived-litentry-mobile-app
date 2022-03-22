@@ -92,7 +92,7 @@ export function SendFundScreen({navigation, route}: Props) {
               label="Existential deposit"
               helperText="The minimum amount that an account should have to be deemed active"
             />
-            <TextInput dense mode="outlined" disabled defaultValue={accountInfo?.balance.formattedExistentialDeposit} />
+            <TextInput dense mode="outlined" disabled defaultValue={chainInfo?.formattedExistentialDeposit} />
             <Padder scale={1} />
             <View style={styles.keepAlive}>
               <View style={styles.keepAliveContainer}>
