@@ -39,22 +39,22 @@ export function AddBountyScreen({navigation}: {navigation: NavigationProp<AppSta
 
   const {calculatedBountyBond, bountyAllocationBN, isBountyValid, isBountyTitleValid} = useMemo(() => {
     if (bounty && bounty.bountyDepositBase) {
-      const calculatedBountyBond = calculateBountyBond(
+      const bountyBondCalculated = calculateBountyBond(
         bountyTitle,
         formattedStringToBn(bounty.bountyDepositBase),
         formattedStringToBn(bounty.dataDepositPerByte),
       );
-      const bountyAllocationBN = stringToBn(bountyAllocation);
-      const isBountyValid = bountyAllocationBN
-        ? bountyAllocationBN.gt(formattedStringToBn(bounty.bountyValueMinimum))
+      const allocationBNBounty = stringToBn(bountyAllocation);
+      const isValidBounty = allocationBNBounty
+        ? allocationBNBounty.gt(formattedStringToBn(bounty.bountyValueMinimum))
         : false;
-      const isBountyTitleValid =
+      const isTitleValid =
         Number(bountyTitle.length) <= Number(bounty.maximumReasonLength) && Number(bountyTitle.length) > 0;
       return {
-        calculatedBountyBond,
-        bountyAllocationBN,
-        isBountyValid,
-        isBountyTitleValid,
+        calculatedBountyBond: bountyBondCalculated,
+        bountyAllocationBN: allocationBNBounty,
+        isBountyValid: isValidBounty,
+        isBountyTitleValid: isTitleValid,
       };
     }
     return {
