@@ -18,11 +18,13 @@ import {
   democracyScreen,
   devScreen,
   drawerNavigator,
+  eventsCalendarScreen,
   exportAccountWithJsonFileScreen,
   feedbackScreen,
   identityGuideScreen,
   importAccountScreen,
   manageIdentityScreen,
+  memberDetailsScreen,
   mnemonicScreen,
   motionDetailScreen,
   motionsScreen,
@@ -43,14 +45,13 @@ import {
   referendumScreen,
   registerSubIdentitiesScreen,
   registrarListScreen,
-  technicalCommitteeScreen,
   sendFundScreen,
+  technicalCommitteeScreen,
   tipDetailScreen,
   tipsScreen,
   treasuryScreen,
   verifyMnemonicScreen,
   webviewScreen,
-  eventsCalendarScreen,
 } from '@ui/navigation/routeKeys';
 import type {CouncilCandidate, CouncilMember} from 'src/api/hooks/useCouncil';
 import type {DemocracyProposal, DemocracyReferendum} from 'src/api/hooks/useDemocracy';
@@ -115,6 +116,7 @@ type AppStackParamList = {
   [permissionGrantingPromptScreen]: undefined;
   [drawerNavigator]: undefined;
   [networkSelectionScreen]: undefined;
+  [memberDetailsScreen]: {address: string};
 };
 
 type AccountsStackParamList = {

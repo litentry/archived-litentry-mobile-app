@@ -24,6 +24,7 @@ import {Registrar} from 'src/api/hooks/useRegistrarsSummary';
 import {stringShorten} from '@polkadot/util';
 import {Account} from '@ui/components/Account/Account';
 import {useSubAccounts} from 'src/api/hooks/useSubAccounts';
+import {AccountRegistration} from '@ui/components/Account/AccountRegistration';
 
 function ManageIdentity({
   navigation,
@@ -133,67 +134,7 @@ function ManageIdentity({
               </ItemRight>
             )}
           />
-          {accountInfo?.hasIdentity ? (
-            <>
-              <List.Item
-                title="Display"
-                left={() => <LeftIcon icon="account" />}
-                right={() => (
-                  <ItemRight>
-                    <Caption>{accountInfo.display}</Caption>
-                  </ItemRight>
-                )}
-              />
-              <List.Accordion title="Identity Detail">
-                <List.Item
-                  title="Legal"
-                  left={() => <LeftIcon icon="medal-outline" />}
-                  right={() => (
-                    <ItemRight>
-                      <Caption>{accountInfo.registration?.legal || 'Unset'}</Caption>
-                    </ItemRight>
-                  )}
-                />
-                <List.Item
-                  title="Email"
-                  left={() => <LeftIcon icon="email-outline" />}
-                  right={() => (
-                    <ItemRight>
-                      <Caption>{accountInfo.registration?.email || 'Unset'}</Caption>
-                    </ItemRight>
-                  )}
-                />
-                <List.Item
-                  title="Twitter"
-                  left={() => <LeftIcon icon="twitter" />}
-                  right={() => (
-                    <ItemRight>
-                      <Caption>{accountInfo.registration?.twitter || 'Unset'}</Caption>
-                    </ItemRight>
-                  )}
-                />
-                <List.Item
-                  title="Riot"
-                  left={() => <LeftIcon icon="message-outline" />}
-                  right={() => (
-                    <ItemRight>
-                      <Caption>{accountInfo.registration?.riot || 'Unset'}</Caption>
-                    </ItemRight>
-                  )}
-                />
-                <List.Item
-                  title="Web"
-                  left={() => <LeftIcon icon="earth" />}
-                  right={() => (
-                    <ItemRight>
-                      <Caption>{accountInfo.registration?.web || 'Unset'}</Caption>
-                    </ItemRight>
-                  )}
-                />
-              </List.Accordion>
-            </>
-          ) : null}
-
+          {accountInfo?.hasIdentity ? <AccountRegistration registration={accountInfo.registration} /> : null}
           <Padder scale={1} />
           <Button onPress={() => identityModalRef.current?.open()} mode="outlined">
             {accountInfo?.hasIdentity ? 'Update Identity' : 'Set Identity'}

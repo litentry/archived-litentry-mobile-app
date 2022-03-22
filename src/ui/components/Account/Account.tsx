@@ -10,18 +10,19 @@ import type {Account as AccountType} from 'src/api/hooks/useAccount';
 type Props = {
   account: AccountType;
   name?: string;
+  onPress?: () => void;
 };
 
-export function Account({account, name}: Props) {
+export function Account({account, name, onPress}: Props) {
   const registrationJudgements = account.registration.judgements
     ? account.registration.judgements.filter(notEmpty)
     : [];
-
   const display = name || stringShorten(account.display, 12);
-
   return (
     <View style={styles.container}>
-      <Caption style={styles.display}>{display}</Caption>
+      <Caption style={styles.display} onPress={onPress}>
+        {display}
+      </Caption>
       <Padder scale={0.5} />
       {registrationJudgements.map((registrationJudgement, i) => (
         <JudgmentStatus

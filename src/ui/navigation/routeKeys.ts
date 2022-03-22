@@ -61,6 +61,7 @@ export const polkassemblyDiscussions = 'Discussions' as const;
 export const polkassemblyDiscussionDetail = 'Discussion' as const;
 
 export const networkSelectionScreen = 'Select Network' as const;
+export const memberDetailsScreen = 'Member Detials' as const;
 
 export const linking: LinkingOptions<CompleteNavigatorParamList> = {
   prefixes: ['litentry://'],

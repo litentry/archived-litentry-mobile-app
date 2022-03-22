@@ -1,10 +1,10 @@
 import React, {useEffect} from 'react';
 import {View, FlatList, Linking, StyleSheet} from 'react-native';
-import {NavigationProp, RouteProp} from '@react-navigation/native';
+import {NavigationProp, RouteProp, useNavigation} from '@react-navigation/native';
 import {Divider, List, Card, Icon, Caption, Subheading, Paragraph} from '@ui/library';
 import IdentityIcon from '@polkadot/reactnative-identicon';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {DashboardStackParamList} from '@ui/navigation/navigation';
+import {AppStackParamList, DashboardStackParamList} from '@ui/navigation/navigation';
 import {Padder} from '@ui/components/Padder';
 import globalStyles from '@ui/styles';
 import {useTheme} from '@ui/library';
@@ -13,6 +13,7 @@ import {EmptyView} from '@ui/components/EmptyView';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {Account} from '@ui/components/Account/Account';
 import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
+import {memberDetailsScreen} from '@ui/navigation/routeKeys';
 
 type ScreenProps = {
   navigation: NavigationProp<DashboardStackParamList>;
@@ -153,6 +154,7 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
 function Voter({account}: {account: string}) {
   const {data: accountInfo} = useAccount(account);
   const {data: councilVote} = useCouncilVotesOf(account);
+  const navigation = useNavigation<NavigationProp<AppStackParamList>>();
 
   return (
     <List.Item
@@ -161,7 +163,14 @@ function Voter({account}: {account: string}) {
           <IdentityIcon value={account} size={35} />
         </View>
       )}
-      title={accountInfo && <Account account={accountInfo} />}
+      title={
+        accountInfo && (
+          <Account
+            account={accountInfo}
+            onPress={() => navigation.navigate(memberDetailsScreen, {address: accountInfo?.address})}
+          />
+        )
+      }
       description={councilVote?.formattedStake || ''}
       disabled
     />
