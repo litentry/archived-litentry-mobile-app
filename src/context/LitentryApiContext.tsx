@@ -2,7 +2,7 @@ import React, {useState, useCallback, useEffect, useContext} from 'react';
 import {ApolloClient, ApolloProvider, InMemoryCache, NormalizedCacheObject, createHttpLink} from '@apollo/client';
 import {CachePersistor, MMKVWrapper} from 'apollo3-cache-persist';
 import {MMKV} from 'react-native-mmkv';
-import {useNetwork} from '.';
+import {useNetwork} from 'context/NetworkContext';
 
 const LITENTRY_API_URI = 'https://graph.litentry.io/graphql';
 

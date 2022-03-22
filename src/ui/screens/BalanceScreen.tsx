@@ -9,7 +9,7 @@ import {useAccount} from 'src/api/hooks/useAccount';
 import {useAccounts} from 'src/context/AccountsContext';
 import {balanceScreen} from '@ui/navigation/routeKeys';
 import globalStyles from '@ui/styles';
-import {useNetwork} from 'src/context/NetworkContext';
+import {useNetwork} from 'context/NetworkContext';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {Padder} from '@ui/components/Padder';
 

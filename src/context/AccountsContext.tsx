@@ -1,7 +1,7 @@
 import React, {createContext, useContext} from 'react';
 import {usePersistedState} from '@hooks/usePersistedState';
 import {SupportedNetworkType} from 'src/types';
-import {useNetwork} from '.';
+import {useNetwork} from 'context/NetworkContext';
 
 export type InternalAccount = {
   encoded: string;
