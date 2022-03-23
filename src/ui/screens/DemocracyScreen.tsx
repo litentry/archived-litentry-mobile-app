@@ -1,5 +1,5 @@
 import React from 'react';
-import {SectionList, StyleSheet, View, RefreshControl} from 'react-native';
+import {SectionList, StyleSheet, View, RefreshControl, SectionListData} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Layout} from '@ui/components/Layout';
@@ -14,11 +14,11 @@ import {Card, Headline, List, Subheading, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {ProposalCallInfo} from '@ui/components/ProposalCallInfo';
 import {useDemocracy, DemocracyProposal, DemocracyReferendum} from 'src/api/hooks/useDemocracy';
+import {EmptyState} from '@ui/components/EmptyState';
 
 export function DemocracyScreen() {
   const {data: democracy, loading, refetch, refreshing} = useDemocracy();
   const {colors} = useTheme();
-
   const groupedData: {title: string; data: Array<DemocracyProposal | DemocracyReferendum>}[] = React.useMemo(
     () => [
       {title: 'Referenda', data: democracy.referendums ?? []},
@@ -28,6 +28,16 @@ export function DemocracyScreen() {
   );
 
   const isLoading = loading && !democracy && !refreshing;
+  const groupedDataEmpty = ({section}: {section: SectionListData<DemocracyProposal | DemocracyReferendum>}) => {
+    if (section.data.length < 1) {
+      return (
+        <Card style={globalStyles.paddedContainer}>
+          <EmptyState subheading="There are no items to display" caption="Please check back for updates" />
+        </Card>
+      );
+    }
+    return null;
+  };
 
   return (
     <Layout style={globalStyles.flex}>
@@ -65,6 +75,7 @@ export function DemocracyScreen() {
                 </>
               );
             }}
+            renderSectionFooter={groupedDataEmpty}
             keyExtractor={(item) => item.index.toString()}
             ListEmptyComponent={EmptyView}
             ListFooterComponent={() => (
