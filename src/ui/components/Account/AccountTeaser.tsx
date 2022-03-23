@@ -7,7 +7,6 @@ import type {Account as AccountType} from 'src/api/hooks/useAccount';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {AppStackParamList} from '@ui/navigation/navigation';
 import {memberDetailsScreen} from '@ui/navigation/routeKeys';
-import LoadingView from '@ui/components/LoadingView';
 
 type Props = {
   account: AccountType;

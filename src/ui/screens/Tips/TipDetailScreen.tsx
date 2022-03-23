@@ -14,6 +14,9 @@ import {DashboardStackParamList} from '@ui/navigation/navigation';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {AppStackParamList} from '@ui/navigation/navigation';
+import {memberDetailsScreen} from '@ui/navigation/routeKeys';
 
 type ScreenProps = {
   navigation: StackNavigationProp<DashboardStackParamList>;
@@ -69,6 +72,7 @@ function TipDetailScreen({route}: ScreenProps) {
   const id = route.params?.id;
   const {data: tip, loading, refetching, refetch} = useTip(id);
   const {colors} = useTheme();
+  const navigation = useNavigation<NavigationProp<AppStackParamList>>();
 
   if (loading && !tip) {
     return <LoadingView />;
@@ -84,7 +88,12 @@ function TipDetailScreen({route}: ScreenProps) {
         renderItem={({item}) => {
           return (
             <List.Item
-              title={() => <Account account={item.account} />}
+              title={() => (
+                <Account
+                  account={item.account}
+                  onPress={() => navigation.navigate(memberDetailsScreen, {address: item.account.address})}
+                />
+              )}
               description={() => <Caption>{item.formattedBalance}</Caption>}
               left={() => (
                 <View style={globalStyles.justifyCenter}>
