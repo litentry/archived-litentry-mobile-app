@@ -61,7 +61,7 @@ export function MemberDetailsScreen({route}: {route: RouteProp<AppStackParamList
                 <Caption style={{color: colors.accent}}>JUDGEMENT(S)</Caption>
                 <Padder scale={0.5} />
                 {account?.registration?.judgements.map((judgement, i) => (
-                  <Caption style={{backgroundColor: colors.accent, alignSelf: 'flex-start'}} key={i}>{`"${
+                  <Caption style={[{backgroundColor: colors.accent}, styles.titleContainer]} key={i}>{`"${
                     mapStatusText(judgement?.judgement ?? {}, Boolean(account?.registration.displayParent)).text
                   }" provided by Registrar #${judgement?.registrarIndex}`}</Caption>
                 ))}
@@ -77,5 +77,8 @@ export function MemberDetailsScreen({route}: {route: RouteProp<AppStackParamList
 const styles = StyleSheet.create({
   caption: {
     paddingVertical: standardPadding,
+  },
+  titleContainer: {
+    alignSelf: 'flex-start',
   },
 });
