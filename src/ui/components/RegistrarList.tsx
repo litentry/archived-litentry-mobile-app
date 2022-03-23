@@ -9,6 +9,9 @@ import {Account} from '@ui/components/Account/Account';
 import Identicon from '@polkadot/reactnative-identicon';
 import {Padder} from '@ui/components/Padder';
 import {EmptyView} from '@ui/components/EmptyView';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {AppStackParamList} from '@ui/navigation/navigation';
+import {memberDetailsScreen} from '@ui/navigation/routeKeys';
 
 function RegistrarList() {
   const {data: registrarsSummary, loading} = useRegistrarsSummary();
@@ -58,7 +61,7 @@ type RegistrarItemProps = {
 
 function RegistrarItem({registrar, testID}: RegistrarItemProps) {
   const {account, id, formattedFee} = registrar;
-
+  const navigation = useNavigation<NavigationProp<AppStackParamList>>();
   return (
     <List.Item
       testID={testID}
@@ -67,7 +70,12 @@ function RegistrarItem({registrar, testID}: RegistrarItemProps) {
           <Identicon value={account.address} size={30} />
         </View>
       )}
-      title={<Account account={account} />}
+      title={
+        <Account
+          account={account}
+          onPress={() => navigation.navigate(memberDetailsScreen, {address: account?.address})}
+        />
+      }
       description={
         <>
           <Caption>{`Index: ${id}`}</Caption>
