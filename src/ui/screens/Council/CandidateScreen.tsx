@@ -1,49 +1,34 @@
 import React, {useEffect} from 'react';
-import {View, FlatList, Linking, StyleSheet} from 'react-native';
+import {View, FlatList} from 'react-native';
 import {NavigationProp, RouteProp, useNavigation} from '@react-navigation/native';
-import {Divider, List, Card, Icon, Caption, Subheading, Paragraph} from '@ui/library';
+import {Divider, List, Card, Subheading, Paragraph} from '@ui/library';
 import IdentityIcon from '@polkadot/reactnative-identicon';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AppStackParamList, DashboardStackParamList} from '@ui/navigation/navigation';
 import {Padder} from '@ui/components/Padder';
 import globalStyles from '@ui/styles';
-import {useTheme} from '@ui/library';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {EmptyView} from '@ui/components/EmptyView';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {Account} from '@ui/components/Account/Account';
 import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 import {memberDetailsScreen} from '@ui/navigation/routeKeys';
+import {AccountRegistration} from '@ui/components/Account/AccountRegistration';
 
 type ScreenProps = {
   navigation: NavigationProp<DashboardStackParamList>;
   route: RouteProp<DashboardStackParamList, 'Candidate'>;
 };
 
-function LeftIcon({icon}: {icon: string}) {
-  return (
-    <View style={globalStyles.justifyCenter}>
-      <Icon name={icon} size={20} />
-    </View>
-  );
-}
-
-function ItemRight({children}: {children: React.ReactNode}) {
-  return <View style={globalStyles.justifyCenter}>{children}</View>;
-}
-
 export function CandidateScreen({route, navigation}: ScreenProps) {
   const member = route.params.candidate;
   const screenTitle = route.params.title;
-  const {colors} = useTheme();
 
   useEffect(() => {
     if (screenTitle) {
       navigation.setOptions({title: screenTitle});
     }
   }, [navigation, screenTitle]);
-
-  const {legal, email, twitter, riot, web} = member.account.registration;
 
   return (
     <SafeView edges={noTopEdges}>
@@ -60,70 +45,8 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
                 </View>
                 <Padder scale={0.5} />
                 <Divider />
-                {legal ? (
-                  <List.Item
-                    title="Legal"
-                    left={() => <LeftIcon icon="medal-outline" />}
-                    right={() => (
-                      <ItemRight>
-                        <Caption>{legal}</Caption>
-                      </ItemRight>
-                    )}
-                  />
-                ) : null}
-                {email ? (
-                  <List.Item
-                    title="Email"
-                    left={() => <LeftIcon icon="email-outline" />}
-                    right={() => (
-                      <ItemRight>
-                        <Caption selectable>{email}</Caption>
-                      </ItemRight>
-                    )}
-                  />
-                ) : null}
-                {twitter ? (
-                  <List.Item
-                    title="Twitter"
-                    left={() => <LeftIcon icon="twitter" />}
-                    right={() => (
-                      <ItemRight>
-                        <Caption
-                          style={{color: colors.primary}}
-                          onPress={() => Linking.openURL(`https://twitter.com/${twitter}`)}>
-                          {twitter}
-                        </Caption>
-                      </ItemRight>
-                    )}
-                  />
-                ) : null}
-                {riot ? (
-                  <List.Item
-                    title="Riot"
-                    left={() => <LeftIcon icon="message-outline" />}
-                    right={() => (
-                      <ItemRight>
-                        <Caption
-                          style={{color: colors.primary}}
-                          onPress={() => Linking.openURL(`https://matrix.to/#/${riot}`)}>
-                          {riot}
-                        </Caption>
-                      </ItemRight>
-                    )}
-                  />
-                ) : null}
-                {web ? (
-                  <List.Item
-                    title="Web"
-                    left={() => <LeftIcon icon="earth" />}
-                    right={() => (
-                      <ItemRight>
-                        <Caption style={styles.web} onPress={() => Linking.openURL(web)}>
-                          {web}
-                        </Caption>
-                      </ItemRight>
-                    )}
-                  />
+                {member.account.registration ? (
+                  <AccountRegistration registration={member.account.registration} />
                 ) : null}
                 {'formattedBacking' in member ? (
                   <>
@@ -176,9 +99,3 @@ function Voter({account}: {account: string}) {
     />
   );
 }
-
-const styles = StyleSheet.create({
-  web: {
-    textDecorationLine: 'underline',
-  },
-});
