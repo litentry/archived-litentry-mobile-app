@@ -73,8 +73,8 @@ export function SendFundScreen({navigation, route}: Props) {
             <Headline>Send funds</Headline>
             <Padder scale={1} />
             <InputLabel label="Enter amount" helperText="Type the amount you want to transfer" />
-            <BalanceInput account={accountInfo} onChangeBalance={setAmount} />
-            <Padder scale={1} />
+            <BalanceInput account={accountInfo} onChangeBalance={setAmount} initialBalance={amount} />
+            <Padder scale={0.5} />
             <InputLabel
               label="Send to address"
               helperText="Scan a contact address or paste the address you want to send funds to."
@@ -86,7 +86,7 @@ export function SendFundScreen({navigation, route}: Props) {
               onChangeText={(nextValue) => setToAddress(nextValue)}
               right={<TextInput.Icon name="qrcode" onPress={() => setScanning(true)} />}
             />
-            {!isToAddressValid ? <HelperText type={'error'}>Enter a valid address</HelperText> : null}
+            {!isToAddressValid && toAddress ? <HelperText type="error">Enter a valid address</HelperText> : null}
             <Padder scale={1} />
             <InputLabel
               label="Existential deposit"
@@ -97,9 +97,9 @@ export function SendFundScreen({navigation, route}: Props) {
             <View style={styles.keepAlive}>
               <View style={styles.keepAliveContainer}>
                 {isKeepAliveActive ? (
-                  <HelperText type={'info'}>Transfer with account keep-alive checks</HelperText>
+                  <HelperText type="info">Transfer with account keep-alive checks</HelperText>
                 ) : (
-                  <HelperText type={'info'}>Normal transfer without keep-alive checks</HelperText>
+                  <HelperText type="info">Normal transfer without keep-alive checks</HelperText>
                 )}
               </View>
               <Switch value={isKeepAliveActive} onValueChange={() => setIsKeepAliveActive(!isKeepAliveActive)} />
@@ -175,11 +175,11 @@ const styles = StyleSheet.create({
   keepAlive: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    paddingVertical: 15,
+    paddingVertical: standardPadding * 2,
   },
   keepAliveContainer: {
     paddingVertical: 5,
-    paddingHorizontal: 10,
+    paddingHorizontal: standardPadding,
   },
 });
 
