@@ -5,7 +5,6 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {Modalize} from 'react-native-modalize';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {useApiTx} from 'src/api/hooks/useApiTx';
-import {stringToBn} from 'src/api/utils/balance';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {sendFundScreen} from '@ui/navigation/routeKeys';
 import {Button, Headline, IconButton, Text, TextInput, Switch, HelperText} from '@ui/library';
@@ -19,6 +18,9 @@ import {InputLabel} from '@ui/library/InputLabel';
 import {NetworkContext} from 'context/NetworkContext';
 import {isAddressValid} from 'src/utils/address';
 import {useSnackbar} from 'context/SnackbarContext';
+import {BN_ZERO} from '@polkadot/util';
+import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
+import {stringToBn as stringToBnUtil, formattedStringToBn} from 'src/api/utils/balance';
 
 type Props = {
   navigation: NavigationProp<AccountsStackParamList, typeof sendFundScreen>;
@@ -37,7 +39,7 @@ export function SendFundScreen({navigation, route}: Props) {
   const [isKeepAliveActive, setIsKeepAliveActive] = React.useState(true);
   const {currentNetwork} = useContext(NetworkContext);
   const snackbar = useSnackbar();
-
+  const {stringToBn} = useFormatBalance();
   useEffect(() => {
     ref.current?.open();
   }, []);
@@ -46,7 +48,14 @@ export function SendFundScreen({navigation, route}: Props) {
     return toAddress ? isAddressValid(currentNetwork, toAddress) : false;
   }, [toAddress, currentNetwork]);
 
-  const isSendDisabled = !amount || !toAddress || !isToAddressValid;
+  const isEnteredBalanceValid = useMemo(() => {
+    const enteredBalance = stringToBn(amount) ?? BN_ZERO;
+    const isBalanceValid =
+      enteredBalance.gt(BN_ZERO) && enteredBalance.lt(formattedStringToBn(accountInfo?.balance.formattedFree));
+    return isBalanceValid;
+  }, [amount, accountInfo, stringToBn]);
+
+  const isSendDisabled = !isEnteredBalanceValid || !toAddress || !isToAddressValid;
 
   return (
     <Modalize ref={ref} adjustToContentHeight onClose={navigation.goBack} closeOnOverlayTap>
@@ -109,7 +118,7 @@ export function SendFundScreen({navigation, route}: Props) {
               <Button
                 onPress={() => {
                   if (chainInfo) {
-                    const _amountBN = stringToBn(chainInfo.registry, amount);
+                    const _amountBN = stringToBnUtil(chainInfo.registry, amount);
                     startTx({
                       address,
                       txMethod: `${isKeepAliveActive ? `balances.transferKeepAlive` : `balances.transfer`}`,
