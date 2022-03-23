@@ -10,11 +10,12 @@ import {formattedStringToBn} from 'src/api/utils/balance';
 type PropTypes = {
   account?: Account;
   onChangeBalance: (dispatch: string) => void;
+  initialBalance?: string;
 };
 
 export function BalanceInput(props: PropTypes) {
   const {account} = props;
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useState(props.initialBalance ?? '');
   const {formatBalance, stringToBn} = useFormatBalance();
 
   const hasEnoughBalance = useMemo(() => {
@@ -32,13 +33,15 @@ export function BalanceInput(props: PropTypes) {
       <TextInput
         dense
         style={styles.textInput}
-        error={!hasEnoughBalance}
+        error={Boolean(!hasEnoughBalance && amount)}
         mode="outlined"
         autoComplete="off"
         placeholder="Enter amount"
         keyboardType="decimal-pad"
         value={amount}
-        onFocus={() => setAmount('')}
+        onFocus={() => {
+          amount;
+        }}
         onChangeText={(nextValue: string) => {
           setAmount(decimalKeypad(nextValue));
           props.onChangeBalance(decimalKeypad(nextValue));
