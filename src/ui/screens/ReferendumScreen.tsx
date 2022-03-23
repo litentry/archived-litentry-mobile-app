@@ -22,7 +22,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
   const startTx = useApiTx();
   const [state, dispatch] = useReducer(reducer, initialState);
   const referendum = route.params.referendum;
-  const convictions = useConvictions();
+  const {data: convictions} = useConvictions();
   const {data: chainInfo} = useChainInfo();
 
   const title = `${referendum.method}.${referendum.section}`;
@@ -139,7 +139,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
           <Padder scale={0.5} />
 
           <Select
-            items={convictions}
+            items={convictions ?? []}
             onSelect={(selectedItem) => {
               dispatch({type: 'SELECT_CONVICTION', payload: selectedItem});
             }}

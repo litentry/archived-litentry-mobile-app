@@ -3,6 +3,7 @@ import {
   accountsNavigator,
   accountsScreen,
   addAccountScreen,
+  addBountyScreen,
   balanceScreen,
   bountiesScreen,
   bountyDetailScreen,
@@ -78,6 +79,7 @@ type DashboardStackParamList = {
   [democracyProposalScreen]: {proposal: DemocracyProposal};
   [bountiesScreen]: undefined;
   [bountyDetailScreen]: {index: string};
+  [addBountyScreen]: undefined;
 };
 
 type DrawerParamList = {

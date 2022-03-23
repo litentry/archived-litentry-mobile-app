@@ -10,3 +10,7 @@ export function fromNow(date: string) {
 export function getCurrentYear() {
   return new Date().getFullYear();
 }
+
+export function getFormatedDate(date: string, format = 'DD/MM/YYYY') {
+  return dayjs(date).format(format);
+}

@@ -35,6 +35,7 @@ export const importAccountScreen = 'Import Account' as const;
 export const exportAccountWithJsonFileScreen = 'Export JSON' as const;
 export const bountiesScreen = 'Bounties' as const;
 export const bountyDetailScreen = 'Bounty' as const;
+export const addBountyScreen = 'Add Bounty' as const;
 export const parachainsOverviewScreen = 'Overview' as const;
 export const parachainDetailScreen = 'Parachain' as const;
 export const parachainAuctionsScreen = 'Auctions' as const;
