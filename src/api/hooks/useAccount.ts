@@ -52,7 +52,6 @@ export const ACCOUNT_FIELDS_FRAGMENT = gql`
       formattedFree
       freeFrozen
       formattedFreeFrozen
-      formattedExistentialDeposit
     }
   }
 `;
