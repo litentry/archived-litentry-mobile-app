@@ -28,16 +28,6 @@ export function DemocracyScreen() {
   );
 
   const isLoading = loading && !democracy && !refreshing;
-  const groupedDataEmpty = ({section}: {section: SectionListData<DemocracyProposal | DemocracyReferendum>}) => {
-    if (section.data.length < 1) {
-      return (
-        <Card style={globalStyles.paddedContainer}>
-          <EmptyState subheading="There are no items to display" caption="Please check back for updates" />
-        </Card>
-      );
-    }
-    return null;
-  };
 
   return (
     <Layout style={globalStyles.flex}>
@@ -75,9 +65,14 @@ export function DemocracyScreen() {
                 </>
               );
             }}
-            renderSectionFooter={groupedDataEmpty}
+            renderSectionFooter={({section}) =>
+              section.data.length < 1 ? (
+                <Card style={globalStyles.paddedContainer}>
+                  <EmptyState subheading="There are no items to display" caption="Please check back for updates" />
+                </Card>
+              ) : null
+            }
             keyExtractor={(item) => item.index.toString()}
-            ListEmptyComponent={EmptyView}
             ListFooterComponent={() => (
               <View style={styles.footer}>
                 <Padder scale={1} />
