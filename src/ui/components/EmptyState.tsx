@@ -2,7 +2,6 @@ import React from 'react';
 import {StyleSheet, Image, View} from 'react-native';
 import EmptyList from 'image/EmptyList.png';
 import {Subheading, Caption} from '@ui/library';
-import {standardPadding} from '@ui/styles';
 
 type Props = {
   subheading: string;
@@ -26,16 +25,12 @@ export function EmptyState({subheading, caption}: Props) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    paddingVertical: standardPadding,
+    alignItems: 'center',
   },
   imageContainer: {
-    width: '30%',
-    height: '20%',
-    paddingHorizontal: standardPadding * 2,
+    flex: 1,
   },
   emptyContainer: {
-    maxWidth: '90%',
-    paddingHorizontal: standardPadding,
-    flexWrap: 'wrap',
+    flex: 3,
   },
 });
