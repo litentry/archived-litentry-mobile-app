@@ -15,6 +15,7 @@ import {memberDetailsScreen} from '@ui/navigation/routeKeys';
 
 function RegistrarList() {
   const {data: registrarsSummary, loading} = useRegistrarsSummary();
+  const navigation = useNavigation<NavigationProp<AppStackParamList>>();
 
   if (loading) {
     return <LoadingView />;
@@ -46,7 +47,13 @@ function RegistrarList() {
       )}
       contentContainerStyle={styles.flatList}
       data={registrars}
-      renderItem={({item: registrar}) => <RegistrarItem testID="registrar_item" registrar={registrar} />}
+      renderItem={({item: registrar}) => (
+        <RegistrarItem
+          testID="registrar_item"
+          registrar={registrar}
+          onPress={() => navigation.navigate(memberDetailsScreen, {address: registrar.address})}
+        />
+      )}
       keyExtractor={(item) => item.address}
       ItemSeparatorComponent={Divider}
       ListEmptyComponent={EmptyView}
@@ -57,11 +64,12 @@ function RegistrarList() {
 type RegistrarItemProps = {
   testID: string;
   registrar: Registrar;
+  onPress?: () => void;
 };
 
-function RegistrarItem({registrar, testID}: RegistrarItemProps) {
+function RegistrarItem({registrar, testID, onPress}: RegistrarItemProps) {
   const {account, id, formattedFee} = registrar;
-  const navigation = useNavigation<NavigationProp<AppStackParamList>>();
+
   return (
     <List.Item
       testID={testID}
@@ -70,12 +78,7 @@ function RegistrarItem({registrar, testID}: RegistrarItemProps) {
           <Identicon value={account.address} size={30} />
         </View>
       )}
-      title={
-        <Account
-          account={account}
-          onPress={() => navigation.navigate(memberDetailsScreen, {address: account?.address})}
-        />
-      }
+      title={<Account account={account} onPress={onPress} />}
       description={
         <>
           <Caption>{`Index: ${id}`}</Caption>

@@ -5,16 +5,13 @@ import type {Account as SubstrateChainAccount} from 'src/api/hooks/useAccount';
 import globalStyles from '@ui/styles';
 import Identicon from '@polkadot/reactnative-identicon';
 import {Account} from './Account';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {AppStackParamList} from '@ui/navigation/navigation';
-import {memberDetailsScreen} from '@ui/navigation/routeKeys';
 
 type Props = {
   account: SubstrateChainAccount;
+  onPress?: () => void;
 };
 
-export function AccountListItem({account}: Props) {
-  const navigation = useNavigation<NavigationProp<AppStackParamList>>();
+export function AccountListItem({account, onPress}: Props) {
   return (
     <List.Item
       left={() => (
@@ -24,10 +21,7 @@ export function AccountListItem({account}: Props) {
       )}
       title={() => (
         <View style={globalStyles.justifyCenter}>
-          <Account
-            account={account}
-            onPress={() => navigation.navigate(memberDetailsScreen, {address: account?.address})}
-          />
+          <Account account={account} onPress={onPress} />
         </View>
       )}
     />

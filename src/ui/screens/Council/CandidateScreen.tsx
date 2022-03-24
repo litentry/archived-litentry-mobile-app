@@ -23,6 +23,7 @@ type ScreenProps = {
 export function CandidateScreen({route, navigation}: ScreenProps) {
   const member = route.params.candidate;
   const screenTitle = route.params.title;
+  const navigationList = useNavigation<NavigationProp<AppStackParamList>>();
 
   useEffect(() => {
     if (screenTitle) {
@@ -65,7 +66,9 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
           </>
         )}
         data={'voters' in member ? member.voters : []}
-        renderItem={({item}) => <Voter account={item} />}
+        renderItem={({item}) => (
+          <Voter account={item} onPress={() => navigationList.navigate(memberDetailsScreen, {address: item})} />
+        )}
         keyExtractor={(item) => item}
         ItemSeparatorComponent={Divider}
         ListEmptyComponent={<EmptyView height={200}>{`No voters yet.`}</EmptyView>}
@@ -74,10 +77,9 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
   );
 }
 
-function Voter({account}: {account: string}) {
+function Voter({account, onPress}: {account: string; onPress?: () => void}) {
   const {data: accountInfo} = useAccount(account);
   const {data: councilVote} = useCouncilVotesOf(account);
-  const navigation = useNavigation<NavigationProp<AppStackParamList>>();
 
   return (
     <List.Item
@@ -86,14 +88,7 @@ function Voter({account}: {account: string}) {
           <IdentityIcon value={account} size={35} />
         </View>
       )}
-      title={
-        accountInfo && (
-          <Account
-            account={accountInfo}
-            onPress={() => navigation.navigate(memberDetailsScreen, {address: accountInfo?.address})}
-          />
-        )
-      }
+      title={accountInfo && <Account account={accountInfo} onPress={onPress} />}
       description={councilVote?.formattedStake || ''}
       disabled
     />
