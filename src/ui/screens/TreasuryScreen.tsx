@@ -13,6 +13,7 @@ import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
 import {NetworkType} from 'src/types';
 import {NetworkContext} from 'context/NetworkContext';
+import {EmptyState} from '@ui/components/EmptyState';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -107,7 +108,13 @@ function TreasuryOverviewScreen() {
                 </View>
               );
             }}
-            ListEmptyComponent={EmptyView}
+            renderSectionFooter={({section}) =>
+              section.data.length < 1 ? (
+                <Card style={globalStyles.paddedContainer}>
+                  <EmptyState subheading="There are no items to display" caption="Please check back for updates" />
+                </Card>
+              ) : null
+            }
           />
         )}
       </SafeView>
