@@ -40,7 +40,7 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
             <Card>
               <Card.Content>
                 <View style={globalStyles.alignCenter}>
-                  <IdentityIcon value={member.address} size={30} />
+                  <IdentityIcon value={member.account.address} size={30} />
                   <Padder scale={0.5} />
                   <AccountTeaser account={member.account} />
                 </View>
