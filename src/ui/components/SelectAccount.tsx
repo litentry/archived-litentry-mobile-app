@@ -7,9 +7,11 @@ import Identicon from '@polkadot/reactnative-identicon';
 import {Padder} from '@ui/components/Padder';
 import {useAccount, Account as SubstrateChainAccount} from 'src/api/hooks/useAccount';
 import {Account} from './Account/Account';
+import {useCouncilAccounts} from 'src/hooks/useCouncilAccounts';
 
 type Props = {
   onSelect: (account: SelectedAccount) => void;
+  onlyCouncils?: boolean;
 };
 
 type SelectedAccount = {
@@ -17,9 +19,10 @@ type SelectedAccount = {
   accountInfo?: SubstrateChainAccount;
 };
 
-export function SelectAccount({onSelect}: Props) {
+export function SelectAccount({onSelect, onlyCouncils = false}: Props) {
   const {colors} = useTheme();
   const {networkAccounts} = useAccounts();
+  const councilAccounts = useCouncilAccounts();
   const [selectedAccount, setSelectedAccount] = React.useState<SelectedAccount>();
   const [visible, setVisible] = React.useState(false);
 
@@ -48,13 +51,20 @@ export function SelectAccount({onSelect}: Props) {
             }
             onPress={openMenu}
             right={() => <Icon name="chevron-down" />}
+            left={() =>
+              selectedAccount?.accountInfo ? (
+                <View style={globalStyles.justifyCenter}>
+                  <Identicon value={selectedAccount?.account.address} size={25} />
+                </View>
+              ) : null
+            }
           />
         </View>
       }>
       <FlatList
         style={styles.items}
         ItemSeparatorComponent={Divider}
-        data={networkAccounts}
+        data={onlyCouncils ? councilAccounts : networkAccounts}
         keyExtractor={(item) => item.address}
         renderItem={({item}) => <AccountItem onSelect={selectAccount} account={item} />}
       />
