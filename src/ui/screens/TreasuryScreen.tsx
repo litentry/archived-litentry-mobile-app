@@ -69,14 +69,14 @@ function TreasuryOverviewScreen() {
                     <View style={styles.row}>
                       <View style={styles.proposerContainer}>
                         <Caption>Proposer</Caption>
-                        <AccountTeaser account={proposer} identiconSize={30} />
+                        <AccountTeaser account={proposer.account} identiconSize={30} />
                       </View>
                       <Caption style={styles.proposalId}>{`# ${item.id}`}</Caption>
                     </View>
                     <Padder scale={0.5} />
                     <View>
                       <Caption>Beneficiary</Caption>
-                      <AccountTeaser account={beneficiary} identiconSize={30} />
+                      <AccountTeaser account={beneficiary.account} identiconSize={30} />
                     </View>
                     <Padder scale={0.5} />
                     <View style={styles.row}>

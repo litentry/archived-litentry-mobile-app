@@ -4,7 +4,7 @@ import type {CouncilMotion} from './useCouncilMotions';
 
 const COUNCIL_MOTION_QUERY = gql`
   ${ACCOUNT_FIELDS_FRAGMENT}
-  query getSubstrateChainCouncilMoitonDetail($hash: String!) {
+  query getSubstrateChainCouncilMotionDetail($hash: String!) {
     substrateChainCouncilMotionDetail(hash: $hash) {
       proposal {
         index
@@ -28,20 +28,28 @@ const COUNCIL_MOTION_QUERY = gql`
         }
         hash
         proposer {
-          ...AccountFields
+          account {
+            ...AccountFields
+          }
         }
         beneficiary {
-          ...AccountFields
+          account {
+            ...AccountFields
+          }
         }
         payout
       }
       votes {
         threshold
         ayes {
-          ...AccountFields
+          account {
+            ...AccountFields
+          }
         }
         nays {
-          ...AccountFields
+          account {
+            ...AccountFields
+          }
         }
         end
         endTime

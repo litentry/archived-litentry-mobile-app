@@ -54,7 +54,7 @@ function RegistrarList() {
           onPress={() => navigation.navigate(memberDetailsScreen, {address: registrar.address})}
         />
       )}
-      keyExtractor={(item) => item.address}
+      keyExtractor={(item) => item.account.address}
       ItemSeparatorComponent={Divider}
       ListEmptyComponent={EmptyView}
     />
