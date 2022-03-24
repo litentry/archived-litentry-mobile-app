@@ -91,7 +91,7 @@ export function ParachainDetailScreen({route}: ScreenProps) {
         sections={sections}
         renderItem={({item}) => <MemoizedValidator account={item.account} />}
         renderSectionHeader={({section: {title}}) => <Text style={styles.header}>{title}</Text>}
-        keyExtractor={(item) => item.address}
+        keyExtractor={(item) => item.account.address}
         ListEmptyComponent={EmptyView}
         ItemSeparatorComponent={Divider}
         removeClippedSubviews={true}

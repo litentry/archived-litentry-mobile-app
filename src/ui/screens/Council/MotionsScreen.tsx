@@ -26,7 +26,7 @@ export function MotionsScreen() {
         <LoadingView />
       ) : (
         <FlatList
-          style={styles.flatList}
+          contentContainerStyle={styles.containerStyle}
           data={motions}
           renderItem={({item}) => {
             return <Motion motion={item} isCouncilMember={isCouncil} />;
@@ -100,23 +100,25 @@ function Motion({motion, isCouncilMember}: {motion: CouncilMotion; isCouncilMemb
         <List.Item
           title={<Headline>{motion.proposal.index}</Headline>}
           right={() => (
-            <View style={globalStyles.justifyCenter}>
+            <View style={globalStyles.rowAlignCenter}>
               <Subheading>{`Aye ${votes?.ayes.length}/${votes?.threshold} `}</Subheading>
+              <Padder scale={0.5} />
               {(() => {
                 if (isCouncilMember) {
                   if (motion.votingStatus?.isCloseable) {
                     return (
-                      <Button onPress={onPressClose} color={colors.error} mode="outlined">
+                      <Button onPress={onPressClose} color={colors.error} mode="outlined" compact uppercase={false}>
                         Close
                       </Button>
                     );
                   } else if (motion.votingStatus?.isVoteable) {
                     return (
                       <View style={globalStyles.rowAlignCenter}>
-                        <Button onPress={onPressNay} color={colors.error} mode="outlined">
+                        <Button onPress={onPressNay} color={colors.error} mode="outlined" compact uppercase={false}>
                           Nay
                         </Button>
-                        <Button onPress={onPressAye} color={colors.success} mode="outlined">
+                        <Padder scale={0.5} />
+                        <Button onPress={onPressAye} color={colors.success} mode="outlined" compact uppercase={false}>
                           Aye
                         </Button>
                       </View>
@@ -134,7 +136,8 @@ function Motion({motion, isCouncilMember}: {motion: CouncilMotion; isCouncilMemb
 }
 
 const styles = StyleSheet.create({
-  flatList: {
-    padding: standardPadding * 2,
+  containerStyle: {
+    marginBottom: standardPadding * 2,
+    padding: standardPadding,
   },
 });
