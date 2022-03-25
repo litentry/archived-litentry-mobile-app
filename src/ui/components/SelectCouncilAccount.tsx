@@ -20,7 +20,7 @@ type SelectedAccount = {
 
 export function SelectCouncilAccount({onSelect}: Props) {
   const {colors} = useTheme();
-  const councilAccounts = useCouncilAccounts();
+  const {councilAccounts} = useCouncilAccounts();
   const [selectedAccount, setSelectedAccount] = React.useState<SelectedAccount>();
   const [visible, setVisible] = React.useState(false);
 

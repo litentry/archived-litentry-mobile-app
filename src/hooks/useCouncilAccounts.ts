@@ -6,10 +6,18 @@ export function useCouncilAccounts() {
   const {data: council} = useCouncil();
 
   if (networkAccounts.length === 0 || !council) {
-    return [];
+    return {
+      councilAccounts: [],
+      isAnyAccountCouncil: false,
+    };
   }
 
-  return networkAccounts.filter((account) =>
+  const councilAccounts = networkAccounts.filter((account) =>
     council.members.some((member) => member.account.address === account.address),
   );
+
+  return {
+    councilAccounts,
+    isAnyAccountCouncil: Boolean(councilAccounts.length),
+  };
 }

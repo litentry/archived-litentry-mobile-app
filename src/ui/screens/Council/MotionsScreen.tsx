@@ -12,17 +12,17 @@ import {motionDetailScreen} from '@ui/navigation/routeKeys';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import LoadingView from '@ui/components/LoadingView';
 import {useApiTx} from 'src/api/hooks/useApiTx';
-import {useIsCouncilMember} from 'src/api/hooks/useIsCouncilMember';
 import {ProposalCall} from '@ui/components/ProposalCall';
 import {SelectCouncilAccount} from '@ui/components/SelectCouncilAccount';
 import type {Account} from 'src/api/hooks/useAccount';
 import {InputLabel} from '@ui/library/InputLabel';
+import {useCouncilAccounts} from 'src/hooks/useCouncilAccounts';
 
 type Vote = 'Aye' | 'Nay' | 'Close';
 
 export function MotionsScreen() {
   const {data: motions, loading, refetch: refetchMotions} = useCouncilMotions();
-  const isCouncil = useIsCouncilMember();
+  const {isAnyAccountCouncil} = useCouncilAccounts();
   const [voteType, setVoteType] = React.useState<Vote>();
   const [selectedMotion, setSelectedMotion] = React.useState<CouncilMotion>();
   const [voteModalVisible, setVoteModalVisible] = React.useState(false);
@@ -42,7 +42,7 @@ export function MotionsScreen() {
           contentContainerStyle={styles.containerStyle}
           data={motions}
           renderItem={({item}) => {
-            return <MotionItem motion={item} isCouncilMember={isCouncil} onVote={onVote} />;
+            return <MotionItem motion={item} isCouncilMember={isAnyAccountCouncil} onVote={onVote} />;
           }}
           ItemSeparatorComponent={() => <Padder scale={1} />}
           keyExtractor={(item) => item.proposal.hash}
