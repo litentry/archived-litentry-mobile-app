@@ -6,7 +6,7 @@ import React from 'react';
 import {Text, useTheme, Divider} from '@ui/library';
 import {standardPadding} from '@ui/styles';
 import {getFormatedDate} from 'src/utils/date';
-import {EmptyState} from './EmptyState';
+import {EmptyStateTeaser} from './EmptyStateTeaser';
 
 type Props = {
   onPress: () => void;
@@ -17,7 +17,7 @@ export function EventsCalendarTeaser(props: Props) {
   const {data: events, loading} = useCalendarEvents();
   const topThreeEvents = events?.slice(0, 3) ?? [];
   return (
-    <SectionTeaserContainer onPress={props.onPress} title="Events Calender">
+    <SectionTeaserContainer onPress={props.onPress} title="Events Calendar">
       {loading && !topThreeEvents ? (
         <LoadingBox />
       ) : topThreeEvents?.length > 0 ? (
@@ -35,7 +35,7 @@ export function EventsCalendarTeaser(props: Props) {
           </React.Fragment>
         ))
       ) : (
-        <EmptyState subheading="No Upcoming Events" caption="Check back soon" />
+        <EmptyStateTeaser subheading="No Upcoming Events" caption="Check back soon" />
       )}
     </SectionTeaserContainer>
   );

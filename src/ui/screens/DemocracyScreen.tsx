@@ -1,9 +1,8 @@
 import React from 'react';
-import {SectionList, StyleSheet, View, RefreshControl, SectionListData} from 'react-native';
+import {SectionList, StyleSheet, View, RefreshControl} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Layout} from '@ui/components/Layout';
-import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -14,7 +13,7 @@ import {Card, Headline, List, Subheading, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {ProposalCallInfo} from '@ui/components/ProposalCallInfo';
 import {useDemocracy, DemocracyProposal, DemocracyReferendum} from 'src/api/hooks/useDemocracy';
-import {EmptyState} from '@ui/components/EmptyState';
+import {EmptyStateTeaser} from '@ui/components/EmptyStateTeaser';
 
 export function DemocracyScreen() {
   const {data: democracy, loading, refetch, refreshing} = useDemocracy();
@@ -65,13 +64,27 @@ export function DemocracyScreen() {
                 </>
               );
             }}
-            renderSectionFooter={({section}) =>
-              section.data.length < 1 ? (
-                <Card style={globalStyles.paddedContainer}>
-                  <EmptyState subheading="There are no items to display" caption="Please check back for updates" />
-                </Card>
-              ) : null
-            }
+            renderSectionFooter={({section}) => {
+              return (
+                <>
+                  {section.title === 'Proposals' && section.data.length < 1 ? (
+                    <Card style={globalStyles.paddedContainer}>
+                      <EmptyStateTeaser
+                        subheading="There are no active proposals"
+                        caption="Please check back for updates"
+                      />
+                    </Card>
+                  ) : section.data.length < 1 ? (
+                    <Card style={globalStyles.paddedContainer}>
+                      <EmptyStateTeaser
+                        subheading="There are no active referendums"
+                        caption="Please check back for updates"
+                      />
+                    </Card>
+                  ) : null}
+                </>
+              );
+            }}
             keyExtractor={(item) => item.index.toString()}
             ListFooterComponent={() => (
               <View style={styles.footer}>
