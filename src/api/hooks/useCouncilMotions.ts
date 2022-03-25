@@ -1,4 +1,4 @@
-import {gql, useQuery} from '@apollo/client';
+import {ApolloQueryResult, gql, useQuery} from '@apollo/client';
 import type {
   SubstrateChainCouncilMotion,
   SubstrateChainMotionProposal,
@@ -7,9 +7,7 @@ import type {
 import {ACCOUNT_FIELDS_FRAGMENT} from './useAccount';
 
 export type CouncilMotion = SubstrateChainCouncilMotion;
-
 export type MotionProposal = SubstrateChainMotionProposal;
-
 export type VotingStatus = SubstrateChainVotingStatus;
 
 const COUNCIL_MOTION_QUERY = gql`
@@ -43,20 +41,28 @@ const COUNCIL_MOTION_QUERY = gql`
         }
         hash
         proposer {
-          ...AccountFields
+          account {
+            ...AccountFields
+          }
         }
         beneficiary {
-          ...AccountFields
+          account {
+            ...AccountFields
+          }
         }
         payout
       }
       votes {
         threshold
         ayes {
-          ...AccountFields
+          account {
+            ...AccountFields
+          }
         }
         nays {
-          ...AccountFields
+          account {
+            ...AccountFields
+          }
         }
         end
         endTime
@@ -73,6 +79,12 @@ const COUNCIL_MOTION_QUERY = gql`
     }
   }
 `;
+
+export type MotionsQueryResult = Promise<
+  ApolloQueryResult<{
+    substrateChainCouncilMotions: CouncilMotion[];
+  }>
+>;
 
 export function useCouncilMotions() {
   const {data, ...rest} = useQuery<{substrateChainCouncilMotions: CouncilMotion[]}>(COUNCIL_MOTION_QUERY);

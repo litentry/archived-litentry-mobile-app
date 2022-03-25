@@ -1,9 +1,9 @@
-import {default as React, useContext, useRef} from 'react';
+import React, {useRef} from 'react';
 import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {Card, Icon, Caption, Subheading, Paragraph, Text} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
-import {NetworkContext} from 'context/NetworkContext';
+import {useNetwork} from 'context/NetworkContext';
 import _ from 'lodash';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
@@ -17,7 +17,7 @@ import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {buildMotionDetailUrl} from 'src/service/Polkasembly';
 import globalStyles, {colorGreen, colorRed, standardPadding} from '@ui/styles';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
-import type {Account} from 'src/api/hooks/useAccount';
+import type {AccountInfo} from 'src/api/hooks/useAccount';
 
 const {height} = Dimensions.get('window');
 
@@ -30,7 +30,7 @@ function VoteItem({
   type = 'aye',
   emptyText,
 }: {
-  voteAccount?: Account;
+  voteAccount?: AccountInfo;
   type?: 'aye' | 'nay';
   emptyText?: string;
 }) {
@@ -41,14 +41,14 @@ function VoteItem({
         color={type === 'aye' ? colorGreen : colorRed}
       />
       <Padder scale={1} />
-      {emptyText ? <Text>{emptyText}</Text> : voteAccount && <AccountTeaser account={voteAccount} />}
+      {emptyText ? <Text>{emptyText}</Text> : voteAccount && <AccountTeaser account={voteAccount.account} />}
     </View>
   );
 }
 
 export function MotionDetailScreen(props: PropTypes) {
   const modalRef = useRef<Modalize>(null);
-  const {currentNetwork} = useContext(NetworkContext);
+  const {currentNetwork} = useNetwork();
 
   const {
     route: {params},
@@ -67,7 +67,7 @@ export function MotionDetailScreen(props: PropTypes) {
         <Card>
           <Card.Content>
             <View style={globalStyles.spaceBetweenRowContainer}>
-              <StatInfoBlock title="ID">{String(motion?.proposal.index)}</StatInfoBlock>
+              <StatInfoBlock title="ID">{motion?.proposal.index || ''}</StatInfoBlock>
               <StatInfoBlock title="Detail">
                 {['kusama', 'polkadot'].includes(currentNetwork.key) ? (
                   <TouchableOpacity onPress={() => modalRef.current?.open()}>
@@ -84,7 +84,7 @@ export function MotionDetailScreen(props: PropTypes) {
               </StatInfoBlock>
             </View>
             <Padder scale={1} />
-            <StatInfoBlock title="Proposer">{proposer && <AccountTeaser account={proposer} />}</StatInfoBlock>
+            <StatInfoBlock title="Proposer">{proposer && <AccountTeaser account={proposer.account} />}</StatInfoBlock>
           </Card.Content>
         </Card>
         <Padder scale={0.3} />
@@ -114,9 +114,9 @@ export function MotionDetailScreen(props: PropTypes) {
           <View style={styles.votesContainer}>
             <Subheading>Votes</Subheading>
             {motion.votes.ayes.length ? (
-              motion.votes.ayes.map((vote: Account) => (
-                <View style={styles.voteContainer} key={String(vote.address)}>
-                  <VoteItem key={vote.toString()} voteAccount={vote} type="aye" />
+              motion.votes.ayes.map((vote) => (
+                <View style={styles.voteContainer} key={vote.account.address}>
+                  <VoteItem voteAccount={vote} type="aye" />
                 </View>
               ))
             ) : (
@@ -126,9 +126,9 @@ export function MotionDetailScreen(props: PropTypes) {
               </>
             )}
             {motion.votes.nays.length ? (
-              motion.votes.nays.map((vote: Account) => (
-                <View style={styles.voteContainer} key={String(vote.address)}>
-                  <VoteItem key={vote.toString()} voteAccount={vote} type="nay" />
+              motion.votes.nays.map((vote) => (
+                <View style={styles.voteContainer} key={vote.account.address}>
+                  <VoteItem voteAccount={vote} type="nay" />
                 </View>
               ))
             ) : (

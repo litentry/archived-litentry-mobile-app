@@ -1,9 +1,9 @@
-import React, {useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useReducer, useRef, useState} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
 import {Divider, Button, Tabs, TabScreen, TextInput, useTheme} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
-import {NetworkContext} from 'context/NetworkContext';
+import {useNetwork} from 'context/NetworkContext';
 import {Padder} from '@ui/components/Padder';
 import QRCamera, {QRCameraRef} from '@ui/components/QRCamera';
 import SuccessDialog from '@ui/components/SuccessDialog';
@@ -22,7 +22,7 @@ export function AddAccountScreen({navigation}: {navigation: NavigationProp<AppSt
     ref.current?.open();
   }, []);
   const qrCameraRef = useRef<QRCameraRef>(null);
-  const {currentNetwork} = useContext(NetworkContext);
+  const {currentNetwork} = useNetwork();
   const [state, dispatch] = useReducer(addAccountReducer, initialState);
   const {addAccount} = useAccounts();
   const {colors} = useTheme();

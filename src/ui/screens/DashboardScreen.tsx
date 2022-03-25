@@ -8,7 +8,13 @@ import {CouncilSummaryTeaser} from '@ui/components/CouncilSummaryTeaser';
 import {DemocracySummaryTeaser} from '@ui/components/DemocracySummaryTeaser';
 import {TreasurySummaryTeaser} from '@ui/components/TreasurySummaryTeaser';
 import {DashboardStackParamList, DrawerParamList} from '@ui/navigation/navigation';
-import {bountiesScreen, councilScreen, democracyScreen, treasuryScreen} from '@ui/navigation/routeKeys';
+import {
+  bountiesScreen,
+  councilScreen,
+  democracyScreen,
+  eventsCalendarScreen,
+  treasuryScreen,
+} from '@ui/navigation/routeKeys';
 import {standardPadding} from '@ui/styles';
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
@@ -17,6 +23,7 @@ import {DEMOCRACY_SUMMARY_QUERY} from 'src/api/hooks/useDemocracySummary';
 import {COUNCIL_SUMMARY_QUERY} from 'src/api/hooks/useCouncilSummary';
 import {BOUNTIES_SUMMARY_QUERY} from 'src/api/hooks/useBountiesSummary';
 import {TREASURY_SUMMARY_QUERY} from 'src/api/hooks/useTreasurySummary';
+import {EventsCalendarTeaser} from '@ui/components/EventsCalendarTeaser';
 
 const refetchQueries = [DEMOCRACY_SUMMARY_QUERY, COUNCIL_SUMMARY_QUERY, BOUNTIES_SUMMARY_QUERY, TREASURY_SUMMARY_QUERY];
 
@@ -31,6 +38,8 @@ function DashboardScreen({navigation}: PropTypes) {
   return (
     <Layout style={styles.container}>
       <ScrollViewRefetch contentContainerStyle={styles.scrollView} refetchQueries={refetchQueries}>
+        <EventsCalendarTeaser onPress={() => navigation.navigate(eventsCalendarScreen)} />
+        <Padder scale={0.6} />
         <DemocracySummaryTeaser onPress={() => navigation.navigate(democracyScreen)} />
         <Padder scale={0.6} />
         <CouncilSummaryTeaser onPress={() => navigation.navigate(councilScreen)} />
