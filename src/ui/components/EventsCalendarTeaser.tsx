@@ -5,7 +5,7 @@ import {View, StyleSheet, Image} from 'react-native';
 import React from 'react';
 import {Text, useTheme, Divider, Subheading, Caption} from '@ui/library';
 import {standardPadding} from '@ui/styles';
-import {getFormatedDate} from 'src/utils/date';
+import {formatDate} from 'src/utils/date';
 import EmptyList from 'image/EmptyList.png';
 
 type Props = {
@@ -17,15 +17,15 @@ export function EventsCalendarTeaser(props: Props) {
   const {data: events, loading} = useCalendarEvents();
   const topThreeEvents = events?.slice(0, 3) ?? [];
   return (
-    <SectionTeaserContainer onPress={props.onPress} title="Events Calender">
-      {loading && !topThreeEvents ? (
+    <SectionTeaserContainer onPress={props.onPress} title="Events Calendar">
+      {loading && !events ? (
         <LoadingBox />
       ) : topThreeEvents?.length > 0 ? (
         topThreeEvents.map((event, id) => (
           <React.Fragment key={id}>
             <View style={styles.container}>
               <View style={styles.dateContainer}>
-                <Text style={{color: colors.primary}}>{getFormatedDate(event.date, 'DD/MM')}</Text>
+                <Text style={{color: colors.primary}}>{formatDate(event.date, 'DD/MM')}</Text>
               </View>
               <View style={styles.titleContainer}>
                 <Text>{event.title}</Text>

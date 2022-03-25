@@ -2,7 +2,7 @@ import React, {createContext, useCallback, useContext, useEffect, useReducer} fr
 import '@polkadot/api-augment';
 import {ApiPromise, WsProvider} from '@polkadot/api';
 import {createLogger} from 'src/utils/logger';
-import {NetworkContext} from './NetworkContext';
+import {useNetwork} from 'context/NetworkContext';
 import {useNavigation} from '@react-navigation/core';
 
 const initialState: ChainApiContext = {
@@ -22,7 +22,7 @@ const logger = createLogger('ChainApiContext');
 export function ChainApiContextProvider({children}: {children: React.ReactNode}) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const {currentNetwork, select} = useContext(NetworkContext);
+  const {currentNetwork, select} = useNetwork();
   const navigation = useNavigation();
 
   const wsAddress = currentNetwork.ws[state.wsConnectionIndex];

@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {SectionList, StyleSheet, View} from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/core';
 import {EmptyView} from '@ui/components/EmptyView';
@@ -15,7 +15,7 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {Chart} from '@ui/components/Chart';
 import BalanceInput from '@ui/components/BalanceInput';
 import {Crowdloan, useCrowdloans} from 'src/api/hooks/useCrowdloans';
-import {NetworkContext} from 'context/NetworkContext';
+import {useNetwork} from 'context/NetworkContext';
 import {notEmpty} from 'src/utils';
 import type {Account} from 'src/api/hooks/useAccount';
 import {useChainInfo} from 'src/api/hooks/useChainInfo';
@@ -116,7 +116,7 @@ export function CrowdloanScreen() {
 function Fund({item, active, onPressContribute}: {item: Crowdloan; active: boolean; onPressContribute: () => void}) {
   const navigation = useNavigation<NavigationProp<CrowdloansStackParamList>>();
   const {colors} = useTheme();
-  const {currentNetwork} = useContext(NetworkContext);
+  const {currentNetwork} = useNetwork();
 
   const isLitentryParachain = currentNetwork.key === 'polkadot' && item.paraId === '2013';
   const isLitmusParachain = currentNetwork.key === 'kusama' && item.paraId === '2106';

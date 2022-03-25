@@ -3,7 +3,7 @@ import {StyleSheet, View, ScrollView} from 'react-native';
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {NavigationProp} from '@react-navigation/core';
 import {InternalAccount, useAccounts} from 'context/AccountsContext';
-import {NetworkContext} from 'context/NetworkContext';
+import {useNetwork} from 'context/NetworkContext';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import DocumentPicker, {DocumentPickerResponse} from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
@@ -18,7 +18,7 @@ import {SecureKeychain} from 'src/service/SecureKeychain';
 
 export function ImportAccountWithJsonFileScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const theme = useTheme();
-  const {currentNetwork} = React.useContext(NetworkContext);
+  const {currentNetwork} = useNetwork();
   const [jsonContent, setJsonContent] = React.useState<string>();
   const [error, setError] = React.useState<string | undefined>(undefined);
   const parsedJson = jsonContent ? tryParseJson(jsonContent) : undefined;

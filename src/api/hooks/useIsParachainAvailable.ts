@@ -1,13 +1,13 @@
 import {useEffect, useState} from 'react';
-import {useApi} from 'context/ChainApiContext';
+import {useNetwork} from 'context/NetworkContext';
 
 export function useIsParachainAvailable() {
-  const {api} = useApi();
+  const {currentNetwork} = useNetwork();
   const [isParachainAvailable, setIsParachainAvailable] = useState(false);
 
   useEffect(() => {
-    setIsParachainAvailable(Boolean(api?.query.paras));
-  }, [api]);
+    setIsParachainAvailable(currentNetwork.key === 'polkadot' || currentNetwork.key === 'kusama');
+  }, [currentNetwork]);
 
   return isParachainAvailable;
 }

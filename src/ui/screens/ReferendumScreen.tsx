@@ -13,7 +13,7 @@ import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {referendumScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
-import {ProposalCallInfo} from '@ui/components/ProposalCallInfo';
+import {ProposalCall} from '@ui/components/ProposalCall';
 import BalanceInput from '@ui/components/BalanceInput';
 import {Account} from 'src/api/hooks/useAccount';
 import {useChainInfo} from 'src/api/hooks/useChainInfo';
@@ -64,7 +64,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
       <SafeView edges={noTopEdges}>
         <ScrollView contentContainerStyle={styles.container}>
           <List.Item title={title} disabled left={() => <Headline>{referendum.index}</Headline>} />
-          <ProposalCallInfo proposal={referendum} />
+          <ProposalCall proposal={referendum} />
           <Padder scale={1} />
 
           <Caption>{`Proposal Hash:`}</Caption>
