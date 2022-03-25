@@ -1,11 +1,11 @@
 import messaging, {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
-import React, {useContext} from 'react';
+import React from 'react';
 import {useInAppNotification, InAppNotificationContent} from 'src/context/InAppNotificationContext';
 import {useLinkTo} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native';
 import {useCallback} from 'react';
 import {pathToRegexp} from 'path-to-regexp';
-import {NetworkContext} from 'context/NetworkContext';
+import {useNetwork} from 'context/NetworkContext';
 
 function getParamsFromDeeplink(deeplink: string) {
   const path = deeplink.replace('litentry://', '/');
@@ -20,7 +20,7 @@ function getParamsFromDeeplink(deeplink: string) {
 export function useFirebase() {
   const linkTo = useLinkTo();
   const {trigger} = useInAppNotification();
-  const {currentNetwork, select, availableNetworks} = useContext(NetworkContext);
+  const {currentNetwork, select, availableNetworks} = useNetwork();
 
   if (!trigger) {
     throw new Error('InAppNotificationContext most be provided!');

@@ -1,11 +1,11 @@
 import React from 'react';
 import {FlatList} from 'react-native';
 import {Divider} from '@ui/library';
-import type {Account} from 'src/api/hooks/useAccount';
+import type {AccountInfo} from 'src/api/hooks/useAccount';
 import {AccountListItem} from './AccountListItem';
 
 type Props = {
-  accounts: Account[];
+  accounts: AccountInfo[];
   header?: React.ReactElement;
 };
 
@@ -13,8 +13,8 @@ export function AccountsList({accounts, header}: Props) {
   return (
     <FlatList
       data={accounts}
-      renderItem={({item}) => <AccountListItem account={item} />}
-      keyExtractor={(item) => item.address}
+      renderItem={({item}) => <AccountListItem account={item.account} />}
+      keyExtractor={(item) => item.account.address}
       ItemSeparatorComponent={Divider}
       ListHeaderComponent={header}
     />

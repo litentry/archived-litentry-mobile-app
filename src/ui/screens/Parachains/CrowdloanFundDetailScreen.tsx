@@ -58,7 +58,7 @@ export function CrowdloanFundDetailScreen({route}: ScreenProps) {
           <Text numberOfLines={1} adjustsFontSizeToFit>{`${data.formattedRaised} / ${data.formattedCap}`}</Text>
         </Row>
         <Row label={'Contributors'}>
-          <Text>{data.contribution.contribution.contributorsCount}</Text>
+          <Text>{data.contribution.contributorsCount}</Text>
         </Row>
         {data.homepage ? (
           <Button

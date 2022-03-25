@@ -1,10 +1,10 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {Keyboard, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
 import {ParamListBase, Route, RouteProp} from '@react-navigation/core';
 import {DrawerNavigationOptions, DrawerNavigationProp} from '@react-navigation/drawer';
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack';
 import {useApi} from 'context/ChainApiContext';
-import {NetworkContext} from 'context/NetworkContext';
+import {useNetwork} from 'context/NetworkContext';
 import NetworkItem from '@ui/components/NetworkItem';
 import {dashboardScreen, networkSelectionScreen} from '@ui/navigation/routeKeys';
 import {AppBar, AppHeader, Title, useTheme} from '@ui/library';
@@ -95,7 +95,7 @@ export function MainAppBar({
 }) {
   const showMenu = route.name === dashboardScreen;
 
-  const {currentNetwork} = useContext(NetworkContext);
+  const {currentNetwork} = useNetwork();
   const {status} = useApi();
   const {colors} = useTheme();
 

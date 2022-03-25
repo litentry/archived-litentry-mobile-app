@@ -11,6 +11,10 @@ export const BOUNTIES_SUMMARY_QUERY = gql`
       formattedTotalValue
       timeLeft
       progressPercent
+      bountyDepositBase
+      bountyValueMinimum
+      dataDepositPerByte
+      maximumReasonLength
     }
   }
 `;

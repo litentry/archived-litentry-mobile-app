@@ -1,41 +1,12 @@
 import {useQuery} from '@apollo/client';
 import gql from 'graphql-tag';
 import type {SubstrateChainParachain} from 'src/generated/litentryGraphQLTypes';
+import {ACCOUNT_FIELDS_FRAGMENT} from 'src/api/hooks/useAccount';
 
 export type Parachain = SubstrateChainParachain;
 
-const ACCOUNT_FIELDS = gql`
-  fragment AccountFields on SubstrateChainAccount {
-    address
-    display
-    registration {
-      display
-      displayParent
-      email
-      image
-      legal
-      pgp
-      riot
-      twitter
-      web
-      judgements {
-        registrarIndex
-        judgement {
-          isUnknown
-          isFeePaid
-          isReasonable
-          isKnownGood
-          isOutOfDate
-          isLowQuality
-          isErroneous
-        }
-      }
-    }
-  }
-`;
-
 const PARACHAIN_INFO = gql`
-  ${ACCOUNT_FIELDS}
+  ${ACCOUNT_FIELDS_FRAGMENT}
   query getParaChainById($id: String!) {
     substrateChainParachain(id: $id) {
       id
@@ -51,14 +22,12 @@ const PARACHAIN_INFO = gql`
       validators {
         groupIndex
         validators {
-          address
           account {
             ...AccountFields
           }
         }
       }
       nonVoters {
-        address
         account {
           ...AccountFields
         }

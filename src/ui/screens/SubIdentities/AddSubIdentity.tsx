@@ -1,7 +1,7 @@
-import React, {useContext, useCallback, useState, useRef} from 'react';
+import React, {useCallback, useState, useRef} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import {TextInput, Button, Tabs, TabScreen, useTabNavigation, useTabIndex, useTheme} from '@ui/library';
-import {NetworkContext} from 'context/NetworkContext';
+import {useNetwork} from 'context/NetworkContext';
 import QRCamera, {QRCameraRef} from '@ui/components/QRCamera';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
@@ -16,7 +16,7 @@ export function AddSubIdentity({
   onAddPress: (subIdentity: SubIdentity) => void;
   subIdentities?: Account[];
 }) {
-  const {currentNetwork} = useContext(NetworkContext);
+  const {currentNetwork} = useNetwork();
   const [subAddress, setSubAddress] = useState('');
   const [subName, setSubName] = useState('');
   const {colors} = useTheme();
@@ -83,7 +83,7 @@ function ScanAddressTab({onScanSuccess}: {onScanSuccess: (address: string) => vo
   const goToTabIndex = useTabNavigation();
   const tabIndex = useTabIndex();
   const qrCameraRef = useRef<QRCameraRef>(null);
-  const {currentNetwork} = useContext(NetworkContext);
+  const {currentNetwork} = useNetwork();
 
   const handleScan = useCallback(
     ({data}: {data: string}) => {

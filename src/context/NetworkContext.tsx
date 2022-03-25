@@ -1,4 +1,4 @@
-import React, {createContext, useMemo} from 'react';
+import React, {createContext, useContext, useMemo} from 'react';
 import {noop} from 'lodash';
 import {NetworkContextValueType, NetworkType} from 'src/types';
 import {usePersistedState} from '@hooks/usePersistedState';
@@ -61,4 +61,14 @@ export default function NetworkContextProvider({children}: PropTypes) {
   );
 
   return <NetworkContext.Provider value={value}>{children}</NetworkContext.Provider>;
+}
+
+export function useNetwork() {
+  const context = useContext(NetworkContext);
+
+  if (!context) {
+    throw new Error('useNetwork must be used within a NetworkContextProvider');
+  }
+
+  return context;
 }

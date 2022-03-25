@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Divider, Button} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
@@ -9,7 +9,7 @@ import {useAccount} from 'src/api/hooks/useAccount';
 import {useAccounts} from 'src/context/AccountsContext';
 import {balanceScreen} from '@ui/navigation/routeKeys';
 import globalStyles from '@ui/styles';
-import {NetworkContext} from 'src/context/NetworkContext';
+import {useNetwork} from 'context/NetworkContext';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {Padder} from '@ui/components/Padder';
 
@@ -20,7 +20,7 @@ export function BalanceScreen({
   navigation: NavigationProp<AccountsStackParamList>;
   route: RouteProp<AccountsStackParamList, typeof balanceScreen>;
 }) {
-  const {currentNetwork} = useContext(NetworkContext);
+  const {currentNetwork} = useNetwork();
   const {accounts} = useAccounts();
 
   const modalRef = useRef<Modalize>(null);

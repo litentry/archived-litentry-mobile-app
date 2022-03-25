@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Alert, FlatList, View} from 'react-native';
 import {Modalize} from 'react-native-modalize';
-import {useQueryClient} from 'react-query';
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Button, Caption, Subheading, List, Divider, IconButton, useTheme} from '@ui/library';
@@ -34,10 +33,9 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
   const {colors} = useTheme();
   const address = route.params.address;
   const modalRef = useRef<Modalize>(null);
-  const {data: accountInfo} = useSubAccounts(address);
+  const {data: accountInfo, refetch: refetchAccount} = useSubAccounts(address);
   const [subIdentities, setSubIdentities] = useState<AccountType[]>();
   const [submitSubsDisabled, setSubmitSubsDisabled] = useState(true);
-  const queryClient = useQueryClient();
   const startTx = useApiTx();
 
   useEffect(() => {
@@ -63,8 +61,7 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
       params: [subIdentities?.map((sub) => [sub.address, {raw: sub.registration?.display}])],
     })
       .then(() => {
-        queryClient.invalidateQueries(['sub_accounts', {address}]);
-        queryClient.invalidateQueries(['sub-identities', {address}]);
+        refetchAccount({address});
         setSubmitSubsDisabled(true);
       })
       .catch((e: Error) => {

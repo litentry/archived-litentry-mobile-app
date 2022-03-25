@@ -2,7 +2,6 @@ import {gql, useQuery} from '@apollo/client';
 import type {SubstrateChainParachain, SubstrateChainParachainsInfo} from 'src/generated/litentryGraphQLTypes';
 
 export type ParachainsInfo = SubstrateChainParachainsInfo;
-
 export type Parachain = SubstrateChainParachain;
 
 export const PARACHAINS_OVERVIEW_QUERY = gql`
