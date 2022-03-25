@@ -2,7 +2,7 @@ import React, {useState, useCallback, useEffect, useContext} from 'react';
 import {ApolloClient, ApolloProvider, InMemoryCache, NormalizedCacheObject, createHttpLink} from '@apollo/client';
 import {CachePersistor, MMKVWrapper} from 'apollo3-cache-persist';
 import {MMKV} from 'react-native-mmkv';
-import {NetworkContext} from 'context/NetworkContext';
+import {useNetwork} from 'context/NetworkContext';
 
 const LITENTRY_API_URI = 'https://graph.litentry.io/graphql';
 
@@ -16,7 +16,7 @@ const LitentryApiContext = React.createContext<LitentryApiContextType | undefine
 export function LitentryApiClientProvider({children}: {children: React.ReactNode}) {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>();
   const [persistor, setPersistor] = useState<CachePersistor<NormalizedCacheObject>>();
-  const {currentNetwork} = useContext(NetworkContext);
+  const {currentNetwork} = useNetwork();
 
   const clearCache = useCallback(() => {
     if (persistor) {

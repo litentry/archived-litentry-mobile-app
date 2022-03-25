@@ -1,9 +1,9 @@
-import React, {useContext, useRef} from 'react';
+import React, {useRef} from 'react';
 import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {Card, Icon, Caption, Subheading, Paragraph, Text} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
-import {NetworkContext} from 'context/NetworkContext';
+import {useNetwork} from 'context/NetworkContext';
 import _ from 'lodash';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
@@ -48,7 +48,7 @@ function VoteItem({
 
 export function MotionDetailScreen(props: PropTypes) {
   const modalRef = useRef<Modalize>(null);
-  const {currentNetwork} = useContext(NetworkContext);
+  const {currentNetwork} = useNetwork();
 
   const {
     route: {params},
