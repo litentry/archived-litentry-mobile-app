@@ -1,7 +1,6 @@
 import React, {useContext} from 'react';
 import {SectionList, StyleSheet, View, Linking, RefreshControl} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
@@ -13,7 +12,7 @@ import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
 import {NetworkType} from 'src/types';
 import {NetworkContext} from 'context/NetworkContext';
-import {EmptyState} from '@ui/components/EmptyState';
+import {EmptyStateTeaser} from '@ui/components/EmptyStateTeaser';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -108,13 +107,27 @@ function TreasuryOverviewScreen() {
                 </View>
               );
             }}
-            renderSectionFooter={({section}) =>
-              section.data.length < 1 ? (
-                <Card style={globalStyles.paddedContainer}>
-                  <EmptyState subheading="There are no items to display" caption="Please check back for updates" />
-                </Card>
-              ) : null
-            }
+            renderSectionFooter={({section: {title, data}}) => {
+              return (
+                <>
+                  {title === 'Proposals' && data.length < 1 ? (
+                    <Card style={globalStyles.paddedContainer}>
+                      <EmptyStateTeaser
+                        subheading="There are no active proposals"
+                        caption="Please check back for updates"
+                      />
+                    </Card>
+                  ) : data.length < 1 ? (
+                    <Card style={globalStyles.paddedContainer}>
+                      <EmptyStateTeaser
+                        subheading="There are no approved proposals"
+                        caption="Please check back for updates"
+                      />
+                    </Card>
+                  ) : null}
+                </>
+              );
+            }}
           />
         )}
       </SafeView>
