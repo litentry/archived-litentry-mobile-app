@@ -87,8 +87,4 @@ function useAccounts() {
   return {...context, networkAccounts};
 }
 
-function getAccountDisplayValue(account: Account) {
-  return account.meta.name ? account.meta.name : account.address;
-}
-
-export {AccountsProvider, useAccounts, getAccountDisplayValue};
+export {AccountsProvider, useAccounts};
