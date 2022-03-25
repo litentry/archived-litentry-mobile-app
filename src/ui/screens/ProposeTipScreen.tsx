@@ -1,6 +1,5 @@
 import React, {useReducer} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {useQueryClient} from 'react-query';
 import {NavigationProp} from '@react-navigation/native';
 import {Subheading, TextInput, Caption, useTheme, Button} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -10,12 +9,14 @@ import globalStyles, {standardPadding} from '@ui/styles';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {Padder} from '@ui/components/Padder';
 import {Account} from 'src/api/hooks/useAccount';
+import {useRefetch} from 'src/api/hooks/useRefetch';
+import {TIPS_QUERY} from 'src/api/hooks/useTips';
 
 export function ProposeTipScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {colors} = useTheme();
   const [state, dispatch] = useReducer(reducer, initialState);
   const startTx = useApiTx();
-  const queryClient = useQueryClient();
+  const {refetch: refetchTips} = useRefetch([TIPS_QUERY]);
 
   const valid = state.account && state.beneficiary && state.reason && state.reason.length > 4;
 
@@ -27,7 +28,7 @@ export function ProposeTipScreen({navigation}: {navigation: NavigationProp<Dashb
         params: [state.reason, state.beneficiary],
       })
         .then(() => {
-          queryClient.invalidateQueries('tips');
+          refetchTips();
           navigation.goBack();
         })
         .catch((e: Error) => {

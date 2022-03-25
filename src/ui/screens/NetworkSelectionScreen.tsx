@@ -1,10 +1,10 @@
-import React, {useContext, useRef} from 'react';
+import React, {useRef} from 'react';
 import {Modalize} from 'react-native-modalize';
 import NetworkSelectionList from '@ui/components/NetworkSelectionList';
 import globalStyles from '@ui/styles';
 import {Button, Divider} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
-import {NetworkContext} from 'context/NetworkContext';
+import {useNetwork} from 'context/NetworkContext';
 import {NetworkType} from 'src/types';
 import {NavigationProp} from '@react-navigation/native';
 import {CompleteNavigatorParamList} from '@ui/navigation/navigation';
@@ -16,7 +16,7 @@ export function NetworkSelectionScreen({navigation}: {navigation: NavigationProp
     modalRef.current?.open();
   }, []);
 
-  const {currentNetwork, availableNetworks, select} = useContext(NetworkContext);
+  const {currentNetwork, availableNetworks, select} = useNetwork();
   const changeNetwork = (network: NetworkType) => {
     select(network);
     navigation.goBack();

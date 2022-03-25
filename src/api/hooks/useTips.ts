@@ -3,7 +3,7 @@ import type {SubstrateChainTip} from 'src/generated/litentryGraphQLTypes';
 
 export type Tip = SubstrateChainTip;
 
-const TIPS_QUERY = gql`
+export const TIPS_QUERY = gql`
   query getTips {
     substrateChainTips {
       id

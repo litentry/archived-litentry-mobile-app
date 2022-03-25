@@ -5,7 +5,7 @@ import {View, StyleSheet} from 'react-native';
 import React from 'react';
 import {Text, useTheme, Divider} from '@ui/library';
 import {standardPadding} from '@ui/styles';
-import {getFormatedDate} from 'src/utils/date';
+import {formatDate} from 'src/utils/date';
 import {EmptyStateTeaser} from './EmptyStateTeaser';
 
 type Props = {
@@ -25,7 +25,7 @@ export function EventsCalendarTeaser(props: Props) {
           <React.Fragment key={id}>
             <View style={styles.container}>
               <View style={styles.dateContainer}>
-                <Text style={{color: colors.primary}}>{getFormatedDate(event.date, 'DD/MM')}</Text>
+                <Text style={{color: colors.primary}}>{formatDate(event.date, 'DD/MM')}</Text>
               </View>
               <View style={styles.titleContainer}>
                 <Text>{event.title}</Text>

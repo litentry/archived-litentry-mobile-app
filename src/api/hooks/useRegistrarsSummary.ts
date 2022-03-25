@@ -15,7 +15,6 @@ const REGISTRARS_SUMMARY_QUERY = gql`
       formattedHighestFee
       list {
         id
-        address
         account {
           ...AccountFields
         }
