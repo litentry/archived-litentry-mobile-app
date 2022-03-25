@@ -18,7 +18,7 @@ export function EventsCalendarTeaser(props: Props) {
   const topThreeEvents = events?.slice(0, 3) ?? [];
   return (
     <SectionTeaserContainer onPress={props.onPress} title="Upcoming events">
-      {loading && !topThreeEvents ? (
+      {loading && !events ? (
         <LoadingBox />
       ) : topThreeEvents?.length > 0 ? (
         topThreeEvents.map((event, id) => (
