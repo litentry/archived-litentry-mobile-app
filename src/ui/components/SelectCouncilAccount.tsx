@@ -1,12 +1,13 @@
 import React from 'react';
 import {View, FlatList, StyleSheet} from 'react-native';
 import {Menu, List, Caption, Icon, useTheme, Divider} from '@ui/library';
-import {Account as AccountType, useAccounts} from 'context/AccountsContext';
-import globalStyles, {standardPadding} from '@ui/styles';
+import {Account as AccountType} from 'context/AccountsContext';
+import globalStyles from '@ui/styles';
 import Identicon from '@polkadot/reactnative-identicon';
-import {Padder} from '@ui/components/Padder';
-import {useAccount, Account as SubstrateChainAccount} from 'src/api/hooks/useAccount';
+import {Account as SubstrateChainAccount} from 'src/api/hooks/useAccount';
 import {Account} from './Account/Account';
+import {useCouncilAccounts} from 'src/hooks/useCouncilAccounts';
+import {AccountItem} from './SelectAccount';
 
 type Props = {
   onSelect: (account: SelectedAccount) => void;
@@ -17,9 +18,9 @@ type SelectedAccount = {
   accountInfo?: SubstrateChainAccount;
 };
 
-export function SelectAccount({onSelect}: Props) {
+export function SelectCouncilAccount({onSelect}: Props) {
   const {colors} = useTheme();
-  const {networkAccounts} = useAccounts();
+  const councilAccounts = useCouncilAccounts();
   const [selectedAccount, setSelectedAccount] = React.useState<SelectedAccount>();
   const [visible, setVisible] = React.useState(false);
 
@@ -61,42 +62,11 @@ export function SelectAccount({onSelect}: Props) {
       <FlatList
         style={styles.items}
         ItemSeparatorComponent={Divider}
-        data={networkAccounts}
+        data={councilAccounts}
         keyExtractor={(item) => item.address}
         renderItem={({item}) => <AccountItem onSelect={selectAccount} account={item} />}
       />
     </Menu>
-  );
-}
-
-type AccountItemProps = {
-  onSelect: (account: SelectedAccount) => void;
-  account: AccountType;
-  accountInfo?: SubstrateChainAccount;
-};
-
-export function AccountItem({onSelect, account}: AccountItemProps) {
-  const {
-    isExternal,
-    meta: {name},
-  } = account;
-  const {data: accountInfo} = useAccount(account.address);
-
-  return (
-    <Menu.Item
-      style={styles.menuItem}
-      onPress={() => onSelect({account, accountInfo})}
-      title={
-        <View style={globalStyles.rowAlignCenter}>
-          <Identicon value={account.address} size={25} />
-          <Padder scale={0.5} />
-          <View style={globalStyles.justifyCenter}>
-            {accountInfo && <Account account={accountInfo} name={name} />}
-            {isExternal && <Caption style={styles.caption}>{`External`}</Caption>}
-          </View>
-        </View>
-      }
-    />
   );
 }
 
@@ -108,11 +78,5 @@ const styles = StyleSheet.create({
   },
   items: {
     maxHeight: 250,
-  },
-  menuItem: {
-    marginVertical: standardPadding,
-  },
-  caption: {
-    lineHeight: 0,
   },
 });

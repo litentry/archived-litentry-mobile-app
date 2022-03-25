@@ -14,7 +14,7 @@ import LoadingView from '@ui/components/LoadingView';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useIsCouncilMember} from 'src/api/hooks/useIsCouncilMember';
 import {ProposalCall} from '@ui/components/ProposalCall';
-import {SelectAccount} from '@ui/components/SelectAccount';
+import {SelectCouncilAccount} from '@ui/components/SelectCouncilAccount';
 import type {Account} from 'src/api/hooks/useAccount';
 import {InputLabel} from '@ui/library/InputLabel';
 
@@ -143,7 +143,7 @@ function VoteModal({visible, setVisible, refetchMotions, voteType, motion}: Vote
       <Padder scale={1} />
 
       <InputLabel label="Select Council account" />
-      <SelectAccount onlyCouncils onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
+      <SelectCouncilAccount onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
 
       <Padder scale={2} />
       <View style={styles.buttons}>
