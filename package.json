@@ -10,7 +10,7 @@
     "lint": "./node_modules/.bin/eslint --ignore-path .gitignore --fix --ext .ts,.tsx .",
     "check-types": "./node_modules/.bin/tsc",
     "prettier": "./node_modules/.bin/prettier --ignore-path .gitignore \"**/*.+(js|ts|tsx|json)\"",
-    "nodeify": "rn-nodeify --hack --install process,crypto,events,constant,console,stream,url,util",
+    "nodeify": "rn-nodeify --hack --install process,crypto,events,constant,console,stream,url,util,assert,http,https,os",
     "validate": "./node_modules/.bin/npm-run-all --parallel check-types lint",
     "postinstall": "npm run nodeify && patch-package",
     "prepare": "husky install",
@@ -41,10 +41,12 @@
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/stack": "^6.1.1",
     "@sentry/react-native": "^3.2.13",
+    "@tradle/react-native-http": "^2.0.1",
     "@types/zxcvbn": "^4.4.1",
     "@walletconnect/react-native-dapp": "^1.7.5",
     "@walletconnect/web3-provider": "^1.7.5",
     "apollo3-cache-persist": "^0.13.0",
+    "assert": "^1.5.0",
     "console-browserify": "^1.2.0",
     "dayjs": "^1.10.8",
     "ethers": "^5.6.1",
@@ -52,6 +54,7 @@
     "fast-text-encoding": "^1.0.3",
     "graphql": "^16.3.0",
     "graphql-tag": "^2.12.6",
+    "https-browserify": "^0.0.1",
     "lodash": "^4.17.21",
     "patch-package": "^6.4.7",
     "path-to-regexp": "^6.2.0",
@@ -77,6 +80,7 @@
     "react-native-logs": "^4.0.1",
     "react-native-mmkv": "^2.1.2",
     "react-native-modalize": "^2.0.13",
+    "react-native-os": "^1.2.6",
     "react-native-pager-view": "^5.4.11",
     "react-native-paper": "^4.11.2",
     "react-native-paper-tabs": "^0.7.0",
@@ -152,7 +156,10 @@
     "_stream_writable": "readable-stream/writable",
     "_stream_duplex": "readable-stream/duplex",
     "_stream_passthrough": "readable-stream/passthrough",
-    "stream": "stream-browserify"
+    "stream": "stream-browserify",
+    "https": "https-browserify",
+    "http": "@tradle/react-native-http",
+    "os": "react-native-os"
   },
   "browser": {
     "console": "console-browserify",
@@ -162,7 +169,10 @@
     "_stream_writable": "readable-stream/writable",
     "_stream_duplex": "readable-stream/duplex",
     "_stream_passthrough": "readable-stream/passthrough",
-    "stream": "stream-browserify"
+    "stream": "stream-browserify",
+    "https": "https-browserify",
+    "http": "@tradle/react-native-http",
+    "os": "react-native-os"
   },
   "lint-staged": {
     "*.+(ts|tsx)": "eslint --fix",
