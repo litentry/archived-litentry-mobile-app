@@ -16,7 +16,7 @@ import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {AppStackParamList} from '@ui/navigation/navigation';
-import {memberDetailsScreen} from '@ui/navigation/routeKeys';
+import {accountScreen} from '@ui/navigation/routeKeys';
 
 type ScreenProps = {
   navigation: StackNavigationProp<DashboardStackParamList>;
@@ -91,7 +91,7 @@ function TipDetailScreen({route}: ScreenProps) {
               title={() => (
                 <Account
                   account={item.account}
-                  onPress={() => navigation.navigate(memberDetailsScreen, {address: item.account.address})}
+                  onPress={() => navigation.navigate(accountScreen, {address: item.account.address})}
                 />
               )}
               description={() => <Caption>{item.formattedBalance}</Caption>}

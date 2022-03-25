@@ -11,7 +11,7 @@ import {Padder} from '@ui/components/Padder';
 import {EmptyView} from '@ui/components/EmptyView';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {AppStackParamList} from '@ui/navigation/navigation';
-import {memberDetailsScreen} from '@ui/navigation/routeKeys';
+import {accountScreen} from '@ui/navigation/routeKeys';
 
 function RegistrarList() {
   const {data: registrarsSummary, loading} = useRegistrarsSummary();
@@ -51,7 +51,7 @@ function RegistrarList() {
         <RegistrarItem
           testID="registrar_item"
           registrar={registrar}
-          onPress={() => navigation.navigate(memberDetailsScreen, {address: registrar.address})}
+          onPress={() => navigation.navigate(accountScreen, {address: registrar.address})}
         />
       )}
       keyExtractor={(item) => item.account.address}

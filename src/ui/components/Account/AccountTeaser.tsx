@@ -6,7 +6,7 @@ import {Account} from './Account';
 import type {Account as AccountType} from 'src/api/hooks/useAccount';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {AppStackParamList} from '@ui/navigation/navigation';
-import {memberDetailsScreen} from '@ui/navigation/routeKeys';
+import {accountScreen} from '@ui/navigation/routeKeys';
 
 type Props = {
   account: AccountType;
@@ -20,7 +20,7 @@ export function AccountTeaser({account, identiconSize = 20}: Props) {
     <View style={styles.container}>
       <Identicon value={account.address} size={identiconSize} />
       <Padder scale={0.5} />
-      <Account account={account} onPress={() => navigation.navigate(memberDetailsScreen, {address: account.address})} />
+      <Account account={account} onPress={() => navigation.navigate(accountScreen, {address: account.address})} />
     </View>
   );
 }

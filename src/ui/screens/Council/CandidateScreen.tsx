@@ -12,7 +12,7 @@ import {EmptyView} from '@ui/components/EmptyView';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {Account} from '@ui/components/Account/Account';
 import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
-import {memberDetailsScreen} from '@ui/navigation/routeKeys';
+import {accountScreen} from '@ui/navigation/routeKeys';
 import {AccountRegistration} from '@ui/components/Account/AccountRegistration';
 
 type ScreenProps = {
@@ -67,7 +67,7 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
         )}
         data={'voters' in member ? member.voters : []}
         renderItem={({item}) => (
-          <Voter account={item} onPress={() => navigationList.navigate(memberDetailsScreen, {address: item})} />
+          <Voter account={item} onPress={() => navigationList.navigate(accountScreen, {address: item})} />
         )}
         keyExtractor={(item) => item}
         ItemSeparatorComponent={Divider}

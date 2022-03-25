@@ -5,7 +5,7 @@ import type {AccountInfo} from 'src/api/hooks/useAccount';
 import {AccountListItem} from './AccountListItem';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {AppStackParamList} from '@ui/navigation/navigation';
-import {memberDetailsScreen} from '@ui/navigation/routeKeys';
+import {accountScreen} from '@ui/navigation/routeKeys';
 
 type Props = {
   accounts: AccountInfo[];
@@ -20,7 +20,7 @@ export function AccountsList({accounts, header}: Props) {
       renderItem={({item}) => (
         <AccountListItem
           account={item.account}
-          onPress={() => navigation.navigate(memberDetailsScreen, {address: item.address})}
+          onPress={() => navigation.navigate(accountScreen, {address: item.address})}
         />
       )}
       keyExtractor={(item) => item.account.address}

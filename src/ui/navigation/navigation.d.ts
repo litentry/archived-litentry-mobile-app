@@ -1,4 +1,5 @@
 import {
+  accountScreen,
   accountsGuideScreen,
   accountsNavigator,
   accountsScreen,
@@ -25,7 +26,6 @@ import {
   identityGuideScreen,
   importAccountScreen,
   manageIdentityScreen,
-  memberDetailsScreen,
   mnemonicScreen,
   motionDetailScreen,
   motionsScreen,
@@ -118,7 +118,7 @@ type AppStackParamList = {
   [permissionGrantingPromptScreen]: undefined;
   [drawerNavigator]: undefined;
   [networkSelectionScreen]: undefined;
-  [memberDetailsScreen]: {address: string};
+  [accountScreen]: {address: string};
 };
 
 type AccountsStackParamList = {

@@ -62,7 +62,7 @@ import {AccountsGuideScreen} from '@ui/screens/AccountsGuideScreen';
 import {ReceiveFundScreen} from '@ui/screens/ReceiveFundScreen';
 import {SendFundScreen} from '@ui/screens/SendFundScreen';
 import {FeedbackScreen} from '@ui/screens/FeedbackScreen';
-import {MemberDetailsScreen} from '@ui/screens/memberDetailsScreen';
+import {AccountScreen} from '@ui/screens/AccountScreen';
 import {AddBountyScreen} from '@ui/screens/AddBountyScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
@@ -271,8 +271,8 @@ function AppNavigator() {
         options={{animationEnabled: false, presentation: 'transparentModal'}}
       />
       <AppStack.Screen
-        name={routeKeys.memberDetailsScreen}
-        component={MemberDetailsScreen}
+        name={routeKeys.accountScreen}
+        component={AccountScreen}
         options={{header: (props) => <MainStackAppBar {...props} />, headerShown: true}}
       />
     </AppStack.Navigator>

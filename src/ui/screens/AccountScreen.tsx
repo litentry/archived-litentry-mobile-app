@@ -3,7 +3,7 @@ import {Divider, Card, Caption, useTheme, IconButton} from '@ui/library';
 import {RouteProp} from '@react-navigation/native';
 import {AppStackParamList} from '@ui/navigation/navigation';
 import {StyleSheet, View} from 'react-native';
-import {memberDetailsScreen} from '@ui/navigation/routeKeys';
+import {accountScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
@@ -17,7 +17,7 @@ import Clipboard from '@react-native-community/clipboard';
 import {stringShorten} from '@polkadot/util';
 import {mapStatusText} from 'src/utils/identity';
 
-export function MemberDetailsScreen({route}: {route: RouteProp<AppStackParamList, typeof memberDetailsScreen>}) {
+export function AccountScreen({route}: {route: RouteProp<AppStackParamList, typeof accountScreen>}) {
   const {colors} = useTheme();
   const {data: account, loading} = useAccount(route.params.address);
   const snackbar = useSnackbar();
