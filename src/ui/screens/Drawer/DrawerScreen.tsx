@@ -88,14 +88,6 @@ function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
               navigation.navigate(polkassemblyDiscussionsNavigator);
             }}
           />
-          <Drawer.Item
-            label="Events"
-            icon="calendar"
-            active={activeScreen === eventsCalendarScreen}
-            onPress={() => {
-              navigation.navigate(eventsCalendarScreen);
-            }}
-          />
         </Drawer.Section>
         {isParachainAvailable ? (
           <Drawer.Section title="Parachains">
