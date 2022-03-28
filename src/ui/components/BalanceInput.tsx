@@ -39,9 +39,6 @@ export function BalanceInput(props: PropTypes) {
         placeholder="Enter amount"
         keyboardType="decimal-pad"
         value={amount}
-        onFocus={() => {
-          amount;
-        }}
         onChangeText={(nextValue: string) => {
           setAmount(decimalKeypad(nextValue));
           props.onChangeBalance(decimalKeypad(nextValue));

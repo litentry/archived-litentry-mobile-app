@@ -50,12 +50,18 @@ export function SendFundScreen({navigation, route}: Props) {
 
   const isEnteredBalanceValid = useMemo(() => {
     const enteredBalance = stringToBn(amount) ?? BN_ZERO;
-    const isBalanceValid =
-      enteredBalance.gt(BN_ZERO) && enteredBalance.lt(formattedStringToBn(accountInfo?.balance.formattedFree));
-    return isBalanceValid;
-  }, [amount, accountInfo, stringToBn]);
+    if (isKeepAliveActive) {
+      const keepAliveBalance = formattedStringToBn(accountInfo?.balance.free).sub(
+        formattedStringToBn(chainInfo?.existentialDeposit),
+      );
+      return (
+        enteredBalance.gt(formattedStringToBn(chainInfo?.existentialDeposit)) && enteredBalance.lt(keepAliveBalance)
+      );
+    }
+    return enteredBalance.gt(BN_ZERO) && enteredBalance.lt(formattedStringToBn(accountInfo?.balance.free));
+  }, [amount, accountInfo, stringToBn, isKeepAliveActive, chainInfo]);
 
-  const isSendDisabled = !isEnteredBalanceValid || !toAddress || !isToAddressValid;
+  const isSendDisabled = !isEnteredBalanceValid || !isToAddressValid;
 
   return (
     <Modalize ref={ref} adjustToContentHeight onClose={navigation.goBack} closeOnOverlayTap>
@@ -125,7 +131,7 @@ export function SendFundScreen({navigation, route}: Props) {
                       params: [toAddress, _amountBN],
                     })
                       .then(() => {
-                        snackbar('Funds transfered');
+                        snackbar('Funds transferred');
                         navigation.goBack();
                       })
                       .catch(() => {
