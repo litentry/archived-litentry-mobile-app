@@ -17,12 +17,13 @@ import {SelectAccount} from '@ui/components/SelectAccount';
 import type {Account} from 'src/api/hooks/useAccount';
 import {InputLabel} from '@ui/library/InputLabel';
 import {useCouncilAccounts} from 'src/hooks/useCouncilAccounts';
+import type {Account as LocalAccount} from 'context/AccountsContext';
 
 type Vote = 'Aye' | 'Nay' | 'Close';
 
 export function MotionsScreen() {
   const {data: motions, loading, refetch: refetchMotions} = useCouncilMotions();
-  const {isAnyAccountCouncil} = useCouncilAccounts();
+  const {isAnyAccountCouncil, councilAccounts} = useCouncilAccounts();
   const [voteType, setVoteType] = React.useState<Vote>();
   const [selectedMotion, setSelectedMotion] = React.useState<CouncilMotion>();
   const [voteModalVisible, setVoteModalVisible] = React.useState(false);
@@ -55,6 +56,7 @@ export function MotionsScreen() {
         visible={voteModalVisible}
         refetchMotions={refetchMotions}
         motion={selectedMotion}
+        councilAccounts={councilAccounts}
       />
     </SafeView>
   );
@@ -66,10 +68,10 @@ type VoteModalProps = {
   refetchMotions: () => MotionsQueryResult;
   voteType?: Vote;
   motion?: CouncilMotion;
+  councilAccounts?: LocalAccount[];
 };
 
-function VoteModal({visible, setVisible, refetchMotions, voteType, motion}: VoteModalProps) {
-  const {councilAccounts} = useCouncilAccounts();
+function VoteModal({visible, setVisible, refetchMotions, voteType, motion, councilAccounts}: VoteModalProps) {
   const {api} = useApi();
   const startTx = useApiTx();
   const heading = voteType === 'Aye' || voteType === 'Nay' ? `Vote ${voteType}` : 'Close';
