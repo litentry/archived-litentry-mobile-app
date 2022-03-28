@@ -89,6 +89,7 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.democracyProposalScreen} component={DemocracyProposalScreen} />
       <DashboardStack.Screen name={routeKeys.bountiesScreen} component={BountiesScreen} />
       <DashboardStack.Screen name={routeKeys.bountyDetailScreen} component={BountyDetailScreen} />
+      <DashboardStack.Screen name={routeKeys.eventsCalendarScreen} component={EventsCalendarScreen} />
       <DashboardStack.Screen
         name={routeKeys.addBountyScreen}
         component={AddBountyScreen}
@@ -205,7 +206,6 @@ function DrawerNavigator() {
       <Drawer.Screen name={routeKeys.devScreen} component={DevScreen} />
       <Drawer.Screen name={routeKeys.notificationSettingsScreen} component={NotificationSettingsScreen} />
       <Drawer.Screen name={routeKeys.feedbackScreen} component={FeedbackScreen} />
-      <Drawer.Screen name={routeKeys.eventsCalendarScreen} component={EventsCalendarScreen} />
     </Drawer.Navigator>
   );
 }
