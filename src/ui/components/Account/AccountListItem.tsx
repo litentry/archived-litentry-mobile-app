@@ -21,9 +21,10 @@ export function AccountListItem({account, onPress}: Props) {
       )}
       title={() => (
         <View style={globalStyles.justifyCenter}>
-          <Account account={account} onPress={onPress} />
+          <Account account={account} />
         </View>
       )}
+      onPress={onPress}
     />
   );
 }

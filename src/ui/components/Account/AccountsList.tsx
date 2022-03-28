@@ -20,7 +20,7 @@ export function AccountsList({accounts, header}: Props) {
       renderItem={({item}) => (
         <AccountListItem
           account={item.account}
-          onPress={() => navigation.navigate(accountScreen, {address: item.address})}
+          onPress={() => navigation.navigate(accountScreen, {address: item.account.address})}
         />
       )}
       keyExtractor={(item) => item.account.address}
