@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {Padder} from '@ui/components/Padder';
 import {Account} from './Account';
@@ -17,11 +17,13 @@ export function AccountTeaser({account, identiconSize = 20}: Props) {
   const navigation = useNavigation<NavigationProp<AppStackParamList>>();
 
   return (
-    <View style={styles.container}>
-      <Identicon value={account.address} size={identiconSize} />
-      <Padder scale={0.5} />
-      <Account account={account} onPress={() => navigation.navigate(accountScreen, {address: account.address})} />
-    </View>
+    <TouchableOpacity onPress={() => navigation.navigate(accountScreen, {address: account.address})}>
+      <View style={styles.container}>
+        <Identicon value={account.address} size={identiconSize} />
+        <Padder scale={0.5} />
+        <Account account={account} />
+      </View>
+    </TouchableOpacity>
   );
 }
 

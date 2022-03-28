@@ -88,18 +88,14 @@ function TipDetailScreen({route}: ScreenProps) {
         renderItem={({item}) => {
           return (
             <List.Item
-              title={() => (
-                <Account
-                  account={item.account}
-                  onPress={() => navigation.navigate(accountScreen, {address: item.account.address})}
-                />
-              )}
+              title={() => <Account account={item.account} />}
               description={() => <Caption>{item.formattedBalance}</Caption>}
               left={() => (
                 <View style={globalStyles.justifyCenter}>
                   <Identicon value={item.account.address} size={35} />
                 </View>
               )}
+              onPress={() => navigation.navigate(accountScreen, {address: item.account.address})}
             />
           );
         }}

@@ -88,9 +88,9 @@ function Voter({account, onPress}: {account: string; onPress?: () => void}) {
           <IdentityIcon value={account} size={35} />
         </View>
       )}
-      title={accountInfo && <Account account={accountInfo} onPress={onPress} />}
+      title={accountInfo && <Account account={accountInfo} />}
       description={councilVote?.formattedStake || ''}
-      disabled
+      onPress={onPress}
     />
   );
 }
