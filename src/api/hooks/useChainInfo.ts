@@ -20,6 +20,7 @@ const CHAIN_INFO_QUERY = gql`
         token
       }
       formattedExistentialDeposit
+      existentialDeposit
     }
   }
 `;
