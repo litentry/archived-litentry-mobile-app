@@ -1,7 +1,6 @@
 import React from 'react';
 import {SectionList, StyleSheet, View, Linking, RefreshControl} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
@@ -12,6 +11,7 @@ import {useTheme, Card, Caption, Subheading, Text, Button, Divider} from '@ui/li
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
 import {NetworkType} from 'src/types';
+import {EmptyStateTeaser} from '@ui/components/EmptyStateTeaser';
 import {useNetwork} from 'context/NetworkContext';
 
 const Tab = createMaterialTopTabNavigator();
@@ -107,7 +107,27 @@ function TreasuryOverviewScreen() {
                 </View>
               );
             }}
-            ListEmptyComponent={EmptyView}
+            renderSectionFooter={({section: {title, data}}) => {
+              return (
+                <>
+                  {title === 'Proposals' && data.length < 1 ? (
+                    <Card style={globalStyles.paddedContainer}>
+                      <EmptyStateTeaser
+                        subheading="There are no active proposals"
+                        caption="Please check back for updates"
+                      />
+                    </Card>
+                  ) : data.length < 1 ? (
+                    <Card style={globalStyles.paddedContainer}>
+                      <EmptyStateTeaser
+                        subheading="There are no approved proposals"
+                        caption="Please check back for updates"
+                      />
+                    </Card>
+                  ) : null}
+                </>
+              );
+            }}
           />
         )}
       </SafeView>
