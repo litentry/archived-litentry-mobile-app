@@ -21,7 +21,6 @@ import {
   parachainsNavigator,
   crowdloansNavigator,
   dashboardNavigator,
-  eventsCalendarScreen,
   technicalCommitteeScreen,
 } from '@ui/navigation/routeKeys';
 import {standardPadding} from '@ui/styles';
