@@ -10,6 +10,7 @@ import {Account} from './Account/Account';
 
 type Props = {
   onSelect: (account: SelectedAccount) => void;
+  accounts?: AccountType[];
 };
 
 type SelectedAccount = {
@@ -17,7 +18,7 @@ type SelectedAccount = {
   accountInfo?: SubstrateChainAccount;
 };
 
-export function SelectAccount({onSelect}: Props) {
+export function SelectAccount({onSelect, accounts}: Props) {
   const {colors} = useTheme();
   const {networkAccounts} = useAccounts();
   const [selectedAccount, setSelectedAccount] = React.useState<SelectedAccount>();
@@ -61,7 +62,7 @@ export function SelectAccount({onSelect}: Props) {
       <FlatList
         style={styles.items}
         ItemSeparatorComponent={Divider}
-        data={networkAccounts}
+        data={accounts ?? networkAccounts}
         keyExtractor={(item) => item.address}
         renderItem={({item}) => <AccountItem onSelect={selectAccount} account={item} />}
       />

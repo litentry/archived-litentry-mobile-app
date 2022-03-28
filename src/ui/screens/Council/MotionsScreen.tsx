@@ -13,7 +13,7 @@ import {DashboardStackParamList} from '@ui/navigation/navigation';
 import LoadingView from '@ui/components/LoadingView';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {ProposalCall} from '@ui/components/ProposalCall';
-import {SelectCouncilAccount} from '@ui/components/SelectCouncilAccount';
+import {SelectAccount} from '@ui/components/SelectAccount';
 import type {Account} from 'src/api/hooks/useAccount';
 import {InputLabel} from '@ui/library/InputLabel';
 import {useCouncilAccounts} from 'src/hooks/useCouncilAccounts';
@@ -69,6 +69,7 @@ type VoteModalProps = {
 };
 
 function VoteModal({visible, setVisible, refetchMotions, voteType, motion}: VoteModalProps) {
+  const {councilAccounts} = useCouncilAccounts();
   const {api} = useApi();
   const startTx = useApiTx();
   const heading = voteType === 'Aye' || voteType === 'Nay' ? `Vote ${voteType}` : 'Close';
@@ -143,7 +144,10 @@ function VoteModal({visible, setVisible, refetchMotions, voteType, motion}: Vote
       <Padder scale={1} />
 
       <InputLabel label="Select Council account" />
-      <SelectCouncilAccount onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
+      <SelectAccount
+        accounts={councilAccounts}
+        onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)}
+      />
 
       <Padder scale={2} />
       <View style={styles.buttons}>
