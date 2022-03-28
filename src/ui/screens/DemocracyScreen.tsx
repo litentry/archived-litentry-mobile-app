@@ -3,7 +3,6 @@ import {SectionList, StyleSheet, View, RefreshControl} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Layout} from '@ui/components/Layout';
-import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -14,11 +13,11 @@ import {Card, Headline, List, Subheading, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {ProposalCall} from '@ui/components/ProposalCall';
 import {useDemocracy, DemocracyProposal, DemocracyReferendum} from 'src/api/hooks/useDemocracy';
+import {EmptyStateTeaser} from '@ui/components/EmptyStateTeaser';
 
 export function DemocracyScreen() {
   const {data: democracy, loading, refetch, refreshing} = useDemocracy();
   const {colors} = useTheme();
-
   const groupedData: {title: string; data: Array<DemocracyProposal | DemocracyReferendum>}[] = React.useMemo(
     () => [
       {title: 'Referenda', data: democracy.referendums ?? []},
@@ -65,8 +64,28 @@ export function DemocracyScreen() {
                 </>
               );
             }}
+            renderSectionFooter={({section}) => {
+              return (
+                <>
+                  {section.title === 'Proposals' && section.data.length < 1 ? (
+                    <Card style={globalStyles.paddedContainer}>
+                      <EmptyStateTeaser
+                        subheading="There are no active proposals"
+                        caption="Please check back for updates"
+                      />
+                    </Card>
+                  ) : section.data.length < 1 ? (
+                    <Card style={globalStyles.paddedContainer}>
+                      <EmptyStateTeaser
+                        subheading="There are no active referendums"
+                        caption="Please check back for updates"
+                      />
+                    </Card>
+                  ) : null}
+                </>
+              );
+            }}
             keyExtractor={(item) => item.index.toString()}
-            ListEmptyComponent={EmptyView}
             ListFooterComponent={() => (
               <View style={styles.footer}>
                 <Padder scale={1} />
