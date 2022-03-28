@@ -51,7 +51,7 @@ function RegistrarList() {
         <RegistrarItem
           testID="registrar_item"
           registrar={registrar}
-          onPress={() => navigation.navigate(accountScreen, {address: registrar.address})}
+          onPress={() => navigation.navigate(accountScreen, {address: registrar.account.address})}
         />
       )}
       keyExtractor={(item) => item.account.address}
@@ -78,7 +78,7 @@ function RegistrarItem({registrar, testID, onPress}: RegistrarItemProps) {
           <Identicon value={account.address} size={30} />
         </View>
       )}
-      title={<Account account={account} onPress={onPress} />}
+      title={<Account account={account} />}
       description={
         <>
           <Caption>{`Index: ${id}`}</Caption>
@@ -86,6 +86,7 @@ function RegistrarItem({registrar, testID, onPress}: RegistrarItemProps) {
           <Caption>{`Fee: ${formattedFee}`}</Caption>
         </>
       }
+      onPress={onPress}
     />
   );
 }
