@@ -1,20 +1,26 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useContext, useEffect, useMemo, useRef} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {NavigationProp, RouteProp} from '@react-navigation/core';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {Modalize} from 'react-native-modalize';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {useApiTx} from 'src/api/hooks/useApiTx';
-import {stringToBn} from 'src/api/utils/balance';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {sendFundScreen} from '@ui/navigation/routeKeys';
-import {Button, Headline, IconButton, Text, TextInput} from '@ui/library';
+import {Button, Headline, IconButton, Text, TextInput, Switch, HelperText} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {Layout} from '@ui/components/Layout';
 import {standardPadding} from '@ui/styles';
 import BalanceInput from '@ui/components/BalanceInput';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {useChainInfo} from 'src/api/hooks/useChainInfo';
+import {InputLabel} from '@ui/library/InputLabel';
+import {NetworkContext} from 'context/NetworkContext';
+import {isAddressValid} from 'src/utils/address';
+import {useSnackbar} from 'context/SnackbarContext';
+import {BN_ZERO} from '@polkadot/util';
+import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
+import {stringToBn as stringToBnUtil, formattedStringToBn} from 'src/api/utils/balance';
 
 type Props = {
   navigation: NavigationProp<AccountsStackParamList, typeof sendFundScreen>;
@@ -26,14 +32,36 @@ export function SendFundScreen({navigation, route}: Props) {
   const {data: accountInfo} = useAccount(address);
   const ref = useRef<Modalize>(null);
   const [amount, setAmount] = React.useState('');
-  const [to, setTo] = React.useState<string>();
+  const [toAddress, setToAddress] = React.useState<string>();
   const [scanning, setScanning] = React.useState(false);
   const startTx = useApiTx();
   const {data: chainInfo} = useChainInfo();
-
+  const [isKeepAliveActive, setIsKeepAliveActive] = React.useState(true);
+  const {currentNetwork} = useContext(NetworkContext);
+  const snackbar = useSnackbar();
+  const {stringToBn} = useFormatBalance();
   useEffect(() => {
     ref.current?.open();
   }, []);
+
+  const isToAddressValid = useMemo(() => {
+    return toAddress ? isAddressValid(currentNetwork, toAddress) : false;
+  }, [toAddress, currentNetwork]);
+
+  const isEnteredBalanceValid = useMemo(() => {
+    const enteredBalance = stringToBn(amount) ?? BN_ZERO;
+    if (isKeepAliveActive) {
+      const keepAliveBalance = formattedStringToBn(accountInfo?.balance.free).sub(
+        formattedStringToBn(chainInfo?.existentialDeposit),
+      );
+      return (
+        enteredBalance.gt(formattedStringToBn(chainInfo?.existentialDeposit)) && enteredBalance.lt(keepAliveBalance)
+      );
+    }
+    return enteredBalance.gt(BN_ZERO) && enteredBalance.lt(formattedStringToBn(accountInfo?.balance.free));
+  }, [amount, accountInfo, stringToBn, isKeepAliveActive, chainInfo]);
+
+  const isSendDisabled = !isEnteredBalanceValid || !isToAddressValid;
 
   return (
     <Modalize ref={ref} adjustToContentHeight onClose={navigation.goBack} closeOnOverlayTap>
@@ -44,7 +72,7 @@ export function SendFundScreen({navigation, route}: Props) {
             <Padder scale={1} />
             <ScanQRCode
               onScanComplete={(_to) => {
-                setTo(_to);
+                setToAddress(_to);
                 setScanning(false);
               }}
             />
@@ -57,41 +85,67 @@ export function SendFundScreen({navigation, route}: Props) {
           </View>
         ) : (
           <View style={styles.container}>
-            <Headline>Send</Headline>
+            <Headline>Send funds</Headline>
             <Padder scale={1} />
-            <BalanceInput account={accountInfo} onChangeBalance={setAmount} />
-            <Padder scale={1} />
+            <InputLabel label="Enter amount" helperText="Type the amount you want to transfer" />
+            <BalanceInput account={accountInfo} onChangeBalance={setAmount} initialBalance={amount} />
+            <Padder scale={0.5} />
+            <InputLabel
+              label="Send to address"
+              helperText="Scan a contact address or paste the address you want to send funds to."
+            />
             <TextInput
               autoComplete="off"
               placeholder="To"
-              value={to}
-              onChangeText={(nextValue) => setTo(nextValue)}
+              value={toAddress}
+              onChangeText={(nextValue) => setToAddress(nextValue)}
               right={<TextInput.Icon name="qrcode" onPress={() => setScanning(true)} />}
             />
+            {!isToAddressValid && toAddress ? <HelperText type="error">Enter a valid address</HelperText> : null}
+            <Padder scale={1} />
+            <InputLabel
+              label="Existential deposit"
+              helperText="The minimum amount that an account should have to be deemed active"
+            />
+            <TextInput dense mode="outlined" disabled defaultValue={chainInfo?.formattedExistentialDeposit} />
+            <Padder scale={1} />
+            <View style={styles.keepAlive}>
+              <View style={styles.keepAliveContainer}>
+                {isKeepAliveActive ? (
+                  <HelperText type="info">Transfer with account keep-alive checks</HelperText>
+                ) : (
+                  <HelperText type="info">Normal transfer without keep-alive checks</HelperText>
+                )}
+              </View>
+              <Switch value={isKeepAliveActive} onValueChange={() => setIsKeepAliveActive(!isKeepAliveActive)} />
+            </View>
             <Padder scale={1} />
             <View style={styles.buttons}>
               <Button
                 onPress={() => {
                   if (chainInfo) {
-                    const _amountBN = stringToBn(chainInfo.registry, amount);
+                    const _amountBN = stringToBnUtil(chainInfo.registry, amount);
                     startTx({
                       address,
-                      txMethod: 'balances.transferKeepAlive',
-                      params: [to, _amountBN],
+                      txMethod: `${isKeepAliveActive ? `balances.transferKeepAlive` : `balances.transfer`}`,
+                      params: [toAddress, _amountBN],
                     })
                       .then(() => {
+                        snackbar('Funds transferred');
                         navigation.goBack();
                       })
-                      .catch((e: Error) => {
-                        console.warn(e);
+                      .catch(() => {
+                        snackbar('Error while transferring funds');
                       });
                   }
                 }}
-                mode="outlined">
-                Send
+                mode="outlined"
+                disabled={isSendDisabled}
+                icon={'send-outline'}>
+                Make Transfer
               </Button>
             </View>
-            <Padder scale={3} />
+            <Padder />
           </View>
         )}
       </SafeView>
@@ -132,6 +186,15 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
     borderRadius: 10,
+  },
+  keepAlive: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    paddingVertical: standardPadding * 2,
+  },
+  keepAliveContainer: {
+    paddingVertical: 5,
+    paddingHorizontal: standardPadding,
   },
 });
 
