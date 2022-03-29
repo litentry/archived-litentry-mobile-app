@@ -1,4 +1,5 @@
 import {
+  accountScreen,
   accountsGuideScreen,
   accountsNavigator,
   accountsScreen,
@@ -117,6 +118,7 @@ type AppStackParamList = {
   [permissionGrantingPromptScreen]: undefined;
   [drawerNavigator]: undefined;
   [networkSelectionScreen]: undefined;
+  [accountScreen]: {address: string};
 };
 
 type AccountsStackParamList = {
