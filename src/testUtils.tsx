@@ -25,5 +25,15 @@ function customRender(ui: React.ReactElement, options?: CustomRenderOptions) {
   return render(ui, {wrapper: Providers, ...options});
 }
 
+const mockedNavigation = jest.fn();
+
+jest.mock('@react-navigation/native', () => {
+  return {
+    useNavigation: () => ({
+      navigate: mockedNavigation,
+    }),
+  };
+});
+
 export * from '@testing-library/react-native';
 export {customRender as render};
