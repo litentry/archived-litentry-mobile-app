@@ -68,6 +68,27 @@ export function AccountScreen({route}: {route: RouteProp<AppStackParamList, type
               </Card.Content>
             </Card>
           ) : null}
+          <Padder scale={1} />
+          {account?.balance ? (
+            <Card>
+              <Card.Content>
+                <Caption style={{color: colors.accent}}>BALANCE</Caption>
+                <Padder scale={0.5} />
+                <View style={styles.balance}>
+                  <Caption>Balance</Caption>
+                  <Caption>{account?.balance.formattedFree}</Caption>
+                </View>
+                <View style={styles.balance}>
+                  <Caption>Reserved</Caption>
+                  <Caption>{account?.balance.formattedReserved}</Caption>
+                </View>
+                <View style={styles.balance}>
+                  <Caption>Locked</Caption>
+                  <Caption>{account?.balance.formattedFreeFrozen}</Caption>
+                </View>
+              </Card.Content>
+            </Card>
+          ) : null}
         </View>
       )}
     </SafeView>
@@ -80,5 +101,9 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     alignSelf: 'flex-start',
+  },
+  balance: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
