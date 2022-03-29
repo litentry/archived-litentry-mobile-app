@@ -11,7 +11,7 @@
     "check-types": "./node_modules/.bin/tsc",
     "prettier": "./node_modules/.bin/prettier --ignore-path .gitignore \"**/*.+(js|ts|tsx|json)\"",
     "nodeify": "rn-nodeify --hack --install process,crypto,events,constant,console,stream,url,util",
-    "validate": "./node_modules/.bin/npm-run-all --parallel check-types lint",
+    "validate": "./node_modules/.bin/npm-run-all --parallel check-types lint test",
     "postinstall": "npm run nodeify && patch-package",
     "prepare": "husky install",
     "bundle:android": "cd android/ && ./gradlew bundleRelease",
