@@ -9,9 +9,13 @@ import {Account} from '@ui/components/Account/Account';
 import Identicon from '@polkadot/reactnative-identicon';
 import {Padder} from '@ui/components/Padder';
 import {EmptyView} from '@ui/components/EmptyView';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {AppStackParamList} from '@ui/navigation/navigation';
+import {accountScreen} from '@ui/navigation/routeKeys';
 
 function RegistrarList() {
   const {data: registrarsSummary, loading} = useRegistrarsSummary();
+  const navigation = useNavigation<NavigationProp<AppStackParamList>>();
 
   if (loading) {
     return <LoadingView />;
@@ -43,8 +47,14 @@ function RegistrarList() {
       )}
       contentContainerStyle={styles.flatList}
       data={registrars}
-      renderItem={({item: registrar}) => <RegistrarItem testID="registrar_item" registrar={registrar} />}
-      keyExtractor={(item) => item.address}
+      renderItem={({item: registrar}) => (
+        <RegistrarItem
+          testID="registrar_item"
+          registrar={registrar}
+          onPress={() => navigation.navigate(accountScreen, {address: registrar.account.address})}
+        />
+      )}
+      keyExtractor={(item) => item.account.address}
       ItemSeparatorComponent={Divider}
       ListEmptyComponent={EmptyView}
     />
@@ -54,9 +64,10 @@ function RegistrarList() {
 type RegistrarItemProps = {
   testID: string;
   registrar: Registrar;
+  onPress?: () => void;
 };
 
-function RegistrarItem({registrar, testID}: RegistrarItemProps) {
+function RegistrarItem({registrar, testID, onPress}: RegistrarItemProps) {
   const {account, id, formattedFee} = registrar;
 
   return (
@@ -75,6 +86,7 @@ function RegistrarItem({registrar, testID}: RegistrarItemProps) {
           <Caption>{`Fee: ${formattedFee}`}</Caption>
         </>
       }
+      onPress={onPress}
     />
   );
 }

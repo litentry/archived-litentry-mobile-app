@@ -62,6 +62,7 @@ import {AccountsGuideScreen} from '@ui/screens/AccountsGuideScreen';
 import {ReceiveFundScreen} from '@ui/screens/ReceiveFundScreen';
 import {SendFundScreen} from '@ui/screens/SendFundScreen';
 import {FeedbackScreen} from '@ui/screens/FeedbackScreen';
+import {AccountScreen} from '@ui/screens/AccountScreen';
 import {AddBountyScreen} from '@ui/screens/AddBountyScreen';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
@@ -88,6 +89,7 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.democracyProposalScreen} component={DemocracyProposalScreen} />
       <DashboardStack.Screen name={routeKeys.bountiesScreen} component={BountiesScreen} />
       <DashboardStack.Screen name={routeKeys.bountyDetailScreen} component={BountyDetailScreen} />
+      <DashboardStack.Screen name={routeKeys.eventsCalendarScreen} component={EventsCalendarScreen} />
       <DashboardStack.Screen
         name={routeKeys.addBountyScreen}
         component={AddBountyScreen}
@@ -204,7 +206,6 @@ function DrawerNavigator() {
       <Drawer.Screen name={routeKeys.devScreen} component={DevScreen} />
       <Drawer.Screen name={routeKeys.notificationSettingsScreen} component={NotificationSettingsScreen} />
       <Drawer.Screen name={routeKeys.feedbackScreen} component={FeedbackScreen} />
-      <Drawer.Screen name={routeKeys.eventsCalendarScreen} component={EventsCalendarScreen} />
     </Drawer.Navigator>
   );
 }
@@ -257,14 +258,23 @@ function AppNavigator() {
   }
 
   return (
-    <AppStack.Navigator screenOptions={overlayScreenOptions}>
+    <AppStack.Navigator screenOptions={{headerShown: false}}>
       {isPnPromptNeeded ? (
         <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen}>
           {() => <PermissionGrantingPrompt skipPnPermission={skipPnPermission} />}
         </AppStack.Screen>
       ) : undefined}
       <AppStack.Screen name={routeKeys.drawerNavigator} component={DrawerNavigator} />
-      <AppStack.Screen name={routeKeys.networkSelectionScreen} component={NetworkSelectionScreen} />
+      <AppStack.Screen
+        name={routeKeys.networkSelectionScreen}
+        component={NetworkSelectionScreen}
+        options={{animationEnabled: false, presentation: 'transparentModal'}}
+      />
+      <AppStack.Screen
+        name={routeKeys.accountScreen}
+        component={AccountScreen}
+        options={{header: (props) => <MainStackAppBar {...props} />, headerShown: true}}
+      />
     </AppStack.Navigator>
   );
 }

@@ -2,12 +2,14 @@ import {gql, useQuery} from '@apollo/client';
 import type {
   SubstrateChainAccount,
   SubstrateChainAccountBalance,
-  SubstrateChainRegistrationJudgement,
   SubstrateChainDeriveAccountRegistration,
   SubstrateChainIdentityJudgement,
+  SubstrateChainAccountInfo,
+  SubstrateChainRegistrationJudgement,
 } from 'src/generated/litentryGraphQLTypes';
 
 export type Account = SubstrateChainAccount;
+export type AccountInfo = SubstrateChainAccountInfo;
 export type AccountBalance = SubstrateChainAccountBalance;
 export type RegistrationJudgment = SubstrateChainRegistrationJudgement;
 export type AccountRegistration = SubstrateChainDeriveAccountRegistration;

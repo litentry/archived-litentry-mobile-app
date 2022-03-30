@@ -1,16 +1,17 @@
 import React from 'react';
 import {List} from '@ui/library';
 import {View} from 'react-native';
-import type {Account as SubstrateChainAccount} from 'src/api/hooks/useAccount';
+import type {Account as AccountInfo} from 'src/api/hooks/useAccount';
 import globalStyles from '@ui/styles';
 import Identicon from '@polkadot/reactnative-identicon';
 import {Account} from './Account';
 
 type Props = {
-  account: SubstrateChainAccount;
+  account: AccountInfo;
+  onPress?: () => void;
 };
 
-export function AccountListItem({account}: Props) {
+export function AccountListItem({account, onPress}: Props) {
   return (
     <List.Item
       left={() => (
@@ -23,6 +24,7 @@ export function AccountListItem({account}: Props) {
           <Account account={account} />
         </View>
       )}
+      onPress={onPress}
     />
   );
 }

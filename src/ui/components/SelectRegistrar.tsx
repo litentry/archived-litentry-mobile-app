@@ -49,7 +49,7 @@ export function SelectRegistrar({onSelect}: Props) {
             left={() =>
               registrar ? (
                 <View style={globalStyles.justifyCenter}>
-                  <Identicon value={registrar?.address} size={25} />
+                  <Identicon value={registrar?.account.address} size={25} />
                 </View>
               ) : null
             }
@@ -79,7 +79,7 @@ type RegistrarItemProps = {
 };
 
 function RegistrarItem({onSelect, registrar}: RegistrarItemProps) {
-  const {account, id, address, formattedFee} = registrar;
+  const {account, id, formattedFee} = registrar;
 
   return (
     <Menu.Item
@@ -88,7 +88,7 @@ function RegistrarItem({onSelect, registrar}: RegistrarItemProps) {
       title={
         <View style={globalStyles.justifyCenter}>
           <View style={globalStyles.rowAlignCenter}>
-            <Identicon value={address} size={20} />
+            <Identicon value={account.address} size={20} />
             <Padder scale={0.5} />
             <Account account={account} />
           </View>

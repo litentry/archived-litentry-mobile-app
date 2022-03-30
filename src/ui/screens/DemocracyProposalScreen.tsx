@@ -13,7 +13,7 @@ import globalStyles, {standardPadding} from '@ui/styles';
 import {Button, Caption, Headline, Icon, List, Modal, Text} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
-import {ProposalCallInfo} from '@ui/components/ProposalCallInfo';
+import {ProposalCall} from '@ui/components/ProposalCall';
 import {Account} from 'src/api/hooks/useAccount';
 
 export function DemocracyProposalScreen({
@@ -34,7 +34,7 @@ export function DemocracyProposalScreen({
       <SafeView edges={noTopEdges}>
         <ScrollView contentContainerStyle={styles.container}>
           <List.Item title={title} disabled left={() => <Headline>{proposal.index}</Headline>} />
-          <ProposalCallInfo proposal={proposal} />
+          <ProposalCall proposal={proposal} />
           <Padder scale={1} />
 
           <Caption>{`Proposal Hash:`}</Caption>

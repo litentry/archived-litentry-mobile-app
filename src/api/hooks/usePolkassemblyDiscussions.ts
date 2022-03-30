@@ -1,8 +1,7 @@
 import {useInfiniteQuery} from 'react-query';
 import {gql} from 'graphql-tag';
 import {print} from 'graphql';
-import {NetworkContext} from 'context/NetworkContext';
-import {useContext} from 'react';
+import {useNetwork} from 'context/NetworkContext';
 
 const orderByMap = {
   lastCommented: {last_update: {last_update: 'desc'}},
@@ -27,7 +26,7 @@ export function usePolkassemblyDiscussions({
   orderBy: OrderByType;
   topicId?: number;
 }) {
-  const {currentNetwork} = useContext(NetworkContext);
+  const {currentNetwork} = useNetwork();
 
   return useInfiniteQuery(
     ['polkassemblyDiscussions', {orderBy, topicId, network: currentNetwork.key}],

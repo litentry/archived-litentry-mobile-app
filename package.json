@@ -20,13 +20,13 @@
     "codegen": "graphql-codegen --config codegen.yml"
   },
   "resolutions": {
-    "@polkadot/types": "^7.9.1",
+    "@polkadot/types": "^7.13.1",
     "@polkadot/util": "^8.2.2",
-    "@polkadot/util-crypto": "^8.2.2"
+    "@polkadot/util-crypto": "^8.6.1"
   },
   "dependencies": {
     "@apollo/client": "^3.5.10",
-    "@polkadot/api": "^7.9.1",
+    "@polkadot/api": "^7.13.1",
     "@polkadot/apps-config": "^0.103.1",
     "@polkadot/reactnative-identicon": "0.89.2",
     "@polkadot/ui-settings": "^0.89.2",
@@ -76,7 +76,7 @@
     "react-native-pager-view": "^5.4.11",
     "react-native-paper": "^4.11.2",
     "react-native-paper-tabs": "^0.7.0",
-    "react-native-permissions": "^3.3.0",
+    "react-native-permissions": "^3.3.1",
     "react-native-popable": "^0.4.3",
     "react-native-qrcode-scanner": "^1.5.5",
     "react-native-randombytes": "^3.6.0",
@@ -114,7 +114,7 @@
     "@types/jest": "^27.4.1",
     "@types/lodash": "^4.14.178",
     "@types/react": "^17.0.38",
-    "@types/react-native": "^0.66.13",
+    "@types/react-native": "^0.67.3",
     "@types/react-native-vector-icons": "^6.4.10",
     "@types/react-test-renderer": "^17.0.1",
     "@typescript-eslint/eslint-plugin": "^5.12.1",

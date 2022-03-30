@@ -15,21 +15,18 @@ const BOUNTIES_QUERY = gql`
       formattedValue
       formattedBond
       proposer {
-        address
         account {
           ...AccountFields
         }
       }
       bountyStatus {
         beneficiary {
-          address
           account {
             ...AccountFields
           }
         }
         status
         curator {
-          address
           account {
             ...AccountFields
           }

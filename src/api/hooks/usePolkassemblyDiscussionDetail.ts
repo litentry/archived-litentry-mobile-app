@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {NetworkContext} from 'context/NetworkContext';
+import {useNetwork} from 'context/NetworkContext';
 import gql from 'graphql-tag';
 import {print} from 'graphql/language/printer';
-import {useContext} from 'react';
 import {useQuery} from 'react-query';
 
 export function usePolkassemblyDiscussionDetail(id: number) {
-  const {currentNetwork} = useContext(NetworkContext);
+  const {currentNetwork} = useNetwork();
 
   return useQuery(['polkassemblyDiscussionDetail', {network: currentNetwork.key, id}], async () => {
     // Only polkadot & kusama are supported
@@ -19,7 +18,7 @@ export function usePolkassemblyDiscussionDetail(id: number) {
       body: JSON.stringify({
         operationName: 'DiscussionPostAndComments',
         variables,
-        query: discussionPostAndCommnetsQuery,
+        query: discussionPostAndCommentsQuery,
       }),
       method: 'POST',
     });
@@ -29,7 +28,7 @@ export function usePolkassemblyDiscussionDetail(id: number) {
   });
 }
 
-const discussionPostAndCommnetsQuery = print(gql`
+const discussionPostAndCommentsQuery = print(gql`
   query DiscussionPostAndComments($id: Int!) {
     posts(where: {id: {_eq: $id}}) {
       ...discussionPost
@@ -147,7 +146,7 @@ type Posts = {
   title?: Maybe<Scalars['String']>;
   /** An object relationship */
   topic: Post_Topics;
-  /** Define the main suject of the post */
+  /** Define the main subject of the post */
   topic_id: Scalars['Int'];
   /** An object relationship */
   type: Post_Types;

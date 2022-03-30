@@ -3,7 +3,7 @@ import {StyleSheet, useWindowDimensions, View, ScrollView, KeyboardAvoidingView,
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {NavigationProp} from '@react-navigation/native';
 import {useAccounts} from 'context/AccountsContext';
-import {NetworkContext} from 'context/NetworkContext';
+import {useNetwork} from 'context/NetworkContext';
 import {ProgressBar} from '@ui/components/ProgressBar';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import SubstrateSign from 'react-native-substrate-sign';
@@ -47,7 +47,7 @@ export function ImportAccountScreen() {
 function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const theme = useTheme();
   const {status: keyboardStatus} = useKeyboardStatus();
-  const {currentNetwork} = React.useContext(NetworkContext);
+  const {currentNetwork} = useNetwork();
   const [account, setAccountState] = React.useState<Account>({title: '', password: '', confirmPassword: ''});
   const setAccount = (_account: Account) => {
     setAccountState(_account);
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
 });
 
 function useParseSeed() {
-  const {currentNetwork} = React.useContext(NetworkContext);
+  const {currentNetwork} = useNetwork();
   const [seed, setSeed] = React.useState('');
   const [address, setAddress] = React.useState<string>();
   const [isSeedValid, setIsSeedValid] = React.useState(false);

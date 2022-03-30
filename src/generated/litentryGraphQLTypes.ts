@@ -58,7 +58,9 @@ export type Bep20AccountTransfersToArgs = {
 export type Bep20Account_Filter = {
   address?: InputMaybe<Scalars['String']>;
   address_contains?: InputMaybe<Scalars['String']>;
+  address_contains_nocase?: InputMaybe<Scalars['String']>;
   address_ends_with?: InputMaybe<Scalars['String']>;
+  address_ends_with_nocase?: InputMaybe<Scalars['String']>;
   address_gt?: InputMaybe<Scalars['String']>;
   address_gte?: InputMaybe<Scalars['String']>;
   address_in?: InputMaybe<Array<Scalars['String']>>;
@@ -66,10 +68,14 @@ export type Bep20Account_Filter = {
   address_lte?: InputMaybe<Scalars['String']>;
   address_not?: InputMaybe<Scalars['String']>;
   address_not_contains?: InputMaybe<Scalars['String']>;
+  address_not_contains_nocase?: InputMaybe<Scalars['String']>;
   address_not_ends_with?: InputMaybe<Scalars['String']>;
+  address_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
   address_not_in?: InputMaybe<Array<Scalars['String']>>;
   address_not_starts_with?: InputMaybe<Scalars['String']>;
+  address_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
   address_starts_with?: InputMaybe<Scalars['String']>;
+  address_starts_with_nocase?: InputMaybe<Scalars['String']>;
   balance?: InputMaybe<Scalars['BigInt']>;
   balance_gt?: InputMaybe<Scalars['BigInt']>;
   balance_gte?: InputMaybe<Scalars['BigInt']>;
@@ -80,7 +86,9 @@ export type Bep20Account_Filter = {
   balance_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   contractAddress?: InputMaybe<Scalars['String']>;
   contractAddress_contains?: InputMaybe<Scalars['String']>;
+  contractAddress_contains_nocase?: InputMaybe<Scalars['String']>;
   contractAddress_ends_with?: InputMaybe<Scalars['String']>;
+  contractAddress_ends_with_nocase?: InputMaybe<Scalars['String']>;
   contractAddress_gt?: InputMaybe<Scalars['String']>;
   contractAddress_gte?: InputMaybe<Scalars['String']>;
   contractAddress_in?: InputMaybe<Array<Scalars['String']>>;
@@ -88,10 +96,14 @@ export type Bep20Account_Filter = {
   contractAddress_lte?: InputMaybe<Scalars['String']>;
   contractAddress_not?: InputMaybe<Scalars['String']>;
   contractAddress_not_contains?: InputMaybe<Scalars['String']>;
+  contractAddress_not_contains_nocase?: InputMaybe<Scalars['String']>;
   contractAddress_not_ends_with?: InputMaybe<Scalars['String']>;
+  contractAddress_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
   contractAddress_not_in?: InputMaybe<Array<Scalars['String']>>;
   contractAddress_not_starts_with?: InputMaybe<Scalars['String']>;
+  contractAddress_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
   contractAddress_starts_with?: InputMaybe<Scalars['String']>;
+  contractAddress_starts_with_nocase?: InputMaybe<Scalars['String']>;
   decimals?: InputMaybe<Scalars['Int']>;
   decimals_gt?: InputMaybe<Scalars['Int']>;
   decimals_gte?: InputMaybe<Scalars['Int']>;
@@ -174,7 +186,9 @@ export type Bep20Account_Filter = {
   lastTransferOutTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   symbol?: InputMaybe<Scalars['String']>;
   symbol_contains?: InputMaybe<Scalars['String']>;
+  symbol_contains_nocase?: InputMaybe<Scalars['String']>;
   symbol_ends_with?: InputMaybe<Scalars['String']>;
+  symbol_ends_with_nocase?: InputMaybe<Scalars['String']>;
   symbol_gt?: InputMaybe<Scalars['String']>;
   symbol_gte?: InputMaybe<Scalars['String']>;
   symbol_in?: InputMaybe<Array<Scalars['String']>>;
@@ -182,10 +196,14 @@ export type Bep20Account_Filter = {
   symbol_lte?: InputMaybe<Scalars['String']>;
   symbol_not?: InputMaybe<Scalars['String']>;
   symbol_not_contains?: InputMaybe<Scalars['String']>;
+  symbol_not_contains_nocase?: InputMaybe<Scalars['String']>;
   symbol_not_ends_with?: InputMaybe<Scalars['String']>;
+  symbol_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
   symbol_not_in?: InputMaybe<Array<Scalars['String']>>;
   symbol_not_starts_with?: InputMaybe<Scalars['String']>;
+  symbol_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
   symbol_starts_with?: InputMaybe<Scalars['String']>;
+  symbol_starts_with_nocase?: InputMaybe<Scalars['String']>;
   totalTransfers?: InputMaybe<Scalars['BigInt']>;
   totalTransfers_gt?: InputMaybe<Scalars['BigInt']>;
   totalTransfers_gte?: InputMaybe<Scalars['BigInt']>;
@@ -256,7 +274,9 @@ export type Bep20Transfer_Filter = {
   fromAccountBalanceAtBlock_not?: InputMaybe<Scalars['BigInt']>;
   fromAccountBalanceAtBlock_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   from_contains?: InputMaybe<Scalars['String']>;
+  from_contains_nocase?: InputMaybe<Scalars['String']>;
   from_ends_with?: InputMaybe<Scalars['String']>;
+  from_ends_with_nocase?: InputMaybe<Scalars['String']>;
   from_gt?: InputMaybe<Scalars['String']>;
   from_gte?: InputMaybe<Scalars['String']>;
   from_in?: InputMaybe<Array<Scalars['String']>>;
@@ -264,10 +284,14 @@ export type Bep20Transfer_Filter = {
   from_lte?: InputMaybe<Scalars['String']>;
   from_not?: InputMaybe<Scalars['String']>;
   from_not_contains?: InputMaybe<Scalars['String']>;
+  from_not_contains_nocase?: InputMaybe<Scalars['String']>;
   from_not_ends_with?: InputMaybe<Scalars['String']>;
+  from_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
   from_not_in?: InputMaybe<Array<Scalars['String']>>;
   from_not_starts_with?: InputMaybe<Scalars['String']>;
+  from_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
   from_starts_with?: InputMaybe<Scalars['String']>;
+  from_starts_with_nocase?: InputMaybe<Scalars['String']>;
   gas?: InputMaybe<Scalars['BigInt']>;
   gas_gt?: InputMaybe<Scalars['BigInt']>;
   gas_gte?: InputMaybe<Scalars['BigInt']>;
@@ -302,7 +326,9 @@ export type Bep20Transfer_Filter = {
   toAccountBalanceAtBlock_not?: InputMaybe<Scalars['BigInt']>;
   toAccountBalanceAtBlock_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   to_contains?: InputMaybe<Scalars['String']>;
+  to_contains_nocase?: InputMaybe<Scalars['String']>;
   to_ends_with?: InputMaybe<Scalars['String']>;
+  to_ends_with_nocase?: InputMaybe<Scalars['String']>;
   to_gt?: InputMaybe<Scalars['String']>;
   to_gte?: InputMaybe<Scalars['String']>;
   to_in?: InputMaybe<Array<Scalars['String']>>;
@@ -310,10 +336,14 @@ export type Bep20Transfer_Filter = {
   to_lte?: InputMaybe<Scalars['String']>;
   to_not?: InputMaybe<Scalars['String']>;
   to_not_contains?: InputMaybe<Scalars['String']>;
+  to_not_contains_nocase?: InputMaybe<Scalars['String']>;
   to_not_ends_with?: InputMaybe<Scalars['String']>;
+  to_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
   to_not_in?: InputMaybe<Array<Scalars['String']>>;
   to_not_starts_with?: InputMaybe<Scalars['String']>;
+  to_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
   to_starts_with?: InputMaybe<Scalars['String']>;
+  to_starts_with_nocase?: InputMaybe<Scalars['String']>;
 };
 
 export enum Bep20Transfer_OrderBy {
@@ -384,7 +414,9 @@ export type Erc20AccountTransfersToArgs = {
 export type Erc20Account_Filter = {
   address?: InputMaybe<Scalars['String']>;
   address_contains?: InputMaybe<Scalars['String']>;
+  address_contains_nocase?: InputMaybe<Scalars['String']>;
   address_ends_with?: InputMaybe<Scalars['String']>;
+  address_ends_with_nocase?: InputMaybe<Scalars['String']>;
   address_gt?: InputMaybe<Scalars['String']>;
   address_gte?: InputMaybe<Scalars['String']>;
   address_in?: InputMaybe<Array<Scalars['String']>>;
@@ -392,10 +424,14 @@ export type Erc20Account_Filter = {
   address_lte?: InputMaybe<Scalars['String']>;
   address_not?: InputMaybe<Scalars['String']>;
   address_not_contains?: InputMaybe<Scalars['String']>;
+  address_not_contains_nocase?: InputMaybe<Scalars['String']>;
   address_not_ends_with?: InputMaybe<Scalars['String']>;
+  address_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
   address_not_in?: InputMaybe<Array<Scalars['String']>>;
   address_not_starts_with?: InputMaybe<Scalars['String']>;
+  address_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
   address_starts_with?: InputMaybe<Scalars['String']>;
+  address_starts_with_nocase?: InputMaybe<Scalars['String']>;
   balance?: InputMaybe<Scalars['BigInt']>;
   balance_gt?: InputMaybe<Scalars['BigInt']>;
   balance_gte?: InputMaybe<Scalars['BigInt']>;
@@ -406,7 +442,9 @@ export type Erc20Account_Filter = {
   balance_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   contractAddress?: InputMaybe<Scalars['String']>;
   contractAddress_contains?: InputMaybe<Scalars['String']>;
+  contractAddress_contains_nocase?: InputMaybe<Scalars['String']>;
   contractAddress_ends_with?: InputMaybe<Scalars['String']>;
+  contractAddress_ends_with_nocase?: InputMaybe<Scalars['String']>;
   contractAddress_gt?: InputMaybe<Scalars['String']>;
   contractAddress_gte?: InputMaybe<Scalars['String']>;
   contractAddress_in?: InputMaybe<Array<Scalars['String']>>;
@@ -414,10 +452,14 @@ export type Erc20Account_Filter = {
   contractAddress_lte?: InputMaybe<Scalars['String']>;
   contractAddress_not?: InputMaybe<Scalars['String']>;
   contractAddress_not_contains?: InputMaybe<Scalars['String']>;
+  contractAddress_not_contains_nocase?: InputMaybe<Scalars['String']>;
   contractAddress_not_ends_with?: InputMaybe<Scalars['String']>;
+  contractAddress_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
   contractAddress_not_in?: InputMaybe<Array<Scalars['String']>>;
   contractAddress_not_starts_with?: InputMaybe<Scalars['String']>;
+  contractAddress_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
   contractAddress_starts_with?: InputMaybe<Scalars['String']>;
+  contractAddress_starts_with_nocase?: InputMaybe<Scalars['String']>;
   decimals?: InputMaybe<Scalars['Int']>;
   decimals_gt?: InputMaybe<Scalars['Int']>;
   decimals_gte?: InputMaybe<Scalars['Int']>;
@@ -500,7 +542,9 @@ export type Erc20Account_Filter = {
   lastTransferOutTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   symbol?: InputMaybe<Scalars['String']>;
   symbol_contains?: InputMaybe<Scalars['String']>;
+  symbol_contains_nocase?: InputMaybe<Scalars['String']>;
   symbol_ends_with?: InputMaybe<Scalars['String']>;
+  symbol_ends_with_nocase?: InputMaybe<Scalars['String']>;
   symbol_gt?: InputMaybe<Scalars['String']>;
   symbol_gte?: InputMaybe<Scalars['String']>;
   symbol_in?: InputMaybe<Array<Scalars['String']>>;
@@ -508,10 +552,14 @@ export type Erc20Account_Filter = {
   symbol_lte?: InputMaybe<Scalars['String']>;
   symbol_not?: InputMaybe<Scalars['String']>;
   symbol_not_contains?: InputMaybe<Scalars['String']>;
+  symbol_not_contains_nocase?: InputMaybe<Scalars['String']>;
   symbol_not_ends_with?: InputMaybe<Scalars['String']>;
+  symbol_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
   symbol_not_in?: InputMaybe<Array<Scalars['String']>>;
   symbol_not_starts_with?: InputMaybe<Scalars['String']>;
+  symbol_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
   symbol_starts_with?: InputMaybe<Scalars['String']>;
+  symbol_starts_with_nocase?: InputMaybe<Scalars['String']>;
   totalTransfers?: InputMaybe<Scalars['BigInt']>;
   totalTransfers_gt?: InputMaybe<Scalars['BigInt']>;
   totalTransfers_gte?: InputMaybe<Scalars['BigInt']>;
@@ -582,7 +630,9 @@ export type Erc20Transfer_Filter = {
   fromAccountBalanceAtBlock_not?: InputMaybe<Scalars['BigInt']>;
   fromAccountBalanceAtBlock_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   from_contains?: InputMaybe<Scalars['String']>;
+  from_contains_nocase?: InputMaybe<Scalars['String']>;
   from_ends_with?: InputMaybe<Scalars['String']>;
+  from_ends_with_nocase?: InputMaybe<Scalars['String']>;
   from_gt?: InputMaybe<Scalars['String']>;
   from_gte?: InputMaybe<Scalars['String']>;
   from_in?: InputMaybe<Array<Scalars['String']>>;
@@ -590,10 +640,14 @@ export type Erc20Transfer_Filter = {
   from_lte?: InputMaybe<Scalars['String']>;
   from_not?: InputMaybe<Scalars['String']>;
   from_not_contains?: InputMaybe<Scalars['String']>;
+  from_not_contains_nocase?: InputMaybe<Scalars['String']>;
   from_not_ends_with?: InputMaybe<Scalars['String']>;
+  from_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
   from_not_in?: InputMaybe<Array<Scalars['String']>>;
   from_not_starts_with?: InputMaybe<Scalars['String']>;
+  from_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
   from_starts_with?: InputMaybe<Scalars['String']>;
+  from_starts_with_nocase?: InputMaybe<Scalars['String']>;
   gas?: InputMaybe<Scalars['BigInt']>;
   gas_gt?: InputMaybe<Scalars['BigInt']>;
   gas_gte?: InputMaybe<Scalars['BigInt']>;
@@ -628,7 +682,9 @@ export type Erc20Transfer_Filter = {
   toAccountBalanceAtBlock_not?: InputMaybe<Scalars['BigInt']>;
   toAccountBalanceAtBlock_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   to_contains?: InputMaybe<Scalars['String']>;
+  to_contains_nocase?: InputMaybe<Scalars['String']>;
   to_ends_with?: InputMaybe<Scalars['String']>;
+  to_ends_with_nocase?: InputMaybe<Scalars['String']>;
   to_gt?: InputMaybe<Scalars['String']>;
   to_gte?: InputMaybe<Scalars['String']>;
   to_in?: InputMaybe<Array<Scalars['String']>>;
@@ -636,10 +692,14 @@ export type Erc20Transfer_Filter = {
   to_lte?: InputMaybe<Scalars['String']>;
   to_not?: InputMaybe<Scalars['String']>;
   to_not_contains?: InputMaybe<Scalars['String']>;
+  to_not_contains_nocase?: InputMaybe<Scalars['String']>;
   to_not_ends_with?: InputMaybe<Scalars['String']>;
+  to_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
   to_not_in?: InputMaybe<Array<Scalars['String']>>;
   to_not_starts_with?: InputMaybe<Scalars['String']>;
+  to_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
   to_starts_with?: InputMaybe<Scalars['String']>;
+  to_starts_with_nocase?: InputMaybe<Scalars['String']>;
 };
 
 export enum Erc20Transfer_OrderBy {
@@ -666,7 +726,9 @@ export type Erc1155Token = {
 export type Erc1155Token_Filter = {
   contractAddress?: InputMaybe<Scalars['String']>;
   contractAddress_contains?: InputMaybe<Scalars['String']>;
+  contractAddress_contains_nocase?: InputMaybe<Scalars['String']>;
   contractAddress_ends_with?: InputMaybe<Scalars['String']>;
+  contractAddress_ends_with_nocase?: InputMaybe<Scalars['String']>;
   contractAddress_gt?: InputMaybe<Scalars['String']>;
   contractAddress_gte?: InputMaybe<Scalars['String']>;
   contractAddress_in?: InputMaybe<Array<Scalars['String']>>;
@@ -674,10 +736,14 @@ export type Erc1155Token_Filter = {
   contractAddress_lte?: InputMaybe<Scalars['String']>;
   contractAddress_not?: InputMaybe<Scalars['String']>;
   contractAddress_not_contains?: InputMaybe<Scalars['String']>;
+  contractAddress_not_contains_nocase?: InputMaybe<Scalars['String']>;
   contractAddress_not_ends_with?: InputMaybe<Scalars['String']>;
+  contractAddress_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
   contractAddress_not_in?: InputMaybe<Array<Scalars['String']>>;
   contractAddress_not_starts_with?: InputMaybe<Scalars['String']>;
+  contractAddress_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
   contractAddress_starts_with?: InputMaybe<Scalars['String']>;
+  contractAddress_starts_with_nocase?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['ID']>;
   id_gt?: InputMaybe<Scalars['ID']>;
   id_gte?: InputMaybe<Scalars['ID']>;
@@ -688,7 +754,9 @@ export type Erc1155Token_Filter = {
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
   ownerAddress?: InputMaybe<Scalars['String']>;
   ownerAddress_contains?: InputMaybe<Scalars['String']>;
+  ownerAddress_contains_nocase?: InputMaybe<Scalars['String']>;
   ownerAddress_ends_with?: InputMaybe<Scalars['String']>;
+  ownerAddress_ends_with_nocase?: InputMaybe<Scalars['String']>;
   ownerAddress_gt?: InputMaybe<Scalars['String']>;
   ownerAddress_gte?: InputMaybe<Scalars['String']>;
   ownerAddress_in?: InputMaybe<Array<Scalars['String']>>;
@@ -696,10 +764,14 @@ export type Erc1155Token_Filter = {
   ownerAddress_lte?: InputMaybe<Scalars['String']>;
   ownerAddress_not?: InputMaybe<Scalars['String']>;
   ownerAddress_not_contains?: InputMaybe<Scalars['String']>;
+  ownerAddress_not_contains_nocase?: InputMaybe<Scalars['String']>;
   ownerAddress_not_ends_with?: InputMaybe<Scalars['String']>;
+  ownerAddress_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
   ownerAddress_not_in?: InputMaybe<Array<Scalars['String']>>;
   ownerAddress_not_starts_with?: InputMaybe<Scalars['String']>;
+  ownerAddress_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
   ownerAddress_starts_with?: InputMaybe<Scalars['String']>;
+  ownerAddress_starts_with_nocase?: InputMaybe<Scalars['String']>;
   quantity?: InputMaybe<Scalars['BigInt']>;
   quantity_gt?: InputMaybe<Scalars['BigInt']>;
   quantity_gte?: InputMaybe<Scalars['BigInt']>;
@@ -940,6 +1012,7 @@ export type Query = {
   substrateChainCrowdloan?: Maybe<SubstrateChainCrowdloan>;
   substrateChainCrowdloanContribution: SubstrateChainCrowdloanContribution;
   substrateChainCrowdloanSummary: SubstrateChainCrowdloanSummary;
+  substrateChainCrowdloans: Array<SubstrateChainCrowdloan>;
   substrateChainDemocracyProposal?: Maybe<SubstrateChainDemocracyProposal>;
   substrateChainDemocracyProposals: Array<SubstrateChainDemocracyProposal>;
   substrateChainDemocracyReferendum?: Maybe<SubstrateChainDemocracyReferendum>;
@@ -957,6 +1030,11 @@ export type Query = {
   substrateChainTips?: Maybe<Array<SubstrateChainTip>>;
   substrateChainTreasury: SubstrateChainTreasury;
   substrateChainTreasurySummary: SubstrateChainTreasurySummary;
+  substrateCouncilProposalById?: Maybe<SubstrateCouncilProposal>;
+  /** @deprecated Use `substrateCouncilProposalById` */
+  substrateCouncilProposalByUniqueInput?: Maybe<SubstrateCouncilProposal>;
+  substrateCouncilProposals: Array<SubstrateCouncilProposal>;
+  substrateCouncilProposalsConnection: SubstrateCouncilProposalsConnection;
   substrateCouncilVoteById?: Maybe<SubstrateCouncilVote>;
   /** @deprecated Use `substrateCouncilVoteById` */
   substrateCouncilVoteByUniqueInput?: Maybe<SubstrateCouncilVote>;
@@ -972,6 +1050,11 @@ export type Query = {
   substrateCrowdloanContributionByUniqueInput?: Maybe<SubstrateCrowdloanContribution>;
   substrateCrowdloanContributions: Array<SubstrateCrowdloanContribution>;
   substrateCrowdloanContributionsConnection: SubstrateCrowdloanContributionsConnection;
+  substrateDemocracyProposalById?: Maybe<SubstrateDemocracyProposal>;
+  /** @deprecated Use `substrateDemocracyProposalById` */
+  substrateDemocracyProposalByUniqueInput?: Maybe<SubstrateDemocracyProposal>;
+  substrateDemocracyProposals: Array<SubstrateDemocracyProposal>;
+  substrateDemocracyProposalsConnection: SubstrateDemocracyProposalsConnection;
   substrateElectionVoteById?: Maybe<SubstrateElectionVote>;
   /** @deprecated Use `substrateElectionVoteById` */
   substrateElectionVoteByUniqueInput?: Maybe<SubstrateElectionVote>;
@@ -992,6 +1075,11 @@ export type Query = {
   substrateProposalVoteByUniqueInput?: Maybe<SubstrateProposalVote>;
   substrateProposalVotes: Array<SubstrateProposalVote>;
   substrateProposalVotesConnection: SubstrateProposalVotesConnection;
+  substrateTechnicalCommitteeProposalById?: Maybe<SubstrateTechnicalCommitteeProposal>;
+  /** @deprecated Use `substrateTechnicalCommitteeProposalById` */
+  substrateTechnicalCommitteeProposalByUniqueInput?: Maybe<SubstrateTechnicalCommitteeProposal>;
+  substrateTechnicalCommitteeProposals: Array<SubstrateTechnicalCommitteeProposal>;
+  substrateTechnicalCommitteeProposalsConnection: SubstrateTechnicalCommitteeProposalsConnection;
   substrateTreasuryDepositById?: Maybe<SubstrateTreasuryDeposit>;
   /** @deprecated Use `substrateTreasuryDepositById` */
   substrateTreasuryDepositByUniqueInput?: Maybe<SubstrateTreasuryDeposit>;
@@ -1170,6 +1258,10 @@ export type QuerySubstrateChainCrowdloanContributionArgs = {
   paraId: Scalars['String'];
 };
 
+export type QuerySubstrateChainCrowdloansArgs = {
+  status?: InputMaybe<SubstrateChainCrowdloanStatus>;
+};
+
 export type QuerySubstrateChainDemocracyProposalArgs = {
   index: Scalars['String'];
 };
@@ -1184,6 +1276,28 @@ export type QuerySubstrateChainParachainArgs = {
 
 export type QuerySubstrateChainTipArgs = {
   id: Scalars['String'];
+};
+
+export type QuerySubstrateCouncilProposalByIdArgs = {
+  id: Scalars['ID'];
+};
+
+export type QuerySubstrateCouncilProposalByUniqueInputArgs = {
+  where: SubstrateCouncilProposalWhereUniqueInput;
+};
+
+export type QuerySubstrateCouncilProposalsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<InputMaybe<SubstrateCouncilProposalOrderByInput>>>;
+  where?: InputMaybe<SubstrateCouncilProposalWhereInput>;
+};
+
+export type QuerySubstrateCouncilProposalsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy: Array<SubstrateCouncilProposalOrderByInput>;
+  where?: InputMaybe<SubstrateCouncilProposalWhereInput>;
 };
 
 export type QuerySubstrateCouncilVoteByIdArgs = {
@@ -1250,6 +1364,28 @@ export type QuerySubstrateCrowdloanContributionsConnectionArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy: Array<SubstrateCrowdloanContributionOrderByInput>;
   where?: InputMaybe<SubstrateCrowdloanContributionWhereInput>;
+};
+
+export type QuerySubstrateDemocracyProposalByIdArgs = {
+  id: Scalars['ID'];
+};
+
+export type QuerySubstrateDemocracyProposalByUniqueInputArgs = {
+  where: SubstrateDemocracyProposalWhereUniqueInput;
+};
+
+export type QuerySubstrateDemocracyProposalsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<InputMaybe<SubstrateDemocracyProposalOrderByInput>>>;
+  where?: InputMaybe<SubstrateDemocracyProposalWhereInput>;
+};
+
+export type QuerySubstrateDemocracyProposalsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy: Array<SubstrateDemocracyProposalOrderByInput>;
+  where?: InputMaybe<SubstrateDemocracyProposalWhereInput>;
 };
 
 export type QuerySubstrateElectionVoteByIdArgs = {
@@ -1338,6 +1474,28 @@ export type QuerySubstrateProposalVotesConnectionArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy: Array<SubstrateProposalVoteOrderByInput>;
   where?: InputMaybe<SubstrateProposalVoteWhereInput>;
+};
+
+export type QuerySubstrateTechnicalCommitteeProposalByIdArgs = {
+  id: Scalars['ID'];
+};
+
+export type QuerySubstrateTechnicalCommitteeProposalByUniqueInputArgs = {
+  where: SubstrateTechnicalCommitteeProposalWhereUniqueInput;
+};
+
+export type QuerySubstrateTechnicalCommitteeProposalsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<InputMaybe<SubstrateTechnicalCommitteeProposalOrderByInput>>>;
+  where?: InputMaybe<SubstrateTechnicalCommitteeProposalWhereInput>;
+};
+
+export type QuerySubstrateTechnicalCommitteeProposalsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy: Array<SubstrateTechnicalCommitteeProposalOrderByInput>;
+  where?: InputMaybe<SubstrateTechnicalCommitteeProposalWhereInput>;
 };
 
 export type QuerySubstrateTreasuryDepositByIdArgs = {
@@ -1587,6 +1745,7 @@ export type SubstrateBalanceAccountWhereInput = {
   firstTransferInBlockNumber_gt?: InputMaybe<Scalars['BigInt']>;
   firstTransferInBlockNumber_gte?: InputMaybe<Scalars['BigInt']>;
   firstTransferInBlockNumber_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  firstTransferInBlockNumber_isNull?: InputMaybe<Scalars['Boolean']>;
   firstTransferInBlockNumber_lt?: InputMaybe<Scalars['BigInt']>;
   firstTransferInBlockNumber_lte?: InputMaybe<Scalars['BigInt']>;
   firstTransferInBlockNumber_not_eq?: InputMaybe<Scalars['BigInt']>;
@@ -1595,6 +1754,7 @@ export type SubstrateBalanceAccountWhereInput = {
   firstTransferInDate_gt?: InputMaybe<Scalars['DateTime']>;
   firstTransferInDate_gte?: InputMaybe<Scalars['DateTime']>;
   firstTransferInDate_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  firstTransferInDate_isNull?: InputMaybe<Scalars['Boolean']>;
   firstTransferInDate_lt?: InputMaybe<Scalars['DateTime']>;
   firstTransferInDate_lte?: InputMaybe<Scalars['DateTime']>;
   firstTransferInDate_not_eq?: InputMaybe<Scalars['DateTime']>;
@@ -1603,6 +1763,7 @@ export type SubstrateBalanceAccountWhereInput = {
   firstTransferOutBlockNumber_gt?: InputMaybe<Scalars['BigInt']>;
   firstTransferOutBlockNumber_gte?: InputMaybe<Scalars['BigInt']>;
   firstTransferOutBlockNumber_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  firstTransferOutBlockNumber_isNull?: InputMaybe<Scalars['Boolean']>;
   firstTransferOutBlockNumber_lt?: InputMaybe<Scalars['BigInt']>;
   firstTransferOutBlockNumber_lte?: InputMaybe<Scalars['BigInt']>;
   firstTransferOutBlockNumber_not_eq?: InputMaybe<Scalars['BigInt']>;
@@ -1611,6 +1772,7 @@ export type SubstrateBalanceAccountWhereInput = {
   firstTransferOutDate_gt?: InputMaybe<Scalars['DateTime']>;
   firstTransferOutDate_gte?: InputMaybe<Scalars['DateTime']>;
   firstTransferOutDate_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  firstTransferOutDate_isNull?: InputMaybe<Scalars['Boolean']>;
   firstTransferOutDate_lt?: InputMaybe<Scalars['DateTime']>;
   firstTransferOutDate_lte?: InputMaybe<Scalars['DateTime']>;
   firstTransferOutDate_not_eq?: InputMaybe<Scalars['DateTime']>;
@@ -1633,6 +1795,7 @@ export type SubstrateBalanceAccountWhereInput = {
   lastTransferInBlockNumber_gt?: InputMaybe<Scalars['BigInt']>;
   lastTransferInBlockNumber_gte?: InputMaybe<Scalars['BigInt']>;
   lastTransferInBlockNumber_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  lastTransferInBlockNumber_isNull?: InputMaybe<Scalars['Boolean']>;
   lastTransferInBlockNumber_lt?: InputMaybe<Scalars['BigInt']>;
   lastTransferInBlockNumber_lte?: InputMaybe<Scalars['BigInt']>;
   lastTransferInBlockNumber_not_eq?: InputMaybe<Scalars['BigInt']>;
@@ -1641,6 +1804,7 @@ export type SubstrateBalanceAccountWhereInput = {
   lastTransferInDate_gt?: InputMaybe<Scalars['DateTime']>;
   lastTransferInDate_gte?: InputMaybe<Scalars['DateTime']>;
   lastTransferInDate_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  lastTransferInDate_isNull?: InputMaybe<Scalars['Boolean']>;
   lastTransferInDate_lt?: InputMaybe<Scalars['DateTime']>;
   lastTransferInDate_lte?: InputMaybe<Scalars['DateTime']>;
   lastTransferInDate_not_eq?: InputMaybe<Scalars['DateTime']>;
@@ -1649,6 +1813,7 @@ export type SubstrateBalanceAccountWhereInput = {
   lastTransferOutBlockNumber_gt?: InputMaybe<Scalars['BigInt']>;
   lastTransferOutBlockNumber_gte?: InputMaybe<Scalars['BigInt']>;
   lastTransferOutBlockNumber_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  lastTransferOutBlockNumber_isNull?: InputMaybe<Scalars['Boolean']>;
   lastTransferOutBlockNumber_lt?: InputMaybe<Scalars['BigInt']>;
   lastTransferOutBlockNumber_lte?: InputMaybe<Scalars['BigInt']>;
   lastTransferOutBlockNumber_not_eq?: InputMaybe<Scalars['BigInt']>;
@@ -1657,6 +1822,7 @@ export type SubstrateBalanceAccountWhereInput = {
   lastTransferOutDate_gt?: InputMaybe<Scalars['DateTime']>;
   lastTransferOutDate_gte?: InputMaybe<Scalars['DateTime']>;
   lastTransferOutDate_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  lastTransferOutDate_isNull?: InputMaybe<Scalars['Boolean']>;
   lastTransferOutDate_lt?: InputMaybe<Scalars['DateTime']>;
   lastTransferOutDate_lte?: InputMaybe<Scalars['DateTime']>;
   lastTransferOutDate_not_eq?: InputMaybe<Scalars['DateTime']>;
@@ -1946,7 +2112,7 @@ export type SubstrateChainAccount = {
   display: Scalars['String'];
   hasIdentity: Scalars['Boolean'];
   registration: SubstrateChainDeriveAccountRegistration;
-  subAccounts?: Maybe<Array<SubstrateChainSubAccount>>;
+  subAccounts?: Maybe<Array<SubstrateChainAccountInfo>>;
 };
 
 export type SubstrateChainAccountBalance = {
@@ -2029,12 +2195,6 @@ export type SubstrateChainBalanceData = {
   reserved: Scalars['Float'];
 };
 
-export type SubstrateChainBeneficiary = {
-  __typename?: 'SubstrateChainBeneficiary';
-  account: SubstrateChainAccount;
-  address: Scalars['String'];
-};
-
 export type SubstrateChainBountiesSummary = {
   __typename?: 'SubstrateChainBountiesSummary';
   activeBounties: Scalars['String'];
@@ -2062,14 +2222,14 @@ export type SubstrateChainBounty = {
   formattedFee: Scalars['String'];
   formattedValue: Scalars['String'];
   index: Scalars['String'];
-  proposer: SubstrateChainProposer;
+  proposer: SubstrateChainAccountInfo;
   value: Scalars['String'];
 };
 
 export type SubstrateChainBountyStatus = {
   __typename?: 'SubstrateChainBountyStatus';
-  beneficiary?: Maybe<SubstrateChainBeneficiary>;
-  curator?: Maybe<SubstrateChainCurator>;
+  beneficiary?: Maybe<SubstrateChainAccountInfo>;
+  curator?: Maybe<SubstrateChainAccountInfo>;
   status?: Maybe<Scalars['String']>;
   unlockAt?: Maybe<Scalars['String']>;
   unlockAtTime?: Maybe<Array<Scalars['String']>>;
@@ -2093,6 +2253,8 @@ export type SubstrateChainChainInfo = {
   crowdloanMinContribution?: Maybe<Scalars['String']>;
   democracyEnactmentPeriod?: Maybe<Scalars['String']>;
   democracyMinimumDeposit?: Maybe<Scalars['String']>;
+  existentialDeposit: Scalars['String'];
+  formattedExistentialDeposit: Scalars['String'];
   nodeName: Scalars['String'];
   nodeVersion: Scalars['String'];
   registry: SubstrateChainRegistry;
@@ -2106,12 +2268,6 @@ export type SubstrateChainCollectiveProposal = {
   votes: SubstrateChainProposalVotes;
 };
 
-export type SubstrateChainContribution = {
-  __typename?: 'SubstrateChainContribution';
-  contribution: SubstrateChainCrowdloanContribution;
-  paraId: Scalars['String'];
-};
-
 export type SubstrateChainConviction = {
   __typename?: 'SubstrateChainConviction';
   text: Scalars['String'];
@@ -2120,7 +2276,7 @@ export type SubstrateChainConviction = {
 
 export type SubstrateChainCouncil = {
   __typename?: 'SubstrateChainCouncil';
-  candidates: Array<SubstrateChainCouncilCandidate>;
+  candidates: Array<SubstrateChainAccountInfo>;
   desiredRunnersUp: Scalars['Int'];
   desiredSeats: Scalars['Int'];
   members: Array<SubstrateChainCouncilMember>;
@@ -2130,12 +2286,6 @@ export type SubstrateChainCouncil = {
   totalCandidates: Scalars['Int'];
   totalMembers: Scalars['Int'];
   totalRunnersUp: Scalars['Int'];
-};
-
-export type SubstrateChainCouncilCandidate = {
-  __typename?: 'SubstrateChainCouncilCandidate';
-  account: SubstrateChainAccount;
-  address: Scalars['String'];
 };
 
 export type SubstrateChainCouncilMember = {
@@ -2158,14 +2308,14 @@ export type SubstrateChainCouncilVote = {
   __typename?: 'SubstrateChainCouncilVote';
   formattedStake: Scalars['String'];
   stake: Scalars['String'];
-  votes: Array<SubstrateChainVote>;
+  votes: Array<SubstrateChainAccountInfo>;
 };
 
 export type SubstrateChainCrowdloan = {
   __typename?: 'SubstrateChainCrowdloan';
   cap: Scalars['String'];
-  contribution: SubstrateChainContribution;
-  depositor: SubstrateChainDepositor;
+  contribution: SubstrateChainCrowdloanContribution;
+  depositor: SubstrateChainAccountInfo;
   ending: Array<Scalars['String']>;
   firstPeriod: Scalars['String'];
   formattedCap: Scalars['String'];
@@ -2185,6 +2335,11 @@ export type SubstrateChainCrowdloanContribution = {
   paraId: Scalars['String'];
 };
 
+export enum SubstrateChainCrowdloanStatus {
+  Active = 'Active',
+  Ended = 'Ended',
+}
+
 export type SubstrateChainCrowdloanSummary = {
   __typename?: 'SubstrateChainCrowdloanSummary';
   activeCap: Scalars['String'];
@@ -2200,12 +2355,6 @@ export type SubstrateChainCrowdloanSummary = {
   totalRaised: Scalars['String'];
 };
 
-export type SubstrateChainCurator = {
-  __typename?: 'SubstrateChainCurator';
-  account: SubstrateChainAccount;
-  address: Scalars['String'];
-};
-
 export type SubstrateChainDemocracyProposal = {
   __typename?: 'SubstrateChainDemocracyProposal';
   args?: Maybe<Array<SubstrateChainProposalArg>>;
@@ -2215,8 +2364,8 @@ export type SubstrateChainDemocracyProposal = {
   index: Scalars['String'];
   meta?: Maybe<Scalars['String']>;
   method?: Maybe<Scalars['String']>;
-  proposer: SubstrateChainProposer;
-  seconds: Array<SubstrateChainProposalSecond>;
+  proposer: SubstrateChainAccountInfo;
+  seconds: Array<SubstrateChainAccountInfo>;
   section?: Maybe<Scalars['String']>;
 };
 
@@ -2248,12 +2397,6 @@ export type SubstrateChainDemocracySummary = {
   referendums: Scalars['String'];
 };
 
-export type SubstrateChainDepositor = {
-  __typename?: 'SubstrateChainDepositor';
-  account: SubstrateChainAccount;
-  address: Scalars['String'];
-};
-
 export type SubstrateChainDeriveAccountRegistration = {
   __typename?: 'SubstrateChainDeriveAccountRegistration';
   display?: Maybe<Scalars['String']>;
@@ -2266,12 +2409,6 @@ export type SubstrateChainDeriveAccountRegistration = {
   riot?: Maybe<Scalars['String']>;
   twitter?: Maybe<Scalars['String']>;
   web?: Maybe<Scalars['String']>;
-};
-
-export type SubstrateChainFinder = {
-  __typename?: 'SubstrateChainFinder';
-  account: SubstrateChainAccount;
-  address: Scalars['String'];
 };
 
 export type SubstrateChainIdentityJudgement = {
@@ -2307,12 +2444,6 @@ export type SubstrateChainLeasePeriod = {
   totalPeriod: Scalars['String'];
 };
 
-export type SubstrateChainManager = {
-  __typename?: 'SubstrateChainManager';
-  account: SubstrateChainAccount;
-  address: Scalars['String'];
-};
-
 export type SubstrateChainModuleElection = {
   __typename?: 'SubstrateChainModuleElection';
   candidacyBond: Scalars['String'];
@@ -2328,30 +2459,30 @@ export type SubstrateChainModuleElection = {
 export type SubstrateChainMotionProposal = {
   __typename?: 'SubstrateChainMotionProposal';
   args: Array<SubstrateChainProposalArg>;
-  beneficiary?: Maybe<SubstrateChainAccount>;
+  beneficiary?: Maybe<SubstrateChainAccountInfo>;
   hash: Scalars['String'];
   index?: Maybe<Scalars['String']>;
   meta: Scalars['String'];
   method: Scalars['String'];
   payout?: Maybe<Scalars['String']>;
-  proposer?: Maybe<SubstrateChainAccount>;
+  proposer?: Maybe<SubstrateChainAccountInfo>;
   section: Scalars['String'];
 };
 
 export type SubstrateChainMotionVotes = {
   __typename?: 'SubstrateChainMotionVotes';
-  ayes: Array<SubstrateChainAccount>;
+  ayes: Array<SubstrateChainAccountInfo>;
   end: Scalars['String'];
   endTime: Array<Scalars['String']>;
-  nays: Array<SubstrateChainAccount>;
+  nays: Array<SubstrateChainAccountInfo>;
   threshold: Scalars['Int'];
 };
 
 export type SubstrateChainPalletProposal = {
   __typename?: 'SubstrateChainPalletProposal';
-  beneficiary: SubstrateChainAccount;
+  beneficiary: SubstrateChainAccountInfo;
   bond: Scalars['String'];
-  proposer: SubstrateChainAccount;
+  proposer: SubstrateChainAccountInfo;
   value: Scalars['String'];
 };
 
@@ -2381,7 +2512,7 @@ export type SubstrateChainParathread = {
   homepage?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   lease?: Maybe<SubstrateChainLease>;
-  manager?: Maybe<SubstrateChainManager>;
+  manager?: Maybe<SubstrateChainAccountInfo>;
   name?: Maybe<Scalars['String']>;
 };
 
@@ -2391,12 +2522,6 @@ export type SubstrateChainProposalArg = {
   subCalls?: Maybe<Array<Maybe<SubstrateChainProposalSubCall>>>;
   type?: Maybe<Scalars['String']>;
   value?: Maybe<Scalars['String']>;
-};
-
-export type SubstrateChainProposalSecond = {
-  __typename?: 'SubstrateChainProposalSecond';
-  account: SubstrateChainAccount;
-  address: Scalars['String'];
 };
 
 export type SubstrateChainProposalSubCall = {
@@ -2414,12 +2539,6 @@ export type SubstrateChainProposalVotes = {
   index?: Maybe<Scalars['String']>;
   nays?: Maybe<Array<Scalars['String']>>;
   threshold?: Maybe<Scalars['String']>;
-};
-
-export type SubstrateChainProposer = {
-  __typename?: 'SubstrateChainProposer';
-  account: SubstrateChainAccount;
-  address: Scalars['String'];
 };
 
 export type SubstrateChainRegistrar = {
@@ -2462,17 +2581,11 @@ export type SubstrateChainSpendPeriod = {
   termLeftParts: Array<Scalars['String']>;
 };
 
-export type SubstrateChainSubAccount = {
-  __typename?: 'SubstrateChainSubAccount';
-  account: SubstrateChainAccount;
-  address: Scalars['String'];
-};
-
 export type SubstrateChainTechnicalCommitteeSummary = {
   __typename?: 'SubstrateChainTechnicalCommitteeSummary';
   activeProposalCount: Scalars['Int'];
   memberCount: Scalars['Int'];
-  members: Array<SubstrateChainAccount>;
+  members: Array<SubstrateChainAccountInfo>;
   totalProposalCount: Scalars['String'];
 };
 
@@ -2489,7 +2602,7 @@ export type SubstrateChainTip = {
   __typename?: 'SubstrateChainTip';
   closes?: Maybe<Scalars['String']>;
   deposit?: Maybe<Scalars['String']>;
-  finder?: Maybe<SubstrateChainFinder>;
+  finder?: Maybe<SubstrateChainAccountInfo>;
   formattedMedian?: Maybe<Scalars['String']>;
   /** id: Tip Hash */
   id: Scalars['String'];
@@ -2497,7 +2610,7 @@ export type SubstrateChainTip = {
   reason: Scalars['String'];
   tippers: Array<SubstrateChainTipper>;
   tippersCount: Scalars['Int'];
-  who: SubstrateChainWho;
+  who: SubstrateChainAccountInfo;
 };
 
 export type SubstrateChainTipper = {
@@ -2548,12 +2661,6 @@ export type SubstrateChainValidatorsGroup = {
   validators: Array<SubstrateChainAccountInfo>;
 };
 
-export type SubstrateChainVote = {
-  __typename?: 'SubstrateChainVote';
-  account: SubstrateChainAccount;
-  address: Scalars['String'];
-};
-
 export type SubstrateChainVotingStatus = {
   __typename?: 'SubstrateChainVotingStatus';
   hasFailed: Scalars['Boolean'];
@@ -2565,10 +2672,156 @@ export type SubstrateChainVotingStatus = {
   status: Scalars['String'];
 };
 
-export type SubstrateChainWho = {
-  __typename?: 'SubstrateChainWho';
-  account: SubstrateChainAccount;
-  address: Scalars['String'];
+export type SubstrateCouncilProposal = {
+  __typename?: 'SubstrateCouncilProposal';
+  account: SubstrateGovernanceAccount;
+  blockNumber: Scalars['BigInt'];
+  date: Scalars['DateTime'];
+  /** network:block:index */
+  id: Scalars['ID'];
+  network: SubstrateNetwork;
+  proposalHash: Scalars['String'];
+  proposalIndex: Scalars['Int'];
+  rootAccount: Scalars['String'];
+  threshold: Scalars['Int'];
+};
+
+export type SubstrateCouncilProposalEdge = {
+  __typename?: 'SubstrateCouncilProposalEdge';
+  cursor: Scalars['String'];
+  node: SubstrateCouncilProposal;
+};
+
+export enum SubstrateCouncilProposalOrderByInput {
+  AccountIdAsc = 'account_id_ASC',
+  AccountIdDesc = 'account_id_DESC',
+  AccountNetworkAsc = 'account_network_ASC',
+  AccountNetworkDesc = 'account_network_DESC',
+  AccountRootAccountAsc = 'account_rootAccount_ASC',
+  AccountRootAccountDesc = 'account_rootAccount_DESC',
+  AccountTotalCouncilProposalsAsc = 'account_totalCouncilProposals_ASC',
+  AccountTotalCouncilProposalsDesc = 'account_totalCouncilProposals_DESC',
+  AccountTotalDemocracyProposalsAsc = 'account_totalDemocracyProposals_ASC',
+  AccountTotalDemocracyProposalsDesc = 'account_totalDemocracyProposals_DESC',
+  AccountTotalElectionVotesAsc = 'account_totalElectionVotes_ASC',
+  AccountTotalElectionVotesDesc = 'account_totalElectionVotes_DESC',
+  AccountTotalProposalSecondsAsc = 'account_totalProposalSeconds_ASC',
+  AccountTotalProposalSecondsDesc = 'account_totalProposalSeconds_DESC',
+  AccountTotalProposalVotesAsc = 'account_totalProposalVotes_ASC',
+  AccountTotalProposalVotesDesc = 'account_totalProposalVotes_DESC',
+  AccountTotalTechnicalCommitteeProposalsAsc = 'account_totalTechnicalCommitteeProposals_ASC',
+  AccountTotalTechnicalCommitteeProposalsDesc = 'account_totalTechnicalCommitteeProposals_DESC',
+  BlockNumberAsc = 'blockNumber_ASC',
+  BlockNumberDesc = 'blockNumber_DESC',
+  DateAsc = 'date_ASC',
+  DateDesc = 'date_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  NetworkAsc = 'network_ASC',
+  NetworkDesc = 'network_DESC',
+  ProposalHashAsc = 'proposalHash_ASC',
+  ProposalHashDesc = 'proposalHash_DESC',
+  ProposalIndexAsc = 'proposalIndex_ASC',
+  ProposalIndexDesc = 'proposalIndex_DESC',
+  RootAccountAsc = 'rootAccount_ASC',
+  RootAccountDesc = 'rootAccount_DESC',
+  ThresholdAsc = 'threshold_ASC',
+  ThresholdDesc = 'threshold_DESC',
+}
+
+export type SubstrateCouncilProposalWhereInput = {
+  AND?: InputMaybe<Array<SubstrateCouncilProposalWhereInput>>;
+  OR?: InputMaybe<Array<SubstrateCouncilProposalWhereInput>>;
+  account?: InputMaybe<SubstrateGovernanceAccountWhereInput>;
+  blockNumber_eq?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_gt?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_gte?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  blockNumber_lt?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_lte?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_not_eq?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  date_eq?: InputMaybe<Scalars['DateTime']>;
+  date_gt?: InputMaybe<Scalars['DateTime']>;
+  date_gte?: InputMaybe<Scalars['DateTime']>;
+  date_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  date_lt?: InputMaybe<Scalars['DateTime']>;
+  date_lte?: InputMaybe<Scalars['DateTime']>;
+  date_not_eq?: InputMaybe<Scalars['DateTime']>;
+  date_not_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  id_contains?: InputMaybe<Scalars['ID']>;
+  id_endsWith?: InputMaybe<Scalars['ID']>;
+  id_eq?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not_contains?: InputMaybe<Scalars['ID']>;
+  id_not_endsWith?: InputMaybe<Scalars['ID']>;
+  id_not_eq?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_not_startsWith?: InputMaybe<Scalars['ID']>;
+  id_startsWith?: InputMaybe<Scalars['ID']>;
+  network_eq?: InputMaybe<SubstrateNetwork>;
+  network_in?: InputMaybe<Array<SubstrateNetwork>>;
+  network_not_eq?: InputMaybe<SubstrateNetwork>;
+  network_not_in?: InputMaybe<Array<SubstrateNetwork>>;
+  proposalHash_contains?: InputMaybe<Scalars['String']>;
+  proposalHash_endsWith?: InputMaybe<Scalars['String']>;
+  proposalHash_eq?: InputMaybe<Scalars['String']>;
+  proposalHash_gt?: InputMaybe<Scalars['String']>;
+  proposalHash_gte?: InputMaybe<Scalars['String']>;
+  proposalHash_in?: InputMaybe<Array<Scalars['String']>>;
+  proposalHash_lt?: InputMaybe<Scalars['String']>;
+  proposalHash_lte?: InputMaybe<Scalars['String']>;
+  proposalHash_not_contains?: InputMaybe<Scalars['String']>;
+  proposalHash_not_endsWith?: InputMaybe<Scalars['String']>;
+  proposalHash_not_eq?: InputMaybe<Scalars['String']>;
+  proposalHash_not_in?: InputMaybe<Array<Scalars['String']>>;
+  proposalHash_not_startsWith?: InputMaybe<Scalars['String']>;
+  proposalHash_startsWith?: InputMaybe<Scalars['String']>;
+  proposalIndex_eq?: InputMaybe<Scalars['Int']>;
+  proposalIndex_gt?: InputMaybe<Scalars['Int']>;
+  proposalIndex_gte?: InputMaybe<Scalars['Int']>;
+  proposalIndex_in?: InputMaybe<Array<Scalars['Int']>>;
+  proposalIndex_lt?: InputMaybe<Scalars['Int']>;
+  proposalIndex_lte?: InputMaybe<Scalars['Int']>;
+  proposalIndex_not_eq?: InputMaybe<Scalars['Int']>;
+  proposalIndex_not_in?: InputMaybe<Array<Scalars['Int']>>;
+  rootAccount_contains?: InputMaybe<Scalars['String']>;
+  rootAccount_endsWith?: InputMaybe<Scalars['String']>;
+  rootAccount_eq?: InputMaybe<Scalars['String']>;
+  rootAccount_gt?: InputMaybe<Scalars['String']>;
+  rootAccount_gte?: InputMaybe<Scalars['String']>;
+  rootAccount_in?: InputMaybe<Array<Scalars['String']>>;
+  rootAccount_lt?: InputMaybe<Scalars['String']>;
+  rootAccount_lte?: InputMaybe<Scalars['String']>;
+  rootAccount_not_contains?: InputMaybe<Scalars['String']>;
+  rootAccount_not_endsWith?: InputMaybe<Scalars['String']>;
+  rootAccount_not_eq?: InputMaybe<Scalars['String']>;
+  rootAccount_not_in?: InputMaybe<Array<Scalars['String']>>;
+  rootAccount_not_startsWith?: InputMaybe<Scalars['String']>;
+  rootAccount_startsWith?: InputMaybe<Scalars['String']>;
+  threshold_eq?: InputMaybe<Scalars['Int']>;
+  threshold_gt?: InputMaybe<Scalars['Int']>;
+  threshold_gte?: InputMaybe<Scalars['Int']>;
+  threshold_in?: InputMaybe<Array<Scalars['Int']>>;
+  threshold_lt?: InputMaybe<Scalars['Int']>;
+  threshold_lte?: InputMaybe<Scalars['Int']>;
+  threshold_not_eq?: InputMaybe<Scalars['Int']>;
+  threshold_not_in?: InputMaybe<Array<Scalars['Int']>>;
+};
+
+export type SubstrateCouncilProposalWhereUniqueInput = {
+  id: Scalars['ID'];
+};
+
+export type SubstrateCouncilProposalsConnection = {
+  __typename?: 'SubstrateCouncilProposalsConnection';
+  edges: Array<SubstrateCouncilProposalEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
 };
 
 export type SubstrateCouncilVote = {
@@ -2598,12 +2851,18 @@ export enum SubstrateCouncilVoteOrderByInput {
   AccountNetworkDesc = 'account_network_DESC',
   AccountRootAccountAsc = 'account_rootAccount_ASC',
   AccountRootAccountDesc = 'account_rootAccount_DESC',
+  AccountTotalCouncilProposalsAsc = 'account_totalCouncilProposals_ASC',
+  AccountTotalCouncilProposalsDesc = 'account_totalCouncilProposals_DESC',
+  AccountTotalDemocracyProposalsAsc = 'account_totalDemocracyProposals_ASC',
+  AccountTotalDemocracyProposalsDesc = 'account_totalDemocracyProposals_DESC',
   AccountTotalElectionVotesAsc = 'account_totalElectionVotes_ASC',
   AccountTotalElectionVotesDesc = 'account_totalElectionVotes_DESC',
   AccountTotalProposalSecondsAsc = 'account_totalProposalSeconds_ASC',
   AccountTotalProposalSecondsDesc = 'account_totalProposalSeconds_DESC',
   AccountTotalProposalVotesAsc = 'account_totalProposalVotes_ASC',
   AccountTotalProposalVotesDesc = 'account_totalProposalVotes_DESC',
+  AccountTotalTechnicalCommitteeProposalsAsc = 'account_totalTechnicalCommitteeProposals_ASC',
+  AccountTotalTechnicalCommitteeProposalsDesc = 'account_totalTechnicalCommitteeProposals_DESC',
   ApproveAsc = 'approve_ASC',
   ApproveDesc = 'approve_DESC',
   BlockNumberAsc = 'blockNumber_ASC',
@@ -2958,6 +3217,141 @@ export type SubstrateCrowdloanContributionsConnection = {
   totalCount: Scalars['Int'];
 };
 
+export type SubstrateDemocracyProposal = {
+  __typename?: 'SubstrateDemocracyProposal';
+  account: SubstrateGovernanceAccount;
+  amount: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
+  date: Scalars['DateTime'];
+  /** network:block:index */
+  id: Scalars['ID'];
+  network: SubstrateNetwork;
+  proposalIndex: Scalars['Int'];
+  rootAccount: Scalars['String'];
+};
+
+export type SubstrateDemocracyProposalEdge = {
+  __typename?: 'SubstrateDemocracyProposalEdge';
+  cursor: Scalars['String'];
+  node: SubstrateDemocracyProposal;
+};
+
+export enum SubstrateDemocracyProposalOrderByInput {
+  AccountIdAsc = 'account_id_ASC',
+  AccountIdDesc = 'account_id_DESC',
+  AccountNetworkAsc = 'account_network_ASC',
+  AccountNetworkDesc = 'account_network_DESC',
+  AccountRootAccountAsc = 'account_rootAccount_ASC',
+  AccountRootAccountDesc = 'account_rootAccount_DESC',
+  AccountTotalCouncilProposalsAsc = 'account_totalCouncilProposals_ASC',
+  AccountTotalCouncilProposalsDesc = 'account_totalCouncilProposals_DESC',
+  AccountTotalDemocracyProposalsAsc = 'account_totalDemocracyProposals_ASC',
+  AccountTotalDemocracyProposalsDesc = 'account_totalDemocracyProposals_DESC',
+  AccountTotalElectionVotesAsc = 'account_totalElectionVotes_ASC',
+  AccountTotalElectionVotesDesc = 'account_totalElectionVotes_DESC',
+  AccountTotalProposalSecondsAsc = 'account_totalProposalSeconds_ASC',
+  AccountTotalProposalSecondsDesc = 'account_totalProposalSeconds_DESC',
+  AccountTotalProposalVotesAsc = 'account_totalProposalVotes_ASC',
+  AccountTotalProposalVotesDesc = 'account_totalProposalVotes_DESC',
+  AccountTotalTechnicalCommitteeProposalsAsc = 'account_totalTechnicalCommitteeProposals_ASC',
+  AccountTotalTechnicalCommitteeProposalsDesc = 'account_totalTechnicalCommitteeProposals_DESC',
+  AmountAsc = 'amount_ASC',
+  AmountDesc = 'amount_DESC',
+  BlockNumberAsc = 'blockNumber_ASC',
+  BlockNumberDesc = 'blockNumber_DESC',
+  DateAsc = 'date_ASC',
+  DateDesc = 'date_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  NetworkAsc = 'network_ASC',
+  NetworkDesc = 'network_DESC',
+  ProposalIndexAsc = 'proposalIndex_ASC',
+  ProposalIndexDesc = 'proposalIndex_DESC',
+  RootAccountAsc = 'rootAccount_ASC',
+  RootAccountDesc = 'rootAccount_DESC',
+}
+
+export type SubstrateDemocracyProposalWhereInput = {
+  AND?: InputMaybe<Array<SubstrateDemocracyProposalWhereInput>>;
+  OR?: InputMaybe<Array<SubstrateDemocracyProposalWhereInput>>;
+  account?: InputMaybe<SubstrateGovernanceAccountWhereInput>;
+  amount_eq?: InputMaybe<Scalars['BigInt']>;
+  amount_gt?: InputMaybe<Scalars['BigInt']>;
+  amount_gte?: InputMaybe<Scalars['BigInt']>;
+  amount_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  amount_lt?: InputMaybe<Scalars['BigInt']>;
+  amount_lte?: InputMaybe<Scalars['BigInt']>;
+  amount_not_eq?: InputMaybe<Scalars['BigInt']>;
+  amount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  blockNumber_eq?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_gt?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_gte?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  blockNumber_lt?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_lte?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_not_eq?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  date_eq?: InputMaybe<Scalars['DateTime']>;
+  date_gt?: InputMaybe<Scalars['DateTime']>;
+  date_gte?: InputMaybe<Scalars['DateTime']>;
+  date_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  date_lt?: InputMaybe<Scalars['DateTime']>;
+  date_lte?: InputMaybe<Scalars['DateTime']>;
+  date_not_eq?: InputMaybe<Scalars['DateTime']>;
+  date_not_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  id_contains?: InputMaybe<Scalars['ID']>;
+  id_endsWith?: InputMaybe<Scalars['ID']>;
+  id_eq?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not_contains?: InputMaybe<Scalars['ID']>;
+  id_not_endsWith?: InputMaybe<Scalars['ID']>;
+  id_not_eq?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_not_startsWith?: InputMaybe<Scalars['ID']>;
+  id_startsWith?: InputMaybe<Scalars['ID']>;
+  network_eq?: InputMaybe<SubstrateNetwork>;
+  network_in?: InputMaybe<Array<SubstrateNetwork>>;
+  network_not_eq?: InputMaybe<SubstrateNetwork>;
+  network_not_in?: InputMaybe<Array<SubstrateNetwork>>;
+  proposalIndex_eq?: InputMaybe<Scalars['Int']>;
+  proposalIndex_gt?: InputMaybe<Scalars['Int']>;
+  proposalIndex_gte?: InputMaybe<Scalars['Int']>;
+  proposalIndex_in?: InputMaybe<Array<Scalars['Int']>>;
+  proposalIndex_lt?: InputMaybe<Scalars['Int']>;
+  proposalIndex_lte?: InputMaybe<Scalars['Int']>;
+  proposalIndex_not_eq?: InputMaybe<Scalars['Int']>;
+  proposalIndex_not_in?: InputMaybe<Array<Scalars['Int']>>;
+  rootAccount_contains?: InputMaybe<Scalars['String']>;
+  rootAccount_endsWith?: InputMaybe<Scalars['String']>;
+  rootAccount_eq?: InputMaybe<Scalars['String']>;
+  rootAccount_gt?: InputMaybe<Scalars['String']>;
+  rootAccount_gte?: InputMaybe<Scalars['String']>;
+  rootAccount_in?: InputMaybe<Array<Scalars['String']>>;
+  rootAccount_lt?: InputMaybe<Scalars['String']>;
+  rootAccount_lte?: InputMaybe<Scalars['String']>;
+  rootAccount_not_contains?: InputMaybe<Scalars['String']>;
+  rootAccount_not_endsWith?: InputMaybe<Scalars['String']>;
+  rootAccount_not_eq?: InputMaybe<Scalars['String']>;
+  rootAccount_not_in?: InputMaybe<Array<Scalars['String']>>;
+  rootAccount_not_startsWith?: InputMaybe<Scalars['String']>;
+  rootAccount_startsWith?: InputMaybe<Scalars['String']>;
+};
+
+export type SubstrateDemocracyProposalWhereUniqueInput = {
+  id: Scalars['ID'];
+};
+
+export type SubstrateDemocracyProposalsConnection = {
+  __typename?: 'SubstrateDemocracyProposalsConnection';
+  edges: Array<SubstrateDemocracyProposalEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
 export type SubstrateElectionVote = {
   __typename?: 'SubstrateElectionVote';
   account: SubstrateGovernanceAccount;
@@ -2984,12 +3378,18 @@ export enum SubstrateElectionVoteOrderByInput {
   AccountNetworkDesc = 'account_network_DESC',
   AccountRootAccountAsc = 'account_rootAccount_ASC',
   AccountRootAccountDesc = 'account_rootAccount_DESC',
+  AccountTotalCouncilProposalsAsc = 'account_totalCouncilProposals_ASC',
+  AccountTotalCouncilProposalsDesc = 'account_totalCouncilProposals_DESC',
+  AccountTotalDemocracyProposalsAsc = 'account_totalDemocracyProposals_ASC',
+  AccountTotalDemocracyProposalsDesc = 'account_totalDemocracyProposals_DESC',
   AccountTotalElectionVotesAsc = 'account_totalElectionVotes_ASC',
   AccountTotalElectionVotesDesc = 'account_totalElectionVotes_DESC',
   AccountTotalProposalSecondsAsc = 'account_totalProposalSeconds_ASC',
   AccountTotalProposalSecondsDesc = 'account_totalProposalSeconds_DESC',
   AccountTotalProposalVotesAsc = 'account_totalProposalVotes_ASC',
   AccountTotalProposalVotesDesc = 'account_totalProposalVotes_DESC',
+  AccountTotalTechnicalCommitteeProposalsAsc = 'account_totalTechnicalCommitteeProposals_ASC',
+  AccountTotalTechnicalCommitteeProposalsDesc = 'account_totalTechnicalCommitteeProposals_DESC',
   AmountAsc = 'amount_ASC',
   AmountDesc = 'amount_DESC',
   BlockNumberAsc = 'blockNumber_ASC',
@@ -3082,7 +3482,9 @@ export type SubstrateElectionVotesConnection = {
 
 export type SubstrateGovernanceAccount = {
   __typename?: 'SubstrateGovernanceAccount';
+  councilProposals: Array<SubstrateCouncilProposal>;
   councilVotes: Array<SubstrateCouncilVote>;
+  democracyProposals: Array<SubstrateDemocracyProposal>;
   electionVotes: Array<SubstrateElectionVote>;
   /** address */
   id: Scalars['ID'];
@@ -3091,10 +3493,21 @@ export type SubstrateGovernanceAccount = {
   proposalVotes: Array<SubstrateProposalVote>;
   /** hex address */
   rootAccount: Scalars['String'];
+  technicalCommitteeProposals: Array<SubstrateTechnicalCommitteeProposal>;
+  totalCouncilProposals: Scalars['Int'];
+  totalDemocracyProposals: Scalars['Int'];
   totalElectionVotes: Scalars['Int'];
   totalProposalSeconds: Scalars['Int'];
   /** includes both normal proposal votes and votes as a council member from council.vote() */
   totalProposalVotes: Scalars['Int'];
+  totalTechnicalCommitteeProposals: Scalars['Int'];
+};
+
+export type SubstrateGovernanceAccountCouncilProposalsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<InputMaybe<SubstrateCouncilProposalOrderByInput>>>;
+  where?: InputMaybe<SubstrateCouncilProposalWhereInput>;
 };
 
 export type SubstrateGovernanceAccountCouncilVotesArgs = {
@@ -3102,6 +3515,13 @@ export type SubstrateGovernanceAccountCouncilVotesArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<InputMaybe<SubstrateCouncilVoteOrderByInput>>>;
   where?: InputMaybe<SubstrateCouncilVoteWhereInput>;
+};
+
+export type SubstrateGovernanceAccountDemocracyProposalsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<InputMaybe<SubstrateDemocracyProposalOrderByInput>>>;
+  where?: InputMaybe<SubstrateDemocracyProposalWhereInput>;
 };
 
 export type SubstrateGovernanceAccountElectionVotesArgs = {
@@ -3125,6 +3545,13 @@ export type SubstrateGovernanceAccountProposalVotesArgs = {
   where?: InputMaybe<SubstrateProposalVoteWhereInput>;
 };
 
+export type SubstrateGovernanceAccountTechnicalCommitteeProposalsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<InputMaybe<SubstrateTechnicalCommitteeProposalOrderByInput>>>;
+  where?: InputMaybe<SubstrateTechnicalCommitteeProposalWhereInput>;
+};
+
 export type SubstrateGovernanceAccountEdge = {
   __typename?: 'SubstrateGovernanceAccountEdge';
   cursor: Scalars['String'];
@@ -3138,20 +3565,32 @@ export enum SubstrateGovernanceAccountOrderByInput {
   NetworkDesc = 'network_DESC',
   RootAccountAsc = 'rootAccount_ASC',
   RootAccountDesc = 'rootAccount_DESC',
+  TotalCouncilProposalsAsc = 'totalCouncilProposals_ASC',
+  TotalCouncilProposalsDesc = 'totalCouncilProposals_DESC',
+  TotalDemocracyProposalsAsc = 'totalDemocracyProposals_ASC',
+  TotalDemocracyProposalsDesc = 'totalDemocracyProposals_DESC',
   TotalElectionVotesAsc = 'totalElectionVotes_ASC',
   TotalElectionVotesDesc = 'totalElectionVotes_DESC',
   TotalProposalSecondsAsc = 'totalProposalSeconds_ASC',
   TotalProposalSecondsDesc = 'totalProposalSeconds_DESC',
   TotalProposalVotesAsc = 'totalProposalVotes_ASC',
   TotalProposalVotesDesc = 'totalProposalVotes_DESC',
+  TotalTechnicalCommitteeProposalsAsc = 'totalTechnicalCommitteeProposals_ASC',
+  TotalTechnicalCommitteeProposalsDesc = 'totalTechnicalCommitteeProposals_DESC',
 }
 
 export type SubstrateGovernanceAccountWhereInput = {
   AND?: InputMaybe<Array<SubstrateGovernanceAccountWhereInput>>;
   OR?: InputMaybe<Array<SubstrateGovernanceAccountWhereInput>>;
+  councilProposals_every?: InputMaybe<SubstrateCouncilProposalWhereInput>;
+  councilProposals_none?: InputMaybe<SubstrateCouncilProposalWhereInput>;
+  councilProposals_some?: InputMaybe<SubstrateCouncilProposalWhereInput>;
   councilVotes_every?: InputMaybe<SubstrateCouncilVoteWhereInput>;
   councilVotes_none?: InputMaybe<SubstrateCouncilVoteWhereInput>;
   councilVotes_some?: InputMaybe<SubstrateCouncilVoteWhereInput>;
+  democracyProposals_every?: InputMaybe<SubstrateDemocracyProposalWhereInput>;
+  democracyProposals_none?: InputMaybe<SubstrateDemocracyProposalWhereInput>;
+  democracyProposals_some?: InputMaybe<SubstrateDemocracyProposalWhereInput>;
   electionVotes_every?: InputMaybe<SubstrateElectionVoteWhereInput>;
   electionVotes_none?: InputMaybe<SubstrateElectionVoteWhereInput>;
   electionVotes_some?: InputMaybe<SubstrateElectionVoteWhereInput>;
@@ -3193,6 +3632,25 @@ export type SubstrateGovernanceAccountWhereInput = {
   rootAccount_not_in?: InputMaybe<Array<Scalars['String']>>;
   rootAccount_not_startsWith?: InputMaybe<Scalars['String']>;
   rootAccount_startsWith?: InputMaybe<Scalars['String']>;
+  technicalCommitteeProposals_every?: InputMaybe<SubstrateTechnicalCommitteeProposalWhereInput>;
+  technicalCommitteeProposals_none?: InputMaybe<SubstrateTechnicalCommitteeProposalWhereInput>;
+  technicalCommitteeProposals_some?: InputMaybe<SubstrateTechnicalCommitteeProposalWhereInput>;
+  totalCouncilProposals_eq?: InputMaybe<Scalars['Int']>;
+  totalCouncilProposals_gt?: InputMaybe<Scalars['Int']>;
+  totalCouncilProposals_gte?: InputMaybe<Scalars['Int']>;
+  totalCouncilProposals_in?: InputMaybe<Array<Scalars['Int']>>;
+  totalCouncilProposals_lt?: InputMaybe<Scalars['Int']>;
+  totalCouncilProposals_lte?: InputMaybe<Scalars['Int']>;
+  totalCouncilProposals_not_eq?: InputMaybe<Scalars['Int']>;
+  totalCouncilProposals_not_in?: InputMaybe<Array<Scalars['Int']>>;
+  totalDemocracyProposals_eq?: InputMaybe<Scalars['Int']>;
+  totalDemocracyProposals_gt?: InputMaybe<Scalars['Int']>;
+  totalDemocracyProposals_gte?: InputMaybe<Scalars['Int']>;
+  totalDemocracyProposals_in?: InputMaybe<Array<Scalars['Int']>>;
+  totalDemocracyProposals_lt?: InputMaybe<Scalars['Int']>;
+  totalDemocracyProposals_lte?: InputMaybe<Scalars['Int']>;
+  totalDemocracyProposals_not_eq?: InputMaybe<Scalars['Int']>;
+  totalDemocracyProposals_not_in?: InputMaybe<Array<Scalars['Int']>>;
   totalElectionVotes_eq?: InputMaybe<Scalars['Int']>;
   totalElectionVotes_gt?: InputMaybe<Scalars['Int']>;
   totalElectionVotes_gte?: InputMaybe<Scalars['Int']>;
@@ -3217,6 +3675,14 @@ export type SubstrateGovernanceAccountWhereInput = {
   totalProposalVotes_lte?: InputMaybe<Scalars['Int']>;
   totalProposalVotes_not_eq?: InputMaybe<Scalars['Int']>;
   totalProposalVotes_not_in?: InputMaybe<Array<Scalars['Int']>>;
+  totalTechnicalCommitteeProposals_eq?: InputMaybe<Scalars['Int']>;
+  totalTechnicalCommitteeProposals_gt?: InputMaybe<Scalars['Int']>;
+  totalTechnicalCommitteeProposals_gte?: InputMaybe<Scalars['Int']>;
+  totalTechnicalCommitteeProposals_in?: InputMaybe<Array<Scalars['Int']>>;
+  totalTechnicalCommitteeProposals_lt?: InputMaybe<Scalars['Int']>;
+  totalTechnicalCommitteeProposals_lte?: InputMaybe<Scalars['Int']>;
+  totalTechnicalCommitteeProposals_not_eq?: InputMaybe<Scalars['Int']>;
+  totalTechnicalCommitteeProposals_not_in?: InputMaybe<Array<Scalars['Int']>>;
 };
 
 export type SubstrateGovernanceAccountWhereUniqueInput = {
@@ -3263,12 +3729,18 @@ export enum SubstrateProposalSecondOrderByInput {
   AccountNetworkDesc = 'account_network_DESC',
   AccountRootAccountAsc = 'account_rootAccount_ASC',
   AccountRootAccountDesc = 'account_rootAccount_DESC',
+  AccountTotalCouncilProposalsAsc = 'account_totalCouncilProposals_ASC',
+  AccountTotalCouncilProposalsDesc = 'account_totalCouncilProposals_DESC',
+  AccountTotalDemocracyProposalsAsc = 'account_totalDemocracyProposals_ASC',
+  AccountTotalDemocracyProposalsDesc = 'account_totalDemocracyProposals_DESC',
   AccountTotalElectionVotesAsc = 'account_totalElectionVotes_ASC',
   AccountTotalElectionVotesDesc = 'account_totalElectionVotes_DESC',
   AccountTotalProposalSecondsAsc = 'account_totalProposalSeconds_ASC',
   AccountTotalProposalSecondsDesc = 'account_totalProposalSeconds_DESC',
   AccountTotalProposalVotesAsc = 'account_totalProposalVotes_ASC',
   AccountTotalProposalVotesDesc = 'account_totalProposalVotes_DESC',
+  AccountTotalTechnicalCommitteeProposalsAsc = 'account_totalTechnicalCommitteeProposals_ASC',
+  AccountTotalTechnicalCommitteeProposalsDesc = 'account_totalTechnicalCommitteeProposals_DESC',
   BlockNumberAsc = 'blockNumber_ASC',
   BlockNumberDesc = 'blockNumber_DESC',
   DateAsc = 'date_ASC',
@@ -3393,12 +3865,18 @@ export enum SubstrateProposalVoteOrderByInput {
   AccountNetworkDesc = 'account_network_DESC',
   AccountRootAccountAsc = 'account_rootAccount_ASC',
   AccountRootAccountDesc = 'account_rootAccount_DESC',
+  AccountTotalCouncilProposalsAsc = 'account_totalCouncilProposals_ASC',
+  AccountTotalCouncilProposalsDesc = 'account_totalCouncilProposals_DESC',
+  AccountTotalDemocracyProposalsAsc = 'account_totalDemocracyProposals_ASC',
+  AccountTotalDemocracyProposalsDesc = 'account_totalDemocracyProposals_DESC',
   AccountTotalElectionVotesAsc = 'account_totalElectionVotes_ASC',
   AccountTotalElectionVotesDesc = 'account_totalElectionVotes_DESC',
   AccountTotalProposalSecondsAsc = 'account_totalProposalSeconds_ASC',
   AccountTotalProposalSecondsDesc = 'account_totalProposalSeconds_DESC',
   AccountTotalProposalVotesAsc = 'account_totalProposalVotes_ASC',
   AccountTotalProposalVotesDesc = 'account_totalProposalVotes_DESC',
+  AccountTotalTechnicalCommitteeProposalsAsc = 'account_totalTechnicalCommitteeProposals_ASC',
+  AccountTotalTechnicalCommitteeProposalsDesc = 'account_totalTechnicalCommitteeProposals_DESC',
   BlockNumberAsc = 'blockNumber_ASC',
   BlockNumberDesc = 'blockNumber_DESC',
   DateAsc = 'date_ASC',
@@ -3498,6 +3976,158 @@ export type SubstrateProposalVoteWhereUniqueInput = {
 export type SubstrateProposalVotesConnection = {
   __typename?: 'SubstrateProposalVotesConnection';
   edges: Array<SubstrateProposalVoteEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type SubstrateTechnicalCommitteeProposal = {
+  __typename?: 'SubstrateTechnicalCommitteeProposal';
+  account: SubstrateGovernanceAccount;
+  blockNumber: Scalars['BigInt'];
+  date: Scalars['DateTime'];
+  /** network:block:index */
+  id: Scalars['ID'];
+  network: SubstrateNetwork;
+  proposalHash: Scalars['String'];
+  proposalIndex: Scalars['Int'];
+  rootAccount: Scalars['String'];
+  threshold: Scalars['Int'];
+};
+
+export type SubstrateTechnicalCommitteeProposalEdge = {
+  __typename?: 'SubstrateTechnicalCommitteeProposalEdge';
+  cursor: Scalars['String'];
+  node: SubstrateTechnicalCommitteeProposal;
+};
+
+export enum SubstrateTechnicalCommitteeProposalOrderByInput {
+  AccountIdAsc = 'account_id_ASC',
+  AccountIdDesc = 'account_id_DESC',
+  AccountNetworkAsc = 'account_network_ASC',
+  AccountNetworkDesc = 'account_network_DESC',
+  AccountRootAccountAsc = 'account_rootAccount_ASC',
+  AccountRootAccountDesc = 'account_rootAccount_DESC',
+  AccountTotalCouncilProposalsAsc = 'account_totalCouncilProposals_ASC',
+  AccountTotalCouncilProposalsDesc = 'account_totalCouncilProposals_DESC',
+  AccountTotalDemocracyProposalsAsc = 'account_totalDemocracyProposals_ASC',
+  AccountTotalDemocracyProposalsDesc = 'account_totalDemocracyProposals_DESC',
+  AccountTotalElectionVotesAsc = 'account_totalElectionVotes_ASC',
+  AccountTotalElectionVotesDesc = 'account_totalElectionVotes_DESC',
+  AccountTotalProposalSecondsAsc = 'account_totalProposalSeconds_ASC',
+  AccountTotalProposalSecondsDesc = 'account_totalProposalSeconds_DESC',
+  AccountTotalProposalVotesAsc = 'account_totalProposalVotes_ASC',
+  AccountTotalProposalVotesDesc = 'account_totalProposalVotes_DESC',
+  AccountTotalTechnicalCommitteeProposalsAsc = 'account_totalTechnicalCommitteeProposals_ASC',
+  AccountTotalTechnicalCommitteeProposalsDesc = 'account_totalTechnicalCommitteeProposals_DESC',
+  BlockNumberAsc = 'blockNumber_ASC',
+  BlockNumberDesc = 'blockNumber_DESC',
+  DateAsc = 'date_ASC',
+  DateDesc = 'date_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  NetworkAsc = 'network_ASC',
+  NetworkDesc = 'network_DESC',
+  ProposalHashAsc = 'proposalHash_ASC',
+  ProposalHashDesc = 'proposalHash_DESC',
+  ProposalIndexAsc = 'proposalIndex_ASC',
+  ProposalIndexDesc = 'proposalIndex_DESC',
+  RootAccountAsc = 'rootAccount_ASC',
+  RootAccountDesc = 'rootAccount_DESC',
+  ThresholdAsc = 'threshold_ASC',
+  ThresholdDesc = 'threshold_DESC',
+}
+
+export type SubstrateTechnicalCommitteeProposalWhereInput = {
+  AND?: InputMaybe<Array<SubstrateTechnicalCommitteeProposalWhereInput>>;
+  OR?: InputMaybe<Array<SubstrateTechnicalCommitteeProposalWhereInput>>;
+  account?: InputMaybe<SubstrateGovernanceAccountWhereInput>;
+  blockNumber_eq?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_gt?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_gte?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  blockNumber_lt?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_lte?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_not_eq?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  date_eq?: InputMaybe<Scalars['DateTime']>;
+  date_gt?: InputMaybe<Scalars['DateTime']>;
+  date_gte?: InputMaybe<Scalars['DateTime']>;
+  date_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  date_lt?: InputMaybe<Scalars['DateTime']>;
+  date_lte?: InputMaybe<Scalars['DateTime']>;
+  date_not_eq?: InputMaybe<Scalars['DateTime']>;
+  date_not_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  id_contains?: InputMaybe<Scalars['ID']>;
+  id_endsWith?: InputMaybe<Scalars['ID']>;
+  id_eq?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not_contains?: InputMaybe<Scalars['ID']>;
+  id_not_endsWith?: InputMaybe<Scalars['ID']>;
+  id_not_eq?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_not_startsWith?: InputMaybe<Scalars['ID']>;
+  id_startsWith?: InputMaybe<Scalars['ID']>;
+  network_eq?: InputMaybe<SubstrateNetwork>;
+  network_in?: InputMaybe<Array<SubstrateNetwork>>;
+  network_not_eq?: InputMaybe<SubstrateNetwork>;
+  network_not_in?: InputMaybe<Array<SubstrateNetwork>>;
+  proposalHash_contains?: InputMaybe<Scalars['String']>;
+  proposalHash_endsWith?: InputMaybe<Scalars['String']>;
+  proposalHash_eq?: InputMaybe<Scalars['String']>;
+  proposalHash_gt?: InputMaybe<Scalars['String']>;
+  proposalHash_gte?: InputMaybe<Scalars['String']>;
+  proposalHash_in?: InputMaybe<Array<Scalars['String']>>;
+  proposalHash_lt?: InputMaybe<Scalars['String']>;
+  proposalHash_lte?: InputMaybe<Scalars['String']>;
+  proposalHash_not_contains?: InputMaybe<Scalars['String']>;
+  proposalHash_not_endsWith?: InputMaybe<Scalars['String']>;
+  proposalHash_not_eq?: InputMaybe<Scalars['String']>;
+  proposalHash_not_in?: InputMaybe<Array<Scalars['String']>>;
+  proposalHash_not_startsWith?: InputMaybe<Scalars['String']>;
+  proposalHash_startsWith?: InputMaybe<Scalars['String']>;
+  proposalIndex_eq?: InputMaybe<Scalars['Int']>;
+  proposalIndex_gt?: InputMaybe<Scalars['Int']>;
+  proposalIndex_gte?: InputMaybe<Scalars['Int']>;
+  proposalIndex_in?: InputMaybe<Array<Scalars['Int']>>;
+  proposalIndex_lt?: InputMaybe<Scalars['Int']>;
+  proposalIndex_lte?: InputMaybe<Scalars['Int']>;
+  proposalIndex_not_eq?: InputMaybe<Scalars['Int']>;
+  proposalIndex_not_in?: InputMaybe<Array<Scalars['Int']>>;
+  rootAccount_contains?: InputMaybe<Scalars['String']>;
+  rootAccount_endsWith?: InputMaybe<Scalars['String']>;
+  rootAccount_eq?: InputMaybe<Scalars['String']>;
+  rootAccount_gt?: InputMaybe<Scalars['String']>;
+  rootAccount_gte?: InputMaybe<Scalars['String']>;
+  rootAccount_in?: InputMaybe<Array<Scalars['String']>>;
+  rootAccount_lt?: InputMaybe<Scalars['String']>;
+  rootAccount_lte?: InputMaybe<Scalars['String']>;
+  rootAccount_not_contains?: InputMaybe<Scalars['String']>;
+  rootAccount_not_endsWith?: InputMaybe<Scalars['String']>;
+  rootAccount_not_eq?: InputMaybe<Scalars['String']>;
+  rootAccount_not_in?: InputMaybe<Array<Scalars['String']>>;
+  rootAccount_not_startsWith?: InputMaybe<Scalars['String']>;
+  rootAccount_startsWith?: InputMaybe<Scalars['String']>;
+  threshold_eq?: InputMaybe<Scalars['Int']>;
+  threshold_gt?: InputMaybe<Scalars['Int']>;
+  threshold_gte?: InputMaybe<Scalars['Int']>;
+  threshold_in?: InputMaybe<Array<Scalars['Int']>>;
+  threshold_lt?: InputMaybe<Scalars['Int']>;
+  threshold_lte?: InputMaybe<Scalars['Int']>;
+  threshold_not_eq?: InputMaybe<Scalars['Int']>;
+  threshold_not_in?: InputMaybe<Array<Scalars['Int']>>;
+};
+
+export type SubstrateTechnicalCommitteeProposalWhereUniqueInput = {
+  id: Scalars['ID'];
+};
+
+export type SubstrateTechnicalCommitteeProposalsConnection = {
+  __typename?: 'SubstrateTechnicalCommitteeProposalsConnection';
+  edges: Array<SubstrateTechnicalCommitteeProposalEdge>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };

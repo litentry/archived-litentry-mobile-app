@@ -73,10 +73,6 @@ const styles = StyleSheet.create({
     paddingVertical: standardPadding * 2,
     paddingHorizontal: standardPadding * 2,
   },
-  accountsRow: {
-    flex: 1,
-    marginRight: 20,
-  },
   itemRight: {
     flexDirection: 'row',
     alignItems: 'center',

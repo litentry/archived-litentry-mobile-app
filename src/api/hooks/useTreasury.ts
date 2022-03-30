@@ -11,10 +11,14 @@ const TREASURY_QUERY = gql`
         proposal {
           value
           proposer {
-            ...AccountFields
+            account {
+              ...AccountFields
+            }
           }
           beneficiary {
-            ...AccountFields
+            account {
+              ...AccountFields
+            }
           }
           bond
         }
@@ -24,10 +28,14 @@ const TREASURY_QUERY = gql`
         proposal {
           value
           proposer {
-            ...AccountFields
+            account {
+              ...AccountFields
+            }
           }
           beneficiary {
-            ...AccountFields
+            account {
+              ...AccountFields
+            }
           }
           bond
         }

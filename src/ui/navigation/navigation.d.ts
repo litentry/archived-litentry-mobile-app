@@ -1,4 +1,5 @@
 import {
+  accountScreen,
   accountsGuideScreen,
   accountsNavigator,
   accountsScreen,
@@ -79,6 +80,7 @@ type DashboardStackParamList = {
   [bountiesScreen]: undefined;
   [bountyDetailScreen]: {index: string};
   [addBountyScreen]: undefined;
+  [eventsCalendarScreen]: undefined;
 };
 
 type DrawerParamList = {
@@ -95,7 +97,6 @@ type DrawerParamList = {
   [feedbackScreen]: undefined;
   [parathreadsScreen]: undefined;
   [parachainAuctionsScreen]: undefined;
-  [eventsCalendarScreen]: undefined;
 };
 
 type ParachainsStackParamList = {
@@ -117,6 +118,7 @@ type AppStackParamList = {
   [permissionGrantingPromptScreen]: undefined;
   [drawerNavigator]: undefined;
   [networkSelectionScreen]: undefined;
+  [accountScreen]: {address: string};
 };
 
 type AccountsStackParamList = {

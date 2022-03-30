@@ -14,6 +14,9 @@ import {DashboardStackParamList} from '@ui/navigation/navigation';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {AppStackParamList} from '@ui/navigation/navigation';
+import {accountScreen} from '@ui/navigation/routeKeys';
 
 type ScreenProps = {
   navigation: StackNavigationProp<DashboardStackParamList>;
@@ -69,6 +72,7 @@ function TipDetailScreen({route}: ScreenProps) {
   const id = route.params?.id;
   const {data: tip, loading, refetching, refetch} = useTip(id);
   const {colors} = useTheme();
+  const navigation = useNavigation<NavigationProp<AppStackParamList>>();
 
   if (loading && !tip) {
     return <LoadingView />;
@@ -91,6 +95,7 @@ function TipDetailScreen({route}: ScreenProps) {
                   <Identicon value={item.account.address} size={35} />
                 </View>
               )}
+              onPress={() => navigation.navigate(accountScreen, {address: item.account.address})}
             />
           );
         }}

@@ -19,6 +19,8 @@ const CHAIN_INFO_QUERY = gql`
         decimals
         token
       }
+      formattedExistentialDeposit
+      existentialDeposit
     }
   }
 `;
