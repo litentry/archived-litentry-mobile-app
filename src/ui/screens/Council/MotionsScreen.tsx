@@ -265,14 +265,19 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
             <AccountTeaser account={proposal.proposer.account} />
           </ItemRowBlock>
         )}
+        {proposal.payout && (
+          <ItemRowBlock label="Payout">
+            <Caption>{proposal.payout}</Caption>
+          </ItemRowBlock>
+        )}
         {proposal.beneficiary && (
           <ItemRowBlock label="Beneficiary">
             <AccountTeaser account={proposal.beneficiary.account} />
           </ItemRowBlock>
         )}
         {proposal.payout && (
-          <ItemRowBlock label="Payout">
-            <Caption>{proposal.payout}</Caption>
+          <ItemRowBlock label="Bond">
+            <Caption>{proposal.bond}</Caption>
           </ItemRowBlock>
         )}
         <ProposalCall proposal={motion.proposal} />

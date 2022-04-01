@@ -2473,6 +2473,7 @@ export type SubstrateChainMotionProposal = {
   __typename?: 'SubstrateChainMotionProposal';
   args: Array<SubstrateChainProposalArg>;
   beneficiary?: Maybe<SubstrateChainAccountInfo>;
+  bond?: Maybe<Scalars['String']>;
   hash: Scalars['String'];
   index?: Maybe<Scalars['String']>;
   meta: Scalars['String'];

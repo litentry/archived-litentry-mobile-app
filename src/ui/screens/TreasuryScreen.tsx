@@ -123,14 +123,14 @@ function TreasuryProposalTeaser({proposal, children}: TreasuryProposalTeaserProp
         <ItemRowBlock label="Proposer">
           <AccountTeaser account={proposal.proposer.account} />
         </ItemRowBlock>
+        <ItemRowBlock label="Payout">
+          <Caption>{proposal.value}</Caption>
+        </ItemRowBlock>
         <ItemRowBlock label="Beneficiary">
           <AccountTeaser account={proposal.beneficiary.account} />
         </ItemRowBlock>
         <ItemRowBlock label="Bond">
           <Caption>{proposal.bond}</Caption>
-        </ItemRowBlock>
-        <ItemRowBlock label="Payment">
-          <Caption>{proposal.value}</Caption>
         </ItemRowBlock>
       </Card.Content>
       <Divider />

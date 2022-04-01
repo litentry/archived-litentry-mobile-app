@@ -37,6 +37,7 @@ const COUNCIL_MOTION_QUERY = gql`
           }
         }
         payout
+        bond
       }
       votes {
         threshold
