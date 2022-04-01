@@ -258,7 +258,7 @@ function AppNavigator() {
   }
 
   return (
-    <AppStack.Navigator screenOptions={{headerShown: false}}>
+    <AppStack.Navigator screenOptions={{headerShown: false, presentation: 'transparentModal'}}>
       {isPnPromptNeeded ? (
         <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen}>
           {() => <PermissionGrantingPrompt skipPnPermission={skipPnPermission} />}
