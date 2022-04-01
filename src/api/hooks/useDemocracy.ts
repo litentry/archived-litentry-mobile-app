@@ -95,13 +95,14 @@ export const DEMOCRACY_QUERY = gql`
 `;
 
 export function useDemocracy() {
-  const {data, networkStatus, ...rest} = useQuery<Democracy>(DEMOCRACY_QUERY);
+  const {data, networkStatus, loading, ...rest} = useQuery<Democracy>(DEMOCRACY_QUERY);
 
   return {
     data: {
       proposals: data?.substrateChainDemocracyProposals,
       referendums: data?.substrateChainDemocracyReferendums,
     },
+    loading: loading && !data?.substrateChainDemocracyProposals && !data?.substrateChainDemocracyReferendums,
     refreshing: networkStatus === NetworkStatus.refetch,
     ...rest,
   };

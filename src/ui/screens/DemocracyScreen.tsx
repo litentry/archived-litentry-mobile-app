@@ -35,7 +35,7 @@ export function DemocracyScreen({navigation}: ScreenProps) {
     [democracy],
   );
 
-  const isLoading = loading && !democracy && !refreshing;
+  const isLoading = loading && !refreshing;
 
   const openInPolkassembly = (proposal: Proposal) => {
     const location = proposal.__typename === 'SubstrateChainDemocracyProposal' ? 'proposal' : 'referendum';
