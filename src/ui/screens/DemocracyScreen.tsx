@@ -16,6 +16,7 @@ import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {ProposalCall} from '@ui/components/ProposalCall';
 import {ItemRowBlock} from '@ui/components/ItemRowBlock';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
+import {getProposalTitle} from 'src/utils/proposal';
 
 type Proposal = DemocracyProposal | DemocracyReferendum;
 
@@ -119,16 +120,6 @@ export function DemocracyScreen({navigation}: ScreenProps) {
   );
 }
 
-function getTitle(proposal: Proposal) {
-  if (proposal.method && proposal.section) {
-    return `${proposal.method}.${proposal.section}()`;
-  } else if (proposal.__typename === 'SubstrateChainDemocracyReferendum') {
-    return `preimage ${proposal.imageHash}`;
-  }
-
-  return '';
-}
-
 type ProposalTeaserProps = {
   proposal: Proposal;
   children?: React.ReactNode;
@@ -141,7 +132,7 @@ function DemocracyProposalTeaser({proposal, children, navigation}: ProposalTease
       <Card onPress={() => navigation.navigate(referendumScreen, {referendum: proposal})}>
         <Card.Content>
           <List.Item
-            title={getTitle(proposal)}
+            title={getProposalTitle(proposal)}
             left={() => <Headline>{`#${proposal.index}`}</Headline>}
             description={proposal.endPeriod ? proposal.endPeriod.slice(0, 2).join(' ') : ''}
           />
@@ -154,7 +145,7 @@ function DemocracyProposalTeaser({proposal, children, navigation}: ProposalTease
     return (
       <Card onPress={() => navigation.navigate(democracyProposalScreen, {proposal})}>
         <Card.Content>
-          <List.Item title={getTitle(proposal)} left={() => <Headline>{`#${proposal.index}`}</Headline>} />
+          <List.Item title={getProposalTitle(proposal)} left={() => <Headline>{`#${proposal.index}`}</Headline>} />
           <ItemRowBlock label="Balance">
             <Caption>{proposal.formattedBalance}</Caption>
           </ItemRowBlock>
