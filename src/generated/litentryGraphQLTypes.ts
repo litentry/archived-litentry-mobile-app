@@ -2512,12 +2512,6 @@ export type SubstrateChainParathread = {
   name?: Maybe<Scalars['String']>;
 };
 
-export type SubstrateChainProposal =
-  | SubstrateChainDemocracyProposal
-  | SubstrateChainDemocracyReferendum
-  | SubstrateChainMotionProposal
-  | SubstrateChainTreasuryProposal;
-
 export type SubstrateChainProposalArg = {
   __typename?: 'SubstrateChainProposalArg';
   name?: Maybe<Scalars['String']>;
@@ -4341,13 +4335,6 @@ export interface PossibleTypesResultData {
   };
 }
 const result: PossibleTypesResultData = {
-  possibleTypes: {
-    SubstrateChainProposal: [
-      'SubstrateChainDemocracyProposal',
-      'SubstrateChainDemocracyReferendum',
-      'SubstrateChainMotionProposal',
-      'SubstrateChainTreasuryProposal',
-    ],
-  },
+  possibleTypes: {},
 };
 export default result;
