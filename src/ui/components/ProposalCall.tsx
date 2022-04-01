@@ -3,15 +3,18 @@ import {StyleSheet, View} from 'react-native';
 import {Paragraph, Card, Caption, Text} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import type {DemocracyProposal, DemocracyReferendum, ProposalSubCall} from 'src/api/hooks/useDemocracy';
-import globalStyles, {standardPadding} from '@ui/styles';
-import {MotionProposal} from 'src/api/hooks/useCouncilMotions';
-import {Account} from './Account/Account';
+import type {MotionProposal} from 'src/api/hooks/useCouncilMotions';
+import {standardPadding} from '@ui/styles';
 
-type ProposalInfoProps = {
+type ProposalCallProps = {
   proposal: DemocracyProposal | DemocracyReferendum | MotionProposal;
 };
 
-export function ProposalCall({proposal}: ProposalInfoProps) {
+export function ProposalCall({proposal}: ProposalCallProps) {
+  if (!proposal.method || !proposal.section) {
+    return null;
+  }
+
   return (
     <>
       {proposal.meta && (
@@ -36,24 +39,6 @@ export function ProposalCall({proposal}: ProposalInfoProps) {
                 })}
             </View>
           ))}
-          {'proposer' in proposal && proposal.proposer && (
-            <View style={globalStyles.rowAlignCenter}>
-              <Caption>{`Proposer: `}</Caption>
-              <Account account={proposal.proposer.account} />
-            </View>
-          )}
-          {'beneficiary' in proposal && proposal.beneficiary && (
-            <View style={globalStyles.rowAlignCenter}>
-              <Caption>{`Beneficiary: `}</Caption>
-              <Account account={proposal.beneficiary.account} />
-            </View>
-          )}
-          {'payout' in proposal && proposal.payout && (
-            <View style={globalStyles.rowAlignCenter}>
-              <Caption>{`Payout: `}</Caption>
-              <Caption>{proposal.payout}</Caption>
-            </View>
-          )}
         </Card.Content>
       </Card>
     </>

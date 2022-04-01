@@ -6,42 +6,57 @@ import type {
 } from 'src/generated/litentryGraphQLTypes';
 import {ACCOUNT_FIELDS_FRAGMENT} from 'src/api/hooks/useAccount';
 
+export type ProposalSubCall = SubstrateChainProposalSubCall;
 export type DemocracyProposal = SubstrateChainDemocracyProposal;
 export type DemocracyReferendum = SubstrateChainDemocracyReferendum;
-export type ProposalSubCall = SubstrateChainProposalSubCall;
 
 type Democracy = {
-  substrateChainDemocracyProposals: DemocracyProposal[];
-  substrateChainDemocracyReferendums: DemocracyReferendum[];
+  substrateChainDemocracyProposals: SubstrateChainDemocracyProposal[];
+  substrateChainDemocracyReferendums: SubstrateChainDemocracyReferendum[];
 };
+
+export const PROPOSAL_ARGS_FRAGMENT = gql`
+  fragment ProposalArgFields on SubstrateChainProposalArg {
+    name
+    type
+    value
+    subCalls {
+      meta
+      method
+      section
+      args {
+        name
+        type
+        value
+      }
+    }
+  }
+`;
 
 export const DEMOCRACY_QUERY = gql`
   ${ACCOUNT_FIELDS_FRAGMENT}
+  ${PROPOSAL_ARGS_FRAGMENT}
   query getDemocracy {
     substrateChainDemocracyProposals {
       index
       balance
       formattedBalance
+      seconds {
+        account {
+          ...AccountFields
+        }
+      }
       meta
       method
       section
       hash
       proposer {
-        address
-        account {
-          ...AccountFields
-        }
-      }
-      seconds {
-        address
         account {
           ...AccountFields
         }
       }
       args {
-        name
-        type
-        value
+        ...ProposalArgFields
       }
     }
     substrateChainDemocracyReferendums {
@@ -50,6 +65,7 @@ export const DEMOCRACY_QUERY = gql`
       method
       section
       hash
+      imageHash
       endPeriod
       activatePeriod
       votedAye
@@ -71,11 +87,6 @@ export const DEMOCRACY_QUERY = gql`
             name
             type
             value
-            subCalls {
-              meta
-              method
-              section
-            }
           }
         }
       }

@@ -1,20 +1,22 @@
 import {gql, useQuery, NetworkStatus} from '@apollo/client';
-import type {SubstrateChainTreasury} from 'src/generated/litentryGraphQLTypes';
+import {SubstrateChainTreasuryProposals, SubstrateChainTreasuryProposal} from 'src/generated/litentryGraphQLTypes';
 import {ACCOUNT_FIELDS_FRAGMENT} from 'src/api/hooks/useAccount';
+
+export type TreasuryProposal = SubstrateChainTreasuryProposal;
 
 const TREASURY_QUERY = gql`
   ${ACCOUNT_FIELDS_FRAGMENT}
   query getTreasury {
-    substrateChainTreasury {
+    substrateChainTreasuryProposals {
       approvals {
-        id
         proposal {
-          value
+          index
           proposer {
             account {
               ...AccountFields
             }
           }
+          value
           beneficiary {
             account {
               ...AccountFields
@@ -24,14 +26,14 @@ const TREASURY_QUERY = gql`
         }
       }
       proposals {
-        id
         proposal {
-          value
+          index
           proposer {
             account {
               ...AccountFields
             }
           }
+          value
           beneficiary {
             account {
               ...AccountFields
@@ -45,10 +47,11 @@ const TREASURY_QUERY = gql`
 `;
 
 export function useTreasury() {
-  const {data, networkStatus, ...rest} = useQuery<{substrateChainTreasury: SubstrateChainTreasury}>(TREASURY_QUERY);
+  const {data, networkStatus, ...rest} =
+    useQuery<{substrateChainTreasuryProposals: SubstrateChainTreasuryProposals}>(TREASURY_QUERY);
 
   return {
-    data: data?.substrateChainTreasury,
+    data: data?.substrateChainTreasuryProposals,
     refetching: networkStatus === NetworkStatus.refetch,
     ...rest,
   };

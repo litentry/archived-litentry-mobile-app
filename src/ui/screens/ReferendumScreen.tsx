@@ -17,6 +17,17 @@ import {ProposalCall} from '@ui/components/ProposalCall';
 import BalanceInput from '@ui/components/BalanceInput';
 import {Account} from 'src/api/hooks/useAccount';
 import {useChainInfo} from 'src/api/hooks/useChainInfo';
+import {DemocracyReferendum} from 'src/api/hooks/useDemocracy';
+
+function getTitle(proposal: DemocracyReferendum) {
+  if (proposal.method && proposal.section) {
+    return `${proposal.method}.${proposal.section}()`;
+  } else if (proposal.__typename === 'SubstrateChainDemocracyReferendum') {
+    return `preimage ${proposal.imageHash}`;
+  }
+
+  return '';
+}
 
 export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
   const startTx = useApiTx();
@@ -24,8 +35,6 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
   const referendum = route.params.referendum;
   const {data: convictions} = useConvictions();
   const {data: chainInfo} = useChainInfo();
-
-  const title = `${referendum.method}.${referendum.section}`;
 
   const reset = () => {
     dispatch({type: 'RESET'});
@@ -63,12 +72,21 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
     <Layout style={globalStyles.flex}>
       <SafeView edges={noTopEdges}>
         <ScrollView contentContainerStyle={styles.container}>
-          <List.Item title={title} disabled left={() => <Headline>{referendum.index}</Headline>} />
+          <List.Item title={getTitle(referendum)} disabled left={() => <Headline>{referendum.index}</Headline>} />
           <ProposalCall proposal={referendum} />
           <Padder scale={1} />
 
-          <Caption>{`Proposal Hash:`}</Caption>
-          <Text selectable>{referendum.hash}</Text>
+          {referendum.hash ? (
+            <>
+              <Caption>{`Proposal Hash:`}</Caption>
+              <Text selectable>{referendum.hash}</Text>
+            </>
+          ) : (
+            <>
+              <Caption>{`Image Hash:`}</Caption>
+              <Text selectable>{referendum.imageHash}</Text>
+            </>
+          )}
 
           <View style={styles.row}>
             <View style={styles.center}>
