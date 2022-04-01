@@ -1,5 +1,5 @@
 import {gql, useQuery, NetworkStatus} from '@apollo/client';
-import {SubstrateChainTreasuryProposals, SubstrateChainTreasuryProposal} from 'src/generated/litentryGraphQLTypes';
+import type {SubstrateChainTreasuryProposals, SubstrateChainTreasuryProposal} from 'src/generated/litentryGraphQLTypes';
 import {ACCOUNT_FIELDS_FRAGMENT} from 'src/api/hooks/useAccount';
 
 export type TreasuryProposal = SubstrateChainTreasuryProposal;
