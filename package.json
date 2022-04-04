@@ -6,7 +6,7 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
-    "test": "jest",
+    "test": "jest --watchAll",
     "lint": "./node_modules/.bin/eslint --ignore-path .gitignore --fix --ext .ts,.tsx .",
     "check-types": "./node_modules/.bin/tsc",
     "prettier": "./node_modules/.bin/prettier --ignore-path .gitignore \"**/*.+(js|ts|tsx|json)\"",
