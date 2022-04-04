@@ -73,11 +73,12 @@ export default function NetworkContextProvider({children}: PropTypes) {
   return <NetworkContext.Provider value={value}>{children}</NetworkContext.Provider>;
 }
 
-export function useCurrentNetwork() {
+export function useNetwork() {
   const context = useContext(NetworkContext);
+
   if (!context) {
-    throw new Error('useCurrentNetwork must be used within NetworkContextProvider');
+    throw new Error('useNetwork must be used within a NetworkContextProvider');
   }
 
-  return context.currentNetwork;
+  return context;
 }

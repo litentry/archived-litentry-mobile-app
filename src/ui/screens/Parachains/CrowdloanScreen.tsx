@@ -1,7 +1,6 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {SectionList, StyleSheet, View} from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/core';
-import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
 import {SelectAccount} from '@ui/components/SelectAccount';
@@ -14,90 +13,53 @@ import globalStyles, {standardPadding} from '@ui/styles';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {Chart} from '@ui/components/Chart';
 import BalanceInput from '@ui/components/BalanceInput';
-import {Crowdloan, useCrowdloans} from 'src/api/hooks/useCrowdloans';
-import {NetworkContext} from 'context/NetworkContext';
-import {notEmpty} from 'src/utils';
+import {Crowdloan, useAllCrowdloans} from 'src/api/hooks/useCrowdloans';
 import type {Account} from 'src/api/hooks/useAccount';
 import {useChainInfo} from 'src/api/hooks/useChainInfo';
 import {BN_ZERO} from '@polkadot/util';
 import {formattedStringToBn} from 'src/api/utils/balance';
+import {CrowdloanSummaryTeaser} from '@ui/components/CrowdloanSummaryTeaser';
+import {useNetwork} from 'context/NetworkContext';
 
 export function CrowdloanScreen() {
-  const {data, loading} = useCrowdloans();
   const [openContributeId, setOpenContributeId] = React.useState<string>();
+  const {activeCrowdloans, endedCrowdloans, loading} = useAllCrowdloans();
 
-  if (loading && !data) {
-    return <LoadingView />;
-  }
-
-  if (!data.summary?.totalFunds) {
-    return <EmptyView />;
-  }
+  const sectionData = React.useMemo(
+    () => [
+      {key: 'Ongoing', data: activeCrowdloans || []},
+      {key: 'Completed', data: endedCrowdloans || []},
+    ],
+    [activeCrowdloans, endedCrowdloans],
+  );
 
   return (
     <SafeView edges={noTopEdges}>
-      <SectionList
-        ListHeaderComponent={() => {
-          if (!data.summary) {
-            return null;
-          }
-          return (
-            <View>
-              <View style={styles.headerContainer}>
-                <View>
-                  <View style={styles.headerTileContainer}>
-                    <Chart percent={data.summary.activeProgress} />
-                    <Padder scale={1} />
-                    <View>
-                      <Subheading>Active Raised / Cap</Subheading>
-                      <Caption numberOfLines={1} adjustsFontSizeToFit>
-                        {`${data.summary.formattedActiveRaised} / ${data.summary.formattedActiveCap}`}
-                      </Caption>
-                    </View>
-                  </View>
-                  <Padder scale={1} />
-                  <View style={styles.headerTileContainer}>
-                    <Chart percent={data.summary.totalProgress} />
-                    <Padder scale={1} />
-                    <View>
-                      <Subheading>Total Raised / Cap</Subheading>
-                      <Caption
-                        numberOfLines={1}
-                        adjustsFontSizeToFit>{`${data.summary.formattedTotalRaised} / ${data.summary.formattedTotalCap}`}</Caption>
-                    </View>
-                  </View>
-                </View>
-                <View style={styles.fundsContainer}>
-                  <Subheading>Funds</Subheading>
-                  <Caption>{data.summary.totalFunds}</Caption>
-                </View>
-              </View>
-              <Padder scale={1} />
-            </View>
-          );
-        }}
-        style={styles.container}
-        contentContainerStyle={styles.listContent}
-        sections={[
-          data.active?.length ? {key: 'Ongoing', data: data.active} : null,
-          data.ended?.length ? {key: 'Completed', data: data.ended} : null,
-        ].filter(notEmpty)}
-        SectionSeparatorComponent={() => <Padder scale={1} />}
-        renderSectionHeader={({section}) => <Title>{section.key}</Title>}
-        renderItem={({item, section: {key}}) => {
-          return (
-            <Fund
-              item={item}
-              active={key === 'Ongoing'}
-              onPressContribute={() => {
-                setOpenContributeId(item.paraId);
-              }}
-            />
-          );
-        }}
-        keyExtractor={(item) => item.paraId}
-        stickySectionHeadersEnabled={false}
-      />
+      {loading ? (
+        <LoadingView />
+      ) : (
+        <SectionList
+          ListHeaderComponent={CrowdloanSummaryTeaser}
+          contentContainerStyle={styles.listContent}
+          style={styles.container}
+          sections={sectionData}
+          SectionSeparatorComponent={() => <Padder scale={1} />}
+          renderSectionHeader={({section}) => <Title>{section.key}</Title>}
+          renderItem={({item, section: {key}}) => {
+            return (
+              <Fund
+                item={item}
+                active={key === 'Ongoing'}
+                onPressContribute={() => {
+                  setOpenContributeId(item.paraId);
+                }}
+              />
+            );
+          }}
+          keyExtractor={(item) => item.paraId}
+          stickySectionHeadersEnabled={false}
+        />
+      )}
       {openContributeId !== undefined ? (
         <ContributeBox
           visible={true}
@@ -116,7 +78,7 @@ export function CrowdloanScreen() {
 function Fund({item, active, onPressContribute}: {item: Crowdloan; active: boolean; onPressContribute: () => void}) {
   const navigation = useNavigation<NavigationProp<CrowdloansStackParamList>>();
   const {colors} = useTheme();
-  const {currentNetwork} = useContext(NetworkContext);
+  const {currentNetwork} = useNetwork();
 
   const isLitentryParachain = currentNetwork.key === 'polkadot' && item.paraId === '2013';
   const isLitmusParachain = currentNetwork.key === 'kusama' && item.paraId === '2106';
@@ -158,25 +120,24 @@ function Fund({item, active, onPressContribute}: {item: Crowdloan; active: boole
 }
 
 const styles = StyleSheet.create({
-  container: {flex: 1},
-  headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: standardPadding,
-  },
-  headerTileContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  container: {
+    marginTop: standardPadding,
   },
   listContent: {
+    paddingHorizontal: standardPadding * 2,
+  },
+  shrink: {
+    flexShrink: 1,
+  },
+  fund: {
+    marginBottom: standardPadding,
+    paddingVertical: standardPadding,
     padding: standardPadding * 2,
   },
-  sectionHeader: {
-    padding: standardPadding * 2,
+  spacer: {
+    flex: 1,
+    minWidth: standardPadding * 3,
   },
-  shrink: {flexShrink: 1},
-  fund: {marginBottom: standardPadding, paddingVertical: standardPadding, padding: standardPadding * 2},
-  spacer: {flex: 1, minWidth: standardPadding * 3},
   alignEnd: {
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
@@ -197,11 +158,6 @@ const styles = StyleSheet.create({
   },
   listItemRightSide: {
     alignItems: 'center',
-  },
-  fundsContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
   },
 });
 

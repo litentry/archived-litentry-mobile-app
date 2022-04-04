@@ -2,7 +2,7 @@ import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View, ScrollView} from 'react-native';
 import {DrawerContentComponentProps} from '@react-navigation/drawer';
 import {useToggleTheme} from 'context/ThemeContext';
-import {useCurrentNetwork} from 'context/NetworkContext';
+import {useNetwork} from 'context/NetworkContext';
 import logo from 'image/logo.png';
 import SafeView from '@ui/components/SafeView';
 import {useIsParachainAvailable} from 'src/api/hooks/useIsParachainAvailable';
@@ -22,7 +22,6 @@ import {
   parachainsNavigator,
   crowdloansNavigator,
   dashboardNavigator,
-  eventsCalendarScreen,
   technicalCommitteeScreen,
   tokenMigrationScreen,
 } from '@ui/navigation/routeKeys';
@@ -32,7 +31,7 @@ import {getCurrentYear} from 'src/utils/date';
 import {Drawer, Switch, Text, Divider} from '@ui/library';
 
 function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
-  const {isParachain: isParachainNetwork} = useCurrentNetwork();
+  const {currentNetwork} = useNetwork();
   const {theme, toggleTheme} = useToggleTheme();
   const isParachainAvailable = useIsParachainAvailable();
   const currentRoute = state.routes[state.index];
@@ -51,7 +50,7 @@ function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
       <Divider />
       <ScrollView>
         <Drawer.Section>
-          {!isParachainNetwork ? (
+          {!currentNetwork.isParachain ? (
             <>
               <Drawer.Item
                 label="Dashboard"
@@ -91,14 +90,6 @@ function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
                 active={activeScreen === polkassemblyDiscussionsNavigator}
                 onPress={() => {
                   navigation.navigate(polkassemblyDiscussionsNavigator);
-                }}
-              />
-              <Drawer.Item
-                label="Events"
-                icon="calendar"
-                active={activeScreen === eventsCalendarScreen}
-                onPress={() => {
-                  navigation.navigate(eventsCalendarScreen);
                 }}
               />
             </>
@@ -165,7 +156,7 @@ function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
             icon="brightness-6"
             right={() => <Switch value={theme === 'dark'} onValueChange={toggleTheme} />}
           />
-          {isParachainNetwork ? (
+          {currentNetwork.isParachain ? (
             <>
               <Drawer.Item
                 label="Notifications"

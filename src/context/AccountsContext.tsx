@@ -1,7 +1,7 @@
 import React, {createContext, useContext} from 'react';
-import {NetworkContext} from 'context/NetworkContext';
 import {usePersistedState} from '@hooks/usePersistedState';
 import {SupportedNetworkType} from 'src/types';
+import {useNetwork} from 'context/NetworkContext';
 
 export type InternalAccount = {
   encoded: string;
@@ -75,7 +75,7 @@ function AccountsProvider({children}: {children: React.ReactNode}) {
 
 function useAccounts() {
   const context = useContext(AccountsContext);
-  const {currentNetwork} = useContext(NetworkContext);
+  const {currentNetwork} = useNetwork();
   const networkAccounts = Object.values(context.accounts).filter(
     (account) => account.meta.network === currentNetwork.key,
   );
@@ -87,8 +87,4 @@ function useAccounts() {
   return {...context, networkAccounts};
 }
 
-function getAccountDisplayValue(account: Account) {
-  return account.meta.name ? account.meta.name : account.address;
-}
-
-export {AccountsProvider, useAccounts, getAccountDisplayValue};
+export {AccountsProvider, useAccounts};

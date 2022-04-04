@@ -1,129 +1,223 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
-import {useQueryClient} from 'react-query';
-import {Card, List, Subheading, Button, Headline, useTheme} from '@ui/library';
-import {formatNumber} from '@polkadot/util';
-import type {DeriveCollectiveProposal} from '@polkadot/api-derive/types';
-import {ChainApiContext} from 'context/ChainApiContext';
+import {Card, List, Subheading, Button, Headline, useTheme, Modal} from '@ui/library';
+import {useApi} from 'context/ChainApiContext';
 import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
-import {useAccounts} from 'context/AccountsContext';
-import {useVotingStatus} from 'src/api/hooks/useVotingStatus';
-import {useCouncilMembers} from 'src/api/hooks/useCouncilMembers';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {ProposalInfo} from '@ui/components/ProposalInfo';
-import {useCouncilMotions} from 'src/api/hooks/useCouncilMotions';
+import {CouncilMotion, useCouncilMotions, MotionsQueryResult} from 'src/api/hooks/useCouncilMotions';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {motionDetailScreen} from '@ui/navigation/routeKeys';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import LoadingView from '@ui/components/LoadingView';
 import {useApiTx} from 'src/api/hooks/useApiTx';
+import {ProposalCall} from '@ui/components/ProposalCall';
+import {SelectAccount} from '@ui/components/SelectAccount';
+import type {Account} from 'src/api/hooks/useAccount';
+import {InputLabel} from '@ui/library/InputLabel';
+import {useCouncilAccounts} from 'src/hooks/useCouncilAccounts';
+import type {Account as LocalAccount} from 'context/AccountsContext';
+
+type Vote = 'Aye' | 'Nay' | 'Close';
 
 export function MotionsScreen() {
-  const {data, refetch, isLoading, isFetching} = useCouncilMotions();
+  const {data: motions, loading, refetch: refetchMotions} = useCouncilMotions();
+  const {isAnyAccountCouncil, councilAccounts} = useCouncilAccounts();
+  const [voteType, setVoteType] = React.useState<Vote>();
+  const [selectedMotion, setSelectedMotion] = React.useState<CouncilMotion>();
+  const [voteModalVisible, setVoteModalVisible] = React.useState(false);
+
+  const onVote = (vote: Vote, motion: CouncilMotion) => {
+    setVoteType(vote);
+    setSelectedMotion(motion);
+    setVoteModalVisible(true);
+  };
 
   return (
     <SafeView edges={noTopEdges}>
-      {isLoading ? (
+      {loading && !motions ? (
         <LoadingView />
       ) : (
         <FlatList
-          refreshing={isFetching}
-          onRefresh={refetch}
-          style={styles.flatList}
-          data={data}
+          contentContainerStyle={styles.containerStyle}
+          data={motions}
           renderItem={({item}) => {
-            return <Motion item={item} />;
+            return <MotionItem motion={item} isCouncilMember={isAnyAccountCouncil} onVote={onVote} />;
           }}
           ItemSeparatorComponent={() => <Padder scale={1} />}
-          keyExtractor={(item) => item.hash.toHex()}
+          keyExtractor={(item) => item.proposal.hash}
           ListEmptyComponent={EmptyView}
         />
       )}
+      <VoteModal
+        voteType={voteType}
+        setVisible={setVoteModalVisible}
+        visible={voteModalVisible}
+        refetchMotions={refetchMotions}
+        motion={selectedMotion}
+        councilAccounts={councilAccounts}
+      />
     </SafeView>
   );
 }
 
-function Motion({item}: {item: DeriveCollectiveProposal}) {
-  const {colors} = useTheme();
-  const navigation = useNavigation<NavigationProp<DashboardStackParamList>>();
-  const {api} = useContext(ChainApiContext);
+type VoteModalProps = {
+  visible: boolean;
+  setVisible: (visible: boolean) => void;
+  refetchMotions: () => MotionsQueryResult;
+  voteType?: Vote;
+  motion?: CouncilMotion;
+  councilAccounts?: LocalAccount[];
+};
+
+function VoteModal({visible, setVisible, refetchMotions, voteType, motion, councilAccounts}: VoteModalProps) {
+  const {api} = useApi();
   const startTx = useApiTx();
-  const {accounts} = useAccounts();
-  const account = accounts?.[0];
+  const heading = voteType === 'Aye' || voteType === 'Nay' ? `Vote ${voteType}` : 'Close';
+  const [account, setAccount] = React.useState<Account>();
 
-  const {votes, proposal, hash} = item;
-  const {data} = useCouncilMembers();
-  const membersCount = data?.members.length ?? 0;
-  const {isCloseable, isVoteable} = useVotingStatus(votes, membersCount, 'council');
+  const closeModal = () => {
+    setVisible(false);
+  };
 
-  const queryClient = useQueryClient();
+  const reset = () => {
+    closeModal();
+    setAccount(undefined);
+  };
 
-  const onPressClose = () => {
-    if (account) {
+  const motionVote = (vote: boolean) => {
+    if (account && api && motion) {
+      closeModal();
+      const {proposal} = motion;
       startTx({
         address: account.address,
-        params: api?.tx.council.close?.meta.args.length === 4 ? [hash, votes?.index, 0, 0] : [hash, votes?.index],
-        txMethod: 'council.close',
+        params: [proposal.hash, proposal.index, vote],
+        txMethod: 'council.vote',
       })
         .then(() => {
-          return queryClient.invalidateQueries('motions');
+          reset();
+          refetchMotions();
         })
         .catch((e) => console.warn(e));
     }
   };
 
-  const onPressNay = () => {
-    if (account) {
+  const closeMotion = () => {
+    if (account && api && motion) {
+      closeModal();
+      const {proposal} = motion;
       startTx({
         address: account.address,
-        params: [hash, votes?.index, false],
-        txMethod: 'council.vote',
+        params:
+          api?.tx.council.close?.meta.args.length === 4
+            ? [proposal.hash, proposal.index, 0, 0]
+            : [proposal.hash, proposal.index],
+        txMethod: 'council.close',
       })
-        .then(() => queryClient.invalidateQueries('motions'))
+        .then(() => {
+          reset();
+          refetchMotions();
+        })
         .catch((e) => console.warn(e));
     }
   };
 
-  const onPressAye = () => {
-    if (account) {
-      startTx({
-        address: account.address,
-        params: [hash, votes?.index, true],
-        txMethod: 'council.vote',
-      })
-        .then(() => queryClient.invalidateQueries('motions'))
-        .catch((e) => console.warn(e));
+  const onVote = () => {
+    switch (voteType) {
+      case 'Aye':
+        motionVote(true);
+        break;
+
+      case 'Nay':
+        motionVote(false);
+        break;
+
+      case 'Close':
+        closeMotion();
     }
   };
 
   return (
+    <Modal visible={visible} onDismiss={reset}>
+      <View style={globalStyles.alignCenter}>
+        <Subheading>{`${heading} (Motion ${motion?.proposal.index})`}</Subheading>
+      </View>
+      <Padder scale={1} />
+
+      <InputLabel label="Select Council account" />
+      <SelectAccount
+        accounts={councilAccounts}
+        onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)}
+      />
+
+      <Padder scale={2} />
+      <View style={styles.buttons}>
+        <Button onPress={reset} mode="outlined" compact>
+          Cancel
+        </Button>
+        <Button mode="contained" disabled={!account} onPress={onVote}>
+          Vote
+        </Button>
+      </View>
+    </Modal>
+  );
+}
+
+type MotionItemProps = {
+  motion: CouncilMotion;
+  isCouncilMember: boolean;
+  onVote: (voteType: Vote, motion: CouncilMotion) => void;
+};
+
+function MotionItem({motion, isCouncilMember, onVote}: MotionItemProps) {
+  const {colors} = useTheme();
+  const navigation = useNavigation<NavigationProp<DashboardStackParamList>>();
+  const {votes, proposal} = motion;
+
+  return (
     <Card
       onPress={() => {
-        navigation.navigate(motionDetailScreen, {hash: String(hash)});
+        navigation.navigate(motionDetailScreen, {hash: String(proposal.hash)});
       }}>
       <Card.Content>
         <List.Item
-          title={<Headline>{formatNumber(votes?.index)}</Headline>}
+          title={<Headline>{motion.proposal.index}</Headline>}
           right={() => (
-            <View style={globalStyles.justifyCenter}>
+            <View style={globalStyles.rowAlignCenter}>
               <Subheading>{`Aye ${votes?.ayes.length}/${votes?.threshold} `}</Subheading>
+              <Padder scale={0.5} />
               {(() => {
-                if (data?.isMember) {
-                  if (isCloseable) {
+                if (isCouncilMember) {
+                  if (motion.votingStatus?.isCloseable) {
                     return (
-                      <Button onPress={onPressClose} color={colors.error} mode="outlined">
+                      <Button
+                        onPress={() => onVote('Close', motion)}
+                        color={colors.error}
+                        mode="outlined"
+                        compact
+                        uppercase={false}>
                         Close
                       </Button>
                     );
-                  } else if (isVoteable) {
+                  } else if (motion.votingStatus?.isVoteable) {
                     return (
                       <View style={globalStyles.rowAlignCenter}>
-                        <Button onPress={onPressNay} color={colors.error} mode="outlined">
+                        <Button
+                          onPress={() => onVote('Nay', motion)}
+                          color={colors.error}
+                          mode="outlined"
+                          compact
+                          uppercase={false}>
                           Nay
                         </Button>
-                        <Button onPress={onPressAye} color={colors.success} mode="outlined">
+                        <Padder scale={0.5} />
+                        <Button
+                          onPress={() => onVote('Aye', motion)}
+                          color={colors.success}
+                          mode="outlined"
+                          compact
+                          uppercase={false}>
                           Aye
                         </Button>
                       </View>
@@ -134,19 +228,19 @@ function Motion({item}: {item: DeriveCollectiveProposal}) {
             </View>
           )}
         />
-        {/* @TODO:
-          Try to reuse components/ProposalCallInfo when fetching motions from graph
-          Possibility of retiring components/ProposalInfo and components/ProposalCall
-          https://github.com/litentry/litentry-app/issues/916
-        */}
-        <ProposalInfo proposal={proposal} />
+        <ProposalCall proposal={proposal} />
       </Card.Content>
     </Card>
   );
 }
 
 const styles = StyleSheet.create({
-  flatList: {
-    padding: standardPadding * 2,
+  containerStyle: {
+    marginBottom: standardPadding * 2,
+    padding: standardPadding,
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
   },
 });

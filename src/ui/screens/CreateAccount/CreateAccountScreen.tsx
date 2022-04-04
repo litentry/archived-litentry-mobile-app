@@ -6,7 +6,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import SubstrateSign from 'react-native-substrate-sign';
 import zxcvbn from 'zxcvbn';
 import {useAccounts} from 'context/AccountsContext';
-import {NetworkContext} from 'context/NetworkContext';
+import {useNetwork} from 'context/NetworkContext';
 import {ProgressBar} from '@ui/components/ProgressBar';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
@@ -35,7 +35,7 @@ export function CreateAccountScreen({
 
   const theme = useTheme();
   const {status: keyboardStatus} = useKeyboardStatus();
-  const {currentNetwork} = React.useContext(NetworkContext);
+  const {currentNetwork} = useNetwork();
   const {addAccount} = useAccounts();
 
   const [account, setAccountState] = React.useState<Account>({title: '', password: '', confirmPassword: ''});

@@ -1,7 +1,6 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {SectionList, StyleSheet, View, Linking, RefreshControl} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
@@ -12,7 +11,8 @@ import {useTheme, Card, Caption, Subheading, Text, Button, Divider} from '@ui/li
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
 import {NetworkType} from 'src/types';
-import {NetworkContext} from 'context/NetworkContext';
+import {EmptyStateTeaser} from '@ui/components/EmptyStateTeaser';
+import {useNetwork} from 'context/NetworkContext';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -69,14 +69,14 @@ function TreasuryOverviewScreen() {
                     <View style={styles.row}>
                       <View style={styles.proposerContainer}>
                         <Caption>Proposer</Caption>
-                        <AccountTeaser account={proposer} identiconSize={30} />
+                        <AccountTeaser account={proposer.account} identiconSize={30} />
                       </View>
                       <Caption style={styles.proposalId}>{`# ${item.id}`}</Caption>
                     </View>
                     <Padder scale={0.5} />
                     <View>
                       <Caption>Beneficiary</Caption>
-                      <AccountTeaser account={beneficiary} identiconSize={30} />
+                      <AccountTeaser account={beneficiary.account} identiconSize={30} />
                     </View>
                     <Padder scale={0.5} />
                     <View style={styles.row}>
@@ -107,7 +107,27 @@ function TreasuryOverviewScreen() {
                 </View>
               );
             }}
-            ListEmptyComponent={EmptyView}
+            renderSectionFooter={({section: {title, data}}) => {
+              return (
+                <>
+                  {title === 'Proposals' && data.length < 1 ? (
+                    <Card style={globalStyles.paddedContainer}>
+                      <EmptyStateTeaser
+                        subheading="There are no active proposals"
+                        caption="Please check back for updates"
+                      />
+                    </Card>
+                  ) : data.length < 1 ? (
+                    <Card style={globalStyles.paddedContainer}>
+                      <EmptyStateTeaser
+                        subheading="There are no approved proposals"
+                        caption="Please check back for updates"
+                      />
+                    </Card>
+                  ) : null}
+                </>
+              );
+            }}
           />
         )}
       </SafeView>
@@ -116,7 +136,7 @@ function TreasuryOverviewScreen() {
 }
 
 function PolkassemblyProposal({proposalId}: {proposalId: string}) {
-  const {currentNetwork} = useContext(NetworkContext);
+  const {currentNetwork} = useNetwork();
 
   return (
     <Button onPress={() => openPolkassemblyProposal(currentNetwork, proposalId)} icon="open-in-new">

@@ -1,10 +1,10 @@
-import React, {useCallback, useContext, useRef, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Layout} from '@ui/components/Layout';
 import {Button, List, Icon, Caption, Divider} from '@ui/library';
-import {NetworkContext} from 'context/NetworkContext';
+import {useNetwork} from 'context/NetworkContext';
 import RegistrarSelectionModal from '@ui/components/RegistrarSelectionModal';
 import IdentityInfoForm, {IdentityPayload} from '@ui/components/IdentityInfoForm';
 import InfoBanner from '@ui/components/InfoBanner';
@@ -14,7 +14,6 @@ import SuccessDialog from '@ui/components/SuccessDialog';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Modalize} from 'react-native-modalize';
 import WebView from 'react-native-webview';
-import {useQueryClient} from 'react-query';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {manageIdentityScreen, registerSubIdentitiesScreen} from '@ui/navigation/routeKeys';
@@ -24,6 +23,7 @@ import {Registrar} from 'src/api/hooks/useRegistrarsSummary';
 import {stringShorten} from '@polkadot/util';
 import {Account} from '@ui/components/Account/Account';
 import {useSubAccounts} from 'src/api/hooks/useSubAccounts';
+import {AccountRegistration} from '@ui/components/Account/AccountRegistration';
 
 function ManageIdentity({
   navigation,
@@ -35,10 +35,9 @@ function ManageIdentity({
   route: RouteProp<AccountsStackParamList, typeof manageIdentityScreen>;
 }) {
   const startTx = useApiTx();
-  const queryClient = useQueryClient();
-  const {data: accountInfo} = useSubAccounts(address);
+  const {data: accountInfo, refetch: refetchAccount} = useSubAccounts(address);
 
-  const {currentNetwork} = useContext(NetworkContext);
+  const {currentNetwork} = useNetwork();
   const [registrarSelectionOpen, setRegistrarSelectionOpen] = useState(false);
 
   const judgements = accountInfo?.registration.judgements;
@@ -52,30 +51,26 @@ function ManageIdentity({
     async (info: IdentityPayload) => {
       identityModalRef.current?.close();
       await startTx({address, txMethod: 'identity.setIdentity', params: [info]})
-        .then(() => {
-          queryClient.invalidateQueries(['account_identity', address]);
-        })
+        .then(() => refetchAccount({address}))
         .catch((e) => {
           Alert.alert('Something went wrong!');
           console.error(e);
         });
     },
-    [address, queryClient, startTx],
+    [address, startTx, refetchAccount],
   );
 
   const handleRequestJudgement = useCallback(
     ({id, fee}: Registrar) => {
       setRegistrarSelectionOpen(false);
       startTx({address, txMethod: 'identity.requestJudgement', params: [id, fee]})
-        .then(() => {
-          queryClient.invalidateQueries(['account_identity', address]);
-        })
+        .then(() => refetchAccount({address}))
         .catch((e) => {
           Alert.alert('Something went wrong!');
           console.error(e);
         });
     },
-    [startTx, address, queryClient],
+    [startTx, address, refetchAccount],
   );
 
   const clearIdentity = () => {
@@ -87,9 +82,7 @@ function ManageIdentity({
             address,
             txMethod: 'identity.clearIdentity',
             params: [],
-          }).then(() => {
-            queryClient.invalidateQueries(['account_identity', address]);
-          });
+          }).then(() => refetchAccount({address}));
         },
         style: 'destructive',
       },
@@ -133,67 +126,7 @@ function ManageIdentity({
               </ItemRight>
             )}
           />
-          {accountInfo?.hasIdentity ? (
-            <>
-              <List.Item
-                title="Display"
-                left={() => <LeftIcon icon="account" />}
-                right={() => (
-                  <ItemRight>
-                    <Caption>{accountInfo.display}</Caption>
-                  </ItemRight>
-                )}
-              />
-              <List.Accordion title="Identity Detail">
-                <List.Item
-                  title="Legal"
-                  left={() => <LeftIcon icon="medal-outline" />}
-                  right={() => (
-                    <ItemRight>
-                      <Caption>{accountInfo.registration?.legal || 'Unset'}</Caption>
-                    </ItemRight>
-                  )}
-                />
-                <List.Item
-                  title="Email"
-                  left={() => <LeftIcon icon="email-outline" />}
-                  right={() => (
-                    <ItemRight>
-                      <Caption>{accountInfo.registration?.email || 'Unset'}</Caption>
-                    </ItemRight>
-                  )}
-                />
-                <List.Item
-                  title="Twitter"
-                  left={() => <LeftIcon icon="twitter" />}
-                  right={() => (
-                    <ItemRight>
-                      <Caption>{accountInfo.registration?.twitter || 'Unset'}</Caption>
-                    </ItemRight>
-                  )}
-                />
-                <List.Item
-                  title="Riot"
-                  left={() => <LeftIcon icon="message-outline" />}
-                  right={() => (
-                    <ItemRight>
-                      <Caption>{accountInfo.registration?.riot || 'Unset'}</Caption>
-                    </ItemRight>
-                  )}
-                />
-                <List.Item
-                  title="Web"
-                  left={() => <LeftIcon icon="earth" />}
-                  right={() => (
-                    <ItemRight>
-                      <Caption>{accountInfo.registration?.web || 'Unset'}</Caption>
-                    </ItemRight>
-                  )}
-                />
-              </List.Accordion>
-            </>
-          ) : null}
-
+          {accountInfo?.hasIdentity ? <AccountRegistration registration={accountInfo.registration} /> : null}
           <Padder scale={1} />
           <Button onPress={() => identityModalRef.current?.open()} mode="outlined">
             {accountInfo?.hasIdentity ? 'Update Identity' : 'Set Identity'}

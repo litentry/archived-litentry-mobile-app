@@ -5,7 +5,7 @@ import {ChainApiContextProvider} from 'context/ChainApiContext';
 import TxContextProvider from 'context/TxContext';
 import {AccountsProvider} from 'context/AccountsContext';
 import InAppNotificationContextProvider from 'context/InAppNotificationContext';
-import NetworkContextProvider, {useCurrentNetwork} from 'context/NetworkContext';
+import NetworkContextProvider, {useNetwork} from 'context/NetworkContext';
 import {ErrorBoundary} from '@ui/components/ErrorBoundary';
 import AppNavigator from '@ui/navigation/AppNavigator';
 import {NavigationContainer} from '@ui/navigation/NavigationContainer';
@@ -30,9 +30,9 @@ function MainApp() {
 }
 
 function LitentryApps() {
-  const {isParachain} = useCurrentNetwork();
+  const {currentNetwork} = useNetwork();
 
-  if (isParachain) {
+  if (currentNetwork.isParachain) {
     return (
       <WalletConnectProvider>
         <Web3WalletProvider>

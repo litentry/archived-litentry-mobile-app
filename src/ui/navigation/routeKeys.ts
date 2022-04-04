@@ -8,7 +8,7 @@ export const dashboardNavigator = 'DashboardNavigator' as const;
 export const accountsNavigator = 'AccountsNavigator' as const;
 export const parachainsNavigator = 'ParachainsNavigator' as const;
 export const crowdloansNavigator = 'CrowdloansNavigator' as const;
-export const eventsCalendarScreen = 'Events ' as const;
+export const eventsCalendarScreen = 'Events' as const;
 
 export const deeplinkNavigatorScreen = 'DeeplinkNavigatorScreen' as const;
 export const addAccountScreen = 'Add Account' as const;
@@ -35,6 +35,7 @@ export const importAccountScreen = 'Import Account' as const;
 export const exportAccountWithJsonFileScreen = 'Export JSON' as const;
 export const bountiesScreen = 'Bounties' as const;
 export const bountyDetailScreen = 'Bounty' as const;
+export const addBountyScreen = 'Add Bounty' as const;
 export const parachainsOverviewScreen = 'Overview' as const;
 export const parachainDetailScreen = 'Parachain' as const;
 export const parachainAuctionsScreen = 'Auctions' as const;
@@ -61,6 +62,7 @@ export const polkassemblyDiscussions = 'Discussions' as const;
 export const polkassemblyDiscussionDetail = 'Discussion' as const;
 
 export const networkSelectionScreen = 'Select Network' as const;
+export const accountScreen = 'Account Details' as const;
 
 export const tokenMigrationScreen = 'Token Migration' as const;
 

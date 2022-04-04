@@ -8,7 +8,7 @@ import {ChainApiContext} from 'context/ChainApiContext';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Modalize} from 'react-native-modalize';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {NetworkContext} from 'context/NetworkContext';
+import {useNetwork} from 'context/NetworkContext';
 import RegistrarSelectionModal from '@ui/components/RegistrarSelectionModal';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {stringShorten} from '@polkadot/util';
@@ -19,9 +19,9 @@ function DevScreen() {
   const {colors} = useTheme();
   const [visible, setVisible] = useState(false);
 
-  const {currentNetwork} = useContext(NetworkContext);
+  const {currentNetwork} = useNetwork();
   const {accounts} = useAccounts();
-  const convictions = useConvictions();
+  const {data: convictions} = useConvictions();
   const {trigger} = useContext(InAppNotificationContext);
   const {status, api} = useContext(ChainApiContext);
   const [debugInfo, setDebugInfo] = useState('');
@@ -48,7 +48,7 @@ function DevScreen() {
         <View style={{padding: standardPadding * 2}}>
           <Subheading>Conviction selection</Subheading>
           <Select
-            items={convictions}
+            items={convictions ?? []}
             onSelect={(selectedItem) => {
               console.log(selectedItem);
             }}

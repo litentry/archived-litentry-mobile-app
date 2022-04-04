@@ -1,8 +1,10 @@
 import {
+  accountScreen,
   accountsGuideScreen,
   accountsNavigator,
   accountsScreen,
   addAccountScreen,
+  addBountyScreen,
   balanceScreen,
   bountiesScreen,
   bountyDetailScreen,
@@ -18,6 +20,7 @@ import {
   democracyScreen,
   devScreen,
   drawerNavigator,
+  eventsCalendarScreen,
   exportAccountWithJsonFileScreen,
   feedbackScreen,
   identityGuideScreen,
@@ -43,14 +46,13 @@ import {
   referendumScreen,
   registerSubIdentitiesScreen,
   registrarListScreen,
-  technicalCommitteeScreen,
   sendFundScreen,
+  technicalCommitteeScreen,
   tipDetailScreen,
   tipsScreen,
   treasuryScreen,
   verifyMnemonicScreen,
   webviewScreen,
-  eventsCalendarScreen,
 } from '@ui/navigation/routeKeys';
 import type {CouncilCandidate, CouncilMember} from 'src/api/hooks/useCouncil';
 import type {DemocracyProposal, DemocracyReferendum} from 'src/api/hooks/useDemocracy';
@@ -77,6 +79,8 @@ type DashboardStackParamList = {
   [democracyProposalScreen]: {proposal: DemocracyProposal};
   [bountiesScreen]: undefined;
   [bountyDetailScreen]: {index: string};
+  [addBountyScreen]: undefined;
+  [eventsCalendarScreen]: undefined;
 };
 
 type DrawerParamList = {
@@ -93,7 +97,6 @@ type DrawerParamList = {
   [feedbackScreen]: undefined;
   [parathreadsScreen]: undefined;
   [parachainAuctionsScreen]: undefined;
-  [eventsCalendarScreen]: undefined;
 };
 
 type ParachainsStackParamList = {
@@ -115,6 +118,7 @@ type AppStackParamList = {
   [permissionGrantingPromptScreen]: undefined;
   [drawerNavigator]: undefined;
   [networkSelectionScreen]: undefined;
+  [accountScreen]: {address: string};
 };
 
 type AccountsStackParamList = {
