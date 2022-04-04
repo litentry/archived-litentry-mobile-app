@@ -4,7 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {MainDrawerAppBar, MainAppBar, MainStackAppBar} from '@ui/navigation/AppBars';
 import {AccountsNavigator, overlayScreenOptions} from '@ui/navigation/AppNavigator';
 import {
-  // accountsNavigator,
+  accountsNavigator,
   feedbackScreen,
   networkSelectionScreen,
   tokenMigrationScreen,
@@ -19,7 +19,7 @@ import {FeedbackScreen} from '@ui/screens/FeedbackScreen';
 
 type DrawerParamList = {
   tokenMigrationNavigator: undefined;
-  // [accountsNavigator]: undefined;
+  [accountsNavigator]: undefined;
   [webviewScreen]: {uri: string; title: string};
   [feedbackScreen]: undefined;
 };
@@ -49,12 +49,12 @@ function DrawerNavigator() {
     <Drawer.Navigator
       drawerContent={(props) => <DrawerScreen {...props} />}
       screenOptions={{header: (props) => <MainDrawerAppBar {...props} />}}>
+      <Drawer.Screen name={accountsNavigator} component={AccountsNavigator} options={{headerShown: false}} />
       <Drawer.Screen
         name={'tokenMigrationNavigator'}
         component={TokenMigrationNavigator}
         options={{headerShown: false}}
       />
-      {/* <Drawer.Screen name={accountsNavigator} component={AccountsNavigator} options={{headerShown: false}} /> */}
       <Drawer.Screen
         name={webviewScreen}
         component={WebviewScreen}

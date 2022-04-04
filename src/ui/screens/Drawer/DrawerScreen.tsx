@@ -105,21 +105,21 @@ function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
           ) : (
             <>
               <Drawer.Item
-                label="LIT Token Migration"
-                icon="bank-transfer"
-                active={activeScreen === tokenMigrationScreen}
-                onPress={() => {
-                  navigation.navigate(tokenMigrationScreen);
-                }}
-              />
-              {/* <Drawer.Item
                 label="Accounts"
                 icon="account-details"
                 active={activeScreen === accountsNavigator}
                 onPress={() => {
                   navigation.navigate(accountsNavigator);
                 }}
-              /> */}
+              />
+              <Drawer.Item
+                label="LIT Migration"
+                icon="bank-transfer"
+                active={activeScreen === 'tokenMigrationNavigator'}
+                onPress={() => {
+                  navigation.navigate('tokenMigrationNavigator');
+                }}
+              />
             </>
           )}
         </Drawer.Section>
