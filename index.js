@@ -1,7 +1,6 @@
 import './shim';
 import 'proxy-polyfill'; // added for android hermes engine, double check when upgrade RN to 0.64
 import 'react-native-gesture-handler';
-import '@polkadot/wasm-crypto/initWasmAsm'; // more context: https://github.com/polkadot-js/wasm/releases/tag/v5.0.1
 import 'fast-text-encoding';
 import Sentry from './sentry';
 import {AppRegistry} from 'react-native';
