@@ -3,10 +3,12 @@ import type {
   SubstrateChainDemocracyProposal,
   SubstrateChainDemocracyReferendum,
   SubstrateChainProposalSubCall,
+  SubstrateChainProposalArg,
 } from 'src/generated/litentryGraphQLTypes';
 import {ACCOUNT_FIELDS_FRAGMENT} from 'src/api/hooks/useAccount';
 
 export type ProposalSubCall = SubstrateChainProposalSubCall;
+export type ProposalArg = SubstrateChainProposalArg;
 export type DemocracyProposal = SubstrateChainDemocracyProposal;
 export type DemocracyReferendum = SubstrateChainDemocracyReferendum;
 

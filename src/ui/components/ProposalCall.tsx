@@ -5,6 +5,7 @@ import {Padder} from '@ui/components/Padder';
 import type {DemocracyProposal, DemocracyReferendum, ProposalSubCall} from 'src/api/hooks/useDemocracy';
 import type {MotionProposal} from 'src/api/hooks/useCouncilMotions';
 import {standardPadding} from '@ui/styles';
+import {formatProposalArgs} from 'src/utils/proposal';
 
 type ProposalCallProps = {
   proposal: DemocracyProposal | DemocracyReferendum | MotionProposal;
@@ -29,7 +30,7 @@ export function ProposalCall({proposal}: ProposalCallProps) {
           <Padder scale={0.5} />
           {proposal.args?.map((arg, index) => (
             <View key={`${index}-${arg.name}`}>
-              <Caption>{`${arg.name}: ${arg.value}`}</Caption>
+              <Caption>{formatProposalArgs(arg)}</Caption>
               {arg.subCalls &&
                 arg.subCalls.map((subCall, subCallIndex) => {
                   if (subCall) {
