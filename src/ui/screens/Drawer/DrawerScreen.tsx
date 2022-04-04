@@ -23,7 +23,6 @@ import {
   crowdloansNavigator,
   dashboardNavigator,
   technicalCommitteeScreen,
-  tokenMigrationScreen,
 } from '@ui/navigation/routeKeys';
 import {standardPadding} from '@ui/styles';
 import {appVersion} from 'src/service/Device';
