@@ -29,17 +29,21 @@ function MainApp() {
   );
 }
 
+function ParachainApp() {
+  return (
+    <WalletConnectProvider>
+      <Web3WalletProvider>
+        <ParachainAppNavigator />
+      </Web3WalletProvider>
+    </WalletConnectProvider>
+  );
+}
+
 function LitentryApps() {
   const {currentNetwork} = useNetwork();
 
   if (currentNetwork.isParachain) {
-    return (
-      <WalletConnectProvider>
-        <Web3WalletProvider>
-          <ParachainAppNavigator />
-        </Web3WalletProvider>
-      </WalletConnectProvider>
-    );
+    return <ParachainApp />;
   }
 
   return <MainApp />;
