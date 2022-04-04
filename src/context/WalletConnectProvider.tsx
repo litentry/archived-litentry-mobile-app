@@ -6,6 +6,8 @@ type Props = {
   children: React.ReactElement;
 };
 
+export type Connector = ReturnType<typeof useWC>;
+
 export function WalletConnectProvider({children}: Props) {
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
