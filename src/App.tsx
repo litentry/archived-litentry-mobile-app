@@ -13,6 +13,7 @@ import ThemeProvider from 'context/ThemeContext';
 import SnackbarProvider from 'context/SnackbarContext';
 import {LitentryApiClientProvider} from 'context/LitentryApiContext';
 import {WalletConnectProvider} from 'context/WalletConnectProvider';
+import {Web3WalletProvider} from 'context/Web3WalletContext';
 
 // init type registry
 import 'src/typeRegistry';
@@ -34,7 +35,9 @@ function LitentryApps() {
   if (isParachain) {
     return (
       <WalletConnectProvider>
-        <ParachainAppNavigator />
+        <Web3WalletProvider>
+          <ParachainAppNavigator />
+        </Web3WalletProvider>
       </WalletConnectProvider>
     );
   }
