@@ -7,6 +7,7 @@ import BigNumber from 'bignumber.js';
 const ERC20 = require('../../abi/ERC20.json');
 const BRIDGE = require('../../abi/Bridge.json');
 
+// TODO: Change these values for production (currently using Rinkeby testnet)
 const ERC20_HANDLER_ADDRESS = '0x50272B13eFbb3dA7C25cf5b98339efBd19A2a855';
 const ERC20_LIT_TOKEN_CONTRACT_ADDRESS = '0x27B981dd46ae0BFDDA6677DDc75BCE6995fCA5bc';
 const TOTAL_LIT_SUPPLY = 10000000;
@@ -14,19 +15,20 @@ const DEPOSIT_CONTRACT_ADDRESS = '0xf1008b8741D4C00Eae7630Fb639F38Aade9d5588';
 const DEPOSIT_DESTINATION_CHAIN_ID = 1;
 const DEPOSIT_RESOURCE_ID = '0x00000000000000000000000000000063a7e2be78898ba83824b0c0cc8dfb6001';
 
-interface Ok {
-  ok: string;
-}
-interface Err {
-  error: string;
-}
-type Result = Ok | Err;
+export type Result = {
+  ok?: string;
+  error?: string;
+};
 
-export async function approveForMigration(address: string, wallet: Web3): Promise<Result> {
+export async function approveForMigration(address: string, wallet?: Web3): Promise<Result> {
+  if (!wallet) {
+    return Promise.resolve({error: 'Wallet not initialized.'});
+  }
   try {
+    console.log('## ApproveForMigration');
     const contract = new wallet.eth.Contract(ERC20.abi, ERC20_LIT_TOKEN_CONTRACT_ADDRESS, {from: address});
     const result = await contract.methods.approve(ERC20_HANDLER_ADDRESS, amountToErc20Number(TOTAL_LIT_SUPPLY)).send();
-    console.log('ApproveForMigration result', result);
+    console.log('### ApproveForMigration result', result);
 
     return {ok: 'success'};
   } catch (error) {
@@ -38,8 +40,11 @@ export async function depositForMigration(
   address: string,
   amount: number,
   recipientAddress: string,
-  wallet: Web3,
+  wallet?: Web3,
 ): Promise<Result> {
+  if (!wallet) {
+    return Promise.resolve({error: 'Wallet not initialized.'});
+  }
   const contract = new wallet.eth.Contract(BRIDGE.abi, DEPOSIT_CONTRACT_ADDRESS, {
     from: address,
   });
@@ -52,6 +57,7 @@ export async function depositForMigration(
   try {
     const tx = await contract.methods.deposit(DEPOSIT_DESTINATION_CHAIN_ID, DEPOSIT_RESOURCE_ID, data).send();
 
+    console.log(`Transaction Hash ${tx.transactionHash}`);
     return {ok: tx.transactionHash};
   } catch (error) {
     return {error: (error as Error).message};
