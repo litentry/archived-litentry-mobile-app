@@ -4,7 +4,11 @@ import {Text, useTheme} from '@ui/library';
 
 export function ErrorText(props: {children: React.ReactNode}) {
   const theme = useTheme();
-  return <Text style={[styles.errorText, {color: theme.colors.error}]}>{props.children}</Text>;
+  return (
+    <Text style={[styles.errorText, {color: theme.colors.error}]} testID="errorText">
+      {props.children}
+    </Text>
+  );
 }
 
 const styles = StyleSheet.create({
