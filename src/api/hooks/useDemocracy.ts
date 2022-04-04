@@ -76,19 +76,7 @@ export const DEMOCRACY_QUERY = gql`
       voteCountNay
       ayePercent
       args {
-        name
-        type
-        value
-        subCalls {
-          meta
-          method
-          section
-          args {
-            name
-            type
-            value
-          }
-        }
+        ...ProposalArgFields
       }
     }
   }

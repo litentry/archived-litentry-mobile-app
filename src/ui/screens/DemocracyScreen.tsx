@@ -6,7 +6,7 @@ import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SubmitProposal} from '@ui/components/SubmitProposal';
 import {democracyProposalScreen, referendumScreen} from '@ui/navigation/routeKeys';
-import {Card, Subheading, useTheme, Button, List, Headline, Caption} from '@ui/library';
+import {Card, Subheading, useTheme, Button, List, Headline, Caption, Divider} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {useDemocracy, DemocracyProposal, DemocracyReferendum} from 'src/api/hooks/useDemocracy';
 import {EmptyStateTeaser} from '@ui/components/EmptyStateTeaser';
@@ -71,6 +71,8 @@ export function DemocracyScreen({navigation}: ScreenProps) {
             sections={groupedData}
             renderItem={({item}) => (
               <DemocracyProposalTeaser proposal={item} navigation={navigation}>
+                <Padder scale={1} />
+                <Divider />
                 <View style={styles.polkaLink}>
                   <Button icon="open-in-new" onPress={() => openInPolkassembly(item)}>{`Polkassembly`}</Button>
                 </View>
@@ -137,8 +139,8 @@ function DemocracyProposalTeaser({proposal, children, navigation}: ProposalTease
             description={proposal.endPeriod ? proposal.endPeriod.slice(0, 2).join(' ') : ''}
           />
           <ProposalCall proposal={proposal} />
-          {children}
         </Card.Content>
+        {children}
       </Card>
     );
   } else if (proposal.__typename === 'SubstrateChainDemocracyProposal') {
@@ -153,8 +155,8 @@ function DemocracyProposalTeaser({proposal, children, navigation}: ProposalTease
             <AccountTeaser account={proposal.proposer.account} />
           </ItemRowBlock>
           <ProposalCall proposal={proposal} />
-          {children}
         </Card.Content>
+        {children}
       </Card>
     );
   }
@@ -174,6 +176,6 @@ const styles = StyleSheet.create({
     paddingVertical: standardPadding,
   },
   polkaLink: {
-    marginTop: standardPadding,
+    marginVertical: standardPadding,
   },
 });

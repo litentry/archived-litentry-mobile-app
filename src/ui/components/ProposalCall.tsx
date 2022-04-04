@@ -17,7 +17,7 @@ export function ProposalCall({proposal}: ProposalCallProps) {
 
   return (
     <>
-      {proposal.meta && (
+      {Boolean(proposal.meta) && (
         <>
           <Paragraph>{proposal.meta}</Paragraph>
           <Padder scale={0.5} />

@@ -19,7 +19,7 @@ import {useCouncilAccounts} from 'src/hooks/useCouncilAccounts';
 import type {Account as LocalAccount} from 'context/AccountsContext';
 import {useNetwork} from 'context/NetworkContext';
 import type {SupportedNetworkType} from 'src/types';
-import {Caption, Card} from 'react-native-paper';
+import {Caption, Card, Divider} from 'react-native-paper';
 import {ProposalCall} from '@ui/components/ProposalCall';
 import {ItemRowBlock} from '@ui/components/ItemRowBlock';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
@@ -281,10 +281,12 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
           </ItemRowBlock>
         )}
         <ProposalCall proposal={motion.proposal} />
-        <View style={styles.polkaLink}>
-          <Button icon="open-in-new" onPress={openInPolkassembly(motion)}>{`Polkassembly`}</Button>
-        </View>
       </Card.Content>
+      <Padder scale={1} />
+      <Divider />
+      <View style={styles.polkaLink}>
+        <Button icon="open-in-new" onPress={openInPolkassembly(motion)}>{`Polkassembly`}</Button>
+      </View>
     </Card>
   );
 }
@@ -299,6 +301,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   polkaLink: {
-    marginTop: standardPadding,
+    marginVertical: standardPadding,
   },
 });
