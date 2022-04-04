@@ -13,11 +13,13 @@ import {EmptyView} from '@ui/components/EmptyView';
 import Clipboard from '@react-native-community/clipboard';
 import {useSnackbar} from 'context/SnackbarContext';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
+import {EmptyStateTeaser} from '@ui/components/EmptyStateTeaser';
 
 export function AuctionsScreen() {
   const {data: auction, loading} = useAuctionsSummary();
   const snackbar = useSnackbar();
   const {formatBalance} = useFormatBalance();
+
   if (loading && !auction) {
     return (
       <SafeView edges={noTopEdges}>
@@ -51,81 +53,85 @@ export function AuctionsScreen() {
 
   return (
     <SafeView edges={noTopEdges}>
-      <Padder scale={1} />
-      <Card style={styles.container}>
-        <Card.Content>
-          <View style={styles.itemRow}>
-            <StatInfoBlock title="Auctions">{auctionsInfo.numAuctions}</StatInfoBlock>
-            <StatInfoBlock title="Active">{auctionsInfo.active ? 'Yes' : 'No'}</StatInfoBlock>
-            <StatInfoBlock title="First - Last">{`${leasePeriod?.first} - ${leasePeriod?.last}`}</StatInfoBlock>
-          </View>
-          <Padder scale={2} />
-          <View style={styles.itemRow}>
-            <View style={globalStyles.flex}>
-              {endingPeriod && (
-                <ProgressChartWidget
-                  title={`Ending period`}
-                  detail={`${remainingPercent}%\n${endingPeriod.remaining.slice(0, 2).join('\n')}`}
-                  data={[remainingPercent / 100]}
+      {auctionsInfo.active ? (
+        <>
+          <Card style={styles.container}>
+            <Card.Content>
+              <View style={styles.itemRow}>
+                <StatInfoBlock title="Auctions">{auctionsInfo.numAuctions}</StatInfoBlock>
+                <StatInfoBlock title="Active">{auctionsInfo.active ? 'Yes' : 'No'}</StatInfoBlock>
+                <StatInfoBlock title="First - Last">{`${leasePeriod?.first} - ${leasePeriod?.last}`}</StatInfoBlock>
+              </View>
+
+              <Padder scale={2} />
+              <View style={styles.itemRow}>
+                <View style={globalStyles.flex}>
+                  {endingPeriod && (
+                    <ProgressChartWidget
+                      title={`Ending period`}
+                      detail={`${remainingPercent}%\n${endingPeriod.remaining.slice(0, 2).join('\n')}`}
+                      data={[remainingPercent / 100]}
+                    />
+                  )}
+                </View>
+                <View style={globalStyles.flex}>
+                  <ProgressChartWidget
+                    title={`Total Raised`}
+                    detail={`${raisedPercent}%\n${raisedFormatted.split(' ').join('\n')}`}
+                    data={[raisedPercent / 100]}
+                  />
+                </View>
+              </View>
+            </Card.Content>
+          </Card>
+
+          <Card style={styles.container}>
+            {winningBid ? (
+              <>
+                <Subheading style={globalStyles.textCenter}>{`Winning Bid`}</Subheading>
+                <List.Item
+                  title={winningBid?.projectName}
+                  description={
+                    <View>
+                      <Padder scale={0.5} />
+                      <Caption>{`ProjectID: ${winningBid?.projectId}`}</Caption>
+                      <Caption>{`Bid: ${winningBid?.amount} ${winningBid?.isCrowdloan ? '(crowdloan)' : ''}`}</Caption>
+                      <Caption>
+                        {`Block number: `}
+                        <Caption onPress={copyToClipboard}>{winningBid?.blockNumber}</Caption>
+                      </Caption>
+                    </View>
+                  }
+                  right={() => (
+                    <View style={globalStyles.justifyCenter}>
+                      <Caption>{`Leases`}</Caption>
+                      <Caption>{`${winningBid?.firstSlot} - ${winningBid?.lastSlot}`}</Caption>
+                    </View>
+                  )}
                 />
-              )}
-            </View>
-            <View style={globalStyles.flex}>
-              <ProgressChartWidget
-                title={`Total Raised`}
-                detail={`${raisedPercent}%\n${raisedFormatted.split(' ').join('\n')}`}
-                data={[raisedPercent / 100]}
-              />
-            </View>
-          </View>
-        </Card.Content>
-      </Card>
-      <Padder scale={0.5} />
-      <Card style={styles.container}>
-        <Subheading style={globalStyles.textCenter}>{`Winning Bid`}</Subheading>
-        {auctionsInfo.active ? (
-          winningBid ? (
-            <List.Item
-              title={winningBid?.projectName}
-              description={
-                <View>
-                  <Padder scale={0.5} />
-                  <Caption>{`ProjectID: ${winningBid?.projectId}`}</Caption>
-                  <Caption>{`Bid: ${winningBid?.amount} ${winningBid?.isCrowdloan ? '(crowdloan)' : ''}`}</Caption>
-                  <Caption>
-                    {`Block number: `}
-                    <Caption onPress={copyToClipboard}>{winningBid?.blockNumber}</Caption>
-                  </Caption>
-                </View>
-              }
-              right={() => (
-                <View style={globalStyles.justifyCenter}>
-                  <Caption>{`Leases`}</Caption>
-                  <Caption>{`${winningBid?.firstSlot} - ${winningBid?.lastSlot}`}</Caption>
-                </View>
-              )}
-            />
-          ) : (
-            <>
-              <Padder scale={1} />
-              <Caption style={globalStyles.textCenter}>{`There is no winning bid currently`}</Caption>
-            </>
-          )
-        ) : (
-          <>
-            <Padder scale={1} />
-            <Caption style={globalStyles.textCenter}>{`The auction is not active`}</Caption>
-          </>
-        )}
-      </Card>
+              </>
+            ) : (
+              <Card.Content>
+                <EmptyStateTeaser subheading="There is no winning bid" />
+              </Card.Content>
+            )}
+          </Card>
+        </>
+      ) : (
+        <Card style={styles.container}>
+          <Card.Content>
+            <EmptyStateTeaser subheading="Auction is not active" />
+          </Card.Content>
+        </Card>
+      )}
     </SafeView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: standardPadding * 2,
-    padding: standardPadding,
+    marginTop: standardPadding * 2,
+    marginHorizontal: standardPadding,
   },
   itemRow: {
     flexDirection: 'row',
