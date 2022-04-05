@@ -80,7 +80,9 @@ export function ProposeTipScreen({navigation}: {navigation: NavigationProp<Dashb
                 onChangeText={(payload) => dispatch({type: 'SET_BENEFICIARY', payload})}
               />
               {!isBeneficiaryAddressValid && state.beneficiary ? (
-                <HelperText type="error">Please enter a valid beneficiary address</HelperText>
+                <HelperText type="error" style={styles.helper}>
+                  Please enter a valid beneficiary address
+                </HelperText>
               ) : null}
               <Padder scale={1} />
 
@@ -95,7 +97,9 @@ export function ProposeTipScreen({navigation}: {navigation: NavigationProp<Dashb
                 onChangeText={(payload) => dispatch({type: 'SET_REASON', payload})}
               />
               {!isTipReasonValid && state.reason ? (
-                <HelperText type="error">Enter a minimum of five letters</HelperText>
+                <HelperText type="error" style={styles.helper}>
+                  Enter a minimum of five letters
+                </HelperText>
               ) : null}
             </View>
           </ScrollView>
@@ -111,6 +115,7 @@ export function ProposeTipScreen({navigation}: {navigation: NavigationProp<Dashb
 const styles = StyleSheet.create({
   container: {flex: 1, padding: standardPadding * 2, paddingBottom: standardPadding * 4},
   rowContainer: {flexDirection: 'row', alignItems: 'center'},
+  helper: {right: standardPadding},
 });
 
 type Action =
