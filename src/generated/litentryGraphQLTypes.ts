@@ -1042,7 +1042,7 @@ export type Query = {
   substrateChainTechnicalCommitteeSummary: SubstrateChainTechnicalCommitteeSummary;
   substrateChainTip?: Maybe<SubstrateChainTip>;
   substrateChainTips?: Maybe<Array<SubstrateChainTip>>;
-  substrateChainTreasuryProposals: SubstrateChainTreasuryProposals;
+  substrateChainTreasury: SubstrateChainTreasury;
   substrateChainTreasurySummary: SubstrateChainTreasurySummary;
   substrateCouncilProposalById?: Maybe<SubstrateCouncilProposal>;
   /** @deprecated Use `substrateCouncilProposalById` */
@@ -2513,6 +2513,15 @@ export type SubstrateChainParathread = {
   name?: Maybe<Scalars['String']>;
 };
 
+export type SubstrateChainProposal = {
+  __typename?: 'SubstrateChainProposal';
+  beneficiary: SubstrateChainAccountInfo;
+  bond: Scalars['String'];
+  index: Scalars['String'];
+  proposer: SubstrateChainAccountInfo;
+  value: Scalars['String'];
+};
+
 export type SubstrateChainProposalArg = {
   __typename?: 'SubstrateChainProposalArg';
   name?: Maybe<Scalars['String']>;
@@ -2621,8 +2630,8 @@ export type SubstrateChainTipper = {
 
 export type SubstrateChainTreasury = {
   __typename?: 'SubstrateChainTreasury';
-  proposal: SubstrateChainTreasuryProposal;
-  votes: Array<SubstrateChainProposalVotes>;
+  approvals: Array<SubstrateChainTreasuryProposal>;
+  proposals: Array<SubstrateChainTreasuryProposal>;
 };
 
 export type SubstrateChainTreasuryBalance = {
@@ -2638,17 +2647,8 @@ export type SubstrateChainTreasuryBalance = {
 
 export type SubstrateChainTreasuryProposal = {
   __typename?: 'SubstrateChainTreasuryProposal';
-  beneficiary: SubstrateChainAccountInfo;
-  bond: Scalars['String'];
-  index: Scalars['String'];
-  proposer: SubstrateChainAccountInfo;
-  value: Scalars['String'];
-};
-
-export type SubstrateChainTreasuryProposals = {
-  __typename?: 'SubstrateChainTreasuryProposals';
-  approvals: Array<SubstrateChainTreasury>;
-  proposals: Array<SubstrateChainTreasury>;
+  proposal: SubstrateChainProposal;
+  votes: Array<SubstrateChainProposalVotes>;
 };
 
 export type SubstrateChainTreasurySummary = {

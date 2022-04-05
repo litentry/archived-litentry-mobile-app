@@ -3,7 +3,7 @@ import {SectionList, StyleSheet, RefreshControl, Linking, View} from 'react-nati
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {TreasuryProposal, useTreasury} from 'src/api/hooks/useTreasury';
+import {Proposal, useTreasury} from 'src/api/hooks/useTreasury';
 import globalStyles, {standardPadding} from '@ui/styles';
 import TipsScreen from './Tips/TipsScreen';
 import {useTheme, Card, Subheading, Button, List, Headline, Divider, Caption} from '@ui/library';
@@ -41,7 +41,7 @@ function TreasuryOverviewScreen() {
     {title: 'Approved', data: treasuryInfo?.approvals ?? []},
   ];
 
-  const openInPolkassembly = (proposal: TreasuryProposal) => () => {
+  const openInPolkassembly = (proposal: Proposal) => () => {
     const url = `https://${currentNetwork.key}.polkassembly.io/treasury/${proposal.index}`;
     Linking.canOpenURL(url).then((supported) => {
       if (supported) {
@@ -111,7 +111,7 @@ function TreasuryOverviewScreen() {
 }
 
 type TreasuryProposalTeaserProps = {
-  proposal: TreasuryProposal;
+  proposal: Proposal;
   children?: React.ReactNode;
 };
 

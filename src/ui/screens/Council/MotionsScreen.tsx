@@ -23,6 +23,7 @@ import {Caption, Card, Divider} from 'react-native-paper';
 import {ProposalCall} from '@ui/components/ProposalCall';
 import {ItemRowBlock} from '@ui/components/ItemRowBlock';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
+import {getProposalTitle} from 'src/utils/proposal';
 
 type Vote = 'Aye' | 'Nay' | 'Close';
 
@@ -256,10 +257,14 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
     <Card onPress={() => onPress(motion.proposal)}>
       <Card.Content>
         <List.Item
-          title={''}
+          title={<Caption>{getProposalTitle(motion.proposal)}</Caption>}
           left={() => <Headline>{`#${proposal.index}`}</Headline>}
           right={() => <View>{Actions}</View>}
         />
+        {/* <Caption>{motion.votingStatus?.remainingBlocksTime?.slice(0, 2).join(' ')}</Caption> */}
+        <ItemRowBlock label="Remaining">
+          <Caption>{motion.votingStatus?.remainingBlocksTime?.slice(0, 2).join(' ')}</Caption>
+        </ItemRowBlock>
         {proposal.proposer && (
           <ItemRowBlock label="Proposer">
             <AccountTeaser account={proposal.proposer.account} />
