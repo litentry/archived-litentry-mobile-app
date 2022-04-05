@@ -8,11 +8,11 @@ export function TokenMigrationScreen() {
   const [isSubmitting, setSubmitting] = React.useState(false);
   const litmusAddress = '5DkLmfqQDZtDpN2SiEMvVeTJuq8zW7pan2c4LqN3EV6deB64'; // TODO: select address from internal accounts
   const ethAddress = '0x838C543187312cc85592f43a35b03A7aCb8B273a'; // TODO: select address from web3 accounts
-  const hasApproved = wallet?.connectedAccount?.approved.isGreaterThan(0) ?? false;
+  const hasApproved = wallet.isConnected ? wallet.connectedAccount?.approved.isGreaterThan(0) : false;
   const [txHash, setTxHash] = React.useState('');
 
   const handleApprove = React.useCallback(async () => {
-    if (!wallet?.isConnected) {
+    if (!wallet.isConnected) {
       throw new Error('The wallet must be connected to call this method');
     }
     setApproving(true);
@@ -28,7 +28,7 @@ export function TokenMigrationScreen() {
   }, [wallet]);
 
   const onSubmit = React.useCallback(async () => {
-    if (!wallet?.isConnected) {
+    if (!wallet.isConnected) {
       throw new Error('The wallet must be connected to call this method');
     }
     setSubmitting(true);
@@ -72,7 +72,7 @@ export function TokenMigrationScreen() {
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <Text>Token Migration</Text>
-      {!wallet?.isConnected ? (
+      {!wallet.isConnected ? (
         <>
           <Button title="Connect Wallet" onPress={() => wallet.connect()} />
         </>

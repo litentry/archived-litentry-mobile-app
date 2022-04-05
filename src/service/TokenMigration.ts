@@ -20,15 +20,10 @@ export type Result = {
   error?: string;
 };
 
-export async function approveForMigration(address: string, wallet?: Web3): Promise<Result> {
-  if (!wallet) {
-    return Promise.resolve({error: 'Wallet not initialized.'});
-  }
+export async function approveForMigration(address: string, wallet: Web3): Promise<Result> {
   try {
-    console.log('## ApproveForMigration');
     const contract = new wallet.eth.Contract(ERC20.abi, ERC20_LIT_TOKEN_CONTRACT_ADDRESS, {from: address});
-    const result = await contract.methods.approve(ERC20_HANDLER_ADDRESS, amountToErc20Number(TOTAL_LIT_SUPPLY)).send();
-    console.log('### ApproveForMigration result', result);
+    await contract.methods.approve(ERC20_HANDLER_ADDRESS, amountToErc20Number(TOTAL_LIT_SUPPLY)).send();
 
     return {ok: 'success'};
   } catch (error) {
@@ -40,24 +35,17 @@ export async function depositForMigration(
   address: string,
   amount: number,
   recipientAddress: string,
-  wallet?: Web3,
+  wallet: Web3,
 ): Promise<Result> {
-  if (!wallet) {
-    return Promise.resolve({error: 'Wallet not initialized.'});
-  }
   const contract = new wallet.eth.Contract(BRIDGE.abi, DEPOSIT_CONTRACT_ADDRESS, {
     from: address,
   });
-
   const recipientHex = Buffer.from(decodeAddress(recipientAddress)).toString('hex');
-
   const data = hexifyData(amount, recipientHex);
-  console.log('DATA FOR MIGRATION:', data);
 
   try {
     const tx = await contract.methods.deposit(DEPOSIT_DESTINATION_CHAIN_ID, DEPOSIT_RESOURCE_ID, data).send();
 
-    console.log(`Transaction Hash ${tx.transactionHash}`);
     return {ok: tx.transactionHash};
   } catch (error) {
     return {error: (error as Error).message};

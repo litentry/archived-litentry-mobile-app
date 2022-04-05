@@ -11,7 +11,7 @@ export type Connector = ReturnType<typeof useWC>;
 export function WalletConnectProvider({children}: Props) {
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore // the interface does not match but all the methods used are implemented
+    // @ts-ignore the interface does not match but all the methods used are implemented
     <Provider redirectUrl="litentry://" storageOptions={{asyncStorage: AsyncStorage}}>
       {children}
     </Provider>

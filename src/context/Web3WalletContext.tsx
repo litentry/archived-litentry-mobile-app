@@ -3,9 +3,16 @@ import WalletConnectWeb3Provider from '@walletconnect/web3-provider';
 import EnvConfig from 'react-native-config';
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
+
 import {useWalletConnect, Connector} from 'context/WalletConnectProvider';
-import {getEthereumBalance, getLitentryBalance, getTokenMigrationAllowance} from 'src/service/TokenMigration';
-import {Result, approveForMigration, depositForMigration} from 'src/service/TokenMigration';
+import {
+  getEthereumBalance,
+  getLitentryBalance,
+  getTokenMigrationAllowance,
+  approveForMigration,
+  depositForMigration,
+  Result,
+} from 'src/service/TokenMigration';
 
 interface Web3Account {
   address: string;
@@ -18,7 +25,7 @@ interface Web3Account {
 
 interface Web3WalletNotInitialized {
   connect: () => void;
-  isInitialized: false;
+  isConnected: false;
 }
 
 interface Web3Wallet {
@@ -27,14 +34,16 @@ interface Web3Wallet {
   updateAccount: (address: string) => void;
   disconnect: () => void;
   isConnected: true;
-  isInitialized: true;
   approveForMigration: (address: string) => Promise<Result>;
   depositForMigration: (address: string, amount: number, recipientAddress: string) => Promise<Result>;
 }
 
 type ContextValue = Web3Wallet | Web3WalletNotInitialized;
 
-const Web3WalletContext = createContext<ContextValue>({isInitialized: false, connect: () => undefined});
+const Web3WalletContext = createContext<ContextValue>({
+  isConnected: false,
+  connect: () => undefined,
+});
 
 export function Web3WalletProvider({children}: {children: React.ReactNode}) {
   const connector = useWalletConnect();
@@ -45,7 +54,6 @@ export function Web3WalletProvider({children}: {children: React.ReactNode}) {
   useEffect(() => {
     if (connector.connected && !wallet) {
       (async function initializeWeb3Wallet() {
-        console.log('initializing web3 wallet...');
         const web3Provider = getWalletConnectWeb3Provider(connector);
         await web3Provider.enable();
         const web3 = new Web3(web3Provider as any);
@@ -57,9 +65,7 @@ export function Web3WalletProvider({children}: {children: React.ReactNode}) {
   useEffect(() => {
     (async function loadAccounts() {
       if (wallet) {
-        console.log('loading accounts...');
         const _accounts = await wallet.eth.getAccounts();
-        console.log('web3 wallet accounts', _accounts);
         setAccounts(_accounts);
       }
     })();
@@ -67,11 +73,9 @@ export function Web3WalletProvider({children}: {children: React.ReactNode}) {
 
   const updateAccount = useCallback(
     async (address: string) => {
-      console.log(`updating ${address} account`);
       if (!wallet) {
         return;
       }
-
       const [eth, lit, approved] = await Promise.all([
         getEthereumBalance(address, wallet),
         getLitentryBalance(address, wallet),
@@ -85,7 +89,7 @@ export function Web3WalletProvider({children}: {children: React.ReactNode}) {
         },
         approved,
       };
-      console.log('updated account', updatedAccount);
+      console.log(`Updated account ${updatedAccount}`);
       setConnectedAccount(updatedAccount);
     },
     [wallet],
@@ -99,15 +103,21 @@ export function Web3WalletProvider({children}: {children: React.ReactNode}) {
     connector.killSession();
   }, [connector]);
 
-  const approveMigration = useCallback(
+  const _approveForMigration = useCallback(
     async (address: string) => {
+      if (!wallet) {
+        throw new Error('Web3 wallet must be initialized');
+      }
       return approveForMigration(address, wallet);
     },
     [wallet],
   );
 
-  const depositMigration = useCallback(
+  const _depositForMigration = useCallback(
     async (address: string, amount: number, recipientAddress: string) => {
+      if (!wallet) {
+        throw new Error('Web3 wallet must be initialized.');
+      }
       return depositForMigration(address, amount, recipientAddress, wallet);
     },
     [wallet],
@@ -119,13 +129,12 @@ export function Web3WalletProvider({children}: {children: React.ReactNode}) {
           connectedAccount,
           accounts,
           updateAccount,
-          disconnect: disconnectWeb3Wallet,
           isConnected: true,
-          isInitialized: true,
-          approveForMigration: approveMigration,
-          depositForMigration: depositMigration,
+          disconnect: disconnectWeb3Wallet,
+          approveForMigration: _approveForMigration,
+          depositForMigration: _depositForMigration,
         }
-      : {isInitialized: false, connect: connectWeb3Wallet};
+      : {isConnected: false, connect: connectWeb3Wallet};
 
   return <Web3WalletContext.Provider value={contextValue}>{children}</Web3WalletContext.Provider>;
 }
@@ -139,17 +148,17 @@ function getWalletConnectWeb3Provider(connector: Connector) {
   return provider;
 }
 
-export function useWeb3Wallet() {
+export function useWeb3Wallet(): ContextValue {
   const context = useContext(Web3WalletContext);
   if (!context) {
     throw new Error('useWeb3Account must be used within Web3WalletProvider');
   }
-  if (!context.isInitialized) {
-    return {connect: context.connect};
+  if (!context.isConnected) {
+    return {connect: context.connect, isConnected: false};
   }
 
   return {
-    isConnected: context.isConnected,
+    isConnected: true,
     disconnect: context.disconnect,
     accounts: context.accounts,
     connectedAccount: context.connectedAccount,
