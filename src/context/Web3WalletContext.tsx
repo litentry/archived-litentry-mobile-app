@@ -23,12 +23,12 @@ interface Web3Account {
   approved: BigNumber;
 }
 
-interface Web3WalletNotInitialized {
+interface DisconnectedWallet {
   connect: () => void;
   isConnected: false;
 }
 
-interface Web3Wallet {
+interface ConnectedWallet {
   connectedAccount?: Web3Account;
   accounts: Array<string>;
   updateAccount: (address: string) => void;
@@ -38,9 +38,9 @@ interface Web3Wallet {
   depositForMigration: (address: string, amount: number, recipientAddress: string) => Promise<Result>;
 }
 
-type ContextValue = Web3Wallet | Web3WalletNotInitialized;
+type Web3Wallet = ConnectedWallet | DisconnectedWallet;
 
-const Web3WalletContext = createContext<ContextValue>({
+const Web3WalletContext = createContext<Web3Wallet>({
   isConnected: false,
   connect: () => undefined,
 });
@@ -123,7 +123,7 @@ export function Web3WalletProvider({children}: {children: React.ReactNode}) {
     [wallet],
   );
 
-  const contextValue: ContextValue =
+  const contextValue: Web3Wallet =
     wallet && connector.connected
       ? {
           connectedAccount,
@@ -148,7 +148,7 @@ function getWalletConnectWeb3Provider(connector: Connector) {
   return provider;
 }
 
-export function useWeb3Wallet(): ContextValue {
+export function useWeb3Wallet(): Web3Wallet {
   const context = useContext(Web3WalletContext);
   if (!context) {
     throw new Error('useWeb3Account must be used within Web3WalletProvider');
