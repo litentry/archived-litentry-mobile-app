@@ -30,6 +30,7 @@ export function ProposeTipScreen({navigation}: {navigation: NavigationProp<Dashb
   }, [state, currentNetwork]);
 
   const isTipReasonValid = useMemo(() => {
+    state.reason = state.reason.replace(/\r?\n|\r/g, ' ');
     return state.reason ? state.reason.length > 4 : false;
   }, [state]);
 
@@ -89,7 +90,7 @@ export function ProposeTipScreen({navigation}: {navigation: NavigationProp<Dashb
                 multiline
                 placeholder={'Tip reason'}
                 value={state.reason}
-                numberOfLines={10}
+                numberOfLines={5}
                 maxLength={100}
                 onChangeText={(payload) => dispatch({type: 'SET_REASON', payload})}
               />
