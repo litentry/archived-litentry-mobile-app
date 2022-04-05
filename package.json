@@ -102,7 +102,7 @@
   "devDependencies": {
     "@babel/core": "^7.17.5",
     "@babel/preset-typescript": "^7.16.7",
-    "@babel/runtime": "^7.17.2",
+    "@babel/runtime": "^7.17.8",
     "@graphql-codegen/cli": "2.6.2",
     "@graphql-codegen/fragment-matcher": "3.2.1",
     "@graphql-codegen/typescript": "2.4.8",
