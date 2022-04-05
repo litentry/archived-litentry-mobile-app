@@ -2515,11 +2515,8 @@ export type SubstrateChainParathread = {
 
 export type SubstrateChainProposal = {
   __typename?: 'SubstrateChainProposal';
-  beneficiary: SubstrateChainAccountInfo;
-  bond: Scalars['String'];
-  index: Scalars['String'];
-  proposer: SubstrateChainAccountInfo;
-  value: Scalars['String'];
+  proposal: SubstrateChainTreasuryProposal;
+  votes: Array<SubstrateChainProposalVotes>;
 };
 
 export type SubstrateChainProposalArg = {
@@ -2630,8 +2627,8 @@ export type SubstrateChainTipper = {
 
 export type SubstrateChainTreasury = {
   __typename?: 'SubstrateChainTreasury';
-  approvals: Array<SubstrateChainTreasuryProposal>;
-  proposals: Array<SubstrateChainTreasuryProposal>;
+  approvals: Array<SubstrateChainProposal>;
+  proposals: Array<SubstrateChainProposal>;
 };
 
 export type SubstrateChainTreasuryBalance = {
@@ -2647,8 +2644,11 @@ export type SubstrateChainTreasuryBalance = {
 
 export type SubstrateChainTreasuryProposal = {
   __typename?: 'SubstrateChainTreasuryProposal';
-  proposal: SubstrateChainProposal;
-  votes: Array<SubstrateChainProposalVotes>;
+  beneficiary: SubstrateChainAccountInfo;
+  bond: Scalars['String'];
+  index: Scalars['String'];
+  proposer: SubstrateChainAccountInfo;
+  value: Scalars['String'];
 };
 
 export type SubstrateChainTreasurySummary = {
