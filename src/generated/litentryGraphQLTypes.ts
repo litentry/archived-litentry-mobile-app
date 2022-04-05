@@ -374,6 +374,20 @@ export type Block_Height = {
   number_gte?: InputMaybe<Scalars['Int']>;
 };
 
+export type EvmChainLpData = {
+  __typename?: 'EVMChainLPData';
+  address: Scalars['String'];
+  contract: Scalars['String'];
+  liquidityProvided: Scalars['Float'];
+  percentageOfPool: Scalars['Float'];
+  totalSupply: Scalars['Float'];
+};
+
+export enum EvmChainSwapPlatform {
+  Pancakeswap = 'pancakeswap',
+  Uniswap = 'uniswap',
+}
+
 export type Erc20Account = {
   __typename?: 'Erc20Account';
   address: Scalars['String'];
@@ -970,9 +984,9 @@ export type PoapCredentialTokens = {
 
 export type Query = {
   __typename?: 'Query';
+  EVMChainLiquidityProvidedByAccount: EvmChainLpData;
   GalaxyCredentialDataByAddress: GalaxyCredentialUserData;
   PoapCredentialTokensByAddress: PoapCredentialTokenData;
-  UniswapLiquidityProvidedByAccount: UniswapLpData;
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
   bep20Account?: Maybe<Bep20Account>;
@@ -1087,6 +1101,12 @@ export type Query = {
   substrateTreasuryDepositsConnection: SubstrateTreasuryDepositsConnection;
 };
 
+export type QueryEvmChainLiquidityProvidedByAccountArgs = {
+  address: Scalars['String'];
+  contract: Scalars['String'];
+  platform: EvmChainSwapPlatform;
+};
+
 export type QueryGalaxyCredentialDataByAddressArgs = {
   address: Scalars['String'];
   chain: GalaxyCredentialChain;
@@ -1094,11 +1114,6 @@ export type QueryGalaxyCredentialDataByAddressArgs = {
 
 export type QueryPoapCredentialTokensByAddressArgs = {
   address: Scalars['String'];
-};
-
-export type QueryUniswapLiquidityProvidedByAccountArgs = {
-  address: Scalars['String'];
-  contract: Scalars['String'];
 };
 
 export type Query_MetaArgs = {
@@ -1240,6 +1255,10 @@ export type QuerySubstrateChainBalanceArgs = {
 
 export type QuerySubstrateChainBountyArgs = {
   index: Scalars['String'];
+};
+
+export type QuerySubstrateChainCouncilArgs = {
+  address?: InputMaybe<Scalars['String']>;
 };
 
 export type QuerySubstrateChainCouncilMotionDetailArgs = {
@@ -4290,15 +4309,6 @@ export type SubstrateTreasuryDepositsConnection = {
   edges: Array<SubstrateTreasuryDepositEdge>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
-};
-
-export type UniswapLpData = {
-  __typename?: 'UniswapLPData';
-  address: Scalars['String'];
-  contract: Scalars['String'];
-  liquidityProvided: Scalars['Float'];
-  percentageOfPool: Scalars['Float'];
-  totalSupply: Scalars['Float'];
 };
 
 export type _Block_ = {
