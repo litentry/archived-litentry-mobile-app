@@ -22,17 +22,19 @@ export function ProposeTipScreen({navigation}: {navigation: NavigationProp<Dashb
   const {currentNetwork} = useContext(NetworkContext);
 
   const isBeneficiaryAddressValid = useMemo(() => {
-    state.beneficiary = state.beneficiary
+    const payload = state.beneficiary
       .replace(/\r?\n|\r/g, ' ')
       .split(' ')
       .join('');
+    dispatch({type: 'SET_BENEFICIARY', payload});
     return state.beneficiary ? isAddressValid(currentNetwork, state.beneficiary) : false;
-  }, [state, currentNetwork]);
+  }, [state.beneficiary, currentNetwork]);
 
   const isTipReasonValid = useMemo(() => {
-    state.reason = state.reason.replace(/\r?\n|\r/g, ' ');
+    const payload = state.reason.replace(/\r?\n|\r/g, ' ');
+    dispatch({type: 'SET_REASON', payload});
     return state.reason ? state.reason.length > 4 : false;
-  }, [state]);
+  }, [state.reason]);
 
   const valid = state.account && isBeneficiaryAddressValid && isTipReasonValid;
 
