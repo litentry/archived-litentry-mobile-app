@@ -118,11 +118,7 @@ export function AuctionsScreen() {
           </Card>
         </>
       ) : (
-        <Card style={styles.container}>
-          <Card.Content>
-            <EmptyStateTeaser subheading="Auction is not active" />
-          </Card.Content>
-        </Card>
+        <EmptyView>{`Auction is not active`}</EmptyView>
       )}
     </SafeView>
   );
