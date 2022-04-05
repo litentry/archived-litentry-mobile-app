@@ -3,6 +3,7 @@ import {Keyboard, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View} 
 import {ParamListBase, Route, RouteProp} from '@react-navigation/core';
 import {DrawerNavigationOptions, DrawerNavigationProp} from '@react-navigation/drawer';
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack';
+import {DrawerActions} from '@react-navigation/native';
 import {useApi} from 'context/ChainApiContext';
 import {useNetwork} from 'context/NetworkContext';
 import NetworkItem from '@ui/components/NetworkItem';
@@ -51,9 +52,7 @@ export function MainStackAppBar({
   const {colors} = useTheme();
 
   const openDrawer = () => {
-    if (navigationSupportsDrawer(navigation)) {
-      navigation.openDrawer();
-    }
+    navigation.dispatch(DrawerActions.openDrawer());
   };
 
   const goBack = () => {
@@ -78,14 +77,6 @@ export function MainStackAppBar({
   );
 }
 
-function navigationSupportsDrawer(navigation: unknown): navigation is DrawerNavigationProp<ParamListBase> {
-  if (navigation && typeof navigation === 'object') {
-    return 'openDrawer' in navigation;
-  }
-
-  throw new Error('Navigation is not of expected type');
-}
-
 export function MainAppBar({
   navigation,
   route,
@@ -100,9 +91,7 @@ export function MainAppBar({
   const {colors} = useTheme();
 
   const onActionLeftPress = React.useCallback(() => {
-    if (navigationSupportsDrawer(navigation)) {
-      navigation.openDrawer();
-    }
+    navigation.dispatch(DrawerActions.openDrawer());
   }, [navigation]);
 
   return (
