@@ -161,6 +161,7 @@ const styles = StyleSheet.create({
   parachainsHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+    right: standardPadding,
   },
   rightItem: {
     marginRight: standardPadding,
