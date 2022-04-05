@@ -5,6 +5,7 @@ import type {
   SubstrateChainVotingStatus,
 } from 'src/generated/litentryGraphQLTypes';
 import {ACCOUNT_FIELDS_FRAGMENT} from './useAccount';
+import {PROPOSAL_ARGS_FRAGMENT} from './useDemocracy';
 
 export type CouncilMotion = SubstrateChainCouncilMotion;
 export type MotionProposal = SubstrateChainMotionProposal;
@@ -12,34 +13,19 @@ export type VotingStatus = SubstrateChainVotingStatus;
 
 const COUNCIL_MOTION_QUERY = gql`
   ${ACCOUNT_FIELDS_FRAGMENT}
-  query getCouncilMotionSummary {
+  ${PROPOSAL_ARGS_FRAGMENT}
+  query getCouncilMotions {
     substrateChainCouncilMotions {
       proposal {
         index
         meta
         method
         section
-        args {
-          name
-          type
-          value
-          subCalls {
-            meta
-            method
-            section
-            args {
-              name
-              type
-              value
-              subCalls {
-                meta
-                method
-                section
-              }
-            }
-          }
-        }
         hash
+        payout
+        args {
+          ...ProposalArgFields
+        }
         proposer {
           account {
             ...AccountFields
@@ -51,6 +37,7 @@ const COUNCIL_MOTION_QUERY = gql`
           }
         }
         payout
+        bond
       }
       votes {
         threshold

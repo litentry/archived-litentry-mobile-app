@@ -33,7 +33,7 @@ export function ParathreadsScreen() {
           contentContainerStyle={styles.content}
           keyExtractor={(item) => item.id.toString()}
           data={parathreads}
-          renderItem={({item}) => <ParathreadItem parathreadInfo={item} />}
+          renderItem={({item}) => <ParathreadItem parathread={item} />}
           ItemSeparatorComponent={Divider}
           ListEmptyComponent={EmptyView}
         />
@@ -45,35 +45,33 @@ export function ParathreadsScreen() {
 }
 
 type ParathreadItemProps = {
-  parathreadInfo: Parathread;
+  parathread: Parathread;
 };
 
-function ParathreadItem({parathreadInfo}: ParathreadItemProps) {
-  const [days, hours] = parathreadInfo.lease?.blockTime || [];
+function ParathreadItem({parathread}: ParathreadItemProps) {
+  const [days, hours] = parathread.lease?.blockTime || [];
 
   return (
     <List.Item
-      onPress={() => toParathreadHomepage(String(parathreadInfo.homepage))}
+      onPress={() => toParathreadHomepage(String(parathread.homepage))}
       left={() => (
         <View style={globalStyles.justifyCenter}>
-          {parathreadInfo?.manager && <Identicon value={parathreadInfo.manager.account.address} size={30} />}
+          {parathread?.manager && <Identicon value={parathread.manager.account.address} size={30} />}
         </View>
       )}
       title={() => (
-        <View style={styles.manager}>
-          {parathreadInfo.manager && <Account account={parathreadInfo.manager.account} />}
-        </View>
+        <View style={styles.manager}>{parathread.manager && <Account account={parathread.manager.account} />}</View>
       )}
       description={() => (
         <>
-          {parathreadInfo.name && <Text>{parathreadInfo.name}</Text>}
-          {parathreadInfo.lease ? <Text>{parathreadInfo.lease.period}</Text> : null}
+          {parathread.name && <Text>{parathread.name}</Text>}
+          {parathread.lease ? <Text>{parathread.lease.period}</Text> : null}
           {days ? <Text>{days || hours ? `${days || ''} ${hours || ''}` : null}</Text> : null}
         </>
       )}
       right={() => (
         <View style={globalStyles.justifyCenter}>
-          <Text>{parathreadInfo.id}</Text>
+          <Text>{parathread.id}</Text>
         </View>
       )}
     />
