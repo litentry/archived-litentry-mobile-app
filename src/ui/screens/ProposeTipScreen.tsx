@@ -22,21 +22,10 @@ export function ProposeTipScreen({navigation}: {navigation: NavigationProp<Dashb
   const {currentNetwork} = useContext(NetworkContext);
 
   const isBeneficiaryAddressValid = useMemo(() => {
-    const payload = state.beneficiary
-      .replace(/\r?\n|\r/g, ' ')
-      .split(' ')
-      .join('');
-    dispatch({type: 'SET_BENEFICIARY', payload});
     return state.beneficiary ? isAddressValid(currentNetwork, state.beneficiary) : false;
   }, [state.beneficiary, currentNetwork]);
 
-  const isTipReasonValid = useMemo(() => {
-    const payload = state.reason.replace(/\r?\n|\r/g, ' ');
-    dispatch({type: 'SET_REASON', payload});
-    return state.reason ? state.reason.length > 4 : false;
-  }, [state.reason]);
-
-  const valid = state.account && isBeneficiaryAddressValid && isTipReasonValid;
+  const valid = state.account && isBeneficiaryAddressValid && state.reason.length > 4;
 
   const submit = () => {
     if (state.account) {
@@ -79,7 +68,7 @@ export function ProposeTipScreen({navigation}: {navigation: NavigationProp<Dashb
                 multiline
                 numberOfLines={2}
                 value={state.beneficiary}
-                onChangeText={(payload) => dispatch({type: 'SET_BENEFICIARY', payload})}
+                onChangeText={(payload) => dispatch({type: 'SET_BENEFICIARY', payload: payload.trim()})}
               />
               {!isBeneficiaryAddressValid && state.beneficiary ? (
                 <HelperText type="error" style={styles.helper}>
@@ -96,9 +85,9 @@ export function ProposeTipScreen({navigation}: {navigation: NavigationProp<Dashb
                 value={state.reason}
                 numberOfLines={5}
                 maxLength={100}
-                onChangeText={(payload) => dispatch({type: 'SET_REASON', payload})}
+                onChangeText={(payload) => dispatch({type: 'SET_REASON', payload: payload.replace(/\r?\n|\r/g, ' ')})}
               />
-              {!isTipReasonValid && state.reason ? (
+              {state.reason && state.reason.length < 5 ? (
                 <HelperText type="error" style={styles.helper}>
                   Enter a minimum of five letters
                 </HelperText>
