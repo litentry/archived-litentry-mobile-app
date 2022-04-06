@@ -209,6 +209,7 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
   const [selectedCandidates, setSelectedCandidates] = React.useState<Array<string>>([]);
   const {data: councilVote} = useCouncilVotesOf(account?.address);
   const {dark: isDarkTheme} = useTheme();
+  const {stringToBn} = useFormatBalance();
 
   // preselect already voted council members
   useEffect(() => {
@@ -230,7 +231,12 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
       : noop;
   };
 
-  const disabled = !amount || !account || selectedCandidates.length === 0;
+  const isValidEnteredBalance = useMemo(() => {
+    const enteredBalance = stringToBn(amount) ?? BN_ZERO;
+    return enteredBalance.gt(BN_ZERO) && enteredBalance.lt(formattedStringToBn(account?.balance.free));
+  }, [account, amount, stringToBn]);
+
+  const disabled = !amount || !account || selectedCandidates.length === 0 || !isValidEnteredBalance;
 
   const bondValue = useMemo(() => {
     const votingBondBase = formattedStringToBn(moduleElection.votingBondBase);
@@ -266,13 +272,16 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
         <Subheading>{`Vote for council`}</Subheading>
       </View>
       <Padder scale={1} />
-
+      <InputLabel label={'voting account:'} helperText={'This account will be use to approve each candidate.'} />
       <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
       <Padder scale={1} />
+      <InputLabel
+        label={'Vote value:'}
+        helperText={'The amount that is associated with this vote. This tokens is locked for the duration of the vote.'}
+      />
       <BalanceInput account={account} onChangeBalance={setAmount} />
       <Padder scale={1} />
-      <Caption>{`Select up to ${MAX_VOTES} candidates in the preferred order:`}</Caption>
-
+      <InputLabel label={`Select up to ${MAX_VOTES} candidates in the preferred order:`} />
       <View style={styles.candidatesContainer}>
         <View style={styles.candidates}>
           <ScrollView indicatorStyle={isDarkTheme ? 'white' : 'black'}>
@@ -289,7 +298,7 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
         </View>
 
         <View style={styles.votingBond}>
-          <Caption style={globalStyles.textCenter}>{`Bond`}</Caption>
+          <InputLabel label={'Bond:'} helperText={'The amount that will be reserved'} />
           {bondValue && <Text style={styles.bondValue}>{`${formatBalance(bondValue)}`}</Text>}
         </View>
       </View>
