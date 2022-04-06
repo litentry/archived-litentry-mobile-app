@@ -2280,13 +2280,6 @@ export type SubstrateChainChainInfo = {
   slotsLeasePeriod?: Maybe<Scalars['String']>;
 };
 
-export type SubstrateChainCollectiveProposal = {
-  __typename?: 'SubstrateChainCollectiveProposal';
-  callIndex: Scalars['String'];
-  hash: Scalars['String'];
-  votes: SubstrateChainProposalVotes;
-};
-
 export type SubstrateChainConviction = {
   __typename?: 'SubstrateChainConviction';
   text: Scalars['String'];
@@ -2319,7 +2312,7 @@ export type SubstrateChainCouncilMember = {
 export type SubstrateChainCouncilMotion = {
   __typename?: 'SubstrateChainCouncilMotion';
   proposal: SubstrateChainMotionProposal;
-  votes?: Maybe<SubstrateChainMotionVotes>;
+  votes?: Maybe<SubstrateChainProposalVotes>;
   votingStatus?: Maybe<SubstrateChainVotingStatus>;
 };
 
@@ -2379,7 +2372,7 @@ export type SubstrateChainDemocracyProposal = {
   args?: Maybe<Array<SubstrateChainProposalArg>>;
   balance?: Maybe<Scalars['String']>;
   formattedBalance?: Maybe<Scalars['String']>;
-  hash: Scalars['String'];
+  hash?: Maybe<Scalars['String']>;
   index: Scalars['String'];
   meta?: Maybe<Scalars['String']>;
   method?: Maybe<Scalars['String']>;
@@ -2396,7 +2389,8 @@ export type SubstrateChainDemocracyReferendum = {
   endPeriod: Array<Scalars['String']>;
   formattedVotedAye: Scalars['String'];
   formattedVotedNay: Scalars['String'];
-  hash: Scalars['String'];
+  hash?: Maybe<Scalars['String']>;
+  imageHash: Scalars['String'];
   index: Scalars['String'];
   meta?: Maybe<Scalars['String']>;
   method?: Maybe<Scalars['String']>;
@@ -2479,6 +2473,7 @@ export type SubstrateChainMotionProposal = {
   __typename?: 'SubstrateChainMotionProposal';
   args: Array<SubstrateChainProposalArg>;
   beneficiary?: Maybe<SubstrateChainAccountInfo>;
+  bond?: Maybe<Scalars['String']>;
   hash: Scalars['String'];
   index?: Maybe<Scalars['String']>;
   meta: Scalars['String'];
@@ -2486,23 +2481,6 @@ export type SubstrateChainMotionProposal = {
   payout?: Maybe<Scalars['String']>;
   proposer?: Maybe<SubstrateChainAccountInfo>;
   section: Scalars['String'];
-};
-
-export type SubstrateChainMotionVotes = {
-  __typename?: 'SubstrateChainMotionVotes';
-  ayes: Array<SubstrateChainAccountInfo>;
-  end: Scalars['String'];
-  endTime: Array<Scalars['String']>;
-  nays: Array<SubstrateChainAccountInfo>;
-  threshold: Scalars['Int'];
-};
-
-export type SubstrateChainPalletProposal = {
-  __typename?: 'SubstrateChainPalletProposal';
-  beneficiary: SubstrateChainAccountInfo;
-  bond: Scalars['String'];
-  proposer: SubstrateChainAccountInfo;
-  value: Scalars['String'];
 };
 
 export type SubstrateChainParachain = {
@@ -2535,6 +2513,15 @@ export type SubstrateChainParathread = {
   name?: Maybe<Scalars['String']>;
 };
 
+export type SubstrateChainProposal = {
+  __typename?: 'SubstrateChainProposal';
+  beneficiary: SubstrateChainAccountInfo;
+  bond: Scalars['String'];
+  index: Scalars['String'];
+  proposer: SubstrateChainAccountInfo;
+  value: Scalars['String'];
+};
+
 export type SubstrateChainProposalArg = {
   __typename?: 'SubstrateChainProposalArg';
   name?: Maybe<Scalars['String']>;
@@ -2553,11 +2540,12 @@ export type SubstrateChainProposalSubCall = {
 
 export type SubstrateChainProposalVotes = {
   __typename?: 'SubstrateChainProposalVotes';
-  ayes?: Maybe<Array<Scalars['String']>>;
+  ayes?: Maybe<Array<SubstrateChainAccountInfo>>;
   end?: Maybe<Scalars['String']>;
-  index?: Maybe<Scalars['String']>;
-  nays?: Maybe<Array<Scalars['String']>>;
-  threshold?: Maybe<Scalars['String']>;
+  endTime: Array<Scalars['String']>;
+  hash: Scalars['String'];
+  nays?: Maybe<Array<SubstrateChainAccountInfo>>;
+  threshold?: Maybe<Scalars['Int']>;
 };
 
 export type SubstrateChainRegistrar = {
@@ -2659,9 +2647,8 @@ export type SubstrateChainTreasuryBalance = {
 
 export type SubstrateChainTreasuryProposal = {
   __typename?: 'SubstrateChainTreasuryProposal';
-  councils: Array<SubstrateChainCollectiveProposal>;
-  id: Scalars['String'];
-  proposal: SubstrateChainPalletProposal;
+  proposal: SubstrateChainProposal;
+  votes: Array<SubstrateChainProposalVotes>;
 };
 
 export type SubstrateChainTreasurySummary = {
