@@ -264,7 +264,11 @@ function AppNavigator() {
           {() => <PermissionGrantingPrompt skipPnPermission={skipPnPermission} />}
         </AppStack.Screen>
       ) : undefined}
-      <AppStack.Screen name={routeKeys.drawerNavigator} component={DrawerNavigator} />
+      <AppStack.Screen
+        name={routeKeys.drawerNavigator}
+        component={DrawerNavigator}
+        options={{presentation: 'transparentModal'}}
+      />
       <AppStack.Screen
         name={routeKeys.networkSelectionScreen}
         component={NetworkSelectionScreen}

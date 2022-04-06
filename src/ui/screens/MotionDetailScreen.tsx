@@ -59,7 +59,12 @@ export function MotionDetailScreen(props: PropTypes) {
   if (loading && !motion) {
     return <LoadingView />;
   }
-  const proposer = motion?.votes?.ayes[0];
+
+  if (!motion) {
+    return null;
+  }
+
+  const {proposal, votes, votingStatus} = motion;
 
   return (
     <SafeView edges={noTopEdges}>
@@ -80,20 +85,22 @@ export function MotionDetailScreen(props: PropTypes) {
                 ) : null}
               </StatInfoBlock>
               <StatInfoBlock title="Status">
-                <Paragraph style={{color: colorGreen}}>{motion?.votingStatus?.status}</Paragraph>
+                <Paragraph style={{color: colorGreen}}>{votingStatus?.status}</Paragraph>
               </StatInfoBlock>
             </View>
             <Padder scale={1} />
-            <StatInfoBlock title="Proposer">{proposer && <AccountTeaser account={proposer.account} />}</StatInfoBlock>
+            <StatInfoBlock title="Proposer">
+              {proposal.proposer && <AccountTeaser account={proposal.proposer.account} />}
+            </StatInfoBlock>
           </Card.Content>
         </Card>
         <Padder scale={0.3} />
         <View style={globalStyles.spaceBetweenRowContainer}>
           <Card style={[styles.item, styles.left]}>
             <Card.Content>
-              <StatInfoBlock title="Section">{_.capitalize(motion?.proposal.section)}</StatInfoBlock>
+              <StatInfoBlock title="Section">{_.capitalize(proposal.section)}</StatInfoBlock>
               <Padder scale={0.5} />
-              <StatInfoBlock title="Method">{motion?.proposal.method}</StatInfoBlock>
+              <StatInfoBlock title="Method">{proposal.method}</StatInfoBlock>
             </Card.Content>
           </Card>
           <Card style={[styles.item, styles.right]}>
@@ -101,10 +108,10 @@ export function MotionDetailScreen(props: PropTypes) {
               <View>
                 <Caption>Votes</Caption>
                 <Subheading style={globalStyles.aye}>
-                  {`Aye (${motion?.votes?.ayes.length}/${motion?.votes?.threshold})`}
+                  {`Aye (${votes?.ayes?.length}/${motion?.votes?.threshold})`}
                 </Subheading>
                 <Subheading style={globalStyles.nay}>
-                  {`Nay (${motion?.votes?.nays.length}/${motion?.votes?.threshold})`}
+                  {`Nay (${votes?.nays?.length}/${motion?.votes?.threshold})`}
                 </Subheading>
               </View>
             </Card.Content>
@@ -113,8 +120,8 @@ export function MotionDetailScreen(props: PropTypes) {
         {motion?.votes ? (
           <View style={styles.votesContainer}>
             <Subheading>Votes</Subheading>
-            {motion.votes.ayes.length ? (
-              motion.votes.ayes.map((vote) => (
+            {votes?.ayes?.length ? (
+              votes.ayes.map((vote) => (
                 <View style={styles.voteContainer} key={vote.account.address}>
                   <VoteItem voteAccount={vote} type="aye" />
                 </View>
@@ -125,8 +132,8 @@ export function MotionDetailScreen(props: PropTypes) {
                 <VoteItem emptyText='No one voted "Aye" yet.' type="aye" />
               </>
             )}
-            {motion.votes.nays.length ? (
-              motion.votes.nays.map((vote) => (
+            {votes?.nays?.length ? (
+              votes.nays.map((vote) => (
                 <View style={styles.voteContainer} key={vote.account.address}>
                   <VoteItem voteAccount={vote} type="nay" />
                 </View>

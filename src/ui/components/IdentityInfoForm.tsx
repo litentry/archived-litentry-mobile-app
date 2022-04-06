@@ -35,7 +35,6 @@ function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps): React
     web: accountInfo?.registration?.web ?? '',
   });
   const {display, legal, email, riot, twitter, web} = state;
-  console.log(accountInfo?.display);
   const formStatus = validateForm(state);
 
   const onSubmitPress = () => {
