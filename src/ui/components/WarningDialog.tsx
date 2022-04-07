@@ -14,7 +14,7 @@ function WarningDialog(props: PropTypes) {
   const {colors} = useTheme();
 
   return (
-    <Layout style={globalStyles.centeredContainer}>
+    <Layout style={globalStyles.fillCenter}>
       <Layout style={styles.textContainer}>
         <Icon size={20} color={colors.warning} name="alert-circle-outline" />
         <Text style={[styles.text, styles.withIcon]}>{text}</Text>

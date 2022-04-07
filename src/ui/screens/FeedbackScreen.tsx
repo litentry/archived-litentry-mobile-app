@@ -33,7 +33,7 @@ export function FeedbackScreen() {
 
   if (status === 'SUCCESS') {
     return (
-      <Layout style={globalStyles.centeredContainer}>
+      <Layout style={globalStyles.fillCenter}>
         <Text style={styles.successMessage}>Thank you for your feedback!</Text>
       </Layout>
     );
@@ -41,7 +41,7 @@ export function FeedbackScreen() {
 
   if (status === 'ERROR') {
     return (
-      <Layout style={globalStyles.centeredContainer}>
+      <Layout style={globalStyles.fillCenter}>
         <Text style={styles.errorMessage}>{`We are having trouble trying to open your mail app.`}</Text>
         <HyperLink linkStyle={{color: colors.primary}} linkDefault>
           <Caption>Please email us at {FEEDBACK_EMAIL}</Caption>
