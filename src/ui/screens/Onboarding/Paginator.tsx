@@ -30,7 +30,6 @@ const paginatorStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    top: '-20%',
   },
 });
 
