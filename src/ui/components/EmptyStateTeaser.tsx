@@ -8,7 +8,7 @@ type Props = {
   caption?: string;
 };
 
-export function EmptyStateTeaser({subheading, caption}: Props) {
+export function EmptyStateTeaser({subheading, caption = 'Please check back for updates'}: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>

@@ -258,13 +258,17 @@ function AppNavigator() {
   }
 
   return (
-    <AppStack.Navigator screenOptions={{headerShown: false, presentation: 'transparentModal'}}>
+    <AppStack.Navigator screenOptions={{headerShown: false}}>
       {isPnPromptNeeded ? (
         <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen}>
           {() => <PermissionGrantingPrompt skipPnPermission={skipPnPermission} />}
         </AppStack.Screen>
       ) : undefined}
-      <AppStack.Screen name={routeKeys.drawerNavigator} component={DrawerNavigator} />
+      <AppStack.Screen
+        name={routeKeys.drawerNavigator}
+        component={DrawerNavigator}
+        options={{presentation: 'transparentModal'}}
+      />
       <AppStack.Screen
         name={routeKeys.networkSelectionScreen}
         component={NetworkSelectionScreen}
