@@ -1,35 +1,43 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {Padder} from '@ui/components/Padder';
 import {Account} from './Account';
 import type {Account as AccountType} from 'src/api/hooks/useAccount';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {AppStackParamList} from '@ui/navigation/navigation';
-import {accountScreen} from '@ui/navigation/routeKeys';
+import globalStyles from '@ui/styles';
 
 type Props = {
   account: AccountType;
   identiconSize?: number;
+  onPress?: () => void;
+  children?: React.ReactNode;
+  testID?: string;
 };
 
-export function AccountTeaser({account, identiconSize = 20}: Props) {
-  const navigation = useNavigation<NavigationProp<AppStackParamList>>();
+export function AccountTeaser({account, onPress, children, testID, identiconSize = 20}: Props) {
+  if (onPress) {
+    return (
+      <TouchableOpacity onPress={onPress}>
+        <View style={globalStyles.rowAlignCenter} testID={testID}>
+          <Identicon value={account.address} size={identiconSize} />
+          <Padder scale={0.5} />
+          <View>
+            <Account account={account} />
+            {children}
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  }
 
   return (
-    <TouchableOpacity onPress={() => navigation.navigate(accountScreen, {address: account.address})}>
-      <View style={styles.container}>
-        <Identicon value={account.address} size={identiconSize} />
-        <Padder scale={0.5} />
+    <View style={globalStyles.rowAlignCenter} testID={testID}>
+      <Identicon value={account.address} size={identiconSize} />
+      <Padder scale={0.5} />
+      <View>
         <Account account={account} />
+        {children}
       </View>
-    </TouchableOpacity>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-});
