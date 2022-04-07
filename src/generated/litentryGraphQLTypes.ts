@@ -2127,10 +2127,10 @@ export type SubstrateBalanceTransfersConnection = {
 export type SubstrateChainAccount = {
   __typename?: 'SubstrateChainAccount';
   address: Scalars['String'];
-  balance: SubstrateChainAccountBalance;
+  balance?: Maybe<SubstrateChainAccountBalance>;
   display: Scalars['String'];
   hasIdentity: Scalars['Boolean'];
-  registration: SubstrateChainDeriveAccountRegistration;
+  registration?: Maybe<SubstrateChainDeriveAccountRegistration>;
   subAccounts?: Maybe<Array<SubstrateChainAccountInfo>>;
 };
 
@@ -2288,7 +2288,7 @@ export type SubstrateChainConviction = {
 
 export type SubstrateChainCouncil = {
   __typename?: 'SubstrateChainCouncil';
-  candidates: Array<SubstrateChainAccountInfo>;
+  candidates: Array<SubstrateChainCouncilMember>;
   desiredRunnersUp: Scalars['Int'];
   desiredSeats: Scalars['Int'];
   members: Array<SubstrateChainCouncilMember>;
@@ -2303,10 +2303,9 @@ export type SubstrateChainCouncil = {
 export type SubstrateChainCouncilMember = {
   __typename?: 'SubstrateChainCouncilMember';
   account: SubstrateChainAccount;
-  address: Scalars['String'];
   backing: Scalars['String'];
   formattedBacking: Scalars['String'];
-  voters: Array<Scalars['String']>;
+  voters: Array<SubstrateChainAccount>;
 };
 
 export type SubstrateChainCouncilMotion = {

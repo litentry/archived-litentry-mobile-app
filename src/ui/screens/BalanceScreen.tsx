@@ -49,7 +49,7 @@ export function BalanceScreen({
         <Layout style={globalStyles.paddedContainer}>
           <ModalTitle title={currentAccount.meta.name} subtitle={` (@${currentNetwork.name})`} />
           <Divider />
-          <Balances balance={accountInfo.balance} />
+          {accountInfo.balance && <Balances balance={accountInfo.balance} />}
           <Divider />
           <Button onPress={() => modalRef.current?.close()}>Close</Button>
           <Padder scale={1} />

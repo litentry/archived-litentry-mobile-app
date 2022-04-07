@@ -1,33 +1,26 @@
 import React from 'react';
 import {FlatList, StyleSheet, View, RefreshControl} from 'react-native';
-import Identicon from '@polkadot/reactnative-identicon';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {Card, Subheading, Caption, Divider, List, useTheme} from '@ui/library';
+import {Card, Subheading, Caption, Divider, useTheme} from '@ui/library';
 import {TipReason} from '@ui/components/Tips/TipReason';
 import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useTip, Tip} from 'src/api/hooks/useTip';
-import {Account} from '@ui/components/Account/Account';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {AppStackParamList} from '@ui/navigation/navigation';
 import {accountScreen} from '@ui/navigation/routeKeys';
 
-type ScreenProps = {
-  navigation: StackNavigationProp<DashboardStackParamList>;
-  route: RouteProp<DashboardStackParamList, 'Tip'>;
-};
-
-type TipDetailContentProps = {
+type TipDetailProps = {
   tip: Tip;
+  toAccountDetails: (address: string) => void;
 };
 
-function TipDetailContent({tip}: TipDetailContentProps) {
+function TipDetailContent({tip, toAccountDetails}: TipDetailProps) {
   return (
     <>
       <Card>
@@ -37,7 +30,7 @@ function TipDetailContent({tip}: TipDetailContentProps) {
               <Subheading>Who</Subheading>
             </View>
             <View style={styles.addressContainer}>
-              <AccountTeaser account={tip.who.account} />
+              <AccountTeaser account={tip.who.account} onPress={() => toAccountDetails(tip.who.account.address)} />
             </View>
           </View>
           {tip.finder ? (
@@ -46,7 +39,7 @@ function TipDetailContent({tip}: TipDetailContentProps) {
                 <Subheading>Finder</Subheading>
               </View>
               <View style={styles.addressContainer}>
-                <AccountTeaser account={tip.finder.account} />
+                <AccountTeaser account={tip.finder.account} onPress={() => toAccountDetails(tip.who.account.address)} />
               </View>
             </View>
           ) : null}
@@ -68,37 +61,38 @@ function TipDetailContent({tip}: TipDetailContentProps) {
   );
 }
 
-function TipDetailScreen({route}: ScreenProps) {
+type ScreenProps = {
+  navigation: StackNavigationProp<AppStackParamList>;
+  route: RouteProp<DashboardStackParamList, 'Tip'>;
+};
+
+function TipDetailScreen({route, navigation}: ScreenProps) {
   const id = route.params?.id;
   const {data: tip, loading, refetching, refetch} = useTip(id);
   const {colors} = useTheme();
-  const navigation = useNavigation<NavigationProp<AppStackParamList>>();
 
   if (loading && !tip) {
     return <LoadingView />;
   }
 
+  const toAccountDetails = (address: string) => {
+    navigation.navigate(accountScreen, {address});
+  };
+
   return (
     <SafeView edges={noTopEdges}>
       <FlatList
-        ListHeaderComponent={tip ? <TipDetailContent tip={tip} /> : null}
+        ListHeaderComponent={tip ? <TipDetailContent tip={tip} toAccountDetails={toAccountDetails} /> : null}
         data={tip?.tippers}
         style={[globalStyles.paddedContainer, styles.container]}
         ItemSeparatorComponent={Divider}
-        renderItem={({item}) => {
-          return (
-            <List.Item
-              title={() => <Account account={item.account} />}
-              description={() => <Caption>{item.formattedBalance}</Caption>}
-              left={() => (
-                <View style={globalStyles.justifyCenter}>
-                  <Identicon value={item.account.address} size={35} />
-                </View>
-              )}
-              onPress={() => navigation.navigate(accountScreen, {address: item.account.address})}
-            />
-          );
-        }}
+        renderItem={({item}) => (
+          <View style={globalStyles.marginVertical}>
+            <AccountTeaser account={item.account} onPress={() => toAccountDetails(item.account.address)}>
+              <Caption>{item.formattedBalance}</Caption>
+            </AccountTeaser>
+          </View>
+        )}
         ListEmptyComponent={<EmptyView height={200}>{`There are no tippers yet`}</EmptyView>}
         showsVerticalScrollIndicator={false}
         refreshControl={
