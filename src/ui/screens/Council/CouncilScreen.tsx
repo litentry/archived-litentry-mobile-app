@@ -110,11 +110,11 @@ function CouncilOverviewScreen({navigation}: ScreenProps) {
               {title === 'Member' ? (
                 <View style={styles.voteActions}>
                   <Button icon="vote" mode="outlined" onPress={() => setCouncilVoteVisible(true)}>
-                    Vote
+                    {`Vote`}
                   </Button>
                   <Padder scale={1} />
                   <Button icon="vote" mode="outlined" onPress={() => setSubmitCandidacyVisible(true)}>
-                    Candidacy
+                    {`Submit candidacy`}
                   </Button>
                 </View>
               ) : null}
