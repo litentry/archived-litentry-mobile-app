@@ -80,16 +80,18 @@ const Overview = React.memo(function Overview({
                 <Divider />
                 <Padder scale={1} />
                 <View style={styles.itemRow}>
-                  <View style={styles.leasePeriodContainer}>
-                    <ProgressChartWidget
-                      title={`Lease Period`}
-                      detail={`\n${progressPercent}%`}
-                      data={[progressPercent]}
-                    />
+                  <View style={[globalStyles.spaceBetweenRowContainer, globalStyles.flex]}>
                     <View>
-                      <StatInfoBlock title="Current lease">{String(currentLeasePeriod)}</StatInfoBlock>
-                      <StatInfoBlock title="Total">{totalPeriod}</StatInfoBlock>
-                      <StatInfoBlock title="Remainder">{periodRemainder}</StatInfoBlock>
+                      <ProgressChartWidget
+                        title={`Lease Period`}
+                        detail={`\n${progressPercent}%`}
+                        data={[progressPercent]}
+                      />
+                    </View>
+                    <View style={styles.statBlock}>
+                      <Caption>Current lease : {String(currentLeasePeriod)}</Caption>
+                      <Caption>Total : {totalPeriod}</Caption>
+                      <Caption>Remainder : {periodRemainder}</Caption>
                     </View>
                   </View>
                 </View>
@@ -153,11 +155,6 @@ const styles = StyleSheet.create({
     marginBottom: standardPadding * 2,
   },
   cardTop: {marginHorizontal: standardPadding * 2},
-  leasePeriodContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
   parachainsHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -165,5 +162,9 @@ const styles = StyleSheet.create({
   },
   rightItem: {
     marginRight: standardPadding,
+  },
+  statBlock: {
+    justifyContent: 'center',
+    textAlign: 'left',
   },
 });
