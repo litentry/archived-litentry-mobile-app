@@ -25,7 +25,7 @@ export function AddressInput(props: Props) {
     const pastText = await Clipboard.getString();
     setInputAddress(pastText);
     addressChanged(pastText);
-    snackbar('Address copied to clipboard!');
+    snackbar('Address pasted from clipboard!');
   };
 
   const addressChanged = (nextValue: string) => {
