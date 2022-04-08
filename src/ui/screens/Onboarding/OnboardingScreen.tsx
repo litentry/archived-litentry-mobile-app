@@ -1,14 +1,14 @@
 import React, {useRef} from 'react';
 import {View, Image, ImageProps, StyleSheet, Dimensions} from 'react-native';
 import Carousel, {ICarouselInstance} from 'react-native-reanimated-carousel';
+import {useNavigation, StackActions} from '@react-navigation/native';
 import {useSharedValue} from 'react-native-reanimated';
 import {useTheme, Headline, Subheading} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles from '@ui/styles';
-import {Paginator} from './Paginator';
-import {useNavigation, StackActions} from '@react-navigation/native';
 import {dashboardScreen} from '@ui/navigation/routeKeys';
 import {usePersistedState} from '@hooks/usePersistedState';
+import {Paginator} from './Paginator';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
