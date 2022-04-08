@@ -1,9 +1,9 @@
-import React, {useRef} from 'react';
+import React, {useRef, useCallback, useState} from 'react';
 import {View, Image, ImageProps, StyleSheet, Dimensions} from 'react-native';
 import Carousel, {ICarouselInstance} from 'react-native-reanimated-carousel';
 import {useNavigation, StackActions} from '@react-navigation/native';
-import {useSharedValue} from 'react-native-reanimated';
-import {useTheme, Headline, Subheading} from '@ui/library';
+import Animated, {FadeIn, FadeOut, useSharedValue} from 'react-native-reanimated';
+import {useTheme, Headline, Subheading, Button} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles from '@ui/styles';
 import {dashboardScreen} from '@ui/navigation/routeKeys';
@@ -51,6 +51,12 @@ export function OnboardingScreen() {
   const activeIndex = useSharedValue(0);
   const navigation = useNavigation();
   const {colors} = useTheme();
+  const [isLastItem, setIsLastItem] = useState(false);
+  const goToDashboard = useCallback(() => {
+    setOnboardingSeen(true);
+    navigation.dispatch(StackActions.replace(dashboardScreen));
+  }, [navigation, setOnboardingSeen]);
+  const lastItemIndex = ITEMS.length - 1;
 
   return (
     <View style={[globalStyles.flex, {backgroundColor: colors.surface}]}>
@@ -68,22 +74,34 @@ export function OnboardingScreen() {
         customConfig={() => ({type: 'positive', viewCount: ITEMS.length})}
         renderItem={({index, item}) => <CarouselItem key={index} item={item} />}
         onProgressChange={(_, indexProgress) => {
-          activeIndex.value = Math.round(indexProgress);
+          const currentIndex = Math.round(indexProgress);
+          activeIndex.value = currentIndex;
+          if (currentIndex === lastItemIndex) {
+            setIsLastItem(true);
+          } else if (isLastItem) {
+            setIsLastItem(false);
+          }
         }}
       />
       <View style={styles.paginatorContainer}>
-        <Paginator
-          items={ITEMS}
-          onNextPress={() => {
-            if (carouselRef.current?.getCurrentIndex() === ITEMS.length - 1) {
-              setOnboardingSeen(true);
-              navigation.dispatch(StackActions.replace(dashboardScreen));
-            }
-            carouselRef.current?.next();
-          }}
-          onSkipPress={() => carouselRef.current?.goToIndex(ITEMS.length - 1, true)}
-          activeIndex={activeIndex}
-        />
+        {isLastItem ? (
+          <Animated.View entering={FadeIn} exiting={FadeOut}>
+            <Button onPress={goToDashboard} compact>
+              Get started!
+            </Button>
+          </Animated.View>
+        ) : (
+          <Paginator
+            items={ITEMS}
+            onNextPress={() => {
+              carouselRef.current?.next();
+            }}
+            onSkipPress={() => {
+              carouselRef.current?.goToIndex(lastItemIndex, true);
+            }}
+            activeIndex={activeIndex}
+          />
+        )}
       </View>
     </View>
   );

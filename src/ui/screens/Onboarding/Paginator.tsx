@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import Animated, {SharedValue, useAnimatedStyle, withTiming} from 'react-native-reanimated';
+import Animated, {FadeIn, FadeOut, SharedValue, useAnimatedStyle, withTiming} from 'react-native-reanimated';
 import {Padder} from '@ui/components/Padder';
 import {Button, useTheme} from '@ui/library';
 
@@ -13,15 +13,19 @@ type PaginatorProps = {
 
 export function Paginator({items, onNextPress, onSkipPress, activeIndex}: PaginatorProps) {
   return (
-    <View style={paginatorStyles.container}>
-      <Button onPress={onSkipPress}>Skip</Button>
+    <Animated.View entering={FadeIn} exiting={FadeOut} style={paginatorStyles.container}>
+      <Button onPress={onSkipPress} compact>
+        Skip
+      </Button>
       <Padder scale={1.5} />
       {items.map((_, index) => {
         return <Dot key={index.toString()} index={index} activeIndex={activeIndex} />;
       })}
       <Padder scale={1.5} />
-      <Button onPress={onNextPress}>Next</Button>
-    </View>
+      <Button onPress={onNextPress} compact>
+        Next
+      </Button>
+    </Animated.View>
   );
 }
 
