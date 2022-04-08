@@ -7,6 +7,7 @@ import {isAddressValid, parseAddress} from 'src/utils/address';
 import {NetworkContext} from 'context/NetworkContext';
 import {Alert, Modal, StyleSheet, Pressable, View} from 'react-native';
 import QRCamera, {QRCameraRef} from './QRCamera';
+import {useSnackbar} from 'context/SnackbarContext';
 
 type Props = {
   addressValid: (dispatch: boolean) => void;
@@ -14,21 +15,21 @@ type Props = {
 };
 
 export function AddressInput(props: Props) {
-  const [address, setAddress] = useState('');
+  const [inputAddress, setInputAddress] = useState('');
   const [addressValid, setAddressValid] = useState(false);
   const {currentNetwork} = useContext(NetworkContext);
   const qrCameraRef = useRef<QRCameraRef>(null);
   const [modalVisible, setModalVisible] = useState(false);
-
+  const snackbar = useSnackbar();
   const onPastePress = async () => {
     const pastText = await Clipboard.getString();
-    setAddress(pastText);
+    setInputAddress(pastText);
     addressChanged(pastText);
+    snackbar('Address copied to clipboard!');
   };
 
   const addressChanged = (nextValue: string) => {
-    console.log(nextValue);
-    setAddress(nextValue);
+    setInputAddress(nextValue);
     props.addressValid(isAddressValid(currentNetwork, nextValue));
     setAddressValid(isAddressValid(currentNetwork, nextValue));
     props.address(nextValue);
@@ -39,7 +40,7 @@ export function AddressInput(props: Props) {
       try {
         const parsed = parseAddress(data);
         if (isAddressValid(currentNetwork, parsed.address)) {
-          setAddress(parsed.address);
+          setInputAddress(parsed.address);
           setModalVisible(!modalVisible);
         } else {
           Alert.alert(
@@ -66,7 +67,7 @@ export function AddressInput(props: Props) {
           dense
           mode="outlined"
           style={styles.textInput}
-          value={address}
+          value={inputAddress}
           onChangeText={addressChanged}
         />
         <View style={styles.icons}>
@@ -97,7 +98,7 @@ export function AddressInput(props: Props) {
         </View>
       </View>
 
-      {!addressValid && address ? (
+      {!addressValid && inputAddress ? (
         <HelperText type="error" style={styles.error}>
           Enter a valid address
         </HelperText>
