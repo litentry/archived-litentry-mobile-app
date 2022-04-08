@@ -1,7 +1,7 @@
-import React, {useReducer} from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useContext, useMemo, useReducer} from 'react';
+import {Platform, ScrollView, StyleSheet, View, KeyboardAvoidingView} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
-import {Subheading, TextInput, Caption, useTheme, Button} from '@ui/library';
+import {TextInput, Button, HelperText} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
@@ -11,14 +11,21 @@ import {Padder} from '@ui/components/Padder';
 import {Account} from 'src/api/hooks/useAccount';
 import {useRefetch} from 'src/api/hooks/useRefetch';
 import {TIPS_QUERY} from 'src/api/hooks/useTips';
+import {InputLabel} from '@ui/library/InputLabel';
+import {isAddressValid} from 'src/utils/address';
+import {NetworkContext} from 'context/NetworkContext';
 
 export function ProposeTipScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
-  const {colors} = useTheme();
   const [state, dispatch] = useReducer(reducer, initialState);
   const startTx = useApiTx();
   const {refetch: refetchTips} = useRefetch([TIPS_QUERY]);
+  const {currentNetwork} = useContext(NetworkContext);
 
-  const valid = state.account && state.beneficiary && state.reason && state.reason.length > 4;
+  const isBeneficiaryAddressValid = useMemo(() => {
+    return state.beneficiary ? isAddressValid(currentNetwork, state.beneficiary) : false;
+  }, [state.beneficiary, currentNetwork]);
+
+  const valid = state.account && isBeneficiaryAddressValid && state.reason.length > 4;
 
   const submit = () => {
     if (state.account) {
@@ -43,37 +50,53 @@ export function ProposeTipScreen({navigation}: {navigation: NavigationProp<Dashb
   return (
     <SafeView edges={noTopEdges}>
       <View style={styles.container}>
-        <View style={globalStyles.flex}>
-          <Subheading>{`Sending from`}</Subheading>
-          <Padder scale={0.5} />
-          <SelectAccount onSelect={(account) => dispatch({type: 'SET_ACCOUNT', payload: account.accountInfo})} />
-          <Padder scale={1.5} />
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={globalStyles.flex}>
+          <ScrollView>
+            <View style={globalStyles.flex}>
+              <InputLabel label="Sending from" helperText="Select the account you wish to submit the tip from" />
+              <Padder scale={0.5} />
+              <SelectAccount onSelect={(account) => dispatch({type: 'SET_ACCOUNT', payload: account.accountInfo})} />
+              <Padder scale={1} />
 
-          <Subheading>{`Beneficiary`}</Subheading>
-          <TextInput
-            mode="outlined"
-            placeholder={'Beneficiary'}
-            multiline
-            numberOfLines={2}
-            value={state.beneficiary}
-            onChangeText={(payload) => dispatch({type: 'SET_BENEFICIARY', payload})}
-          />
-          {state.error === 'beneficiary_error' && (
-            <Caption style={{color: colors.error}}>{'Please enter a valid beneficiary!'}</Caption>
-          )}
-          <Padder scale={1.5} />
+              <InputLabel
+                label="Beneficiary address"
+                helperText="The account to which the tip will be transferred if approved"
+              />
+              <TextInput
+                mode="outlined"
+                placeholder={'Beneficiary address'}
+                multiline
+                numberOfLines={2}
+                value={state.beneficiary}
+                onChangeText={(payload) => dispatch({type: 'SET_BENEFICIARY', payload: payload.trim()})}
+              />
+              {!isBeneficiaryAddressValid && state.beneficiary ? (
+                <HelperText type="error" style={styles.helper}>
+                  Please enter a valid beneficiary address
+                </HelperText>
+              ) : null}
+              <Padder scale={1} />
 
-          <Subheading>{`Tip reason`}</Subheading>
-          <TextInput
-            mode="outlined"
-            placeholder={'Tip reason'}
-            value={state.reason}
-            onChangeText={(payload) => dispatch({type: 'SET_REASON', payload})}
-          />
-        </View>
-
+              <InputLabel label="Tip reason" helperText="The reason why this tip should be paid." />
+              <TextInput
+                mode="outlined"
+                multiline
+                placeholder={'Tip reason'}
+                value={state.reason}
+                numberOfLines={5}
+                maxLength={100}
+                onChangeText={(payload) => dispatch({type: 'SET_REASON', payload: payload.replace(/\r?\n|\r/g, ' ')})}
+              />
+              {state.reason && state.reason.length < 5 ? (
+                <HelperText type="error" style={styles.helper}>
+                  Enter a minimum of five letters
+                </HelperText>
+              ) : null}
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
         <Button mode="contained" disabled={!valid} onPress={submit}>
-          {`Sign and Submit`}
+          {`Propose Tip`}
         </Button>
       </View>
     </SafeView>
@@ -83,6 +106,7 @@ export function ProposeTipScreen({navigation}: {navigation: NavigationProp<Dashb
 const styles = StyleSheet.create({
   container: {flex: 1, padding: standardPadding * 2, paddingBottom: standardPadding * 4},
   rowContainer: {flexDirection: 'row', alignItems: 'center'},
+  helper: {right: standardPadding},
 });
 
 type Action =

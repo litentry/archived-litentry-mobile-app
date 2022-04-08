@@ -1,18 +1,18 @@
 import React from 'react';
-import {SectionList, StyleSheet, View, Linking, RefreshControl} from 'react-native';
+import {SectionList, StyleSheet, RefreshControl, Linking, View} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
-import {useTreasury} from 'src/api/hooks/useTreasury';
+import {TreasuryProposal, useTreasury} from 'src/api/hooks/useTreasury';
 import globalStyles, {standardPadding} from '@ui/styles';
 import TipsScreen from './Tips/TipsScreen';
-import {useTheme, Card, Caption, Subheading, Text, Button, Divider} from '@ui/library';
+import {useTheme, Card, Subheading, Button, List, Headline, Divider, Caption} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
-import {NetworkType} from 'src/types';
 import {EmptyStateTeaser} from '@ui/components/EmptyStateTeaser';
 import {useNetwork} from 'context/NetworkContext';
+import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
+import {ItemRowBlock} from '@ui/components/ItemRowBlock';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -32,6 +32,7 @@ export function TreasuryScreen() {
 }
 
 function TreasuryOverviewScreen() {
+  const {currentNetwork} = useNetwork();
   const {loading, data: treasuryInfo, refetch, refetching} = useTreasury();
   const {colors} = useTheme();
 
@@ -39,6 +40,15 @@ function TreasuryOverviewScreen() {
     {title: 'Proposals', data: treasuryInfo?.proposals ?? []},
     {title: 'Approved', data: treasuryInfo?.approvals ?? []},
   ];
+
+  const openInPolkassembly = (proposal: TreasuryProposal) => () => {
+    const url = `https://${currentNetwork.key}.polkassembly.io/treasury/${proposal.index}`;
+    Linking.canOpenURL(url).then((supported) => {
+      if (supported) {
+        Linking.openURL(url);
+      }
+    });
+  };
 
   return (
     <Layout style={globalStyles.flex}>
@@ -58,55 +68,20 @@ function TreasuryOverviewScreen() {
               />
             }
             sections={groupedData}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({item}) => {
-              const proposer = item.proposal.proposer;
-              const beneficiary = item.proposal.beneficiary;
-
-              return (
-                <Card style={styles.item}>
-                  <Card.Content>
-                    <View style={styles.row}>
-                      <View style={styles.proposerContainer}>
-                        <Caption>Proposer</Caption>
-                        <AccountTeaser account={proposer.account} identiconSize={30} />
-                      </View>
-                      <Caption style={styles.proposalId}>{`# ${item.id}`}</Caption>
-                    </View>
-                    <Padder scale={0.5} />
-                    <View>
-                      <Caption>Beneficiary</Caption>
-                      <AccountTeaser account={beneficiary.account} identiconSize={30} />
-                    </View>
-                    <Padder scale={0.5} />
-                    <View style={styles.row}>
-                      <View style={styles.balancesRow}>
-                        <Caption>Payment:</Caption>
-                        <Padder scale={0.5} />
-                        <Text>{item.proposal.value}</Text>
-                      </View>
-                      <View style={styles.balancesRow}>
-                        <Caption>Bond: </Caption>
-                        <Padder scale={0.5} />
-                        <Text>{item.proposal.bond}</Text>
-                      </View>
-                    </View>
-                    <Padder scale={0.5} />
-                    <Divider />
-                    <Padder scale={0.5} />
-                    <PolkassemblyProposal proposalId={item.id} />
-                  </Card.Content>
-                </Card>
-              );
-            }}
-            renderSectionHeader={({section: {title, data}}) => {
-              return (
-                <View style={styles.header}>
-                  <Subheading>{title}</Subheading>
-                  <Caption>{`${data.length}`}</Caption>
-                </View>
-              );
-            }}
+            keyExtractor={(item) => item.proposal.index}
+            renderItem={({item}) => (
+              <TreasuryProposalTeaser proposal={item.proposal}>
+                <Button icon="open-in-new" onPress={openInPolkassembly(item.proposal)}>{`Polkassembly`}</Button>
+              </TreasuryProposalTeaser>
+            )}
+            ItemSeparatorComponent={() => <Padder scale={1} />}
+            renderSectionHeader={({section: {title, data}}) => (
+              <>
+                {title === 'Approved' && <Padder scale={1} />}
+                <Subheading>{`${title} (${data.length})`}</Subheading>
+                <Padder scale={0.5} />
+              </>
+            )}
             renderSectionFooter={({section: {title, data}}) => {
               return (
                 <>
@@ -135,50 +110,40 @@ function TreasuryOverviewScreen() {
   );
 }
 
-function PolkassemblyProposal({proposalId}: {proposalId: string}) {
-  const {currentNetwork} = useNetwork();
+type TreasuryProposalTeaserProps = {
+  proposal: TreasuryProposal;
+  children?: React.ReactNode;
+};
 
+function TreasuryProposalTeaser({proposal, children}: TreasuryProposalTeaserProps) {
   return (
-    <Button onPress={() => openPolkassemblyProposal(currentNetwork, proposalId)} icon="open-in-new">
-      Polkassembly
-    </Button>
+    <Card>
+      <Card.Content>
+        <List.Item title={''} left={() => <Headline>{`#${proposal.index}`}</Headline>} />
+        <ItemRowBlock label="Proposer">
+          <AccountTeaser account={proposal.proposer.account} />
+        </ItemRowBlock>
+        <ItemRowBlock label="Payout">
+          <Caption>{proposal.value}</Caption>
+        </ItemRowBlock>
+        <ItemRowBlock label="Beneficiary">
+          <AccountTeaser account={proposal.beneficiary.account} />
+        </ItemRowBlock>
+        <ItemRowBlock label="Bond">
+          <Caption>{proposal.bond}</Caption>
+        </ItemRowBlock>
+      </Card.Content>
+      <Divider />
+      <View style={styles.button}>{children}</View>
+    </Card>
   );
 }
 
-function openPolkassemblyProposal(currentNetwork: NetworkType, proposalId: string) {
-  const network = currentNetwork.key === 'kusama' ? 'kusama' : 'polkadot';
-  const url = `https://${network}.polkassembly.io/treasury/${proposalId}`;
-  Linking.canOpenURL(url).then((supported) => {
-    if (supported) {
-      Linking.openURL(url);
-    }
-  });
-}
-
 const styles = StyleSheet.create({
-  proposerContainer: {
-    flex: 1,
-  },
   sectionList: {
     padding: standardPadding * 2,
   },
-  header: {
-    justifyContent: 'space-between',
-    flexDirection: 'row',
+  button: {
     paddingVertical: standardPadding,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  balancesRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  item: {
-    marginBottom: standardPadding,
-  },
-  proposalId: {
-    fontSize: 14,
   },
 });
