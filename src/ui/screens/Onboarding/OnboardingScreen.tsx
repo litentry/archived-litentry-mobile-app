@@ -6,6 +6,9 @@ import {useTheme, Headline, Subheading} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles from '@ui/styles';
 import {Paginator} from './Paginator';
+import {useNavigation, StackActions} from '@react-navigation/native';
+import {dashboardScreen} from '@ui/navigation/routeKeys';
+import {usePersistedState} from '@hooks/usePersistedState';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
@@ -43,20 +46,22 @@ const ITEMS: CarouselItem[] = [
 ];
 
 export function OnboardingScreen() {
+  const [, setOnboardingSeen] = usePersistedState('onboarding_seen');
   const carouselRef = useRef<ICarouselInstance>(null);
   const activeIndex = useSharedValue(0);
+  const navigation = useNavigation();
+  const {colors} = useTheme();
 
   return (
-    <View style={globalStyles.flex}>
+    <View style={[globalStyles.flex, {backgroundColor: colors.surface}]}>
       <Carousel
         ref={carouselRef}
-        height={SCREEN_HEIGHT * 0.95}
+        height={SCREEN_HEIGHT * 0.9}
         width={SCREEN_WIDTH}
         mode={'horizontal-stack'}
         loop={false}
         data={ITEMS}
         modeConfig={{
-          snapDirection: 'left',
           stackInterval: 20,
           rotateZDeg: 0,
         }}
@@ -66,21 +71,32 @@ export function OnboardingScreen() {
           activeIndex.value = Math.round(indexProgress);
         }}
       />
-      <Paginator
-        items={ITEMS}
-        onNextPress={() => carouselRef.current?.next()}
-        onSkipPress={() => console.log('skipping')}
-        activeIndex={activeIndex}
-      />
+      <View style={styles.paginatorContainer}>
+        <Paginator
+          items={ITEMS}
+          onNextPress={() => {
+            if (carouselRef.current?.getCurrentIndex() === ITEMS.length - 1) {
+              setOnboardingSeen(true);
+              navigation.dispatch(StackActions.replace(dashboardScreen));
+            }
+            carouselRef.current?.next();
+          }}
+          onSkipPress={() => carouselRef.current?.goToIndex(ITEMS.length - 1, true)}
+          activeIndex={activeIndex}
+        />
+      </View>
     </View>
   );
 }
+const styles = StyleSheet.create({
+  paginatorContainer: {top: '-6%'},
+});
 
 function CarouselItem({item}: {item: CarouselItem}) {
   const {colors} = useTheme();
 
   return (
-    <View style={globalStyles.fillCenter}>
+    <View style={[globalStyles.fillCenter]}>
       <View style={[itemStyles.contentContainer, {backgroundColor: colors.background}]}>
         <Image style={itemStyles.image} source={item.source} />
         <View style={globalStyles.paddedContainer}>
