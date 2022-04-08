@@ -126,9 +126,9 @@ const styles = StyleSheet.create({
     marginTop: 22,
   },
   modalView: {
-    margin: 10,
+    margin: standardPadding,
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderRadius: standardPadding,
     padding: standardPadding * 2,
     shadowOpacity: 0.25,
     elevation: 5,
