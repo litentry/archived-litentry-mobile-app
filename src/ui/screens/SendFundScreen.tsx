@@ -49,9 +49,7 @@ export function SendFundScreen({navigation, route}: Props) {
       const keepAliveBalance = formattedStringToBn(accountInfo?.balance.free).sub(
         formattedStringToBn(chainInfo?.existentialDeposit),
       );
-      return (
-        enteredBalance.gt(formattedStringToBn(chainInfo?.existentialDeposit)) && enteredBalance.lt(keepAliveBalance)
-      );
+      return enteredBalance.gt(BN_ZERO) && enteredBalance.lt(keepAliveBalance);
     }
     return enteredBalance.gt(BN_ZERO) && enteredBalance.lt(formattedStringToBn(accountInfo?.balance.free));
   }, [amount, accountInfo, stringToBn, isKeepAliveActive, chainInfo]);
@@ -90,7 +88,6 @@ export function SendFundScreen({navigation, route}: Props) {
               helperText="Scan a contact address or paste the address you want to send funds to."
             />
             <AddressInput addressValid={setIsToAddressValid} address={setToAddress} />
-            {!isToAddressValid && toAddress ? <HelperText type="error">Enter a valid address</HelperText> : null}
             <Padder scale={1} />
             <InputLabel
               label="Existential deposit"
