@@ -231,12 +231,14 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
       : noop;
   };
 
-  const isValidEnteredBalance = useMemo(() => {
-    const enteredBalance = stringToBn(amount) ?? BN_ZERO;
-    return enteredBalance.gt(BN_ZERO) && enteredBalance.lt(formattedStringToBn(account?.balance.free));
-  }, [account, amount, stringToBn]);
+  const enteredBalance = stringToBn(amount) ?? BN_ZERO;
 
-  const disabled = !amount || !account || selectedCandidates.length === 0 || !isValidEnteredBalance;
+  const disabled =
+    !amount ||
+    !account ||
+    selectedCandidates.length === 0 ||
+    !enteredBalance.gt(formattedStringToBn(moduleElection.votingBondBase)) ||
+    !enteredBalance.lt(formattedStringToBn(account?.balance?.free));
 
   const bondValue = useMemo(() => {
     const votingBondBase = formattedStringToBn(moduleElection.votingBondBase);
