@@ -5,45 +5,74 @@ import {ChainApiContextProvider} from 'context/ChainApiContext';
 import TxContextProvider from 'context/TxContext';
 import {AccountsProvider} from 'context/AccountsContext';
 import InAppNotificationContextProvider from 'context/InAppNotificationContext';
-import NetworkContextProvider from 'context/NetworkContext';
+import NetworkContextProvider, {useNetwork} from 'context/NetworkContext';
 import {ErrorBoundary} from '@ui/components/ErrorBoundary';
 import AppNavigator from '@ui/navigation/AppNavigator';
 import {NavigationContainer} from '@ui/navigation/NavigationContainer';
 import ThemeProvider from 'context/ThemeContext';
 import SnackbarProvider from 'context/SnackbarContext';
 import {LitentryApiClientProvider} from 'context/LitentryApiContext';
+import {WalletConnectProvider} from 'context/WalletConnectProvider';
+import {Web3WalletProvider} from 'context/Web3WalletContext';
 
 // init type registry
 import 'src/typeRegistry';
+import {ParachainAppNavigator} from '@ui/navigation/ParachainAppNavigator';
 
 const queryClient = new QueryClient();
 
+function MainApp() {
+  return (
+    <LitentryApiClientProvider>
+      <AppNavigator />
+    </LitentryApiClientProvider>
+  );
+}
+
+function ParachainApp() {
+  return (
+    <WalletConnectProvider>
+      <Web3WalletProvider>
+        <ParachainAppNavigator />
+      </Web3WalletProvider>
+    </WalletConnectProvider>
+  );
+}
+
+function LitentryApps() {
+  const {currentNetwork} = useNetwork();
+
+  if (currentNetwork.isParachain) {
+    return <ParachainApp />;
+  }
+
+  return <MainApp />;
+}
+
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <NetworkContextProvider>
-        <LitentryApiClientProvider>
-          <NavigationContainer>
-            <ChainApiContextProvider>
-              <AccountsProvider>
-                <SafeAreaProvider>
-                  <ThemeProvider>
-                    <InAppNotificationContextProvider>
-                      <ErrorBoundary>
-                        <TxContextProvider>
-                          <SnackbarProvider>
-                            <AppNavigator />
-                          </SnackbarProvider>
-                        </TxContextProvider>
-                      </ErrorBoundary>
-                    </InAppNotificationContextProvider>
-                  </ThemeProvider>
-                </SafeAreaProvider>
-              </AccountsProvider>
-            </ChainApiContextProvider>
-          </NavigationContainer>
-        </LitentryApiClientProvider>
-      </NetworkContextProvider>
-    </QueryClientProvider>
+    <NetworkContextProvider>
+      <QueryClientProvider client={queryClient}>
+        <NavigationContainer>
+          <ChainApiContextProvider>
+            <AccountsProvider>
+              <SafeAreaProvider>
+                <ThemeProvider>
+                  <InAppNotificationContextProvider>
+                    <ErrorBoundary>
+                      <TxContextProvider>
+                        <SnackbarProvider>
+                          <LitentryApps />
+                        </SnackbarProvider>
+                      </TxContextProvider>
+                    </ErrorBoundary>
+                  </InAppNotificationContextProvider>
+                </ThemeProvider>
+              </SafeAreaProvider>
+            </AccountsProvider>
+          </ChainApiContextProvider>
+        </NavigationContainer>
+      </QueryClientProvider>
+    </NetworkContextProvider>
   );
 }
