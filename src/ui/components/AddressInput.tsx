@@ -1,7 +1,6 @@
-import React, {useCallback, useContext, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useContext, useRef, useState} from 'react';
 import {TextInput, Icon, HelperText, Button} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Padder} from './Padder';
 import Clipboard from '@react-native-community/clipboard';
 import {isAddressValid, parseAddress} from 'src/utils/address';
@@ -24,6 +23,15 @@ export function AddressInput(props: Props) {
   const onPastePress = async () => {
     const pastText = await Clipboard.getString();
     setAddress(pastText);
+    addressChanged(pastText);
+  };
+
+  const addressChanged = (nextValue: string) => {
+    console.log(nextValue);
+    setAddress(nextValue);
+    props.addressValid(isAddressValid(currentNetwork, nextValue));
+    setAddressValid(isAddressValid(currentNetwork, nextValue));
+    props.address(nextValue);
   };
 
   const handleScan = useCallback(
@@ -49,13 +57,6 @@ export function AddressInput(props: Props) {
     [currentNetwork, modalVisible],
   );
 
-  useEffect(() => {
-    setAddressValid(isAddressValid(currentNetwork, address));
-    props.addressValid(isAddressValid(currentNetwork, address));
-    setAddressValid(isAddressValid(currentNetwork, address));
-    props.address(address);
-  }, [address, currentNetwork, props]);
-
   return (
     <>
       <View style={globalStyles.spaceBetweenRowContainer}>
@@ -66,12 +67,12 @@ export function AddressInput(props: Props) {
           mode="outlined"
           style={styles.textInput}
           value={address}
-          onChangeText={(nextValue) => setAddress(nextValue)}
+          onChangeText={addressChanged}
         />
         <View style={styles.icons}>
-          <TouchableOpacity onPress={onPastePress}>
+          <Pressable onPress={onPastePress}>
             <Icon name="content-paste" size={30} />
-          </TouchableOpacity>
+          </Pressable>
           <Padder />
 
           <Modal
