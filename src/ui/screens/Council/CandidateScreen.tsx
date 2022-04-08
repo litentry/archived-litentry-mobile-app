@@ -1,12 +1,12 @@
 import React, {useEffect} from 'react';
-import {View, FlatList, StyleSheet} from 'react-native';
+import {View, FlatList} from 'react-native';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Divider, Card, Subheading, Paragraph, Caption} from '@ui/library';
 import Identicon from '@polkadot/reactnative-identicon';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AppStackParamList, DashboardStackParamList} from '@ui/navigation/navigation';
 import {Padder} from '@ui/components/Padder';
-import globalStyles, {standardPadding} from '@ui/styles';
+import globalStyles from '@ui/styles';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {EmptyView} from '@ui/components/EmptyView';
 import {Account as AccountType, useAccount} from 'src/api/hooks/useAccount';
@@ -14,8 +14,6 @@ import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 import {accountScreen} from '@ui/navigation/routeKeys';
 import {AccountRegistration} from '@ui/components/Account/AccountRegistration';
 import LoadingView from '@ui/components/LoadingView';
-import {Account} from '@ui/components/Account/Account';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 
 type ScreenProps = {
   navigation: NavigationProp<AppStackParamList>;
@@ -30,7 +28,7 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
     navigation.setOptions({title});
   }, [navigation, title]);
 
-  const toDetailsScreen = (address: string) => {
+  const toAccountDetails = (address: string) => {
     navigation.navigate(accountScreen, {address});
   };
 
@@ -49,7 +47,7 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
                     <Identicon value={candidate.account.address} size={30} />
                     <Padder scale={0.5} />
                     {accountInfo && (
-                      <AccountTeaser account={accountInfo} onPress={() => toDetailsScreen(accountInfo.address)} />
+                      <AccountTeaser account={accountInfo} onPress={() => toAccountDetails(accountInfo.address)} />
                     )}
                   </View>
                   <Padder scale={0.5} />
@@ -68,7 +66,7 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
             </>
           )}
           data={candidate.voters}
-          renderItem={({item}) => <Voter account={item} onPress={() => toDetailsScreen(item.address)} />}
+          renderItem={({item}) => <Voter account={item} onPress={() => toAccountDetails(item.address)} />}
           keyExtractor={(item) => item.address}
           ItemSeparatorComponent={Divider}
           ListEmptyComponent={<EmptyView height={200}>{`No voters yet.`}</EmptyView>}
@@ -87,21 +85,10 @@ function Voter({account, onPress}: VoterItemProps) {
   const {data: councilVote} = useCouncilVotesOf(account.address);
 
   return (
-    <TouchableOpacity style={styles.voterItem} onPress={onPress}>
-      <View style={globalStyles.rowAlignCenter}>
-        <Identicon value={account.address} size={25} />
-        <Padder scale={0.5} />
-        <View>
-          {account && <Account account={account} />}
-          {councilVote?.formattedStake && <Caption>{`Stake: ${councilVote.formattedStake}`}</Caption>}
-        </View>
-      </View>
-    </TouchableOpacity>
+    <View style={globalStyles.marginVertical}>
+      <AccountTeaser account={account} onPress={onPress} identiconSize={30}>
+        {councilVote?.formattedStake && <Caption>{`Stake: ${councilVote.formattedStake}`}</Caption>}
+      </AccountTeaser>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  voterItem: {
-    padding: standardPadding,
-  },
-});

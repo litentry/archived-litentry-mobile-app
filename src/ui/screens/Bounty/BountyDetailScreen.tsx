@@ -24,7 +24,7 @@ export function BountyDetailScreen({route, navigation}: ScreenProps) {
     return <LoadingView />;
   }
 
-  const toDetailsScreen = (address?: string) => {
+  const toAccountDetails = (address?: string) => {
     if (address) {
       navigation.navigate(accountScreen, {address});
     }
@@ -66,7 +66,7 @@ export function BountyDetailScreen({route, navigation}: ScreenProps) {
             <AccountTeaser
               account={bounty.bountyStatus.curator.account}
               identiconSize={30}
-              onPress={() => toDetailsScreen(bounty?.bountyStatus?.curator?.account.address)}
+              onPress={() => toAccountDetails(bounty?.bountyStatus?.curator?.account.address)}
             />
             <Padder scale={1} />
             <Divider />
