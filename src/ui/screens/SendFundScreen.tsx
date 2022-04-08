@@ -89,7 +89,7 @@ export function SendFundScreen({navigation, route}: Props) {
               label="Send to address"
               helperText="Scan a contact address or paste the address you want to send funds to."
             />
-            <AddressInput addressValid={setIsToAddressValid} />
+            <AddressInput addressValid={setIsToAddressValid} address={setToAddress} />
             {!isToAddressValid && toAddress ? <HelperText type="error">Enter a valid address</HelperText> : null}
             <Padder scale={1} />
             <InputLabel
