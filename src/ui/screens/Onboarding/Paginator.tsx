@@ -4,14 +4,14 @@ import Animated, {SharedValue, useAnimatedStyle, withTiming} from 'react-native-
 import {Padder} from '@ui/components/Padder';
 import {Button, useTheme} from '@ui/library';
 
-type Props = {
+type PaginatorProps = {
   items: Array<unknown>;
   onNextPress: () => void;
   onSkipPress: () => void;
   activeIndex: SharedValue<number>;
 };
 
-export function Paginator({items, onNextPress, onSkipPress, activeIndex}: Props) {
+export function Paginator({items, onNextPress, onSkipPress, activeIndex}: PaginatorProps) {
   return (
     <View style={paginatorStyles.container}>
       <Button onPress={onSkipPress}>Skip</Button>
@@ -33,7 +33,12 @@ const paginatorStyles = StyleSheet.create({
   },
 });
 
-function Dot({index, activeIndex}: {index: number; activeIndex: Animated.SharedValue<number>}) {
+type DotProps = {
+  index: number;
+  activeIndex: Animated.SharedValue<number>;
+};
+
+function Dot({index, activeIndex}: DotProps) {
   const {colors} = useTheme();
   const rStyle = useAnimatedStyle(() => {
     const isActive = activeIndex.value === index;
