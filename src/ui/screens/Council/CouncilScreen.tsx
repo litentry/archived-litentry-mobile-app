@@ -64,6 +64,7 @@ function CouncilOverviewScreen({navigation}: ScreenProps) {
   const {sectionData, votingCandidates} = useMemo(() => {
     return {
       sectionData: [
+        {title: 'Prime voter', data: council?.primeMember ? [council.primeMember] : []},
         {title: 'Member', data: council?.members ? council.members : []},
         {title: 'Runners Up', data: council?.runnersUp ? council.runnersUp : []},
         {title: 'Candidate', data: council?.candidates ? council.candidates : []},
@@ -158,6 +159,8 @@ function buildSectionHeaderTitle(sectionTitle: string, council?: Council) {
     title = `${council.totalMembers}/${council.desiredSeats}`;
   } else if (sectionTitle === 'Runners Up') {
     title = `${council.totalRunnersUp}/${council.desiredRunnersUp}`;
+  } else if (sectionTitle === 'Prime voter') {
+    title = '';
   } else {
     title = String(council.totalCandidates);
   }
