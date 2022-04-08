@@ -1,4 +1,4 @@
-import React, {useContext, useMemo, useReducer} from 'react';
+import React, {useReducer, useState} from 'react';
 import {Platform, ScrollView, StyleSheet, View, KeyboardAvoidingView} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
 import {TextInput, Button, HelperText} from '@ui/library';
@@ -12,18 +12,13 @@ import {Account} from 'src/api/hooks/useAccount';
 import {useRefetch} from 'src/api/hooks/useRefetch';
 import {TIPS_QUERY} from 'src/api/hooks/useTips';
 import {InputLabel} from '@ui/library/InputLabel';
-import {isAddressValid} from 'src/utils/address';
-import {NetworkContext} from 'context/NetworkContext';
+import AddressInput from '@ui/components/AddressInput';
 
 export function ProposeTipScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const startTx = useApiTx();
   const {refetch: refetchTips} = useRefetch([TIPS_QUERY]);
-  const {currentNetwork} = useContext(NetworkContext);
-
-  const isBeneficiaryAddressValid = useMemo(() => {
-    return state.beneficiary ? isAddressValid(currentNetwork, state.beneficiary) : false;
-  }, [state.beneficiary, currentNetwork]);
+  const [isBeneficiaryAddressValid, setIsBeneficiaryAddressValid] = useState(false);
 
   const valid = state.account && isBeneficiaryAddressValid && state.reason.length > 4;
 
@@ -62,19 +57,10 @@ export function ProposeTipScreen({navigation}: {navigation: NavigationProp<Dashb
                 label="Beneficiary address"
                 helperText="The account to which the tip will be transferred if approved"
               />
-              <TextInput
-                mode="outlined"
-                placeholder={'Beneficiary address'}
-                multiline
-                numberOfLines={2}
-                value={state.beneficiary}
-                onChangeText={(payload) => dispatch({type: 'SET_BENEFICIARY', payload: payload.trim()})}
+              <AddressInput
+                addressValid={setIsBeneficiaryAddressValid}
+                address={(payload) => dispatch({type: 'SET_BENEFICIARY', payload: payload.trim()})}
               />
-              {!isBeneficiaryAddressValid && state.beneficiary ? (
-                <HelperText type="error" style={styles.helper}>
-                  Please enter a valid beneficiary address
-                </HelperText>
-              ) : null}
               <Padder scale={1} />
 
               <InputLabel label="Tip reason" helperText="The reason why this tip should be paid." />
