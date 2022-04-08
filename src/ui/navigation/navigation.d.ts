@@ -32,6 +32,7 @@ import {
   myAccountScreen,
   networkSelectionScreen,
   notificationSettingsScreen,
+  onboardingScreen,
   parachainAuctionsScreen,
   parachainDetailScreen,
   parachainsNavigator,
@@ -81,6 +82,7 @@ type DashboardStackParamList = {
   [bountyDetailScreen]: {index: string};
   [addBountyScreen]: undefined;
   [eventsCalendarScreen]: undefined;
+  [onboardingScreen]: undefined;
 };
 
 type DrawerParamList = {
