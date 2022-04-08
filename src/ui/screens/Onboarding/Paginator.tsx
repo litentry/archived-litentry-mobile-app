@@ -35,7 +35,7 @@ const paginatorStyles = StyleSheet.create({
 
 type DotProps = {
   index: number;
-  activeIndex: Animated.SharedValue<number>;
+  activeIndex: SharedValue<number>;
 };
 
 function Dot({index, activeIndex}: DotProps) {
