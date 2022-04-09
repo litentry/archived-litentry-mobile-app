@@ -3,7 +3,7 @@ import {noop} from 'lodash';
 import {NetworkContextValueType, NetworkType} from 'src/types';
 import {usePersistedState} from '@hooks/usePersistedState';
 
-const PolkadotNetwork: NetworkType = {
+const polkadotNetwork: NetworkType = {
   name: 'Polkadot',
   key: 'polkadot',
   ws: ['wss://rpc.polkadot.io'],
@@ -11,7 +11,7 @@ const PolkadotNetwork: NetworkType = {
   ss58Format: 0,
 };
 
-const KusamaNetwork: NetworkType = {
+const kusamaNetwork: NetworkType = {
   name: 'Kusama',
   key: 'kusama',
   ws: ['wss://kusama.api.onfinality.io/public-ws'],
@@ -26,24 +26,34 @@ const KusamaNetwork: NetworkType = {
 //   color: '#e6194B',
 // };
 
-const LitentryNetworkTest: NetworkType = {
+const litentryNetworkTest: NetworkType = {
   name: 'Litentry Testnet',
   key: 'litentry_test',
   ws: ['wss://staging.registrar.litentry.io'],
-  isTestnet: true,
   color: '#006400',
   ss58Format: 31,
+  isTestnet: true,
+  isParachain: true,
+};
+
+const litmusNetwork: NetworkType = {
+  name: 'Litmus',
+  key: 'litmus',
+  ws: ['wss://rpc.litmus-parachain.litentry.io'],
+  color: '#6822fb',
+  ss58Format: 131,
+  isParachain: true,
 };
 
 const availableNetworks = [
-  PolkadotNetwork,
-  KusamaNetwork,
+  polkadotNetwork,
+  kusamaNetwork,
   // EthereumNetwork,
-  ...(__DEV__ ? [LitentryNetworkTest] : []),
+  ...(__DEV__ ? [litentryNetworkTest, litmusNetwork] : []),
 ];
 
 export const NetworkContext = createContext<NetworkContextValueType>({
-  currentNetwork: PolkadotNetwork,
+  currentNetwork: polkadotNetwork,
   availableNetworks,
   select: noop,
 });
@@ -53,7 +63,7 @@ type PropTypes = {
 };
 
 export default function NetworkContextProvider({children}: PropTypes) {
-  const [currentNetwork, setCurrentNetwork] = usePersistedState<NetworkType>('network', PolkadotNetwork);
+  const [currentNetwork, setCurrentNetwork] = usePersistedState<NetworkType>('network', polkadotNetwork);
 
   const value = useMemo(
     () => ({currentNetwork, availableNetworks, select: setCurrentNetwork}),

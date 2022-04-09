@@ -13,7 +13,7 @@ function ErrorDialog(props: PropTypes) {
   const {text, msg} = props;
 
   return (
-    <Layout style={globalStyles.centeredContainer}>
+    <Layout style={globalStyles.fillCenter}>
       <Layout style={styles.textContainer}>
         <Icon size={20} color={colorRed} name="close-circle-outline" />
         <Text style={[styles.text, styles.withIcon]}>{text}</Text>

@@ -14,7 +14,8 @@ const CMD_HASH = 1;
 const CMD_MORTAL = 2;
 export const ADDRESS_PREFIX_POLKADOT = 0;
 export const ADDRESS_PREFIX_KUSAMA = 2;
-export const ADDRESS_PREFIX_LITENTRY = 0; // TODO: setting from our chain
+export const ADDRESS_PREFIX_LITENTRY = 31;
+export const ADDRESS_PREFIX_LITMUS = 131;
 
 const TREASURY_ACCOUNT = stringToU8a('modlpy/trsry'.padEnd(32, '\0'));
 

@@ -15,7 +15,7 @@ function LoadingView(props: PropTypes) {
   const {text, renderIcon, size, appearance} = props;
 
   return (
-    <Layout style={globalStyles.centeredContainer} testID="loading_view">
+    <Layout style={globalStyles.fillCenter} testID="loading_view">
       <View style={styles.textContainer}>
         {renderIcon && renderIcon()}
         <Text style={[styles.text, renderIcon ? styles.withIcon : {}, styles[appearance || 'primary']]}>{text}</Text>

@@ -9,7 +9,7 @@ function ModalTitle(props: PropTypes) {
   const {title, subtitle = ''} = props;
 
   return (
-    <View style={[globalStyles.rowContainer, globalStyles.centeredContainer, styles.container]}>
+    <View style={[globalStyles.rowContainer, globalStyles.fillCenter, styles.container]}>
       <Subheading numberOfLines={1} ellipsizeMode="middle" selectable>
         {title}
       </Subheading>

@@ -67,3 +67,5 @@ buck-out/
 
 #sentry
 /sentry/bundles/
+
+.env
