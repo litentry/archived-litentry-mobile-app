@@ -33,7 +33,7 @@ export function SubmitProposal() {
   };
 
   const enteredBalance = stringToBn(state.balance ?? '0') ?? BN_ZERO;
-  const democracyMinimumDeposit = formattedStringToBn(chainInfo?.democracyMinimumDeposit ?? '0') ?? BN_ZERO;
+  const democracyMinimumDeposit = formattedStringToBn(chainInfo?.democracyMinimumDeposit ?? '0');
   const isDisabled =
     !state.account ||
     !state.preimageHash ||
