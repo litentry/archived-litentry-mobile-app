@@ -10,7 +10,7 @@ import {SelectAccount} from '@ui/components/SelectAccount';
 import {useCouncil, CouncilCandidate, CouncilMember, Council} from 'src/api/hooks/useCouncil';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {candidateScreen} from '@ui/navigation/routeKeys';
-import {List, Button, Divider, Modal, useTheme, Caption, Subheading, Text, TextInput} from '@ui/library';
+import {List, Button, Divider, Modal, useTheme, Caption, Subheading, Text, TextInput, HelperText} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {MotionsScreen} from './MotionsScreen';
@@ -26,6 +26,7 @@ import MaxBalance from '@ui/components/MaxBalance';
 import {useApi} from 'context/ChainApiContext';
 import {useSnackbar} from 'context/SnackbarContext';
 import {InputLabel} from '@ui/library/InputLabel';
+import {BN_ZERO} from '@polkadot/util';
 
 const MAX_VOTES = 16;
 
@@ -208,6 +209,7 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
   const [selectedCandidates, setSelectedCandidates] = React.useState<Array<string>>([]);
   const {data: councilVote} = useCouncilVotesOf(account?.address);
   const {dark: isDarkTheme} = useTheme();
+  const {stringToBn} = useFormatBalance();
 
   // preselect already voted council members
   useEffect(() => {
@@ -229,7 +231,14 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
       : noop;
   };
 
-  const disabled = !amount || !account || selectedCandidates.length === 0;
+  const enteredBalance = stringToBn(amount) ?? BN_ZERO;
+
+  const disabled =
+    !amount ||
+    !account ||
+    selectedCandidates.length === 0 ||
+    !enteredBalance.gt(formattedStringToBn(moduleElection.votingBondBase)) ||
+    !enteredBalance.lt(formattedStringToBn(account?.balance?.free));
 
   const bondValue = useMemo(() => {
     const votingBondBase = formattedStringToBn(moduleElection.votingBondBase);
@@ -265,13 +274,16 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
         <Subheading>{`Vote for council`}</Subheading>
       </View>
       <Padder scale={1} />
-
+      <InputLabel label={'voting account:'} helperText={'This account will be use to approve each candidate.'} />
       <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
       <Padder scale={1} />
+      <InputLabel
+        label={'Vote value:'}
+        helperText={'The amount that is associated with this vote. This tokens is locked for the duration of the vote.'}
+      />
       <BalanceInput account={account} onChangeBalance={setAmount} />
       <Padder scale={1} />
-      <Caption>{`Select up to ${MAX_VOTES} candidates in the preferred order:`}</Caption>
-
+      <InputLabel label={`Select up to ${MAX_VOTES} candidates in the preferred order:`} />
       <View style={styles.candidatesContainer}>
         <View style={styles.candidates}>
           <ScrollView indicatorStyle={isDarkTheme ? 'white' : 'black'}>
@@ -288,7 +300,7 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
         </View>
 
         <View style={styles.votingBond}>
-          <Caption style={globalStyles.textCenter}>{`Bond`}</Caption>
+          <InputLabel label={'Bond:'} helperText={'The amount that will be reserved'} />
           {bondValue && <Text style={styles.bondValue}>{`${formatBalance(bondValue)}`}</Text>}
         </View>
       </View>
@@ -313,6 +325,12 @@ function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandi
   const balance = useFormatBalance();
   const formattedBalance = balance.formatBalance(moduleElection.candidacyBond);
   const {data: council} = useCouncil();
+  const accountFreeBalance = account?.balance.free ?? '';
+  const candidacyBond = balance.stringToBn(moduleElection.candidacyBond) ?? BN_ZERO;
+  const sufficientBalance =
+    balance.stringToBn(accountFreeBalance)?.gt(BN_ZERO) && balance.stringToBn(accountFreeBalance)?.gt(candidacyBond);
+
+  const submitCandidacy = !account || !sufficientBalance;
 
   const snackbar = useSnackbar();
   const onSubmitCandidacy = () => {
@@ -351,12 +369,15 @@ function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandi
       <InputLabel label={'Candidacy bond:'} helperText={'The bond that is reserved.'} />
       <TextInput mode="outlined" disabled value={formattedBalance} />
       <MaxBalance address={account} />
+      {submitCandidacy && account ? (
+        <HelperText type="error">{`Selected account has insufficient funds to submit a council candidacy`}</HelperText>
+      ) : null}
       <Padder scale={1} />
       <View style={styles.buttons}>
         <Button onPress={reset} mode="outlined" compact>
           Cancel
         </Button>
-        <Button mode="contained" disabled={!account} onPress={onSubmitCandidacy}>
+        <Button mode="contained" disabled={submitCandidacy} onPress={onSubmitCandidacy}>
           Submit
         </Button>
       </View>

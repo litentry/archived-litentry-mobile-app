@@ -8,7 +8,7 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useConvictions, Conviction} from 'src/api/hooks/useConvictions';
-import {stringToBn} from 'src/api/utils/balance';
+import {formattedStringToBn, stringToBn as stringToBnUtil} from 'src/api/utils/balance';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {referendumScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
@@ -18,6 +18,8 @@ import BalanceInput from '@ui/components/BalanceInput';
 import {Account} from 'src/api/hooks/useAccount';
 import {useChainInfo} from 'src/api/hooks/useChainInfo';
 import {getProposalTitle} from 'src/utils/proposal';
+import {BN_ZERO} from '@polkadot/util';
+import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 
 export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
   const startTx = useApiTx();
@@ -25,6 +27,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
   const referendum = route.params.referendum;
   const {data: convictions} = useConvictions();
   const {data: chainInfo} = useChainInfo();
+  const {stringToBn} = useFormatBalance();
 
   const reset = () => {
     dispatch({type: 'RESET'});
@@ -40,7 +43,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
 
   const vote = () => {
     if (chainInfo && state.account && state.conviction && state.voteValue) {
-      const balance = stringToBn(chainInfo.registry, state.voteValue);
+      const balance = stringToBnUtil(chainInfo.registry, state.voteValue);
       startTx({
         address: state.account.address,
         txMethod: 'democracy.vote',
@@ -57,6 +60,13 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
       reset();
     }
   };
+
+  const balance = stringToBn(state.voteValue) ?? BN_ZERO;
+  const disabled =
+    !state.account ||
+    !state.conviction ||
+    !balance.gt(BN_ZERO) ||
+    balance.gt(formattedStringToBn(state.account.balance.free));
 
   return (
     <Layout style={globalStyles.flex}>
@@ -162,10 +172,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
             <Button mode="outlined" onPress={reset}>
               {`Cancel`}
             </Button>
-            <Button
-              mode="outlined"
-              disabled={!state.account || !state.conviction}
-              onPress={vote}>{`VOTE ${state.voting}`}</Button>
+            <Button mode="outlined" disabled={disabled} onPress={vote}>{`VOTE ${state.voting}`}</Button>
           </View>
         </Modal>
       </SafeView>
