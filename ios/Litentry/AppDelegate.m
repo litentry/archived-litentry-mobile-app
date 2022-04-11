@@ -8,6 +8,7 @@
 #import <React/RCTRootView.h>
 #import <Firebase.h>
 #import "RNSplashScreen.h"
+#import <StartupTrace.h>
 
 #ifdef FB_SONARKIT_ENABLED
 #import <FlipperKit/FlipperClient.h>
@@ -47,6 +48,8 @@ static void InitializeFlipper(UIApplication *application) {
   if ([FIRApp defaultApp] == nil) {
     [FIRApp configure];
   }
+  
+  [StartupPerformanceTrace start];
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   #if RCT_DEV

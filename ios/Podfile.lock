@@ -329,6 +329,9 @@ PODS:
     - React
   - react-native-splash-screen (3.3.0):
     - React-Core
+  - react-native-startup-trace (0.5.0):
+    - FirebasePerformance
+    - React-Core
   - react-native-substrate-sign (1.1.1):
     - React
   - react-native-webview (11.17.2):
@@ -507,6 +510,7 @@ DEPENDENCIES:
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-sensitive-info (from `../node_modules/react-native-sensitive-info`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
+  - react-native-startup-trace (from `../node_modules/react-native-startup-trace`)
   - react-native-substrate-sign (from `../node_modules/react-native-substrate-sign`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -622,6 +626,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-sensitive-info"
   react-native-splash-screen:
     :path: "../node_modules/react-native-splash-screen"
+  react-native-startup-trace:
+    :path: "../node_modules/react-native-startup-trace"
   react-native-substrate-sign:
     :path: "../node_modules/react-native-substrate-sign"
   react-native-webview:
@@ -737,6 +743,7 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: 114e9a74df2643012b9d6cc1460b94f3b6a90780
   react-native-sensitive-info: 400c6e3d27945e15c8cddb5b4b92233c85ee06f8
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
+  react-native-startup-trace: b58c82b61e0b10817fcc7bc8312033440248f2b8
   react-native-substrate-sign: 77515bc7fe68e2f8bd23f1aba8ecc40ef27bb50e
   react-native-webview: 380c1a03ec94b7ed764dac8db1e7c9952d08c93a
   React-perflogger: 93d3f142d6d9a46e635f09ba0518027215a41098
