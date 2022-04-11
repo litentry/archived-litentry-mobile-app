@@ -2303,6 +2303,7 @@ export type SubstrateChainCouncil = {
 export type SubstrateChainCouncilMember = {
   __typename?: 'SubstrateChainCouncilMember';
   account: SubstrateChainAccount;
+  address: Scalars['String'];
   backing: Scalars['String'];
   formattedBacking: Scalars['String'];
   voters: Array<SubstrateChainAccount>;
