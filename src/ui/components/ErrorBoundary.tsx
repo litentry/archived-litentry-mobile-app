@@ -24,7 +24,7 @@ export class ErrorBoundary extends React.Component<{children: React.ReactNode}, 
   render() {
     if (this.state.hasError) {
       return (
-        <Layout style={globalStyles.centeredContainer}>
+        <Layout style={globalStyles.fillCenter}>
           <Text>Something went wrong!</Text>
           <Button onPress={() => this.setState({hasError: false})}>Try again</Button>
         </Layout>

@@ -64,14 +64,24 @@ import {SendFundScreen} from '@ui/screens/SendFundScreen';
 import {FeedbackScreen} from '@ui/screens/FeedbackScreen';
 import {AccountScreen} from '@ui/screens/AccountScreen';
 import {AddBountyScreen} from '@ui/screens/AddBountyScreen';
+import {OnboardingScreen} from '@ui/screens/Onboarding/OnboardingScreen';
+import {usePersistedState} from '@hooks/usePersistedState';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
 function DashboardStackNavigator() {
+  const [onboardingSeen] = usePersistedState<boolean>('onboarding_seen');
   useFirebase();
 
   return (
     <DashboardStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
+      {!onboardingSeen ? (
+        <DashboardStack.Screen
+          name={routeKeys.onboardingScreen}
+          component={OnboardingScreen}
+          options={{headerShown: false, presentation: 'modal'}}
+        />
+      ) : null}
       <DashboardStack.Screen
         name={routeKeys.dashboardScreen}
         component={DashboardScreen}
@@ -101,7 +111,7 @@ function DashboardStackNavigator() {
 
 const AccountsStack = createStackNavigator<AccountsStackParamList>();
 
-function AccountsNavigator() {
+export function AccountsNavigator() {
   return (
     <AccountsStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
       <AccountsStack.Screen
@@ -264,7 +274,11 @@ function AppNavigator() {
           {() => <PermissionGrantingPrompt skipPnPermission={skipPnPermission} />}
         </AppStack.Screen>
       ) : undefined}
-      <AppStack.Screen name={routeKeys.drawerNavigator} component={DrawerNavigator} />
+      <AppStack.Screen
+        name={routeKeys.drawerNavigator}
+        component={DrawerNavigator}
+        options={{presentation: 'transparentModal'}}
+      />
       <AppStack.Screen
         name={routeKeys.networkSelectionScreen}
         component={NetworkSelectionScreen}
@@ -281,7 +295,7 @@ function AppNavigator() {
 
 export default AppNavigator;
 
-const overlayScreenOptions: StackNavigationOptions = {
+export const overlayScreenOptions: StackNavigationOptions = {
   presentation: 'transparentModal',
   headerShown: false,
   animationEnabled: false,

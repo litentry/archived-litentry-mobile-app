@@ -3,13 +3,13 @@ import {Keyboard, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View} 
 import {ParamListBase, Route, RouteProp} from '@react-navigation/core';
 import {DrawerNavigationOptions, DrawerNavigationProp} from '@react-navigation/drawer';
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack';
+import {DrawerActions} from '@react-navigation/native';
 import {useApi} from 'context/ChainApiContext';
 import {useNetwork} from 'context/NetworkContext';
 import NetworkItem from '@ui/components/NetworkItem';
-import {dashboardScreen, networkSelectionScreen} from '@ui/navigation/routeKeys';
+import {dashboardScreen, networkSelectionScreen, tokenMigrationScreen} from '@ui/navigation/routeKeys';
 import {AppBar, AppHeader, Title, useTheme} from '@ui/library';
 import {standardPadding} from '@ui/styles';
-import {noop} from 'lodash';
 
 export function MainDrawerAppBar({
   navigation,
@@ -51,9 +51,7 @@ export function MainStackAppBar({
   const {colors} = useTheme();
 
   const openDrawer = () => {
-    if (navigationSupportsDrawer(navigation)) {
-      navigation.openDrawer();
-    }
+    navigation.dispatch(DrawerActions.openDrawer());
   };
 
   const goBack = () => {
@@ -78,14 +76,6 @@ export function MainStackAppBar({
   );
 }
 
-function navigationSupportsDrawer(navigation: unknown): navigation is DrawerNavigationProp<ParamListBase> {
-  if (navigation && typeof navigation === 'object') {
-    return 'openDrawer' in navigation;
-  }
-
-  throw new Error('Navigation is not of expected type');
-}
-
 export function MainAppBar({
   navigation,
   route,
@@ -93,25 +83,19 @@ export function MainAppBar({
   navigation: StackNavigationProp<ParamListBase>;
   route: RouteProp<ParamListBase>;
 }) {
-  const showMenu = route.name === dashboardScreen;
+  const showMenu = route.name === dashboardScreen || tokenMigrationScreen;
 
   const {currentNetwork} = useNetwork();
   const {status} = useApi();
   const {colors} = useTheme();
 
   const onActionLeftPress = React.useCallback(() => {
-    if (navigationSupportsDrawer(navigation)) {
-      navigation.openDrawer();
-    }
+    navigation.dispatch(DrawerActions.openDrawer());
   }, [navigation]);
 
   return (
     <AppHeader style={{backgroundColor: colors.primary}}>
-      <AppBar.Action
-        onPress={showMenu ? onActionLeftPress : noop}
-        icon={'menu'}
-        color={showMenu ? 'white' : 'transparent'}
-      />
+      {showMenu ? <AppBar.Action onPress={onActionLeftPress} icon={'menu'} color="white" /> : null}
       <AppBar.Content
         style={styles.contentContainer}
         title={
