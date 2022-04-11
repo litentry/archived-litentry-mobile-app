@@ -249,6 +249,7 @@
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
 				C16081AA9903B5C63812BAAC /* [CP] Copy Pods Resources */,
+				6E9169C0888520B06C8EE4D9 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -272,6 +273,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				A13A2BEB3036C5834D00F544 /* [CP] Copy Pods Resources */,
 				A172560752A4D7F286FD562C /* [CP-User] [RNFB] Core Configuration */,
+				E1D247062E0346B7C7D613B1 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -467,6 +469,24 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
+		6E9169C0888520B06C8EE4D9 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Litentry-LitentryTests/Pods-Litentry-LitentryTests-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL-Universal/OpenSSL.framework/OpenSSL",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Litentry-LitentryTests/Pods-Litentry-LitentryTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		72B81B6FA727D3E04BE9BB00 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -622,6 +642,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Litentry-LitentryTests/Pods-Litentry-LitentryTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E1D247062E0346B7C7D613B1 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Litentry/Pods-Litentry-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL-Universal/OpenSSL.framework/OpenSSL",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Litentry/Pods-Litentry-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F97BCFA52AF5E3A573316ADA /* [CP] Check Pods Manifest.lock */ = {
