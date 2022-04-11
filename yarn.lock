@@ -1073,6 +1073,14 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@craftzdog/react-native-buffer@^6.0.4":
+  version "6.0.4"
+  resolved "https://registry.yarnpkg.com/@craftzdog/react-native-buffer/-/react-native-buffer-6.0.4.tgz#b9ac7d3c492bfc119e1d52e00ff734b8eda8f561"
+  integrity sha512-2cWejr0rCyALjXJ8UVZjvRIalzJZzGAqsGiCOb7CSgOULqP+yhT+f9PdLQsNE4+ZT3/+8DFrF7S9ZPHrY9RtWg==
+  dependencies:
+    ieee754 "^1.2.1"
+    react-native-quick-base64 "^2.0.0"
+
 "@crustio/type-definitions@1.2.0":
   version "1.2.0"
   resolved "https://registry.npmjs.org/@crustio/type-definitions/-/type-definitions-1.2.0.tgz"
@@ -8493,7 +8501,7 @@ idna-uts46-hx@^2.3.1:
   dependencies:
     punycode "2.1.0"
 
-ieee754@^1.1.13, ieee754@^1.1.4:
+ieee754@^1.1.13, ieee754@^1.1.4, ieee754@^1.2.1:
   version "1.2.1"
   resolved "https://registry.npmjs.org/ieee754/-/ieee754-1.2.1.tgz"
   integrity sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==
@@ -12835,6 +12843,13 @@ react-native-aes-crypto@^2.1.0:
   resolved "https://registry.npmjs.org/react-native-aes-crypto/-/react-native-aes-crypto-2.1.0.tgz"
   integrity sha512-2zvvQXMW2Qeg9B/VDetoB2w/cyVncPuEsoW1iUhZP12jAx+zbxsdf+A7inSf2XKMcRURfpsfUshQTb2beYUVhA==
 
+react-native-bignumber@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/react-native-bignumber/-/react-native-bignumber-0.1.4.tgz#4d7ac1c88af87ae822a2f165ceba5a78635a0e57"
+  integrity sha512-+wprNMYnNH003B4Tkx8Of5KTWirBRPJHsIwk2ZpUhzpPfqE46U64r3p602OvDbSdbHxw7WmNxnasAQBXgMZd3w==
+  dependencies:
+    "@craftzdog/react-native-buffer" "^6.0.4"
+
 react-native-calendars@^1.1279.0:
   version "1.1279.0"
   resolved "https://registry.npmjs.org/react-native-calendars/-/react-native-calendars-1.1279.0.tgz"
@@ -13042,6 +13057,13 @@ react-native-qrcode-svg@6.0.6:
   dependencies:
     prop-types "^15.5.10"
     qrcode "^1.3.2"
+
+react-native-quick-base64@^2.0.0:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-quick-base64/-/react-native-quick-base64-2.0.2.tgz#1d2af8ddab8f548d89e66208201fe6ce377b1fc5"
+  integrity sha512-bLIAOUhQ0JaVQ9RSQoQdt/lV5/XHpq982J1UwN+Gj42A2GfNtqT8kJzaLjJLO6rWhMZ7iVJeFJIVcTf90pWoJQ==
+  dependencies:
+    base64-js "^1.5.1"
 
 react-native-randombytes@^3.6.0:
   version "3.6.1"
