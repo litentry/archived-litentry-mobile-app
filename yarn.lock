@@ -3106,6 +3106,13 @@
   resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-14.7.0.tgz#9ab30860f140dec1dce49f012fd56526e5b3707a"
   integrity sha512-G0GmmbmmAvhEltK7Rr1A3Mz6vH4qsX6OaqYNzbhgHvP2jvTIuchLcWozjTGcH/0OsXZz15fRe0WjQ3aMS2TTpg==
 
+"@react-native-firebase/perf@^14.7.0":
+  version "14.7.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/perf/-/perf-14.7.0.tgz#e89280edd3ecf97c6dad2f1e5997b39aba650852"
+  integrity sha512-r/AUDpR/R670q2iJFes3peui+1jmmdOok6/HS1tr/eEGlEmsBa5/iYCJJ704AwhKa8ZQqpJSsiw1VEcPTYICZg==
+  dependencies:
+    "@expo/config-plugins" "^4.0.18"
+
 "@react-native/assets@1.0.0":
   version "1.0.0"
   resolved "https://registry.npmjs.org/@react-native/assets/-/assets-1.0.0.tgz"
