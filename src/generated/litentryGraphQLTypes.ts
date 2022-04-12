@@ -56,6 +56,8 @@ export type Bep20AccountTransfersToArgs = {
 };
 
 export type Bep20Account_Filter = {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
   address?: InputMaybe<Scalars['String']>;
   address_contains?: InputMaybe<Scalars['String']>;
   address_contains_nocase?: InputMaybe<Scalars['String']>;
@@ -248,6 +250,8 @@ export type Bep20Transfer = {
 };
 
 export type Bep20Transfer_Filter = {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
   amount?: InputMaybe<Scalars['BigInt']>;
   amount_gt?: InputMaybe<Scalars['BigInt']>;
   amount_gte?: InputMaybe<Scalars['BigInt']>;
@@ -358,19 +362,13 @@ export enum Bep20Transfer_OrderBy {
   ToAccountBalanceAtBlock = 'toAccountBalanceAtBlock',
 }
 
-/** The block at which the query should be executed. */
+export type BlockChangedFilter = {
+  number_gte: Scalars['Int'];
+};
+
 export type Block_Height = {
-  /** Value containing a block hash */
   hash?: InputMaybe<Scalars['Bytes']>;
-  /** Value containing a block number */
   number?: InputMaybe<Scalars['Int']>;
-  /**
-   * Value containing the minimum block number.
-   * In the case of `number_gte`, the query will be executed on the latest block only if
-   * the subgraph has progressed to or past the minimum block number.
-   * Defaults to the latest block when omitted.
-   *
-   */
   number_gte?: InputMaybe<Scalars['Int']>;
 };
 
@@ -426,6 +424,8 @@ export type Erc20AccountTransfersToArgs = {
 };
 
 export type Erc20Account_Filter = {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
   address?: InputMaybe<Scalars['String']>;
   address_contains?: InputMaybe<Scalars['String']>;
   address_contains_nocase?: InputMaybe<Scalars['String']>;
@@ -618,6 +618,8 @@ export type Erc20Transfer = {
 };
 
 export type Erc20Transfer_Filter = {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
   amount?: InputMaybe<Scalars['BigInt']>;
   amount_gt?: InputMaybe<Scalars['BigInt']>;
   amount_gte?: InputMaybe<Scalars['BigInt']>;
@@ -738,6 +740,8 @@ export type Erc1155Token = {
 };
 
 export type Erc1155Token_Filter = {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
   contractAddress?: InputMaybe<Scalars['String']>;
   contractAddress_contains?: InputMaybe<Scalars['String']>;
   contractAddress_contains_nocase?: InputMaybe<Scalars['String']>;
