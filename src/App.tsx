@@ -14,6 +14,7 @@ import SnackbarProvider from 'context/SnackbarContext';
 import {LitentryApiClientProvider} from 'context/LitentryApiContext';
 import {WalletConnectProvider} from 'context/WalletConnectProvider';
 import {Web3WalletProvider} from 'context/Web3WalletContext';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 
 // init type registry
 import 'src/typeRegistry';
@@ -59,7 +60,9 @@ export default function App() {
                       <ErrorBoundary>
                         <TxContextProvider>
                           <SnackbarProvider>
-                            <LitentryApps />
+                            <BottomSheetModalProvider>
+                              <LitentryApps />
+                            </BottomSheetModalProvider>
                           </SnackbarProvider>
                         </TxContextProvider>
                       </ErrorBoundary>
