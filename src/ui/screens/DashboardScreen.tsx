@@ -90,20 +90,6 @@ const styles = StyleSheet.create({
   titleContainer: {
     alignItems: 'flex-start',
   },
-  divider: {
-    height: 2,
-  },
-  networkSwitch: {
-    position: 'absolute',
-    right: standardPadding * 1.5,
-    bottom: 0,
-    paddingHorizontal: standardPadding,
-    paddingVertical: standardPadding / 2,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    height: 30,
-    justifyContent: 'center',
-  },
 });
 
 export default DashboardScreen;
