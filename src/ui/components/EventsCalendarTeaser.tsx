@@ -23,7 +23,7 @@ export function EventsCalendarTeaser(props: Props) {
       ) : topThreeEvents?.length > 0 ? (
         topThreeEvents.map((event, id) => (
           <React.Fragment key={id}>
-            <View style={styles.container}>
+            <View style={styles.container} testID={'event_detail_items'}>
               <View style={styles.dateContainer}>
                 <Text style={{color: colors.primary}}>{formatDate(event.date, 'DD/MM')}</Text>
               </View>
