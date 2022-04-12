@@ -1,8 +1,22 @@
 import React from 'react';
 import {View, Text, Button} from 'react-native';
 import {useWeb3Wallet} from 'context/Web3WalletContext';
+import {useBottomSheet} from '@ui/library/BottomSheet';
+import {useNetwork} from 'context/NetworkContext';
+import {NetworkType} from 'src/types';
+import {NetworkChangeButton} from '@ui/components/NetworkChangeButton';
+import {NavigationProp} from '@react-navigation/native';
+import {AppStackParamList} from '@ui/navigation/navigation';
+import globalStyles from '@ui/styles';
+import {Layout} from '@ui/components/Layout';
+import NetworkSelectionList from '@ui/components/NetworkSelectionList';
+import {Padder} from '@ui/components/Padder';
 
-export function TokenMigrationScreen() {
+type ScreenProps = {
+  navigation: NavigationProp<AppStackParamList>;
+};
+
+export function TokenMigrationScreen({navigation}: ScreenProps) {
   const wallet = useWeb3Wallet();
   const [isApproving, setApproving] = React.useState(false);
   const [isSubmitting, setSubmitting] = React.useState(false);
@@ -10,6 +24,20 @@ export function TokenMigrationScreen() {
   const ethAddress = '0x838C543187312cc85592f43a35b03A7aCb8B273a'; // TODO: select address from web3 accounts
   const hasApproved = wallet.isConnected ? wallet.connectedAccount?.approved.isGreaterThan(0) : false;
   const [txHash, setTxHash] = React.useState('');
+
+  const {closeBottomSheet, openBottomSheet, BottomSheet} = useBottomSheet();
+  const {currentNetwork, availableNetworks, select} = useNetwork();
+
+  const changeNetwork = (network: NetworkType) => {
+    select(network);
+    closeBottomSheet();
+  };
+
+  React.useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => <NetworkChangeButton onPress={openBottomSheet} />,
+    });
+  }, [navigation, openBottomSheet]);
 
   const handleApprove = React.useCallback(async () => {
     if (!wallet.isConnected) {
@@ -84,6 +112,13 @@ export function TokenMigrationScreen() {
           {hasApproved ? <Button title="deposit migration" onPress={onSubmit} /> : null}
         </View>
       )}
+
+      <BottomSheet>
+        <Layout style={globalStyles.paddedContainer}>
+          <NetworkSelectionList items={availableNetworks} selected={currentNetwork} onSelect={changeNetwork} />
+          <Padder scale={2} />
+        </Layout>
+      </BottomSheet>
     </View>
   );
 }
