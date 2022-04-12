@@ -46,7 +46,8 @@
                 <!-- Accepts URIs that begin with "litentry://” -->
                 <data android:scheme="litentry" />
             </intent-filter>
-                </activity>
-            </application>
+        </activity>
+        <activity android:name="com.facebook.flipper.android.diagnostics.FlipperDiagnosticActivity" android:exported="true" />
+    </application>
 
 </manifest>
