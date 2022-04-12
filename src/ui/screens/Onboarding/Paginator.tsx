@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import Animated, {FadeIn, FadeOut, SharedValue, useAnimatedStyle, withTiming} from 'react-native-reanimated';
 import {Padder} from '@ui/components/Padder';
 import {Button, useTheme} from '@ui/library';
