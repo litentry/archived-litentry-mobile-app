@@ -15,29 +15,16 @@ type Props = {
 };
 
 export function AccountTeaser({account, onPress, children, testID, identiconSize = 20}: Props) {
-  if (onPress) {
-    return (
-      <TouchableOpacity onPress={onPress}>
-        <View style={globalStyles.rowAlignCenter} testID={testID}>
-          <Identicon value={account.address} size={identiconSize} />
-          <Padder scale={0.5} />
-          <View>
-            <Account account={account} />
-            {children}
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
-  }
-
   return (
-    <View style={globalStyles.rowAlignCenter} testID={testID}>
-      <Identicon value={account.address} size={identiconSize} />
-      <Padder scale={0.5} />
-      <View>
-        <Account account={account} />
-        {children}
+    <TouchableOpacity onPress={onPress} disabled={!onPress}>
+      <View style={globalStyles.rowAlignCenter} testID={testID}>
+        <Identicon value={account.address} size={identiconSize} />
+        <Padder scale={0.5} />
+        <View>
+          <Account account={account} />
+          {children}
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
