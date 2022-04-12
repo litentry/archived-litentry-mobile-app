@@ -17,6 +17,7 @@
 #import <FlipperKitNetworkPlugin/FlipperKitNetworkPlugin.h>
 #import <SKIOSNetworkPlugin/SKIOSNetworkAdapter.h>
 #import <FlipperKitReactPlugin/FlipperKitReactPlugin.h>
+#import <FlipperPerformancePlugin.h>
 #import <React/RCTLinkingManager.h>
 
 static void InitializeFlipper(UIApplication *application) {
@@ -26,6 +27,8 @@ static void InitializeFlipper(UIApplication *application) {
   [client addPlugin:[[FKUserDefaultsPlugin alloc] initWithSuiteName:nil]];
   [client addPlugin:[FlipperKitReactPlugin new]];
   [client addPlugin:[[FlipperKitNetworkPlugin alloc] initWithNetworkAdapter:[SKIOSNetworkAdapter new]]];
+  [client addPlugin:[FlipperPerformancePlugin new]];
+  
   [client start];
 }
 #endif
