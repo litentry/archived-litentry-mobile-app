@@ -1,5 +1,6 @@
 import React from 'react';
 import RNBottomSheet, {
+  BottomSheetProps as RNBottomSheetProps,
   BottomSheetView,
   BottomSheetBackdrop,
   useBottomSheetDynamicSnapPoints,
@@ -7,9 +8,7 @@ import RNBottomSheet, {
 } from '@gorhom/bottom-sheet';
 import {useTheme} from './index';
 
-type BottomSheetProps = {
-  children: React.ReactNode;
-};
+type BottomSheetProps = Omit<RNBottomSheetProps, 'snapPoints'>;
 
 export function useBottomSheet() {
   const {colors} = useTheme();
