@@ -1,5 +1,5 @@
 import React from 'react';
-import BottomSheetModal, {
+import RNBottomSheet, {
   BottomSheetView,
   BottomSheetBackdrop,
   useBottomSheetDynamicSnapPoints,
@@ -13,7 +13,7 @@ type BottomSheetProps = {
 
 export function useBottomSheet() {
   const {colors} = useTheme();
-  const bottomSheetRef = React.useRef<BottomSheetModal>(null);
+  const bottomSheetRef = React.useRef<RNBottomSheet>(null);
   const initialSnapPoints = React.useMemo(() => ['25%', 'CONTENT_HEIGHT'], []);
   const {animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout} =
     useBottomSheetDynamicSnapPoints(initialSnapPoints);
@@ -33,7 +33,7 @@ export function useBottomSheet() {
 
   const BottomSheet = React.useCallback(
     ({children}: BottomSheetProps) => (
-      <BottomSheetModal
+      <RNBottomSheet
         handleIndicatorStyle={{backgroundColor: colors.accent}}
         handleStyle={{backgroundColor: colors.background}}
         backdropComponent={Backdrop}
@@ -45,7 +45,7 @@ export function useBottomSheet() {
         enablePanDownToClose={true}
         animateOnMount={true}>
         <BottomSheetView onLayout={handleContentLayout}>{children}</BottomSheetView>
-      </BottomSheetModal>
+      </RNBottomSheet>
     ),
     [colors, Backdrop, animatedSnapPoints, animatedHandleHeight, animatedContentHeight, handleContentLayout],
   );
