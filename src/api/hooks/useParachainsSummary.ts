@@ -1,12 +1,12 @@
 import {gql, useQuery} from '@apollo/client';
-import type {SubstrateChainParachain, SubstrateChainParachainsInfo} from 'src/generated/litentryGraphQLTypes';
+import type {SubstrateChainParachain, SubstrateChainParachainsSummary} from 'src/generated/litentryGraphQLTypes';
 
-export type ParachainsInfo = SubstrateChainParachainsInfo;
+export type ParachainsSummary = SubstrateChainParachainsSummary;
 export type Parachain = SubstrateChainParachain;
 
-export const PARACHAINS_OVERVIEW_QUERY = gql`
-  query getParachainsOverview {
-    substrateChainParachainsInfo {
+export const PARACHAINS_SUMMARY_QUERY = gql`
+  query getParachainsSummary {
+    substrateChainParachainsSummary {
       parachainsCount
       parathreadsCount
       proposalsCount
@@ -28,13 +28,13 @@ export const PARACHAINS_OVERVIEW_QUERY = gql`
   }
 `;
 
-export function useParachainsOverview() {
+export function useParachainsSummary() {
   const {data, ...rest} = useQuery<{
-    substrateChainParachainsInfo: ParachainsInfo;
+    substrateChainParachainsSummary: ParachainsSummary;
     substrateChainParachains: Parachain[];
-  }>(PARACHAINS_OVERVIEW_QUERY);
+  }>(PARACHAINS_SUMMARY_QUERY);
   return {
-    parachainsInfo: data?.substrateChainParachainsInfo,
+    parachainsSummary: data?.substrateChainParachainsSummary,
     parachains: data?.substrateChainParachains,
     ...rest,
   };

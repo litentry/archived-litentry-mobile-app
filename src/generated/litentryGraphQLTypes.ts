@@ -1036,7 +1036,7 @@ export type Query = {
   substrateChainModuleElection: SubstrateChainModuleElection;
   substrateChainParachain?: Maybe<SubstrateChainParachain>;
   substrateChainParachains?: Maybe<Array<SubstrateChainParachain>>;
-  substrateChainParachainsInfo: SubstrateChainParachainsInfo;
+  substrateChainParachainsSummary: SubstrateChainParachainsSummary;
   substrateChainParathreads: Array<SubstrateChainParathread>;
   substrateChainRegistrarsSummary: SubstrateChainRegistrarsSummary;
   substrateChainTechnicalCommitteeSummary: SubstrateChainTechnicalCommitteeSummary;
@@ -2492,12 +2492,12 @@ export type SubstrateChainParachain = {
   lease?: Maybe<SubstrateChainLease>;
   lifecycle: Scalars['String'];
   name?: Maybe<Scalars['String']>;
-  nonVoters: Array<SubstrateChainAccountInfo>;
+  nonVoters: Array<SubstrateChainAccount>;
   validators?: Maybe<SubstrateChainValidatorsGroup>;
 };
 
-export type SubstrateChainParachainsInfo = {
-  __typename?: 'SubstrateChainParachainsInfo';
+export type SubstrateChainParachainsSummary = {
+  __typename?: 'SubstrateChainParachainsSummary';
   leasePeriod: SubstrateChainLeasePeriod;
   parachainsCount: Scalars['Int'];
   parathreadsCount: Scalars['Int'];
@@ -2664,7 +2664,7 @@ export type SubstrateChainTreasurySummary = {
 export type SubstrateChainValidatorsGroup = {
   __typename?: 'SubstrateChainValidatorsGroup';
   groupIndex?: Maybe<Scalars['String']>;
-  validators: Array<SubstrateChainAccountInfo>;
+  validators: Array<SubstrateChainAccount>;
 };
 
 export type SubstrateChainVotingStatus = {
