@@ -4,7 +4,7 @@ import {useWeb3Wallet} from 'context/Web3WalletContext';
 import {useBottomSheet} from '@ui/library/BottomSheet';
 import {useNetwork} from 'context/NetworkContext';
 import {NetworkType} from 'src/types';
-import {NetworkChangeButton} from '@ui/components/NetworkChangeButton';
+import {NetworkSwitch} from '@ui/components/NetworkSwitch';
 import {NavigationProp} from '@react-navigation/native';
 import {AppStackParamList} from '@ui/navigation/navigation';
 import globalStyles from '@ui/styles';
@@ -35,7 +35,7 @@ export function TokenMigrationScreen({navigation}: ScreenProps) {
 
   React.useEffect(() => {
     navigation.setOptions({
-      headerRight: () => <NetworkChangeButton onPress={openBottomSheet} />,
+      headerRight: () => <NetworkSwitch onPress={openBottomSheet} />,
     });
   }, [navigation, openBottomSheet]);
 

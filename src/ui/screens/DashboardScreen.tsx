@@ -28,7 +28,7 @@ import {useBottomSheet} from '@ui/library/BottomSheet';
 import NetworkSelectionList from '@ui/components/NetworkSelectionList';
 import {useNetwork} from 'context/NetworkContext';
 import {NetworkType} from 'src/types';
-import {NetworkChangeButton} from '@ui/components/NetworkChangeButton';
+import {NetworkSwitch} from '@ui/components/NetworkSwitch';
 
 const refetchQueries = [DEMOCRACY_SUMMARY_QUERY, COUNCIL_SUMMARY_QUERY, BOUNTIES_SUMMARY_QUERY, TREASURY_SUMMARY_QUERY];
 
@@ -50,7 +50,7 @@ function DashboardScreen({navigation}: PropTypes) {
 
   React.useEffect(() => {
     navigation.setOptions({
-      headerRight: () => <NetworkChangeButton onPress={openBottomSheet} />,
+      headerRight: () => <NetworkSwitch onPress={openBottomSheet} />,
     });
   }, [navigation, openBottomSheet]);
 

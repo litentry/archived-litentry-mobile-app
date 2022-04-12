@@ -10,7 +10,7 @@ type Props = {
   onPress: () => void;
 };
 
-export function NetworkChangeButton({onPress}: Props) {
+export function NetworkSwitch({onPress}: Props) {
   const {status} = useApi();
   const {currentNetwork} = useNetwork();
   const {colors} = useTheme();
