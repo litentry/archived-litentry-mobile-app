@@ -45,7 +45,7 @@ export function MotionsScreen({navigation}: ScreenProps) {
     setVoteModalVisible(true);
   };
 
-  const toDetailsScreen = (proposal: MotionProposal) => {
+  const toMotionDetails = (proposal: MotionProposal) => {
     navigation.navigate(motionDetailScreen, {hash: String(proposal.hash)});
   };
 
@@ -63,7 +63,7 @@ export function MotionsScreen({navigation}: ScreenProps) {
                 motion={item}
                 isCouncilMember={isAnyAccountCouncil}
                 network={currentNetwork.key}
-                onPress={toDetailsScreen}
+                onPress={toMotionDetails}
                 onVote={onVote}
               />
             );

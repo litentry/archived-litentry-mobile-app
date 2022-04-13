@@ -82,7 +82,9 @@ const globalStyles = StyleSheet.create({
 
     elevation: 5,
   },
-
+  marginVertical: {
+    marginVertical: standardPadding,
+  },
   monoFont: {
     fontFamily: monofontFamily,
   },
