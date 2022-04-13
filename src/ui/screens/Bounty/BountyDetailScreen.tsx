@@ -2,26 +2,33 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {DashboardStackParamList} from '@ui/navigation/navigation';
+import {AppStackParamList, DashboardStackParamList} from '@ui/navigation/navigation';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useBounty} from 'src/api/hooks/useBounty';
 import {Subheading, Paragraph, Text, Divider} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import LoadingView from '@ui/components/LoadingView';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
+import {accountScreen} from '@ui/navigation/routeKeys';
 
 type ScreenProps = {
-  navigation: StackNavigationProp<DashboardStackParamList>;
+  navigation: StackNavigationProp<AppStackParamList>;
   route: RouteProp<DashboardStackParamList, 'Bounty'>;
 };
 
-export function BountyDetailScreen({route}: ScreenProps) {
+export function BountyDetailScreen({route, navigation}: ScreenProps) {
   const index = route.params.index;
   const {data: bounty, loading} = useBounty(index);
 
-  if (loading) {
+  if (loading && !bounty) {
     return <LoadingView />;
   }
+
+  const toAccountDetails = (address?: string) => {
+    if (address) {
+      navigation.navigate(accountScreen, {address});
+    }
+  };
 
   return (
     <SafeView edges={noTopEdges}>
@@ -53,10 +60,14 @@ export function BountyDetailScreen({route}: ScreenProps) {
         <Padder scale={1} />
         <Divider />
         <Padder scale={1} />
-        {bounty?.bountyStatus.curator ? (
+        {bounty?.bountyStatus?.curator ? (
           <View>
             <Subheading>Curator</Subheading>
-            <AccountTeaser account={bounty.bountyStatus.curator.account} identiconSize={30} />
+            <AccountTeaser
+              account={bounty.bountyStatus.curator.account}
+              identiconSize={30}
+              onPress={() => toAccountDetails(bounty?.bountyStatus?.curator?.account.address)}
+            />
             <Padder scale={1} />
             <Divider />
           </View>

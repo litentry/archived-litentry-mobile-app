@@ -51,14 +51,14 @@ export function SendFundScreen({navigation, route}: Props) {
   const isEnteredBalanceValid = useMemo(() => {
     const enteredBalance = stringToBn(amount) ?? BN_ZERO;
     if (isKeepAliveActive) {
-      const keepAliveBalance = formattedStringToBn(accountInfo?.balance.free).sub(
+      const keepAliveBalance = formattedStringToBn(accountInfo?.balance?.free).sub(
         formattedStringToBn(chainInfo?.existentialDeposit),
       );
       return (
         enteredBalance.gt(formattedStringToBn(chainInfo?.existentialDeposit)) && enteredBalance.lt(keepAliveBalance)
       );
     }
-    return enteredBalance.gt(BN_ZERO) && enteredBalance.lt(formattedStringToBn(accountInfo?.balance.free));
+    return enteredBalance.gt(BN_ZERO) && enteredBalance.lt(formattedStringToBn(accountInfo?.balance?.free));
   }, [amount, accountInfo, stringToBn, isKeepAliveActive, chainInfo]);
 
   const isSendDisabled = !isEnteredBalanceValid || !isToAddressValid;

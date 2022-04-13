@@ -37,7 +37,7 @@ export function SubmitProposal() {
   const isDisabled =
     !state.account ||
     !state.preimageHash ||
-    !enteredBalance.lt(formattedStringToBn(state.account.balance.free)) ||
+    !enteredBalance.lt(formattedStringToBn(state.account.balance?.free)) ||
     !enteredBalance.gt(democracyMinimumDeposit);
 
   const submit = () => {
