@@ -22,11 +22,7 @@ import {ParachainAppNavigator} from '@ui/navigation/ParachainAppNavigator';
 const queryClient = new QueryClient();
 
 function MainApp() {
-  return (
-    <LitentryApiClientProvider>
-      <AppNavigator />
-    </LitentryApiClientProvider>
-  );
+  return <AppNavigator />;
 }
 
 function ParachainApp() {
@@ -52,27 +48,29 @@ function LitentryApps() {
 export default function App() {
   return (
     <NetworkContextProvider>
-      <QueryClientProvider client={queryClient}>
-        <NavigationContainer>
-          <ChainApiContextProvider>
-            <AccountsProvider>
-              <SafeAreaProvider>
-                <ThemeProvider>
-                  <InAppNotificationContextProvider>
-                    <ErrorBoundary>
-                      <TxContextProvider>
-                        <SnackbarProvider>
-                          <LitentryApps />
-                        </SnackbarProvider>
-                      </TxContextProvider>
-                    </ErrorBoundary>
-                  </InAppNotificationContextProvider>
-                </ThemeProvider>
-              </SafeAreaProvider>
-            </AccountsProvider>
-          </ChainApiContextProvider>
-        </NavigationContainer>
-      </QueryClientProvider>
+      <LitentryApiClientProvider>
+        <QueryClientProvider client={queryClient}>
+          <NavigationContainer>
+            <ChainApiContextProvider>
+              <AccountsProvider>
+                <SafeAreaProvider>
+                  <ThemeProvider>
+                    <InAppNotificationContextProvider>
+                      <ErrorBoundary>
+                        <TxContextProvider>
+                          <SnackbarProvider>
+                            <LitentryApps />
+                          </SnackbarProvider>
+                        </TxContextProvider>
+                      </ErrorBoundary>
+                    </InAppNotificationContextProvider>
+                  </ThemeProvider>
+                </SafeAreaProvider>
+              </AccountsProvider>
+            </ChainApiContextProvider>
+          </NavigationContainer>
+        </QueryClientProvider>
+      </LitentryApiClientProvider>
     </NetworkContextProvider>
   );
 }

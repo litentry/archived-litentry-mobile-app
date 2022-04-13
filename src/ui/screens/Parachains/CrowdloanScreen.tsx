@@ -20,6 +20,7 @@ import {BN_ZERO} from '@polkadot/util';
 import {formattedStringToBn} from 'src/api/utils/balance';
 import {CrowdloanSummaryTeaser} from '@ui/components/CrowdloanSummaryTeaser';
 import {useNetwork} from 'context/NetworkContext';
+import {InputLabel} from '@ui/library/InputLabel';
 
 export function CrowdloanScreen() {
   const [openContributeId, setOpenContributeId] = React.useState<string>();
@@ -185,19 +186,25 @@ function ContributeBox({
   const minContribution = chainInfo?.crowdloanMinContribution
     ? formattedStringToBn(chainInfo.crowdloanMinContribution)
     : BN_ZERO;
-  const balance = stringToBn(amount);
-  const disabled = !account || !balance || !minContribution || balance.isZero() || balance.lt(minContribution);
+  const balance = stringToBn(amount) ?? BN_ZERO;
+  const disabled =
+    !account ||
+    !balance ||
+    !minContribution ||
+    balance.isZero() ||
+    balance.lt(minContribution) ||
+    balance.gt(formattedStringToBn(account.balance?.free));
 
   return (
     <Modal visible={visible} onDismiss={reset}>
-      <Text>Contribute with:</Text>
+      <InputLabel label="Contribute with" helperText="This account will contribute to the crowdloan." />
       <Padder scale={0.5} />
       <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
       <Padder scale={1} />
-      <Text>Amount:</Text>
+      <InputLabel label="Amount" helperText="The amount to contribute from this account." />
       <BalanceInput account={account} onChangeBalance={setAmount} />
       <Padder scale={0.2} />
-      <Text>minimum allowed: </Text>
+      <InputLabel label="Minimum allowed" />
       <Text>{formatBalance(minContribution)}</Text>
 
       <Padder scale={2} />

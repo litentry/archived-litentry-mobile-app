@@ -1,7 +1,7 @@
 import React, {useRef} from 'react';
 import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
-import {Card, Icon, Caption, Subheading, Paragraph, Text} from '@ui/library';
+import {Card, Icon, Caption, Subheading, Paragraph} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {useNetwork} from 'context/NetworkContext';
 import _ from 'lodash';
@@ -13,27 +13,26 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {Modalize} from 'react-native-modalize';
 import WebView from 'react-native-webview';
 import {useMotionDetail} from 'src/api/hooks/useMotionDetail';
-import {DashboardStackParamList} from '@ui/navigation/navigation';
+import {AppStackParamList, DashboardStackParamList} from '@ui/navigation/navigation';
 import {buildMotionDetailUrl} from 'src/service/Polkasembly';
 import globalStyles, {colorGreen, colorRed, standardPadding} from '@ui/styles';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
-import type {AccountInfo} from 'src/api/hooks/useAccount';
+import {StackNavigationProp} from '@react-navigation/stack/lib/typescript/src/types';
+import {accountScreen} from '@ui/navigation/routeKeys';
 
 const {height} = Dimensions.get('window');
 
 type PropTypes = {
   route: RouteProp<DashboardStackParamList, 'Motion'>;
+  navigation: StackNavigationProp<AppStackParamList>;
 };
 
-function VoteItem({
-  voteAccount,
-  type = 'aye',
-  emptyText,
-}: {
-  voteAccount?: AccountInfo;
-  type?: 'aye' | 'nay';
-  emptyText?: string;
-}) {
+type VoteItemProps = {
+  type: 'aye' | 'nay';
+  children?: React.ReactNode;
+};
+
+function VoteItem({type, children}: VoteItemProps) {
   return (
     <View style={globalStyles.rowAlignCenter}>
       <Icon
@@ -41,20 +40,16 @@ function VoteItem({
         color={type === 'aye' ? colorGreen : colorRed}
       />
       <Padder scale={1} />
-      {emptyText ? <Text>{emptyText}</Text> : voteAccount && <AccountTeaser account={voteAccount.account} />}
+      {children}
     </View>
   );
 }
 
-export function MotionDetailScreen(props: PropTypes) {
+export function MotionDetailScreen({route, navigation}: PropTypes) {
   const modalRef = useRef<Modalize>(null);
   const {currentNetwork} = useNetwork();
 
-  const {
-    route: {params},
-  } = props;
-
-  const {data: motion, loading} = useMotionDetail(params);
+  const {data: motion, loading} = useMotionDetail(route.params.hash);
 
   if (loading && !motion) {
     return <LoadingView />;
@@ -65,6 +60,12 @@ export function MotionDetailScreen(props: PropTypes) {
   }
 
   const {proposal, votes, votingStatus} = motion;
+
+  const toAccountDetails = (address?: string) => () => {
+    if (address) {
+      navigation.navigate(accountScreen, {address});
+    }
+  };
 
   return (
     <SafeView edges={noTopEdges}>
@@ -90,7 +91,12 @@ export function MotionDetailScreen(props: PropTypes) {
             </View>
             <Padder scale={1} />
             <StatInfoBlock title="Proposer">
-              {proposal.proposer && <AccountTeaser account={proposal.proposer.account} />}
+              {proposal.proposer && (
+                <AccountTeaser
+                  account={proposal.proposer.account}
+                  onPress={toAccountDetails(proposal.proposer?.account.address)}
+                />
+              )}
             </StatInfoBlock>
           </Card.Content>
         </Card>
@@ -123,25 +129,33 @@ export function MotionDetailScreen(props: PropTypes) {
             {votes?.ayes?.length ? (
               votes.ayes.map((vote) => (
                 <View style={styles.voteContainer} key={vote.account.address}>
-                  <VoteItem voteAccount={vote} type="aye" />
+                  <VoteItem type="aye">
+                    <AccountTeaser account={vote.account} onPress={toAccountDetails(vote.account.address)} />
+                  </VoteItem>
                 </View>
               ))
             ) : (
               <>
                 <Padder scale={0.5} />
-                <VoteItem emptyText='No one voted "Aye" yet.' type="aye" />
+                <VoteItem type="aye">
+                  <Paragraph>{`No one voted "Aye" yet.`}</Paragraph>
+                </VoteItem>
               </>
             )}
             {votes?.nays?.length ? (
               votes.nays.map((vote) => (
                 <View style={styles.voteContainer} key={vote.account.address}>
-                  <VoteItem voteAccount={vote} type="nay" />
+                  <VoteItem type="nay">
+                    <AccountTeaser account={vote.account} onPress={toAccountDetails(vote.account.address)} />
+                  </VoteItem>
                 </View>
               ))
             ) : (
               <>
                 <Padder scale={0.5} />
-                <VoteItem emptyText='No one voted "Nay" yet.' type="nay" />
+                <VoteItem type="nay">
+                  <Paragraph>{`No one voted "Nay" yet.`}</Paragraph>
+                </VoteItem>
               </>
             )}
           </View>

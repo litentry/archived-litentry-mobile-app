@@ -1,17 +1,16 @@
 import React from 'react';
 import {StyleSheet, FlatList, View} from 'react-native';
-import {Caption, Divider, List} from '@ui/library';
-import {useRegistrarsSummary, Registrar} from 'src/api/hooks/useRegistrarsSummary';
+import {Caption, Divider} from '@ui/library';
+import {useRegistrarsSummary} from 'src/api/hooks/useRegistrarsSummary';
 import StatInfoBlock from '@ui/components/StatInfoBlock';
 import globalStyles, {standardPadding, monofontFamily} from '@ui/styles';
 import LoadingView from '@ui/components/LoadingView';
-import {Account} from '@ui/components/Account/Account';
-import Identicon from '@polkadot/reactnative-identicon';
 import {Padder} from '@ui/components/Padder';
 import {EmptyView} from '@ui/components/EmptyView';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {AppStackParamList} from '@ui/navigation/navigation';
 import {accountScreen} from '@ui/navigation/routeKeys';
+import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 
 function RegistrarList() {
   const {data: registrarsSummary, loading} = useRegistrarsSummary();
@@ -26,6 +25,10 @@ function RegistrarList() {
   }
 
   const {list: registrars, registrarsCount, formattedLowestFee, formattedHighestFee} = registrarsSummary;
+
+  const toAccountDetails = (address: string) => {
+    navigation.navigate(accountScreen, {address});
+  };
 
   return (
     <FlatList
@@ -47,12 +50,20 @@ function RegistrarList() {
       )}
       contentContainerStyle={styles.flatList}
       data={registrars}
-      renderItem={({item: registrar}) => (
-        <RegistrarItem
-          testID="registrar_item"
-          registrar={registrar}
-          onPress={() => navigation.navigate(accountScreen, {address: registrar.account.address})}
-        />
+      renderItem={({item}) => (
+        <View style={globalStyles.marginVertical}>
+          <AccountTeaser
+            testID="registrar_item"
+            account={item.account}
+            identiconSize={25}
+            onPress={() => toAccountDetails(item.account.address)}>
+            <View style={globalStyles.rowAlignCenter}>
+              <Caption>{`Index: ${item.id}`}</Caption>
+              <Padder />
+              <Caption>{`Fee: ${item.formattedFee}`}</Caption>
+            </View>
+          </AccountTeaser>
+        </View>
       )}
       keyExtractor={(item) => item.account.address}
       ItemSeparatorComponent={Divider}
@@ -61,39 +72,9 @@ function RegistrarList() {
   );
 }
 
-type RegistrarItemProps = {
-  testID: string;
-  registrar: Registrar;
-  onPress?: () => void;
-};
-
-function RegistrarItem({registrar, testID, onPress}: RegistrarItemProps) {
-  const {account, id, formattedFee} = registrar;
-
-  return (
-    <List.Item
-      testID={testID}
-      left={() => (
-        <View style={globalStyles.rowAlignCenter}>
-          <Identicon value={account.address} size={30} />
-        </View>
-      )}
-      title={<Account account={account} />}
-      description={
-        <>
-          <Caption>{`Index: ${id}`}</Caption>
-          <Padder scale={1} />
-          <Caption>{`Fee: ${formattedFee}`}</Caption>
-        </>
-      }
-      onPress={onPress}
-    />
-  );
-}
-
 const styles = StyleSheet.create({
   flatList: {
-    marginHorizontal: standardPadding,
+    marginHorizontal: standardPadding * 2,
   },
   infoContainer: {
     marginTop: standardPadding * 3,
