@@ -24,7 +24,6 @@ import {MotionDetailScreen} from '@ui/screens/MotionDetailScreen';
 import {MyAccountScreen} from '@ui/screens/MyAccountScreen';
 import {IdentityGuideScreen} from '@ui/screens/MyIdentityScreen/IdentityGuideScreen';
 import ManageIdentityScreen from '@ui/screens/MyIdentityScreen/ManageIdentity';
-import {NetworkSelectionScreen} from '@ui/screens/NetworkSelectionScreen';
 import {NotificationSettingsScreen} from '@ui/screens/NotificationSettingsScreen';
 import {AuctionsScreen} from '@ui/screens/Parachains/AuctionsScreen';
 import {CrowdloanFundDetailScreen} from '@ui/screens/Parachains/CrowdloanFundDetailScreen';
@@ -278,11 +277,6 @@ function AppNavigator() {
         name={routeKeys.drawerNavigator}
         component={DrawerNavigator}
         options={{presentation: 'transparentModal'}}
-      />
-      <AppStack.Screen
-        name={routeKeys.networkSelectionScreen}
-        component={NetworkSelectionScreen}
-        options={{animationEnabled: false, presentation: 'transparentModal'}}
       />
       <AppStack.Screen
         name={routeKeys.accountScreen}
