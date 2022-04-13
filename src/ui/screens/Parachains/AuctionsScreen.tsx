@@ -86,35 +86,37 @@ export function AuctionsScreen() {
           </Card>
 
           <Card style={styles.container}>
-            {winningBid ? (
-              <>
-                <Subheading style={globalStyles.textCenter}>{`Winning Bid`}</Subheading>
-                <List.Item
-                  title={winningBid?.projectName}
-                  description={
-                    <View>
-                      <Padder scale={0.5} />
-                      <Caption>{`ProjectID: ${winningBid?.projectId}`}</Caption>
-                      <Caption>{`Bid: ${winningBid?.amount} ${winningBid?.isCrowdloan ? '(crowdloan)' : ''}`}</Caption>
-                      <Caption>
-                        {`Block number: `}
-                        <Caption onPress={copyToClipboard}>{winningBid?.blockNumber}</Caption>
-                      </Caption>
-                    </View>
-                  }
-                  right={() => (
-                    <View style={globalStyles.justifyCenter}>
-                      <Caption>{`Leases`}</Caption>
-                      <Caption>{`${winningBid?.firstSlot} - ${winningBid?.lastSlot}`}</Caption>
-                    </View>
-                  )}
-                />
-              </>
-            ) : (
-              <Card.Content>
+            <Card.Content>
+              {winningBid ? (
+                <>
+                  <Subheading style={globalStyles.textCenter}>{`Winning Bid`}</Subheading>
+                  <List.Item
+                    title={winningBid?.projectName}
+                    description={
+                      <View>
+                        <Padder scale={0.5} />
+                        <Caption>{`ProjectID: ${winningBid?.projectId}`}</Caption>
+                        <Caption>{`Bid: ${winningBid?.amount} ${
+                          winningBid?.isCrowdloan ? '(crowdloan)' : ''
+                        }`}</Caption>
+                        <Caption>
+                          {`Block number: `}
+                          <Caption onPress={copyToClipboard}>{winningBid?.blockNumber}</Caption>
+                        </Caption>
+                      </View>
+                    }
+                    right={() => (
+                      <View style={globalStyles.justifyCenter}>
+                        <Caption>{`Leases`}</Caption>
+                        <Caption>{`${winningBid?.firstSlot} - ${winningBid?.lastSlot}`}</Caption>
+                      </View>
+                    )}
+                  />
+                </>
+              ) : (
                 <EmptyStateTeaser subheading="There is no winning bid" />
-              </Card.Content>
-            )}
+              )}
+            </Card.Content>
           </Card>
         </>
       ) : (

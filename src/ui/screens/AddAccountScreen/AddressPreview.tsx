@@ -8,7 +8,6 @@ import {useAccount} from 'src/api/hooks/useAccount';
 import {NetworkType} from 'src/types';
 import globalStyles from '@ui/styles';
 import {stringShorten} from '@polkadot/util';
-import {notEmpty} from 'src/utils';
 
 type PropTypes = {
   network: NetworkType;
@@ -18,10 +17,6 @@ type PropTypes = {
 function AddressInfoPreview(props: PropTypes) {
   const {address, network} = props;
   const {data: accountInfo, loading} = useAccount(address);
-
-  const registrationJudgements = accountInfo?.registration.judgements
-    ? accountInfo?.registration.judgements.filter(notEmpty)
-    : [];
 
   return (
     <View style={globalStyles.paddedContainer}>
@@ -55,7 +50,7 @@ function AddressInfoPreview(props: PropTypes) {
                   <Icon name="card-text-outline" size={20} />
                 </View>
               )}
-              right={() => <Caption>{accountInfo.balance.formattedFree}</Caption>}
+              right={() => <Caption>{accountInfo.balance?.formattedFree}</Caption>}
             />
           )}
           <List.Item
@@ -66,14 +61,16 @@ function AddressInfoPreview(props: PropTypes) {
               </View>
             )}
             right={() =>
-              registrationJudgements.map((judgment, i) => {
-                return (
-                  <JudgmentStatus
-                    key={i}
-                    registrationJudgement={judgment}
-                    hasParent={Boolean(accountInfo?.registration.displayParent)}
-                  />
-                );
+              accountInfo?.registration?.judgements?.map((judgment, i) => {
+                if (judgment) {
+                  return (
+                    <JudgmentStatus
+                      key={i}
+                      registrationJudgement={judgment}
+                      hasParent={Boolean(accountInfo?.registration?.displayParent)}
+                    />
+                  );
+                }
               })
             }
           />

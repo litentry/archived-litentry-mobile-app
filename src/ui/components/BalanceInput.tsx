@@ -20,7 +20,7 @@ export function BalanceInput(props: PropTypes) {
 
   const hasEnoughBalance = useMemo(() => {
     const amountBN = stringToBn(amount);
-    const freeBalance = formattedStringToBn(account?.balance.free);
+    const freeBalance = formattedStringToBn(account?.balance?.free);
     if (amountBN) {
       return freeBalance.gt(amountBN);
     }

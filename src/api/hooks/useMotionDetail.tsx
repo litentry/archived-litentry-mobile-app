@@ -66,7 +66,7 @@ const COUNCIL_MOTION_QUERY = gql`
     }
   }
 `;
-export function useMotionDetail({hash}: {hash: string}) {
+export function useMotionDetail(hash: string) {
   const {data, ...rest} = useQuery<{substrateChainCouncilMotionDetail: CouncilMotion}>(COUNCIL_MOTION_QUERY, {
     variables: {hash},
   });

@@ -66,7 +66,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
     !state.account ||
     !state.conviction ||
     !balance.gt(BN_ZERO) ||
-    balance.gt(formattedStringToBn(state.account.balance.free));
+    balance.gt(formattedStringToBn(state.account.balance?.free));
 
   return (
     <Layout style={globalStyles.flex}>

@@ -63,7 +63,7 @@ export function AccountScreen({route}: {route: RouteProp<AppStackParamList, type
                   <Padder scale={0.5} />
                   {account?.registration?.judgements.map((judgement, i) => (
                     <Caption style={[{backgroundColor: colors.accent}, styles.titleContainer]} key={i}>{`"${
-                      mapStatusText(judgement?.judgement ?? {}, Boolean(account?.registration.displayParent)).text
+                      mapStatusText(judgement?.judgement ?? {}, Boolean(account?.registration?.displayParent)).text
                     }" provided by Registrar #${judgement?.registrarIndex}`}</Caption>
                   ))}
                 </Card.Content>

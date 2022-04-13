@@ -1,22 +1,23 @@
 import React from 'react';
 import {View, StyleSheet, SectionList, Linking} from 'react-native';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {RouteProp} from '@react-navigation/native';
-import {ParachainsStackParamList} from '@ui/navigation/navigation';
+import {NavigationProp, RouteProp} from '@react-navigation/native';
+import {AppStackParamList, ParachainsStackParamList} from '@ui/navigation/navigation';
 import {Card, Subheading, Paragraph, List, Divider, Icon, Button, Text} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {EmptyView} from '@ui/components/EmptyView';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
-import type {Account} from 'src/api/hooks/useAccount';
 import LoadingView from '@ui/components/LoadingView';
 import {useParaChain} from 'src/api/hooks/useParachain';
+import {accountScreen} from '@ui/navigation/routeKeys';
 
 type ScreenProps = {
   route: RouteProp<ParachainsStackParamList, 'Parachain'>;
+  navigation: NavigationProp<AppStackParamList>;
 };
 
-export function ParachainDetailScreen({route}: ScreenProps) {
+export function ParachainDetailScreen({route, navigation}: ScreenProps) {
   const {data: parachain, loading} = useParaChain(route.params.parachainId);
   const [days, hours] = parachain?.lease?.blockTime || [];
   const sections = [
@@ -29,6 +30,10 @@ export function ParachainDetailScreen({route}: ScreenProps) {
       data: parachain?.nonVoters || [],
     },
   ];
+
+  const toAccountDetails = (address: string) => {
+    navigation.navigate(accountScreen, {address});
+  };
 
   if (loading && !parachain) return <LoadingView />;
 
@@ -89,9 +94,13 @@ export function ParachainDetailScreen({route}: ScreenProps) {
         contentContainerStyle={styles.content}
         stickySectionHeadersEnabled={false}
         sections={sections}
-        renderItem={({item}) => <MemoizedValidator account={item.account} />}
+        renderItem={({item}) => (
+          <View style={globalStyles.marginVertical}>
+            <AccountTeaser account={item} onPress={() => toAccountDetails(item.address)} />
+          </View>
+        )}
         renderSectionHeader={({section: {title}}) => <Text style={styles.header}>{title}</Text>}
-        keyExtractor={(item) => item.account.address}
+        keyExtractor={(item) => item.address}
         ListEmptyComponent={EmptyView}
         ItemSeparatorComponent={Divider}
         removeClippedSubviews={true}
@@ -107,11 +116,6 @@ function LeftIcon({icon}: {icon: string}) {
     </View>
   );
 }
-
-function Validator({account}: {account: Account}) {
-  return <List.Item title={() => account && <AccountTeaser account={account} />} />;
-}
-const MemoizedValidator = React.memo(Validator);
 
 const styles = StyleSheet.create({
   content: {
