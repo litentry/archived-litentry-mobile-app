@@ -17,7 +17,7 @@ on:
 
 jobs:
   fastlane-deploy:
-    runs-on: macOS-latest
+    runs-on: 'macos-latest'
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: install packages
@@ -41,7 +41,7 @@ jobs:
       - name: Setup Fastlane
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '2.6'
+          ruby-version: '3.1'
           bundler-cache: true
           working-directory: ios 
         # Build and deploy with Fastlane (by default, to beta track) 🚀.
