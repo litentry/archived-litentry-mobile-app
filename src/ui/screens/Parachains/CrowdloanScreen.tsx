@@ -193,7 +193,7 @@ function ContributeBox({
     !minContribution ||
     balance.isZero() ||
     balance.lt(minContribution) ||
-    balance.gt(formattedStringToBn(account.balance.free));
+    balance.gt(formattedStringToBn(account.balance?.free));
 
   return (
     <Modal visible={visible} onDismiss={reset}>

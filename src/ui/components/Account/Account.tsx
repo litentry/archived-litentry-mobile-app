@@ -3,7 +3,6 @@ import {StyleSheet, View} from 'react-native';
 import {stringShorten} from '@polkadot/util';
 import {Caption} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
-import {notEmpty} from 'src/utils';
 import {JudgmentStatus} from '@ui/components/Account/JudgmentStatus';
 import type {Account as AccountType} from 'src/api/hooks/useAccount';
 
@@ -13,23 +12,23 @@ type Props = {
 };
 
 export function Account({account, name}: Props) {
-  const registrationJudgements = account.registration.judgements
-    ? account.registration.judgements.filter(notEmpty)
-    : [];
-
   const display = name || stringShorten(account.display, 10);
 
   return (
     <View style={styles.container}>
       <Caption style={styles.display}>{display}</Caption>
       <Padder scale={0.5} />
-      {registrationJudgements.map((registrationJudgement, i) => (
-        <JudgmentStatus
-          key={i}
-          registrationJudgement={registrationJudgement}
-          hasParent={Boolean(account.registration.displayParent)}
-        />
-      ))}
+      {account.registration?.judgements?.map((judgement, i) => {
+        if (judgement) {
+          return (
+            <JudgmentStatus
+              key={i}
+              registrationJudgement={judgement}
+              hasParent={Boolean(account?.registration?.displayParent)}
+            />
+          );
+        }
+      })}
     </View>
   );
 }

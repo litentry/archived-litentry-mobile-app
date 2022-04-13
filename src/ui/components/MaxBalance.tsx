@@ -8,7 +8,7 @@ type PropTypes = {address: Account | undefined};
 function MaxBalance(props: PropTypes) {
   return (
     <View style={styles.balance}>
-      {!props.address ? <Caption>MAX: -- </Caption> : <Caption>MAX: {props.address?.balance.formattedFree}</Caption>}
+      {!props.address ? <Caption>MAX: -- </Caption> : <Caption>MAX: {props.address?.balance?.formattedFree}</Caption>}
     </View>
   );
 }

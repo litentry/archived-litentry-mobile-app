@@ -40,7 +40,7 @@ function ManageIdentity({
   const {currentNetwork} = useNetwork();
   const [registrarSelectionOpen, setRegistrarSelectionOpen] = useState(false);
 
-  const judgements = accountInfo?.registration.judgements;
+  const judgements = accountInfo?.registration?.judgements;
   const judgementCount = judgements?.length || 0;
   const hasJudgements = judgements && judgementCount > 0;
 
@@ -126,7 +126,7 @@ function ManageIdentity({
               </ItemRight>
             )}
           />
-          {accountInfo?.hasIdentity ? <AccountRegistration registration={accountInfo.registration} /> : null}
+          {accountInfo?.registration ? <AccountRegistration registration={accountInfo.registration} /> : null}
           <Padder scale={1} />
           <Button onPress={() => identityModalRef.current?.open()} mode="outlined">
             {accountInfo?.hasIdentity ? 'Update Identity' : 'Set Identity'}
