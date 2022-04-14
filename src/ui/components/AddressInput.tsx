@@ -1,13 +1,13 @@
 import React, {useCallback, useContext, useRef, useState} from 'react';
-import {TextInput, Icon, HelperText, Button} from '@ui/library';
-import globalStyles, {standardPadding} from '@ui/styles';
-import {Padder} from './Padder';
+import {Alert, Modal, StyleSheet, View} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
+import {TextInput, HelperText, Button, Title, IconButton} from '@ui/library';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {isAddressValid, parseAddress} from 'src/utils/address';
 import {NetworkContext} from 'context/NetworkContext';
-import {Alert, Modal, StyleSheet, Pressable, View} from 'react-native';
-import QRCamera, {QRCameraRef} from './QRCamera';
 import {useSnackbar} from 'context/SnackbarContext';
+import QRCamera, {QRCameraRef} from './QRCamera';
+import {Padder} from './Padder';
 
 type Props = {
   addressValid: (dispatch: boolean) => void;
@@ -21,19 +21,23 @@ export function AddressInput(props: Props) {
   const qrCameraRef = useRef<QRCameraRef>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const snackbar = useSnackbar();
-  const onPastePress = async () => {
+
+  const addressChanged = useCallback(
+    (nextValue: string) => {
+      setInputAddress(nextValue);
+      props.addressValid(isAddressValid(currentNetwork, nextValue));
+      setAddressValid(isAddressValid(currentNetwork, nextValue));
+      props.address(nextValue);
+    },
+    [currentNetwork, props],
+  );
+
+  const onPastePress = useCallback(async () => {
     const pastText = await Clipboard.getString();
     setInputAddress(pastText);
     addressChanged(pastText);
     snackbar('Address pasted from clipboard!');
-  };
-
-  const addressChanged = (nextValue: string) => {
-    setInputAddress(nextValue);
-    props.addressValid(isAddressValid(currentNetwork, nextValue));
-    setAddressValid(isAddressValid(currentNetwork, nextValue));
-    props.address(nextValue);
-  };
+  }, [addressChanged, snackbar]);
 
   const handleScan = useCallback(
     ({data}: {data: string}) => {
@@ -71,30 +75,8 @@ export function AddressInput(props: Props) {
           onChangeText={addressChanged}
         />
         <View style={styles.icons}>
-          <Pressable onPress={onPastePress}>
-            <Icon name="content-paste" size={30} />
-          </Pressable>
-          <Padder />
-
-          <Modal
-            animationType="fade"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              setModalVisible(!modalVisible);
-            }}>
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                <QRCamera onRead={handleScan} ref={qrCameraRef} />
-                <Padder scale={2} />
-                <Button onPress={() => setModalVisible(!modalVisible)}> Close </Button>
-              </View>
-            </View>
-          </Modal>
-
-          <Pressable onPress={() => setModalVisible(true)}>
-            <Icon name="qrcode-scan" size={30} />
-          </Pressable>
+          <IconButton icon="content-paste" onPress={onPastePress} />
+          <IconButton icon="qrcode-scan" onPress={() => setModalVisible(true)} />
         </View>
       </View>
 
@@ -103,6 +85,26 @@ export function AddressInput(props: Props) {
           Enter a valid address
         </HelperText>
       ) : null}
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Title style={globalStyles.textCenter}>Scan the address QR code</Title>
+            <Padder scale={1.5} />
+            <QRCamera onRead={handleScan} ref={qrCameraRef} />
+            <Padder scale={3} />
+            <Button compact onPress={() => setModalVisible(!modalVisible)}>
+              Close
+            </Button>
+          </View>
+        </View>
+      </Modal>
     </>
   );
 }
@@ -115,25 +117,21 @@ const styles = StyleSheet.create({
   icons: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-around',
-    marginHorizontal: standardPadding,
   },
   error: {
     right: standardPadding,
   },
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    marginTop: 22,
   },
   modalView: {
-    margin: standardPadding,
     backgroundColor: 'white',
-    borderRadius: standardPadding,
-    padding: standardPadding * 2,
     shadowOpacity: 0.25,
     elevation: 5,
+    height: '70%',
+    paddingVertical: 30,
   },
 });
 
