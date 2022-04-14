@@ -1,10 +1,10 @@
-import React, {useCallback, useContext, useRef, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {Alert, Modal, StyleSheet, View} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import {TextInput, HelperText, Button, Title, IconButton} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {isAddressValid, parseAddress} from 'src/utils/address';
-import {NetworkContext} from 'context/NetworkContext';
+import {useNetwork} from 'context/NetworkContext';
 import {useSnackbar} from 'context/SnackbarContext';
 import QRCamera, {QRCameraRef} from './QRCamera';
 import {Padder} from './Padder';
@@ -17,7 +17,7 @@ type Props = {
 export function AddressInput(props: Props) {
   const [inputAddress, setInputAddress] = useState('');
   const [addressValid, setAddressValid] = useState(false);
-  const {currentNetwork} = useContext(NetworkContext);
+  const {currentNetwork} = useNetwork();
   const qrCameraRef = useRef<QRCameraRef>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const snackbar = useSnackbar();
