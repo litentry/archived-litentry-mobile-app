@@ -22,7 +22,7 @@ export function AddressInput({onAddressChanged, onValidateAddress}: Props) {
   const [modalVisible, setModalVisible] = useState(false);
   const snackbar = useSnackbar();
 
-  const addressChanged = useCallback(
+  const updateInputAddress = useCallback(
     (address: string) => {
       setInputAddress(address);
       onAddressChanged(address);
@@ -31,18 +31,17 @@ export function AddressInput({onAddressChanged, onValidateAddress}: Props) {
   );
 
   const onPastePress = useCallback(async () => {
-    const pastText = await Clipboard.getString();
-    setInputAddress(pastText);
-    addressChanged(pastText);
+    const pastedAddress = await Clipboard.getString();
+    updateInputAddress(pastedAddress);
     snackbar('Address pasted from clipboard!');
-  }, [addressChanged, snackbar]);
+  }, [updateInputAddress, snackbar]);
 
   const handleScan = useCallback(
     ({data}: {data: string}) => {
       try {
         const parsed = parseAddress(data);
         if (isAddressValid(currentNetwork, parsed.address)) {
-          setInputAddress(parsed.address);
+          updateInputAddress(parsed.address);
           setModalVisible(false);
         } else {
           Alert.alert(
@@ -57,7 +56,7 @@ export function AddressInput({onAddressChanged, onValidateAddress}: Props) {
         ]);
       }
     },
-    [currentNetwork],
+    [currentNetwork, updateInputAddress],
   );
 
   useEffect(
@@ -81,7 +80,7 @@ export function AddressInput({onAddressChanged, onValidateAddress}: Props) {
           mode="outlined"
           style={styles.textInput}
           value={inputAddress}
-          onChangeText={addressChanged}
+          onChangeText={updateInputAddress}
         />
         <View style={styles.icons}>
           <IconButton icon="content-paste" onPress={onPastePress} />
