@@ -87,7 +87,7 @@ export function SendFundScreen({navigation, route}: Props) {
               label="Send to address"
               helperText="Scan a contact address or paste the address you want to send funds to."
             />
-            <AddressInput addressValid={setIsToAddressValid} address={setToAddress} />
+            <AddressInput onValidateAddress={setIsToAddressValid} onAddressChanged={setToAddress} />
             <Padder scale={1} />
             <InputLabel
               label="Existential deposit"

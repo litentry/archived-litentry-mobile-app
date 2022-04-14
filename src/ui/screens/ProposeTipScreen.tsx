@@ -58,8 +58,8 @@ export function ProposeTipScreen({navigation}: {navigation: NavigationProp<Dashb
                 helperText="The account to which the tip will be transferred if approved"
               />
               <AddressInput
-                addressValid={setIsBeneficiaryAddressValid}
-                address={(payload) => dispatch({type: 'SET_BENEFICIARY', payload: payload.trim()})}
+                onValidateAddress={setIsBeneficiaryAddressValid}
+                onAddressChanged={(address) => dispatch({type: 'SET_BENEFICIARY', payload: address.trim()})}
               />
               <Padder scale={1} />
 

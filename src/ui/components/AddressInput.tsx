@@ -1,4 +1,4 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Alert, Modal, StyleSheet, View} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import {TextInput, HelperText, Button, Title, IconButton} from '@ui/library';
@@ -10,12 +10,12 @@ import QRCamera, {QRCameraRef} from './QRCamera';
 import {Padder} from './Padder';
 
 type Props = {
-  addressValid: (dispatch: boolean) => void;
-  address: (dispatch: string) => void;
+  onValidateAddress: (isValid: boolean) => void;
+  onAddressChanged: (address: string) => void;
 };
 
-export function AddressInput(props: Props) {
-  const [inputAddress, setInputAddress] = useState('');
+export function AddressInput({onAddressChanged, onValidateAddress}: Props) {
+  const [inputAddress, setInputAddress] = useState<string>();
   const [addressValid, setAddressValid] = useState(false);
   const {currentNetwork} = useNetwork();
   const qrCameraRef = useRef<QRCameraRef>(null);
@@ -23,13 +23,11 @@ export function AddressInput(props: Props) {
   const snackbar = useSnackbar();
 
   const addressChanged = useCallback(
-    (nextValue: string) => {
-      setInputAddress(nextValue);
-      props.addressValid(isAddressValid(currentNetwork, nextValue));
-      setAddressValid(isAddressValid(currentNetwork, nextValue));
-      props.address(nextValue);
+    (address: string) => {
+      setInputAddress(address);
+      onAddressChanged(address);
     },
-    [currentNetwork, props],
+    [onAddressChanged],
   );
 
   const onPastePress = useCallback(async () => {
@@ -45,7 +43,7 @@ export function AddressInput(props: Props) {
         const parsed = parseAddress(data);
         if (isAddressValid(currentNetwork, parsed.address)) {
           setInputAddress(parsed.address);
-          setModalVisible(!modalVisible);
+          setModalVisible(false);
         } else {
           Alert.alert(
             'Validation Failed',
@@ -59,7 +57,18 @@ export function AddressInput(props: Props) {
         ]);
       }
     },
-    [currentNetwork, modalVisible],
+    [currentNetwork],
+  );
+
+  useEffect(
+    function validateAddress() {
+      if (inputAddress) {
+        const isValid = isAddressValid(currentNetwork, inputAddress);
+        onValidateAddress(isValid);
+        setAddressValid(isValid);
+      }
+    },
+    [inputAddress, onValidateAddress, currentNetwork],
   );
 
   return (
