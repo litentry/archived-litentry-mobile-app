@@ -15,7 +15,7 @@ import {
   eventsCalendarScreen,
   treasuryScreen,
 } from '@ui/navigation/routeKeys';
-import {standardPadding} from '@ui/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
 import {ScrollViewRefetch} from '@ui/components/ScrollViewRefetch';
@@ -24,6 +24,11 @@ import {COUNCIL_SUMMARY_QUERY} from 'src/api/hooks/useCouncilSummary';
 import {BOUNTIES_SUMMARY_QUERY} from 'src/api/hooks/useBountiesSummary';
 import {TREASURY_SUMMARY_QUERY} from 'src/api/hooks/useTreasurySummary';
 import {EventsCalendarTeaser} from '@ui/components/EventsCalendarTeaser';
+import {useBottomSheet} from '@ui/library/BottomSheet';
+import NetworkSelectionList from '@ui/components/NetworkSelectionList';
+import {useNetwork} from 'context/NetworkContext';
+import {NetworkType} from 'src/types';
+import {NetworkSwitch} from '@ui/components/NetworkSwitch';
 
 const refetchQueries = [DEMOCRACY_SUMMARY_QUERY, COUNCIL_SUMMARY_QUERY, BOUNTIES_SUMMARY_QUERY, TREASURY_SUMMARY_QUERY];
 
@@ -35,6 +40,20 @@ type PropTypes = {
 };
 
 function DashboardScreen({navigation}: PropTypes) {
+  const {closeBottomSheet, openBottomSheet, BottomSheet} = useBottomSheet();
+  const {currentNetwork, availableNetworks, select} = useNetwork();
+
+  const changeNetwork = (network: NetworkType) => {
+    select(network);
+    closeBottomSheet();
+  };
+
+  React.useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => <NetworkSwitch onPress={openBottomSheet} />,
+    });
+  }, [navigation, openBottomSheet]);
+
   return (
     <Layout style={styles.container}>
       <ScrollViewRefetch contentContainerStyle={styles.scrollView} refetchQueries={refetchQueries}>
@@ -48,6 +67,13 @@ function DashboardScreen({navigation}: PropTypes) {
         <Padder scale={0.6} />
         <BountySummaryTeaser onPress={() => navigation.navigate(bountiesScreen)} />
       </ScrollViewRefetch>
+
+      <BottomSheet>
+        <Layout style={globalStyles.paddedContainer}>
+          <NetworkSelectionList items={availableNetworks} selected={currentNetwork} onSelect={changeNetwork} />
+          <Padder scale={2} />
+        </Layout>
+      </BottomSheet>
     </Layout>
   );
 }
@@ -64,7 +90,6 @@ const styles = StyleSheet.create({
   titleContainer: {
     alignItems: 'flex-start',
   },
-  divider: {height: 2},
 });
 
 export default DashboardScreen;

@@ -3,17 +3,10 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createStackNavigator} from '@react-navigation/stack';
 import {MainDrawerAppBar, MainAppBar, MainStackAppBar} from '@ui/navigation/AppBars';
 import {AccountsNavigator, overlayScreenOptions} from '@ui/navigation/AppNavigator';
-import {
-  accountsNavigator,
-  feedbackScreen,
-  networkSelectionScreen,
-  tokenMigrationScreen,
-  webviewScreen,
-} from '@ui/navigation/routeKeys';
+import {accountsNavigator, feedbackScreen, tokenMigrationScreen, webviewScreen} from '@ui/navigation/routeKeys';
 import DrawerScreen from '@ui/screens/Drawer/DrawerScreen';
 import {TokenMigrationScreen} from '@ui/screens/TokenMigrationScreen';
 import {AppStackParamList} from '@ui/navigation/navigation';
-import {NetworkSelectionScreen} from '@ui/screens/NetworkSelectionScreen';
 import WebviewScreen from '@ui/screens/WebviewScreen';
 import {FeedbackScreen} from '@ui/screens/FeedbackScreen';
 
@@ -69,7 +62,6 @@ export function ParachainAppNavigator() {
   return (
     <AppStack.Navigator screenOptions={overlayScreenOptions}>
       <AppStack.Screen name={'Drawer'} component={DrawerNavigator} />
-      <AppStack.Screen name={networkSelectionScreen} component={NetworkSelectionScreen} />
     </AppStack.Navigator>
   );
 }
