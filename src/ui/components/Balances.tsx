@@ -19,6 +19,7 @@ function Balances({balance}: Props) {
             <Caption>{balance.formattedTotal}</Caption>
           </ItemRight>
         )}
+        testID={'total_balance'}
       />
       <List.Item
         title="Transferrable"
@@ -27,6 +28,7 @@ function Balances({balance}: Props) {
             <Caption>{balance.formattedFree}</Caption>
           </ItemRight>
         )}
+        testID={'transferrable'}
       />
       <List.Item
         title="Reserved"
@@ -35,6 +37,7 @@ function Balances({balance}: Props) {
             <Caption>{balance.formattedReserved}</Caption>
           </ItemRight>
         )}
+        testID={'reserved'}
       />
       <List.Item
         title="Locked"
@@ -43,6 +46,7 @@ function Balances({balance}: Props) {
             <Caption>{balance.formattedFreeFrozen}</Caption>
           </ItemRight>
         )}
+        testID={'locked'}
       />
     </Layout>
   );
