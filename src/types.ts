@@ -2,7 +2,7 @@ import {DeriveAccountRegistration} from '@polkadot/api-derive/types';
 import {Registration} from '@polkadot/types/interfaces';
 import {BarCodeReadEvent} from 'react-native-camera';
 
-export type SupportedNetworkType = 'ethereum' | 'polkadot' | 'kusama' | 'litentry_test';
+export type SupportedNetworkType = 'ethereum' | 'polkadot' | 'kusama' | 'litentry_test' | 'litmus';
 
 export type DeviceType = {
   firebase_token: string;
@@ -20,9 +20,10 @@ export type NetworkType = {
   name: string;
   key: SupportedNetworkType;
   ws: string[];
-  isTestnet?: boolean;
   color?: string;
   ss58Format: number;
+  isTestnet?: boolean;
+  isParachain?: boolean;
 };
 
 export type NetworkContextValueType = {
@@ -49,7 +50,7 @@ export type AccountAddressType = {
 export type AddressDetailType =
   | {network: 'ethereum'; data: null}
   | {
-      network: 'polkadot' | 'kusama' | 'litentry_test';
+      network: 'polkadot' | 'kusama' | 'litentry_test' | 'litmus';
       data?: Registration;
     };
 

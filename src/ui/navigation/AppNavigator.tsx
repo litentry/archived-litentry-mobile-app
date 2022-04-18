@@ -24,7 +24,6 @@ import {MotionDetailScreen} from '@ui/screens/MotionDetailScreen';
 import {MyAccountScreen} from '@ui/screens/MyAccountScreen';
 import {IdentityGuideScreen} from '@ui/screens/MyIdentityScreen/IdentityGuideScreen';
 import ManageIdentityScreen from '@ui/screens/MyIdentityScreen/ManageIdentity';
-import {NetworkSelectionScreen} from '@ui/screens/NetworkSelectionScreen';
 import {NotificationSettingsScreen} from '@ui/screens/NotificationSettingsScreen';
 import {AuctionsScreen} from '@ui/screens/Parachains/AuctionsScreen';
 import {CrowdloanFundDetailScreen} from '@ui/screens/Parachains/CrowdloanFundDetailScreen';
@@ -64,14 +63,24 @@ import {SendFundScreen} from '@ui/screens/SendFundScreen';
 import {FeedbackScreen} from '@ui/screens/FeedbackScreen';
 import {AccountScreen} from '@ui/screens/AccountScreen';
 import {AddBountyScreen} from '@ui/screens/AddBountyScreen';
+import {OnboardingScreen} from '@ui/screens/Onboarding/OnboardingScreen';
+import {usePersistedState} from '@hooks/usePersistedState';
 
 const DashboardStack = createStackNavigator<DashboardStackParamList>();
 
 function DashboardStackNavigator() {
+  const [onboardingSeen] = usePersistedState<boolean>('onboarding_seen');
   useFirebase();
 
   return (
     <DashboardStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
+      {!onboardingSeen ? (
+        <DashboardStack.Screen
+          name={routeKeys.onboardingScreen}
+          component={OnboardingScreen}
+          options={{headerShown: false, presentation: 'modal'}}
+        />
+      ) : null}
       <DashboardStack.Screen
         name={routeKeys.dashboardScreen}
         component={DashboardScreen}
@@ -101,7 +110,7 @@ function DashboardStackNavigator() {
 
 const AccountsStack = createStackNavigator<AccountsStackParamList>();
 
-function AccountsNavigator() {
+export function AccountsNavigator() {
   return (
     <AccountsStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
       <AccountsStack.Screen
@@ -270,11 +279,6 @@ function AppNavigator() {
         options={{presentation: 'transparentModal'}}
       />
       <AppStack.Screen
-        name={routeKeys.networkSelectionScreen}
-        component={NetworkSelectionScreen}
-        options={{animationEnabled: false, presentation: 'transparentModal'}}
-      />
-      <AppStack.Screen
         name={routeKeys.accountScreen}
         component={AccountScreen}
         options={{header: (props) => <MainStackAppBar {...props} />, headerShown: true}}
@@ -285,7 +289,7 @@ function AppNavigator() {
 
 export default AppNavigator;
 
-const overlayScreenOptions: StackNavigationOptions = {
+export const overlayScreenOptions: StackNavigationOptions = {
   presentation: 'transparentModal',
   headerShown: false,
   animationEnabled: false,

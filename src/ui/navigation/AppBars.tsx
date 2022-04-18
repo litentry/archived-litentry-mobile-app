@@ -1,16 +1,12 @@
 import React from 'react';
-import {Keyboard, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
+import {Keyboard, StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
 import {ParamListBase, Route, RouteProp} from '@react-navigation/core';
 import {DrawerNavigationOptions, DrawerNavigationProp} from '@react-navigation/drawer';
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack';
 import {DrawerActions} from '@react-navigation/native';
-import {useApi} from 'context/ChainApiContext';
-import {useNetwork} from 'context/NetworkContext';
-import NetworkItem from '@ui/components/NetworkItem';
-import {dashboardScreen, networkSelectionScreen} from '@ui/navigation/routeKeys';
+import {dashboardScreen, tokenMigrationScreen} from '@ui/navigation/routeKeys';
 import {AppBar, AppHeader, Title, useTheme} from '@ui/library';
 import {standardPadding} from '@ui/styles';
-import {noop} from 'lodash';
 
 export function MainDrawerAppBar({
   navigation,
@@ -80,14 +76,13 @@ export function MainStackAppBar({
 export function MainAppBar({
   navigation,
   route,
+  options,
 }: {
   navigation: StackNavigationProp<ParamListBase>;
   route: RouteProp<ParamListBase>;
+  options: StackNavigationOptions;
 }) {
-  const showMenu = route.name === dashboardScreen;
-
-  const {currentNetwork} = useNetwork();
-  const {status} = useApi();
+  const showMenu = route.name === dashboardScreen || tokenMigrationScreen;
   const {colors} = useTheme();
 
   const onActionLeftPress = React.useCallback(() => {
@@ -96,11 +91,7 @@ export function MainAppBar({
 
   return (
     <AppHeader style={{backgroundColor: colors.primary}}>
-      <AppBar.Action
-        onPress={showMenu ? onActionLeftPress : noop}
-        icon={'menu'}
-        color={showMenu ? 'white' : 'transparent'}
-      />
+      {showMenu ? <AppBar.Action onPress={onActionLeftPress} icon={'menu'} color="white" /> : null}
       <AppBar.Content
         style={styles.contentContainer}
         title={
@@ -109,13 +100,7 @@ export function MainAppBar({
           </View>
         }
       />
-      <TouchableOpacity
-        onPress={() => navigation.navigate(networkSelectionScreen)}
-        style={[styles.networkSwitch, {backgroundColor: colors.background}]}>
-        {currentNetwork ? (
-          <NetworkItem item={currentNetwork} isConnected={status === 'connected' || status === 'ready'} />
-        ) : undefined}
-      </TouchableOpacity>
+      {options.headerRight ? options.headerRight({}) : null}
     </AppHeader>
   );
 }

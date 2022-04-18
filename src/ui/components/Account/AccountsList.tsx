@@ -1,11 +1,12 @@
 import React from 'react';
-import {FlatList} from 'react-native';
+import {FlatList, View} from 'react-native';
 import {Divider} from '@ui/library';
 import type {AccountInfo} from 'src/api/hooks/useAccount';
-import {AccountListItem} from './AccountListItem';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {AppStackParamList} from '@ui/navigation/navigation';
 import {accountScreen} from '@ui/navigation/routeKeys';
+import {AccountTeaser} from './AccountTeaser';
+import globalStyles from '@ui/styles';
 
 type Props = {
   accounts: AccountInfo[];
@@ -18,10 +19,13 @@ export function AccountsList({accounts, header}: Props) {
     <FlatList
       data={accounts}
       renderItem={({item}) => (
-        <AccountListItem
-          account={item.account}
-          onPress={() => navigation.navigate(accountScreen, {address: item.account.address})}
-        />
+        <View style={globalStyles.paddedContainer}>
+          <AccountTeaser
+            identiconSize={25}
+            account={item.account}
+            onPress={() => navigation.navigate(accountScreen, {address: item.account.address})}
+          />
+        </View>
       )}
       keyExtractor={(item) => item.account.address}
       ItemSeparatorComponent={Divider}

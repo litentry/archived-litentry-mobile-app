@@ -54,7 +54,7 @@ const globalStyles = StyleSheet.create({
     ...dividerPlain,
   },
   dividerPlain,
-  centeredContainer: {
+  fillCenter: {
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
@@ -77,12 +77,14 @@ const globalStyles = StyleSheet.create({
       width: 1,
       height: 2,
     },
-    shadowOpacity: 1,
+    shadowOpacity: 0.2,
     shadowRadius: 3.84,
 
     elevation: 5,
   },
-
+  marginVertical: {
+    marginVertical: standardPadding,
+  },
   monoFont: {
     fontFamily: monofontFamily,
   },

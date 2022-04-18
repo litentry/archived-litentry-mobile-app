@@ -2,6 +2,7 @@ import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View, ScrollView} from 'react-native';
 import {DrawerContentComponentProps} from '@react-navigation/drawer';
 import {useToggleTheme} from 'context/ThemeContext';
+import {useNetwork} from 'context/NetworkContext';
 import logo from 'image/logo.png';
 import SafeView from '@ui/components/SafeView';
 import {useIsParachainAvailable} from 'src/api/hooks/useIsParachainAvailable';
@@ -29,6 +30,7 @@ import {getCurrentYear} from 'src/utils/date';
 import {Drawer, Switch, Text, Divider} from '@ui/library';
 
 function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
+  const {currentNetwork} = useNetwork();
   const {theme, toggleTheme} = useToggleTheme();
   const isParachainAvailable = useIsParachainAvailable();
   const currentRoute = state.routes[state.index];
@@ -47,46 +49,69 @@ function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
       <Divider />
       <ScrollView>
         <Drawer.Section>
-          <Drawer.Item
-            label="Dashboard"
-            icon="view-dashboard"
-            active={activeScreen === dashboardNavigator}
-            onPress={() => {
-              navigation.navigate(dashboardScreen);
-            }}
-          />
-          <Drawer.Item
-            label="Accounts"
-            icon="account-details"
-            active={activeScreen === accountsNavigator}
-            onPress={() => {
-              navigation.navigate(accountsNavigator);
-            }}
-          />
-          <Drawer.Item
-            label="Registrars"
-            icon="playlist-check"
-            active={activeScreen === registrarListScreen}
-            onPress={() => {
-              navigation.navigate(registrarListScreen);
-            }}
-          />
-          <Drawer.Item
-            label="Tech. Committee"
-            icon="chip"
-            active={activeScreen === technicalCommitteeScreen}
-            onPress={() => {
-              navigation.navigate(technicalCommitteeScreen);
-            }}
-          />
-          <Drawer.Item
-            label="Discussions"
-            icon="forum"
-            active={activeScreen === polkassemblyDiscussionsNavigator}
-            onPress={() => {
-              navigation.navigate(polkassemblyDiscussionsNavigator);
-            }}
-          />
+          {!currentNetwork.isParachain ? (
+            <>
+              <Drawer.Item
+                label="Dashboard"
+                icon="view-dashboard"
+                active={activeScreen === dashboardNavigator}
+                onPress={() => {
+                  navigation.navigate(dashboardScreen);
+                }}
+              />
+              <Drawer.Item
+                label="Accounts"
+                icon="account-details"
+                active={activeScreen === accountsNavigator}
+                onPress={() => {
+                  navigation.navigate(accountsNavigator);
+                }}
+              />
+              <Drawer.Item
+                label="Registrars"
+                icon="playlist-check"
+                active={activeScreen === registrarListScreen}
+                onPress={() => {
+                  navigation.navigate(registrarListScreen);
+                }}
+              />
+              <Drawer.Item
+                label="Tech. Committee"
+                icon="chip"
+                active={activeScreen === technicalCommitteeScreen}
+                onPress={() => {
+                  navigation.navigate(technicalCommitteeScreen);
+                }}
+              />
+              <Drawer.Item
+                label="Discussions"
+                icon="forum"
+                active={activeScreen === polkassemblyDiscussionsNavigator}
+                onPress={() => {
+                  navigation.navigate(polkassemblyDiscussionsNavigator);
+                }}
+              />
+            </>
+          ) : (
+            <>
+              <Drawer.Item
+                label="Accounts"
+                icon="account-details"
+                active={activeScreen === accountsNavigator}
+                onPress={() => {
+                  navigation.navigate(accountsNavigator);
+                }}
+              />
+              <Drawer.Item
+                label="LIT Migration"
+                icon="bank-transfer"
+                active={activeScreen === 'tokenMigrationNavigator'}
+                onPress={() => {
+                  navigation.navigate('tokenMigrationNavigator');
+                }}
+              />
+            </>
+          )}
         </Drawer.Section>
         {isParachainAvailable ? (
           <Drawer.Section title="Parachains">
@@ -130,24 +155,28 @@ function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
             icon="brightness-6"
             right={() => <Switch value={theme === 'dark'} onValueChange={toggleTheme} />}
           />
-          <Drawer.Item
-            label="Notifications"
-            icon="bell"
-            active={activeScreen === notificationSettingsScreen}
-            onPress={() => {
-              navigation.navigate(notificationSettingsScreen);
-            }}
-          />
-          {__DEV__ && (
-            <Drawer.Item
-              label="Dev Kit"
-              icon="code-tags"
-              active={activeScreen === devScreen}
-              onPress={() => {
-                navigation.navigate(devScreen);
-              }}
-            />
-          )}
+          {currentNetwork.isParachain ? (
+            <>
+              <Drawer.Item
+                label="Notifications"
+                icon="bell"
+                active={activeScreen === notificationSettingsScreen}
+                onPress={() => {
+                  navigation.navigate(notificationSettingsScreen);
+                }}
+              />
+              {__DEV__ && (
+                <Drawer.Item
+                  label="Dev Kit"
+                  icon="code-tags"
+                  active={activeScreen === devScreen}
+                  onPress={() => {
+                    navigation.navigate(devScreen);
+                  }}
+                />
+              )}
+            </>
+          ) : null}
         </Drawer.Section>
         <Drawer.Section>
           <Drawer.Item

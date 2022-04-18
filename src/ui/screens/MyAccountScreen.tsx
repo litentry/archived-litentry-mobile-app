@@ -85,11 +85,11 @@ export function MyAccountScreen({
 
           <InfoItem title="IDENTITY">
             <Caption>{accountInfo?.hasIdentity ? accountInfo.display : 'No Identity Data Found'}</Caption>
-            <Caption>{`${accountInfo?.registration.judgements?.length} Judgements`}</Caption>
+            <Caption>{`${accountInfo?.registration?.judgements?.length} Judgements`}</Caption>
           </InfoItem>
 
           <InfoItem title="BALANCE">
-            <Caption>{accountInfo?.balance.formattedFree}</Caption>
+            <Caption>{accountInfo?.balance?.formattedFree}</Caption>
           </InfoItem>
         </Card>
 

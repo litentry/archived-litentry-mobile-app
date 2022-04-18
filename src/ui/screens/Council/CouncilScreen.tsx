@@ -2,15 +2,16 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {ScrollView, TouchableOpacity, SectionList, StyleSheet, View, useWindowDimensions} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp} from '@react-navigation/native';
+import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SelectAccount} from '@ui/components/SelectAccount';
-import {useCouncil, CouncilCandidate, CouncilMember, Council} from 'src/api/hooks/useCouncil';
+import {useCouncil, CouncilMember, Council} from 'src/api/hooks/useCouncil';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {candidateScreen} from '@ui/navigation/routeKeys';
-import {List, Button, Divider, Modal, useTheme, Caption, Subheading, Text, TextInput} from '@ui/library';
+import {Button, Divider, Modal, useTheme, Caption, Subheading, Text, TextInput, HelperText} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {MotionsScreen} from './MotionsScreen';
@@ -26,6 +27,8 @@ import MaxBalance from '@ui/components/MaxBalance';
 import {useApi} from 'context/ChainApiContext';
 import {useSnackbar} from 'context/SnackbarContext';
 import {InputLabel} from '@ui/library/InputLabel';
+import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
+import {BN_ZERO} from '@polkadot/util';
 
 const MAX_VOTES = 16;
 
@@ -49,69 +52,74 @@ export function CouncilScreen() {
   );
 }
 
-function CouncilOverviewScreen() {
+type ScreenProps = {
+  navigation: NavigationProp<DashboardStackParamList>;
+};
+
+function CouncilOverviewScreen({navigation}: ScreenProps) {
   const {data: council, loading} = useCouncil();
   const {data: moduleElection} = useModuleElection();
-
   const [councilVoteVisible, setCouncilVoteVisible] = useState(false);
-
   const [submitCandidacyVisible, setSubmitCandidacyVisible] = useState(false);
 
-  const sectionsData = useMemo(
-    () => [
-      {title: 'Members', data: council ? council.members : []},
-      {title: 'Runners Up', data: council ? council.runnersUp : []},
-      {
-        title: 'Candidates',
-        data: council ? council.candidates : [],
-      },
-    ],
-    [council],
-  );
-
-  const votingCandidates = useMemo(() => {
-    if (council) {
-      return council.members.concat(council.runnersUp).concat(council.candidates as CouncilMember[]);
-    }
-    return [];
+  const {sectionData, votingCandidates} = useMemo(() => {
+    return {
+      sectionData: [
+        {title: 'Prime voter', data: council?.primeMember ? [council.primeMember] : []},
+        {title: 'Member', data: council?.members ? council.members : []},
+        {title: 'Runners Up', data: council?.runnersUp ? council.runnersUp : []},
+        {title: 'Candidate', data: council?.candidates ? council.candidates : []},
+      ],
+      votingCandidates: council ? council.members.concat(council.runnersUp).concat(council.candidates) : [],
+    };
   }, [council]);
+
+  const toMemberScreen = (member: CouncilMember, title: string) => {
+    navigation.navigate(candidateScreen, {candidate: member, title});
+  };
 
   return (
     <SafeView edges={noTopEdges}>
       {loading && !council ? (
         <LoadingView />
       ) : (
-        <SectionList<CouncilMember | CouncilCandidate>
+        <SectionList
           style={globalStyles.flex}
           contentContainerStyle={styles.content}
-          sections={sectionsData}
+          sections={sectionData}
           keyExtractor={(item) => item.account.address}
           stickySectionHeadersEnabled={false}
           renderItem={({item, section}) => {
             return (
-              <CouncilMemberItem
-                member={item}
-                sectionType={
-                  section.title === 'Members' ? 'Member' : section.title === 'Runners Up' ? 'Runner Up' : 'Candidate'
-                }
-              />
+              <View style={globalStyles.marginVertical}>
+                <AccountTeaser
+                  identiconSize={25}
+                  account={item.account}
+                  onPress={() => toMemberScreen(item, section.title)}>
+                  <View style={globalStyles.rowAlignCenter}>
+                    <Caption>{`Backing: ${item.formattedBacking}`}</Caption>
+                    <Padder />
+                    <Caption>{`votes: ${item.voters.length}`}</Caption>
+                  </View>
+                </AccountTeaser>
+              </View>
             );
           }}
           renderSectionHeader={({section: {title}}) => (
             <>
-              <List.Item style={styles.sectionHeader} title={buildSectionHeaderTitle(title, council)} />
-              {title === 'Members' ? (
-                <View style={globalStyles.rowContainer}>
+              <Padder />
+              <Subheading>{buildSectionHeaderTitle(title, council)}</Subheading>
+              {title === 'Member' ? (
+                <View style={styles.voteActions}>
                   <Button icon="vote" mode="outlined" onPress={() => setCouncilVoteVisible(true)}>
-                    Vote
+                    {`Vote`}
                   </Button>
                   <Padder scale={1} />
                   <Button icon="vote" mode="outlined" onPress={() => setSubmitCandidacyVisible(true)}>
-                    Submit Candidacy
+                    {`Submit candidacy`}
                   </Button>
                 </View>
               ) : null}
-              <Padder scale={1} />
             </>
           )}
           ItemSeparatorComponent={Divider}
@@ -148,45 +156,16 @@ function buildSectionHeaderTitle(sectionTitle: string, council?: Council) {
 
   let title: string;
 
-  if (sectionTitle === 'Members') {
+  if (sectionTitle === 'Member') {
     title = `${council.totalMembers}/${council.desiredSeats}`;
   } else if (sectionTitle === 'Runners Up') {
     title = `${council.totalRunnersUp}/${council.desiredRunnersUp}`;
+  } else if (sectionTitle === 'Prime voter') {
+    title = '';
   } else {
     title = String(council.totalCandidates);
   }
   return `${sectionTitle} ${title}`;
-}
-
-type CouncilMemberItemProps = {
-  member: CouncilMember | CouncilCandidate;
-  sectionType: string;
-};
-
-function CouncilMemberItem({member, sectionType}: CouncilMemberItemProps) {
-  const {navigate} = useNavigation();
-
-  return (
-    <List.Item
-      title={member.account.display}
-      left={() => (
-        <View style={globalStyles.justifyCenter}>
-          <Identicon value={member.account.address} size={30} />
-        </View>
-      )}
-      right={
-        'voters' in member
-          ? () => (
-              <View style={globalStyles.justifyCenter}>
-                <Caption>{member.voters.length} votes</Caption>
-              </View>
-            )
-          : undefined
-      }
-      description={'formattedBacking' in member ? `Backing: ${member.formattedBacking}` : ''}
-      onPress={() => navigate(candidateScreen, {candidate: member, title: sectionType})}
-    />
-  );
 }
 
 type CouncilVoteProps = {
@@ -208,6 +187,7 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
   const [selectedCandidates, setSelectedCandidates] = React.useState<Array<string>>([]);
   const {data: councilVote} = useCouncilVotesOf(account?.address);
   const {dark: isDarkTheme} = useTheme();
+  const {stringToBn} = useFormatBalance();
 
   // preselect already voted council members
   useEffect(() => {
@@ -229,7 +209,14 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
       : noop;
   };
 
-  const disabled = !amount || !account || selectedCandidates.length === 0;
+  const enteredBalance = stringToBn(amount) ?? BN_ZERO;
+
+  const disabled =
+    !amount ||
+    !account ||
+    selectedCandidates.length === 0 ||
+    !enteredBalance.gt(formattedStringToBn(moduleElection.votingBondBase)) ||
+    !enteredBalance.lt(formattedStringToBn(account?.balance?.free));
 
   const bondValue = useMemo(() => {
     const votingBondBase = formattedStringToBn(moduleElection.votingBondBase);
@@ -261,17 +248,20 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
 
   return (
     <Modal visible={visible} onDismiss={reset}>
-      <View style={styles.centerAlign}>
+      <View style={globalStyles.alignCenter}>
         <Subheading>{`Vote for council`}</Subheading>
       </View>
       <Padder scale={1} />
-
+      <InputLabel label={'voting account:'} helperText={'This account will be use to approve each candidate.'} />
       <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
       <Padder scale={1} />
+      <InputLabel
+        label={'Vote value:'}
+        helperText={'The amount that is associated with this vote. This tokens is locked for the duration of the vote.'}
+      />
       <BalanceInput account={account} onChangeBalance={setAmount} />
       <Padder scale={1} />
-      <Caption>{`Select up to ${MAX_VOTES} candidates in the preferred order:`}</Caption>
-
+      <InputLabel label={`Select up to ${MAX_VOTES} candidates in the preferred order:`} />
       <View style={styles.candidatesContainer}>
         <View style={styles.candidates}>
           <ScrollView indicatorStyle={isDarkTheme ? 'white' : 'black'}>
@@ -288,7 +278,7 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
         </View>
 
         <View style={styles.votingBond}>
-          <Caption style={globalStyles.textCenter}>{`Bond`}</Caption>
+          <InputLabel label={'Bond:'} helperText={'The amount that will be reserved'} />
           {bondValue && <Text style={styles.bondValue}>{`${formatBalance(bondValue)}`}</Text>}
         </View>
       </View>
@@ -313,6 +303,12 @@ function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandi
   const balance = useFormatBalance();
   const formattedBalance = balance.formatBalance(moduleElection.candidacyBond);
   const {data: council} = useCouncil();
+  const accountFreeBalance = account?.balance?.free ?? '';
+  const candidacyBond = balance.stringToBn(moduleElection.candidacyBond) ?? BN_ZERO;
+  const sufficientBalance =
+    balance.stringToBn(accountFreeBalance)?.gt(BN_ZERO) && balance.stringToBn(accountFreeBalance)?.gt(candidacyBond);
+
+  const submitCandidacy = !account || !sufficientBalance;
 
   const snackbar = useSnackbar();
   const onSubmitCandidacy = () => {
@@ -341,7 +337,7 @@ function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandi
 
   return (
     <Modal visible={visible} onDismiss={reset}>
-      <View style={styles.centerAlign}>
+      <View style={globalStyles.alignCenter}>
         <Subheading>{`Submit Council Candidacy`}</Subheading>
       </View>
       <Padder scale={1} />
@@ -351,12 +347,15 @@ function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandi
       <InputLabel label={'Candidacy bond:'} helperText={'The bond that is reserved.'} />
       <TextInput mode="outlined" disabled value={formattedBalance} />
       <MaxBalance address={account} />
+      {submitCandidacy && account ? (
+        <HelperText type="error">{`Selected account has insufficient funds to submit a council candidacy`}</HelperText>
+      ) : null}
       <Padder scale={1} />
       <View style={styles.buttons}>
         <Button onPress={reset} mode="outlined" compact>
           Cancel
         </Button>
-        <Button mode="contained" disabled={!account} onPress={onSubmitCandidacy}>
+        <Button mode="contained" disabled={submitCandidacy} onPress={onSubmitCandidacy}>
           Submit
         </Button>
       </View>
@@ -398,20 +397,9 @@ function MemberItem({candidate, onSelect, isSelected, order}: MemberItemProps) {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    padding: standardPadding * 2,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  sectionHeader: {
-    marginTop: standardPadding * 2,
-  },
   content: {
     paddingVertical: standardPadding,
     paddingHorizontal: standardPadding * 2,
-  },
-  centerAlign: {
-    alignItems: 'center',
   },
   candidatesContainer: {
     flexDirection: 'row',
@@ -432,9 +420,6 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-  },
-  voteButton: {
-    width: 100,
   },
   candidateItemContainer: {
     flexDirection: 'row',
@@ -458,15 +443,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
-  fab: {
-    position: 'absolute',
-    margin: 0,
-    right: 24,
-    bottom: 32,
+  voteActions: {
+    flexDirection: 'row',
+    marginVertical: standardPadding,
   },
-  voteValue: {
-    marginLeft: standardPadding,
-  },
-  spacer: {minWidth: standardPadding * 3},
-  paddingTop: {paddingTop: 3},
 });

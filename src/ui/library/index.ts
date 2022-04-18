@@ -9,6 +9,7 @@ export {
   Text,
   Title,
   Caption,
+  Card,
   Paragraph,
   Subheading,
   Headline,
@@ -38,7 +39,6 @@ export {Icon} from './Icon';
 export {ProgressChart} from 'react-native-chart-kit';
 export {AppHeader} from './AppHeader';
 export {Modal} from './Modal';
-export {Card} from './Card';
 export {Select} from './Select';
 export {Calendar} from './Calendar';
 export {Tabs, TabScreen, useTabIndex, useTabNavigation} from 'react-native-paper-tabs';

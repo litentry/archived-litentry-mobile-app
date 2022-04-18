@@ -32,6 +32,7 @@ import {
   myAccountScreen,
   networkSelectionScreen,
   notificationSettingsScreen,
+  onboardingScreen,
   parachainAuctionsScreen,
   parachainDetailScreen,
   parachainsNavigator,
@@ -54,7 +55,7 @@ import {
   verifyMnemonicScreen,
   webviewScreen,
 } from '@ui/navigation/routeKeys';
-import type {CouncilCandidate, CouncilMember} from 'src/api/hooks/useCouncil';
+import type {CouncilMember} from 'src/api/hooks/useCouncil';
 import type {DemocracyProposal, DemocracyReferendum} from 'src/api/hooks/useDemocracy';
 
 type DashboardStackParamList = {
@@ -68,7 +69,7 @@ type DashboardStackParamList = {
   };
   [councilScreen]: undefined;
   [candidateScreen]: {
-    candidate: CouncilCandidate | CouncilMember;
+    candidate: CouncilMember;
     title: string;
   };
   [proposeTipScreen]: undefined;
@@ -81,6 +82,7 @@ type DashboardStackParamList = {
   [bountyDetailScreen]: {index: string};
   [addBountyScreen]: undefined;
   [eventsCalendarScreen]: undefined;
+  [onboardingScreen]: undefined;
 };
 
 type DrawerParamList = {

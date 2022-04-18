@@ -35,7 +35,14 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-    </application>
+            <intent-filter android:label="filter_litentry_scheme">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "litentry://” -->
+                <data android:scheme="litentry" />
+            </intent-filter>
+                </activity>
+            </application>
 
 </manifest>

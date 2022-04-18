@@ -1,7 +1,6 @@
 import {Compact} from '@polkadot/types';
-import type BN from 'bn.js';
 // eslint-disable-next-line no-restricted-imports
-import {formatBalance as formatBalancePolkaUtil} from '@polkadot/util';
+import {formatBalance as formatBalancePolkaUtil, BN} from '@polkadot/util';
 import {useChainInfo, Registry} from './useChainInfo';
 import {stringToBn as stringToBnUtil} from 'src/api/utils/balance';
 
