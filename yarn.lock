@@ -3071,6 +3071,13 @@
   resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-14.7.0.tgz#9ab30860f140dec1dce49f012fd56526e5b3707a"
   integrity sha512-G0GmmbmmAvhEltK7Rr1A3Mz6vH4qsX6OaqYNzbhgHvP2jvTIuchLcWozjTGcH/0OsXZz15fRe0WjQ3aMS2TTpg==
 
+"@react-native-firebase/perf@^14.7.0":
+  version "14.7.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/perf/-/perf-14.7.0.tgz#e89280edd3ecf97c6dad2f1e5997b39aba650852"
+  integrity sha512-r/AUDpR/R670q2iJFes3peui+1jmmdOok6/HS1tr/eEGlEmsBa5/iYCJJ704AwhKa8ZQqpJSsiw1VEcPTYICZg==
+  dependencies:
+    "@expo/config-plugins" "^4.0.18"
+
 "@react-native/assets@1.0.0":
   version "1.0.0"
   resolved "https://registry.npmjs.org/@react-native/assets/-/assets-1.0.0.tgz"
@@ -12902,6 +12909,16 @@ react-native-document-picker@^8.0.0:
   dependencies:
     invariant "^2.2.4"
 
+react-native-flipper-performance-plugin@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-flipper-performance-plugin/-/react-native-flipper-performance-plugin-0.2.1.tgz#49d00a14d548b666cd2cb5734172fc1bacf73e5b"
+  integrity sha512-wZuCgVkHfJ9363XynKVdAiG532lO5sw49HoQMjUJDOEI6BuicUxKzf2WJlO/VSHMUCfP1Ys6EO+ElwPM9sxEIg==
+
+react-native-flipper@^0.142.0:
+  version "0.142.0"
+  resolved "https://registry.yarnpkg.com/react-native-flipper/-/react-native-flipper-0.142.0.tgz#f5e6863efea0e1e9b60f949bebfab1dd154d830a"
+  integrity sha512-R9WB+0ihIYNEUQ3H7zOf7Gc4aUC6LXE8NF6Sx4aVVsIqRGEfBP30/X/jl/hU3z9K1D1DBE86sL/6fpDbAdy8Kw==
+
 react-native-fs@^2.19.0:
   version "2.19.0"
   resolved "https://registry.npmjs.org/react-native-fs/-/react-native-fs-2.19.0.tgz"
@@ -13087,6 +13104,11 @@ react-native-splash-screen@^3.3.0:
   version "3.3.0"
   resolved "https://registry.npmjs.org/react-native-splash-screen/-/react-native-splash-screen-3.3.0.tgz"
   integrity sha512-rGjt6HkoSXxMqH4SQUJ1gnPQlPJV8+J47+4yhgTIan4bVvAwJhEeJH7wWt9hXSdH4+VfwTS0GTaflj1Tw83IhA==
+
+react-native-startup-trace@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-startup-trace/-/react-native-startup-trace-0.5.0.tgz#631e8d039d15cc65ee0a1bb8579566476aa02af7"
+  integrity sha512-80fHUE0Rt0DmjhUcf/Sd3cPJkH0tt4Inly06cyT4C7OWU7u8VlrQRD+UY/0EG5der4DGWnccaJuANgMwpbR+NA==
 
 react-native-substrate-sign@^1.1.1:
   version "1.1.1"

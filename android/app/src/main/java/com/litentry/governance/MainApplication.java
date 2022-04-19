@@ -12,6 +12,7 @@ import com.facebook.react.bridge.JSIModulePackage;
 import com.swmansion.reanimated.ReanimatedJSIModulePackage;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import tech.bam.rnperformance.startuptrace.StartupTraceModule;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -51,6 +52,7 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
+    StartupTraceModule.start();
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
   }
 
@@ -69,7 +71,7 @@ public class MainApplication extends Application implements ReactApplication {
          We use reflection here to pick up the class that initializes Flipper,
         since Flipper library is not available in release mode
         */
-        Class<?> aClass = Class.forName("com.litentry.ReactNativeFlipper");
+        Class<?> aClass = Class.forName("com.litentry.governance.ReactNativeFlipper");
         aClass
             .getMethod("initializeFlipper", Context.class, ReactInstanceManager.class)
             .invoke(null, context, reactInstanceManager);
