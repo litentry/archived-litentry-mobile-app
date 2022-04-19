@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useMemo, useRef} from 'react';
+import React, {useEffect, useMemo, useRef} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {NavigationProp, RouteProp} from '@react-navigation/core';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -15,12 +15,11 @@ import BalanceInput from '@ui/components/BalanceInput';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {useChainInfo} from 'src/api/hooks/useChainInfo';
 import {InputLabel} from '@ui/library/InputLabel';
-import {NetworkContext} from 'context/NetworkContext';
-import {isAddressValid} from 'src/utils/address';
 import {useSnackbar} from 'context/SnackbarContext';
 import {BN_ZERO} from '@polkadot/util';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {stringToBn as stringToBnUtil, formattedStringToBn} from 'src/api/utils/balance';
+import AddressInput from '@ui/components/AddressInput';
 
 type Props = {
   navigation: NavigationProp<AccountsStackParamList, typeof sendFundScreen>;
@@ -34,19 +33,15 @@ export function SendFundScreen({navigation, route}: Props) {
   const [amount, setAmount] = React.useState('');
   const [toAddress, setToAddress] = React.useState<string>();
   const [scanning, setScanning] = React.useState(false);
+  const [isToAddressValid, setIsToAddressValid] = React.useState(false);
   const startTx = useApiTx();
   const {data: chainInfo} = useChainInfo();
   const [isKeepAliveActive, setIsKeepAliveActive] = React.useState(true);
-  const {currentNetwork} = useContext(NetworkContext);
   const snackbar = useSnackbar();
   const {stringToBn} = useFormatBalance();
   useEffect(() => {
     ref.current?.open();
   }, []);
-
-  const isToAddressValid = useMemo(() => {
-    return toAddress ? isAddressValid(currentNetwork, toAddress) : false;
-  }, [toAddress, currentNetwork]);
 
   const isEnteredBalanceValid = useMemo(() => {
     const enteredBalance = stringToBn(amount) ?? BN_ZERO;
@@ -54,9 +49,7 @@ export function SendFundScreen({navigation, route}: Props) {
       const keepAliveBalance = formattedStringToBn(accountInfo?.balance?.free).sub(
         formattedStringToBn(chainInfo?.existentialDeposit),
       );
-      return (
-        enteredBalance.gt(formattedStringToBn(chainInfo?.existentialDeposit)) && enteredBalance.lt(keepAliveBalance)
-      );
+      return enteredBalance.gt(BN_ZERO) && enteredBalance.lt(keepAliveBalance);
     }
     return enteredBalance.gt(BN_ZERO) && enteredBalance.lt(formattedStringToBn(accountInfo?.balance?.free));
   }, [amount, accountInfo, stringToBn, isKeepAliveActive, chainInfo]);
@@ -94,14 +87,7 @@ export function SendFundScreen({navigation, route}: Props) {
               label="Send to address"
               helperText="Scan a contact address or paste the address you want to send funds to."
             />
-            <TextInput
-              autoComplete="off"
-              placeholder="To"
-              value={toAddress}
-              onChangeText={(nextValue) => setToAddress(nextValue)}
-              right={<TextInput.Icon name="qrcode" onPress={() => setScanning(true)} />}
-            />
-            {!isToAddressValid && toAddress ? <HelperText type="error">Enter a valid address</HelperText> : null}
+            <AddressInput onValidateAddress={setIsToAddressValid} onAddressChanged={setToAddress} />
             <Padder scale={1} />
             <InputLabel
               label="Existential deposit"
