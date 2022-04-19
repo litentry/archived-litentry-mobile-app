@@ -21,9 +21,9 @@ export function EventsCalendarTeaser(props: Props) {
       {loading && !events ? (
         <LoadingBox />
       ) : topThreeEvents?.length > 0 ? (
-        topThreeEvents.map((event, id) => (
-          <React.Fragment key={id}>
-            <View style={styles.container} testID={'event_detail_items'}>
+        topThreeEvents.map((event) => (
+          <React.Fragment key={event.id}>
+            <View style={styles.container} testID="upcoming_event_items">
               <View style={styles.dateContainer}>
                 <Text style={{color: colors.primary}}>{formatDate(event.date, 'DD/MM')}</Text>
               </View>
