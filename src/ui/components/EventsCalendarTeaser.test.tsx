@@ -17,6 +17,6 @@ describe('EventsCalendarTeaser component', () => {
     expect(eventItems.length).toBe(3);
     expect(within(eventItems[0] as ReactTestInstance).getByText('Start of a new staking session 4,121')).toBeTruthy();
     expect(within(eventItems[1] as ReactTestInstance).getByText('Start of a new staking era 681')).toBeTruthy();
-    expect(within(eventItems[1] as ReactTestInstance).getByText('Election of new council candidates')).toBeTruthy();
+    expect(within(eventItems[2] as ReactTestInstance).getByText('Election of new council candidates')).toBeTruthy();
   });
 });
