@@ -30,6 +30,7 @@ target 'Litentry' do
   #
   # Run pod install and build the app with xcode after uncomment this lile
   # use_flipper!({ 'Flipper' => '0.54.0', 'Flipper-RSocket' => '1.1', 'Flipper-Folly' => '2.3.0' })
+  use_flipper!({ 'Flipper'=> '0.142.0' })
 
   post_install do |installer|
       react_native_post_install(installer)
