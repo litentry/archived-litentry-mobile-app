@@ -55,14 +55,12 @@ function SubCall({subCall}: SubCallProps) {
   return (
     <Card mode="outlined" style={styles.subCallContainer}>
       <Card.Content>
-        <Text>
-          {subCall.meta && (
-            <>
-              <Paragraph>{subCall.meta}</Paragraph>
-              <Padder scale={0.5} />
-            </>
-          )}
-        </Text>
+        {subCall.meta ? (
+          <>
+            <Paragraph>{subCall.meta}</Paragraph>
+            <Padder scale={0.5} />
+          </>
+        ) : null}
         <Caption>{title}</Caption>
         {subCall.args?.map((arg, index) => (
           <View key={`${index}-${arg?.name}`}>
