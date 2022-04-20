@@ -49,7 +49,7 @@ export function ParachainsOverviewScreen({navigation}: ScreenProps) {
                     ) : null}
                     <Divider />
                     <Padder scale={1} />
-                    <View style={globalStyles.spaceBetweenRowContainer}>
+                    <View style={styles.itemRow}>
                       <View style={styles.leasePeriodContainer}>
                         {parachainsSummary?.leasePeriod.progressPercent && (
                           <ProgressChartWidget
@@ -58,23 +58,14 @@ export function ParachainsOverviewScreen({navigation}: ScreenProps) {
                             data={[parachainsSummary.leasePeriod.progressPercent]}
                           />
                         )}
-                      </View>
-                      <View style={styles.leasePeriodInfo}>
-                        <View style={globalStyles.spaceBetweenRowContainer}>
-                          <Caption>{'Current Lease : '}</Caption>
-                          <Caption style={styles.leaseCaptionFont}>
+                        <View>
+                          <StatInfoBlock title="Current lease">
                             {parachainsSummary?.leasePeriod.currentLease}
-                          </Caption>
-                        </View>
-                        <View style={globalStyles.spaceBetweenRowContainer}>
-                          <Caption>{'Total : '}</Caption>
-                          <Caption style={styles.leaseCaptionFont}>
-                            {parachainsSummary?.leasePeriod.totalPeriod}
-                          </Caption>
-                        </View>
-                        <View style={globalStyles.spaceBetweenRowContainer}>
-                          <Caption>{'Remainder : '}</Caption>
-                          <Caption style={styles.leaseCaptionFont}>{parachainsSummary?.leasePeriod.remainder}</Caption>
+                          </StatInfoBlock>
+                          <Padder scale={1} />
+                          <StatInfoBlock title="Total">{parachainsSummary?.leasePeriod.totalPeriod}</StatInfoBlock>
+                          <Padder scale={1} />
+                          <StatInfoBlock title="Remainder">{parachainsSummary?.leasePeriod.remainder}</StatInfoBlock>
                         </View>
                       </View>
                     </View>
@@ -142,12 +133,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    maxWidth: '40%',
-  },
-  leasePeriodInfo: {
-    flex: 1,
-    fontSize: 16,
-    justifyContent: 'center',
   },
   parachainsHeaderContainer: {
     flexDirection: 'row',
@@ -155,8 +140,5 @@ const styles = StyleSheet.create({
   },
   rightItem: {
     marginRight: standardPadding,
-  },
-  leaseCaptionFont: {
-    fontSize: 16,
   },
 });
