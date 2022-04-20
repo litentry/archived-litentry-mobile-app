@@ -34,6 +34,7 @@
     "@react-native-community/clipboard": "^1.5.1",
     "@react-native-firebase/app": "^14.7.0",
     "@react-native-firebase/messaging": "^14.7.0",
+    "@react-native-firebase/perf": "^14.7.0",
     "@react-navigation/drawer": "^6.4.1",
     "@react-navigation/material-top-tabs": "^6.1.1",
     "@react-navigation/native": "^6.0.8",
