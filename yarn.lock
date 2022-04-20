@@ -2739,6 +2739,13 @@
   "resolved" "https://registry.npmjs.org/@react-native-firebase/messaging/-/messaging-14.7.0.tgz"
   "version" "14.7.0"
 
+"@react-native-firebase/perf@^14.7.0":
+  "integrity" "sha512-r/AUDpR/R670q2iJFes3peui+1jmmdOok6/HS1tr/eEGlEmsBa5/iYCJJ704AwhKa8ZQqpJSsiw1VEcPTYICZg=="
+  "resolved" "https://registry.npmjs.org/@react-native-firebase/perf/-/perf-14.7.0.tgz"
+  "version" "14.7.0"
+  dependencies:
+    "@expo/config-plugins" "^4.0.18"
+
 "@react-native/assets@1.0.0":
   "integrity" "sha512-KrwSpS1tKI70wuKl68DwJZYEvXktDHdZMG0k2AXD/rJVSlB23/X2CB2cutVR0HwNMJIal9HOUOBB2rVfa6UGtQ=="
   "resolved" "https://registry.npmjs.org/@react-native/assets/-/assets-1.0.0.tgz"
@@ -12362,6 +12369,16 @@
   dependencies:
     "invariant" "^2.2.4"
 
+"react-native-flipper-performance-plugin@^0.2.1":
+  "integrity" "sha512-wZuCgVkHfJ9363XynKVdAiG532lO5sw49HoQMjUJDOEI6BuicUxKzf2WJlO/VSHMUCfP1Ys6EO+ElwPM9sxEIg=="
+  "resolved" "https://registry.npmjs.org/react-native-flipper-performance-plugin/-/react-native-flipper-performance-plugin-0.2.1.tgz"
+  "version" "0.2.1"
+
+"react-native-flipper@^0.142.0":
+  "integrity" "sha512-R9WB+0ihIYNEUQ3H7zOf7Gc4aUC6LXE8NF6Sx4aVVsIqRGEfBP30/X/jl/hU3z9K1D1DBE86sL/6fpDbAdy8Kw=="
+  "resolved" "https://registry.npmjs.org/react-native-flipper/-/react-native-flipper-0.142.0.tgz"
+  "version" "0.142.0"
+
 "react-native-fs@^2.19.0":
   "integrity" "sha512-Yl09IbETkV5UJcBtVtBLttyTmiAhJIHpGA/LvredI5dYiw3MXMMVu42bzELiuH2Bwj7F+qd0fMNvgfBDiDxd2A=="
   "resolved" "https://registry.npmjs.org/react-native-fs/-/react-native-fs-2.19.0.tgz"
@@ -12533,6 +12550,11 @@
   "resolved" "https://registry.npmjs.org/react-native-splash-screen/-/react-native-splash-screen-3.3.0.tgz"
   "version" "3.3.0"
 
+"react-native-startup-trace@^0.5.0":
+  "integrity" "sha512-80fHUE0Rt0DmjhUcf/Sd3cPJkH0tt4Inly06cyT4C7OWU7u8VlrQRD+UY/0EG5der4DGWnccaJuANgMwpbR+NA=="
+  "resolved" "https://registry.npmjs.org/react-native-startup-trace/-/react-native-startup-trace-0.5.0.tgz"
+  "version" "0.5.0"
+
 "react-native-substrate-sign@^1.1.1":
   "integrity" "sha512-UUAkl2Dba1cjnYse5Qrjg9FFrdiNzCgIE/57E/68d+XVh1eiMl6842HJEtWfkTGb23yf/R2V93nSc49jR7gBUQ=="
   "resolved" "https://registry.npmjs.org/react-native-substrate-sign/-/react-native-substrate-sign-1.1.1.tgz"
@@ -12579,7 +12601,7 @@
     "escape-string-regexp" "2.0.0"
     "invariant" "2.2.4"
 
-"react-native@*", "react-native@^0.0.0-0 || ^0.60.6 || ^0.61.5 || ^0.62.2 || ^0.63.2 || ^0.64.0 || ^0.65.0 || 1000.0.0", "react-native@> 0.50.0", "react-native@>= 0.30.0", "react-native@>= 0.50.0", "react-native@>=0.42.0", "react-native@>=0.50.0", "react-native@>=0.56.0", "react-native@>=0.57.0", "react-native@>=0.59", "react-native@>=0.59.0", "react-native@>=0.6.0", "react-native@>=0.60.0", "react-native@>=0.60.0-rc.0 <1.0.x", "react-native@0.67.3":
+"react-native@*", "react-native@^0.0.0-0 || ^0.60.6 || ^0.61.5 || ^0.62.2 || ^0.63.2 || ^0.64.0 || ^0.65.0 || 1000.0.0", "react-native@> 0.50.0", "react-native@>= 0.30.0", "react-native@>= 0.50.0", "react-native@>=0.42.0", "react-native@>=0.50.0", "react-native@>=0.56.0", "react-native@>=0.57.0", "react-native@>=0.59", "react-native@>=0.59.0", "react-native@>=0.6.0", "react-native@>=0.60.0", "react-native@>=0.60.0-rc.0 <1.0.x", "react-native@>0.62.0", "react-native@0.67.3":
   "integrity" "sha512-epMVRMRH7dLCis97+YwiV4dmTVZO6qKmQgwcTNcxVt/kEMxAa+OYK7h81+99/n7XCeMFk/U2zYOBuQqc7c5Amg=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.67.3.tgz"
   "version" "0.67.3"
