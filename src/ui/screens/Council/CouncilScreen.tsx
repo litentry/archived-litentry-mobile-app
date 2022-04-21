@@ -29,6 +29,7 @@ import {useSnackbar} from 'context/SnackbarContext';
 import {InputLabel} from '@ui/library/InputLabel';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {BN_ZERO} from '@polkadot/util';
+import {useAppAccounts} from 'src/hooks/useAppAccounts';
 
 const MAX_VOTES = 16;
 
@@ -182,6 +183,7 @@ type SubmitCandidacyProps = {
 };
 
 function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: CouncilVoteProps) {
+  const accounts = useAppAccounts();
   const [account, setAccount] = React.useState<Account>();
   const [amount, setAmount] = React.useState<string>('');
   const [selectedCandidates, setSelectedCandidates] = React.useState<Array<string>>([]);
@@ -253,7 +255,7 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
       </View>
       <Padder scale={1} />
       <InputLabel label={'voting account:'} helperText={'This account will be use to approve each candidate.'} />
-      <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
+      <SelectAccount accounts={accounts} onSelect={(selectedAccount) => setAccount(selectedAccount as Account)} />
       <Padder scale={1} />
       <InputLabel
         label={'Vote value:'}
@@ -297,6 +299,7 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
 }
 
 function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandidacyProps) {
+  const accounts = useAppAccounts();
   const [account, setAccount] = React.useState<Account>();
   const startTx = useApiTx();
   const {api} = useApi();
@@ -342,7 +345,7 @@ function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandi
       </View>
       <Padder scale={1} />
       <InputLabel label={'Candidate account:'} helperText={'Select the account you wish to submit for candidacy.'} />
-      <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
+      <SelectAccount accounts={accounts} onSelect={(selectedAccount) => setAccount(selectedAccount as Account)} />
       <Padder scale={1} />
       <InputLabel label={'Candidacy bond:'} helperText={'The bond that is reserved.'} />
       <TextInput mode="outlined" disabled value={formattedBalance} />

@@ -16,7 +16,6 @@ import {SelectAccount} from '@ui/components/SelectAccount';
 import type {Account} from 'src/api/hooks/useAccount';
 import {InputLabel} from '@ui/library/InputLabel';
 import {useCouncilAccounts} from 'src/hooks/useCouncilAccounts';
-import type {Account as LocalAccount} from 'context/AccountsContext';
 import {useNetwork} from 'context/NetworkContext';
 import type {SupportedNetworkType} from 'src/types';
 import {Caption, Card, Divider} from 'react-native-paper';
@@ -91,7 +90,7 @@ type VoteModalProps = {
   refetchMotions: () => MotionsQueryResult;
   voteType?: Vote;
   motion?: CouncilMotion;
-  councilAccounts?: LocalAccount[];
+  councilAccounts: Account[];
 };
 
 function VoteModal({visible, setVisible, refetchMotions, voteType, motion, councilAccounts}: VoteModalProps) {
@@ -171,7 +170,7 @@ function VoteModal({visible, setVisible, refetchMotions, voteType, motion, counc
       <InputLabel label="Select Council account" />
       <SelectAccount
         accounts={councilAccounts}
-        onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)}
+        onSelect={(selectedAccount) => setAccount(selectedAccount as Account)}
       />
 
       <Padder scale={2} />

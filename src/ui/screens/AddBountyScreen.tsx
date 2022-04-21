@@ -18,6 +18,7 @@ import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {useBountiesSummary} from 'src/api/hooks/useBountiesSummary';
 import type {BN} from '@polkadot/util';
 import {formattedStringToBn} from 'src/api/utils/balance';
+import {useAppAccounts} from 'src/hooks/useAppAccounts';
 
 export function AddBountyScreen({navigation}: {navigation: NavigationProp<AppStackParamList>}) {
   const modalRef = useRef<Modalize>(null);
@@ -36,6 +37,7 @@ export function AddBountyScreen({navigation}: {navigation: NavigationProp<AppSta
   const startTx = useApiTx();
   const {api} = useApi();
   const snackbar = useSnackbar();
+  const accounts = useAppAccounts();
 
   const {calculatedBountyBond, bountyAllocationBN, isBountyValid, isBountyTitleValid} = useMemo(() => {
     if (bounty && bounty.bountyDepositBase) {
@@ -146,7 +148,7 @@ export function AddBountyScreen({navigation}: {navigation: NavigationProp<AppSta
             label={'Submit with account:'}
             helperText={'This account will propose the bounty. Bond amount will be reserved on its balance.'}
           />
-          <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
+          <SelectAccount accounts={accounts} onSelect={(selectedAccount) => setAccount(selectedAccount as Account)} />
           <Padder scale={2} />
           <View style={styles.row}>
             <Button mode="outlined" onPress={modelClose}>

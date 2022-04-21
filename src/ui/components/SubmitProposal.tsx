@@ -7,17 +7,20 @@ import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import globalStyles, {standardPadding} from '@ui/styles';
 import BalanceInput from './BalanceInput';
-import type {Account} from 'src/api/hooks/useAccount';
+import {useAccount} from 'src/api/hooks/useAccount';
 import {useChainInfo} from 'src/api/hooks/useChainInfo';
 import {InputLabel} from '@ui/library/InputLabel';
 import {BN_ZERO} from '@polkadot/util';
 import {formattedStringToBn} from 'src/api/utils/balance';
+import {useAppAccounts} from 'src/hooks/useAppAccounts';
 
 export function SubmitProposal() {
   const [state, dispatch] = React.useReducer(reducer, initialState);
   const {formatBalance, stringToBn} = useFormatBalance();
   const startTx = useApiTx();
   const {data: chainInfo} = useChainInfo();
+  const accounts = useAppAccounts();
+  const {data: accountInfo} = useAccount(state.account);
 
   const openModal = () => {
     dispatch({type: 'SET_OPEN', payload: true});
@@ -37,14 +40,14 @@ export function SubmitProposal() {
   const isDisabled =
     !state.account ||
     !state.preimageHash ||
-    !enteredBalance.lt(formattedStringToBn(state.account.balance?.free)) ||
+    !enteredBalance.lt(formattedStringToBn(accountInfo?.balance?.free)) ||
     !enteredBalance.gt(democracyMinimumDeposit);
 
   const submit = () => {
     if (state.balance && state.account) {
       const balance = stringToBn(state.balance);
       startTx({
-        address: state.account.address,
+        address: state.account,
         txMethod: 'democracy.propose',
         params: [state.preimageHash, balance],
       });
@@ -65,11 +68,14 @@ export function SubmitProposal() {
         <Padder scale={1} />
 
         <InputLabel label={'Select account'} helperText={'The account you want to register the proposal from'} />
+
         <SelectAccount
           onSelect={(account) => {
-            dispatch({type: 'SELECT_ACCOUNT', payload: account.accountInfo});
+            dispatch({type: 'SELECT_ACCOUNT', payload: account.address});
           }}
+          accounts={accounts}
         />
+
         <Padder scale={1} />
         <InputLabel label={'PreImage Hash'} helperText={'The preimage hash of the proposal'} />
         <TextInput
@@ -86,7 +92,7 @@ export function SubmitProposal() {
 
         <InputLabel label={'Locked Balance'} helperText={'The minimum deposit required'} />
         <BalanceInput
-          account={state.account}
+          account={accountInfo}
           onChangeBalance={(amount) => {
             dispatch({type: 'SET_BALANCE', payload: amount});
           }}
@@ -122,7 +128,7 @@ const styles = StyleSheet.create({
 
 type State = {
   open: boolean;
-  account?: Account | undefined;
+  account?: string;
   preimageHash?: string;
   balance?: string;
 };
@@ -135,7 +141,7 @@ const initialState = {
 };
 
 type Action =
-  | {type: 'SELECT_ACCOUNT'; payload: Account | undefined}
+  | {type: 'SELECT_ACCOUNT'; payload: string}
   | {type: 'SET_BALANCE'; payload: string}
   | {type: 'SET_HASH'; payload: string}
   | {type: 'SET_OPEN'; payload: boolean}

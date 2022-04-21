@@ -13,8 +13,10 @@ import {useRefetch} from 'src/api/hooks/useRefetch';
 import {TIPS_QUERY} from 'src/api/hooks/useTips';
 import {InputLabel} from '@ui/library/InputLabel';
 import AddressInput from '@ui/components/AddressInput';
+import {useAppAccounts} from 'src/hooks/useAppAccounts';
 
 export function ProposeTipScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
+  const accounts = useAppAccounts();
   const [state, dispatch] = useReducer(reducer, initialState);
   const startTx = useApiTx();
   const {refetch: refetchTips} = useRefetch([TIPS_QUERY]);
@@ -50,7 +52,10 @@ export function ProposeTipScreen({navigation}: {navigation: NavigationProp<Dashb
             <View style={globalStyles.flex}>
               <InputLabel label="Sending from" helperText="Select the account you wish to submit the tip from" />
               <Padder scale={0.5} />
-              <SelectAccount onSelect={(account) => dispatch({type: 'SET_ACCOUNT', payload: account.accountInfo})} />
+              <SelectAccount
+                accounts={accounts}
+                onSelect={(account) => dispatch({type: 'SET_ACCOUNT', payload: account as Account})}
+              />
               <Padder scale={1} />
 
               <InputLabel

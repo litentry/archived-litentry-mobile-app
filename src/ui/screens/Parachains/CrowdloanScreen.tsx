@@ -21,6 +21,7 @@ import {formattedStringToBn} from 'src/api/utils/balance';
 import {CrowdloanSummaryTeaser} from '@ui/components/CrowdloanSummaryTeaser';
 import {useNetwork} from 'context/NetworkContext';
 import {InputLabel} from '@ui/library/InputLabel';
+import {useAppAccounts} from 'src/hooks/useAppAccounts';
 
 export function CrowdloanScreen() {
   const [openContributeId, setOpenContributeId] = React.useState<string>();
@@ -171,6 +172,7 @@ function ContributeBox({
   setVisible: (_visible: boolean) => void;
   parachainId: string;
 }) {
+  const accounts = useAppAccounts();
   const startTx = useApiTx();
   const [account, setAccount] = React.useState<Account>();
   const [amount, setAmount] = React.useState<string>('');
@@ -199,7 +201,7 @@ function ContributeBox({
     <Modal visible={visible} onDismiss={reset}>
       <InputLabel label="Contribute with" helperText="This account will contribute to the crowdloan." />
       <Padder scale={0.5} />
-      <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
+      <SelectAccount accounts={accounts} onSelect={(selectedAccount) => setAccount(selectedAccount as Account)} />
       <Padder scale={1} />
       <InputLabel label="Amount" helperText="The amount to contribute from this account." />
       <BalanceInput account={account} onChangeBalance={setAmount} />

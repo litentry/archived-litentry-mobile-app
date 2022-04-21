@@ -1,18 +1,18 @@
-import {useAccounts} from 'context/AccountsContext';
 import {useCouncil} from 'src/api/hooks/useCouncil';
+import {useAppAccounts} from './useAppAccounts';
 
 export function useCouncilAccounts() {
-  const {networkAccounts} = useAccounts();
+  const accounts = useAppAccounts();
   const {data: council} = useCouncil();
 
-  if (networkAccounts.length === 0 || !council) {
+  if (accounts.length === 0 || !council) {
     return {
       councilAccounts: [],
       isAnyAccountCouncil: false,
     };
   }
 
-  const councilAccounts = networkAccounts.filter((account) =>
+  const councilAccounts = accounts.filter((account) =>
     council.members.some((member) => member.account.address === account.address),
   );
 

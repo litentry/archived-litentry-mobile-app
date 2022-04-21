@@ -15,6 +15,7 @@ import {Layout} from '@ui/components/Layout';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {ProposalCall} from '@ui/components/ProposalCall';
 import {Account} from 'src/api/hooks/useAccount';
+import {useAppAccounts} from 'src/hooks/useAppAccounts';
 
 export function DemocracyProposalScreen({
   route,
@@ -23,6 +24,7 @@ export function DemocracyProposalScreen({
 }) {
   const startTx = useApiTx();
   const {api} = useApi();
+  const accounts = useAppAccounts();
 
   const [secondsOpen, setSecondsOpen] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -113,8 +115,9 @@ export function DemocracyProposalScreen({
           <Text>{`Vote with account`}</Text>
           <Padder scale={0.5} />
           <SelectAccount
+            accounts={accounts}
             onSelect={(account) => {
-              dispatch({type: 'SELECT_ACCOUNT', payload: account.accountInfo});
+              dispatch({type: 'SELECT_ACCOUNT', payload: account as Account});
             }}
           />
           <Padder scale={1.5} />

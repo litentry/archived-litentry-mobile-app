@@ -20,8 +20,10 @@ import {useChainInfo} from 'src/api/hooks/useChainInfo';
 import {getProposalTitle} from 'src/utils/proposal';
 import {BN_ZERO} from '@polkadot/util';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
+import {useAppAccounts} from 'src/hooks/useAppAccounts';
 
 export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
+  const accounts = useAppAccounts();
   const startTx = useApiTx();
   const [state, dispatch] = useReducer(reducer, initialState);
   const referendum = route.params.referendum;
@@ -143,8 +145,9 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
         <Modal visible={state.voting !== undefined} onDismiss={() => dispatch({type: 'RESET'})}>
           <Caption>{`Vote with account`}</Caption>
           <SelectAccount
+            accounts={accounts}
             onSelect={(account) => {
-              dispatch({type: 'SELECT_ACCOUNT', payload: account.accountInfo});
+              dispatch({type: 'SELECT_ACCOUNT', payload: account as Account});
             }}
           />
           <Padder scale={1} />
