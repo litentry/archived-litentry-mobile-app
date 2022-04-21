@@ -1014,6 +1014,7 @@ export type Query = {
   substrateBalanceTransfers: Array<SubstrateBalanceTransfer>;
   substrateBalanceTransfersConnection: SubstrateBalanceTransfersConnection;
   substrateChainAccount?: Maybe<SubstrateChainAccount>;
+  substrateChainAccounts: Array<SubstrateChainAccount>;
   substrateChainActiveCrowdloans: Array<SubstrateChainCrowdloan>;
   substrateChainAuctionsSummary: SubstrateChainAuctionsSummary;
   substrateChainBalance: SubstrateChainBalance;
@@ -1250,6 +1251,10 @@ export type QuerySubstrateBalanceTransfersConnectionArgs = {
 
 export type QuerySubstrateChainAccountArgs = {
   address: Scalars['String'];
+};
+
+export type QuerySubstrateChainAccountsArgs = {
+  addresses: Array<Scalars['String']>;
 };
 
 export type QuerySubstrateChainBalanceArgs = {
