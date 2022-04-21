@@ -1,103 +1,76 @@
 import React from 'react';
-import {View, FlatList, StyleSheet} from 'react-native';
-import {Menu, List, Caption, Icon, useTheme, Divider} from '@ui/library';
-import {Account as AccountType, useAccounts} from 'context/AccountsContext';
+import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Menu, Caption, useTheme, Divider} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
-import Identicon from '@polkadot/reactnative-identicon';
-import {Padder} from '@ui/components/Padder';
-import {useAccount, Account as SubstrateChainAccount} from 'src/api/hooks/useAccount';
-import {Account} from './Account/Account';
+import type {Account as SubstrateChainAccount} from 'src/api/hooks/useAccount';
+import type {Registrar} from 'src/api/hooks/useRegistrarsSummary';
+import {AccountTeaser} from './Account/AccountTeaser';
+
+type Account = SubstrateChainAccount | Registrar;
 
 type Props = {
-  onSelect: (account: SelectedAccount) => void;
-  accounts?: AccountType[];
+  onSelect: (account: Account) => void;
+  accounts: Account[];
+  renderItem?: (item: Registrar, onPress: () => void) => JSX.Element;
+  placeholder?: string;
 };
 
-type SelectedAccount = {
-  account: AccountType;
-  accountInfo?: SubstrateChainAccount;
-};
-
-export function SelectAccount({onSelect, accounts}: Props) {
+export function SelectAccount({onSelect, accounts, renderItem, placeholder = 'Select account'}: Props) {
   const {colors} = useTheme();
-  const {networkAccounts} = useAccounts();
-  const [selectedAccount, setSelectedAccount] = React.useState<SelectedAccount>();
+  const [selectedAccount, setSelectedAccount] = React.useState<Account>();
   const [visible, setVisible] = React.useState(false);
 
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
 
-  const selectAccount = (accountSelected: SelectedAccount) => {
-    setSelectedAccount(accountSelected);
-    onSelect(accountSelected);
+  const selectAccount = (account: Account) => {
+    setSelectedAccount(account);
+    onSelect(account);
     closeMenu();
   };
+
+  const renderSelectedAccount = React.useCallback(() => {
+    switch (selectedAccount?.__typename) {
+      case 'SubstrateChainAccount':
+        return <AccountTeaser account={selectedAccount} />;
+
+      case 'SubstrateChainRegistrar':
+        return <AccountTeaser account={selectedAccount.account} />;
+
+      default:
+        return <Caption>{placeholder}</Caption>;
+    }
+  }, [selectedAccount, placeholder]);
 
   return (
     <Menu
       visible={visible}
       onDismiss={closeMenu}
       anchor={
-        <View style={[styles.anchor, {borderColor: colors.onSurface}]}>
-          <List.Item
-            title={
-              selectedAccount?.accountInfo ? (
-                <Account account={selectedAccount.accountInfo} name={selectedAccount.account.meta.name} />
-              ) : (
-                <Caption>{`Select account`}</Caption>
-              )
-            }
-            onPress={openMenu}
-            right={() => <Icon name="chevron-down" />}
-            left={() =>
-              selectedAccount?.accountInfo ? (
-                <View style={globalStyles.justifyCenter}>
-                  <Identicon value={selectedAccount?.account.address} size={25} />
-                </View>
-              ) : null
-            }
-          />
-        </View>
+        <TouchableOpacity style={[styles.anchor, {borderColor: colors.onSurface}]} onPress={openMenu}>
+          {renderSelectedAccount()}
+        </TouchableOpacity>
       }>
       <FlatList
         style={styles.items}
         ItemSeparatorComponent={Divider}
-        data={accounts ?? networkAccounts}
+        data={accounts}
         keyExtractor={(item) => item.address}
-        renderItem={({item}) => <AccountItem onSelect={selectAccount} account={item} />}
+        renderItem={({item}) => {
+          if (item.__typename === 'SubstrateChainAccount') {
+            return (
+              <View style={globalStyles.paddedContainer}>
+                <AccountTeaser account={item} onPress={() => selectAccount(item)} />
+              </View>
+            );
+          } else if (renderItem && item.__typename === 'SubstrateChainRegistrar') {
+            return renderItem(item, () => selectAccount(item.account));
+          }
+
+          return null;
+        }}
       />
     </Menu>
-  );
-}
-
-type AccountItemProps = {
-  onSelect: (account: SelectedAccount) => void;
-  account: AccountType;
-  accountInfo?: SubstrateChainAccount;
-};
-
-export function AccountItem({onSelect, account}: AccountItemProps) {
-  const {
-    isExternal,
-    meta: {name},
-  } = account;
-  const {data: accountInfo} = useAccount(account.address);
-
-  return (
-    <Menu.Item
-      style={styles.menuItem}
-      onPress={() => onSelect({account, accountInfo})}
-      title={
-        <View style={globalStyles.rowAlignCenter}>
-          <Identicon value={account.address} size={25} />
-          <Padder scale={0.5} />
-          <View style={globalStyles.justifyCenter}>
-            {accountInfo && <Account account={accountInfo} name={name} />}
-            {isExternal && <Caption style={styles.caption}>{`External`}</Caption>}
-          </View>
-        </View>
-      }
-    />
   );
 }
 
@@ -106,6 +79,8 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 5,
     height: 50,
+    justifyContent: 'center',
+    paddingLeft: standardPadding * 1.5,
   },
   items: {
     maxHeight: 250,
