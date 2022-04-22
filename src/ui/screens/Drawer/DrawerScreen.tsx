@@ -165,18 +165,18 @@ function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
                   navigation.navigate(notificationSettingsScreen);
                 }}
               />
-              {__DEV__ && (
-                <Drawer.Item
-                  label="Dev Kit"
-                  icon="code-tags"
-                  active={activeScreen === devScreen}
-                  onPress={() => {
-                    navigation.navigate(devScreen);
-                  }}
-                />
-              )}
             </>
           ) : null}
+          {__DEV__ && (
+            <Drawer.Item
+              label="Dev Kit"
+              icon="code-tags"
+              active={activeScreen === devScreen}
+              onPress={() => {
+                navigation.navigate(devScreen);
+              }}
+            />
+          )}
         </Drawer.Section>
         <Drawer.Section>
           <Drawer.Item

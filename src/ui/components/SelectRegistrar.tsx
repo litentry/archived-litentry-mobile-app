@@ -1,11 +1,10 @@
 import React from 'react';
-import {View, FlatList, StyleSheet} from 'react-native';
-import {Menu, List, Caption, Icon, useTheme, Divider} from '@ui/library';
-import Identicon from '@polkadot/reactnative-identicon';
+import {View, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
+import {Menu, Caption, useTheme, Divider} from '@ui/library';
 import {useRegistrarsSummary, Registrar} from 'src/api/hooks/useRegistrarsSummary';
-import globalStyles from '@ui/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
-import {Account} from '@ui/components/Account/Account';
+import {AccountTeaser} from './Account/AccountTeaser';
 
 type Props = {
   onSelect: (registrar: Registrar) => void;
@@ -35,32 +34,9 @@ export function SelectRegistrar({onSelect}: Props) {
       visible={visible}
       onDismiss={closeMenu}
       anchor={
-        <View style={[styles.anchor, {borderColor: colors.onSurface}]}>
-          <List.Item
-            title={
-              registrar ? (
-                <View style={globalStyles.justifyCenter}>
-                  <Account account={registrar.account} />
-                </View>
-              ) : (
-                <Caption>{'Select registrar'}</Caption>
-              )
-            }
-            left={() =>
-              registrar ? (
-                <View style={globalStyles.justifyCenter}>
-                  <Identicon value={registrar?.account.address} size={25} />
-                </View>
-              ) : null
-            }
-            onPress={openMenu}
-            right={() => (
-              <View style={globalStyles.justifyCenter}>
-                <Icon name="chevron-down" />
-              </View>
-            )}
-          />
-        </View>
+        <TouchableOpacity style={[styles.anchor, {borderColor: colors.onSurface}]} onPress={openMenu}>
+          {registrar ? <AccountTeaser account={registrar.account} /> : <Caption>{'Select registrar'}</Caption>}
+        </TouchableOpacity>
       }>
       <FlatList
         style={styles.items}
@@ -82,24 +58,15 @@ function RegistrarItem({onSelect, registrar}: RegistrarItemProps) {
   const {account, id, formattedFee} = registrar;
 
   return (
-    <Menu.Item
-      style={styles.menuItem}
-      onPress={() => onSelect(registrar)}
-      title={
-        <View style={globalStyles.justifyCenter}>
-          <View style={globalStyles.rowAlignCenter}>
-            <Identicon value={account.address} size={20} />
-            <Padder scale={0.5} />
-            <Account account={account} />
-          </View>
-          <View style={globalStyles.rowAlignCenter}>
-            <Caption>{`Index: ${id}`}</Caption>
-            <Padder scale={0.5} />
-            <Caption>{`Fee: ${formattedFee}`}</Caption>
-          </View>
+    <View style={globalStyles.paddedContainer}>
+      <AccountTeaser account={account} onPress={() => onSelect(registrar)}>
+        <View style={globalStyles.rowAlignCenter}>
+          <Caption>{`Index: ${id}`}</Caption>
+          <Padder scale={0.5} />
+          <Caption>{`Fee: ${formattedFee}`}</Caption>
         </View>
-      }
-    />
+      </AccountTeaser>
+    </View>
   );
 }
 
@@ -108,6 +75,8 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 5,
     height: 50,
+    justifyContent: 'center',
+    paddingLeft: standardPadding * 1.5,
   },
   items: {
     maxHeight: 250,
