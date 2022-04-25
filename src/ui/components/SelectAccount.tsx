@@ -1,10 +1,10 @@
 import React from 'react';
 import {View, FlatList, StyleSheet} from 'react-native';
-import {Menu, List, Caption, Icon, useTheme, Divider} from '@ui/library';
-import {Account as AccountType, useAccounts} from 'context/AccountsContext';
-import globalStyles, {standardPadding} from '@ui/styles';
 import Identicon from '@polkadot/reactnative-identicon';
+import {Account as AccountType, useAccounts} from 'context/AccountsContext';
+import {Menu, List, Caption, Icon, Divider, TextInput, Text} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {useAccount, Account as SubstrateChainAccount} from 'src/api/hooks/useAccount';
 import {Account} from './Account/Account';
 
@@ -19,7 +19,6 @@ type SelectedAccount = {
 };
 
 export function SelectAccount({onSelect, accounts}: Props) {
-  const {colors} = useTheme();
   const {networkAccounts} = useAccounts();
   const [selectedAccount, setSelectedAccount] = React.useState<SelectedAccount>();
   const [visible, setVisible] = React.useState(false);
@@ -38,26 +37,33 @@ export function SelectAccount({onSelect, accounts}: Props) {
       visible={visible}
       onDismiss={closeMenu}
       anchor={
-        <View style={[styles.anchor, {borderColor: colors.onSurface}]}>
-          <List.Item
-            title={
-              selectedAccount?.accountInfo ? (
-                <Account account={selectedAccount.accountInfo} name={selectedAccount.account.meta.name} />
-              ) : (
-                <Caption>{`Select account`}</Caption>
-              )
-            }
-            onPress={openMenu}
-            right={() => <Icon name="chevron-down" />}
-            left={() =>
-              selectedAccount?.accountInfo ? (
-                <View style={globalStyles.justifyCenter}>
-                  <Identicon value={selectedAccount?.account.address} size={25} />
-                </View>
-              ) : null
-            }
-          />
-        </View>
+        <TextInput
+          disabled
+          mode="outlined"
+          render={(_props) => {
+            return (
+              <List.Item
+                style={globalStyles.fillCenter}
+                title={
+                  selectedAccount?.accountInfo ? (
+                    <Account account={selectedAccount.accountInfo} name={selectedAccount.account.meta.name} />
+                  ) : (
+                    <Text>{`Select account`}</Text>
+                  )
+                }
+                onPress={openMenu}
+                right={() => <Icon name="chevron-down" />}
+                left={() =>
+                  selectedAccount?.accountInfo ? (
+                    <View style={globalStyles.justifyCenter}>
+                      <Identicon value={selectedAccount?.account.address} size={25} />
+                    </View>
+                  ) : null
+                }
+              />
+            );
+          }}
+        />
       }>
       <FlatList
         style={styles.items}
@@ -102,11 +108,6 @@ export function AccountItem({onSelect, account}: AccountItemProps) {
 }
 
 const styles = StyleSheet.create({
-  anchor: {
-    borderWidth: 0.5,
-    borderRadius: 5,
-    height: 50,
-  },
   items: {
     maxHeight: 250,
   },
