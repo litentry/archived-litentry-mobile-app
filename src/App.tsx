@@ -14,6 +14,7 @@ import SnackbarProvider from 'context/SnackbarContext';
 import {LitentryApiClientProvider} from 'context/LitentryApiContext';
 import {WalletConnectProvider} from 'context/WalletConnectProvider';
 import {Web3WalletProvider} from 'context/Web3WalletContext';
+import {useStopStartupTrace} from 'react-native-startup-trace';
 
 // init type registry
 import 'src/typeRegistry';
@@ -46,6 +47,8 @@ function LitentryApps() {
 }
 
 export default function App() {
+  useStopStartupTrace();
+
   return (
     <NetworkContextProvider>
       <LitentryApiClientProvider>
