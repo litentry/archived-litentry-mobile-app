@@ -1,10 +1,12 @@
-import {registrarsHandler} from './registrarsHandler';
-import {democracyHandler} from './democracyHandler';
 import {councilMotionsHandler} from './councilMotionsHandler';
+import {democracyHandler} from './democracyHandler';
+import {democracySummaryHandler} from './democracySummaryHandler';
+import {registrarsHandler} from './registrarsHandler';
 
 export const handlers = [
   registrarsHandler,
   democracyHandler,
   councilMotionsHandler,
+  democracySummaryHandler,
   // other handlers
 ];
