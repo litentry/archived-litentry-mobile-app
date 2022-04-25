@@ -94,6 +94,15 @@ function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
             </>
           ) : (
             <>
+              {/* TODO: define entry screen */}
+              <Drawer.Item
+                label="Home"
+                icon="view-dashboard"
+                active={activeScreen === 'Home'}
+                onPress={() => {
+                  navigation.navigate('Home');
+                }}
+              />
               <Drawer.Item
                 label="Accounts"
                 icon="account-details"
@@ -103,7 +112,7 @@ function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
                 }}
               />
               <Drawer.Item
-                label="LIT Migration"
+                label="Token Migration"
                 icon="bank-transfer"
                 active={activeScreen === 'tokenMigrationNavigator'}
                 onPress={() => {
