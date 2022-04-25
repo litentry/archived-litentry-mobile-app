@@ -42,7 +42,7 @@ export function SelectRegistrar({onSelect}: Props) {
         style={styles.items}
         ItemSeparatorComponent={Divider}
         data={registrarsSummary.list}
-        keyExtractor={(item) => item.address}
+        keyExtractor={(item) => item.account.address}
         renderItem={({item}) => <RegistrarItem onSelect={selectRegistrar} registrar={item} />}
       />
     </Menu>
