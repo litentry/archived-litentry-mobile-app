@@ -1,10 +1,15 @@
 import React from 'react';
-import {render, waitFor, within} from 'src/testUtils';
+import {render, waitFor, within, create} from 'src/testUtils';
 import {DemocracySummaryTeaser} from './DemocracySummaryTeaser';
 
 const onPressEvent = jest.fn();
 
 describe('DemocracySummaryTeaser component', () => {
+  it('should render the loading view when data is fetching', async () => {
+    const {getByTestId} = render(<DemocracySummaryTeaser onPress={onPressEvent} />);
+    expect(getByTestId('loading_box')).toBeTruthy();
+  });
+
   it('should render the component with the data', async () => {
     const {getByTestId} = await waitFor(() => render(<DemocracySummaryTeaser onPress={onPressEvent} />));
     const activeProposal = getByTestId('activeProposals_id');
