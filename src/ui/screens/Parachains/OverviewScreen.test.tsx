@@ -8,13 +8,12 @@ import {ParachainsOverviewScreen} from './OverviewScreen';
 let navigation: NavigationProp<ParachainsStackParamList>;
 
 describe('OverviewScreen component', () => {
-  test('should render the loading view when data is fetching', async () => {
+  it('should render the loading view when data is fetching', async () => {
     const {getByTestId} = render(<ParachainsOverviewScreen navigation={navigation} />);
     expect(getByTestId('loading_view')).toBeTruthy();
   });
 
-  //   test('render the component when data arrives', async () => {
-  //   const parachainsOverviewScreen = await waitFor(() => create(<ParachainsOverviewScreen navigation={navigation} />));
-  //   console.log(parachainsOverviewScreen)
-  // });
+  it('render the component when data arrives', async () => {
+    const parachainsOverviewScreen = await waitFor(() => render(<ParachainsOverviewScreen navigation={navigation} />));
+  });
 });
