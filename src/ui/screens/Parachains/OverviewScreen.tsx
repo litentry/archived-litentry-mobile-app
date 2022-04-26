@@ -3,14 +3,13 @@ import {View, StyleSheet, FlatList} from 'react-native';
 import {Divider, Card, List, Caption, Text, Subheading} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import ProgressChartWidget from '@ui/components/ProgressWidget';
-import StatInfoBlock from '@ui/components/StatInfoBlock';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {Padder} from '@ui/components/Padder';
 import LoadingView from '@ui/components/LoadingView';
 import {NavigationProp} from '@react-navigation/native';
 import {parachainDetailScreen} from '@ui/navigation/routeKeys';
 import {Parachain, useParachainsSummary} from 'src/api/hooks/useParachainsSummary';
 import {ParachainsStackParamList} from '@ui/navigation/navigation';
+import {Padder} from '@ui/components/Padder';
 
 type ScreenProps = {
   navigation: NavigationProp<ParachainsStackParamList>;
@@ -31,55 +30,63 @@ export function ParachainsOverviewScreen({navigation}: ScreenProps) {
         <FlatList
           contentContainerStyle={globalStyles.paddedContainer}
           showsVerticalScrollIndicator={false}
-          ListHeaderComponent={() => {
-            return (
-              <>
-                <Card>
-                  <Card.Content>
-                    <View style={[styles.itemRow, styles.cardTop]}>
-                      <StatInfoBlock title="Parachains">{parachainsSummary?.parachainsCount.toString()}</StatInfoBlock>
-                      <StatInfoBlock title="Parathreads">
-                        {parachainsSummary?.parathreadsCount.toString()}
-                      </StatInfoBlock>
+          ListHeaderComponent={
+            <>
+              <Card>
+                <Card.Content>
+                  <View style={globalStyles.rowAlignCenter}>
+                    <View style={styles.progressChart}>
+                      {parachainsSummary?.leasePeriod.progressPercent && (
+                        <ProgressChartWidget
+                          chartTextStyle={styles.chartText}
+                          title={`Lease Period`}
+                          detail={`\n${parachainsSummary.leasePeriod.progressPercent}%\n${parachainsSummary.leasePeriod.remainderParts[0]}`}
+                          data={[parachainsSummary.leasePeriod.progressPercent / 100]}
+                        />
+                      )}
                     </View>
-                    {parachainsSummary?.proposalsCount ? (
-                      <View style={styles.itemRow}>
-                        <StatInfoBlock title="Proposals">{parachainsSummary.proposalsCount}</StatInfoBlock>
-                      </View>
-                    ) : null}
-                    <Divider />
-                    <Padder scale={1} />
-                    <View style={styles.itemRow}>
-                      <View style={styles.leasePeriodContainer}>
-                        {parachainsSummary?.leasePeriod.progressPercent && (
-                          <ProgressChartWidget
-                            title={`Lease Period`}
-                            detail={`\n${parachainsSummary.leasePeriod.progressPercent}%`}
-                            data={[parachainsSummary.leasePeriod.progressPercent]}
-                          />
-                        )}
-                        <View>
-                          <StatInfoBlock title="Current lease">
-                            {parachainsSummary?.leasePeriod.currentLease}
-                          </StatInfoBlock>
-                          <Padder scale={1} />
-                          <StatInfoBlock title="Total">{parachainsSummary?.leasePeriod.totalPeriod}</StatInfoBlock>
-                          <Padder scale={1} />
-                          <StatInfoBlock title="Remainder">{parachainsSummary?.leasePeriod.remainder}</StatInfoBlock>
-                        </View>
-                      </View>
+                    <View style={styles.summaryInfo}>
+                      {parachainsSummary?.parachainsCount ? (
+                        <Row label="Parachains">
+                          <Caption>{parachainsSummary.parachainsCount.toString()}</Caption>
+                        </Row>
+                      ) : null}
+                      {parachainsSummary?.parathreadsCount ? (
+                        <Row label="Parathreads">
+                          <Caption>{parachainsSummary.parathreadsCount.toString()}</Caption>
+                        </Row>
+                      ) : null}
+                      {parachainsSummary?.proposalsCount ? (
+                        <Row label="Proposals">
+                          <Caption>{parachainsSummary.proposalsCount.toString()}</Caption>
+                        </Row>
+                      ) : null}
+                      {parachainsSummary?.leasePeriod ? (
+                        <Row label="Current lease">
+                          <Caption>{parachainsSummary.leasePeriod.currentLease}</Caption>
+                        </Row>
+                      ) : null}
+                      {parachainsSummary?.leasePeriod ? (
+                        <Row label="Total period">
+                          <Caption>{parachainsSummary.leasePeriod.totalPeriod}</Caption>
+                        </Row>
+                      ) : null}
                     </View>
-                  </Card.Content>
-                </Card>
-                <Padder scale={1} />
-                <View style={styles.parachainsHeaderContainer}>
-                  <Subheading>Parachains</Subheading>
-                  <Subheading>Leases</Subheading>
+                  </View>
+                </Card.Content>
+              </Card>
+
+              <Padder scale={1} />
+              <View style={[globalStyles.rowContainer, globalStyles.paddedContainer]}>
+                <View style={globalStyles.flex}>
+                  <Subheading>{`Parachains`}</Subheading>
                 </View>
-                <Padder scale={1} />
-              </>
-            );
-          }}
+                <View style={[globalStyles.flex, globalStyles.alignCenter]}>
+                  <Subheading>{`Leases`}</Subheading>
+                </View>
+              </View>
+            </>
+          }
           data={parachains}
           keyExtractor={(item) => item.id}
           renderItem={({item}) => <ParachainItem parachain={item} onPress={() => toParachainDetails(item.id)} />}
@@ -121,24 +128,39 @@ function ParachainItem({parachain, onPress}: ParachainProps) {
   );
 }
 
+function Row({label, children}: {label: string; children: React.ReactNode}) {
+  return (
+    <View style={styles.row}>
+      <Caption style={styles.rowLabel}>{label}:</Caption>
+      <View style={globalStyles.flex}>{children}</View>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
-  itemRow: {
-    flexDirection: 'row',
+  progressChart: {
+    flex: 1.5,
+    alignItems: 'flex-start',
+  },
+  summaryInfo: {
+    flex: 2,
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: standardPadding * 2,
-  },
-  cardTop: {marginHorizontal: standardPadding * 2},
-  leasePeriodContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  parachainsHeaderContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
   },
   rightItem: {
     marginRight: standardPadding,
+    width: '35%',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: standardPadding,
+  },
+  rowLabel: {
+    width: '65%',
+  },
+  chartText: {
+    left: '32%',
+    top: '10%',
   },
 });
