@@ -115,6 +115,7 @@ function ParachainItem({parachain, onPress}: ParachainProps) {
           </View>
         );
       }}
+      testID={'parachain_items'}
     />
   );
 }
