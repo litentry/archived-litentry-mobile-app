@@ -62,14 +62,14 @@ export function ParachainsOverviewScreen({navigation}: ScreenProps) {
                         </Row>
                       ) : null}
                       {parachainsSummary?.leasePeriod ? (
-                        <Row label="Current lease">
-                          <Caption>{parachainsSummary.leasePeriod.currentLease}</Caption>
-                        </Row>
-                      ) : null}
-                      {parachainsSummary?.leasePeriod ? (
-                        <Row label="Total period">
-                          <Caption>{parachainsSummary.leasePeriod.totalPeriod}</Caption>
-                        </Row>
+                        <>
+                          <Row label="Current lease">
+                            <Caption>{parachainsSummary.leasePeriod.currentLease}</Caption>
+                          </Row>
+                          <Row label="Total period">
+                            <Caption>{parachainsSummary.leasePeriod.totalPeriod}</Caption>
+                          </Row>
+                        </>
                       ) : null}
                     </View>
                   </View>
