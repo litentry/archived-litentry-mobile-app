@@ -14,7 +14,7 @@ function ProgressChartWidget(props: PropTypes) {
   const {title, detail, data} = props;
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID="progress_chart_id">
       <Caption style={styles.title}>{title}</Caption>
       <View style={styles.chartContainer}>
         <Caption style={styles.chartText}>{detail}</Caption>

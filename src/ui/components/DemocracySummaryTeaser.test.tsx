@@ -1,12 +1,21 @@
 import React from 'react';
-import {render, waitFor} from 'src/testUtils';
+import {render, waitFor, within} from 'src/testUtils';
 import {DemocracySummaryTeaser} from './DemocracySummaryTeaser';
 
 const onPressEvent = jest.fn();
 
 describe('DemocracySummaryTeaser component', () => {
   it('should render the component with the data', async () => {
-    const {getByLabelText, debug} = await waitFor(() => render(<DemocracySummaryTeaser onPress={onPressEvent} />));
-    debug();
+    const {getByTestId} = await waitFor(() => render(<DemocracySummaryTeaser onPress={onPressEvent} />));
+    const activeProposal = getByTestId('activeProposals_id');
+    expect(within(activeProposal).getByText('0')).toBeTruthy();
+    const proposals = getByTestId('proposals_id');
+    expect(within(proposals).getByText('17')).toBeTruthy();
+    const referendums = getByTestId('referendums_id');
+    expect(within(referendums).getByText('60')).toBeTruthy();
+    const activeReferendums = getByTestId('activeReferendums_id');
+    expect(within(activeReferendums).getByText('1')).toBeTruthy();
+    const progressChart = getByTestId('progress_chart_id');
+    expect(within(progressChart).getByText('87% 3 days 10 hrs')).toBeTruthy();
   });
 });

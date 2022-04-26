@@ -26,12 +26,20 @@ export function DemocracySummaryTeaser(props: Props) {
         <View style={styles.boxRow}>
           <Card mode="outlined" style={styles.card}>
             <View style={styles.itemRow}>
-              <StatInfoBlock title="Proposals">{String(data.activeProposals)}</StatInfoBlock>
-              <StatInfoBlock title="Total">{String(data.proposals)}</StatInfoBlock>
+              <StatInfoBlock title="Proposals" testID="activeProposals_id">
+                {String(data.activeProposals)}
+              </StatInfoBlock>
+              <StatInfoBlock title="Total" testID="proposals_id">
+                {String(data.proposals)}
+              </StatInfoBlock>
             </View>
             <View style={styles.itemRow}>
-              <StatInfoBlock title="Referenda">{String(data.activeReferendums)}</StatInfoBlock>
-              <StatInfoBlock title="Total">{String(data.referendums)}</StatInfoBlock>
+              <StatInfoBlock title="Referenda" testID="activeReferendums_id">
+                {String(data.activeReferendums)}
+              </StatInfoBlock>
+              <StatInfoBlock title="Total" testID="referendums_id">
+                {String(data.referendums)}
+              </StatInfoBlock>
             </View>
           </Card>
           <Padder scale={0.2} />
