@@ -5,6 +5,7 @@ import {ApolloProvider, ApolloClient, InMemoryCache, HttpLink} from '@apollo/cli
 import fetch from 'cross-fetch';
 
 import ThemeProvider from 'context/ThemeContext';
+import {create, TestRendererOptions} from 'react-test-renderer';
 
 export const client = new ApolloClient({
   cache: new InMemoryCache(),
@@ -35,5 +36,10 @@ jest.mock('@react-navigation/native', () => {
   };
 });
 
+function customCreate(ui: React.ReactElement, options?: TestRendererOptions) {
+  return create(ui, options);
+}
+
 export * from '@testing-library/react-native';
 export {customRender as render};
+export {customCreate as create};
