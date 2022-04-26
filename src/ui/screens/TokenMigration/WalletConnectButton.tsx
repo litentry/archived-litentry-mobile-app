@@ -7,7 +7,7 @@ export function WalletConnectButton({title, onPress}: {title: string; onPress: (
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
       <Subheading style={styles.title}>{title}</Subheading>
-      <Image source={require('../../image/walletconnect-logo.png')} resizeMode="contain" style={styles.image} />
+      <Image source={require('../../../image/walletconnect-logo.png')} resizeMode="contain" style={styles.image} />
     </TouchableOpacity>
   );
 }
