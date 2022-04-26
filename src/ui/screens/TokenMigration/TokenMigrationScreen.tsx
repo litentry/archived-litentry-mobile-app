@@ -1,58 +1,16 @@
 import React from 'react';
-import {View, StyleSheet, Image, TouchableOpacity, Linking} from 'react-native';
-import LottieView from 'lottie-react-native';
+import {View, StyleSheet, Linking} from 'react-native';
 import {stringShorten} from '@polkadot/util';
 import {useWeb3Wallet} from 'context/Web3WalletContext';
 import {useNetwork} from 'context/NetworkContext';
+import {SuccessAnimation} from '@ui/components/SuccessAnimation';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
 import {Text, Card, Button, Subheading, Title, Icon, TextInput, useBottomSheet, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
-import Animated, {SharedValue, useAnimatedStyle, useSharedValue, withTiming} from 'react-native-reanimated';
-
-function WalletConnectButton({title, onPress}: {title: string; onPress: () => void}) {
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#3182CE',
-        borderRadius: 8,
-        height: 45,
-      }}>
-      <Subheading style={{color: '#3182CE'}}>{title}</Subheading>
-      <Image
-        source={require('../../image/walletconnect-logo.png')}
-        resizeMode="contain"
-        style={{height: 25, width: 25, marginLeft: standardPadding}}
-      />
-    </TouchableOpacity>
-  );
-}
-
-enum Step {
-  RequestPermission = 1,
-  RequestTransfer = 2,
-  Completed = 3,
-}
-
-const stepsInitialState = {
-  [Step.RequestPermission]: {
-    active: true,
-    done: false,
-  },
-  [Step.RequestTransfer]: {
-    active: false,
-    done: false,
-  },
-  [Step.Completed]: {
-    active: false,
-  },
-};
+import {useTransactionWizard, WizardStep} from './TransactionWizard';
+import {WalletConnectButton} from './WalletConnectButton';
 
 export function TokenMigrationScreen() {
   const wallet = useWeb3Wallet();
@@ -64,10 +22,7 @@ export function TokenMigrationScreen() {
   const hasApproved = wallet.isConnected ? wallet.connectedAccount?.approved.isGreaterThan(0) : false;
   const [txHash, setTxHash] = React.useState('');
   const {colors} = useTheme();
-
-  const initialStep = Step.RequestPermission;
-  const [currentStep, setNextStep] = React.useState<Step>(initialStep);
-  const stepsState = useSharedValue(stepsInitialState);
+  const {TransactionWizard, currentStep, nextStep, resetWizard} = useTransactionWizard();
 
   const {openBottomSheet: openPreview, closeBottomSheet: closePreview, BottomSheet: Preview} = useBottomSheet();
 
@@ -104,17 +59,48 @@ export function TokenMigrationScreen() {
     setIsRequestingTransfer(false);
   }, [wallet]);
 
-  if (txHash) {
+  const renderPreviewHeader = React.useCallback(() => {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Text>Your tokens have been successfully migrated.</Text>
-        <Text>View transaction {txHash} on Etherscan.io</Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}>
+        <Title>Transaction summary</Title>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Text>Ethereum</Text>
+          <Padder scale={0.5} />
+          <Icon name="swap-horizontal" size={25} />
+          <Padder scale={0.5} />
+          <Text>Litmus</Text>
+        </View>
       </View>
     );
-  }
+  }, []);
+
+  const renderPreviewContent = () => {
+    return (
+      <>
+        <TransactionWizard />
+        <Padder scale={2} />
+        {currentStep === WizardStep.Completed ? (
+          <TransactionCompleted
+            txHash={txHash}
+            onPress={() => {
+              closePreview();
+              resetWizard();
+            }}
+          />
+        ) : (
+          <TransactionSummary />
+        )}
+      </>
+    );
+  };
 
   const renderPreviewButton = () => {
-    if (currentStep === Step.RequestPermission) {
+    if (currentStep === WizardStep.RequestPermission) {
       return (
         <Button
           loading={isRequestingPermission}
@@ -122,18 +108,7 @@ export function TokenMigrationScreen() {
           onPress={() => {
             setIsRequestingPermission(true);
             setTimeout(() => {
-              setNextStep(Step.RequestTransfer);
-              stepsState.value = {
-                ...stepsState.value,
-                [Step.RequestPermission]: {
-                  active: false,
-                  done: true,
-                },
-                [Step.RequestTransfer]: {
-                  active: true,
-                  done: false,
-                },
-              };
+              nextStep(WizardStep.RequestTransfer);
               setIsRequestingPermission(false);
             }, 2000);
           }}>
@@ -141,7 +116,7 @@ export function TokenMigrationScreen() {
         </Button>
       );
     }
-    if (currentStep === Step.RequestTransfer) {
+    if (currentStep === WizardStep.RequestTransfer) {
       return (
         <Button
           loading={isRequestingTransfer}
@@ -149,17 +124,7 @@ export function TokenMigrationScreen() {
           onPress={() => {
             setIsRequestingTransfer(true);
             setTimeout(() => {
-              setNextStep(Step.Completed);
-              stepsState.value = {
-                ...stepsState.value,
-                [Step.RequestTransfer]: {
-                  active: false,
-                  done: true,
-                },
-                [Step.Completed]: {
-                  active: true,
-                },
-              };
+              nextStep(WizardStep.Completed);
               setIsRequestingTransfer(false);
             }, 2000);
           }}>
@@ -171,8 +136,7 @@ export function TokenMigrationScreen() {
       <Button
         onPress={() => {
           closePreview();
-          setNextStep(1);
-          stepsState.value = stepsInitialState;
+          resetWizard();
         }}>
         Close
       </Button>
@@ -216,22 +180,9 @@ export function TokenMigrationScreen() {
 
       <Preview>
         <Layout style={globalStyles.paddedContainer}>
-          <PreviewHeader />
+          {renderPreviewHeader()}
           <Padder />
-          <TransactionSteps state={stepsState} />
-          <Padder scale={2} />
-          {currentStep === Step.Completed ? (
-            <TransactionCompleted
-              txHash={txHash}
-              onPress={() => {
-                closePreview();
-                setNextStep(initialStep);
-                stepsState.value = stepsInitialState;
-              }}
-            />
-          ) : (
-            <TransactionSummary />
-          )}
+          {renderPreviewContent()}
           <Padder />
           {renderPreviewButton()}
           <Padder scale={2} />
@@ -241,74 +192,8 @@ export function TokenMigrationScreen() {
   );
 }
 
-type StepsState = SharedValue<Record<Step, {active: boolean; done?: boolean}>>;
-
-function TransactionSteps({state}: {state: StepsState}) {
-  return (
-    <View style={{flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center'}}>
-      <StepCircle step={1} state={state} />
-      <StepDivider />
-      <StepCircle step={2} state={state} />
-      <StepDivider />
-      <StepCircle step={3} state={state} />
-    </View>
-  );
-}
-
-function StepCircle({step, state}: {step: Step; state: StepsState}) {
-  const {colors} = useTheme();
-  const animatedTextStyle = useAnimatedStyle(() => {
-    return {
-      color: withTiming(state.value[step].active || state.value[step].done ? colors.surface : colors.primary),
-    };
-  });
-  const animatedCircleStyles = useAnimatedStyle(() => {
-    return {
-      backgroundColor: withTiming(
-        state.value[step].active || state.value[step].done ? colors.primary : colors.background,
-      ),
-    };
-  });
-
-  return (
-    <Animated.View
-      style={[
-        {
-          width: 30,
-          height: 30,
-          borderRadius: 15,
-          borderWidth: 2,
-          borderColor: colors.primary,
-          justifyContent: 'center',
-          alignItems: 'center',
-        },
-        animatedCircleStyles,
-      ]}>
-      {step === Step.Completed ? (
-        <Icon name="check" size={18} color={state.value[Step.Completed].active ? colors.surface : colors.primary} />
-      ) : state.value[step].done ? (
-        <Icon name="check" size={18} color={colors.surface} />
-      ) : (
-        <Animated.Text style={[{fontWeight: '700'}, animatedTextStyle]}>{step}</Animated.Text>
-      )}
-    </Animated.View>
-  );
-}
-
-function StepDivider() {
-  const {colors} = useTheme();
-  return (
-    <View
-      style={{
-        height: 1,
-        backgroundColor: colors.disabled,
-        width: '30%',
-      }}
-    />
-  );
-}
-
-function openEtherscan(txHash: string) {
+function openOnEtherscan(txHash: string) {
+  // TODO: use `https://etherscan.io/tx/${txHash}` when using Ethereum
   const url = `https://rinkeby.etherscan.io/tx/${txHash}`;
   Linking.canOpenURL(url).then((supported) => {
     if (supported) {
@@ -317,54 +202,6 @@ function openEtherscan(txHash: string) {
   });
 }
 
-function TransactionCompleted({txHash, onPress}: {txHash: string; onPress: () => void}) {
-  const {colors} = useTheme();
-  return (
-    <View
-      style={[
-        globalStyles.fillCenter,
-        {backgroundColor: colors.surface, padding: standardPadding * 2, borderRadius: 10},
-      ]}>
-      <LottieView
-        autoPlay
-        style={{width: '50%'}}
-        source={require('../../../assets/lottieFiles/success_animation.json')}
-        loop={false}
-      />
-      <Padder />
-      <Text>Your tokens have been successfully migrated.</Text>
-      <Padder />
-      <Button
-        icon="open-in-new"
-        onPress={() => {
-          openEtherscan(txHash);
-          onPress();
-        }}>
-        Etherscan
-      </Button>
-    </View>
-  );
-}
-
-function PreviewHeader() {
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      }}>
-      <Title>Transaction summary</Title>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Text>Ethereum</Text>
-        <Padder scale={0.5} />
-        <Icon name="swap-horizontal" size={25} />
-        <Padder scale={0.5} />
-        <Text>Litmus</Text>
-      </View>
-    </View>
-  );
-}
 function TransactionSummary() {
   const {colors} = useTheme();
   return (
@@ -402,16 +239,40 @@ function TransactionSummary() {
   );
 }
 
+function TransactionCompleted({txHash, onPress}: {txHash: string; onPress: () => void}) {
+  const {colors} = useTheme();
+  return (
+    <View
+      style={[
+        globalStyles.fillCenter,
+        {backgroundColor: colors.surface, padding: standardPadding * 2, borderRadius: 10},
+      ]}>
+      <SuccessAnimation />
+      <Padder />
+      <Text>Your tokens have been successfully migrated.</Text>
+      <Padder />
+      <Button
+        icon="open-in-new"
+        onPress={() => {
+          openOnEtherscan(txHash);
+          onPress();
+        }}>
+        Etherscan
+      </Button>
+    </View>
+  );
+}
+
 const stepsState = {
-  [Step.RequestPermission]: {
+  [WizardStep.RequestPermission]: {
     active: true,
     done: false,
   },
-  [Step.RequestTransfer]: {
+  [WizardStep.RequestTransfer]: {
     active: true,
     done: false,
   },
-  [Step.Completed]: {
+  [WizardStep.Completed]: {
     active: true,
     done: true,
   },

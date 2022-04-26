@@ -5,7 +5,7 @@ import {MainDrawerAppBar, MainAppBar, MainStackAppBar} from '@ui/navigation/AppB
 import {AccountsNavigator, overlayScreenOptions} from '@ui/navigation/AppNavigator';
 import {accountsNavigator, feedbackScreen, tokenMigrationScreen, webviewScreen} from '@ui/navigation/routeKeys';
 import DrawerScreen from '@ui/screens/Drawer/DrawerScreen';
-import {TokenMigrationScreen} from '@ui/screens/TokenMigrationScreen';
+import {TokenMigrationScreen} from '@ui/screens/TokenMigration/TokenMigrationScreen';
 import {AppStackParamList} from '@ui/navigation/navigation';
 import WebviewScreen from '@ui/screens/WebviewScreen';
 import {FeedbackScreen} from '@ui/screens/FeedbackScreen';
