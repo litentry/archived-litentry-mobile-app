@@ -1,12 +1,14 @@
 import React from 'react';
-import {View, StyleSheet, Linking} from 'react-native';
+import {View, StyleSheet, Linking, KeyboardAvoidingView, ScrollView} from 'react-native';
 import {stringShorten} from '@polkadot/util';
 import {useWeb3Wallet} from 'context/Web3WalletContext';
 import {useNetwork} from 'context/NetworkContext';
+import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
 import {SuccessAnimation} from '@ui/components/SuccessAnimation';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
+import {decimalKeypad} from 'src/utils';
 import {Text, Card, Button, Subheading, Title, Icon, TextInput, useBottomSheet, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {useTransactionWizard, WizardStep} from './TransactionWizard';
@@ -15,20 +17,27 @@ import {WalletConnectButton} from './WalletConnectButton';
 export function TokenMigrationScreen() {
   const wallet = useWeb3Wallet();
   const {currentNetwork} = useNetwork();
+  const {formatBalance, stringToBn} = useFormatBalance();
+  const {TransactionWizard, currentStep, nextStep, resetWizard} = useTransactionWizard();
+  const {openBottomSheet: openPreview, closeBottomSheet: closePreview, BottomSheet: Preview} = useBottomSheet();
+  const {colors} = useTheme();
+
   const [isRequestingPermission, setIsRequestingPermission] = React.useState(false);
   const [isRequestingTransfer, setIsRequestingTransfer] = React.useState(false);
-  const litmusAddress = '5DkLmfqQDZtDpN2SiEMvVeTJuq8zW7pan2c4LqN3EV6deB64'; // TODO: select address from internal accounts
-  const ethAddress = '0x838C543187312cc85592f43a35b03A7aCb8B273a'; // TODO: select address from web3 accounts
-  const hasApproved = wallet.isConnected ? wallet.connectedAccount?.approved.isGreaterThan(0) : false;
+  const [destinationAddress, setDestinationAddress] = React.useState('');
   const [txHash, setTxHash] = React.useState('');
-  const {colors} = useTheme();
-  const {TransactionWizard, currentStep, nextStep, resetWizard} = useTransactionWizard();
+  const [amount, setAmount] = React.useState('');
 
-  const {openBottomSheet: openPreview, closeBottomSheet: closePreview, BottomSheet: Preview} = useBottomSheet();
+  // todo handle reject
+  const hasApproved = wallet.isConnected ? wallet.connectedAccount?.approved.isGreaterThan(0) : false;
 
   const requestPermission = React.useCallback(async () => {
     if (!wallet.isConnected) {
       throw new Error('The wallet must be connected to call this method');
+    }
+    const ethAddress = wallet.connectedAccount?.address;
+    if (!ethAddress) {
+      throw new Error('No account connected');
     }
     setIsRequestingPermission(true);
     const result = await wallet.approveForMigration(ethAddress);
@@ -39,15 +48,20 @@ export function TokenMigrationScreen() {
       // TODO: handle error
       console.error(result.error);
     }
+    nextStep(WizardStep.RequestTransfer);
     setIsRequestingPermission(false);
-  }, [wallet]);
+  }, [wallet, nextStep]);
 
   const requestTransfer = React.useCallback(async () => {
     if (!wallet.isConnected) {
       throw new Error('The wallet must be connected to call this method');
     }
+    const ethAddress = wallet.connectedAccount?.address;
+    if (!ethAddress) {
+      throw new Error('No account connected');
+    }
     setIsRequestingTransfer(true);
-    const result = await wallet.depositForMigration(ethAddress, 1, litmusAddress);
+    const result = await wallet.depositForMigration(ethAddress, Number(amount), destinationAddress);
     if (result?.ok) {
       wallet.updateAccount(ethAddress);
       setTxHash(result.ok);
@@ -56,8 +70,9 @@ export function TokenMigrationScreen() {
       // TODO: handle error
       console.error(result.error);
     }
+    nextStep(WizardStep.Completed);
     setIsRequestingTransfer(false);
-  }, [wallet]);
+  }, [wallet, nextStep, amount, destinationAddress]);
 
   const renderPreviewHeader = React.useCallback(() => {
     return (
@@ -102,32 +117,14 @@ export function TokenMigrationScreen() {
   const renderPreviewButton = () => {
     if (currentStep === WizardStep.RequestPermission) {
       return (
-        <Button
-          loading={isRequestingPermission}
-          mode="contained"
-          onPress={() => {
-            setIsRequestingPermission(true);
-            setTimeout(() => {
-              nextStep(WizardStep.RequestTransfer);
-              setIsRequestingPermission(false);
-            }, 2000);
-          }}>
+        <Button loading={isRequestingPermission} mode="contained" onPress={requestPermission}>
           Request permission
         </Button>
       );
     }
     if (currentStep === WizardStep.RequestTransfer) {
       return (
-        <Button
-          loading={isRequestingTransfer}
-          mode="contained"
-          onPress={() => {
-            setIsRequestingTransfer(true);
-            setTimeout(() => {
-              nextStep(WizardStep.Completed);
-              setIsRequestingTransfer(false);
-            }, 2000);
-          }}>
+        <Button loading={isRequestingTransfer} mode="contained" onPress={requestTransfer}>
           Request transfer
         </Button>
       );
@@ -145,38 +142,56 @@ export function TokenMigrationScreen() {
 
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
-      <Card mode="outlined">
-        <Card.Title title={`From Ethereum to ${currentNetwork.name}`} subtitle="Via ERC-20 Token Standard" />
-        <Card.Content>
-          <Subheading>From Account</Subheading>
-          {!wallet.isConnected ? (
-            <View style={{marginVertical: standardPadding}}>
-              <WalletConnectButton title="Connect Wallet" onPress={() => wallet.connect()} />
-            </View>
-          ) : (
-            <View>
+      <KeyboardAvoidingView>
+        <ScrollView>
+          <Card mode="outlined">
+            <Card.Title title={`From Ethereum to ${currentNetwork.name}`} subtitle="Via ERC-20 Token Standard" />
+            <Card.Content>
+              <Subheading>From Account</Subheading>
+              {!wallet.isConnected ? (
+                <View style={{marginVertical: standardPadding}}>
+                  <WalletConnectButton title="Connect Wallet" onPress={() => wallet.connect()} />
+                </View>
+              ) : (
+                <View>
+                  <TextInput
+                    left={<TextInput.Icon name="check-network-outline" color={colors.primary} />}
+                    mode="outlined"
+                    value={stringShorten(wallet.connectedAccount?.address ?? '', 12)}
+                    disabled
+                  />
+                  <Button compact style={{alignSelf: 'flex-end'}} onPress={() => wallet.disconnect()}>
+                    Disconnect Wallet
+                  </Button>
+                </View>
+              )}
+              <Subheading>Destination</Subheading>
+              <SelectAccount onSelect={(selectedAccount) => setDestinationAddress(selectedAccount.account.address)} />
+              <Padder scale={0.5} />
+              <Subheading>Amount</Subheading>
               <TextInput
-                left={<TextInput.Icon name="check-network-outline" color={colors.primary} />}
+                value={amount}
                 mode="outlined"
-                value={stringShorten(wallet.connectedAccount?.address ?? '', 12)}
-                disabled
+                keyboardType="decimal-pad"
+                placeholder="Enter amount"
+                autoComplete="off"
+                right={<TextInput.Affix text={formatBalance(stringToBn(amount?.toString()))} />}
+                onChangeText={(_amount) => {
+                  setAmount(decimalKeypad(_amount));
+                }}
               />
-              <Button compact style={{alignSelf: 'flex-end'}} onPress={() => wallet.disconnect()}>
-                Disconnect Wallet
+              <Padder scale={2} />
+              <Button
+                mode="contained"
+                compact
+                onPress={openPreview}
+                disabled={!amount || !wallet.isConnected || !destinationAddress}>
+                Preview
               </Button>
-            </View>
-          )}
-          <Subheading>Destination</Subheading>
-          <SelectAccount onSelect={(selectedAccount) => console.log(selectedAccount)} />
-          <Padder scale={0.5} />
-          <Subheading>Amount</Subheading>
-          <TextInput value={'10'} mode="outlined" />
-          <Padder scale={2} />
-          <Button mode="contained" compact onPress={openPreview}>
-            Preview
-          </Button>
-        </Card.Content>
-      </Card>
+            </Card.Content>
+          </Card>
+        </ScrollView>
+      </KeyboardAvoidingView>
 
       <Preview>
         <Layout style={globalStyles.paddedContainer}>
