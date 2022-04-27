@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Linking, KeyboardAvoidingView, ScrollView} from 'react-native';
+import {View, StyleSheet, Linking, ScrollView} from 'react-native';
 import {stringShorten} from '@polkadot/util';
 import {useWeb3Wallet} from 'context/Web3WalletContext';
 import {useNetwork} from 'context/NetworkContext';
@@ -15,21 +15,18 @@ import {useTransactionWizard, WizardStep} from './TransactionWizard';
 import {WalletConnectButton} from './WalletConnectButton';
 
 export function TokenMigrationScreen() {
+  const {colors} = useTheme();
   const wallet = useWeb3Wallet();
   const {currentNetwork} = useNetwork();
   const {formatBalance, stringToBn} = useFormatBalance();
   const {TransactionWizard, currentStep, nextStep, resetWizard} = useTransactionWizard();
   const {openBottomSheet: openPreview, closeBottomSheet: closePreview, BottomSheet: Preview} = useBottomSheet();
-  const {colors} = useTheme();
 
   const [isRequestingPermission, setIsRequestingPermission] = React.useState(false);
   const [isRequestingTransfer, setIsRequestingTransfer] = React.useState(false);
   const [destinationAddress, setDestinationAddress] = React.useState('');
   const [txHash, setTxHash] = React.useState('');
   const [amount, setAmount] = React.useState('');
-
-  // todo handle reject
-  const hasApproved = wallet.isConnected ? wallet.connectedAccount?.approved.isGreaterThan(0) : false;
 
   const requestPermission = React.useCallback(async () => {
     if (!wallet.isConnected) {
@@ -76,14 +73,9 @@ export function TokenMigrationScreen() {
 
   const renderPreviewHeader = React.useCallback(() => {
     return (
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}>
+      <View style={styles.previewHeaderContainer}>
         <Title>Transaction summary</Title>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View style={globalStyles.rowAlignCenter}>
           <Text>Ethereum</Text>
           <Padder scale={0.5} />
           <Icon name="swap-horizontal" size={25} />
@@ -95,10 +87,13 @@ export function TokenMigrationScreen() {
   }, []);
 
   const renderPreviewContent = () => {
+    if (!wallet.isConnected) {
+      return null;
+    }
     return (
       <>
         <TransactionWizard />
-        <Padder scale={2} />
+        <Padder />
         {currentStep === WizardStep.Completed ? (
           <TransactionCompleted
             txHash={txHash}
@@ -108,7 +103,39 @@ export function TokenMigrationScreen() {
             }}
           />
         ) : (
-          <TransactionSummary />
+          <View style={[{backgroundColor: colors.surface}, styles.summaryContainer]}>
+            <View style={styles.summaryRow}>
+              <Subheading>Amount</Subheading>
+              <Text>{formatBalance(stringToBn(amount?.toString()))}</Text>
+            </View>
+            <Padder />
+            <View style={styles.summaryRow}>
+              <Subheading>Source</Subheading>
+              <Text>{stringShorten(wallet.connectedAccount?.address ?? '', 12)}</Text>
+            </View>
+            <Padder />
+            <View style={styles.summaryRow}>
+              <Subheading>Destination</Subheading>
+              <Text>{stringShorten(destinationAddress, 12)}</Text>
+            </View>
+            <Padder />
+            <View style={styles.summaryRow}>
+              <Subheading>LIT Balance</Subheading>
+              <Text>{formatBalance(stringToBn(wallet.connectedAccount?.balance.lit.toString() ?? ''))}</Text>
+            </View>
+            <Padder />
+            <View style={styles.summaryRow}>
+              <Subheading>ETH Balance</Subheading>
+              <Text>{formatBalance(stringToBn(wallet.connectedAccount?.balance.eth.toString() ?? ''))}</Text>
+            </View>
+            <Padder />
+            <View style={styles.summaryRow}>
+              <Subheading>New LIT Balance in Ethereum</Subheading>
+              <Text>
+                {formatBalance(stringToBn(wallet.connectedAccount?.balance.lit.minus(amount).toString() ?? ''))}
+              </Text>
+            </View>
+          </View>
         )}
       </>
     );
@@ -142,56 +169,56 @@ export function TokenMigrationScreen() {
 
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
-      <KeyboardAvoidingView>
-        <ScrollView>
-          <Card mode="outlined">
-            <Card.Title title={`From Ethereum to ${currentNetwork.name}`} subtitle="Via ERC-20 Token Standard" />
-            <Card.Content>
-              <Subheading>From Account</Subheading>
-              {!wallet.isConnected ? (
-                <View style={{marginVertical: standardPadding}}>
-                  <WalletConnectButton title="Connect Wallet" onPress={() => wallet.connect()} />
-                </View>
-              ) : (
-                <View>
-                  <TextInput
-                    left={<TextInput.Icon name="check-network-outline" color={colors.primary} />}
-                    mode="outlined"
-                    value={stringShorten(wallet.connectedAccount?.address ?? '', 12)}
-                    disabled
-                  />
-                  <Button compact style={{alignSelf: 'flex-end'}} onPress={() => wallet.disconnect()}>
+      <ScrollView>
+        <Card mode="outlined">
+          <Card.Title title={`From Ethereum to ${currentNetwork.name}`} subtitle="Via ERC-20 Token Standard" />
+          <Card.Content>
+            <Subheading>From Account</Subheading>
+            {!wallet.isConnected ? (
+              <View style={{marginVertical: standardPadding}}>
+                <WalletConnectButton title="Connect Wallet" onPress={() => wallet.connect()} />
+              </View>
+            ) : (
+              <View>
+                <TextInput
+                  left={<TextInput.Icon name="check-network-outline" color={colors.primary} />}
+                  mode="outlined"
+                  value={stringShorten(wallet.connectedAccount?.address ?? '', 12)}
+                  disabled
+                />
+                <View style={styles.disconnectWalletContainer}>
+                  <Button compact onPress={() => wallet.disconnect()}>
                     Disconnect Wallet
                   </Button>
                 </View>
-              )}
-              <Subheading>Destination</Subheading>
-              <SelectAccount onSelect={(selectedAccount) => setDestinationAddress(selectedAccount.account.address)} />
-              <Padder scale={0.5} />
-              <Subheading>Amount</Subheading>
-              <TextInput
-                value={amount}
-                mode="outlined"
-                keyboardType="decimal-pad"
-                placeholder="Enter amount"
-                autoComplete="off"
-                right={<TextInput.Affix text={formatBalance(stringToBn(amount?.toString()))} />}
-                onChangeText={(_amount) => {
-                  setAmount(decimalKeypad(_amount));
-                }}
-              />
-              <Padder scale={2} />
-              <Button
-                mode="contained"
-                compact
-                onPress={openPreview}
-                disabled={!amount || !wallet.isConnected || !destinationAddress}>
-                Preview
-              </Button>
-            </Card.Content>
-          </Card>
-        </ScrollView>
-      </KeyboardAvoidingView>
+              </View>
+            )}
+            <Subheading>Destination</Subheading>
+            <SelectAccount onSelect={(selectedAccount) => setDestinationAddress(selectedAccount.account.address)} />
+            <Padder scale={0.5} />
+            <Subheading>Amount</Subheading>
+            <TextInput
+              value={amount}
+              mode="outlined"
+              keyboardType="decimal-pad"
+              placeholder="Enter amount"
+              autoComplete="off"
+              right={<TextInput.Affix text={formatBalance(stringToBn(amount?.toString()))} />}
+              onChangeText={(_amount) => {
+                setAmount(decimalKeypad(_amount));
+              }}
+            />
+            <Padder scale={2} />
+            <Button
+              mode="contained"
+              compact
+              onPress={openPreview}
+              disabled={!amount || !destinationAddress || !wallet.isConnected}>
+              Preview
+            </Button>
+          </Card.Content>
+        </Card>
+      </ScrollView>
 
       <Preview>
         <Layout style={globalStyles.paddedContainer}>
@@ -217,51 +244,11 @@ function openOnEtherscan(txHash: string) {
   });
 }
 
-function TransactionSummary() {
-  const {colors} = useTheme();
-  return (
-    <View style={{backgroundColor: colors.surface, padding: standardPadding * 2, borderRadius: 10}}>
-      <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-        <Subheading>Amount</Subheading>
-        <Text> 1 LIT</Text>
-      </View>
-      <Padder />
-      <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-        <Subheading>Source</Subheading>
-        <Text>0xBa3cb7dd5C533bB8b4E35c...</Text>
-      </View>
-      <Padder />
-      <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-        <Subheading>Destination</Subheading>
-        <Text>0xBa3cb7dd5C533bB8b4E35c...</Text>
-      </View>
-      <Padder />
-      <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-        <Subheading>LIT Balance</Subheading>
-        <Text>200</Text>
-      </View>
-      <Padder />
-      <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-        <Subheading>ETH Balance</Subheading>
-        <Text>30</Text>
-      </View>
-      <Padder />
-      <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-        <Subheading>New LIT Balance in Ethereum</Subheading>
-        <Text>199</Text>
-      </View>
-    </View>
-  );
-}
-
 function TransactionCompleted({txHash, onPress}: {txHash: string; onPress: () => void}) {
   const {colors} = useTheme();
+
   return (
-    <View
-      style={[
-        globalStyles.fillCenter,
-        {backgroundColor: colors.surface, padding: standardPadding * 2, borderRadius: 10},
-      ]}>
+    <View style={[globalStyles.fillCenter, styles.transactionCompletedContainer, {backgroundColor: colors.surface}]}>
       <SuccessAnimation />
       <Padder />
       <Text>Your tokens have been successfully migrated.</Text>
@@ -278,24 +265,30 @@ function TransactionCompleted({txHash, onPress}: {txHash: string; onPress: () =>
   );
 }
 
-const stepsState = {
-  [WizardStep.RequestPermission]: {
-    active: true,
-    done: false,
-  },
-  [WizardStep.RequestTransfer]: {
-    active: true,
-    done: false,
-  },
-  [WizardStep.Completed]: {
-    active: true,
-    done: true,
-  },
-};
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: standardPadding * 2,
+  },
+  disconnectWalletContainer: {
+    alignItems: 'flex-end',
+  },
+  previewHeaderContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  summaryContainer: {
+    padding: standardPadding * 2,
+    borderRadius: 10,
+  },
+  summaryRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  transactionCompletedContainer: {
+    padding: standardPadding * 2,
+    borderRadius: 10,
   },
 });
