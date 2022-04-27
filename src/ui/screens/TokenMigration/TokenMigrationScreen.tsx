@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, StyleSheet, Linking, ScrollView} from 'react-native';
-import {stringShorten} from '@polkadot/util';
 import {useWeb3Wallet} from 'context/Web3WalletContext';
 import {useNetwork} from 'context/NetworkContext';
 import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
@@ -13,6 +12,7 @@ import {Text, Card, Button, Subheading, Title, Icon, TextInput, useBottomSheet, 
 import globalStyles, {standardPadding} from '@ui/styles';
 import {useTransactionWizard, WizardStep} from './TransactionWizard';
 import {WalletConnectButton} from './WalletConnectButton';
+import {toShortAddress} from 'src/utils/address';
 
 export function TokenMigrationScreen() {
   const {colors} = useTheme();
@@ -111,12 +111,12 @@ export function TokenMigrationScreen() {
             <Padder />
             <View style={styles.summaryRow}>
               <Subheading>Source</Subheading>
-              <Text>{stringShorten(wallet.connectedAccount?.address ?? '', 12)}</Text>
+              <Text>{toShortAddress(wallet.connectedAccount?.address ?? '')}</Text>
             </View>
             <Padder />
             <View style={styles.summaryRow}>
               <Subheading>Destination</Subheading>
-              <Text>{stringShorten(destinationAddress, 12)}</Text>
+              <Text>{toShortAddress(destinationAddress)}</Text>
             </View>
             <Padder />
             <View style={styles.summaryRow}>
@@ -183,7 +183,7 @@ export function TokenMigrationScreen() {
                 <TextInput
                   left={<TextInput.Icon name="check-network-outline" color={colors.primary} />}
                   mode="outlined"
-                  value={stringShorten(wallet.connectedAccount?.address ?? '', 12)}
+                  value={toShortAddress(wallet.connectedAccount?.address ?? '')}
                   disabled
                 />
                 <View style={styles.disconnectWalletContainer}>
