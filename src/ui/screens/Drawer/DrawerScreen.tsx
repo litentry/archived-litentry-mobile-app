@@ -155,7 +155,7 @@ function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
             icon="brightness-6"
             right={() => <Switch value={theme === 'dark'} onValueChange={toggleTheme} />}
           />
-          {currentNetwork.isParachain ? (
+          {!currentNetwork.isParachain ? (
             <>
               <Drawer.Item
                 label="Notifications"
