@@ -38,9 +38,8 @@ export function ParachainsOverviewScreen({navigation}: ScreenProps) {
                     <View style={styles.progressChart}>
                       {parachainsSummary?.leasePeriod.progressPercent && (
                         <ProgressChartWidget
-                          chartTextStyle={styles.chartText}
                           title={`Lease Period`}
-                          detail={`\n${parachainsSummary.leasePeriod.progressPercent}%\n${parachainsSummary.leasePeriod.remainderParts[0]}`}
+                          detail={`\n${parachainsSummary.leasePeriod.progressPercent}%`}
                           data={[parachainsSummary.leasePeriod.progressPercent / 100]}
                         />
                       )}
@@ -49,11 +48,6 @@ export function ParachainsOverviewScreen({navigation}: ScreenProps) {
                       {parachainsSummary?.parachainsCount ? (
                         <Row label="Parachains">
                           <Caption>{parachainsSummary.parachainsCount.toString()}</Caption>
-                        </Row>
-                      ) : null}
-                      {parachainsSummary?.parathreadsCount ? (
-                        <Row label="Parathreads">
-                          <Caption>{parachainsSummary.parathreadsCount.toString()}</Caption>
                         </Row>
                       ) : null}
                       {parachainsSummary?.proposalsCount ? (
@@ -68,6 +62,9 @@ export function ParachainsOverviewScreen({navigation}: ScreenProps) {
                           </Row>
                           <Row label="Total period">
                             <Caption>{parachainsSummary.leasePeriod.totalPeriod}</Caption>
+                          </Row>
+                          <Row label="Remaining">
+                            <Caption>{parachainsSummary.leasePeriod.remainderParts[0]}</Caption>
                           </Row>
                         </>
                       ) : null}
@@ -157,10 +154,6 @@ const styles = StyleSheet.create({
     marginBottom: standardPadding,
   },
   rowLabel: {
-    width: '65%',
-  },
-  chartText: {
-    left: '32%',
-    top: '10%',
+    width: '60%',
   },
 });

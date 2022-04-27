@@ -18,7 +18,7 @@ function ProgressChartWidget(props: PropTypes) {
     <View style={styles.container}>
       <Caption style={styles.title}>{title}</Caption>
       <View style={styles.chartContainer}>
-        <Caption style={{...styles.chartText, ...(chartTextStyle as Record<string, unknown>)}}>{detail}</Caption>
+        <Caption style={[styles.chartText, chartTextStyle]}>{detail}</Caption>
         <ProgressChart
           data={data}
           width={100}
