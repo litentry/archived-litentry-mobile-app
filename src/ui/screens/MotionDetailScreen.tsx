@@ -176,6 +176,7 @@ export function MotionDetailScreen({route, navigation}: PropTypes) {
             injectedJavaScript={`(function() {
                 // remove some html element
                 document.getElementById('menubar').remove();
+                document.getElementsByClassName('sidebar-parent')[0].parentElement.remove();
                 var footer = document.getElementsByTagName('footer');
                 Array.prototype.forEach.call(footer, el => el.remove());
             })();`}
