@@ -8,7 +8,7 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useConvictions, Conviction} from 'src/api/hooks/useConvictions';
-import {formattedStringToBn, stringToBn as stringToBnUtil} from 'src/api/utils/balance';
+import {formattedStringToBn, stringToBn as stringToBnUtil} from 'src/utils/balance';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {referendumScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';

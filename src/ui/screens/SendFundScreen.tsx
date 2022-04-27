@@ -18,7 +18,7 @@ import {InputLabel} from '@ui/library/InputLabel';
 import {useSnackbar} from 'context/SnackbarContext';
 import {BN_ZERO} from '@polkadot/util';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
-import {stringToBn as stringToBnUtil, formattedStringToBn} from 'src/api/utils/balance';
+import {stringToBn as stringToBnUtil, formattedStringToBn} from 'src/utils/balance';
 import AddressInput from '@ui/components/AddressInput';
 
 type Props = {

@@ -2,7 +2,7 @@ import {Compact} from '@polkadot/types';
 // eslint-disable-next-line no-restricted-imports
 import {formatBalance as formatBalancePolkaUtil, BN} from '@polkadot/util';
 import {useChainInfo, Registry} from 'src/api/hooks/useChainInfo';
-import {stringToBn as stringToBnUtil} from 'src/api/utils/balance';
+import {stringToBn as stringToBnUtil} from 'src/utils/balance';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Balance = Compact<any> | BN | string | number;

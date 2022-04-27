@@ -22,7 +22,7 @@ import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 import BalanceInput from '@ui/components/BalanceInput';
 import type {Account} from 'src/api/hooks/useAccount';
-import {formattedStringToBn} from 'src/api/utils/balance';
+import {formattedStringToBn} from 'src/utils/balance';
 import MaxBalance from '@ui/components/MaxBalance';
 import {useApi} from 'context/ChainApiContext';
 import {useSnackbar} from 'context/SnackbarContext';

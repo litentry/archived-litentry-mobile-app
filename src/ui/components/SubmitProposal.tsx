@@ -11,7 +11,7 @@ import type {Account} from 'src/api/hooks/useAccount';
 import {useChainInfo} from 'src/api/hooks/useChainInfo';
 import {InputLabel} from '@ui/library/InputLabel';
 import {BN_ZERO} from '@polkadot/util';
-import {formattedStringToBn} from 'src/api/utils/balance';
+import {formattedStringToBn} from 'src/utils/balance';
 
 export function SubmitProposal() {
   const [state, dispatch] = React.useReducer(reducer, initialState);

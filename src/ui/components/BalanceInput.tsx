@@ -5,7 +5,7 @@ import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {decimalKeypad} from 'src/utils';
 import MaxBalance from './MaxBalance';
 import type {Account} from 'src/api/hooks/useAccount';
-import {formattedStringToBn} from 'src/api/utils/balance';
+import {formattedStringToBn} from 'src/utils/balance';
 
 type PropTypes = {
   account?: Account;

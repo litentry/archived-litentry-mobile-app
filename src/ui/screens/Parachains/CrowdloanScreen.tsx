@@ -17,7 +17,7 @@ import {Crowdloan, useAllCrowdloans} from 'src/api/hooks/useCrowdloans';
 import type {Account} from 'src/api/hooks/useAccount';
 import {useChainInfo} from 'src/api/hooks/useChainInfo';
 import {BN_ZERO} from '@polkadot/util';
-import {formattedStringToBn} from 'src/api/utils/balance';
+import {formattedStringToBn} from 'src/utils/balance';
 import {CrowdloanSummaryTeaser} from '@ui/components/CrowdloanSummaryTeaser';
 import {useNetwork} from 'context/NetworkContext';
 import {InputLabel} from '@ui/library/InputLabel';

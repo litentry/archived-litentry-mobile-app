@@ -17,7 +17,7 @@ import {decimalKeypad} from 'src/utils';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {useBountiesSummary} from 'src/api/hooks/useBountiesSummary';
 import type {BN} from '@polkadot/util';
-import {formattedStringToBn} from 'src/api/utils/balance';
+import {formattedStringToBn} from 'src/utils/balance';
 
 export function AddBountyScreen({navigation}: {navigation: NavigationProp<AppStackParamList>}) {
   const modalRef = useRef<Modalize>(null);
