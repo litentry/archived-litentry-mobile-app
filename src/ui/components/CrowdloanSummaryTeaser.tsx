@@ -4,7 +4,7 @@ import {View, StyleSheet} from 'react-native';
 import {useCrowdloanSummary} from 'src/api/hooks/useCrowdloanSummary';
 import {Chart} from '@ui/components/Chart';
 import {Subheading, Caption, List} from '@ui/library';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
+import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {LoadingBox} from './LoadingBox';
 
 export function CrowdloanSummaryTeaser() {

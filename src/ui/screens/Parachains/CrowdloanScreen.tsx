@@ -5,7 +5,7 @@ import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {useApiTx} from 'src/api/hooks/useApiTx';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
+import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {CrowdloansStackParamList} from '@ui/navigation/navigation';
 import {crowdloanFundDetailScreen} from '@ui/navigation/routeKeys';
 import {Button, Card, Subheading, Text, Caption, Title, Modal, useTheme} from '@ui/library';

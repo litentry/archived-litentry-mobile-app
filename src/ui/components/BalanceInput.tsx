@@ -1,7 +1,7 @@
 import React, {useMemo, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {TextInput} from '@ui/library';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
+import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {decimalKeypad} from 'src/utils';
 import MaxBalance from './MaxBalance';
 import type {Account} from 'src/api/hooks/useAccount';

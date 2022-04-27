@@ -9,7 +9,7 @@ import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {useCouncil, CouncilMember, Council} from 'src/api/hooks/useCouncil';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
+import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {candidateScreen} from '@ui/navigation/routeKeys';
 import {Button, Divider, Modal, useTheme, Caption, Subheading, Text, TextInput, HelperText} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
