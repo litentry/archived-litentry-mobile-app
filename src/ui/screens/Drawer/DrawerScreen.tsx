@@ -164,7 +164,7 @@ function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
             icon="brightness-6"
             right={() => <Switch value={theme === 'dark'} onValueChange={toggleTheme} />}
           />
-          {currentNetwork.isParachain ? (
+          {!currentNetwork.isParachain ? (
             <>
               <Drawer.Item
                 label="Notifications"
@@ -174,18 +174,18 @@ function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
                   navigation.navigate(notificationSettingsScreen);
                 }}
               />
-              {__DEV__ && (
-                <Drawer.Item
-                  label="Dev Kit"
-                  icon="code-tags"
-                  active={activeScreen === devScreen}
-                  onPress={() => {
-                    navigation.navigate(devScreen);
-                  }}
-                />
-              )}
             </>
           ) : null}
+          {__DEV__ && (
+            <Drawer.Item
+              label="Dev Kit"
+              icon="code-tags"
+              active={activeScreen === devScreen}
+              onPress={() => {
+                navigation.navigate(devScreen);
+              }}
+            />
+          )}
         </Drawer.Section>
         <Drawer.Section>
           <Drawer.Item
