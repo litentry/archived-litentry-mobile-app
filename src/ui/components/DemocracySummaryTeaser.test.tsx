@@ -1,5 +1,5 @@
 import React from 'react';
-import {render, waitFor, within} from 'src/testUtils';
+import {render, waitFor} from 'src/testUtils';
 import {DemocracySummaryTeaser} from './DemocracySummaryTeaser';
 
 const onPressEvent = jest.fn();
