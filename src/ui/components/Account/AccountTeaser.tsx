@@ -12,16 +12,17 @@ type Props = {
   onPress?: () => void;
   children?: React.ReactNode;
   testID?: string;
+  name?: string;
 };
 
-export function AccountTeaser({account, onPress, children, testID, identiconSize = 20}: Props) {
+export function AccountTeaser({account, onPress, children, testID, name, identiconSize = 20}: Props) {
   return (
     <TouchableOpacity onPress={onPress} disabled={!onPress}>
       <View style={globalStyles.rowAlignCenter} testID={testID}>
         <Identicon value={account.address} size={identiconSize} />
         <Padder scale={0.5} />
         <View>
-          <Account account={account} />
+          <Account account={account} name={name} />
           {children}
         </View>
       </View>

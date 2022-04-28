@@ -34,13 +34,15 @@ export function CouncilSummaryTeaser(props: PropTypes) {
             </Card>
             <Padder scale={0.2} />
             <Card mode="outlined" style={styles.card}>
-              <ProgressChartWidget
-                title={`Term Progress (${council?.termProgress.termDurationParts[0]})`}
-                detail={`${council?.termProgress.percentage}%\n${council?.termProgress.termLeftParts?.[0] || ''}${
-                  council?.termProgress.termLeftParts?.[1] ? `\n${council?.termProgress.termLeftParts[1]}` : ''
-                }`}
-                data={[council?.termProgress.percentage ?? 0 / 100]}
-              />
+              {council ? (
+                <ProgressChartWidget
+                  title={`Term Progress (${council.termProgress.termDurationParts[0]})`}
+                  detail={`${council.termProgress.percentage}%\n${council.termProgress.termLeftParts
+                    ?.slice(0, 2)
+                    .join('\n')}`}
+                  data={[council.termProgress.percentage / 100]}
+                />
+              ) : null}
             </Card>
           </View>
           <Padder scale={0.2} />

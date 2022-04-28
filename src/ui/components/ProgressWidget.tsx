@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, TextStyle, StyleProp} from 'react-native';
 import {ProgressChart, Caption, useTheme} from '@ui/library';
 import {standardPadding} from '@ui/styles';
 
@@ -7,17 +7,18 @@ type PropTypes = {
   title: string;
   detail: string;
   data: number[];
+  chartTextStyle?: StyleProp<TextStyle>;
 };
 
 function ProgressChartWidget(props: PropTypes) {
   const {colors} = useTheme();
-  const {title, detail, data} = props;
+  const {title, detail, data, chartTextStyle} = props;
 
   return (
     <View style={styles.container} testID="progress_chart_id">
       <Caption style={styles.title}>{title}</Caption>
       <View style={styles.chartContainer}>
-        <Caption style={styles.chartText}>{detail}</Caption>
+        <Caption style={[styles.chartText, chartTextStyle]}>{detail}</Caption>
         <ProgressChart
           data={data}
           width={100}
