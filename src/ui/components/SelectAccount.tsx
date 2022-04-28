@@ -1,20 +1,19 @@
 import React from 'react';
-import {View, FlatList, StyleSheet} from 'react-native';
-import {Menu, List, Caption, Icon, useTheme, Divider} from '@ui/library';
-import {Account as AccountType, useAccounts} from 'context/AccountsContext';
+import {View, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
+import {Menu, Caption, useTheme, Divider} from '@ui/library';
+import {Account as AppAccount, useAccounts} from 'context/AccountsContext';
 import globalStyles, {standardPadding} from '@ui/styles';
-import Identicon from '@polkadot/reactnative-identicon';
-import {Padder} from '@ui/components/Padder';
 import {useAccount, Account as SubstrateChainAccount} from 'src/api/hooks/useAccount';
-import {Account} from './Account/Account';
+import {AccountTeaser} from './Account/AccountTeaser';
+import {} from 'react-native-gesture-handler';
 
 type Props = {
   onSelect: (account: SelectedAccount) => void;
-  accounts?: AccountType[];
+  accounts?: AppAccount[];
 };
 
 type SelectedAccount = {
-  account: AccountType;
+  account: AppAccount;
   accountInfo?: SubstrateChainAccount;
 };
 
@@ -38,66 +37,47 @@ export function SelectAccount({onSelect, accounts}: Props) {
       visible={visible}
       onDismiss={closeMenu}
       anchor={
-        <View style={[styles.anchor, {borderColor: colors.onSurface}]}>
-          <List.Item
-            title={
-              selectedAccount?.accountInfo ? (
-                <Account account={selectedAccount.accountInfo} name={selectedAccount.account.meta.name} />
-              ) : (
-                <Caption>{`Select account`}</Caption>
-              )
-            }
-            onPress={openMenu}
-            right={() => <Icon name="chevron-down" />}
-            left={() =>
-              selectedAccount?.accountInfo ? (
-                <View style={globalStyles.justifyCenter}>
-                  <Identicon value={selectedAccount?.account.address} size={25} />
-                </View>
-              ) : null
-            }
-          />
-        </View>
+        <TouchableOpacity style={[styles.anchor, {borderColor: colors.onSurface}]} onPress={openMenu}>
+          {selectedAccount?.accountInfo ? (
+            <AccountTeaser account={selectedAccount.accountInfo} />
+          ) : (
+            <Caption>{`Select account`}</Caption>
+          )}
+        </TouchableOpacity>
       }>
       <FlatList
         style={styles.items}
         ItemSeparatorComponent={Divider}
         data={accounts ?? networkAccounts}
         keyExtractor={(item) => item.address}
-        renderItem={({item}) => <AccountItem onSelect={selectAccount} account={item} />}
+        renderItem={({item}) => <Account onSelect={selectAccount} account={item} />}
       />
     </Menu>
   );
 }
 
-type AccountItemProps = {
+type AccountProps = {
   onSelect: (account: SelectedAccount) => void;
-  account: AccountType;
-  accountInfo?: SubstrateChainAccount;
+  account: AppAccount;
 };
 
-export function AccountItem({onSelect, account}: AccountItemProps) {
+export function Account({onSelect, account}: AccountProps) {
   const {
     isExternal,
     meta: {name},
   } = account;
   const {data: accountInfo} = useAccount(account.address);
 
+  if (!accountInfo) {
+    return null;
+  }
+
   return (
-    <Menu.Item
-      style={styles.menuItem}
-      onPress={() => onSelect({account, accountInfo})}
-      title={
-        <View style={globalStyles.rowAlignCenter}>
-          <Identicon value={account.address} size={25} />
-          <Padder scale={0.5} />
-          <View style={globalStyles.justifyCenter}>
-            {accountInfo && <Account account={accountInfo} name={name} />}
-            {isExternal && <Caption style={styles.caption}>{`External`}</Caption>}
-          </View>
-        </View>
-      }
-    />
+    <View style={globalStyles.paddedContainer}>
+      <AccountTeaser account={accountInfo} onPress={() => onSelect({account, accountInfo})} name={name}>
+        {isExternal && <Caption style={styles.caption}>{`External`}</Caption>}
+      </AccountTeaser>
+    </View>
   );
 }
 
@@ -106,6 +86,8 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 5,
     height: 50,
+    justifyContent: 'center',
+    paddingLeft: standardPadding * 1.5,
   },
   items: {
     maxHeight: 250,
