@@ -109,7 +109,7 @@
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.5",
+    "@babel/core": "^7.17.9",
     "@babel/preset-typescript": "^7.16.7",
     "@babel/runtime": "^7.17.2",
     "@graphql-codegen/cli": "2.6.2",
