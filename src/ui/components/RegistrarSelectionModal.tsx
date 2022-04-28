@@ -4,7 +4,7 @@ import {Modal, Button, TextInput, Subheading, Caption, Icon} from '@ui/library';
 import {Registrar} from 'src/api/hooks/useRegistrarsSummary';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
+import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {SelectRegistrar} from '@ui/components/SelectRegistrar';
 
 type PropTypes = {
