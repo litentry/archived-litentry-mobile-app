@@ -5,16 +5,16 @@ export const parachainSummaryHandler = graphql.query('getParachainsSummary', (_,
     ctx.data({
       substrateChainParachainsSummary: {
         __typename: 'SubstrateChainParachainsSummary',
-        parachainsCount: 14,
-        parathreadsCount: 14,
-        proposalsCount: 0,
         leasePeriod: {
           __typename: 'SubstrateChainLeasePeriod',
           currentLease: '7',
+          progressPercent: 56,
+          remainderParts: ['36 days', '10 hrs', '14 mins', '18 s'],
           totalPeriod: '84 days',
-          progressPercent: 53,
-          remainder: '38 days 21 hrs',
         },
+        parachainsCount: 14,
+        parathreadsCount: 14,
+        proposalsCount: 0,
       },
       substrateChainParachains: [
         {
