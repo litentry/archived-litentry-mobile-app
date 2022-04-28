@@ -14,7 +14,7 @@ export const PARACHAINS_SUMMARY_QUERY = gql`
         currentLease
         totalPeriod
         progressPercent
-        remainder
+        remainderParts
       }
     }
     substrateChainParachains {

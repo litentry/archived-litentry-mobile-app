@@ -80,7 +80,7 @@ export function BountyDetailScreen({route, navigation}: ScreenProps) {
           </View>
           <View style={styles.sectionItem}>
             <Subheading>Curator's Deposit</Subheading>
-            <Text>{String(bounty?.formattedCuratorDeposit ?? 0)}</Text>
+            <Paragraph>{String(bounty?.formattedCuratorDeposit ?? 0)}</Paragraph>
           </View>
         </View>
         <Padder scale={1} />
