@@ -12,7 +12,7 @@ import ProgressChartWidget from '@ui/components/ProgressWidget';
 import {EmptyView} from '@ui/components/EmptyView';
 import Clipboard from '@react-native-community/clipboard';
 import {useSnackbar} from 'context/SnackbarContext';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
+import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {EmptyStateTeaser} from '@ui/components/EmptyStateTeaser';
 
 export function AuctionsScreen() {

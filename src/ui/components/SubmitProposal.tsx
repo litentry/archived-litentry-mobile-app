@@ -4,14 +4,14 @@ import {Button, Modal, Subheading, TextInput, Caption} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {useApiTx} from 'src/api/hooks/useApiTx';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
+import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import globalStyles, {standardPadding} from '@ui/styles';
 import BalanceInput from './BalanceInput';
 import type {Account} from 'src/api/hooks/useAccount';
 import {useChainInfo} from 'src/api/hooks/useChainInfo';
 import {InputLabel} from '@ui/library/InputLabel';
 import {BN_ZERO} from '@polkadot/util';
-import {formattedStringToBn} from 'src/api/utils/balance';
+import {formattedStringToBn} from 'src/utils/balance';
 
 export function SubmitProposal() {
   const [state, dispatch] = React.useReducer(reducer, initialState);
