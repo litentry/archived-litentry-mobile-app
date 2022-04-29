@@ -75,6 +75,7 @@ function ParathreadItem({parathread}: ParathreadItemProps) {
           <Text>{parathread.id}</Text>
         </View>
       )}
+      testID="parathread_items"
     />
   );
 }
