@@ -5,8 +5,8 @@ import {ErrorText} from './ErrorText';
 
 describe('ErrorText component', () => {
   it('should render the prop component correctly', async () => {
-    const {getByTestId} = render(<ErrorText>Mocked Error Text</ErrorText>);
-    expect(getByTestId('error_text').children.at(0)).toEqual('Mocked Error Text');
+    const {getByText} = render(<ErrorText>Mocked Error Text</ErrorText>);
+    expect(getByText('Mocked Error Text')).toBeTruthy();
   });
 
   it('Testing render with snapshot', () => {
@@ -34,7 +34,6 @@ describe('ErrorText component', () => {
             ],
           ]
         }
-        testID="error_text"
       >
         Mocked Error Text
       </Text>
