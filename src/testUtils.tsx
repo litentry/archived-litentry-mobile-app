@@ -1,4 +1,5 @@
 /* eslint-disable no-restricted-imports */
+/* eslint-disable @typescript-eslint/no-var-requires */
 import React from 'react';
 import {render, RenderOptions} from '@testing-library/react-native';
 import {ApolloProvider, ApolloClient, InMemoryCache, HttpLink} from '@apollo/client';
@@ -32,6 +33,17 @@ jest.mock('@react-navigation/native', () => {
     useNavigation: () => ({
       navigate: mockedNavigation,
     }),
+  };
+});
+
+jest.mock('react-native-qrcode-scanner/node_modules/react-native-permissions', () =>
+  require('react-native-permissions/mock'),
+);
+
+jest.mock('react-native/Libraries/Components/Switch/Switch', () => {
+  const mockComponent = require('react-native/jest/mockComponent');
+  return {
+    default: mockComponent('react-native/Libraries/Components/Switch/Switch'),
   };
 });
 
