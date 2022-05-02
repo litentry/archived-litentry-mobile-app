@@ -2,7 +2,7 @@ import React from 'react';
 import {View, StyleSheet, Linking, ScrollView} from 'react-native';
 import {useWeb3Wallet} from 'context/Web3WalletContext';
 import {useNetwork} from 'context/NetworkContext';
-import {useFormatBalance} from 'src/api/hooks/useFormatBalance';
+import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {SuccessAnimation} from '@ui/components/SuccessAnimation';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {Layout} from '@ui/components/Layout';

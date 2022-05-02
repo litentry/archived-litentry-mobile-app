@@ -98,9 +98,9 @@ function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
               <Drawer.Item
                 label="Home"
                 icon="view-dashboard"
-                active={activeScreen === 'Home'}
+                active={activeScreen === 'homeScreen'}
                 onPress={() => {
-                  navigation.navigate('Home');
+                  navigation.navigate('homeScreen');
                 }}
               />
               <Drawer.Item

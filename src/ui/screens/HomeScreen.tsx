@@ -26,7 +26,7 @@ export function HomeScreen({navigation}: {navigation: any}) {
   }, [navigation, openBottomSheet]);
 
   return (
-    <View style={{flex: 1}}>
+    <View style={globalStyles.fillCenter}>
       <Text>Home</Text>
       <BottomSheet>
         <Layout style={globalStyles.paddedContainer}>
