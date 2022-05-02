@@ -36,6 +36,7 @@
     "@react-native-firebase/app": "^14.9.1",
     "@react-native-firebase/messaging": "^14.9.1",
     "@react-native-firebase/perf": "^14.9.1",
+    "@react-native-firebase/remote-config": "^14.9.1",
     "@react-navigation/drawer": "^6.4.1",
     "@react-navigation/material-top-tabs": "^6.1.1",
     "@react-navigation/native": "^6.0.8",

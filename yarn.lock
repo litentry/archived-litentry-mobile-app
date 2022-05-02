@@ -2767,6 +2767,11 @@
   dependencies:
     "@expo/config-plugins" "^4.1.1"
 
+"@react-native-firebase/remote-config@^14.9.1":
+  version "14.9.1"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/remote-config/-/remote-config-14.9.1.tgz#f0077846413d43956b9b29992df27cc8e79775e0"
+  integrity sha512-tzVxE3RloRgX2A5jmRYO9LxWwvCw/1sEklYGi9PexI672FgQXNl5rxkq3UuK7sNqkPVJnXvKjD8narykaG5C4w==
+
 "@react-native/assets@1.0.0":
   version "1.0.0"
   resolved "https://registry.npmjs.org/@react-native/assets/-/assets-1.0.0.tgz"

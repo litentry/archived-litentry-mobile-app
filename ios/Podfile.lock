@@ -23,6 +23,9 @@ PODS:
   - Firebase/Performance (8.15.0):
     - Firebase/CoreOnly
     - FirebasePerformance (~> 8.15.0)
+  - Firebase/RemoteConfig (8.15.0):
+    - Firebase/CoreOnly
+    - FirebaseRemoteConfig (~> 8.15.0)
   - FirebaseABTesting (8.15.0):
     - FirebaseCore (~> 8.0)
   - FirebaseAnalytics (8.15.0):
@@ -537,6 +540,10 @@ PODS:
     - Firebase/Performance (= 8.15.0)
     - React-Core
     - RNFBApp
+  - RNFBRemoteConfig (14.9.1):
+    - Firebase/RemoteConfig (= 8.15.0)
+    - React-Core
+    - RNFBApp
   - RNFS (2.19.0):
     - React-Core
   - RNGestureHandler (2.2.0):
@@ -675,6 +682,7 @@ DEPENDENCIES:
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - "RNFBPerf (from `../node_modules/@react-native-firebase/perf`)"
+  - "RNFBRemoteConfig (from `../node_modules/@react-native-firebase/remote-config`)"
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
@@ -834,6 +842,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/messaging"
   RNFBPerf:
     :path: "../node_modules/@react-native-firebase/perf"
+  RNFBRemoteConfig:
+    :path: "../node_modules/@react-native-firebase/remote-config"
   RNFS:
     :path: "../node_modules/react-native-fs"
   RNGestureHandler:
@@ -944,6 +954,7 @@ SPEC CHECKSUMS:
   RNFBApp: fd23737680ed2bdde41ca27d8bfb171b6d668c6b
   RNFBMessaging: cd273b4dcacf98c83a25ce1711c8c85511573990
   RNFBPerf: d1a864588aa96d34e6b741da04b3af7bb0e00501
+  RNFBRemoteConfig: 32b35cf031733539c6b433d19c55ca1b90b88f84
   RNFS: fc610f78fdf8bfc89a9e5cc2f898519f4dba1002
   RNGestureHandler: bf572f552ea324acd5b5464b8d30755b2d8c1de6
   RNKeychain: 4f63aada75ebafd26f4bc2c670199461eab85d94
