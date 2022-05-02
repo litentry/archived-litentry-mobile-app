@@ -59,8 +59,19 @@ export function SelectAccount({onSelect, accounts}: Props) {
         data={accounts ?? networkAccounts}
         keyExtractor={(item) => item.address}
         renderItem={({item}) => <Account onSelect={selectAccount} account={item} />}
+        ListEmptyComponent={<EmptyAccounts />}
       />
     </Menu>
+  );
+}
+
+function EmptyAccounts() {
+  const {colors} = useTheme();
+
+  return (
+    <View style={globalStyles.paddedContainer}>
+      <Text style={{color: colors.placeholder}}>There are no accounts registered.</Text>
+    </View>
   );
 }
 
