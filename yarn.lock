@@ -12053,10 +12053,10 @@ react-native-chart-kit@^6.12.0:
     paths-js "^0.4.10"
     point-in-polygon "^1.0.1"
 
-react-native-codegen@^0.0.14:
-  version "0.0.14"
-  resolved "https://registry.yarnpkg.com/react-native-codegen/-/react-native-codegen-0.0.14.tgz#1c8a9d39935e611a22765aefb06c2d81b2341672"
-  integrity sha512-i3TtOB7IWIhaKZCg7EMBcXmNtaxEMFyzGQ4Zf6ZR1esj6gs36OWpYj357nSqeqzPKUqb8P1pUvmhoLIK4uVNeQ==
+react-native-codegen@^0.0.15:
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/react-native-codegen/-/react-native-codegen-0.0.15.tgz#ff664909dad8d7d8c6c3c8ff74ad548cf15956f9"
+  integrity sha512-kxOwGM9Jmz476NGZCq/kJswX4rD8c0kXCkZ6UNszAs+LbtlT8D2dyJeH2RRxLSZXDFUcvbgKWQNcHTidzmvYkA==
   dependencies:
     "@babel/parser" "^7.14.0"
     flow-parser "^0.121.0"
