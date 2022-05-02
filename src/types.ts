@@ -28,7 +28,7 @@ export type NetworkType = {
 
 export type NetworkContextValueType = {
   currentNetwork: NetworkType;
-  availableNetworks: NetworkType[];
+  getAvailableNetworks: (options?: {parachainsEnabled: boolean}) => NetworkType[];
   select: (network: NetworkType) => void;
 };
 
