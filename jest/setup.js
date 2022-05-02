@@ -10,5 +10,7 @@ jest.mock('react-native-reanimated', () => {
   return Reanimated;
 });
 
+global.__reanimatedWorkletInit = jest.fn();
+
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
 jest.mock('react-native-mmkv');

@@ -56,6 +56,8 @@
     "graphql-tag": "^2.12.6",
     "https-browserify": "^0.0.1",
     "lodash": "^4.17.21",
+    "lottie-ios": "3.2.3",
+    "lottie-react-native": "^5.0.1",
     "patch-package": "^6.4.7",
     "path-to-regexp": "^6.2.0",
     "proxy-polyfill": "^0.3.2",

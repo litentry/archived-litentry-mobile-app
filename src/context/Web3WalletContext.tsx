@@ -30,7 +30,6 @@ interface DisconnectedWallet {
 
 interface ConnectedWallet {
   connectedAccount?: Web3Account;
-  accounts: Array<string>;
   updateAccount: (address: string) => void;
   disconnect: () => void;
   isConnected: true;
@@ -48,7 +47,6 @@ const Web3WalletContext = createContext<Web3Wallet>({
 export function Web3WalletProvider({children}: {children: React.ReactNode}) {
   const connector = useWalletConnect();
   const [connectedAccount, setConnectedAccount] = useState<Web3Account>();
-  const [accounts, setAccounts] = useState<Array<string>>([]);
   const [wallet, setWallet] = useState<Web3>();
 
   useEffect(() => {
@@ -61,15 +59,6 @@ export function Web3WalletProvider({children}: {children: React.ReactNode}) {
       })();
     }
   }, [connector, wallet]);
-
-  useEffect(() => {
-    (async function loadAccounts() {
-      if (wallet) {
-        const _accounts = await wallet.eth.getAccounts();
-        setAccounts(_accounts);
-      }
-    })();
-  }, [wallet]);
 
   const updateAccount = useCallback(
     async (address: string) => {
@@ -89,11 +78,22 @@ export function Web3WalletProvider({children}: {children: React.ReactNode}) {
         },
         approved,
       };
-      console.log(`Updated account ${updatedAccount}`);
       setConnectedAccount(updatedAccount);
     },
     [wallet],
   );
+
+  useEffect(() => {
+    (async function getEthAccount() {
+      if (wallet) {
+        const _accounts = await wallet.eth.getAccounts();
+        const ethAddress = _accounts[0];
+        if (ethAddress) {
+          updateAccount(ethAddress);
+        }
+      }
+    })();
+  }, [wallet, updateAccount]);
 
   const connectWeb3Wallet = useCallback(() => {
     connector.connect();
@@ -101,6 +101,8 @@ export function Web3WalletProvider({children}: {children: React.ReactNode}) {
 
   const disconnectWeb3Wallet = useCallback(() => {
     connector.killSession();
+    setWallet(undefined);
+    setConnectedAccount(undefined);
   }, [connector]);
 
   const _approveForMigration = useCallback(
@@ -127,7 +129,6 @@ export function Web3WalletProvider({children}: {children: React.ReactNode}) {
     wallet && connector.connected
       ? {
           connectedAccount,
-          accounts,
           updateAccount,
           isConnected: true,
           disconnect: disconnectWeb3Wallet,
@@ -160,9 +161,8 @@ export function useWeb3Wallet(): Web3Wallet {
   return {
     isConnected: true,
     disconnect: context.disconnect,
-    accounts: context.accounts,
     connectedAccount: context.connectedAccount,
-    updateAccount: context.updateAccount,
+    updateAccount: context.updateAccount, // TODO: remove this
     approveForMigration: context.approveForMigration,
     depositForMigration: context.depositForMigration,
   };

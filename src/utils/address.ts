@@ -24,6 +24,10 @@ export function parseAddress(payload: string): AccountAddressType {
   return {protocol: parts[0], address: parts[1]!, name: parts[3]!};
 }
 
+export function toShortAddress(address: string) {
+  return address.length > 13 ? `${address.slice(0, 6)}…${address.slice(-6)}` : address;
+}
+
 export const isAddressValid = (network: NetworkType, address: string) => {
   switch (network.key) {
     case 'polkadot':
