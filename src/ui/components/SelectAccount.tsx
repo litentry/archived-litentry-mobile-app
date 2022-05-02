@@ -1,20 +1,18 @@
 import React from 'react';
-import {View, FlatList, StyleSheet} from 'react-native';
-import Identicon from '@polkadot/reactnative-identicon';
-import {Account as AccountType, useAccounts} from 'context/AccountsContext';
-import {Menu, List, Caption, Icon, Divider, TextInput, Text} from '@ui/library';
-import {Padder} from '@ui/components/Padder';
-import globalStyles, {standardPadding} from '@ui/styles';
+import {View, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
+import {Account as AppAccount, useAccounts} from 'context/AccountsContext';
 import {useAccount, Account as SubstrateChainAccount} from 'src/api/hooks/useAccount';
-import {Account} from './Account/Account';
+import {Menu, Caption, Divider, TextInput, Text, Icon, useTheme} from '@ui/library';
+import globalStyles from '@ui/styles';
+import {AccountTeaser} from './Account/AccountTeaser';
 
 type Props = {
   onSelect: (account: SelectedAccount) => void;
-  accounts?: AccountType[];
+  accounts?: AppAccount[];
 };
 
 type SelectedAccount = {
-  account: AccountType;
+  account: AppAccount;
   accountInfo?: SubstrateChainAccount;
 };
 
@@ -22,6 +20,7 @@ export function SelectAccount({onSelect, accounts}: Props) {
   const {networkAccounts} = useAccounts();
   const [selectedAccount, setSelectedAccount] = React.useState<SelectedAccount>();
   const [visible, setVisible] = React.useState(false);
+  const {colors} = useTheme();
 
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
@@ -36,31 +35,20 @@ export function SelectAccount({onSelect, accounts}: Props) {
     <Menu
       visible={visible}
       onDismiss={closeMenu}
+      style={styles.menu}
       anchor={
         <TextInput
-          disabled
           mode="outlined"
           render={(_props) => {
             return (
-              <List.Item
-                style={globalStyles.fillCenter}
-                title={
-                  selectedAccount?.accountInfo ? (
-                    <Account account={selectedAccount.accountInfo} name={selectedAccount.account.meta.name} />
-                  ) : (
-                    <Text>{`Select account`}</Text>
-                  )
-                }
-                onPress={openMenu}
-                right={() => <Icon name="chevron-down" />}
-                left={() =>
-                  selectedAccount?.accountInfo ? (
-                    <View style={globalStyles.justifyCenter}>
-                      <Identicon value={selectedAccount?.account.address} size={25} />
-                    </View>
-                  ) : null
-                }
-              />
+              <TouchableOpacity style={styles.anchorContent} onPress={openMenu}>
+                {selectedAccount?.accountInfo ? (
+                  <AccountTeaser account={selectedAccount.accountInfo} />
+                ) : (
+                  <Text style={[styles.placeholder, {color: colors.placeholder}]}>{`Select account`}</Text>
+                )}
+                <Icon name="chevron-down" />
+              </TouchableOpacity>
             );
           }}
         />
@@ -70,50 +58,52 @@ export function SelectAccount({onSelect, accounts}: Props) {
         ItemSeparatorComponent={Divider}
         data={accounts ?? networkAccounts}
         keyExtractor={(item) => item.address}
-        renderItem={({item}) => <AccountItem onSelect={selectAccount} account={item} />}
+        renderItem={({item}) => <Account onSelect={selectAccount} account={item} />}
       />
     </Menu>
   );
 }
 
-type AccountItemProps = {
+type AccountProps = {
   onSelect: (account: SelectedAccount) => void;
-  account: AccountType;
-  accountInfo?: SubstrateChainAccount;
+  account: AppAccount;
 };
 
-export function AccountItem({onSelect, account}: AccountItemProps) {
+export function Account({onSelect, account}: AccountProps) {
   const {
     isExternal,
     meta: {name},
   } = account;
   const {data: accountInfo} = useAccount(account.address);
 
+  if (!accountInfo) {
+    return null;
+  }
+
   return (
-    <Menu.Item
-      style={styles.menuItem}
-      onPress={() => onSelect({account, accountInfo})}
-      title={
-        <View style={globalStyles.rowAlignCenter}>
-          <Identicon value={account.address} size={25} />
-          <Padder scale={0.5} />
-          <View style={globalStyles.justifyCenter}>
-            {accountInfo && <Account account={accountInfo} name={name} />}
-            {isExternal && <Caption style={styles.caption}>{`External`}</Caption>}
-          </View>
-        </View>
-      }
-    />
+    <View style={globalStyles.paddedContainer}>
+      <AccountTeaser account={accountInfo} onPress={() => onSelect({account, accountInfo})} name={name}>
+        {isExternal && <Caption style={styles.caption}>{`External`}</Caption>}
+      </AccountTeaser>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  menu: {
+    width: '80%',
+  },
+  anchorContent: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 12,
+  },
   items: {
     maxHeight: 250,
   },
-  menuItem: {
-    marginVertical: standardPadding,
-  },
+  placeholder: {fontSize: 16},
   caption: {
     lineHeight: 0,
   },

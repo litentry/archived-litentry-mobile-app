@@ -15,7 +15,7 @@ export function LoadingBox() {
   }, [fadeAnim]);
 
   return (
-    <Animated.View style={[styles.container, {opacity: fadeAnim}]}>
+    <Animated.View style={[styles.container, {opacity: fadeAnim}]} testID="loading_box">
       <LoadingItem width={50} />
       <LoadingItem width={70} />
       <LoadingItem width={60} />

@@ -3,7 +3,7 @@ import {View, FlatList, StyleSheet, Linking} from 'react-native';
 import globalStyles, {standardPadding} from '@ui/styles';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useParathreads} from 'src/api/hooks/useParaThreads';
-import {List, Text, Divider} from '@ui/library';
+import {List, Text, Divider, Subheading} from '@ui/library';
 import Identicon from '@polkadot/reactnative-identicon';
 import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
@@ -29,6 +29,7 @@ export function ParathreadsScreen() {
     <SafeView edges={noTopEdges}>
       {parathreads ? (
         <FlatList
+          ListHeaderComponent={<List.Item title={<Subheading>{`Parathreads: ${parathreads.length}`}</Subheading>} />}
           style={globalStyles.flex}
           contentContainerStyle={styles.content}
           keyExtractor={(item) => item.id.toString()}
