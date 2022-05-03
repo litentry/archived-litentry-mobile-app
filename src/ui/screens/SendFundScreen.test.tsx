@@ -32,8 +32,8 @@ describe('SendFundScreen component', () => {
     getByA11yState({disabled: true});
   });
 
-  it('When user enter correct values', async () => {
-    const {queryAllByText, getByPlaceholderText, getByA11yState} = await waitFor(() =>
+  it('When user enter correct values and checked keep alive check', async () => {
+    const {queryAllByText, getByPlaceholderText, getByText} = await waitFor(() =>
       render(<SendFundScreen navigation={navigation} route={route} />),
     );
     fireEvent.changeText(getByPlaceholderText('Enter amount'), '2588');
@@ -41,6 +41,25 @@ describe('SendFundScreen component', () => {
     expect(queryAllByText('Enter a valid address').length).toEqual(1);
     fireEvent.changeText(getByPlaceholderText('Account address'), '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a');
     expect(queryAllByText('Enter a valid address').length).toEqual(0);
-    getByA11yState({disabled: true});
+    getByText('Transfer with account keep-alive checks');
+    const button = getByText('Make Transfer');
+    fireEvent.press(button);
+  });
+
+  it('When user enter correct values and normal transfer', async () => {
+    const {queryAllByText, getByPlaceholderText, getByText, getByTestId, queryByText} = await waitFor(() =>
+      render(<SendFundScreen navigation={navigation} route={route} />),
+    );
+    fireEvent.changeText(getByPlaceholderText('Enter amount'), '2588');
+    fireEvent.changeText(getByPlaceholderText('Account address'), 'test');
+    expect(queryAllByText('Enter a valid address').length).toEqual(1);
+    fireEvent.changeText(getByPlaceholderText('Account address'), '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a');
+    expect(queryAllByText('Enter a valid address').length).toEqual(0);
+    const switchComponent = getByTestId('keep_alive_switch');
+    fireEvent(switchComponent, 'valueChange', false);
+    await waitFor(() => queryByText('Normal transfer without keep-alive checks'));
+    expect(queryByText('Transfer with account keep-alive checks')).toBe(null);
+    const button = getByText('Make Transfer');
+    fireEvent.press(button);
   });
 });
