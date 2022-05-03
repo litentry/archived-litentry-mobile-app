@@ -55,29 +55,33 @@ function AddressInfoPreview(props: PropTypes) {
               right={() => <Caption>{accountInfo.balance?.formattedFree}</Caption>}
             />
           )}
-          {accountInfo?.registration?.judgements && accountInfo?.registration?.judgements.length > 0 ? (
-            <List.Item
-              title="Judgment"
-              left={() => (
-                <View style={globalStyles.justifyCenter}>
-                  <Icon name="hammer" size={20} />
-                </View>
-              )}
-              right={() =>
-                accountInfo?.registration?.judgements?.map((judgment, i) => {
-                  if (judgment) {
-                    return (
-                      <JudgmentStatus
-                        key={i}
-                        registrationJudgement={judgment}
-                        hasParent={Boolean(accountInfo?.registration?.displayParent)}
-                      />
-                    );
-                  }
-                })
-              }
-            />
-          ) : null}
+          <List.Item
+            title="Judgment"
+            left={() => (
+              <View style={globalStyles.justifyCenter}>
+                <Icon name="hammer" size={20} />
+              </View>
+            )}
+            right={() => (
+              <>
+                {accountInfo?.registration?.judgements && accountInfo?.registration?.judgements.length > 0 ? (
+                  accountInfo?.registration?.judgements?.map((judgment, i) => {
+                    if (judgment) {
+                      return (
+                        <JudgmentStatus
+                          key={i}
+                          registrationJudgement={judgment}
+                          hasParent={Boolean(accountInfo?.registration?.displayParent)}
+                        />
+                      );
+                    }
+                  })
+                ) : (
+                  <Caption>No judgements provided</Caption>
+                )}
+              </>
+            )}
+          />
           <List.Item
             title="Network"
             left={() => (
