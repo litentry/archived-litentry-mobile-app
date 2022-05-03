@@ -40,7 +40,9 @@ function AddressInfoPreview(props: PropTypes) {
                 <Icon name="account" size={20} />
               </View>
             )}
-            right={() => <Caption>{accountInfo?.display ?? 'Untitled account'}</Caption>}
+            right={() => (
+              <Caption>{accountInfo?.display ? stringShorten(accountInfo?.display) : 'Untitled account'}</Caption>
+            )}
           />
           {accountInfo?.balance && (
             <List.Item
@@ -60,19 +62,25 @@ function AddressInfoPreview(props: PropTypes) {
                 <Icon name="hammer" size={20} />
               </View>
             )}
-            right={() =>
-              accountInfo?.registration?.judgements?.map((judgment, i) => {
-                if (judgment) {
-                  return (
-                    <JudgmentStatus
-                      key={i}
-                      registrationJudgement={judgment}
-                      hasParent={Boolean(accountInfo?.registration?.displayParent)}
-                    />
-                  );
-                }
-              })
-            }
+            right={() => (
+              <>
+                {accountInfo?.registration?.judgements && accountInfo?.registration?.judgements.length > 0 ? (
+                  accountInfo?.registration?.judgements?.map((judgment, i) => {
+                    if (judgment) {
+                      return (
+                        <JudgmentStatus
+                          key={i}
+                          registrationJudgement={judgment}
+                          hasParent={Boolean(accountInfo?.registration?.displayParent)}
+                        />
+                      );
+                    }
+                  })
+                ) : (
+                  <Caption>No judgements provided</Caption>
+                )}
+              </>
+            )}
           />
           <List.Item
             title="Network"
