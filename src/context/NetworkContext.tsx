@@ -19,13 +19,6 @@ const kusamaNetwork: NetworkType = {
   ss58Format: 2,
 };
 
-// const EthereumNetwork: NetworkType = {
-//   name: 'Ethereum',
-//   key: 'ethereum',
-//   ws: [],
-//   color: '#e6194B',
-// };
-
 const litentryNetworkTest: NetworkType = {
   name: 'Litentry Testnet',
   key: 'litentry_test',
@@ -45,16 +38,17 @@ const litmusNetwork: NetworkType = {
   isParachain: true,
 };
 
-const availableNetworks = [
-  polkadotNetwork,
-  kusamaNetwork,
-  // EthereumNetwork,
-  ...(__DEV__ ? [litentryNetworkTest, litmusNetwork] : []),
-];
+function getAvailableNetworks(options?: {parachainsEnabled: boolean}): NetworkType[] {
+  return [
+    polkadotNetwork,
+    kusamaNetwork,
+    ...(__DEV__ || options?.parachainsEnabled ? [litentryNetworkTest, litmusNetwork] : []),
+  ];
+}
 
 export const NetworkContext = createContext<NetworkContextValueType>({
   currentNetwork: polkadotNetwork,
-  availableNetworks,
+  getAvailableNetworks,
   select: noop,
 });
 
@@ -66,7 +60,7 @@ export default function NetworkContextProvider({children}: PropTypes) {
   const [currentNetwork, setCurrentNetwork] = usePersistedState<NetworkType>('network', polkadotNetwork);
 
   const value = useMemo(
-    () => ({currentNetwork, availableNetworks, select: setCurrentNetwork}),
+    () => ({currentNetwork, getAvailableNetworks, select: setCurrentNetwork}),
     [currentNetwork, setCurrentNetwork],
   );
 

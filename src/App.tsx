@@ -1,6 +1,7 @@
 import React from 'react';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {QueryClient, QueryClientProvider} from 'react-query';
+import {useStopStartupTrace} from 'react-native-startup-trace';
 import {ChainApiContextProvider} from 'context/ChainApiContext';
 import TxContextProvider from 'context/TxContext';
 import {AccountsProvider} from 'context/AccountsContext';
@@ -14,7 +15,7 @@ import SnackbarProvider from 'context/SnackbarContext';
 import {LitentryApiClientProvider} from 'context/LitentryApiContext';
 import {WalletConnectProvider} from 'context/WalletConnectProvider';
 import {Web3WalletProvider} from 'context/Web3WalletContext';
-import {useStopStartupTrace} from 'react-native-startup-trace';
+import {useRemoteConfig} from 'src/hooks/useRemoteConfig';
 
 // init type registry
 import 'src/typeRegistry';
@@ -47,6 +48,7 @@ function LitentryApps() {
 }
 
 export default function App() {
+  useRemoteConfig();
   useStopStartupTrace();
 
   return (

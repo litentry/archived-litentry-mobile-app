@@ -8,11 +8,13 @@ import {useNetwork} from 'context/NetworkContext';
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
 import {NetworkType} from 'src/types';
+import {useParachainAppEnabled} from 'src/hooks/useParachainAppEnabled';
 
 // TODO: This is a dummy screen, should be removed!!
 export function HomeScreen({navigation}: {navigation: any}) {
-  const {currentNetwork, availableNetworks, select} = useNetwork();
+  const {currentNetwork, getAvailableNetworks, select} = useNetwork();
   const {closeBottomSheet, openBottomSheet, BottomSheet} = useBottomSheet();
+  const {parachainAppEnabled} = useParachainAppEnabled();
 
   const changeNetwork = (network: NetworkType) => {
     select(network);
@@ -30,7 +32,11 @@ export function HomeScreen({navigation}: {navigation: any}) {
       <Text>Home</Text>
       <BottomSheet>
         <Layout style={globalStyles.paddedContainer}>
-          <NetworkSelectionList items={availableNetworks} selected={currentNetwork} onSelect={changeNetwork} />
+          <NetworkSelectionList
+            items={getAvailableNetworks({parachainsEnabled: parachainAppEnabled})}
+            selected={currentNetwork}
+            onSelect={changeNetwork}
+          />
           <Padder scale={2} />
         </Layout>
       </BottomSheet>
