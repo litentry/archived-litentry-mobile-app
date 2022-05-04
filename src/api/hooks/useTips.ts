@@ -7,26 +7,10 @@ export const TIPS_QUERY = gql`
   query getTips {
     substrateChainTips {
       id
+      createdAt
       who {
-        account {
-          address
-          display
-          registration {
-            displayParent
-            judgements {
-              registrarIndex
-              judgement {
-                isUnknown
-                isFeePaid
-                isReasonable
-                isKnownGood
-                isOutOfDate
-                isLowQuality
-                isErroneous
-              }
-            }
-          }
-        }
+        address
+        display
       }
       reason
     }

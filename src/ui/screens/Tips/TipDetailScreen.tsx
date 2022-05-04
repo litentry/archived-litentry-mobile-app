@@ -30,7 +30,7 @@ function TipDetailContent({tip, toAccountDetails}: TipDetailProps) {
               <Subheading>Who</Subheading>
             </View>
             <View style={styles.addressContainer}>
-              <AccountTeaser account={tip.who.account} onPress={() => toAccountDetails(tip.who.account.address)} />
+              <AccountTeaser account={tip.who} onPress={() => toAccountDetails(tip.who.address)} />
             </View>
           </View>
           {tip.finder ? (
@@ -39,7 +39,7 @@ function TipDetailContent({tip, toAccountDetails}: TipDetailProps) {
                 <Subheading>Finder</Subheading>
               </View>
               <View style={styles.addressContainer}>
-                <AccountTeaser account={tip.finder.account} onPress={() => toAccountDetails(tip.who.account.address)} />
+                <AccountTeaser account={tip.finder} onPress={() => toAccountDetails(tip.finder?.address as string)} />
               </View>
             </View>
           ) : null}

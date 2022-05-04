@@ -12,18 +12,17 @@ const TIP_QUERY = gql`
       reason
       deposit
       closes
+      createdAt
       median
       formattedMedian
       tippersCount
       who {
-        account {
-          ...AccountFields
-        }
+        address
+        display
       }
       finder {
-        account {
-          ...AccountFields
-        }
+        address
+        display
       }
       tippers {
         formattedBalance
