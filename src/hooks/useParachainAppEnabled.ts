@@ -7,8 +7,16 @@ export function useParachainAppEnabled() {
 
   // TODO: add specific config to enable the "parachainApp"
   const configValue = getValue('token_bridge_test');
-  const testAddress = JSON.parse(configValue.asString())?.test_address ?? '';
-  const parachainAppEnabled = accounts[testAddress] ? true : false;
+  let parachainAppEnabled = false;
+
+  try {
+    const parsedValue = JSON.parse(configValue.asString());
+    const testAddress = parsedValue?.test_address ?? '';
+
+    parachainAppEnabled = accounts[testAddress] ? true : false;
+  } catch (error) {
+    console.error(error);
+  }
 
   return {parachainAppEnabled};
 }

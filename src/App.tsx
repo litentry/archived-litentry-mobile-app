@@ -48,8 +48,8 @@ function LitentryApps() {
 }
 
 export default function App() {
-  useRemoteConfig();
   useStopStartupTrace();
+  useRemoteConfig();
 
   return (
     <NetworkContextProvider>

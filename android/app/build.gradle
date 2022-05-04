@@ -145,6 +145,14 @@ android {
     ndkVersion rootProject.ext.ndkVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
+    /**
+     * Workaround to fix: "2 files found with path 'lib/arm64-v8a/libcrypto.so'"
+     * caused by react-native-bignumber
+     */
+    packagingOptions {
+        pickFirst '**/*.so'
+    }
+
     defaultConfig {
         applicationId "com.litentry.governance"
         minSdkVersion rootProject.ext.minSdkVersion
