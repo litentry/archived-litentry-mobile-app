@@ -1,5 +1,5 @@
-import messaging, {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
 import React from 'react';
+import messaging, {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
 import {useInAppNotification, InAppNotificationContent} from 'src/context/InAppNotificationContext';
 import {useLinkTo} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native';
@@ -20,7 +20,7 @@ function getParamsFromDeeplink(deeplink: string) {
 export function useFirebase() {
   const linkTo = useLinkTo();
   const {trigger} = useInAppNotification();
-  const {currentNetwork, select, availableNetworks} = useNetwork();
+  const {currentNetwork, select, getAvailableNetworks} = useNetwork();
 
   if (!trigger) {
     throw new Error('InAppNotificationContext most be provided!');
@@ -35,7 +35,7 @@ export function useFirebase() {
           linkTo('/');
         } else {
           if (params.network !== currentNetwork.key) {
-            const selectedNetwork = availableNetworks.find((n) => n.key === params.network) ?? currentNetwork;
+            const selectedNetwork = getAvailableNetworks().find((n) => n.key === params.network) ?? currentNetwork;
             select(selectedNetwork);
           }
 
@@ -43,7 +43,7 @@ export function useFirebase() {
         }
       }
     },
-    [linkTo, currentNetwork, availableNetworks, select],
+    [linkTo, currentNetwork, getAvailableNetworks, select],
   );
 
   React.useEffect(() => {
