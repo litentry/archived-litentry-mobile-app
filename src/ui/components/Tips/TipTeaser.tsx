@@ -14,13 +14,14 @@ type TipTeaserProps = {
 };
 
 function Teaser({tip, onPress}: TipTeaserProps) {
-  const {id, who, reason, createdAt} = tip;
+  const {id, who, reason, createdAt, status} = tip;
 
   return (
     <Card style={styles.card} onPress={() => onPress(id)}>
       <Card.Content>
         <AccountTeaser account={who} />
         <Caption>{`Created: ${fromNow(createdAt)}`}</Caption>
+        <Caption>{`Status: ${status}`}</Caption>
         <Padder scale={0.5} />
         <TipReason reason={reason} />
       </Card.Content>

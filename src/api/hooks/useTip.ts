@@ -10,11 +10,13 @@ const TIP_QUERY = gql`
     substrateChainTip(id: $id) {
       id
       reason
+      status
       deposit
       closes
+      closesTime
       createdAt
-      median
-      formattedMedian
+      medianTipValue
+      formattedMedianTipValue
       tippersCount
       who {
         address

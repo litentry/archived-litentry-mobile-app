@@ -1370,6 +1370,10 @@ export type QuerySubstrateChainTipArgs = {
   id: Scalars['String'];
 };
 
+export type QuerySubstrateChainTipsArgs = {
+  status?: InputMaybe<Array<SubstrateChainTipStatus>>;
+};
+
 export type QuerySubstrateCouncilProposalByIdArgs = {
   id: Scalars['ID'];
 };
@@ -3042,19 +3046,28 @@ export type SubstrateChainTermProgress = {
 export type SubstrateChainTip = {
   __typename?: 'SubstrateChainTip';
   closes?: Maybe<Scalars['String']>;
+  closesTime?: Maybe<Array<Scalars['String']>>;
   createdAt: Scalars['String'];
   deposit?: Maybe<Scalars['String']>;
   finder?: Maybe<SubstrateChainAccount>;
   formattedDeposit?: Maybe<Scalars['String']>;
-  formattedMedian?: Maybe<Scalars['String']>;
+  formattedMedianTipValue?: Maybe<Scalars['String']>;
   /** id: Tip Hash */
   id: Scalars['String'];
-  median?: Maybe<Scalars['String']>;
+  medianTipValue?: Maybe<Scalars['String']>;
   reason: Scalars['String'];
+  status: SubstrateChainTipStatus;
   tippers: Array<SubstrateChainTipper>;
   tippersCount: Scalars['Int'];
   who: SubstrateChainAccount;
 };
+
+export enum SubstrateChainTipStatus {
+  Closed = 'Closed',
+  Opened = 'Opened',
+  Retracted = 'Retracted',
+  Slashed = 'Slashed',
+}
 
 export type SubstrateChainTipper = {
   __typename?: 'SubstrateChainTipper';

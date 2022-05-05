@@ -12,7 +12,7 @@ import globalStyles from '@ui/styles';
 import {Button, useTheme} from '@ui/library';
 
 function TipsScreen() {
-  const {data: tips, loading, refetch, refetching} = useTips();
+  const {data: tips, loading, refetch, refetching} = useTips(['Opened']);
   const navigation = useNavigation();
   const {colors} = useTheme();
 
