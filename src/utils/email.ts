@@ -1,6 +1,6 @@
 import {Linking} from 'react-native';
 
-type SendEmailProps = {
+export type SendEmailProps = {
   to: string;
   subject: string;
   body: string;
@@ -11,7 +11,7 @@ type SendEmailProps = {
 };
 
 export async function sendEmail(props: SendEmailProps) {
-  const url = composeEmail(props);
+  const url = composeEmailURL(props);
   // check if we can use this link
   const canOpen = await Linking.canOpenURL(url);
   if (!canOpen) {
@@ -20,7 +20,7 @@ export async function sendEmail(props: SendEmailProps) {
   return Linking.openURL(url);
 }
 
-export function composeEmail(props: SendEmailProps) {
+export function composeEmailURL(props: SendEmailProps) {
   const {to, subject, body, options} = props;
   const {cc, bcc} = options ?? {};
 
