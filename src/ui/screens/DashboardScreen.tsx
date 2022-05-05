@@ -29,6 +29,7 @@ import NetworkSelectionList from '@ui/components/NetworkSelectionList';
 import {useNetwork} from 'context/NetworkContext';
 import {NetworkType} from 'src/types';
 import {NetworkSwitch} from '@ui/components/NetworkSwitch';
+import {useParachainAppEnabled} from 'src/hooks/useParachainAppEnabled';
 
 const refetchQueries = [DEMOCRACY_SUMMARY_QUERY, COUNCIL_SUMMARY_QUERY, BOUNTIES_SUMMARY_QUERY, TREASURY_SUMMARY_QUERY];
 
@@ -41,7 +42,8 @@ type PropTypes = {
 
 function DashboardScreen({navigation}: PropTypes) {
   const {closeBottomSheet, openBottomSheet, BottomSheet} = useBottomSheet();
-  const {currentNetwork, availableNetworks, select} = useNetwork();
+  const {currentNetwork, getAvailableNetworks, select} = useNetwork();
+  const {parachainAppEnabled} = useParachainAppEnabled();
 
   const changeNetwork = (network: NetworkType) => {
     select(network);
@@ -70,7 +72,11 @@ function DashboardScreen({navigation}: PropTypes) {
 
       <BottomSheet>
         <Layout style={globalStyles.paddedContainer}>
-          <NetworkSelectionList items={availableNetworks} selected={currentNetwork} onSelect={changeNetwork} />
+          <NetworkSelectionList
+            items={getAvailableNetworks({parachainsEnabled: parachainAppEnabled})}
+            selected={currentNetwork}
+            onSelect={changeNetwork}
+          />
           <Padder scale={2} />
         </Layout>
       </BottomSheet>

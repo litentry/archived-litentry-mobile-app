@@ -10,7 +10,7 @@ type Props = {
 
 export function EmptyStateTeaser({subheading, caption = 'Please check back for updates'}: Props) {
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID={'empty_state'}>
       <View style={styles.imageContainer}>
         <Image source={EmptyList} resizeMode="contain" />
       </View>
