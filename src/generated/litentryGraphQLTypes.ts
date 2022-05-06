@@ -1109,16 +1109,6 @@ export type Query = {
   substrateTechnicalCommitteeProposalByUniqueInput?: Maybe<SubstrateTechnicalCommitteeProposal>;
   substrateTechnicalCommitteeProposals: Array<SubstrateTechnicalCommitteeProposal>;
   substrateTechnicalCommitteeProposalsConnection: SubstrateTechnicalCommitteeProposalsConnection;
-  substrateTipById?: Maybe<SubstrateTip>;
-  /** @deprecated Use `substrateTipById` */
-  substrateTipByUniqueInput?: Maybe<SubstrateTip>;
-  substrateTipperById?: Maybe<SubstrateTipper>;
-  /** @deprecated Use `substrateTipperById` */
-  substrateTipperByUniqueInput?: Maybe<SubstrateTipper>;
-  substrateTippers: Array<SubstrateTipper>;
-  substrateTippersConnection: SubstrateTippersConnection;
-  substrateTips: Array<SubstrateTip>;
-  substrateTipsConnection: SubstrateTipsConnection;
   substrateTreasuryAwardedById?: Maybe<SubstrateTreasuryAwarded>;
   /** @deprecated Use `substrateTreasuryAwardedById` */
   substrateTreasuryAwardedByUniqueInput?: Maybe<SubstrateTreasuryAwarded>;
@@ -1380,6 +1370,10 @@ export type QuerySubstrateChainTipArgs = {
   id: Scalars['String'];
 };
 
+export type QuerySubstrateChainTipsArgs = {
+  status?: InputMaybe<Array<SubstrateChainTipStatus>>;
+};
+
 export type QuerySubstrateCouncilProposalByIdArgs = {
   id: Scalars['ID'];
 };
@@ -1598,50 +1592,6 @@ export type QuerySubstrateTechnicalCommitteeProposalsConnectionArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy: Array<SubstrateTechnicalCommitteeProposalOrderByInput>;
   where?: InputMaybe<SubstrateTechnicalCommitteeProposalWhereInput>;
-};
-
-export type QuerySubstrateTipByIdArgs = {
-  id: Scalars['ID'];
-};
-
-export type QuerySubstrateTipByUniqueInputArgs = {
-  where: SubstrateTipWhereUniqueInput;
-};
-
-export type QuerySubstrateTipperByIdArgs = {
-  id: Scalars['ID'];
-};
-
-export type QuerySubstrateTipperByUniqueInputArgs = {
-  where: SubstrateTipperWhereUniqueInput;
-};
-
-export type QuerySubstrateTippersArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<InputMaybe<SubstrateTipperOrderByInput>>>;
-  where?: InputMaybe<SubstrateTipperWhereInput>;
-};
-
-export type QuerySubstrateTippersConnectionArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  orderBy: Array<SubstrateTipperOrderByInput>;
-  where?: InputMaybe<SubstrateTipperWhereInput>;
-};
-
-export type QuerySubstrateTipsArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<InputMaybe<SubstrateTipOrderByInput>>>;
-  where?: InputMaybe<SubstrateTipWhereInput>;
-};
-
-export type QuerySubstrateTipsConnectionArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  orderBy: Array<SubstrateTipOrderByInput>;
-  where?: InputMaybe<SubstrateTipWhereInput>;
 };
 
 export type QuerySubstrateTreasuryAwardedByIdArgs = {
@@ -3096,22 +3046,32 @@ export type SubstrateChainTermProgress = {
 export type SubstrateChainTip = {
   __typename?: 'SubstrateChainTip';
   closes?: Maybe<Scalars['String']>;
+  closesTime?: Maybe<Array<Scalars['String']>>;
+  createdAt: Scalars['String'];
   deposit?: Maybe<Scalars['String']>;
-  finder?: Maybe<SubstrateChainAccountInfo>;
-  formattedMedian?: Maybe<Scalars['String']>;
+  finder?: Maybe<SubstrateChainAccount>;
+  formattedDeposit?: Maybe<Scalars['String']>;
+  formattedMedianTipValue?: Maybe<Scalars['String']>;
   /** id: Tip Hash */
   id: Scalars['String'];
-  median?: Maybe<Scalars['String']>;
+  medianTipValue?: Maybe<Scalars['String']>;
   reason: Scalars['String'];
+  status: SubstrateChainTipStatus;
   tippers: Array<SubstrateChainTipper>;
   tippersCount: Scalars['Int'];
-  who: SubstrateChainAccountInfo;
+  who: SubstrateChainAccount;
 };
+
+export enum SubstrateChainTipStatus {
+  Closed = 'Closed',
+  Opened = 'Opened',
+  Retracted = 'Retracted',
+  Slashed = 'Slashed',
+}
 
 export type SubstrateChainTipper = {
   __typename?: 'SubstrateChainTipper';
   account: SubstrateChainAccount;
-  address: Scalars['String'];
   balance: Scalars['String'];
   formattedBalance: Scalars['String'];
 };
@@ -4694,395 +4654,6 @@ export type SubstrateTechnicalCommitteeProposalWhereUniqueInput = {
 export type SubstrateTechnicalCommitteeProposalsConnection = {
   __typename?: 'SubstrateTechnicalCommitteeProposalsConnection';
   edges: Array<SubstrateTechnicalCommitteeProposalEdge>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type SubstrateTip = {
-  __typename?: 'SubstrateTip';
-  /** address */
-  account: Scalars['String'];
-  blockNumber: Scalars['BigInt'];
-  closes?: Maybe<Scalars['BigInt']>;
-  createdAt: Scalars['DateTime'];
-  deposit?: Maybe<Scalars['BigInt']>;
-  finder?: Maybe<Scalars['String']>;
-  /** hash */
-  id: Scalars['ID'];
-  network: SubstrateNetwork;
-  reason: Scalars['String'];
-  /** hex address */
-  rootAccount: Scalars['String'];
-  status: SubstrateTipStatus;
-  tipValue?: Maybe<Scalars['BigInt']>;
-  tippers: Array<SubstrateTipper>;
-  updatedAt: Scalars['DateTime'];
-  who: Scalars['String'];
-};
-
-export type SubstrateTipTippersArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<InputMaybe<SubstrateTipperOrderByInput>>>;
-  where?: InputMaybe<SubstrateTipperWhereInput>;
-};
-
-export type SubstrateTipEdge = {
-  __typename?: 'SubstrateTipEdge';
-  cursor: Scalars['String'];
-  node: SubstrateTip;
-};
-
-export enum SubstrateTipOrderByInput {
-  AccountAsc = 'account_ASC',
-  AccountDesc = 'account_DESC',
-  BlockNumberAsc = 'blockNumber_ASC',
-  BlockNumberDesc = 'blockNumber_DESC',
-  ClosesAsc = 'closes_ASC',
-  ClosesDesc = 'closes_DESC',
-  CreatedAtAsc = 'createdAt_ASC',
-  CreatedAtDesc = 'createdAt_DESC',
-  DepositAsc = 'deposit_ASC',
-  DepositDesc = 'deposit_DESC',
-  FinderAsc = 'finder_ASC',
-  FinderDesc = 'finder_DESC',
-  IdAsc = 'id_ASC',
-  IdDesc = 'id_DESC',
-  NetworkAsc = 'network_ASC',
-  NetworkDesc = 'network_DESC',
-  ReasonAsc = 'reason_ASC',
-  ReasonDesc = 'reason_DESC',
-  RootAccountAsc = 'rootAccount_ASC',
-  RootAccountDesc = 'rootAccount_DESC',
-  StatusAsc = 'status_ASC',
-  StatusDesc = 'status_DESC',
-  TipValueAsc = 'tipValue_ASC',
-  TipValueDesc = 'tipValue_DESC',
-  UpdatedAtAsc = 'updatedAt_ASC',
-  UpdatedAtDesc = 'updatedAt_DESC',
-  WhoAsc = 'who_ASC',
-  WhoDesc = 'who_DESC',
-}
-
-export enum SubstrateTipStatus {
-  Closed = 'Closed',
-  Opened = 'Opened',
-  Retracted = 'Retracted',
-  Slashed = 'Slashed',
-}
-
-export type SubstrateTipWhereInput = {
-  AND?: InputMaybe<Array<SubstrateTipWhereInput>>;
-  OR?: InputMaybe<Array<SubstrateTipWhereInput>>;
-  account_contains?: InputMaybe<Scalars['String']>;
-  account_endsWith?: InputMaybe<Scalars['String']>;
-  account_eq?: InputMaybe<Scalars['String']>;
-  account_gt?: InputMaybe<Scalars['String']>;
-  account_gte?: InputMaybe<Scalars['String']>;
-  account_in?: InputMaybe<Array<Scalars['String']>>;
-  account_lt?: InputMaybe<Scalars['String']>;
-  account_lte?: InputMaybe<Scalars['String']>;
-  account_not_contains?: InputMaybe<Scalars['String']>;
-  account_not_endsWith?: InputMaybe<Scalars['String']>;
-  account_not_eq?: InputMaybe<Scalars['String']>;
-  account_not_in?: InputMaybe<Array<Scalars['String']>>;
-  account_not_startsWith?: InputMaybe<Scalars['String']>;
-  account_startsWith?: InputMaybe<Scalars['String']>;
-  blockNumber_eq?: InputMaybe<Scalars['BigInt']>;
-  blockNumber_gt?: InputMaybe<Scalars['BigInt']>;
-  blockNumber_gte?: InputMaybe<Scalars['BigInt']>;
-  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']>>;
-  blockNumber_lt?: InputMaybe<Scalars['BigInt']>;
-  blockNumber_lte?: InputMaybe<Scalars['BigInt']>;
-  blockNumber_not_eq?: InputMaybe<Scalars['BigInt']>;
-  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
-  closes_eq?: InputMaybe<Scalars['BigInt']>;
-  closes_gt?: InputMaybe<Scalars['BigInt']>;
-  closes_gte?: InputMaybe<Scalars['BigInt']>;
-  closes_in?: InputMaybe<Array<Scalars['BigInt']>>;
-  closes_isNull?: InputMaybe<Scalars['Boolean']>;
-  closes_lt?: InputMaybe<Scalars['BigInt']>;
-  closes_lte?: InputMaybe<Scalars['BigInt']>;
-  closes_not_eq?: InputMaybe<Scalars['BigInt']>;
-  closes_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
-  createdAt_eq?: InputMaybe<Scalars['DateTime']>;
-  createdAt_gt?: InputMaybe<Scalars['DateTime']>;
-  createdAt_gte?: InputMaybe<Scalars['DateTime']>;
-  createdAt_in?: InputMaybe<Array<Scalars['DateTime']>>;
-  createdAt_lt?: InputMaybe<Scalars['DateTime']>;
-  createdAt_lte?: InputMaybe<Scalars['DateTime']>;
-  createdAt_not_eq?: InputMaybe<Scalars['DateTime']>;
-  createdAt_not_in?: InputMaybe<Array<Scalars['DateTime']>>;
-  deposit_eq?: InputMaybe<Scalars['BigInt']>;
-  deposit_gt?: InputMaybe<Scalars['BigInt']>;
-  deposit_gte?: InputMaybe<Scalars['BigInt']>;
-  deposit_in?: InputMaybe<Array<Scalars['BigInt']>>;
-  deposit_isNull?: InputMaybe<Scalars['Boolean']>;
-  deposit_lt?: InputMaybe<Scalars['BigInt']>;
-  deposit_lte?: InputMaybe<Scalars['BigInt']>;
-  deposit_not_eq?: InputMaybe<Scalars['BigInt']>;
-  deposit_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
-  finder_contains?: InputMaybe<Scalars['String']>;
-  finder_endsWith?: InputMaybe<Scalars['String']>;
-  finder_eq?: InputMaybe<Scalars['String']>;
-  finder_gt?: InputMaybe<Scalars['String']>;
-  finder_gte?: InputMaybe<Scalars['String']>;
-  finder_in?: InputMaybe<Array<Scalars['String']>>;
-  finder_isNull?: InputMaybe<Scalars['Boolean']>;
-  finder_lt?: InputMaybe<Scalars['String']>;
-  finder_lte?: InputMaybe<Scalars['String']>;
-  finder_not_contains?: InputMaybe<Scalars['String']>;
-  finder_not_endsWith?: InputMaybe<Scalars['String']>;
-  finder_not_eq?: InputMaybe<Scalars['String']>;
-  finder_not_in?: InputMaybe<Array<Scalars['String']>>;
-  finder_not_startsWith?: InputMaybe<Scalars['String']>;
-  finder_startsWith?: InputMaybe<Scalars['String']>;
-  id_contains?: InputMaybe<Scalars['ID']>;
-  id_endsWith?: InputMaybe<Scalars['ID']>;
-  id_eq?: InputMaybe<Scalars['ID']>;
-  id_gt?: InputMaybe<Scalars['ID']>;
-  id_gte?: InputMaybe<Scalars['ID']>;
-  id_in?: InputMaybe<Array<Scalars['ID']>>;
-  id_lt?: InputMaybe<Scalars['ID']>;
-  id_lte?: InputMaybe<Scalars['ID']>;
-  id_not_contains?: InputMaybe<Scalars['ID']>;
-  id_not_endsWith?: InputMaybe<Scalars['ID']>;
-  id_not_eq?: InputMaybe<Scalars['ID']>;
-  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
-  id_not_startsWith?: InputMaybe<Scalars['ID']>;
-  id_startsWith?: InputMaybe<Scalars['ID']>;
-  network_eq?: InputMaybe<SubstrateNetwork>;
-  network_in?: InputMaybe<Array<SubstrateNetwork>>;
-  network_not_eq?: InputMaybe<SubstrateNetwork>;
-  network_not_in?: InputMaybe<Array<SubstrateNetwork>>;
-  reason_contains?: InputMaybe<Scalars['String']>;
-  reason_endsWith?: InputMaybe<Scalars['String']>;
-  reason_eq?: InputMaybe<Scalars['String']>;
-  reason_gt?: InputMaybe<Scalars['String']>;
-  reason_gte?: InputMaybe<Scalars['String']>;
-  reason_in?: InputMaybe<Array<Scalars['String']>>;
-  reason_lt?: InputMaybe<Scalars['String']>;
-  reason_lte?: InputMaybe<Scalars['String']>;
-  reason_not_contains?: InputMaybe<Scalars['String']>;
-  reason_not_endsWith?: InputMaybe<Scalars['String']>;
-  reason_not_eq?: InputMaybe<Scalars['String']>;
-  reason_not_in?: InputMaybe<Array<Scalars['String']>>;
-  reason_not_startsWith?: InputMaybe<Scalars['String']>;
-  reason_startsWith?: InputMaybe<Scalars['String']>;
-  rootAccount_contains?: InputMaybe<Scalars['String']>;
-  rootAccount_endsWith?: InputMaybe<Scalars['String']>;
-  rootAccount_eq?: InputMaybe<Scalars['String']>;
-  rootAccount_gt?: InputMaybe<Scalars['String']>;
-  rootAccount_gte?: InputMaybe<Scalars['String']>;
-  rootAccount_in?: InputMaybe<Array<Scalars['String']>>;
-  rootAccount_lt?: InputMaybe<Scalars['String']>;
-  rootAccount_lte?: InputMaybe<Scalars['String']>;
-  rootAccount_not_contains?: InputMaybe<Scalars['String']>;
-  rootAccount_not_endsWith?: InputMaybe<Scalars['String']>;
-  rootAccount_not_eq?: InputMaybe<Scalars['String']>;
-  rootAccount_not_in?: InputMaybe<Array<Scalars['String']>>;
-  rootAccount_not_startsWith?: InputMaybe<Scalars['String']>;
-  rootAccount_startsWith?: InputMaybe<Scalars['String']>;
-  status_eq?: InputMaybe<SubstrateTipStatus>;
-  status_in?: InputMaybe<Array<SubstrateTipStatus>>;
-  status_not_eq?: InputMaybe<SubstrateTipStatus>;
-  status_not_in?: InputMaybe<Array<SubstrateTipStatus>>;
-  tipValue_eq?: InputMaybe<Scalars['BigInt']>;
-  tipValue_gt?: InputMaybe<Scalars['BigInt']>;
-  tipValue_gte?: InputMaybe<Scalars['BigInt']>;
-  tipValue_in?: InputMaybe<Array<Scalars['BigInt']>>;
-  tipValue_isNull?: InputMaybe<Scalars['Boolean']>;
-  tipValue_lt?: InputMaybe<Scalars['BigInt']>;
-  tipValue_lte?: InputMaybe<Scalars['BigInt']>;
-  tipValue_not_eq?: InputMaybe<Scalars['BigInt']>;
-  tipValue_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
-  tippers_every?: InputMaybe<SubstrateTipperWhereInput>;
-  tippers_none?: InputMaybe<SubstrateTipperWhereInput>;
-  tippers_some?: InputMaybe<SubstrateTipperWhereInput>;
-  updatedAt_eq?: InputMaybe<Scalars['DateTime']>;
-  updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
-  updatedAt_gte?: InputMaybe<Scalars['DateTime']>;
-  updatedAt_in?: InputMaybe<Array<Scalars['DateTime']>>;
-  updatedAt_lt?: InputMaybe<Scalars['DateTime']>;
-  updatedAt_lte?: InputMaybe<Scalars['DateTime']>;
-  updatedAt_not_eq?: InputMaybe<Scalars['DateTime']>;
-  updatedAt_not_in?: InputMaybe<Array<Scalars['DateTime']>>;
-  who_contains?: InputMaybe<Scalars['String']>;
-  who_endsWith?: InputMaybe<Scalars['String']>;
-  who_eq?: InputMaybe<Scalars['String']>;
-  who_gt?: InputMaybe<Scalars['String']>;
-  who_gte?: InputMaybe<Scalars['String']>;
-  who_in?: InputMaybe<Array<Scalars['String']>>;
-  who_lt?: InputMaybe<Scalars['String']>;
-  who_lte?: InputMaybe<Scalars['String']>;
-  who_not_contains?: InputMaybe<Scalars['String']>;
-  who_not_endsWith?: InputMaybe<Scalars['String']>;
-  who_not_eq?: InputMaybe<Scalars['String']>;
-  who_not_in?: InputMaybe<Array<Scalars['String']>>;
-  who_not_startsWith?: InputMaybe<Scalars['String']>;
-  who_startsWith?: InputMaybe<Scalars['String']>;
-};
-
-export type SubstrateTipWhereUniqueInput = {
-  id: Scalars['ID'];
-};
-
-export type SubstrateTipper = {
-  __typename?: 'SubstrateTipper';
-  /** address */
-  account: Scalars['String'];
-  blockNumber: Scalars['BigInt'];
-  createdAt: Scalars['DateTime'];
-  /** address:hash */
-  id: Scalars['ID'];
-  network: SubstrateNetwork;
-  /** hex address */
-  rootAccount: Scalars['String'];
-  tip: SubstrateTip;
-  tipValue: Scalars['BigInt'];
-};
-
-export type SubstrateTipperEdge = {
-  __typename?: 'SubstrateTipperEdge';
-  cursor: Scalars['String'];
-  node: SubstrateTipper;
-};
-
-export enum SubstrateTipperOrderByInput {
-  AccountAsc = 'account_ASC',
-  AccountDesc = 'account_DESC',
-  BlockNumberAsc = 'blockNumber_ASC',
-  BlockNumberDesc = 'blockNumber_DESC',
-  CreatedAtAsc = 'createdAt_ASC',
-  CreatedAtDesc = 'createdAt_DESC',
-  IdAsc = 'id_ASC',
-  IdDesc = 'id_DESC',
-  NetworkAsc = 'network_ASC',
-  NetworkDesc = 'network_DESC',
-  RootAccountAsc = 'rootAccount_ASC',
-  RootAccountDesc = 'rootAccount_DESC',
-  TipValueAsc = 'tipValue_ASC',
-  TipValueDesc = 'tipValue_DESC',
-  TipAccountAsc = 'tip_account_ASC',
-  TipAccountDesc = 'tip_account_DESC',
-  TipBlockNumberAsc = 'tip_blockNumber_ASC',
-  TipBlockNumberDesc = 'tip_blockNumber_DESC',
-  TipClosesAsc = 'tip_closes_ASC',
-  TipClosesDesc = 'tip_closes_DESC',
-  TipCreatedAtAsc = 'tip_createdAt_ASC',
-  TipCreatedAtDesc = 'tip_createdAt_DESC',
-  TipDepositAsc = 'tip_deposit_ASC',
-  TipDepositDesc = 'tip_deposit_DESC',
-  TipFinderAsc = 'tip_finder_ASC',
-  TipFinderDesc = 'tip_finder_DESC',
-  TipIdAsc = 'tip_id_ASC',
-  TipIdDesc = 'tip_id_DESC',
-  TipNetworkAsc = 'tip_network_ASC',
-  TipNetworkDesc = 'tip_network_DESC',
-  TipReasonAsc = 'tip_reason_ASC',
-  TipReasonDesc = 'tip_reason_DESC',
-  TipRootAccountAsc = 'tip_rootAccount_ASC',
-  TipRootAccountDesc = 'tip_rootAccount_DESC',
-  TipStatusAsc = 'tip_status_ASC',
-  TipStatusDesc = 'tip_status_DESC',
-  TipTipValueAsc = 'tip_tipValue_ASC',
-  TipTipValueDesc = 'tip_tipValue_DESC',
-  TipUpdatedAtAsc = 'tip_updatedAt_ASC',
-  TipUpdatedAtDesc = 'tip_updatedAt_DESC',
-  TipWhoAsc = 'tip_who_ASC',
-  TipWhoDesc = 'tip_who_DESC',
-}
-
-export type SubstrateTipperWhereInput = {
-  AND?: InputMaybe<Array<SubstrateTipperWhereInput>>;
-  OR?: InputMaybe<Array<SubstrateTipperWhereInput>>;
-  account_contains?: InputMaybe<Scalars['String']>;
-  account_endsWith?: InputMaybe<Scalars['String']>;
-  account_eq?: InputMaybe<Scalars['String']>;
-  account_gt?: InputMaybe<Scalars['String']>;
-  account_gte?: InputMaybe<Scalars['String']>;
-  account_in?: InputMaybe<Array<Scalars['String']>>;
-  account_lt?: InputMaybe<Scalars['String']>;
-  account_lte?: InputMaybe<Scalars['String']>;
-  account_not_contains?: InputMaybe<Scalars['String']>;
-  account_not_endsWith?: InputMaybe<Scalars['String']>;
-  account_not_eq?: InputMaybe<Scalars['String']>;
-  account_not_in?: InputMaybe<Array<Scalars['String']>>;
-  account_not_startsWith?: InputMaybe<Scalars['String']>;
-  account_startsWith?: InputMaybe<Scalars['String']>;
-  blockNumber_eq?: InputMaybe<Scalars['BigInt']>;
-  blockNumber_gt?: InputMaybe<Scalars['BigInt']>;
-  blockNumber_gte?: InputMaybe<Scalars['BigInt']>;
-  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']>>;
-  blockNumber_lt?: InputMaybe<Scalars['BigInt']>;
-  blockNumber_lte?: InputMaybe<Scalars['BigInt']>;
-  blockNumber_not_eq?: InputMaybe<Scalars['BigInt']>;
-  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
-  createdAt_eq?: InputMaybe<Scalars['DateTime']>;
-  createdAt_gt?: InputMaybe<Scalars['DateTime']>;
-  createdAt_gte?: InputMaybe<Scalars['DateTime']>;
-  createdAt_in?: InputMaybe<Array<Scalars['DateTime']>>;
-  createdAt_lt?: InputMaybe<Scalars['DateTime']>;
-  createdAt_lte?: InputMaybe<Scalars['DateTime']>;
-  createdAt_not_eq?: InputMaybe<Scalars['DateTime']>;
-  createdAt_not_in?: InputMaybe<Array<Scalars['DateTime']>>;
-  id_contains?: InputMaybe<Scalars['ID']>;
-  id_endsWith?: InputMaybe<Scalars['ID']>;
-  id_eq?: InputMaybe<Scalars['ID']>;
-  id_gt?: InputMaybe<Scalars['ID']>;
-  id_gte?: InputMaybe<Scalars['ID']>;
-  id_in?: InputMaybe<Array<Scalars['ID']>>;
-  id_lt?: InputMaybe<Scalars['ID']>;
-  id_lte?: InputMaybe<Scalars['ID']>;
-  id_not_contains?: InputMaybe<Scalars['ID']>;
-  id_not_endsWith?: InputMaybe<Scalars['ID']>;
-  id_not_eq?: InputMaybe<Scalars['ID']>;
-  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
-  id_not_startsWith?: InputMaybe<Scalars['ID']>;
-  id_startsWith?: InputMaybe<Scalars['ID']>;
-  network_eq?: InputMaybe<SubstrateNetwork>;
-  network_in?: InputMaybe<Array<SubstrateNetwork>>;
-  network_not_eq?: InputMaybe<SubstrateNetwork>;
-  network_not_in?: InputMaybe<Array<SubstrateNetwork>>;
-  rootAccount_contains?: InputMaybe<Scalars['String']>;
-  rootAccount_endsWith?: InputMaybe<Scalars['String']>;
-  rootAccount_eq?: InputMaybe<Scalars['String']>;
-  rootAccount_gt?: InputMaybe<Scalars['String']>;
-  rootAccount_gte?: InputMaybe<Scalars['String']>;
-  rootAccount_in?: InputMaybe<Array<Scalars['String']>>;
-  rootAccount_lt?: InputMaybe<Scalars['String']>;
-  rootAccount_lte?: InputMaybe<Scalars['String']>;
-  rootAccount_not_contains?: InputMaybe<Scalars['String']>;
-  rootAccount_not_endsWith?: InputMaybe<Scalars['String']>;
-  rootAccount_not_eq?: InputMaybe<Scalars['String']>;
-  rootAccount_not_in?: InputMaybe<Array<Scalars['String']>>;
-  rootAccount_not_startsWith?: InputMaybe<Scalars['String']>;
-  rootAccount_startsWith?: InputMaybe<Scalars['String']>;
-  tip?: InputMaybe<SubstrateTipWhereInput>;
-  tipValue_eq?: InputMaybe<Scalars['BigInt']>;
-  tipValue_gt?: InputMaybe<Scalars['BigInt']>;
-  tipValue_gte?: InputMaybe<Scalars['BigInt']>;
-  tipValue_in?: InputMaybe<Array<Scalars['BigInt']>>;
-  tipValue_lt?: InputMaybe<Scalars['BigInt']>;
-  tipValue_lte?: InputMaybe<Scalars['BigInt']>;
-  tipValue_not_eq?: InputMaybe<Scalars['BigInt']>;
-  tipValue_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
-};
-
-export type SubstrateTipperWhereUniqueInput = {
-  id: Scalars['ID'];
-};
-
-export type SubstrateTippersConnection = {
-  __typename?: 'SubstrateTippersConnection';
-  edges: Array<SubstrateTipperEdge>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type SubstrateTipsConnection = {
-  __typename?: 'SubstrateTipsConnection';
-  edges: Array<SubstrateTipEdge>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
