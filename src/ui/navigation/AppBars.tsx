@@ -6,7 +6,6 @@ import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/sta
 import {DrawerActions} from '@react-navigation/native';
 import {dashboardScreen, tokenMigrationScreen} from '@ui/navigation/routeKeys';
 import {AppBar, AppHeader, Title, useTheme} from '@ui/library';
-import {standardPadding} from '@ui/styles';
 
 export function MainDrawerAppBar({
   navigation,
@@ -114,17 +113,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
-  title: {color: 'white'},
-  logoImage: {width: 30, height: 30},
-  networkSwitch: {
-    position: 'absolute',
-    right: standardPadding * 1.5,
-    bottom: 0,
-    paddingHorizontal: standardPadding,
-    paddingVertical: standardPadding / 2,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    height: 30,
-    justifyContent: 'center',
+  title: {
+    color: 'white',
   },
 });
