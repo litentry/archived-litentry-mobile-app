@@ -3,9 +3,7 @@ import React from 'react';
 import {render, RenderOptions} from '@testing-library/react-native';
 import {ApolloProvider, ApolloClient, InMemoryCache, HttpLink} from '@apollo/client';
 import fetch from 'cross-fetch';
-
 import ThemeProvider from 'context/ThemeContext';
-import {create, TestRendererOptions} from 'react-test-renderer';
 
 export const client = new ApolloClient({
   cache: new InMemoryCache(),
@@ -36,10 +34,5 @@ jest.mock('@react-navigation/native', () => {
   };
 });
 
-function customCreate(ui: React.ReactElement, options?: TestRendererOptions) {
-  return create(ui, options);
-}
-
 export * from '@testing-library/react-native';
 export {customRender as render};
-export {customCreate as create};
