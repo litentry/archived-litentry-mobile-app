@@ -1,8 +1,7 @@
 import {NavigationProp} from '@react-navigation/native';
 import {ParachainsStackParamList} from '@ui/navigation/navigation';
 import React from 'react';
-import {ReactTestInstance} from 'react-test-renderer';
-import {render, waitFor, within} from 'src/testUtils';
+import {render, waitFor} from 'src/testUtils';
 import {ParachainsOverviewScreen} from './OverviewScreen';
 
 let navigation: NavigationProp<ParachainsStackParamList>;
@@ -14,17 +13,24 @@ describe('OverviewScreen component', () => {
   });
 
   it('render the component when data arrives', async () => {
-    const {getAllByTestId, getAllByText} = await waitFor(() =>
-      render(<ParachainsOverviewScreen navigation={navigation} />),
-    );
-    const parachainItems = getAllByTestId('parachain_items');
-    expect(parachainItems.length).toBe(10);
-    expect(within(parachainItems[0] as ReactTestInstance).getByText('Statemint')).toBeTruthy();
-    expect(within(parachainItems[9] as ReactTestInstance).getByText('Nodle')).toBeTruthy();
-
+    const {getAllByText, getByText} = await waitFor(() => render(<ParachainsOverviewScreen navigation={navigation} />));
+    const parachainsElement = getAllByText('Parachains:');
+    expect(parachainsElement).toHaveLength(1);
+    const totalPeriodElement = getAllByText('Total period:');
+    expect(totalPeriodElement).toHaveLength(1);
+    const remainingElement = getAllByText('Remaining:');
+    expect(remainingElement).toHaveLength(1);
     const leasePeriodElement = getAllByText('Lease Period');
     expect(leasePeriodElement).toHaveLength(1);
-    const parachainsElement = getAllByText('Parachains');
-    expect(parachainsElement).toHaveLength(1);
+
+    expect(getByText('Statemint')).toBeTruthy();
+    expect(getByText('1000')).toBeTruthy();
+    expect(getByText('7 - 20')).toBeTruthy();
+
+    expect(getByText('Acala')).toBeTruthy();
+    expect(getByText('Clover')).toBeTruthy();
+    expect(getByText('Moonbeam')).toBeTruthy();
+    expect(getByText('Astar')).toBeTruthy();
+    expect(getByText('Equilibrium')).toBeTruthy();
   });
 });
