@@ -56,6 +56,28 @@ export function SendFundScreen({navigation, route}: Props) {
 
   const isSendDisabled = !isEnteredBalanceValid || !isToAddressValid;
 
+  const onCancelled = () => {
+    navigation.goBack();
+  };
+
+  const onMakeTransaction = () => {
+    if (chainInfo) {
+      const _amountBN = stringToBnUtil(chainInfo.registry, amount);
+      startTx({
+        address,
+        txMethod: `${isKeepAliveActive ? `balances.transferKeepAlive` : `balances.transfer`}`,
+        params: [toAddress, _amountBN],
+      })
+        .then(() => {
+          snackbar('Funds transferred');
+          navigation.goBack();
+        })
+        .catch(() => {
+          snackbar('Error while transferring funds');
+        });
+    }
+  };
+
   return (
     <Modalize ref={ref} adjustToContentHeight onClose={navigation.goBack} closeOnOverlayTap>
       <SafeView edges={noTopEdges}>
@@ -111,27 +133,11 @@ export function SendFundScreen({navigation, route}: Props) {
             </View>
             <Padder scale={1} />
             <View style={styles.buttons}>
-              <Button
-                onPress={() => {
-                  if (chainInfo) {
-                    const _amountBN = stringToBnUtil(chainInfo.registry, amount);
-                    startTx({
-                      address,
-                      txMethod: `${isKeepAliveActive ? `balances.transferKeepAlive` : `balances.transfer`}`,
-                      params: [toAddress, _amountBN],
-                    })
-                      .then(() => {
-                        snackbar('Funds transferred');
-                        navigation.goBack();
-                      })
-                      .catch(() => {
-                        snackbar('Error while transferring funds');
-                      });
-                  }
-                }}
-                mode="outlined"
-                disabled={isSendDisabled}
-                icon={'send-outline'}>
+              <Button onPress={onCancelled} mode="outlined" icon={'cancel'}>
+                Cancel
+              </Button>
+
+              <Button onPress={onMakeTransaction} mode="outlined" disabled={isSendDisabled} icon={'send-outline'}>
                 Make Transfer
               </Button>
             </View>
@@ -152,7 +158,7 @@ const styles = StyleSheet.create({
   },
   buttons: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
   },
   marker: {
     borderColor: '#ccc',
