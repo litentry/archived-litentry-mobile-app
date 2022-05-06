@@ -15,7 +15,7 @@ const config = {
     '^.+\\.tsx?$': 'babel-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-  setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect', './jest/setupTests.js'],
+  setupFilesAfterEnv: ['./jest/setupJestNative.ts', './jest/setupTests.js'],
   setupFiles: ['<rootDir>/jest/setup.js'],
   transformIgnorePatterns: [
     'node_modules/(?!(jest-)?@?react-native|@react-native-community|@react-navigation|@polkadot|@babel/runtime/helpers/esm/)',
