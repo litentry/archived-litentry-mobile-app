@@ -4,6 +4,7 @@ import {render, RenderOptions} from '@testing-library/react-native';
 import {ApolloProvider, ApolloClient, InMemoryCache, HttpLink} from '@apollo/client';
 import fetch from 'cross-fetch';
 import ThemeProvider from 'context/ThemeContext';
+import {act} from '@testing-library/react-native';
 
 export const client = new ApolloClient({
   cache: new InMemoryCache(),
@@ -36,3 +37,7 @@ jest.mock('@react-navigation/native', () => {
 
 export * from '@testing-library/react-native';
 export {customRender as render};
+
+export function wait(timeOut = 500) {
+  return act(() => new Promise((resolve) => setTimeout(resolve, timeOut)));
+}

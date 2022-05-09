@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React from 'react';
-import {render, waitFor, within} from 'src/testUtils';
+import {render, wait, within} from 'src/testUtils';
 import RegistrarList from '@ui/components/RegistrarList';
 
 describe('RegistrarList component', () => {
@@ -10,7 +10,8 @@ describe('RegistrarList component', () => {
   });
 
   it('renders data correctly', async () => {
-    const {getByTestId, getAllByTestId} = await waitFor(() => render(<RegistrarList />));
+    const {getByTestId, getAllByTestId} = render(<RegistrarList />);
+    await wait();
 
     const countContainer = getByTestId('registrars_count');
     expect(within(countContainer).getByText('Count')).toBeTruthy();

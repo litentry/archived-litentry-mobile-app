@@ -1,5 +1,5 @@
 import React from 'react';
-import {render, waitFor} from 'src/testUtils';
+import {render, wait} from 'src/testUtils';
 import {DemocracySummaryTeaser} from './DemocracySummaryTeaser';
 
 const onPressEvent = jest.fn();
@@ -11,7 +11,9 @@ describe('DemocracySummaryTeaser component', () => {
   });
 
   it('should render the component with the data', async () => {
-    const {getAllByText} = await waitFor(() => render(<DemocracySummaryTeaser onPress={onPressEvent} />));
+    const {getAllByText} = render(<DemocracySummaryTeaser onPress={onPressEvent} />);
+    await wait();
+
     const democracyElement = getAllByText('Democracy');
     expect(democracyElement).toHaveLength(1);
     const totalElements = getAllByText('Total');
