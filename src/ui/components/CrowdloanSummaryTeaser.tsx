@@ -1,10 +1,10 @@
-import globalStyles from '@ui/styles';
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {useCrowdloanSummary} from 'src/api/hooks/useCrowdloanSummary';
-import {Chart} from '@ui/components/Chart';
-import {Subheading, Caption, List} from '@ui/library';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
+import {ProgressChart} from '@ui/components/ProgressChart';
+import {Padder} from '@ui/components/Padder';
+import {Subheading, Caption, Card} from '@ui/library';
 import {LoadingBox} from './LoadingBox';
 
 export function CrowdloanSummaryTeaser() {
@@ -25,33 +25,38 @@ export function CrowdloanSummaryTeaser() {
   const totalCap = formatBalance(data.totalCap, {isShort: true});
 
   return (
-    <View style={globalStyles.rowContainer}>
-      <View style={styles.infoContainer}>
-        <List.Item
-          left={() => <Chart percent={data.activeProgress} />}
-          title={<Subheading>{`Active Raised / Cap`}</Subheading>}
-          description={<Caption>{`${activeRaised} / ${activeCap}`}</Caption>}
-        />
-        <List.Item
-          left={() => <Chart percent={data.totalProgress} />}
-          title={<Subheading>{`Total Raised / Cap`}</Subheading>}
-          description={<Caption>{`${totalRaised} / ${totalCap}`}</Caption>}
-        />
-      </View>
-
-      <View style={styles.fundsContainer}>
-        <Subheading>{`Funds: ${data.totalFunds}`}</Subheading>
-      </View>
-    </View>
+    <Card>
+      <Card.Content>
+        <View style={styles.content}>
+          <View style={styles.progressContainer}>
+            <ProgressChart percent={data.activeProgress} width={100} />
+            <Padder />
+            <View>
+              <Subheading>{`Active Raised / Cap`}</Subheading>
+              <Caption>{`${activeRaised} / ${activeCap}`}</Caption>
+            </View>
+          </View>
+          <Padder scale={0.4} />
+          <View style={styles.progressContainer}>
+            <ProgressChart percent={data.totalProgress} width={100} />
+            <Padder />
+            <View>
+              <Subheading>{`Total Raised / Cap`}</Subheading>
+              <Caption>{`${totalRaised} / ${totalCap}`}</Caption>
+            </View>
+          </View>
+        </View>
+      </Card.Content>
+    </Card>
   );
 }
 
 const styles = StyleSheet.create({
-  infoContainer: {
-    flex: 3,
-  },
-  fundsContainer: {
-    flex: 1,
+  content: {
     justifyContent: 'center',
+  },
+  progressContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
