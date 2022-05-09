@@ -12,7 +12,13 @@ export function CrowdloanSummaryTeaser() {
   const {data, loading} = useCrowdloanSummary();
 
   if (loading && !data) {
-    return <LoadingBox />;
+    return (
+      <Card>
+        <Card.Content>
+          <LoadingBox />
+        </Card.Content>
+      </Card>
+    );
   }
 
   if (!data) {
