@@ -4,21 +4,21 @@ const {defaults: tsjPreset} = require('ts-jest/presets');
 /** @type {import('@jest/types').Config.InitialOptions} */
 const config = {
   ...tsjPreset,
-  preset: 'react-native',
+  preset: '@testing-library/react-native',
   globals: {
     'ts-jest': {
       tsconfig: 'tsconfig.spec.json',
     },
   },
   transform: {
-    '^.+\\.jsx$': 'babel-jest',
+    '^.+\\.(js|jsx)$': 'babel-jest',
     '^.+\\.tsx?$': 'babel-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect', './jest/setupTests.js'],
   setupFiles: ['<rootDir>/jest/setup.js'],
   transformIgnorePatterns: [
-    'node_modules/(?!(jest-)?@?react-native|@react-native-community|@react-navigation|@polkadot|@babel/runtime/helpers/esm/)',
+    'node_modules/(?!(jest-)?@?react-native|@react-native-community|@react-navigation|@polkadot|@gorhom|@babel/runtime/helpers/esm/)',
   ],
   moduleNameMapper: {
     '^src/(.*)$': '<rootDir>/src/$1',
