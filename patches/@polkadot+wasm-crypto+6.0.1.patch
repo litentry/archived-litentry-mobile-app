@@ -1,0 +1,20 @@
+diff --git a/node_modules/@polkadot/wasm-crypto/cjs/init.js b/node_modules/@polkadot/wasm-crypto/cjs/init.js
+index cbdb8d5..a5cf3b3 100644
+--- a/node_modules/@polkadot/wasm-crypto/cjs/init.js
++++ b/node_modules/@polkadot/wasm-crypto/cjs/init.js
+@@ -10,6 +10,7 @@ exports.setWasmPromiseFn = setWasmPromiseFn;
+ var _util = require("@polkadot/util");
+ 
+ var _wasmCryptoWasm = require("@polkadot/wasm-crypto-wasm");
++var _asmCryptoWasm = require("@polkadot/wasm-crypto-asmjs");
+ 
+ var _bridge = require("./bridge");
+ 
+@@ -50,5 +51,5 @@ function setWasmPromiseFn(fn) {
+ }
+ 
+ function initWasm() {
+-  return setWasmPromise(_wasmCryptoWasm.wasmBytes, null);
++  return setWasmPromise(_wasmCryptoWasm.wasmBytes, _asmCryptoWasm.asmJsInit);
+ }
+\ No newline at end of file

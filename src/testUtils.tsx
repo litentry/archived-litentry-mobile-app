@@ -3,7 +3,6 @@ import React from 'react';
 import {render, RenderOptions} from '@testing-library/react-native';
 import {ApolloProvider, ApolloClient, InMemoryCache, HttpLink} from '@apollo/client';
 import fetch from 'cross-fetch';
-
 import ThemeProvider from 'context/ThemeContext';
 
 export const client = new ApolloClient({
