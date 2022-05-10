@@ -12,7 +12,7 @@ describe('OverviewScreen component', () => {
     expect(getByTestId('loading_view')).toBeTruthy();
   });
 
-  it('renders the component when data arrives', async () => {
+  it.skip('renders the component when data arrives', async () => {
     const {getAllByText, getByText} = await waitFor(() => render(<ParachainsOverviewScreen navigation={navigation} />));
     const parachainsElement = getAllByText('Parachains:');
     expect(parachainsElement).toHaveLength(1);
