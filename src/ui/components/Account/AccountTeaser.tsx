@@ -3,11 +3,11 @@ import {TouchableOpacity, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {Padder} from '@ui/components/Padder';
 import {Account} from './Account';
-import type {Account as AccountType} from 'src/api/hooks/useAccount';
+import type {Account as SubstrateChainAccount} from 'src/api/hooks/useAccount';
 import globalStyles from '@ui/styles';
 
 type Props = {
-  account: AccountType;
+  account: SubstrateChainAccount;
   identiconSize?: number;
   onPress?: () => void;
   children?: React.ReactNode;

@@ -30,7 +30,7 @@ function TipDetailContent({tip, toAccountDetails}: TipDetailProps) {
               <Subheading>Who</Subheading>
             </View>
             <View style={styles.addressContainer}>
-              <AccountTeaser account={tip.who.account} onPress={() => toAccountDetails(tip.who.account.address)} />
+              <AccountTeaser account={tip.who} onPress={() => toAccountDetails(tip.who.address)} />
             </View>
           </View>
           {tip.finder ? (
@@ -39,7 +39,14 @@ function TipDetailContent({tip, toAccountDetails}: TipDetailProps) {
                 <Subheading>Finder</Subheading>
               </View>
               <View style={styles.addressContainer}>
-                <AccountTeaser account={tip.finder.account} onPress={() => toAccountDetails(tip.who.account.address)} />
+                <AccountTeaser
+                  account={tip.finder}
+                  onPress={() => {
+                    if (tip.finder?.address) {
+                      toAccountDetails(tip.finder.address);
+                    }
+                  }}
+                />
               </View>
             </View>
           ) : null}
@@ -49,13 +56,13 @@ function TipDetailContent({tip, toAccountDetails}: TipDetailProps) {
       <TipReason reason={tip.reason} />
       {tip.closes ? (
         <View style={styles.closesAtContainer}>
-          <Subheading>Closes at</Subheading>
-          <Subheading>#{tip.closes}</Subheading>
+          <Subheading>{`Closes at`}</Subheading>
+          <Subheading>{tip.closesTime?.slice(0, 2).join(' ')}</Subheading>
         </View>
       ) : null}
       <View style={styles.containerSpacing}>
         <Subheading>Tippers {tip.tippersCount > 0 ? `(${tip.tippersCount})` : ''}</Subheading>
-        {Number(tip.median) > 0 ? <Caption>{tip.formattedMedian ?? ''}</Caption> : null}
+        {tip.formattedMedianTipValue ? <Caption>{tip.formattedMedianTipValue}</Caption> : null}
       </View>
     </>
   );
@@ -131,7 +138,6 @@ const styles = StyleSheet.create({
   },
   closesAtContainer: {
     marginTop: standardPadding * 2,
-    marginHorizontal: standardPadding,
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
