@@ -1,7 +1,7 @@
 import {Registry} from 'src/api/hooks/useChainInfo';
 import {formattedStringToBn, stringToBn} from './balance';
 
-test('stringToBn test case', async () => {
+test('stringToBn test case', () => {
   const expectedResult = {
     negative: 0,
     words: [3815424, 12049553, 7827495, 6],
