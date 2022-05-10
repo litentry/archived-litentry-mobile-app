@@ -4,8 +4,21 @@ import {fireEvent} from '@testing-library/react-native';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {sendFundScreen} from '@ui/navigation/routeKeys';
 import React from 'react';
+import * as useApiTx from 'src/api/hooks/useApiTx';
 import {render, waitFor} from 'src/testUtils';
 import {SendFundScreen} from './SendFundScreen';
+
+jest.mock('src/api/hooks/useApiTx');
+
+const sendTx = jest.fn(() => {
+  return Promise.resolve();
+});
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore Ignore the mocker
+sendTx.mockImplementation(() => {
+  return {sendTx: sendTx};
+});
 
 const navigation = {
   goBack: () => jest.fn(),
@@ -49,6 +62,7 @@ test('When user enter correct values and checked keep alive check to make transf
     expect(queryAllByText('Enter a valid address').length).toEqual(0);
 
     getByText('Transfer with account keep-alive checks');
+    expect(getByText(/Make Transfer/i)).toBeEnabled();
     const button = getByText('Make Transfer');
     fireEvent.press(button);
   });
@@ -69,6 +83,7 @@ test('When user enter correct values and normal transfer to make transfer', asyn
     fireEvent(switchComponent, 'valueChange', false);
     queryByText('Normal transfer without keep-alive checks');
     expect(queryByText('Transfer with account keep-alive checks')).toBe(null);
+    expect(getByText(/Make Transfer/i)).toBeEnabled();
     const button = getByText('Make Transfer');
     fireEvent.press(button);
   });

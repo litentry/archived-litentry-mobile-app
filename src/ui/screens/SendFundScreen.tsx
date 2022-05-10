@@ -4,7 +4,6 @@ import {NavigationProp, RouteProp} from '@react-navigation/core';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {Modalize} from 'react-native-modalize';
 import QRCodeScanner from 'react-native-qrcode-scanner';
-import {useApiTx} from 'src/api/hooks/useApiTx';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {sendFundScreen} from '@ui/navigation/routeKeys';
 import {Button, Headline, IconButton, Text, TextInput, Switch, HelperText} from '@ui/library';
@@ -20,6 +19,7 @@ import {BN_ZERO} from '@polkadot/util';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {stringToBn as stringToBnUtil, formattedStringToBn} from 'src/utils/balance';
 import AddressInput from '@ui/components/AddressInput';
+import {useApiTx} from 'src/api/hooks/useApiTx';
 
 type Props = {
   navigation: NavigationProp<AccountsStackParamList, typeof sendFundScreen>;
@@ -34,7 +34,7 @@ export function SendFundScreen({navigation, route}: Props) {
   const [toAddress, setToAddress] = React.useState<string>();
   const [scanning, setScanning] = React.useState(false);
   const [isToAddressValid, setIsToAddressValid] = React.useState(false);
-  const startTx = useApiTx();
+  const sendTx = useApiTx();
   const {data: chainInfo} = useChainInfo();
   const [isKeepAliveActive, setIsKeepAliveActive] = React.useState(true);
   const snackbar = useSnackbar();
@@ -61,9 +61,10 @@ export function SendFundScreen({navigation, route}: Props) {
   };
 
   const onMakeTransaction = () => {
+    console.log(chainInfo);
     if (chainInfo) {
       const _amountBN = stringToBnUtil(chainInfo.registry, amount);
-      startTx({
+      sendTx({
         address,
         txMethod: `${isKeepAliveActive ? `balances.transferKeepAlive` : `balances.transfer`}`,
         params: [toAddress, _amountBN],

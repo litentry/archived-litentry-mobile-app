@@ -1,7 +1,7 @@
-import {useContext} from 'react';
-import {useApi} from 'context/ChainApiContext';
-import {TxContext, StartConfig} from 'context/TxContext';
 import {ApiPromise} from '@polkadot/api';
+import {useApi} from 'context/ChainApiContext';
+import {StartConfig, TxContext} from 'context/TxContext';
+import {useContext} from 'react';
 
 type TxConfig = Omit<StartConfig, 'api'>;
 
