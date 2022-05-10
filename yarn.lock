@@ -3999,11 +3999,6 @@ anymatch@^3.0.3, anymatch@~3.1.2:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
 
-apollo3-cache-persist@^0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/apollo3-cache-persist/-/apollo3-cache-persist-0.14.0.tgz#457519f548698fb1e70f99d81e59652fc289ab19"
-  integrity sha512-jT3wkB3IJGNyK1XTtS2WbaAyD/Z9Z4HuFEsU0kIpYceqdtT8gV1kNSX+4YMBt0XgS954zMKY6cs8Q4zt7NNPeQ==
-
 appdirsjs@^1.2.4:
   version "1.2.5"
   resolved "https://registry.npmjs.org/appdirsjs/-/appdirsjs-1.2.5.tgz"
@@ -12291,6 +12286,15 @@ react-native-redash@^16.1.1:
   version "16.2.3"
   resolved "https://registry.npmjs.org/react-native-redash/-/react-native-redash-16.2.3.tgz"
   integrity sha512-vSjHA6/mBY3IpDYPish3DlG06PKNLkb/b89hw7nsDM3yxAJ7Db+yMnEL3pp2YsoYblDc3s+0+wBRlvxay4X4vQ==
+  dependencies:
+    abs-svg-path "^0.1.1"
+    normalize-svg-path "^1.0.1"
+    parse-svg-path "^0.1.2"
+
+react-native-redash@^16.2.4:
+  version "16.2.4"
+  resolved "https://registry.yarnpkg.com/react-native-redash/-/react-native-redash-16.2.4.tgz#bded45d264b7d358de376708a4a72f93b1d5b723"
+  integrity sha512-LrMc3H8O8lBg1IWXvLvLqTgrvs0/JVp7fHAE4iznQV710cedWaAzVObiIVq3BCZnUd1cojfRFLs9QXdf2gw7Vg==
   dependencies:
     abs-svg-path "^0.1.1"
     normalize-svg-path "^1.0.1"
