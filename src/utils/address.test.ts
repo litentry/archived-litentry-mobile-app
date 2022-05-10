@@ -1,5 +1,4 @@
 import {getAvailableNetworks} from 'context/NetworkContext';
-import {waitFor} from 'src/testUtils';
 import {NetworkType} from 'src/types';
 import {isAddressValid, toShortAddress} from './address';
 
@@ -16,8 +15,8 @@ test('toShortAddress function test', () => {
   });
 });
 
-test('isAddressValid function test', async () => {
-  const networkTypes = await waitFor(() => getAvailableNetworks());
+test('isAddressValid function test', () => {
+  const networkTypes = getAvailableNetworks();
   const validAddress_polka = isAddressValid(networkTypes[0] as NetworkType, POLKADOT_ADDRESS);
   expect(validAddress_polka).toBeTruthy();
 
