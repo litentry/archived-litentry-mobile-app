@@ -11,7 +11,7 @@ test('getCurrentYear function', () => {
   expect(currentYear).toEqual(fullYear);
 });
 
-test('fromNow function', () => {
+test('formatDate function', () => {
   const format_date = formatDate('04-05-2022');
   expect(format_date).toBe('05/04/2022');
 });
