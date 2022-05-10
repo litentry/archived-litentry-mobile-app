@@ -1,19 +1,32 @@
 import {decimalKeypad, notEmpty} from './utils';
 
 test('utility function notEmpty', () => {
-  const testCase = ['', null, undefined, 'Test'];
-  const expected = [false, false, false, true];
-  testCase.forEach((element, i) => {
-    const decimalValue = notEmpty(element);
-    expect(decimalValue).toBe(expected[i]);
-  });
+  const emptyString = notEmpty('');
+  expect(emptyString).toBeFalsy();
+
+  const nullValue = notEmpty(null);
+  expect(nullValue).toBeFalsy();
+
+  const undefinedValue = notEmpty(undefined);
+  expect(undefinedValue).toBeFalsy();
+
+  const testString = notEmpty('test');
+  expect(testString).toBeTruthy();
 });
 
 test('utility function decimalKeypad', () => {
-  const testCase = ['10', '.', '123,2', '12.2'];
-  const expected = ['10', '0.', '123.2', '12.2'];
-  testCase.forEach((element, i) => {
-    const decimalValue = decimalKeypad(element);
-    expect(decimalValue).toBe(expected[i]);
-  });
+  const inputValue = decimalKeypad('10');
+  expect(inputValue).toBe('10');
+
+  const decimalValue = decimalKeypad('.');
+  expect(decimalValue).toBe('0.');
+
+  const commaValue = decimalKeypad(',');
+  expect(commaValue).toBe('0.');
+
+  const commaNumberValue = decimalKeypad('123,2');
+  expect(commaNumberValue).toBe('123.2');
+
+  const decimalNumberValue = decimalKeypad('12.2');
+  expect(decimalNumberValue).toBe('12.2');
 });
