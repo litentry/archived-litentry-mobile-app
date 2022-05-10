@@ -11,7 +11,7 @@ import {crowdloanFundDetailScreen} from '@ui/navigation/routeKeys';
 import {Button, Card, Subheading, Text, Caption, Title, Modal, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {Chart} from '@ui/components/Chart';
+import {ProgressChart} from '@ui/components/ProgressChart';
 import BalanceInput from '@ui/components/BalanceInput';
 import {Crowdloan, useAllCrowdloans} from 'src/api/hooks/useCrowdloans';
 import type {Account} from 'src/api/hooks/useAccount';
@@ -25,13 +25,15 @@ import {InputLabel} from '@ui/library/InputLabel';
 export function CrowdloanScreen() {
   const [openContributeId, setOpenContributeId] = React.useState<string>();
   const {activeCrowdloans, endedCrowdloans, loading} = useAllCrowdloans();
+  const ongoingKey = `Ongoing (${activeCrowdloans.length ?? 0})`;
+  const completedKey = `Completed (${endedCrowdloans.length ?? 0})`;
 
   const sectionData = React.useMemo(
     () => [
-      {key: 'Ongoing', data: activeCrowdloans || []},
-      {key: 'Completed', data: endedCrowdloans || []},
+      {key: ongoingKey, data: activeCrowdloans || []},
+      {key: completedKey, data: endedCrowdloans || []},
     ],
-    [activeCrowdloans, endedCrowdloans],
+    [activeCrowdloans, endedCrowdloans, ongoingKey, completedKey],
   );
 
   return (
@@ -40,7 +42,13 @@ export function CrowdloanScreen() {
         <LoadingView />
       ) : (
         <SectionList
-          ListHeaderComponent={CrowdloanSummaryTeaser}
+          ListHeaderComponent={() => (
+            <>
+              <Padder />
+              <CrowdloanSummaryTeaser />
+              <Padder scale={1.5} />
+            </>
+          )}
           contentContainerStyle={styles.listContent}
           style={styles.container}
           sections={sectionData}
@@ -50,7 +58,7 @@ export function CrowdloanScreen() {
             return (
               <Fund
                 item={item}
-                active={key === 'Ongoing'}
+                active={key === ongoingKey}
                 onPressContribute={() => {
                   setOpenContributeId(item.paraId);
                 }}
@@ -102,7 +110,7 @@ function Fund({item, active, onPressContribute}: {item: Crowdloan; active: boole
         </View>
         <View style={styles.spacer} />
         <View style={styles.listItemRightSide}>
-          <Chart percent={Number(item.raisedPercentage)} />
+          <ProgressChart percent={Number(item.raisedPercentage)} width={active ? 60 : 80} strokeWidth={8} />
           {active && (
             <Button
               style={styles.button}
