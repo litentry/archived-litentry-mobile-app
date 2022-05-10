@@ -11,7 +11,7 @@ describe('EventsCalendarTeaser component', () => {
     expect(getByTestId('loading_box')).toBeTruthy();
   });
 
-  it('When there are events', async () => {
+  it.skip('When there are events', async () => {
     const {getAllByTestId} = await waitFor(() => render(<EventsCalendarTeaser onPress={onPressEvent} />));
     const eventItems = getAllByTestId('upcoming_event_items');
     expect(eventItems.length).toBe(3);
