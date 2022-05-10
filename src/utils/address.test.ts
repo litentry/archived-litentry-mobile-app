@@ -17,21 +17,21 @@ test('toShortAddress function test', () => {
 
 test('isAddressValid function test', () => {
   const networkTypes = getAvailableNetworks();
-  const validAddress_polka = isAddressValid(networkTypes[0] as NetworkType, POLKADOT_ADDRESS);
-  expect(validAddress_polka).toBeTruthy();
+  const validAddressPolka = isAddressValid(networkTypes[0] as NetworkType, POLKADOT_ADDRESS);
+  expect(validAddressPolka).toBeTruthy();
 
-  const invalidAddress_polka = isAddressValid(networkTypes[0] as NetworkType, KUSAMA_ADDRESS);
-  expect(invalidAddress_polka).toBeFalsy();
+  const invalidAddressPolka = isAddressValid(networkTypes[0] as NetworkType, KUSAMA_ADDRESS);
+  expect(invalidAddressPolka).toBeFalsy();
 
-  const validAddress_kusama = isAddressValid(networkTypes[1] as NetworkType, KUSAMA_ADDRESS);
-  expect(validAddress_kusama).toBeTruthy();
+  const validAddressKusama = isAddressValid(networkTypes[1] as NetworkType, KUSAMA_ADDRESS);
+  expect(validAddressKusama).toBeTruthy();
 
-  const invalidAddress_kusama = isAddressValid(networkTypes[1] as NetworkType, LITMUS_ADDRESS);
-  expect(invalidAddress_kusama).toBeFalsy();
+  const invalidAddressKusama = isAddressValid(networkTypes[1] as NetworkType, LITMUS_ADDRESS);
+  expect(invalidAddressKusama).toBeFalsy();
 
-  const validAddress_litmus = isAddressValid(networkTypes[3] as NetworkType, LITMUS_ADDRESS);
-  expect(validAddress_litmus).toBeTruthy();
+  const validAddressLitmus = isAddressValid(networkTypes[3] as NetworkType, LITMUS_ADDRESS);
+  expect(validAddressLitmus).toBeTruthy();
 
-  const invalidAddress_litmus = isAddressValid(networkTypes[3] as NetworkType, POLKADOT_ADDRESS);
-  expect(invalidAddress_litmus).toBeFalsy();
+  const invalidAddressLitmus = isAddressValid(networkTypes[3] as NetworkType, POLKADOT_ADDRESS);
+  expect(invalidAddressLitmus).toBeFalsy();
 });
