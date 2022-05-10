@@ -1,23 +1,23 @@
 import React from 'react';
-import {ReactTestInstance} from 'react-test-renderer';
-import {render, waitFor, within} from 'src/testUtils';
+import {render, waitFor} from 'src/testUtils';
 import {ParathreadsScreen} from './ParathreadsScreen';
 
-describe('OverviewScreen component', () => {
-  it('should render the loading view when data is fetching', async () => {
-    const {getByTestId} = render(<ParathreadsScreen />);
-    expect(getByTestId('loading_view')).toBeTruthy();
-  });
+test('render the loading view when data is fetching', async () => {
+  const {getByTestId} = render(<ParathreadsScreen />);
+  expect(getByTestId('loading_view')).toBeTruthy();
+});
 
-  it('When data is rendered', async () => {
-    const {getAllByText, getAllByTestId} = await waitFor(() => render(<ParathreadsScreen />));
-
-    const leasePeriodElement = getAllByText('Parathreads: 15');
-    expect(leasePeriodElement).toHaveLength(1);
-
-    const parathreadItems = getAllByTestId('parathread_items');
-    expect(parathreadItems.length).toBe(10);
-    expect(within(parathreadItems[0] as ReactTestInstance).getAllByText('Litentry')).toBeTruthy();
-    expect(within(parathreadItems[9] as ReactTestInstance).getAllByText('Geminis')).toBeTruthy();
+test('render when the data is fetched', async () => {
+  const {getByText, getAllByText} = render(<ParathreadsScreen />);
+  await waitFor(() => {
+    expect(getByText('Parathreads: 15')).toBeTruthy();
+    expect(getAllByText('Litentry').length).toBe(2);
+    expect(getAllByText('Unique Network').length).toBe(2);
+    expect(getAllByText('Kapex').length).toBe(1);
+    expect(getAllByText('SubGame Gamma').length).toBe(1);
+    expect(getAllByText('SubDAO').length).toBe(1);
+    expect(getAllByText('Coinversation').length).toBe(1);
+    expect(getAllByText('Ares Odyssey').length).toBe(1);
+    expect(getAllByText('Geminis').length).toBe(1);
   });
 });
