@@ -14,8 +14,8 @@ test('isErroneous test case', () => {
   const mapStatus = mapStatusText(isErroneousJudgement, false);
   expect(mapStatus).toEqual(expectedJudgement);
 
-  const mapStatus_hasParent = mapStatusText(isErroneousJudgement, true);
-  expect(mapStatus_hasParent).toEqual(expectedJudgement);
+  const mapStatusHasParent = mapStatusText(isErroneousJudgement, true);
+  expect(mapStatusHasParent).toEqual(expectedJudgement);
 });
 
 test('isReasonable test case', () => {
@@ -28,13 +28,13 @@ test('isReasonable test case', () => {
   };
   const expectedJudgement = {text: 'Reasonable', category: 'good', icon: 'check-circle'};
 
-  const expectedJudgement_hasParent = {text: 'Reasonable', category: 'good', icon: 'link'};
+  const expectedJudgementHasParent = {text: 'Reasonable', category: 'good', icon: 'link'};
 
   const mapStatus = mapStatusText(isReasonableJudgement, false);
   expect(mapStatus).toEqual(expectedJudgement);
 
-  const mapStatus_hasParent = mapStatusText(isReasonableJudgement, true);
-  expect(mapStatus_hasParent).toEqual(expectedJudgement_hasParent);
+  const mapStatusHasParent = mapStatusText(isReasonableJudgement, true);
+  expect(mapStatusHasParent).toEqual(expectedJudgementHasParent);
 });
 
 test('isKnownGood test case', () => {
@@ -47,13 +47,13 @@ test('isKnownGood test case', () => {
   };
   const expectedJudgement = {text: 'Reasonable', category: 'good', icon: 'check-circle'};
 
-  const expectedJudgement_hasParent = {text: 'Reasonable', category: 'good', icon: 'link'};
+  const expectedJudgementHasParent = {text: 'Reasonable', category: 'good', icon: 'link'};
 
   const mapStatus = mapStatusText(isKnownGoodJudgement, false);
   expect(mapStatus).toEqual(expectedJudgement);
 
-  const mapStatus_hasParent = mapStatusText(isKnownGoodJudgement, true);
-  expect(mapStatus_hasParent).toEqual(expectedJudgement_hasParent);
+  const mapStatusHasParent = mapStatusText(isKnownGoodJudgement, true);
+  expect(mapStatusHasParent).toEqual(expectedJudgementHasParent);
 });
 
 test('isOutOfDate test case', () => {
@@ -66,13 +66,13 @@ test('isOutOfDate test case', () => {
   };
   const expectedJudgement = {text: 'Reasonable', category: 'good', icon: 'check-circle'};
 
-  const expectedJudgement_parent = {text: 'Reasonable', category: 'good', icon: 'link'};
+  const expectedJudgementParent = {text: 'Reasonable', category: 'good', icon: 'link'};
 
   const mapStatus = mapStatusText(isOutOfDateJudgement, false);
   expect(mapStatus).toEqual(expectedJudgement);
 
-  const mapStatus_hasParent = mapStatusText(isOutOfDateJudgement, true);
-  expect(mapStatus_hasParent).toEqual(expectedJudgement_parent);
+  const mapStatusHasParent = mapStatusText(isOutOfDateJudgement, true);
+  expect(mapStatusHasParent).toEqual(expectedJudgementParent);
 });
 
 test('isLowQuality test case', () => {
@@ -85,11 +85,11 @@ test('isLowQuality test case', () => {
   };
   const expectedJudgement = {text: 'Reasonable', category: 'good', icon: 'check-circle'};
 
-  const expectedJudgement_hasParent = {text: 'Reasonable', category: 'good', icon: 'link'};
+  const expectedJudgementHasParent = {text: 'Reasonable', category: 'good', icon: 'link'};
 
   const mapStatus = mapStatusText(isLowQualityJudgement, false);
   expect(mapStatus).toEqual(expectedJudgement);
 
-  const mapStatus_hasParent = mapStatusText(isLowQualityJudgement, true);
-  expect(mapStatus_hasParent).toEqual(expectedJudgement_hasParent);
+  const mapStatusHasParent = mapStatusText(isLowQualityJudgement, true);
+  expect(mapStatusHasParent).toEqual(expectedJudgementHasParent);
 });
