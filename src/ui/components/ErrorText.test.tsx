@@ -2,9 +2,9 @@ import React from 'react';
 import {render} from 'src/testUtils';
 import {ErrorText} from './ErrorText';
 
-test('should render with children data', async () => {
+test('should render with children data', () => {
   const {findByText} = render(<ErrorText>Mocked Error Text</ErrorText>);
-  expect(await findByText('Mocked Error Text')).toBeTruthy();
+  expect(findByText('Mocked Error Text')).toBeTruthy();
 });
 
 test('snapshot match', () => {
