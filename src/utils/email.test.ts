@@ -1,7 +1,7 @@
-import {composeEmailURL, SendEmailProps} from './email';
+import {composeEmailURL, SendEmailOptions} from './email';
 
 test('composeEmailURL test case', () => {
-  const emailProps: SendEmailProps = {
+  const emailProps: SendEmailOptions = {
     to: 'test@example.com',
     subject: 'test',
     body: 'test body',
