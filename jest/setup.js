@@ -15,12 +15,10 @@ global.__reanimatedWorkletInit = jest.fn();
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
 jest.mock('react-native-mmkv');
 
-const mockedNavigation = jest.fn();
-
 jest.mock('@react-navigation/native', () => {
   return {
     useNavigation: () => ({
-      navigate: mockedNavigation,
+      navigate: jest.fn(),
     }),
   };
 });
