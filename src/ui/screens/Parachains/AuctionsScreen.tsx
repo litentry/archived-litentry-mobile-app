@@ -8,17 +8,15 @@ import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import StatInfoBlock from '@ui/components/StatInfoBlock';
-import ProgressChartWidget from '@ui/components/ProgressWidget';
+import {ProgressChartWidget} from '@ui/components/ProgressChartWidget';
 import {EmptyView} from '@ui/components/EmptyView';
 import Clipboard from '@react-native-community/clipboard';
 import {useSnackbar} from 'context/SnackbarContext';
-import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {EmptyStateTeaser} from '@ui/components/EmptyStateTeaser';
 
 export function AuctionsScreen() {
   const {data: auction, loading} = useAuctionsSummary();
   const snackbar = useSnackbar();
-  const {formatBalance} = useFormatBalance();
 
   if (loading && !auction) {
     return (
@@ -38,7 +36,6 @@ export function AuctionsScreen() {
 
   const {auctionsInfo, latestAuction} = auction;
   const {winningBid, leasePeriod, endingPeriod, raised, raisedPercent} = latestAuction;
-  const raisedFormatted = formatBalance(raised, {isShort: true}) ?? '';
   const remainingPercent =
     typeof endingPeriod?.remainingPercent === 'number' && endingPeriod.remainingPercent > 100
       ? 100
@@ -65,20 +62,20 @@ export function AuctionsScreen() {
 
               <Padder scale={2} />
               <View style={styles.itemRow}>
-                <View style={globalStyles.flex}>
+                <View>
                   {endingPeriod && (
                     <ProgressChartWidget
                       title={`Ending period`}
                       detail={`${remainingPercent}%\n${endingPeriod.remaining.slice(0, 2).join('\n')}`}
-                      data={[remainingPercent / 100]}
+                      progress={remainingPercent / 100}
                     />
                   )}
                 </View>
-                <View style={globalStyles.flex}>
+                <View>
                   <ProgressChartWidget
                     title={`Total Raised`}
-                    detail={`${raisedPercent}%\n${raisedFormatted.split(' ').join('\n')}`}
-                    data={[raisedPercent / 100]}
+                    detail={`${raisedPercent}%\n${raised.split(' ').join('\n')}`}
+                    progress={raisedPercent / 100}
                   />
                 </View>
               </View>
@@ -120,7 +117,7 @@ export function AuctionsScreen() {
           </Card>
         </>
       ) : (
-        <EmptyView>{`Auction is not active`}</EmptyView>
+        <EmptyView>{`There is no ongoing auction`}</EmptyView>
       )}
     </SafeView>
   );
@@ -134,6 +131,6 @@ const styles = StyleSheet.create({
   itemRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
   },
 });

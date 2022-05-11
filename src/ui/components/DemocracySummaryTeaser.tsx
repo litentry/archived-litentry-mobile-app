@@ -4,7 +4,7 @@ import {SectionTeaserContainer} from '@ui/components/SectionTeaserContainer';
 import StatInfoBlock from '@ui/components/StatInfoBlock';
 import {useDemocracySummary} from 'src/api/hooks/useDemocracySummary';
 import {Padder} from '@ui/components/Padder';
-import ProgressChartWidget from '@ui/components/ProgressWidget';
+import {ProgressChartWidget} from '@ui/components/ProgressChartWidget';
 import {standardPadding} from '@ui/styles';
 import {LoadingBox} from '@ui/components/LoadingBox';
 import {Card} from '@ui/library';
@@ -40,7 +40,7 @@ export function DemocracySummaryTeaser(props: Props) {
               <ProgressChartWidget
                 title={`Launch period`}
                 detail={`${data.launchPeriodInfo.progressPercent}%\n${timeLeftString}`}
-                data={[data.launchPeriodInfo.progressPercent / 100]}
+                progress={data.launchPeriodInfo.progressPercent / 100}
               />
             )}
           </Card>
