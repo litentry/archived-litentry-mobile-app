@@ -5,7 +5,7 @@ import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {ProgressChart} from '@ui/components/ProgressChart';
 import {Padder} from '@ui/components/Padder';
 import {Subheading, Caption, Card} from '@ui/library';
-import {DashboardTeaserSkeleton} from './DashboardTeaserSkeleton';
+import {DashboardTeaserSkeleton} from '@ui/components/DashboardTeaserSkeleton';
 
 export function CrowdloanSummaryTeaser() {
   const {formatBalance} = useFormatBalance();

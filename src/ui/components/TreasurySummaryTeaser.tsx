@@ -7,7 +7,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useTreasurySummary} from 'src/api/hooks/useTreasurySummary';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {DashboardTeaserSkeleton} from './DashboardTeaserSkeleton';
+import {DashboardTeaserSkeleton} from '@ui/components/DashboardTeaserSkeleton';
 
 type PropTypes = {
   onPress: () => void;

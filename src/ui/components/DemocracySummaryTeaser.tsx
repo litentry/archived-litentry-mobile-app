@@ -7,7 +7,7 @@ import {Padder} from '@ui/components/Padder';
 import {ProgressChartWidget} from '@ui/components/ProgressChartWidget';
 import {standardPadding} from '@ui/styles';
 import {Card} from '@ui/library';
-import {DashboardTeaserSkeleton} from './DashboardTeaserSkeleton';
+import {DashboardTeaserSkeleton} from '@ui/components/DashboardTeaserSkeleton';
 
 type Props = {
   onPress: () => void;

@@ -6,7 +6,7 @@ import {Text, useTheme, Divider} from '@ui/library';
 import {standardPadding} from '@ui/styles';
 import {formatDate} from 'src/utils/date';
 import {EmptyStateTeaser} from './EmptyStateTeaser';
-import {DashboardTeaserSkeleton} from './DashboardTeaserSkeleton';
+import {DashboardTeaserSkeleton} from '@ui/components/DashboardTeaserSkeleton';
 
 type Props = {
   onPress: () => void;

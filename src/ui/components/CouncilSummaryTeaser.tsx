@@ -8,7 +8,7 @@ import StatInfoBlock from '@ui/components/StatInfoBlock';
 import {Card} from '@ui/library';
 import {useCouncilSummary} from 'src/api/hooks/useCouncilSummary';
 import {AccountTeaser} from './Account/AccountTeaser';
-import {DashboardTeaserSkeleton} from './DashboardTeaserSkeleton';
+import {DashboardTeaserSkeleton} from '@ui/components/DashboardTeaserSkeleton';
 
 type PropTypes = {
   onPress: () => void;
