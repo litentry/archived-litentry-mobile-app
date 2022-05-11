@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Animated, Easing} from 'react-native';
+import {View, StyleSheet, Animated, Easing, Dimensions} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 type Props = {
@@ -15,21 +15,23 @@ export function Skeleton({width, height, circle = false}: Props) {
   const heightValue = height ? height : !circle && !height ? 25 : width;
   const borderRadius = circle ? Math.floor(width / 2) : 4;
 
-  const animatedValue = new Animated.Value(0);
+  const animatedValue = React.useRef(new Animated.Value(0)).current;
+
   React.useEffect(() => {
     Animated.loop(
       Animated.timing(animatedValue, {
         toValue: 1,
-        duration: 2000,
+        duration: (150 - width) * 25,
         easing: Easing.linear,
         useNativeDriver: true,
       }),
     ).start();
-  });
+  }, [animatedValue, width]);
 
+  const interpolateWidth = Dimensions.get('window').width - (250 - width);
   const translateX = animatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [circle ? -width : -250, circle ? width : 250],
+    outputRange: [-interpolateWidth, interpolateWidth],
   });
 
   return (
