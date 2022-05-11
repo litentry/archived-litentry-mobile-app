@@ -6,7 +6,7 @@ import {standardPadding} from '@ui/styles';
 import {useBountiesSummary} from 'src/api/hooks/useBountiesSummary';
 import StatInfoBlock from '@ui/components/StatInfoBlock';
 import {Padder} from '@ui/components/Padder';
-import ProgressChartWidget from '@ui/components/ProgressWidget';
+import {ProgressChartWidget} from '@ui/components/ProgressChartWidget';
 import {Card} from '@ui/library';
 
 type Props = {
@@ -39,7 +39,7 @@ export function BountySummaryTeaser(props: Props) {
               <ProgressChartWidget
                 title={`Funding period (${data.timeLeft[0]})`}
                 detail={`${data.progressPercent ?? 0}%\n${data.timeLeft.slice(0, 2).join('\n')}`}
-                data={[data.progressPercent / 100]}
+                progress={data.progressPercent / 100}
               />
             )}
           </Card>

@@ -3,7 +3,7 @@ import {StyleSheet, View} from 'react-native';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
 import {SectionTeaserContainer} from '@ui/components/SectionTeaserContainer';
-import ProgressChartWidget from '@ui/components/ProgressWidget';
+import {ProgressChartWidget} from '@ui/components/ProgressChartWidget';
 import StatInfoBlock from '@ui/components/StatInfoBlock';
 import {LoadingBox} from '@ui/components/LoadingBox';
 import {Card} from '@ui/library';
@@ -40,7 +40,7 @@ export function CouncilSummaryTeaser(props: PropTypes) {
                   detail={`${council.termProgress.percentage}%\n${council.termProgress.termLeftParts
                     ?.slice(0, 2)
                     .join('\n')}`}
-                  data={[council.termProgress.percentage / 100]}
+                  progress={council.termProgress.percentage / 100}
                 />
               ) : null}
             </Card>
