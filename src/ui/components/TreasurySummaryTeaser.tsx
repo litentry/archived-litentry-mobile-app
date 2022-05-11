@@ -1,7 +1,7 @@
 import {LoadingBox} from '@ui/components/LoadingBox';
 import {Padder} from '@ui/components/Padder';
 import {Card} from '@ui/library';
-import ProgressChartWidget from '@ui/components/ProgressWidget';
+import {ProgressChartWidget} from '@ui/components/ProgressChartWidget';
 import {SectionTeaserContainer} from '@ui/components/SectionTeaserContainer';
 import StatInfoBlock from '@ui/components/StatInfoBlock';
 import React from 'react';
@@ -40,7 +40,7 @@ export function TreasurySummaryTeaser(props: PropTypes) {
                     ? `\n${treasurySummary.spendPeriod.termLeftParts[1]}`
                     : ''
                 }`}
-                data={[treasurySummary.spendPeriod.percentage / 100]}
+                progress={treasurySummary.spendPeriod.percentage / 100}
               />
             </Card>
           </View>
