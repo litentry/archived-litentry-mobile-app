@@ -1,4 +1,3 @@
-import {LoadingBox} from '@ui/components/LoadingBox';
 import {Padder} from '@ui/components/Padder';
 import {Card} from '@ui/library';
 import {ProgressChartWidget} from '@ui/components/ProgressChartWidget';
@@ -8,6 +7,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useTreasurySummary} from 'src/api/hooks/useTreasurySummary';
 import globalStyles, {standardPadding} from '@ui/styles';
+import {DashboardTeaserSkeleton} from './DashboardTeaserSkeleton';
 
 type PropTypes = {
   onPress: () => void;
@@ -19,7 +19,7 @@ export function TreasurySummaryTeaser(props: PropTypes) {
   return (
     <SectionTeaserContainer onPress={props.onPress} title="Treasury">
       {loading && !treasurySummary ? (
-        <LoadingBox />
+        <DashboardTeaserSkeleton />
       ) : treasurySummary ? (
         <>
           <View style={styles.container}>

@@ -5,10 +5,10 @@ import {Padder} from '@ui/components/Padder';
 import {SectionTeaserContainer} from '@ui/components/SectionTeaserContainer';
 import {ProgressChartWidget} from '@ui/components/ProgressChartWidget';
 import StatInfoBlock from '@ui/components/StatInfoBlock';
-import {LoadingBox} from '@ui/components/LoadingBox';
 import {Card} from '@ui/library';
 import {useCouncilSummary} from 'src/api/hooks/useCouncilSummary';
 import {AccountTeaser} from './Account/AccountTeaser';
+import {DashboardTeaserSkeleton} from './DashboardTeaserSkeleton';
 
 type PropTypes = {
   onPress: () => void;
@@ -20,7 +20,7 @@ export function CouncilSummaryTeaser(props: PropTypes) {
   return (
     <SectionTeaserContainer onPress={props.onPress} title="Council">
       {loading && !council ? (
-        <LoadingBox />
+        <DashboardTeaserSkeleton />
       ) : (
         <>
           <View style={globalStyles.spaceBetweenRowContainer}>

@@ -1,4 +1,3 @@
-import {LoadingBox} from '@ui/components/LoadingBox';
 import {SectionTeaserContainer} from '@ui/components/SectionTeaserContainer';
 import {useCalendarEvents} from 'src/api/hooks/useCalendarEvents';
 import {View, StyleSheet} from 'react-native';
@@ -7,6 +6,7 @@ import {Text, useTheme, Divider} from '@ui/library';
 import {standardPadding} from '@ui/styles';
 import {formatDate} from 'src/utils/date';
 import {EmptyStateTeaser} from './EmptyStateTeaser';
+import {DashboardTeaserSkeleton} from './DashboardTeaserSkeleton';
 
 type Props = {
   onPress: () => void;
@@ -19,7 +19,7 @@ export function EventsCalendarTeaser(props: Props) {
   return (
     <SectionTeaserContainer onPress={props.onPress} title="Upcoming events">
       {loading && !events ? (
-        <LoadingBox />
+        <DashboardTeaserSkeleton />
       ) : topThreeEvents?.length > 0 ? (
         topThreeEvents.map((event) => (
           <React.Fragment key={event.id}>

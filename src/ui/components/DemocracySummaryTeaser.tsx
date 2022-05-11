@@ -6,8 +6,8 @@ import {useDemocracySummary} from 'src/api/hooks/useDemocracySummary';
 import {Padder} from '@ui/components/Padder';
 import {ProgressChartWidget} from '@ui/components/ProgressChartWidget';
 import {standardPadding} from '@ui/styles';
-import {LoadingBox} from '@ui/components/LoadingBox';
 import {Card} from '@ui/library';
+import {DashboardTeaserSkeleton} from './DashboardTeaserSkeleton';
 
 type Props = {
   onPress: () => void;
@@ -21,7 +21,7 @@ export function DemocracySummaryTeaser(props: Props) {
   return (
     <SectionTeaserContainer onPress={props.onPress} title="Democracy">
       {loading && !data ? (
-        <LoadingBox />
+        <DashboardTeaserSkeleton />
       ) : data ? (
         <View style={styles.boxRow}>
           <Card mode="outlined" style={styles.card}>
