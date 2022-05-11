@@ -44,7 +44,7 @@ function AddressInfoPreview(props: PropTypes) {
               <Caption>{accountInfo?.display ? stringShorten(accountInfo?.display) : 'Untitled account'}</Caption>
             )}
           />
-          {accountInfo?.balance && (
+          {accountInfo?.balance ? (
             <List.Item
               title="Balance"
               left={() => (
@@ -54,7 +54,7 @@ function AddressInfoPreview(props: PropTypes) {
               )}
               right={() => <Caption>{accountInfo.balance?.formattedFree}</Caption>}
             />
-          )}
+          ) : null}
           <List.Item
             title="Judgment"
             left={() => (
