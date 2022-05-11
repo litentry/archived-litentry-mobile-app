@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import {LoadingBox} from '@ui/components/LoadingBox';
 import {SectionTeaserContainer} from '@ui/components/SectionTeaserContainer';
 import {standardPadding} from '@ui/styles';
 import {useBountiesSummary} from 'src/api/hooks/useBountiesSummary';
@@ -8,6 +7,7 @@ import StatInfoBlock from '@ui/components/StatInfoBlock';
 import {Padder} from '@ui/components/Padder';
 import {ProgressChartWidget} from '@ui/components/ProgressChartWidget';
 import {Card} from '@ui/library';
+import {DashboardTeaserSkeleton} from '@ui/components/DashboardTeaserSkeleton';
 
 type Props = {
   onPress: () => void;
@@ -19,7 +19,7 @@ export function BountySummaryTeaser(props: Props) {
   return (
     <SectionTeaserContainer onPress={props.onPress} title="Bounties">
       {loading && !data ? (
-        <LoadingBox />
+        <DashboardTeaserSkeleton />
       ) : data ? (
         <View style={styles.boxRow}>
           <Card mode="outlined" style={styles.card}>
