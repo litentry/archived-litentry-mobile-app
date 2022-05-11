@@ -1,4 +1,5 @@
 import {bountiesHandler} from './bountiesHandler';
+import {bountyHandler} from './bountyHandler';
 import {councilMotionsHandler} from './councilMotionsHandler';
 import {democracyHandler} from './democracyHandler';
 import {democracySummaryHandler} from './democracySummaryHandler';
@@ -14,5 +15,6 @@ export const handlers = [
   democracySummaryHandler,
   eventsCalendarHandler,
   bountiesHandler,
+  bountyHandler,
   // other handlers
 ];
