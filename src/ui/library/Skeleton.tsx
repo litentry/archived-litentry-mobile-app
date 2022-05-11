@@ -29,13 +29,13 @@ export function Skeleton({width, height, circle = false}: Props) {
 
   const translateX = animatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [-250, 250],
+    outputRange: [circle ? -width : -250, circle ? width : 250],
   });
 
   return (
     <View style={[{width: widthValue, height: heightValue, borderRadius}, styles.container]}>
       <AnimatedLG
-        colors={['#adacac', '#c4c2c2', '#dbd9d9', '#dbd9d9', '#c4c2c2', '#adacac']}
+        colors={['#a0a0a0', '#a0a0a0', '#b0b0b0', '#b0b0b0', '#b0b0b0', '#b0b0b0', '#a0a0a0', '#a0a0a0']}
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
         style={[
@@ -51,7 +51,7 @@ export function Skeleton({width, height, circle = false}: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#adacac',
+    backgroundColor: '#a0a0a0',
     overflow: 'hidden',
   },
 });
