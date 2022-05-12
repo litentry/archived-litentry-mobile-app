@@ -2,7 +2,6 @@ import {
   accountScreen,
   accountsNavigator,
   accountsScreen,
-  addAccountScreen,
   addBountyScreen,
   balanceScreen,
   bountiesScreen,
@@ -134,7 +133,6 @@ type AccountsStackParamList = {
   [exportAccountWithJsonFileScreen]: {address: string};
   [receiveFundScreen]: {address: string};
   [sendFundScreen]: {address: string};
-  [addAccountScreen]: undefined;
   [balanceScreen]: {address: string};
   [identityGuideScreen]: undefined;
 };

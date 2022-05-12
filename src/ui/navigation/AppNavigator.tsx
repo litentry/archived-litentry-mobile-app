@@ -2,7 +2,6 @@ import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createStackNavigator, StackNavigationOptions} from '@react-navigation/stack';
 import {AccountsScreen} from '@ui/screens/AccountsScreen';
-import {AddAccountScreen} from '@ui/screens/AddAccountScreen/AddAccountScreen';
 import {BalanceScreen} from '@ui/screens/BalanceScreen';
 import {BountiesScreen} from '@ui/screens/Bounty/BountiesScreen';
 import {BountyDetailScreen} from '@ui/screens/Bounty/BountyDetailScreen';
@@ -130,11 +129,6 @@ export function AccountsNavigator() {
         options={overlayScreenOptions}
       />
       <AccountsStack.Screen name={routeKeys.sendFundScreen} component={SendFundScreen} options={overlayScreenOptions} />
-      <AccountsStack.Screen
-        name={routeKeys.addAccountScreen}
-        component={AddAccountScreen}
-        options={overlayScreenOptions}
-      />
       <AccountsStack.Screen name={routeKeys.balanceScreen} component={BalanceScreen} options={overlayScreenOptions} />
       <AccountsStack.Screen
         name={routeKeys.identityGuideScreen}

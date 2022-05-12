@@ -11,7 +11,6 @@ export const crowdloansNavigator = 'CrowdloansNavigator' as const;
 export const eventsCalendarScreen = 'Events' as const;
 
 export const deeplinkNavigatorScreen = 'DeeplinkNavigatorScreen' as const;
-export const addAccountScreen = 'Add Account' as const;
 export const mnemonicScreen = 'Mnemonic' as const;
 export const verifyMnemonicScreen = 'Verify Mnemonic' as const;
 export const createAccountScreen = 'Create Account' as const;
