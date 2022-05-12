@@ -10,7 +10,7 @@ type PropTypes = {
   onClosePress?: () => void;
 };
 
-function SuccessDialog({text, onClosePress}: PropTypes) {
+export function SuccessDialog({text, onClosePress}: PropTypes) {
   return (
     <Layout style={globalStyles.paddedContainer}>
       <View style={styles.textContainer}>
@@ -34,5 +34,3 @@ function SuccessDialog({text, onClosePress}: PropTypes) {
 const styles = StyleSheet.create({
   textContainer: {flexDirection: 'row', justifyContent: 'center', alignItems: 'center'},
 });
-
-export default SuccessDialog;

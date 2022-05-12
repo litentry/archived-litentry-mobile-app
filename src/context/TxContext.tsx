@@ -18,7 +18,7 @@ import LoadingView from '@ui/components/LoadingView';
 import {AuthenticateView} from '@ui/components/Tx/AuthenticateView';
 import {TxPreview} from '@ui/components/Tx/Preview';
 import {ErrorDialog} from '@ui/components/Tx/ErrorDialog';
-import SuccessDialog from '@ui/components/SuccessDialog';
+import {SuccessDialog} from '@ui/components/SuccessDialog';
 import {WarningDialog} from '@ui/components/Tx/WarningDialog';
 import {PayloadQrCodeView} from '@ui/components/Tx/PayloadQrCodeView';
 import {formatCallMeta} from 'src/utils/callMetadata';
