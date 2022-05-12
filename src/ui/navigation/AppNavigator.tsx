@@ -21,8 +21,7 @@ import {ExportAccountWithJsonFileScreen} from '@ui/screens/ExportAccountWithJson
 import {ImportAccountScreen} from '@ui/screens/ImportAccountScreen';
 import {MotionDetailScreen} from '@ui/screens/MotionDetailScreen';
 import {MyAccountScreen} from '@ui/screens/MyAccountScreen';
-import {IdentityGuideScreen} from '@ui/screens/MyIdentityScreen/IdentityGuideScreen';
-import ManageIdentityScreen from '@ui/screens/MyIdentityScreen/ManageIdentity';
+import {ManageIdentityScreen} from '@ui/screens/MyIdentityScreen/ManageIdentityScreen';
 import {NotificationSettingsScreen} from '@ui/screens/NotificationSettingsScreen';
 import {AuctionsScreen} from '@ui/screens/Parachains/AuctionsScreen';
 import {CrowdloanFundDetailScreen} from '@ui/screens/Parachains/CrowdloanFundDetailScreen';
@@ -124,11 +123,6 @@ export function AccountsNavigator() {
       />
       <AccountsStack.Screen name={routeKeys.sendFundScreen} component={SendFundScreen} options={overlayScreenOptions} />
       <AccountsStack.Screen name={routeKeys.balanceScreen} component={BalanceScreen} options={overlayScreenOptions} />
-      <AccountsStack.Screen
-        name={routeKeys.identityGuideScreen}
-        component={IdentityGuideScreen}
-        options={overlayScreenOptions}
-      />
     </AccountsStack.Navigator>
   );
 }

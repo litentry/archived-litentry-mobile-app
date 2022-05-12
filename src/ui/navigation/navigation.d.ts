@@ -20,7 +20,6 @@ import {
   eventsCalendarScreen,
   exportAccountWithJsonFileScreen,
   feedbackScreen,
-  identityGuideScreen,
   importAccountScreen,
   manageIdentityScreen,
   mnemonicScreen,
@@ -124,7 +123,7 @@ type AccountsStackParamList = {
   [verifyMnemonicScreen]: {mnemonic: string};
   [createAccountScreen]: {mnemonic: string};
   [accountsScreen]: {reload?: boolean};
-  [manageIdentityScreen]: {address: string};
+  [manageIdentityScreen]: {address: string; showIdentityGuide: boolean};
   [myAccountScreen]: {address: string};
   [registerSubIdentitiesScreen]: {address: string};
   [importAccountScreen]: undefined;
@@ -132,7 +131,6 @@ type AccountsStackParamList = {
   [receiveFundScreen]: {address: string};
   [sendFundScreen]: {address: string};
   [balanceScreen]: {address: string};
-  [identityGuideScreen]: undefined;
 };
 
 type CompleteNavigatorParamList = AppStackParamList &

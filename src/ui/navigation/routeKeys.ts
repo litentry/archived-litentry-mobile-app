@@ -15,7 +15,6 @@ export const mnemonicScreen = 'Mnemonic' as const;
 export const verifyMnemonicScreen = 'Verify Mnemonic' as const;
 export const createAccountScreen = 'Create Account' as const;
 export const balanceScreen = 'Account Balance' as const;
-export const identityGuideScreen = 'Identity Guid' as const;
 
 export const dashboardScreen = 'Dashboard' as const;
 export const tipsScreen = 'Tips' as const;

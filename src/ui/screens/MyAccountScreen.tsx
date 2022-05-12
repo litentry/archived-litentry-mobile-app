@@ -15,7 +15,6 @@ import {
   accountsScreen,
   balanceScreen,
   exportAccountWithJsonFileScreen,
-  identityGuideScreen,
   manageIdentityScreen,
   receiveFundScreen,
   sendFundScreen,
@@ -23,15 +22,17 @@ import {
 import {standardPadding} from '@ui/styles';
 import {useSnackbar} from 'context/SnackbarContext';
 
+type ScreenProps = {
+  navigation: NavigationProp<CompleteNavigatorParamList>;
+  route: RouteProp<AccountsStackParamList, typeof manageIdentityScreen>;
+};
+
 export function MyAccountScreen({
   navigation,
   route: {
     params: {address},
   },
-}: {
-  navigation: NavigationProp<CompleteNavigatorParamList>;
-  route: RouteProp<AccountsStackParamList, typeof manageIdentityScreen>;
-}) {
+}: ScreenProps) {
   const {data: accountInfo} = useAccount(address);
   const {accounts, removeAccount} = useAccounts();
   const account = accounts[address];
@@ -102,10 +103,7 @@ export function MyAccountScreen({
             icon="cog"
             mode="text"
             onPress={() => {
-              navigation.navigate(manageIdentityScreen, {address});
-              if (account?.isExternal) {
-                navigation.navigate(identityGuideScreen);
-              }
+              navigation.navigate(manageIdentityScreen, {address, showIdentityGuide: Boolean(account?.isExternal)});
             }}>
             Manage identity
           </Button>

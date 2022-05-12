@@ -1,9 +1,9 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useLayoutEffect, useRef, useState} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Layout} from '@ui/components/Layout';
-import {Button, List, Icon, Caption, Divider} from '@ui/library';
+import {Button, List, Icon, Caption, Divider, useBottomSheet} from '@ui/library';
 import {useNetwork} from 'context/NetworkContext';
 import RegistrarSelectionModal from '@ui/components/RegistrarSelectionModal';
 import IdentityInfoForm, {IdentityPayload} from '@ui/components/IdentityInfoForm';
@@ -24,16 +24,23 @@ import {stringShorten} from '@polkadot/util';
 import {Account} from '@ui/components/Account/Account';
 import {useSubAccounts} from 'src/api/hooks/useSubAccounts';
 import {AccountRegistration} from '@ui/components/Account/AccountRegistration';
+import {IdentityGuide} from '@ui/components/IdentityGuide';
 
-function ManageIdentity({
-  navigation,
-  route: {
-    params: {address},
-  },
-}: {
+type ScreenProps = {
   navigation: NavigationProp<AccountsStackParamList>;
   route: RouteProp<AccountsStackParamList, typeof manageIdentityScreen>;
-}) {
+};
+
+export function ManageIdentityScreen({navigation, route}: ScreenProps) {
+  const {openBottomSheet, closeBottomSheet, BottomSheet} = useBottomSheet();
+  const {address, showIdentityGuide} = route.params;
+
+  useLayoutEffect(() => {
+    if (showIdentityGuide) {
+      openBottomSheet();
+    }
+  }, [showIdentityGuide, openBottomSheet]);
+
   const startTx = useApiTx();
   const {data: accountInfo, refetch: refetchAccount} = useSubAccounts(address);
 
@@ -223,11 +230,13 @@ function ManageIdentity({
           />
         </Modalize>
       </ScrollView>
+
+      <BottomSheet>
+        <IdentityGuide onClose={closeBottomSheet} />
+      </BottomSheet>
     </SafeView>
   );
 }
-
-export default ManageIdentity;
 
 const styles = StyleSheet.create({
   content: {padding: standardPadding * 2},
