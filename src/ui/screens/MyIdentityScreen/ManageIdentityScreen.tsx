@@ -1,9 +1,9 @@
-import React, {useCallback, useLayoutEffect, useRef, useState} from 'react';
+import React, {useCallback, useLayoutEffect, useState} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Layout} from '@ui/components/Layout';
-import {Button, List, Icon, Caption, Divider, useBottomSheet} from '@ui/library';
+import {Button, List, Icon, Caption, Divider, useBottomSheet, Subheading} from '@ui/library';
 import {useNetwork} from 'context/NetworkContext';
 import RegistrarSelectionModal from '@ui/components/RegistrarSelectionModal';
 import IdentityInfoForm, {IdentityPayload} from '@ui/components/IdentityInfoForm';
@@ -12,7 +12,6 @@ import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import SuccessDialog from '@ui/components/SuccessDialog';
 import {ScrollView} from 'react-native-gesture-handler';
-import {Modalize} from 'react-native-modalize';
 import WebView from 'react-native-webview';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
@@ -31,15 +30,11 @@ type ScreenProps = {
   route: RouteProp<AccountsStackParamList, typeof manageIdentityScreen>;
 };
 
+type BOTTOM_SHEET_TYPE = 'IDENTITY_GUIDE' | 'SET_IDENTITY' | 'POLKA_SCAN';
+
 export function ManageIdentityScreen({navigation, route}: ScreenProps) {
   const {openBottomSheet, closeBottomSheet, BottomSheet} = useBottomSheet();
   const {address, showIdentityGuide} = route.params;
-
-  useLayoutEffect(() => {
-    if (showIdentityGuide) {
-      openBottomSheet();
-    }
-  }, [showIdentityGuide, openBottomSheet]);
 
   const startTx = useApiTx();
   const {data: accountInfo, refetch: refetchAccount} = useSubAccounts(address);
@@ -51,12 +46,9 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
   const judgementCount = judgements?.length || 0;
   const hasJudgements = judgements && judgementCount > 0;
 
-  const identityModalRef = useRef<Modalize>(null);
-  const polkascanViewRef = useRef<Modalize>(null);
-
   const onSubmitIdentityInfo = useCallback(
     async (info: IdentityPayload) => {
-      identityModalRef.current?.close();
+      closeBottomSheet();
       await startTx({address, txMethod: 'identity.setIdentity', params: [info]})
         .then(() => refetchAccount({address}))
         .catch((e) => {
@@ -64,7 +56,7 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
           console.error(e);
         });
     },
-    [address, startTx, refetchAccount],
+    [address, startTx, refetchAccount, closeBottomSheet],
   );
 
   const handleRequestJudgement = useCallback(
@@ -96,6 +88,49 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
       {text: 'Cancel', style: 'cancel'},
     ]);
   };
+
+  const [bottomSheetType, setBottomSheetType] = React.useState<BOTTOM_SHEET_TYPE>('IDENTITY_GUIDE');
+
+  const onOpenBottomSheet = React.useCallback(
+    (type: BOTTOM_SHEET_TYPE) => {
+      setBottomSheetType(type);
+      openBottomSheet();
+    },
+    [openBottomSheet],
+  );
+
+  useLayoutEffect(() => {
+    if (showIdentityGuide) {
+      onOpenBottomSheet(bottomSheetType);
+    }
+  }, [showIdentityGuide, onOpenBottomSheet, bottomSheetType]);
+
+  const bottomSheetContent = React.useMemo(() => {
+    switch (bottomSheetType) {
+      case 'IDENTITY_GUIDE':
+        return <IdentityGuide onClose={closeBottomSheet} />;
+      case 'SET_IDENTITY':
+        return (
+          <Layout>
+            <IdentityInfoForm onSubmit={onSubmitIdentityInfo} accountInfo={accountInfo} />
+          </Layout>
+        );
+      case 'POLKA_SCAN':
+        return (
+          <WebView
+            injectedJavaScript={`(function() {
+            // remove some html element
+            document.querySelectorAll('.navbar')[1].remove()
+        })();`}
+            source={{uri: buildAddressDetailUrl(address || '', currentNetwork?.key || 'polkadot')}}
+            style={styles.polkascanWebView}
+            onMessage={() => null}
+          />
+        );
+      default:
+        return <Subheading>{`Hello world`}</Subheading>;
+    }
+  }, [bottomSheetType, closeBottomSheet, address, accountInfo, currentNetwork.key, onSubmitIdentityInfo]);
 
   return (
     <SafeView edges={noTopEdges}>
@@ -135,7 +170,11 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
           />
           {accountInfo?.registration ? <AccountRegistration registration={accountInfo.registration} /> : null}
           <Padder scale={1} />
-          <Button onPress={() => identityModalRef.current?.open()} mode="outlined">
+          <Button
+            onPress={() => {
+              onOpenBottomSheet('SET_IDENTITY');
+            }}
+            mode="outlined">
             {accountInfo?.hasIdentity ? 'Update Identity' : 'Set Identity'}
           </Button>
           {accountInfo?.hasIdentity ? (
@@ -179,7 +218,9 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
 
           <List.Item
             title="View externally"
-            onPress={() => polkascanViewRef.current?.open()}
+            onPress={() => {
+              onOpenBottomSheet('POLKA_SCAN');
+            }}
             left={() => <LeftIcon icon="share" />}
             right={() => (
               <ItemRight>
@@ -194,46 +235,9 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
           onSelect={handleRequestJudgement}
           visible={registrarSelectionOpen}
         />
-        <Modalize
-          ref={identityModalRef}
-          threshold={250}
-          scrollViewProps={{showsVerticalScrollIndicator: false}}
-          adjustToContentHeight
-          handlePosition="outside"
-          closeOnOverlayTap
-          withReactModal
-          useNativeDriver
-          panGestureEnabled>
-          <Layout>
-            <IdentityInfoForm onSubmit={onSubmitIdentityInfo} accountInfo={accountInfo} />
-          </Layout>
-        </Modalize>
-
-        <Modalize
-          ref={polkascanViewRef}
-          threshold={250}
-          scrollViewProps={{showsVerticalScrollIndicator: false}}
-          adjustToContentHeight
-          handlePosition="outside"
-          closeOnOverlayTap
-          withReactModal
-          useNativeDriver
-          panGestureEnabled>
-          <WebView
-            injectedJavaScript={`(function() {
-                // remove some html element
-                document.querySelectorAll('.navbar')[1].remove()
-            })();`}
-            source={{uri: buildAddressDetailUrl(address || '', currentNetwork?.key || 'polkadot')}}
-            style={styles.polkascanWebView}
-            onMessage={() => null}
-          />
-        </Modalize>
       </ScrollView>
 
-      <BottomSheet>
-        <IdentityGuide onClose={closeBottomSheet} />
-      </BottomSheet>
+      <BottomSheet>{bottomSheetContent}</BottomSheet>
     </SafeView>
   );
 }
