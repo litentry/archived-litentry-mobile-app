@@ -31,8 +31,9 @@ export function useBottomSheet() {
   );
 
   const BottomSheet = React.useCallback(
-    ({children}: BottomSheetProps) => (
+    ({children, ...props}: BottomSheetProps) => (
       <RNBottomSheet
+        {...props}
         handleIndicatorStyle={{backgroundColor: colors.accent}}
         handleStyle={{backgroundColor: colors.background}}
         backdropComponent={Backdrop}
