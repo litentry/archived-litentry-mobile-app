@@ -60,7 +60,6 @@ import {ReceiveFundScreen} from '@ui/screens/ReceiveFundScreen';
 import {SendFundScreen} from '@ui/screens/SendFundScreen';
 import {FeedbackScreen} from '@ui/screens/FeedbackScreen';
 import {AccountScreen} from '@ui/screens/AccountScreen';
-import {AddBountyScreen} from '@ui/screens/AddBountyScreen';
 import {OnboardingScreen} from '@ui/screens/Onboarding/OnboardingScreen';
 import {usePersistedState} from '@hooks/usePersistedState';
 
@@ -97,11 +96,6 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.bountiesScreen} component={BountiesScreen} />
       <DashboardStack.Screen name={routeKeys.bountyDetailScreen} component={BountyDetailScreen} />
       <DashboardStack.Screen name={routeKeys.eventsCalendarScreen} component={EventsCalendarScreen} />
-      <DashboardStack.Screen
-        name={routeKeys.addBountyScreen}
-        component={AddBountyScreen}
-        options={overlayScreenOptions}
-      />
     </DashboardStack.Navigator>
   );
 }

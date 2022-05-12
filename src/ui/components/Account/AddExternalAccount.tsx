@@ -123,7 +123,7 @@ export function AddExternalAccount({onClose}: Props) {
 
   return (
     <Layout>
-      <Subheading style={globalStyles.textCenter}>{`Add external account`}</Subheading>
+      <Subheading style={globalStyles.textCenter}>{`Add External Account`}</Subheading>
       {(() => {
         switch (state.step) {
           case 'input':
