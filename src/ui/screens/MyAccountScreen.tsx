@@ -7,32 +7,37 @@ import Identicon from '@polkadot/reactnative-identicon';
 import {useAccounts} from 'context/AccountsContext';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {Button, Caption, IconButton, IconSource, Card, useTheme} from '@ui/library';
+import {
+  Button,
+  Caption,
+  IconButton,
+  IconSource,
+  Card,
+  useTheme,
+  useBottomSheet,
+  Subheading,
+  Divider,
+} from '@ui/library';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {AccountsStackParamList, CompleteNavigatorParamList} from '@ui/navigation/navigation';
-import {
-  accountsScreen,
-  balanceScreen,
-  exportAccountWithJsonFileScreen,
-  manageIdentityScreen,
-  receiveFundScreen,
-  sendFundScreen,
-} from '@ui/navigation/routeKeys';
-import {standardPadding} from '@ui/styles';
+import {accountsScreen, exportAccountWithJsonFileScreen, manageIdentityScreen} from '@ui/navigation/routeKeys';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {useSnackbar} from 'context/SnackbarContext';
+import {Layout} from '@ui/components/Layout';
+import {AccountBalance} from '@ui/components/Account/AccountBalance';
+import {SendFund} from '@ui/components/SendFund';
+import {ReceiveFund} from '@ui/components/ReceiveFund';
+
+type BOTTOM_SHEET_TYPE = 'BALANCE' | 'SEND_FUND' | 'RECEIVE_FUND';
 
 type ScreenProps = {
   navigation: NavigationProp<CompleteNavigatorParamList>;
   route: RouteProp<AccountsStackParamList, typeof manageIdentityScreen>;
 };
 
-export function MyAccountScreen({
-  navigation,
-  route: {
-    params: {address},
-  },
-}: ScreenProps) {
+export function MyAccountScreen({navigation, route}: ScreenProps) {
+  const {address} = route.params;
   const {data: accountInfo} = useAccount(address);
   const {accounts, removeAccount} = useAccounts();
   const account = accounts[address];
@@ -42,6 +47,38 @@ export function MyAccountScreen({
     Clipboard.setString(address);
     snackbar('Address copied to clipboard!');
   };
+
+  const {openBottomSheet, closeBottomSheet, BottomSheet} = useBottomSheet();
+  const [bottomSheetType, setBottomSheetType] = React.useState<BOTTOM_SHEET_TYPE>();
+
+  const onOpenBottomSheet = (type: BOTTOM_SHEET_TYPE) => {
+    setBottomSheetType(type);
+    openBottomSheet();
+  };
+
+  const bottomSheetContent = React.useMemo(() => {
+    switch (bottomSheetType) {
+      case 'BALANCE':
+        return (
+          <Layout style={styles.balanceContainer}>
+            <Subheading style={globalStyles.textCenter}>{`Account balance`}</Subheading>
+            <Padder scale={0.5} />
+            <Divider />
+            {accountInfo?.balance ? <AccountBalance balance={accountInfo.balance} /> : null}
+            <Divider />
+            <Padder scale={1} />
+            <Button onPress={closeBottomSheet}>Close</Button>
+            <Padder scale={2} />
+          </Layout>
+        );
+      case 'SEND_FUND':
+        return <SendFund address={address} onClose={closeBottomSheet} />;
+      case 'RECEIVE_FUND':
+        return <ReceiveFund address={address} onClose={closeBottomSheet} />;
+      default:
+        return <Subheading>{`Hello world`}</Subheading>;
+    }
+  }, [bottomSheetType, closeBottomSheet, accountInfo?.balance, address]);
 
   return (
     <SafeView edges={noTopEdges}>
@@ -59,12 +96,20 @@ export function MyAccountScreen({
             </TouchableOpacity>
             <Padder scale={0.5} />
             <View style={styles.row}>
-              <ActionButton icon="send" title="Send" onPress={() => navigation.navigate(sendFundScreen, {address})} />
+              <ActionButton
+                icon="send"
+                title="Send"
+                onPress={() => {
+                  onOpenBottomSheet('SEND_FUND');
+                }}
+              />
 
               <ActionButton
                 icon="download"
                 title="Receive"
-                onPress={() => navigation.navigate(receiveFundScreen, {address})}
+                onPress={() => {
+                  onOpenBottomSheet('RECEIVE_FUND');
+                }}
               />
               <ActionButton
                 icon="share-variant"
@@ -95,7 +140,7 @@ export function MyAccountScreen({
         </Card>
 
         <View style={styles.buttonGroup}>
-          <Button icon="credit-card" mode="text" onPress={() => navigation.navigate(balanceScreen, {address})}>
+          <Button icon="credit-card" mode="text" onPress={() => onOpenBottomSheet('BALANCE')}>
             Balance details
           </Button>
           <Padder scale={1} />
@@ -139,6 +184,8 @@ export function MyAccountScreen({
           ) : null}
         </View>
       </ScrollView>
+
+      <BottomSheet>{bottomSheetContent}</BottomSheet>
     </SafeView>
   );
 }
@@ -202,5 +249,8 @@ const styles = StyleSheet.create({
   },
   buttonGroup: {
     marginTop: standardPadding * 2,
+  },
+  balanceContainer: {
+    paddingHorizontal: standardPadding,
   },
 });

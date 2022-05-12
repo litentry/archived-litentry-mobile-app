@@ -2,7 +2,6 @@ import {
   accountScreen,
   accountsNavigator,
   accountsScreen,
-  balanceScreen,
   bountiesScreen,
   bountyDetailScreen,
   candidateScreen,
@@ -39,11 +38,9 @@ import {
   polkassemblyDiscussions,
   polkassemblyDiscussionsNavigator,
   proposeTipScreen,
-  receiveFundScreen,
   referendumScreen,
   registerSubIdentitiesScreen,
   registrarListScreen,
-  sendFundScreen,
   technicalCommitteeScreen,
   tipDetailScreen,
   tipsScreen,
@@ -128,9 +125,6 @@ type AccountsStackParamList = {
   [registerSubIdentitiesScreen]: {address: string};
   [importAccountScreen]: undefined;
   [exportAccountWithJsonFileScreen]: {address: string};
-  [receiveFundScreen]: {address: string};
-  [sendFundScreen]: {address: string};
-  [balanceScreen]: {address: string};
 };
 
 type CompleteNavigatorParamList = AppStackParamList &

@@ -2,7 +2,6 @@ import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createStackNavigator, StackNavigationOptions} from '@react-navigation/stack';
 import {AccountsScreen} from '@ui/screens/AccountsScreen';
-import {BalanceScreen} from '@ui/screens/BalanceScreen';
 import {BountiesScreen} from '@ui/screens/Bounty/BountiesScreen';
 import {BountyDetailScreen} from '@ui/screens/Bounty/BountyDetailScreen';
 import {CandidateScreen} from '@ui/screens/Council/CandidateScreen';
@@ -55,8 +54,6 @@ import {
 } from '@ui/navigation/navigation';
 import * as routeKeys from '@ui/navigation/routeKeys';
 import {AppBar} from '@ui/library';
-import {ReceiveFundScreen} from '@ui/screens/ReceiveFundScreen';
-import {SendFundScreen} from '@ui/screens/SendFundScreen';
 import {FeedbackScreen} from '@ui/screens/FeedbackScreen';
 import {AccountScreen} from '@ui/screens/AccountScreen';
 import {OnboardingScreen} from '@ui/screens/Onboarding/OnboardingScreen';
@@ -116,13 +113,6 @@ export function AccountsNavigator() {
         name={routeKeys.exportAccountWithJsonFileScreen}
         component={ExportAccountWithJsonFileScreen}
       />
-      <AccountsStack.Screen
-        name={routeKeys.receiveFundScreen}
-        component={ReceiveFundScreen}
-        options={overlayScreenOptions}
-      />
-      <AccountsStack.Screen name={routeKeys.sendFundScreen} component={SendFundScreen} options={overlayScreenOptions} />
-      <AccountsStack.Screen name={routeKeys.balanceScreen} component={BalanceScreen} options={overlayScreenOptions} />
     </AccountsStack.Navigator>
   );
 }
