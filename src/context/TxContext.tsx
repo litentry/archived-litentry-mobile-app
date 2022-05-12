@@ -10,19 +10,19 @@ import {BN_ZERO, hexToU8a, u8aConcat, u8aToHex} from '@polkadot/util';
 import {ApiPromise} from '@polkadot/api';
 import {get} from 'lodash';
 
-import {Subheading, Caption, Icon, useBottomSheet} from '@ui/library';
-import {Layout} from '@ui/components/Layout';
+import {formatCallMeta} from 'src/utils/callMetadata';
+import AsyncSigner from 'src/service/AsyncSigner';
 import {useAccounts} from 'context/AccountsContext';
 import {useApi} from 'context/ChainApiContext';
 import LoadingView from '@ui/components/LoadingView';
 import {AuthenticateView} from '@ui/components/Tx/AuthenticateView';
-import {TxPreview} from '@ui/components/Tx/Preview';
+import {PayloadQrCodeView} from '@ui/components/Tx/PayloadQrCodeView';
 import {ErrorDialog} from '@ui/components/Tx/ErrorDialog';
 import {SuccessDialog} from '@ui/components/SuccessDialog';
 import {WarningDialog} from '@ui/components/Tx/WarningDialog';
-import {PayloadQrCodeView} from '@ui/components/Tx/PayloadQrCodeView';
-import {formatCallMeta} from 'src/utils/callMetadata';
-import AsyncSigner from 'src/service/AsyncSigner';
+import {Layout} from '@ui/components/Layout';
+import {TxPreview} from '@ui/components/Tx/Preview';
+import {Subheading, Caption, Icon, useBottomSheet} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 
 let id = 0;
