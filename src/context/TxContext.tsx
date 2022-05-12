@@ -1,26 +1,27 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, {createContext, useCallback, useEffect, useMemo, useReducer, useRef} from 'react';
+import React, {createContext, useCallback, useEffect, useMemo, useReducer, useRef, useContext} from 'react';
 import {Dimensions, StyleSheet} from 'react-native';
-import {ApiPromise} from '@polkadot/api';
+import {Modalize} from 'react-native-modalize';
+import QRCodeScanner from 'react-native-qrcode-scanner';
+import SubstrateSign from 'react-native-substrate-sign';
 import {SubmittableExtrinsic} from '@polkadot/api/submittable/types';
-import {ExtrinsicPayload} from '@polkadot/types/interfaces';
 import {SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
+import {ExtrinsicPayload} from '@polkadot/types/interfaces';
 import {BN_ZERO, hexToU8a, u8aConcat, u8aToHex} from '@polkadot/util';
+import {ApiPromise} from '@polkadot/api';
+import {get} from 'lodash';
+
 import {Subheading, Caption, Icon} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {useAccounts} from 'context/AccountsContext';
 import {useApi} from 'context/ChainApiContext';
-import {AuthenticateView} from 'context/TxContext/AuthenticateView';
-import {TxPreview} from 'context/TxContext/TxPreview';
-import {get} from 'lodash';
+import {AuthenticateView} from '@ui/components/Tx/AuthenticateView';
+import {TxPreview} from '@ui/components/Tx/Preview';
 import ErrorDialog from '@ui/components/ErrorDialog';
 import LoadingView from '@ui/components/LoadingView';
 import SuccessDialog from '@ui/components/SuccessDialog';
-import TxPayloadQr from '@ui/components/TxPayloadQr';
+import {PayloadQrCodeView} from '@ui/components/Tx/PayloadQrCodeView';
 import WarningDialog from '@ui/components/WarningDialog';
-import {Modalize} from 'react-native-modalize';
-import QRCodeScanner from 'react-native-qrcode-scanner';
-import SubstrateSign from 'react-native-substrate-sign';
 import {formatCallMeta} from 'src/utils/callMetadata';
 import AsyncSigner from 'src/service/AsyncSigner';
 import globalStyles, {standardPadding} from '@ui/styles';
@@ -34,7 +35,7 @@ type TxContextValueType = {
   start: (config: StartConfig) => Promise<void>;
 };
 
-export const TxContext = createContext<TxContextValueType>({
+const TxContext = createContext<TxContextValueType>({
   start: () => Promise.resolve(),
 });
 
@@ -45,7 +46,7 @@ export type StartConfig = {
   params: unknown[];
 };
 
-function TxContextProvider({children}: PropTypes): React.ReactElement {
+export function TxProvider({children}: PropTypes): React.ReactElement {
   const modalRef = useRef<Modalize>(null);
   const signTransactionRef = useRef<(value: SignerResult) => void>();
   const showPreviewRef = useRef<(txPayload: SignerPayloadJSON, seed?: string) => Promise<void>>();
@@ -221,7 +222,7 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
 
       case 'qr_code_tx_payload_view':
         return (
-          <TxPayloadQr
+          <PayloadQrCodeView
             payload={state.txPayload}
             onCancel={() => {
               modalRef.current?.close();
@@ -320,6 +321,16 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
   );
 }
 
+export function useTx() {
+  const context = useContext(TxContext);
+
+  if (!context) {
+    throw new Error('useTx must be used within a TxProvider');
+  }
+
+  return context;
+}
+
 const styles = StyleSheet.create({
   infoContainer: {
     height: height * 0.3,
@@ -359,8 +370,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
 });
-
-export default TxContextProvider;
 
 type State =
   | {view: 'initial_view' | 'submitting_view' | 'success_view'}
