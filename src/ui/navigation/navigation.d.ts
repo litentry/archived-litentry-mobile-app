@@ -1,6 +1,5 @@
 import {
   accountScreen,
-  accountsGuideScreen,
   accountsNavigator,
   accountsScreen,
   addAccountScreen,
@@ -138,7 +137,6 @@ type AccountsStackParamList = {
   [addAccountScreen]: undefined;
   [balanceScreen]: {address: string};
   [identityGuideScreen]: undefined;
-  [accountsGuideScreen]: undefined;
 };
 
 type CompleteNavigatorParamList = AppStackParamList &

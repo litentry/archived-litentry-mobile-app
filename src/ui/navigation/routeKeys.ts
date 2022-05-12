@@ -27,7 +27,6 @@ export const technicalCommitteeScreen = 'Technical Committee' as const;
 export const motionDetailScreen = 'Motion' as const;
 export const notificationSettingsScreen = 'Notification' as const;
 export const accountsScreen = 'My Accounts' as const;
-export const accountsGuideScreen = 'Accounts Guide' as const;
 export const myAccountScreen = 'My Account' as const;
 export const receiveFundScreen = 'ReceiveFund' as const;
 export const sendFundScreen = 'SendFund' as const;

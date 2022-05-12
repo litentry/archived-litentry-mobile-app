@@ -3,7 +3,7 @@ import {FlatList, View, StyleSheet, TouchableOpacity} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp} from '@react-navigation/native';
 import {Account as AccountType, useAccounts} from 'context/index';
-import {useTheme, Divider, IconButton, List, FAB, Caption, Menu, Subheading, Icon} from '@ui/library';
+import {useTheme, Divider, IconButton, List, FAB, Caption, Menu, Subheading, Icon, useBottomSheet} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {CompleteNavigatorParamList} from '@ui/navigation/navigation';
 import {
@@ -18,6 +18,7 @@ import {EmptyView} from '@ui/components/EmptyView';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {Account} from '@ui/components/Account/Account';
 import {Padder} from '@ui/components/Padder';
+import {AccountsGuide} from '@ui/components/Account/AccountsGuide';
 
 type Props = {
   navigation: NavigationProp<CompleteNavigatorParamList, typeof accountsScreen>;
@@ -26,6 +27,7 @@ type Props = {
 type SortBy = 'name' | 'favorites';
 
 export function AccountsScreen({navigation}: Props) {
+  const {openBottomSheet, BottomSheet} = useBottomSheet();
   const {networkAccounts, toggleFavorite} = useAccounts();
 
   const [sortBy, setSortBy] = React.useState<SortBy>('name');
@@ -35,6 +37,12 @@ export function AccountsScreen({navigation}: Props) {
   const toAccountDetail = (address: string) => {
     navigation.navigate(myAccountScreen, {address});
   };
+
+  React.useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => <IconButton icon="information" onPress={openBottomSheet} />,
+    });
+  }, [navigation, openBottomSheet]);
 
   const sortAccounts = (sort: SortBy) => {
     setSortBy(sort);
@@ -92,6 +100,10 @@ export function AccountsScreen({navigation}: Props) {
         ListEmptyComponent={EmptyView}
       />
       <Buttons navigation={navigation} />
+
+      <BottomSheet>
+        <AccountsGuide />
+      </BottomSheet>
     </SafeView>
   );
 }

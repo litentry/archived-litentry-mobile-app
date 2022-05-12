@@ -56,8 +56,7 @@ import {
   PolkassemblyDiscussionStackParamList,
 } from '@ui/navigation/navigation';
 import * as routeKeys from '@ui/navigation/routeKeys';
-import {AppBar, IconButton} from '@ui/library';
-import {AccountsGuideScreen} from '@ui/screens/AccountsGuideScreen';
+import {AppBar} from '@ui/library';
 import {ReceiveFundScreen} from '@ui/screens/ReceiveFundScreen';
 import {SendFundScreen} from '@ui/screens/SendFundScreen';
 import {FeedbackScreen} from '@ui/screens/FeedbackScreen';
@@ -113,15 +112,7 @@ const AccountsStack = createStackNavigator<AccountsStackParamList>();
 export function AccountsNavigator() {
   return (
     <AccountsStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
-      <AccountsStack.Screen
-        name={routeKeys.accountsScreen}
-        component={AccountsScreen}
-        options={({navigation}) => ({
-          headerRight: () => (
-            <IconButton icon="information" onPress={() => navigation.navigate(routeKeys.accountsGuideScreen)} />
-          ),
-        })}
-      />
+      <AccountsStack.Screen name={routeKeys.accountsScreen} component={AccountsScreen} />
       <AccountsStack.Screen name={routeKeys.manageIdentityScreen} component={ManageIdentityScreen} />
       <AccountsStack.Screen name={routeKeys.myAccountScreen} component={MyAccountScreen} />
       <AccountsStack.Screen name={routeKeys.registerSubIdentitiesScreen} component={RegisterSubIdentitiesScreen} />
@@ -148,11 +139,6 @@ export function AccountsNavigator() {
       <AccountsStack.Screen
         name={routeKeys.identityGuideScreen}
         component={IdentityGuideScreen}
-        options={overlayScreenOptions}
-      />
-      <AccountsStack.Screen
-        name={routeKeys.accountsGuideScreen}
-        component={AccountsGuideScreen}
         options={overlayScreenOptions}
       />
     </AccountsStack.Navigator>
