@@ -14,8 +14,9 @@ const polka_network = {
 const address = '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a';
 
 test('render the loading view when rendered with no data', async () => {
-  const {getByTestId} = render(<AddressInfoPreview address={address} network={polka_network} />);
+  const {getByTestId, getByText} = render(<AddressInfoPreview address={address} network={polka_network} />);
   expect(getByTestId('loading_view')).toBeTruthy();
+  expect(getByText('Fetching Address Info')).toBeTruthy();
 });
 
 test('render the component after data fetched', async () => {
