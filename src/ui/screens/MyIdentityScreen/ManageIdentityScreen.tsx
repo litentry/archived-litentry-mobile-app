@@ -3,7 +3,7 @@ import {Alert, StyleSheet, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Layout} from '@ui/components/Layout';
-import {Button, List, Icon, Caption, Divider, useBottomSheet, Subheading} from '@ui/library';
+import {Button, List, Icon, Caption, Divider, useBottomSheet} from '@ui/library';
 import {useNetwork} from 'context/NetworkContext';
 import IdentityInfoForm, {IdentityPayload} from '@ui/components/IdentityInfoForm';
 import InfoBanner from '@ui/components/InfoBanner';
@@ -128,7 +128,7 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
       case 'REQUEST_JUDGEMENT':
         return <RequestJudgement onRequest={handleRequestJudgement} onClose={closeBottomSheet} />;
       default:
-        return <Subheading>{`Hello world`}</Subheading>;
+        return null;
     }
   }, [
     bottomSheetType,

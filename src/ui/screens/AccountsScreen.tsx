@@ -21,13 +21,10 @@ type Props = {
 
 type SortBy = 'name' | 'favorites';
 
+type BOTTOM_SHEET_TYPE = 'ACCOUNT_GUIDE' | 'ADD_EXTERNAL_ACCOUNT';
+
 export function AccountsScreen({navigation}: Props) {
-  const {openBottomSheet, BottomSheet} = useBottomSheet();
-  const {
-    openBottomSheet: openAddAccount,
-    closeBottomSheet: closeAddAccount,
-    BottomSheet: AddAccount,
-  } = useBottomSheet();
+  const {openBottomSheet, closeBottomSheet, BottomSheet} = useBottomSheet();
   const {networkAccounts, toggleFavorite} = useAccounts();
 
   const [sortBy, setSortBy] = React.useState<SortBy>('name');
@@ -38,16 +35,44 @@ export function AccountsScreen({navigation}: Props) {
     navigation.navigate(myAccountScreen, {address});
   };
 
+  const [bottomSheetType, setBottomSheetType] = React.useState<BOTTOM_SHEET_TYPE>();
+
+  const onOpenBottomSheet = React.useCallback(
+    (type: BOTTOM_SHEET_TYPE) => {
+      setBottomSheetType(type);
+      openBottomSheet();
+    },
+    [openBottomSheet],
+  );
+
   React.useEffect(() => {
     navigation.setOptions({
-      headerRight: () => <IconButton icon="information" onPress={openBottomSheet} />,
+      headerRight: () => (
+        <IconButton
+          icon="information"
+          onPress={() => {
+            onOpenBottomSheet('ACCOUNT_GUIDE');
+          }}
+        />
+      ),
     });
-  }, [navigation, openBottomSheet]);
+  }, [navigation, onOpenBottomSheet]);
 
   const sortAccounts = (sort: SortBy) => {
     setSortBy(sort);
     setSortMenuVisible(false);
   };
+
+  const bottomSheetContent = React.useMemo(() => {
+    switch (bottomSheetType) {
+      case 'ACCOUNT_GUIDE':
+        return <AccountsGuide />;
+      case 'ADD_EXTERNAL_ACCOUNT':
+        return <AddExternalAccount onClose={closeBottomSheet} />;
+      default:
+        return null;
+    }
+  }, [bottomSheetType, closeBottomSheet]);
 
   return (
     <SafeView edges={noTopEdges}>
@@ -99,15 +124,14 @@ export function AccountsScreen({navigation}: Props) {
         ItemSeparatorComponent={Divider}
         ListEmptyComponent={EmptyView}
       />
-      <Buttons navigation={navigation} onAddAccount={openAddAccount} />
+      <Buttons
+        navigation={navigation}
+        onAddAccount={() => {
+          onOpenBottomSheet('ADD_EXTERNAL_ACCOUNT');
+        }}
+      />
 
-      <BottomSheet>
-        <AccountsGuide />
-      </BottomSheet>
-
-      <AddAccount>
-        <AddExternalAccount onClose={closeAddAccount} />
-      </AddAccount>
+      <BottomSheet>{bottomSheetContent}</BottomSheet>
     </SafeView>
   );
 }

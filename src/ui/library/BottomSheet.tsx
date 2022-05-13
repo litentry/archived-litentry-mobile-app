@@ -6,6 +6,7 @@ import RNBottomSheet, {
   useBottomSheetDynamicSnapPoints,
   BottomSheetBackdropProps,
 } from '@gorhom/bottom-sheet';
+import {View, Text, StyleSheet} from 'react-native';
 import {useTheme} from './index';
 
 type BottomSheetProps = Omit<RNBottomSheetProps, 'snapPoints'>;
@@ -30,6 +31,15 @@ export function useBottomSheet() {
     [],
   );
 
+  const noContent = React.useMemo(
+    () => (
+      <View style={styles.noContent}>
+        <Text>{`No content`}</Text>
+      </View>
+    ),
+    [],
+  );
+
   const BottomSheet = React.useCallback(
     ({children}: BottomSheetProps) => (
       <RNBottomSheet
@@ -43,10 +53,10 @@ export function useBottomSheet() {
         contentHeight={animatedContentHeight}
         enablePanDownToClose={true}
         animateOnMount={true}>
-        <BottomSheetView onLayout={handleContentLayout}>{children}</BottomSheetView>
+        <BottomSheetView onLayout={handleContentLayout}>{children ? children : noContent}</BottomSheetView>
       </RNBottomSheet>
     ),
-    [colors, Backdrop, animatedSnapPoints, animatedHandleHeight, animatedContentHeight, handleContentLayout],
+    [colors, Backdrop, animatedSnapPoints, animatedHandleHeight, animatedContentHeight, handleContentLayout, noContent],
   );
 
   return {
@@ -55,3 +65,10 @@ export function useBottomSheet() {
     BottomSheet,
   };
 }
+
+const styles = StyleSheet.create({
+  noContent: {
+    height: 200,
+    padding: 20,
+  },
+});

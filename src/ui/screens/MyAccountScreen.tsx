@@ -76,7 +76,7 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
       case 'RECEIVE_FUND':
         return <ReceiveFund address={address} onClose={closeBottomSheet} />;
       default:
-        return <Subheading>{`Hello world`}</Subheading>;
+        return null;
     }
   }, [bottomSheetType, closeBottomSheet, accountInfo?.balance, address]);
 
