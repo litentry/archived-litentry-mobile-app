@@ -53,7 +53,9 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
 
   const onOpenBottomSheet = (type: BOTTOM_SHEET_TYPE) => {
     setBottomSheetType(type);
-    openBottomSheet();
+    setTimeout(() => {
+      openBottomSheet();
+    }, 100);
   };
 
   const bottomSheetContent = React.useMemo(() => {

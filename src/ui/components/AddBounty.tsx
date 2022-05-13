@@ -87,7 +87,6 @@ export function AddBounty({onClose}: Props) {
       <TextInput
         dense
         multiline
-        numberOfLines={4}
         autoComplete="off"
         mode="outlined"
         placeholder="Enter bounty title"
@@ -127,7 +126,7 @@ export function AddBounty({onClose}: Props) {
       <Padder scale={1} />
 
       <InputLabel
-        label={'Submit with account:'}
+        label={'Account:'}
         helperText={'This account will propose the bounty. Bond amount will be reserved on its balance.'}
       />
       <SelectAccount onSelect={(selectedAccount) => setAccount(selectedAccount.accountInfo)} />
@@ -140,7 +139,7 @@ export function AddBounty({onClose}: Props) {
           Submit Bounty
         </Button>
       </View>
-      <Padder scale={2} />
+      <Padder scale={1} />
     </Layout>
   );
 }

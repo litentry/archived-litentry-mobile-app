@@ -24,6 +24,7 @@ import {Layout} from '@ui/components/Layout';
 import {TxPreview} from '@ui/components/Tx/Preview';
 import {Subheading, Caption, Icon, useBottomSheet} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
+import {Padder} from '@ui/components/Padder';
 
 let id = 0;
 
@@ -236,6 +237,8 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
       case 'scan_signature_view':
         return (
           <Layout style={globalStyles.paddedContainer}>
+            <Subheading style={globalStyles.textCenter}>{`Scan QR code`}</Subheading>
+            <Padder scale={1} />
             <QRCodeScanner
               onRead={(data) => {
                 dispatch({type: 'SHOW_SUBMITTING_VIEW'});
@@ -245,7 +248,6 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
                 });
               }}
               showMarker
-              topContent={<Caption>Scanning ...</Caption>}
               markerStyle={styles.marker}
               cameraStyle={styles.cameraBase}
               notAuthorizedView={
@@ -257,6 +259,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
                 </Layout>
               }
             />
+            <Padder scale={2} />
           </Layout>
         );
 
@@ -355,8 +358,8 @@ const styles = StyleSheet.create({
   },
   cameraBase: {
     overflow: 'hidden',
-    width: width * 0.8,
-    height: width * 0.8,
+    width: width * 0.7,
+    height: width * 0.7,
     justifyContent: 'center',
     alignSelf: 'center',
     alignItems: 'center',

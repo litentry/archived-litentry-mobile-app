@@ -41,8 +41,9 @@ export function AddSubIdentity({onClose, onAddPress, subIdentities}: Props) {
 
   return (
     <>
-      <View style={{marginHorizontal: standardPadding * 2}}>
+      <View style={styles.accountName}>
         <TextInput
+          dense
           mode="outlined"
           placeholder="Sub account name (optional)"
           value={subName}
@@ -83,7 +84,7 @@ export function AddSubIdentity({onClose, onAddPress, subIdentities}: Props) {
           Add Identity
         </Button>
       </View>
-      <Padder scale={2} />
+      <Padder scale={1.5} />
     </>
   );
 }
@@ -126,8 +127,11 @@ function ScanAddressTab({onScanSuccess}: {onScanSuccess: (address: string) => vo
 }
 
 const styles = StyleSheet.create({
+  accountName: {
+    marginHorizontal: standardPadding * 2,
+  },
   tabViewContainer: {
-    minHeight: 400,
+    minHeight: 300,
   },
   input: {
     minHeight: 100,

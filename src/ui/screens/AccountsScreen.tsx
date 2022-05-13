@@ -40,7 +40,9 @@ export function AccountsScreen({navigation}: Props) {
   const onOpenBottomSheet = React.useCallback(
     (type: BOTTOM_SHEET_TYPE) => {
       setBottomSheetType(type);
-      openBottomSheet();
+      setTimeout(() => {
+        openBottomSheet();
+      }, 100);
     },
     [openBottomSheet],
   );

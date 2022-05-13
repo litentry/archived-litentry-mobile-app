@@ -92,7 +92,9 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
   const onOpenBottomSheet = React.useCallback(
     (type: BOTTOM_SHEET_TYPE) => {
       setBottomSheetType(type);
-      openBottomSheet();
+      setTimeout(() => {
+        openBottomSheet();
+      }, 100);
     },
     [openBottomSheet],
   );

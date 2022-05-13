@@ -184,6 +184,6 @@ const styles = StyleSheet.create({
     marginBottom: standardPadding,
   },
   tabViewContainer: {
-    minHeight: 400,
+    minHeight: 300,
   },
 });
