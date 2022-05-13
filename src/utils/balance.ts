@@ -1,6 +1,5 @@
-import {BN, BN_TEN} from '@polkadot/util';
+import {BN, bnToBn, BN_TEN} from '@polkadot/util';
 import type {Registry} from 'src/api/hooks/useChainInfo';
-import {bnToBn} from '@polkadot/util';
 
 /**
  * Use this method to convert unformatted string values (Balance) to BN.
