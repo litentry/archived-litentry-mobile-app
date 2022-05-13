@@ -10,13 +10,14 @@ interface ChartProps {
   width: number;
   percent: number;
   strokeWidth?: number;
+  textHidden?: boolean;
 }
 
 const DEFAULT_STROKE_WIDTH = 12;
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
-export function ProgressChart({width, percent, strokeWidth = DEFAULT_STROKE_WIDTH}: ChartProps) {
+export function ProgressChart({width, percent, strokeWidth = DEFAULT_STROKE_WIDTH, textHidden = false}: ChartProps) {
   const {colors} = useTheme();
   const progress = useSharedValue(0);
   const circumference = width * Math.PI;
@@ -38,14 +39,16 @@ export function ProgressChart({width, percent, strokeWidth = DEFAULT_STROKE_WIDT
 
   return (
     <View style={{width, height: width}}>
-      <ReText
-        text={progressText}
-        style={[
-          StyleSheet.absoluteFillObject,
-          {fontSize: width / 5, color: colors.placeholder},
-          globalStyles.textCenter,
-        ]}
-      />
+      {!textHidden ? (
+        <ReText
+          text={progressText}
+          style={[
+            StyleSheet.absoluteFillObject,
+            {fontSize: width / 5, color: colors.placeholder},
+            globalStyles.textCenter,
+          ]}
+        />
+      ) : null}
       <Svg height={width} width={width} viewBox={`0 0 ${halfCircle * 2} ${halfCircle * 2}`}>
         <G rotation="-90" origin={`${halfCircle}, ${halfCircle}`}>
           <Circle

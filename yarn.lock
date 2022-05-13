@@ -1006,14 +1006,7 @@
     pirates "^4.0.5"
     source-map-support "^0.5.16"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.7", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4":
-  version "7.17.2"
-  resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.17.2.tgz"
-  integrity sha512-hzeyJyMA1YGdJTuWU0e/j4wKXrU4OMFvY2MSlaI9B7VQb0r5cxTE3EAIS2Q7Tn2RIcDkRvTA/v2JsAEhxe99uw==
-  dependencies:
-    regenerator-runtime "^0.13.4"
-
-"@babel/runtime@^7.17.9":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.12.5", "@babel/runtime@^7.17.9", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4":
   version "7.17.9"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.17.9.tgz#d19fbf802d01a8cb6cf053a64e472d42c434ba72"
   integrity sha512-lSiBBvodq29uShpWGNbgFdKYNiFDo5/HIYsaCEY9ff4sb10x9jizo2+pRrSyF4jKZCXqgzuqBOQKbUm90gQwJg==
@@ -2326,16 +2319,16 @@
     "@polkadot/util" "9.1.1"
     "@substrate/ss58-registry" "^1.17.0"
 
-"@polkadot/reactnative-identicon@0.89.2":
-  version "0.89.2"
-  resolved "https://registry.npmjs.org/@polkadot/reactnative-identicon/-/reactnative-identicon-0.89.2.tgz"
-  integrity sha512-Ieu2Eup/KurKO0j4+IyRc8Flbd7eayoNEUEBFD15gMmbB+NFPO7vVT08rx7TxefXCXnzkEVG5xwFXTd1LpNSew==
+"@polkadot/reactnative-identicon@2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@polkadot/reactnative-identicon/-/reactnative-identicon-2.1.1.tgz#07065309414122a29c4ca81b42888a432c2434a5"
+  integrity sha512-qigllxUosU/rM1e0l+CZEDVqykkPBf5cC8iOkE25gYwpQhgDKQHBB707K87mOgw4whbZuSjcyA3SRZHo8ySQ9g==
   dependencies:
-    "@babel/runtime" "^7.16.7"
-    "@polkadot/ui-shared" "0.89.2"
-    "@polkadot/util" "^8.3.2"
-    "@polkadot/util-crypto" "^8.3.2"
-    react-native-svg "^12.2.0"
+    "@babel/runtime" "^7.17.9"
+    "@polkadot/ui-shared" "2.1.1"
+    "@polkadot/util" "^9.1.1"
+    "@polkadot/util-crypto" "^9.1.1"
+    react-native-svg "^12.3.0"
 
 "@polkadot/rpc-augment@8.3.1":
   version "8.3.1"
@@ -2440,15 +2433,15 @@
     "@polkadot/util-crypto" "^9.1.1"
     rxjs "^7.5.5"
 
-"@polkadot/ui-shared@0.89.2":
-  version "0.89.2"
-  resolved "https://registry.npmjs.org/@polkadot/ui-shared/-/ui-shared-0.89.2.tgz"
-  integrity sha512-gpbWE7JQ2j5I3q1ig8UOT8H7sKNevhPreiNT345ry2q8VcRDdrQlIIk7uw3AZism4ukX0eyQITxtGvTBb5KD4A==
+"@polkadot/ui-shared@2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@polkadot/ui-shared/-/ui-shared-2.1.1.tgz#9cfad2f12cf685f3df96b9b6761cf0aacaa79654"
+  integrity sha512-7akz06gzRKXyKoK5iI3+HfD1Qz0e4/ecrvoMK0/o9uA3zDA4VaBUflRvu8UVisLIidpS6DILna31ZTLJp6CFIQ==
   dependencies:
-    "@babel/runtime" "^7.16.7"
+    "@babel/runtime" "^7.17.9"
     color "^3.2.1"
 
-"@polkadot/util-crypto@9.1.1", "@polkadot/util-crypto@^8.3.2", "@polkadot/util-crypto@^9.1.1":
+"@polkadot/util-crypto@9.1.1", "@polkadot/util-crypto@^9.1.1":
   version "9.1.1"
   resolved "https://registry.yarnpkg.com/@polkadot/util-crypto/-/util-crypto-9.1.1.tgz#3826f8377beabee3efd6ff8a54c4899e6ee4819c"
   integrity sha512-FiQ4u8q1QZNdE2MUMb3JupbSMei9Ww6Czo/QYPguy73Tp6OH3G9OX8abBgTUwS/gX/CFcbHajhb3oi95v0IgVg==
@@ -2465,7 +2458,7 @@
     ed2curve "^0.3.0"
     tweetnacl "^1.0.3"
 
-"@polkadot/util@9.1.1", "@polkadot/util@^8.3.2", "@polkadot/util@^9.1.1":
+"@polkadot/util@9.1.1", "@polkadot/util@^9.1.1":
   version "9.1.1"
   resolved "https://registry.yarnpkg.com/@polkadot/util/-/util-9.1.1.tgz#7b6eda0130fd578f7fa14821ed9b82e1e48efcdb"
   integrity sha512-eJzyrM0+b+DLo1hD+y4Al1DOEdF0UEUVnWqWZNIx2fuKsgG72gFosJM0EOjbVoxq8B1Hx3KOCNc0fl3Mpc9oYQ==
@@ -12185,6 +12178,11 @@ react-native-keychain@^8.0.0:
   resolved "https://registry.npmjs.org/react-native-keychain/-/react-native-keychain-8.0.0.tgz"
   integrity sha512-c7Cs+YQN26UaQsRG1dmlXL7VL2ctnXwH/dl0IOMEQ7ZaL2NdN313YSAI8ZEZZjrVhNmPsyWEuvTFqWrdpItqQg==
 
+react-native-linear-gradient@^2.5.6:
+  version "2.5.6"
+  resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.6.tgz#96215cbc5ec7a01247a20890888aa75b834d44a0"
+  integrity sha512-HDwEaXcQIuXXCV70O+bK1rizFong3wj+5Q/jSyifKFLg0VWF95xh8XQgfzXwtq0NggL9vNjPKXa016KuFu+VFg==
+
 react-native-logs@^4.0.1:
   version "4.0.1"
   resolved "https://registry.npmjs.org/react-native-logs/-/react-native-logs-4.0.1.tgz"
@@ -12345,7 +12343,7 @@ react-native-substrate-sign@^1.1.1:
   resolved "https://registry.npmjs.org/react-native-substrate-sign/-/react-native-substrate-sign-1.1.1.tgz"
   integrity sha512-UUAkl2Dba1cjnYse5Qrjg9FFrdiNzCgIE/57E/68d+XVh1eiMl6842HJEtWfkTGb23yf/R2V93nSc49jR7gBUQ==
 
-react-native-svg@9.6.4, react-native-svg@^12.2.0, react-native-svg@^12.3.0:
+react-native-svg@9.6.4, react-native-svg@^12.3.0:
   version "12.3.0"
   resolved "https://registry.npmjs.org/react-native-svg/-/react-native-svg-12.3.0.tgz"
   integrity sha512-ESG1g1j7/WLD7X3XRFTQHVv0r6DpbHNNcdusngAODIxG88wpTWUZkhcM3A2HJTb+BbXTFDamHv7FwtRKWQ/ALg==

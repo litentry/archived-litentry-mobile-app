@@ -1,13 +1,13 @@
-import {LoadingBox} from '@ui/components/LoadingBox';
 import {Padder} from '@ui/components/Padder';
 import {Card} from '@ui/library';
-import ProgressChartWidget from '@ui/components/ProgressWidget';
+import {ProgressChartWidget} from '@ui/components/ProgressChartWidget';
 import {SectionTeaserContainer} from '@ui/components/SectionTeaserContainer';
 import StatInfoBlock from '@ui/components/StatInfoBlock';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useTreasurySummary} from 'src/api/hooks/useTreasurySummary';
 import globalStyles, {standardPadding} from '@ui/styles';
+import {DashboardTeaserSkeleton} from '@ui/components/DashboardTeaserSkeleton';
 
 type PropTypes = {
   onPress: () => void;
@@ -19,7 +19,7 @@ export function TreasurySummaryTeaser(props: PropTypes) {
   return (
     <SectionTeaserContainer onPress={props.onPress} title="Treasury">
       {loading && !treasurySummary ? (
-        <LoadingBox />
+        <DashboardTeaserSkeleton />
       ) : treasurySummary ? (
         <>
           <View style={styles.container}>
@@ -40,7 +40,7 @@ export function TreasurySummaryTeaser(props: PropTypes) {
                     ? `\n${treasurySummary.spendPeriod.termLeftParts[1]}`
                     : ''
                 }`}
-                data={[treasurySummary.spendPeriod.percentage / 100]}
+                progress={treasurySummary.spendPeriod.percentage / 100}
               />
             </Card>
           </View>
