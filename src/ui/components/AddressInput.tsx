@@ -90,7 +90,7 @@ export function AddressInput({onAddressChanged, onValidateAddress}: Props) {
 
       {!addressValid && inputAddress ? (
         <HelperText type="error" style={styles.error}>
-          Enter a valid address
+          {`Enter a valid address for ${currentNetwork.name}`}
         </HelperText>
       ) : null}
 
