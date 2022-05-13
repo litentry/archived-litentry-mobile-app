@@ -1,11 +1,10 @@
-import React, {useCallback, useLayoutEffect, useState} from 'react';
+import React, {useCallback, useLayoutEffect} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Layout} from '@ui/components/Layout';
 import {Button, List, Icon, Caption, Divider, useBottomSheet, Subheading} from '@ui/library';
 import {useNetwork} from 'context/NetworkContext';
-import RegistrarSelectionModal from '@ui/components/RegistrarSelectionModal';
 import IdentityInfoForm, {IdentityPayload} from '@ui/components/IdentityInfoForm';
 import InfoBanner from '@ui/components/InfoBanner';
 import {Padder} from '@ui/components/Padder';
@@ -24,23 +23,22 @@ import {Account} from '@ui/components/Account/Account';
 import {useSubAccounts} from 'src/api/hooks/useSubAccounts';
 import {AccountRegistration} from '@ui/components/Account/AccountRegistration';
 import {IdentityGuide} from '@ui/components/IdentityGuide';
+import {RequestJudgement} from '@ui/components/RequestJudgement';
 
 type ScreenProps = {
   navigation: NavigationProp<AccountsStackParamList>;
   route: RouteProp<AccountsStackParamList, typeof manageIdentityScreen>;
 };
 
-type BOTTOM_SHEET_TYPE = 'IDENTITY_GUIDE' | 'SET_IDENTITY' | 'POLKA_SCAN';
+type BOTTOM_SHEET_TYPE = 'IDENTITY_GUIDE' | 'SET_IDENTITY' | 'POLKA_SCAN' | 'REQUEST_JUDGEMENT';
 
 export function ManageIdentityScreen({navigation, route}: ScreenProps) {
+  const {currentNetwork} = useNetwork();
   const {openBottomSheet, closeBottomSheet, BottomSheet} = useBottomSheet();
   const {address, showIdentityGuide} = route.params;
 
   const startTx = useApiTx();
   const {data: accountInfo, refetch: refetchAccount} = useSubAccounts(address);
-
-  const {currentNetwork} = useNetwork();
-  const [registrarSelectionOpen, setRegistrarSelectionOpen] = useState(false);
 
   const judgements = accountInfo?.registration?.judgements;
   const judgementCount = judgements?.length || 0;
@@ -61,7 +59,7 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
 
   const handleRequestJudgement = useCallback(
     ({id, fee}: Registrar) => {
-      setRegistrarSelectionOpen(false);
+      closeBottomSheet();
       startTx({address, txMethod: 'identity.requestJudgement', params: [id, fee]})
         .then(() => refetchAccount({address}))
         .catch((e) => {
@@ -69,7 +67,7 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
           console.error(e);
         });
     },
-    [startTx, address, refetchAccount],
+    [startTx, address, refetchAccount, closeBottomSheet],
   );
 
   const clearIdentity = () => {
@@ -127,10 +125,20 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
             onMessage={() => null}
           />
         );
+      case 'REQUEST_JUDGEMENT':
+        return <RequestJudgement onRequest={handleRequestJudgement} onClose={closeBottomSheet} />;
       default:
         return <Subheading>{`Hello world`}</Subheading>;
     }
-  }, [bottomSheetType, closeBottomSheet, address, accountInfo, currentNetwork.key, onSubmitIdentityInfo]);
+  }, [
+    bottomSheetType,
+    closeBottomSheet,
+    address,
+    accountInfo,
+    currentNetwork.key,
+    onSubmitIdentityInfo,
+    handleRequestJudgement,
+  ]);
 
   return (
     <SafeView edges={noTopEdges}>
@@ -180,7 +188,11 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
           {accountInfo?.hasIdentity ? (
             <>
               <Padder scale={1} />
-              <Button onPress={() => setRegistrarSelectionOpen(true)} mode="outlined">
+              <Button
+                onPress={() => {
+                  onOpenBottomSheet('REQUEST_JUDGEMENT');
+                }}
+                mode="outlined">
                 Request Judgement
               </Button>
               <Padder scale={1} />
@@ -229,12 +241,6 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
             )}
           />
         </View>
-
-        <RegistrarSelectionModal
-          onClose={() => setRegistrarSelectionOpen(false)}
-          onSelect={handleRequestJudgement}
-          visible={registrarSelectionOpen}
-        />
       </ScrollView>
 
       <BottomSheet>{bottomSheetContent}</BottomSheet>

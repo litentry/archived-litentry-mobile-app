@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import {View} from 'react-native';
 import {Divider, Button, List, Subheading, useTheme, Select} from '@ui/library';
 import {InAppNotificationContent, InAppNotificationContext} from 'context/InAppNotificationContext';
@@ -6,14 +6,11 @@ import {useApi} from 'context/ChainApiContext';
 import {ScrollView} from 'react-native-gesture-handler';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {useNetwork} from 'context/NetworkContext';
-import RegistrarSelectionModal from '@ui/components/RegistrarSelectionModal';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useConvictions} from 'src/api/hooks/useConvictions';
 
 function DevScreen() {
   const {colors} = useTheme();
-  const [visible, setVisible] = useState(false);
-
   const {currentNetwork} = useNetwork();
   const {data: convictions} = useConvictions();
   const {trigger} = useContext(InAppNotificationContext);
@@ -42,26 +39,6 @@ function DevScreen() {
             }}
           />
         </View>
-
-        <List.Item
-          title="Registrar Selection Modal"
-          description="Trigger display of Registrar Selection Modal"
-          right={() => (
-            <ItemRight>
-              <Button mode="contained" onPress={() => setVisible(true)}>
-                Trigger
-              </Button>
-            </ItemRight>
-          )}
-        />
-        <Divider />
-
-        <RegistrarSelectionModal
-          onClose={() => setVisible(false)}
-          onSelect={(registrar) => console.log(registrar)}
-          visible={visible}
-        />
-        <Divider />
 
         <List.Item
           title="Simple Notification"
