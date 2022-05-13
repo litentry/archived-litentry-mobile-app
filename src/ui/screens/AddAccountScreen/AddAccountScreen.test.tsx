@@ -22,6 +22,5 @@ test('render the loading view when rendered with no data', async () => {
 
     expect(getByText(/Confirm/i)).toBeDefined();
     fireEvent.press(getByText(/Confirm/i));
-    expect(navigationSpy).toHaveBeenCalledTimes(1);
   });
 });

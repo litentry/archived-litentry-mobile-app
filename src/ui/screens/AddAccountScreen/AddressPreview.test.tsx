@@ -25,10 +25,8 @@ test('render the component after data fetched', async () => {
   await waitFor(() => {
     expect(getByText('Address')).toBeTruthy();
     expect(getByText('Display')).toBeTruthy();
-    // expect(getByText('Balance')).toBeTruthy();
     expect(getByText('Judgment')).toBeTruthy();
     expect(queryByText('No judgements provided')).toBeTruthy();
-
     expect(getByText('Network')).toBeTruthy();
   });
 });
