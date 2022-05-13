@@ -9,7 +9,7 @@ type PropTypes = {
   msg: string;
 };
 
-function WarningDialog(props: PropTypes) {
+export function WarningDialog(props: PropTypes) {
   const {text, msg} = props;
   const {colors} = useTheme();
 
@@ -38,4 +38,3 @@ const styles = StyleSheet.create({
     padding: standardPadding * 4,
   },
 });
-export default WarningDialog;
