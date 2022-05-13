@@ -1,12 +1,11 @@
-import {useContext} from 'react';
-import {useApi} from 'context/ChainApiContext';
-import {TxContext, StartConfig} from 'context/TxContext';
 import {ApiPromise} from '@polkadot/api';
+import {useApi} from 'context/ChainApiContext';
+import {useTx, StartConfig} from 'context/TxContext';
 
 type TxConfig = Omit<StartConfig, 'api'>;
 
 export function useApiTx() {
-  const {start} = useContext(TxContext);
+  const {start} = useTx();
   const {api} = useApi();
 
   return (config: TxConfig | ((apiPromise: ApiPromise) => TxConfig)) => {
