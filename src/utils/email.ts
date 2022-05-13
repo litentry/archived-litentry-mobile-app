@@ -12,7 +12,7 @@ export type SendEmailOptions = {
 
 export async function sendEmail(props: SendEmailOptions) {
   const url = composeEmailURL(props);
-  // check if we can use this link
+
   const canOpen = await Linking.canOpenURL(url);
   if (!canOpen) {
     throw new Error('Provided URL can not be handled');

@@ -18,20 +18,20 @@ test('toShortAddress function test', () => {
 test('isAddressValid function test', () => {
   const networkTypes = getAvailableNetworks();
   const validAddressPolka = isAddressValid(networkTypes[0] as NetworkType, POLKADOT_ADDRESS);
-  expect(validAddressPolka).toBeTruthy();
+  expect(validAddressPolka).toBe(true);
 
   const invalidAddressPolka = isAddressValid(networkTypes[0] as NetworkType, KUSAMA_ADDRESS);
-  expect(invalidAddressPolka).toBeFalsy();
+  expect(invalidAddressPolka).toBe(false);
 
   const validAddressKusama = isAddressValid(networkTypes[1] as NetworkType, KUSAMA_ADDRESS);
-  expect(validAddressKusama).toBeTruthy();
+  expect(validAddressKusama).toBe(true);
 
   const invalidAddressKusama = isAddressValid(networkTypes[1] as NetworkType, LITMUS_ADDRESS);
-  expect(invalidAddressKusama).toBeFalsy();
+  expect(invalidAddressKusama).toBe(false);
 
   const validAddressLitmus = isAddressValid(networkTypes[3] as NetworkType, LITMUS_ADDRESS);
-  expect(validAddressLitmus).toBeTruthy();
+  expect(validAddressLitmus).toBe(true);
 
   const invalidAddressLitmus = isAddressValid(networkTypes[3] as NetworkType, POLKADOT_ADDRESS);
-  expect(invalidAddressLitmus).toBeFalsy();
+  expect(invalidAddressLitmus).toBe(false);
 });
