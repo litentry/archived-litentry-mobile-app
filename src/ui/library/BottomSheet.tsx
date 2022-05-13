@@ -33,7 +33,6 @@ export function useBottomSheet() {
   const BottomSheet = React.useCallback(
     ({children, ...props}: BottomSheetProps) => (
       <RNBottomSheet
-        {...props}
         handleIndicatorStyle={{backgroundColor: colors.accent}}
         handleStyle={{backgroundColor: colors.background}}
         backdropComponent={Backdrop}
@@ -43,7 +42,8 @@ export function useBottomSheet() {
         handleHeight={animatedHandleHeight}
         contentHeight={animatedContentHeight}
         enablePanDownToClose={true}
-        animateOnMount={true}>
+        animateOnMount={true}
+        {...props}>
         <BottomSheetView onLayout={handleContentLayout}>{children}</BottomSheetView>
       </RNBottomSheet>
     ),
