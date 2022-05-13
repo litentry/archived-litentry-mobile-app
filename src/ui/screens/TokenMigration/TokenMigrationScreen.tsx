@@ -1,9 +1,10 @@
 import React from 'react';
-import {View, StyleSheet, Linking, ScrollView} from 'react-native';
+import {View, StyleSheet, Linking, ScrollView, Dimensions} from 'react-native';
 import {useWeb3Wallet} from 'context/Web3WalletContext';
 import {useNetwork} from 'context/NetworkContext';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {SuccessAnimation} from '@ui/components/SuccessAnimation';
+import {MessageTeaser} from '@ui/components/MessageTeaser';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
@@ -13,6 +14,8 @@ import globalStyles, {standardPadding} from '@ui/styles';
 import {useTransactionWizard, WizardStep} from './TransactionWizard';
 import {WalletConnectButton} from './WalletConnectButton';
 import {toShortAddress} from 'src/utils/address';
+
+const {height} = Dimensions.get('window');
 
 export function TokenMigrationScreen() {
   const {colors} = useTheme();
@@ -27,6 +30,13 @@ export function TokenMigrationScreen() {
   const [destinationAddress, setDestinationAddress] = React.useState('');
   const [txHash, setTxHash] = React.useState('');
   const [amount, setAmount] = React.useState('');
+  const [error, setError] = React.useState<string | null>(null);
+
+  const retry = React.useCallback(() => {
+    setIsRequestingPermission(false);
+    setIsRequestingTransfer(false);
+    setError(null);
+  }, []);
 
   const requestPermission = React.useCallback(async () => {
     if (!wallet.isConnected) {
@@ -42,8 +52,7 @@ export function TokenMigrationScreen() {
       wallet.updateAccount(ethAddress);
     }
     if (result?.error) {
-      // TODO: handle error
-      console.error(result.error);
+      setError(result.error);
     }
     nextStep(WizardStep.RequestTransfer);
     setIsRequestingPermission(false);
@@ -64,8 +73,7 @@ export function TokenMigrationScreen() {
       setTxHash(result.ok);
     }
     if (result?.error) {
-      // TODO: handle error
-      console.error(result.error);
+      setError(result.error);
     }
     nextStep(WizardStep.Completed);
     setIsRequestingTransfer(false);
@@ -90,6 +98,7 @@ export function TokenMigrationScreen() {
     if (!wallet.isConnected) {
       return null;
     }
+
     return (
       <>
         <TransactionWizard />
@@ -126,7 +135,7 @@ export function TokenMigrationScreen() {
             <Padder />
             <View style={styles.summaryRow}>
               <Subheading>ETH Balance</Subheading>
-              <Text>{formatBalance(stringToBn(wallet.connectedAccount?.balance.eth.toString() ?? ''))}</Text>
+              <Text>{`${wallet.connectedAccount?.balance.eth.toFixed(4)} ETH` ?? ''}</Text>
             </View>
             <Padder />
             <View style={styles.summaryRow}>
@@ -142,6 +151,9 @@ export function TokenMigrationScreen() {
   };
 
   const renderPreviewButton = () => {
+    if (error) {
+      return null;
+    }
     if (currentStep === WizardStep.RequestPermission) {
       return (
         <Button loading={isRequestingPermission} mode="contained" onPress={requestPermission}>
@@ -184,7 +196,7 @@ export function TokenMigrationScreen() {
                   left={<TextInput.Icon name="check-network-outline" color={colors.primary} />}
                   mode="outlined"
                   value={toShortAddress(wallet.connectedAccount?.address ?? '')}
-                  disabled
+                  editable={false}
                 />
                 <View style={styles.disconnectWalletContainer}>
                   <Button compact onPress={() => wallet.disconnect()}>
@@ -222,12 +234,21 @@ export function TokenMigrationScreen() {
 
       <Preview>
         <Layout style={globalStyles.paddedContainer}>
-          {renderPreviewHeader()}
-          <Padder />
-          {renderPreviewContent()}
-          <Padder />
-          {renderPreviewButton()}
-          <Padder scale={2} />
+          {error ? (
+            <View style={styles.errorMessageContainer}>
+              <MessageTeaser title="An error has occurred" msg={error} type="error" />
+              <Button onPress={retry}>Close</Button>
+            </View>
+          ) : (
+            <>
+              {renderPreviewHeader()}
+              <Padder />
+              {renderPreviewContent()}
+              <Padder />
+              {renderPreviewButton()}
+              <Padder scale={2} />
+            </>
+          )}
         </Layout>
       </Preview>
     </View>
@@ -290,5 +311,9 @@ const styles = StyleSheet.create({
   transactionCompletedContainer: {
     padding: standardPadding * 2,
     borderRadius: 10,
+  },
+  errorMessageContainer: {
+    height: height * 0.3,
+    paddingBottom: standardPadding * 2,
   },
 });
