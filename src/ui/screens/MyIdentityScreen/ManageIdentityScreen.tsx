@@ -9,7 +9,7 @@ import IdentityInfoForm, {IdentityPayload} from '@ui/components/IdentityInfoForm
 import InfoBanner from '@ui/components/InfoBanner';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import SuccessDialog from '@ui/components/SuccessDialog';
+import {SuccessDialog} from '@ui/components/SuccessDialog';
 import {ScrollView} from 'react-native-gesture-handler';
 import WebView from 'react-native-webview';
 import {useApiTx} from 'src/api/hooks/useApiTx';

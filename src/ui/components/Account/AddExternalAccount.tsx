@@ -5,7 +5,7 @@ import {Layout} from '@ui/components/Layout';
 import {useNetwork} from 'context/NetworkContext';
 import {Padder} from '@ui/components/Padder';
 import QRCamera, {QRCameraRef} from '@ui/components/QRCamera';
-import SuccessDialog from '@ui/components/SuccessDialog';
+import {SuccessDialog} from '@ui/components/SuccessDialog';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {isAddressValid, parseAddress} from 'src/utils/address';
 import {useAccounts} from 'context/AccountsContext';
