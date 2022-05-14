@@ -1,9 +1,9 @@
-import React, {useCallback, useLayoutEffect} from 'react';
+import React, {useCallback} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Layout} from '@ui/components/Layout';
-import {Button, List, Icon, Caption, Divider, useBottomSheet} from '@ui/library';
+import {Button, List, Icon, Caption, Divider, IconButton} from '@ui/library';
 import {useNetwork} from 'context/NetworkContext';
 import IdentityInfoForm, {IdentityPayload} from '@ui/components/IdentityInfoForm';
 import InfoBanner from '@ui/components/InfoBanner';
@@ -24,18 +24,16 @@ import {useSubAccounts} from 'src/api/hooks/useSubAccounts';
 import {AccountRegistration} from '@ui/components/Account/AccountRegistration';
 import {IdentityGuide} from '@ui/components/IdentityGuide';
 import {RequestJudgement} from '@ui/components/RequestJudgement';
+import {useDynamicBottomSheet} from 'src/hooks/useDynamicBottomSheet';
 
 type ScreenProps = {
   navigation: NavigationProp<AccountsStackParamList>;
   route: RouteProp<AccountsStackParamList, typeof manageIdentityScreen>;
 };
 
-type BOTTOM_SHEET_TYPE = 'IDENTITY_GUIDE' | 'SET_IDENTITY' | 'POLKA_SCAN' | 'REQUEST_JUDGEMENT';
-
 export function ManageIdentityScreen({navigation, route}: ScreenProps) {
   const {currentNetwork} = useNetwork();
-  const {openBottomSheet, closeBottomSheet, BottomSheet} = useBottomSheet();
-  const {address, showIdentityGuide} = route.params;
+  const {address} = route.params;
 
   const startTx = useApiTx();
   const {data: accountInfo, refetch: refetchAccount} = useSubAccounts(address);
@@ -43,6 +41,8 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
   const judgements = accountInfo?.registration?.judgements;
   const judgementCount = judgements?.length || 0;
   const hasJudgements = judgements && judgementCount > 0;
+
+  const {closeBottomSheet, makeDynamicBottomSheet} = useDynamicBottomSheet();
 
   const onSubmitIdentityInfo = useCallback(
     async (info: IdentityPayload) => {
@@ -70,6 +70,54 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
     [startTx, address, refetchAccount, closeBottomSheet],
   );
 
+  const contents = [
+    {
+      type: 'IDENTITY_GUIDE',
+      content: <IdentityGuide onClose={closeBottomSheet} />,
+    },
+    {
+      type: 'SET_IDENTITY',
+      content: (
+        <Layout>
+          <IdentityInfoForm onSubmit={onSubmitIdentityInfo} accountInfo={accountInfo} />
+        </Layout>
+      ),
+    },
+    {
+      type: 'POLKA_SCAN',
+      content: (
+        <WebView
+          injectedJavaScript={`(function() {
+      // remove some html element
+      document.querySelectorAll('.navbar')[1].remove()
+  })();`}
+          source={{uri: buildAddressDetailUrl(address || '', currentNetwork?.key || 'polkadot')}}
+          style={styles.polkascanWebView}
+          onMessage={() => null}
+        />
+      ),
+    },
+    {
+      type: 'REQUEST_JUDGEMENT',
+      content: <RequestJudgement onRequest={handleRequestJudgement} onClose={closeBottomSheet} />,
+    },
+  ];
+
+  const {openBottomSheet, BottomSheet} = makeDynamicBottomSheet(contents);
+
+  React.useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <IconButton
+          icon="information"
+          onPress={() => {
+            openBottomSheet('IDENTITY_GUIDE');
+          }}
+        />
+      ),
+    });
+  }, [navigation, openBottomSheet]);
+
   const clearIdentity = () => {
     Alert.alert('Clear Identity', `Clear identity of account: \n ${address}`, [
       {
@@ -86,61 +134,6 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
       {text: 'Cancel', style: 'cancel'},
     ]);
   };
-
-  const [bottomSheetType, setBottomSheetType] = React.useState<BOTTOM_SHEET_TYPE>('IDENTITY_GUIDE');
-
-  const onOpenBottomSheet = React.useCallback(
-    (type: BOTTOM_SHEET_TYPE) => {
-      setBottomSheetType(type);
-      setTimeout(() => {
-        openBottomSheet();
-      }, 100);
-    },
-    [openBottomSheet],
-  );
-
-  useLayoutEffect(() => {
-    if (showIdentityGuide) {
-      onOpenBottomSheet(bottomSheetType);
-    }
-  }, [showIdentityGuide, onOpenBottomSheet, bottomSheetType]);
-
-  const bottomSheetContent = React.useMemo(() => {
-    switch (bottomSheetType) {
-      case 'IDENTITY_GUIDE':
-        return <IdentityGuide onClose={closeBottomSheet} />;
-      case 'SET_IDENTITY':
-        return (
-          <Layout>
-            <IdentityInfoForm onSubmit={onSubmitIdentityInfo} accountInfo={accountInfo} />
-          </Layout>
-        );
-      case 'POLKA_SCAN':
-        return (
-          <WebView
-            injectedJavaScript={`(function() {
-            // remove some html element
-            document.querySelectorAll('.navbar')[1].remove()
-        })();`}
-            source={{uri: buildAddressDetailUrl(address || '', currentNetwork?.key || 'polkadot')}}
-            style={styles.polkascanWebView}
-            onMessage={() => null}
-          />
-        );
-      case 'REQUEST_JUDGEMENT':
-        return <RequestJudgement onRequest={handleRequestJudgement} onClose={closeBottomSheet} />;
-      default:
-        return null;
-    }
-  }, [
-    bottomSheetType,
-    closeBottomSheet,
-    address,
-    accountInfo,
-    currentNetwork.key,
-    onSubmitIdentityInfo,
-    handleRequestJudgement,
-  ]);
 
   return (
     <SafeView edges={noTopEdges}>
@@ -182,7 +175,7 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
           <Padder scale={1} />
           <Button
             onPress={() => {
-              onOpenBottomSheet('SET_IDENTITY');
+              openBottomSheet('SET_IDENTITY');
             }}
             mode="outlined">
             {accountInfo?.hasIdentity ? 'Update Identity' : 'Set Identity'}
@@ -192,7 +185,7 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
               <Padder scale={1} />
               <Button
                 onPress={() => {
-                  onOpenBottomSheet('REQUEST_JUDGEMENT');
+                  openBottomSheet('REQUEST_JUDGEMENT');
                 }}
                 mode="outlined">
                 Request Judgement
@@ -233,7 +226,7 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
           <List.Item
             title="View externally"
             onPress={() => {
-              onOpenBottomSheet('POLKA_SCAN');
+              openBottomSheet('POLKA_SCAN');
             }}
             left={() => <LeftIcon icon="share" />}
             right={() => (
@@ -245,7 +238,7 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
         </View>
       </ScrollView>
 
-      <BottomSheet>{bottomSheetContent}</BottomSheet>
+      <BottomSheet />
     </SafeView>
   );
 }

@@ -9,7 +9,7 @@ import RNBottomSheet, {
 import {View, Text, StyleSheet} from 'react-native';
 import {useTheme} from './index';
 
-type BottomSheetProps = Omit<RNBottomSheetProps, 'snapPoints'>;
+export type BottomSheetProps = Omit<RNBottomSheetProps, 'snapPoints'>;
 
 export function useBottomSheet() {
   const {colors} = useTheme();

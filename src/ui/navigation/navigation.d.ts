@@ -120,7 +120,7 @@ type AccountsStackParamList = {
   [verifyMnemonicScreen]: {mnemonic: string};
   [createAccountScreen]: {mnemonic: string};
   [accountsScreen]: {reload?: boolean};
-  [manageIdentityScreen]: {address: string; showIdentityGuide: boolean};
+  [manageIdentityScreen]: {address: string};
   [myAccountScreen]: {address: string};
   [registerSubIdentitiesScreen]: {address: string};
   [importAccountScreen]: undefined;
