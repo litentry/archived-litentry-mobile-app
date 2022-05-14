@@ -53,10 +53,11 @@ export function IdentityGuide({onClose}: Props) {
           />
         </View>
       </PagerView>
-      <View style={styles.footer}>
-        <Button mode="outlined" uppercase={false} icon="skip-next-outline" onPress={onClose}>{`Skip`}</Button>
-      </View>
       <Padder scale={1} />
+      <View style={styles.footer}>
+        <Button mode="outlined" onPress={onClose}>{`Skip`}</Button>
+      </View>
+      <Padder scale={2} />
     </Layout>
   );
 }
@@ -89,8 +90,6 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    marginTop: standardPadding,
-    marginBottom: standardPadding * 3,
     marginRight: standardPadding * 3,
   },
   row: {

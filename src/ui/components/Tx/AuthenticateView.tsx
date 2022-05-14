@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
-import {TextInput, Button, Caption, useTheme} from '@ui/library';
+import {TextInput, Button, Caption, useTheme, Subheading} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
-import ModalTitle from '@ui/components/ModalTitle';
 import {Padder} from '@ui/components/Padder';
 import SubstrateSign from 'react-native-substrate-sign';
 import {Account, InternalAccount, useAccounts} from 'context/AccountsContext';
 import {SecureKeychain} from 'src/service/SecureKeychain';
-import {standardPadding} from '@ui/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 
 type Props = {
   address: string;
@@ -50,7 +49,7 @@ export function AuthenticateView({onAuthenticate, address}: Props) {
 
   return (
     <Layout style={styles.container}>
-      <ModalTitle title="Unlock Account" />
+      <Subheading style={globalStyles.textCenter}>{`Unlock account`}</Subheading>
       <TextInput
         mode="outlined"
         placeholder="Enter password"
