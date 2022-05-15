@@ -51,6 +51,7 @@ export function AuthenticateView({onAuthenticate, address}: Props) {
     <Layout style={styles.container}>
       <Subheading style={globalStyles.textCenter}>{`Unlock account`}</Subheading>
       <TextInput
+        dense
         mode="outlined"
         placeholder="Enter password"
         secureTextEntry
@@ -62,6 +63,7 @@ export function AuthenticateView({onAuthenticate, address}: Props) {
       <Button onPress={onPressUnlock} mode="contained" icon="lock">
         Unlock
       </Button>
+      <Padder scale={1} />
     </Layout>
   );
 }
