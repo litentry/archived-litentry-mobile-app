@@ -16,5 +16,6 @@ export const handlers = [
   parachainSummaryHandler,
   democracySummaryHandler,
   eventsCalendarHandler,
+  chainInfoHandler,
   // other handlers
 ];

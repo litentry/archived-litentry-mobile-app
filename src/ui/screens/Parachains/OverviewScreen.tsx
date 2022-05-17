@@ -1,15 +1,15 @@
 import React from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
+import {NavigationProp} from '@react-navigation/native';
 import {Divider, Card, List, Caption, Text, Subheading} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import ProgressChartWidget from '@ui/components/ProgressWidget';
-import globalStyles, {standardPadding} from '@ui/styles';
+import {ProgressChart} from '@ui/components/ProgressChart';
 import LoadingView from '@ui/components/LoadingView';
-import {NavigationProp} from '@react-navigation/native';
 import {parachainDetailScreen} from '@ui/navigation/routeKeys';
 import {Parachain, useParachainsSummary} from 'src/api/hooks/useParachainsSummary';
 import {ParachainsStackParamList} from '@ui/navigation/navigation';
 import {Padder} from '@ui/components/Padder';
+import globalStyles, {standardPadding} from '@ui/styles';
 
 type ScreenProps = {
   navigation: NavigationProp<ParachainsStackParamList>;
@@ -37,11 +37,10 @@ export function ParachainsOverviewScreen({navigation}: ScreenProps) {
                   <View style={globalStyles.rowAlignCenter}>
                     <View style={styles.progressChart}>
                       {parachainsSummary?.leasePeriod.progressPercent && (
-                        <ProgressChartWidget
-                          title={`Lease Period`}
-                          detail={`\n${parachainsSummary.leasePeriod.progressPercent}%`}
-                          data={[parachainsSummary.leasePeriod.progressPercent / 100]}
-                        />
+                        <View>
+                          <Caption style={globalStyles.textCenter}> Lease Period</Caption>
+                          <ProgressChart width={100} percent={parachainsSummary.leasePeriod.progressPercent / 100} />
+                        </View>
                       )}
                     </View>
                     <View style={styles.summaryInfo}>

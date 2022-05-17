@@ -9,7 +9,7 @@ type PropTypes = {
   msg: string;
 };
 
-function ErrorDialog(props: PropTypes) {
+export function ErrorDialog(props: PropTypes) {
   const {text, msg} = props;
 
   return (
@@ -41,5 +41,3 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
-export default ErrorDialog;
