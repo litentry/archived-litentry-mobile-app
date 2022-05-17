@@ -1,40 +1,42 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, {createContext, useCallback, useEffect, useMemo, useReducer, useRef} from 'react';
+import React, {createContext, useCallback, useEffect, useMemo, useReducer, useRef, useContext} from 'react';
 import {Dimensions, StyleSheet} from 'react-native';
-import {ApiPromise} from '@polkadot/api';
-import {SubmittableExtrinsic} from '@polkadot/api/submittable/types';
-import {ExtrinsicPayload} from '@polkadot/types/interfaces';
-import {SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
-import {BN_ZERO, hexToU8a, u8aConcat, u8aToHex} from '@polkadot/util';
-import {Subheading, Caption, Icon} from '@ui/library';
-import {Layout} from '@ui/components/Layout';
-import {useAccounts} from 'context/AccountsContext';
-import {useApi} from 'context/ChainApiContext';
-import {AuthenticateView} from 'context/TxContext/AuthenticateView';
-import {TxPreview} from 'context/TxContext/TxPreview';
-import {get} from 'lodash';
-import ErrorDialog from '@ui/components/ErrorDialog';
-import LoadingView from '@ui/components/LoadingView';
-import SuccessDialog from '@ui/components/SuccessDialog';
-import TxPayloadQr from '@ui/components/TxPayloadQr';
-import WarningDialog from '@ui/components/WarningDialog';
-import {Modalize} from 'react-native-modalize';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import SubstrateSign from 'react-native-substrate-sign';
+import {SubmittableExtrinsic} from '@polkadot/api/submittable/types';
+import {SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
+import {ExtrinsicPayload} from '@polkadot/types/interfaces';
+import {BN_ZERO, hexToU8a, u8aConcat, u8aToHex} from '@polkadot/util';
+import {ApiPromise} from '@polkadot/api';
+import {get} from 'lodash';
+
 import {formatCallMeta} from 'src/utils/callMetadata';
 import AsyncSigner from 'src/service/AsyncSigner';
+import {useAccounts} from 'context/AccountsContext';
+import {useApi} from 'context/ChainApiContext';
+import LoadingView from '@ui/components/LoadingView';
+import {AuthenticateView} from '@ui/components/Tx/AuthenticateView';
+import {PayloadQrCodeView} from '@ui/components/Tx/PayloadQrCodeView';
+import {ErrorDialog} from '@ui/components/Tx/ErrorDialog';
+import {SuccessDialog} from '@ui/components/SuccessDialog';
+import {WarningDialog} from '@ui/components/Tx/WarningDialog';
+import {Layout} from '@ui/components/Layout';
+import {TxPreview} from '@ui/components/Tx/Preview';
+import {Subheading, Caption, Icon, useBottomSheet} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 
 let id = 0;
 
 const {width, height} = Dimensions.get('window');
 
-type PropTypes = {children: React.ReactNode};
+type TxProviderProps = {
+  children: React.ReactNode;
+};
 type TxContextValueType = {
   start: (config: StartConfig) => Promise<void>;
 };
 
-export const TxContext = createContext<TxContextValueType>({
+const TxContext = createContext<TxContextValueType>({
   start: () => Promise.resolve(),
 });
 
@@ -45,8 +47,8 @@ export type StartConfig = {
   params: unknown[];
 };
 
-function TxContextProvider({children}: PropTypes): React.ReactElement {
-  const modalRef = useRef<Modalize>(null);
+export function TxProvider({children}: TxProviderProps): React.ReactElement {
+  const {BottomSheet, openBottomSheet, closeBottomSheet} = useBottomSheet();
   const signTransactionRef = useRef<(value: SignerResult) => void>();
   const showPreviewRef = useRef<(txPayload: SignerPayloadJSON, seed?: string) => Promise<void>>();
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -77,7 +79,7 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
 
       const transaction: SubmittableExtrinsic<'promise'> = api.tx[section]![method]!(...params);
 
-      modalRef.current?.open();
+      openBottomSheet();
 
       const {meta} = transaction.registry.findMetaCall(transaction.callIndex);
       const args = meta?.args.map(({name}) => name).join(', ') || '';
@@ -173,7 +175,7 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
         dispatch({type: 'SHOW_ERROR', payload: String(e)});
       }
     },
-    [accounts],
+    [accounts, openBottomSheet],
   );
 
   const modalContent = useMemo(() => {
@@ -204,7 +206,7 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
             params={state.params}
             partialFee={state.partialFee}
             onCancel={() => {
-              modalRef.current?.close();
+              closeBottomSheet();
               dispatch({type: 'RESET'});
             }}
             isExternalAccount={state.isExternalAccount}
@@ -221,10 +223,10 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
 
       case 'qr_code_tx_payload_view':
         return (
-          <TxPayloadQr
+          <PayloadQrCodeView
             payload={state.txPayload}
             onCancel={() => {
-              modalRef.current?.close();
+              closeBottomSheet();
               dispatch({type: 'RESET'});
             }}
             onConfirm={() => dispatch({type: 'SHOW_SCAN_SIGNATURE_VIEW'})}
@@ -271,7 +273,7 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
             <SuccessDialog
               text="Tx Success"
               onClosePress={() => {
-                modalRef.current?.close();
+                closeBottomSheet();
                 dispatch({type: 'RESET'});
               }}
             />
@@ -295,29 +297,31 @@ function TxContextProvider({children}: PropTypes): React.ReactElement {
       default:
         return null;
     }
-  }, [state]);
+  }, [state, closeBottomSheet]);
 
   const contextValue: TxContextValueType = useMemo(() => ({start}), [start]);
+
+  const onCloseBottomSheet = useCallback(() => {
+    dispatch({type: 'RESET'});
+    signTransactionRef.current = undefined;
+  }, [signTransactionRef]);
 
   return (
     <TxContext.Provider value={contextValue}>
       {children}
-      <Modalize
-        ref={modalRef}
-        threshold={250}
-        scrollViewProps={{showsVerticalScrollIndicator: false}}
-        adjustToContentHeight
-        handlePosition="outside"
-        onClosed={() => {
-          dispatch({type: 'RESET'});
-          signTransactionRef.current = undefined;
-        }}
-        closeOnOverlayTap
-        panGestureEnabled>
-        {modalContent}
-      </Modalize>
+      <BottomSheet onClose={onCloseBottomSheet}>{modalContent}</BottomSheet>
     </TxContext.Provider>
   );
+}
+
+export function useTx() {
+  const context = useContext(TxContext);
+
+  if (!context) {
+    throw new Error('useTx must be used within a TxProvider');
+  }
+
+  return context;
 }
 
 const styles = StyleSheet.create({
@@ -359,8 +363,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
 });
-
-export default TxContextProvider;
 
 type State =
   | {view: 'initial_view' | 'submitting_view' | 'success_view'}
