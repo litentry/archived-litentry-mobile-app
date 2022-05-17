@@ -3,7 +3,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {QueryClient, QueryClientProvider} from 'react-query';
 import {useStopStartupTrace} from 'react-native-startup-trace';
 import {ChainApiContextProvider} from 'context/ChainApiContext';
-import TxContextProvider from 'context/TxContext';
+import {TxProvider} from 'context/TxContext';
 import {AccountsProvider} from 'context/AccountsContext';
 import InAppNotificationContextProvider from 'context/InAppNotificationContext';
 import NetworkContextProvider, {useNetwork} from 'context/NetworkContext';
@@ -62,11 +62,11 @@ export default function App() {
                   <ThemeProvider>
                     <InAppNotificationContextProvider>
                       <ErrorBoundary>
-                        <TxContextProvider>
+                        <TxProvider>
                           <SnackbarProvider>
                             <LitentryApps />
                           </SnackbarProvider>
-                        </TxContextProvider>
+                        </TxProvider>
                       </ErrorBoundary>
                     </InAppNotificationContextProvider>
                   </ThemeProvider>

@@ -10,7 +10,7 @@ import IdentityInfoForm, {IdentityPayload} from '@ui/components/IdentityInfoForm
 import InfoBanner from '@ui/components/InfoBanner';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import SuccessDialog from '@ui/components/SuccessDialog';
+import {SuccessDialog} from '@ui/components/SuccessDialog';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Modalize} from 'react-native-modalize';
 import WebView from 'react-native-webview';

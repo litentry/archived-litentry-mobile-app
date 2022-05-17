@@ -2,7 +2,7 @@ import React from 'react';
 import {FlatList, View, StyleSheet, TouchableOpacity} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp} from '@react-navigation/native';
-import {Account as AccountType, useAccounts} from 'context/index';
+import {Account as AccountType, useAccounts} from 'context/AccountsContext';
 import {useTheme, Divider, IconButton, List, FAB, Caption, Menu, Subheading, Icon} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {CompleteNavigatorParamList} from '@ui/navigation/navigation';
