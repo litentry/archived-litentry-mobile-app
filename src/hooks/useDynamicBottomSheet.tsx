@@ -1,10 +1,10 @@
 import React from 'react';
 import {useBottomSheet, BottomSheetProps} from '@ui/library';
 
-type BottomSheets = {
+type BottomSheet = {
   type: string;
   content: JSX.Element;
-}[];
+};
 
 type DynamicBottomSheetProps = Omit<BottomSheetProps, 'children'>;
 
@@ -13,7 +13,7 @@ export function useDynamicBottomSheet() {
   const [bottomSheetType, setBottomSheetType] = React.useState('');
 
   const makeDynamicBottomSheet = React.useCallback(
-    (bottomSheets: BottomSheets) => {
+    (bottomSheets: BottomSheet[]) => {
       const bottomSheetContent = bottomSheets.find((bottomSheet) => bottomSheet.type === bottomSheetType)?.content;
 
       const onOpenBottomSheet = (type: string) => {
