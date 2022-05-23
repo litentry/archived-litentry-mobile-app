@@ -111,13 +111,7 @@ export function AddExternalAccount({onClose}: Props) {
   );
 
   const disabled = state.address.length === 0;
-  const confirmBtnDisabled = React.useMemo(() => {
-    if (state.step === 'input') {
-      return !currentNetwork;
-    }
-
-    return disabled;
-  }, [disabled, state, currentNetwork]);
+  const confirmBtnDisabled = state.step === 'input' && disabled;
 
   const [tabIndex, setTabIndex] = React.useState(0);
 

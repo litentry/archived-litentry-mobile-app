@@ -18,13 +18,13 @@ export function useBottomSheet() {
   const {animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout} =
     useBottomSheetDynamicSnapPoints(initialSnapPoints);
 
-  const openBottomSheet = () => {
+  const openBottomSheet = React.useCallback(() => {
     bottomSheetRef.current?.expand();
-  };
+  }, []);
 
-  const closeBottomSheet = () => {
+  const closeBottomSheet = React.useCallback(() => {
     bottomSheetRef.current?.close();
-  };
+  }, []);
 
   const Backdrop = React.useCallback(
     (props: BottomSheetBackdropProps) => <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} />,

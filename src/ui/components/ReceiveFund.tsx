@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Dimensions, Image, Share, View, StyleSheet} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import qrcode from 'qrcode-generator';
 import {stringShorten} from '@polkadot/util';
-import {Caption, Subheading, IconButton, Button} from '@ui/library';
+import {Caption, Subheading, IconButton, Button, Skeleton} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {useSnackbar} from 'context/SnackbarContext';
@@ -14,9 +14,17 @@ type Props = {
   onClose: () => void;
 };
 
+const QR_CODE_DIMENSION = Dimensions.get('screen').width * 0.5;
+
 export function ReceiveFund({address, onClose}: Props) {
   const snackbar = useSnackbar();
-  const [imageUri] = useState(() => getAccountQRCode(address));
+  const [imageUri, setImageUri] = useState('');
+
+  useEffect(() => {
+    setTimeout(() => {
+      setImageUri(getAccountQRCode(address));
+    }, 1000);
+  }, [address]);
 
   const copyToClipboard = () => {
     Clipboard.setString(address);
@@ -27,7 +35,11 @@ export function ReceiveFund({address, onClose}: Props) {
     <Layout style={styles.container}>
       <Subheading>Receive Fund</Subheading>
       <Padder scale={1} />
-      <Image source={{uri: imageUri}} style={styles.qrCode} />
+      {imageUri ? (
+        <Image source={{uri: imageUri}} style={styles.qrCode} />
+      ) : (
+        <Skeleton width={QR_CODE_DIMENSION} height={QR_CODE_DIMENSION} />
+      )}
       <Padder scale={1} />
       <View style={globalStyles.rowAlignCenter}>
         <IconButton icon="content-copy" size={20} onPress={copyToClipboard} />
@@ -49,8 +61,6 @@ function share(string: string) {
     message: string,
   });
 }
-
-const QR_CODE_DIMENSION = Dimensions.get('screen').width * 0.5;
 
 const styles = StyleSheet.create({
   container: {

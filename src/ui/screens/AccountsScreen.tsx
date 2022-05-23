@@ -37,18 +37,7 @@ export function AccountsScreen({navigation}: Props) {
     setSortMenuVisible(false);
   };
 
-  const {closeBottomSheet, makeDynamicBottomSheet} = useDynamicBottomSheet();
-  const contents = [
-    {
-      type: 'ACCOUNT_GUIDE',
-      content: <AccountsGuide />,
-    },
-    {
-      type: 'ADD_EXTERNAL_ACCOUNT',
-      content: <AddExternalAccount onClose={closeBottomSheet} />,
-    },
-  ];
-  const {openBottomSheet, BottomSheet} = makeDynamicBottomSheet(contents);
+  const {closeBottomSheet, openBottomSheet, BottomSheet} = useDynamicBottomSheet();
 
   React.useEffect(() => {
     navigation.setOptions({
@@ -56,7 +45,7 @@ export function AccountsScreen({navigation}: Props) {
         <IconButton
           icon="information"
           onPress={() => {
-            openBottomSheet('ACCOUNT_GUIDE');
+            openBottomSheet(<AccountsGuide />);
           }}
         />
       ),
@@ -116,7 +105,7 @@ export function AccountsScreen({navigation}: Props) {
       <Buttons
         navigation={navigation}
         onAddAccount={() => {
-          openBottomSheet('ADD_EXTERNAL_ACCOUNT');
+          openBottomSheet(<AddExternalAccount onClose={closeBottomSheet} />);
         }}
       />
       <BottomSheet />

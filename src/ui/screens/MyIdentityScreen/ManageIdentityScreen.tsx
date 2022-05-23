@@ -42,7 +42,7 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
   const judgementCount = judgements?.length || 0;
   const hasJudgements = judgements && judgementCount > 0;
 
-  const {closeBottomSheet, makeDynamicBottomSheet} = useDynamicBottomSheet();
+  const {closeBottomSheet, openBottomSheet, BottomSheet} = useDynamicBottomSheet();
 
   const onSubmitIdentityInfo = useCallback(
     async (info: IdentityPayload) => {
@@ -70,53 +70,18 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
     [startTx, address, refetchAccount, closeBottomSheet],
   );
 
-  const contents = [
-    {
-      type: 'IDENTITY_GUIDE',
-      content: <IdentityGuide onClose={closeBottomSheet} />,
-    },
-    {
-      type: 'SET_IDENTITY',
-      content: (
-        <Layout>
-          <IdentityInfoForm onSubmit={onSubmitIdentityInfo} accountInfo={accountInfo} />
-        </Layout>
-      ),
-    },
-    {
-      type: 'POLKA_SCAN',
-      content: (
-        <WebView
-          injectedJavaScript={`(function() {
-      // remove some html element
-      document.querySelectorAll('.navbar')[1].remove()
-  })();`}
-          source={{uri: buildAddressDetailUrl(address || '', currentNetwork?.key || 'polkadot')}}
-          style={styles.polkascanWebView}
-          onMessage={() => null}
-        />
-      ),
-    },
-    {
-      type: 'REQUEST_JUDGEMENT',
-      content: <RequestJudgement onRequest={handleRequestJudgement} onClose={closeBottomSheet} />,
-    },
-  ];
-
-  const {openBottomSheet, BottomSheet} = makeDynamicBottomSheet(contents);
-
   React.useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <IconButton
           icon="information"
           onPress={() => {
-            openBottomSheet('IDENTITY_GUIDE');
+            openBottomSheet(<IdentityGuide onClose={closeBottomSheet} />);
           }}
         />
       ),
     });
-  }, [navigation, openBottomSheet]);
+  }, [navigation, openBottomSheet, closeBottomSheet]);
 
   const clearIdentity = () => {
     Alert.alert('Clear Identity', `Clear identity of account: \n ${address}`, [
@@ -175,7 +140,11 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
           <Padder scale={1} />
           <Button
             onPress={() => {
-              openBottomSheet('SET_IDENTITY');
+              openBottomSheet(
+                <Layout>
+                  <IdentityInfoForm onSubmit={onSubmitIdentityInfo} accountInfo={accountInfo} />
+                </Layout>,
+              );
             }}
             mode="outlined">
             {accountInfo?.hasIdentity ? 'Update Identity' : 'Set Identity'}
@@ -185,7 +154,7 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
               <Padder scale={1} />
               <Button
                 onPress={() => {
-                  openBottomSheet('REQUEST_JUDGEMENT');
+                  openBottomSheet(<RequestJudgement onRequest={handleRequestJudgement} onClose={closeBottomSheet} />);
                 }}
                 mode="outlined">
                 Request Judgement
@@ -226,7 +195,17 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
           <List.Item
             title="View externally"
             onPress={() => {
-              openBottomSheet('POLKA_SCAN');
+              openBottomSheet(
+                <WebView
+                  injectedJavaScript={`(function() {
+            // remove some html element
+            document.querySelectorAll('.navbar')[1].remove()
+        })();`}
+                  source={{uri: buildAddressDetailUrl(address || '', currentNetwork?.key || 'polkadot')}}
+                  style={styles.polkascanWebView}
+                  onMessage={() => null}
+                />,
+              );
             }}
             left={() => <LeftIcon icon="share" />}
             right={() => (

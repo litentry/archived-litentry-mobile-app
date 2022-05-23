@@ -37,34 +37,7 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
     snackbar('Address copied to clipboard!');
   };
 
-  const {closeBottomSheet, makeDynamicBottomSheet} = useDynamicBottomSheet();
-  const contents = [
-    {
-      type: 'BALANCE',
-      content: (
-        <Layout style={styles.balanceContainer}>
-          <Subheading style={globalStyles.textCenter}>{`Account balance`}</Subheading>
-          <Padder scale={0.5} />
-          <Divider />
-          {accountInfo?.balance ? <AccountBalance balance={accountInfo.balance} /> : null}
-          <Divider />
-          <Padder scale={1} />
-          <Button onPress={closeBottomSheet}>Close</Button>
-          <Padder scale={2} />
-        </Layout>
-      ),
-    },
-    {
-      type: 'SEND_FUND',
-      content: <SendFund address={address} onClose={closeBottomSheet} />,
-    },
-    {
-      type: 'RECEIVE_FUND',
-      content: <ReceiveFund address={address} onClose={closeBottomSheet} />,
-    },
-  ];
-
-  const {openBottomSheet, BottomSheet} = makeDynamicBottomSheet(contents);
+  const {closeBottomSheet, openBottomSheet, BottomSheet} = useDynamicBottomSheet();
 
   return (
     <SafeView edges={noTopEdges}>
@@ -86,7 +59,7 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
                 icon="send"
                 title="Send"
                 onPress={() => {
-                  openBottomSheet('SEND_FUND');
+                  openBottomSheet(<SendFund address={address} onClose={closeBottomSheet} />);
                 }}
               />
 
@@ -94,7 +67,7 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
                 icon="download"
                 title="Receive"
                 onPress={() => {
-                  openBottomSheet('RECEIVE_FUND');
+                  openBottomSheet(<ReceiveFund address={address} onClose={closeBottomSheet} />);
                 }}
               />
               <ActionButton
@@ -126,7 +99,23 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
         </Card>
 
         <View style={styles.buttonGroup}>
-          <Button icon="credit-card" mode="text" onPress={() => openBottomSheet('BALANCE')}>
+          <Button
+            icon="credit-card"
+            mode="text"
+            onPress={() =>
+              openBottomSheet(
+                <Layout style={styles.balanceContainer}>
+                  <Subheading style={globalStyles.textCenter}>{`Account balance`}</Subheading>
+                  <Padder scale={0.5} />
+                  <Divider />
+                  {accountInfo?.balance ? <AccountBalance balance={accountInfo.balance} /> : null}
+                  <Divider />
+                  <Padder scale={1} />
+                  <Button onPress={closeBottomSheet}>Close</Button>
+                  <Padder scale={2} />
+                </Layout>,
+              )
+            }>
             Balance details
           </Button>
           <Padder scale={1} />

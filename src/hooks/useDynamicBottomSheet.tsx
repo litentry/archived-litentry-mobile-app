@@ -1,40 +1,28 @@
 import React from 'react';
 import {useBottomSheet, BottomSheetProps} from '@ui/library';
 
-type BottomSheet = {
-  type: string;
-  content: JSX.Element;
-};
-
 type DynamicBottomSheetProps = Omit<BottomSheetProps, 'children'>;
 
 export function useDynamicBottomSheet() {
   const {openBottomSheet, closeBottomSheet, BottomSheet} = useBottomSheet();
-  const [bottomSheetType, setBottomSheetType] = React.useState('');
+  const [bottomSheetContent, setBottomSheetContent] = React.useState<JSX.Element>();
 
-  const makeDynamicBottomSheet = React.useCallback(
-    (bottomSheets: BottomSheet[]) => {
-      const bottomSheetContent = bottomSheets.find((bottomSheet) => bottomSheet.type === bottomSheetType)?.content;
-
-      const onOpenBottomSheet = (type: string) => {
-        setBottomSheetType(type);
-        setTimeout(openBottomSheet, 200);
-      };
-
-      const DynamicBottomSheet = (props: DynamicBottomSheetProps) => (
-        <BottomSheet {...props}>{bottomSheetContent}</BottomSheet>
-      );
-
-      return {
-        openBottomSheet: onOpenBottomSheet,
-        BottomSheet: DynamicBottomSheet,
-      };
+  const onOpenBottomSheet = React.useCallback(
+    (content: JSX.Element) => {
+      setBottomSheetContent(content);
+      setTimeout(openBottomSheet, 200);
     },
-    [bottomSheetType, openBottomSheet, BottomSheet],
+    [openBottomSheet],
+  );
+
+  const DynamicBottomSheet = React.useCallback(
+    (props: DynamicBottomSheetProps) => <BottomSheet {...props}>{bottomSheetContent}</BottomSheet>,
+    [bottomSheetContent, BottomSheet],
   );
 
   return {
     closeBottomSheet,
-    makeDynamicBottomSheet,
+    openBottomSheet: onOpenBottomSheet,
+    BottomSheet: DynamicBottomSheet,
   };
 }
