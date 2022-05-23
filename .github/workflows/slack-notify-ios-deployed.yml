@@ -15,7 +15,7 @@ jobs:
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2
         env:
-          SLACK_CHANNEL: rn-app
+          SLACK_CHANNEL: rn-app-bots-push-notification
           SLACK_COLOR: ${{ github.event.workflow_run.conclusion }}
           SLACK_TITLE: New IOS build (${{ github.event.workflow_run.conclusion }})
           SLACK_MESSAGE: ${{ github.event.workflow_run.head_commit.message }}
