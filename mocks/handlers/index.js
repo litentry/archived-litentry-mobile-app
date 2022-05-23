@@ -1,3 +1,5 @@
+import {bountiesHandler} from './bountiesHandler';
+import {bountyHandler} from './bountyHandler';
 import {chainInfoHandler} from './chainInfoHandler';
 import {councilMotionsHandler} from './councilMotionsHandler';
 import {democracyHandler} from './democracyHandler';
@@ -15,6 +17,8 @@ export const handlers = [
   parachainSummaryHandler,
   democracySummaryHandler,
   eventsCalendarHandler,
+  bountiesHandler,
+  bountyHandler,
   chainInfoHandler,
   // other handlers
 ];
