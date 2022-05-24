@@ -20,7 +20,7 @@ test('should render motion data after data is fetched', async () => {
   const navigationSpy = jest.spyOn(navigation, 'navigate');
   const polkassemblySpy = jest.spyOn(Linking, 'canOpenURL');
 
-  await waitFor(async () => {
+  await waitFor(() => {
     expect(getByText('Proposer:')).toBeTruthy();
     expect(getByText('Payout:')).toBeTruthy();
     expect(getByText('Beneficiary:')).toBeTruthy();
@@ -34,7 +34,7 @@ test('should render motion data after data is fetched', async () => {
     fireEvent.press(motionTestID);
     expect(navigationSpy).toHaveBeenCalledTimes(1);
 
-    const polkaAssembly = (await getAllByText('Polkassembly')[0]) as ReactTestInstance;
+    const polkaAssembly = getAllByText('Polkassembly')[0] as ReactTestInstance;
     fireEvent.press(polkaAssembly);
     expect(polkassemblySpy).toHaveBeenCalledTimes(1);
   });
