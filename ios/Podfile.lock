@@ -635,7 +635,7 @@ DEPENDENCIES:
   - lottie-ios (from `../node_modules/lottie-ios`)
   - lottie-react-native (from `../node_modules/lottie-react-native`)
   - OpenSSL-Universal (= 1.1.180)
-  - Permission-Camera (from `../node_modules/react-native-permissions/ios/Camera/Permission-Camera.podspec`)
+  - Permission-Camera (from `../node_modules/react-native-permissions/ios/Camera`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -752,7 +752,7 @@ EXTERNAL SOURCES:
   lottie-react-native:
     :path: "../node_modules/lottie-react-native"
   Permission-Camera:
-    :path: "../node_modules/react-native-permissions/ios/Camera/Permission-Camera.podspec"
+    :path: "../node_modules/react-native-permissions/ios/Camera"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -977,6 +977,6 @@ SPEC CHECKSUMS:
   Yoga: 90dcd029e45d8a7c1ff059e8b3c6612ff409061a
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 527540eaf7972ba894ba362ff7bafe08d78ee86a
+PODFILE CHECKSUM: 5d1b4930632e01d6c1b2e57ba3696d031033640c
 
 COCOAPODS: 1.11.2
