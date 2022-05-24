@@ -50,8 +50,8 @@ export const ACCOUNT_FIELDS_FRAGMENT = gql`
       formattedReserved
       free
       formattedFree
-      freeFrozen
-      formattedFreeFrozen
+      feeFrozen
+      formattedFeeFrozen
     }
   }
 `;

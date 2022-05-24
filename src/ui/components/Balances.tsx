@@ -40,7 +40,7 @@ function Balances({balance}: Props) {
         title="Locked"
         right={() => (
           <ItemRight>
-            <Caption>{balance.formattedFreeFrozen}</Caption>
+            <Caption>{balance.formattedFeeFrozen}</Caption>
           </ItemRight>
         )}
       />
