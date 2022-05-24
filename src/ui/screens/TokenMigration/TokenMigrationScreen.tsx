@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Linking, ScrollView, Dimensions} from 'react-native';
 import * as yup from 'yup';
-import {useWeb3Wallet} from 'context/Web3WalletContext';
+import {useWeb3Wallet, TxResult} from 'context/Web3WalletContext';
 import {useNetwork} from 'context/NetworkContext';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {SuccessAnimation} from '@ui/components/SuccessAnimation';
@@ -48,13 +48,22 @@ export function TokenMigrationScreen() {
     if (!ethAddress) {
       throw new Error('No account connected');
     }
+    const timeoutPromise = new Promise<TxResult>((resolve) => {
+      setTimeout(() => {
+        resolve({error: 'Transaction rejected.'});
+      }, 1000 * 60);
+    });
+
     setIsRequestingPermission(true);
-    const result = await wallet.approveForMigration(ethAddress);
+
+    const result = await Promise.race([wallet.approveForMigration(ethAddress), timeoutPromise]);
+
     if (result?.ok) {
       wallet.updateAccount(ethAddress);
     }
     if (result?.error) {
       setError(result.error);
+      return;
     }
     nextStep(WizardStep.RequestTransfer);
     setIsRequestingPermission(false);
@@ -68,14 +77,26 @@ export function TokenMigrationScreen() {
     if (!ethAddress) {
       throw new Error('No account connected');
     }
+    const timeoutPromise = new Promise<TxResult>((resolve) => {
+      setTimeout(() => {
+        resolve({error: 'Transaction rejected.'});
+      }, 1000 * 60);
+    });
+
     setIsRequestingTransfer(true);
-    const result = await wallet.depositForMigration(ethAddress, Number(amount), destinationAddress);
+
+    const result = await Promise.race([
+      wallet.depositForMigration(ethAddress, Number(amount), destinationAddress),
+      timeoutPromise,
+    ]);
+
     if (result?.ok) {
       wallet.updateAccount(ethAddress);
       setTxHash(result.ok);
     }
     if (result?.error) {
       setError(result.error);
+      return;
     }
     nextStep(WizardStep.Completed);
     setIsRequestingTransfer(false);
