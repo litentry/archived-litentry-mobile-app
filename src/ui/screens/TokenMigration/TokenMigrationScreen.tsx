@@ -48,11 +48,6 @@ export function TokenMigrationScreen() {
     if (!ethAddress) {
       throw new Error('No account connected');
     }
-    const timeoutPromise = new Promise<TxResult>((resolve) => {
-      setTimeout(() => {
-        resolve({error: 'Transaction rejected.'});
-      }, 1000 * 60);
-    });
 
     setIsRequestingPermission(true);
 
@@ -74,14 +69,10 @@ export function TokenMigrationScreen() {
       throw new Error('The wallet must be connected to call this method');
     }
     const ethAddress = wallet.connectedAccount?.address;
+
     if (!ethAddress) {
       throw new Error('No account connected');
     }
-    const timeoutPromise = new Promise<TxResult>((resolve) => {
-      setTimeout(() => {
-        resolve({error: 'Transaction rejected.'});
-      }, 1000 * 60);
-    });
 
     setIsRequestingTransfer(true);
 
@@ -285,6 +276,12 @@ export function TokenMigrationScreen() {
     </View>
   );
 }
+
+const timeoutPromise = new Promise<TxResult>((resolve) => {
+  setTimeout(() => {
+    resolve({error: 'Transaction rejected.'});
+  }, 1000 * 60);
+});
 
 function isAmountValid(balance: number, amount: number): boolean {
   const amountSchema = yup.number().positive().max(balance);
