@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, FlatList} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {useBounties, Bounty} from 'src/api/hooks/useBounties';
 import {EmptyView} from '@ui/components/EmptyView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -10,10 +10,14 @@ import {bountyDetailScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
 import * as routeKeys from '@ui/navigation/routeKeys';
+import {DashboardStackParamList} from '@ui/navigation/navigation';
 
-export function BountiesScreen() {
+type ScreenProps = {
+  navigation: NavigationProp<DashboardStackParamList>;
+};
+
+export function BountiesScreen({navigation}: ScreenProps) {
   const {data: bounties, loading} = useBounties();
-  const navigation = useNavigation();
   return (
     <SafeView edges={noTopEdges}>
       {loading && !bounties ? (

@@ -38,7 +38,7 @@ const litmusNetwork: NetworkType = {
   isParachain: true,
 };
 
-function getAvailableNetworks(options?: {parachainsEnabled: boolean}): NetworkType[] {
+export function getAvailableNetworks(options?: {parachainsEnabled: boolean}): NetworkType[] {
   return [
     polkadotNetwork,
     kusamaNetwork,

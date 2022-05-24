@@ -1,6 +1,6 @@
 import {Linking} from 'react-native';
 
-type SendEmailProps = {
+export type SendEmailOptions = {
   to: string;
   subject: string;
   body: string;
@@ -10,7 +10,17 @@ type SendEmailProps = {
   };
 };
 
-export async function sendEmail(props: SendEmailProps) {
+export async function sendEmail(props: SendEmailOptions) {
+  const url = composeEmailURL(props);
+
+  const canOpen = await Linking.canOpenURL(url);
+  if (!canOpen) {
+    throw new Error('Provided URL can not be handled');
+  }
+  return Linking.openURL(url);
+}
+
+export function composeEmailURL(props: SendEmailOptions) {
   const {to, subject, body, options} = props;
   const {cc, bcc} = options ?? {};
 
@@ -30,13 +40,5 @@ export async function sendEmail(props: SendEmailProps) {
   if (query.length) {
     url += `?${query}`;
   }
-
-  // check if we can use this link
-  const canOpen = await Linking.canOpenURL(url);
-
-  if (!canOpen) {
-    throw new Error('Provided URL can not be handled');
-  }
-
-  return Linking.openURL(url);
+  return url;
 }

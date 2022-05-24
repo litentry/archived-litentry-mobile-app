@@ -6,7 +6,7 @@ import {SignerPayloadJSON} from '@polkadot/types/types';
 import {createFrames, QrCode} from 'src/utils/qrCode';
 import {createSignPayload} from 'src/utils/signer';
 import {CMD_HASH, CMD_MORTAL} from 'src/constants';
-import ModalTitle from './ModalTitle';
+import ModalTitle from '@ui/components/ModalTitle';
 import {ChainApiContext} from 'context/ChainApiContext';
 import {Button, Divider, useTheme} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
@@ -20,7 +20,7 @@ type PropTypes = {
   onCancel: () => void;
 };
 
-function TxPayloadQr({payload, onConfirm, onCancel}: PropTypes): React.ReactElement {
+export function PayloadQrCodeView({payload, onConfirm, onCancel}: PropTypes): React.ReactElement {
   const {api} = useContext(ChainApiContext);
   const [imageUri, setImageUri] = useState<string>();
   const {colors} = useTheme();
@@ -95,5 +95,3 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
 });
-
-export default TxPayloadQr;
