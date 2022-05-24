@@ -209,7 +209,7 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
   };
 
   const Actions = (
-    <View style={globalStyles.rowAlignCenter}>
+    <View style={globalStyles.rowAlignCenter} testID="motion-container">
       <Subheading>{`Aye ${votes?.ayes?.length}/${votes?.threshold} `}</Subheading>
       <Padder scale={0.5} />
       {(() => {
@@ -262,27 +262,27 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
           left={() => <Headline>{`#${proposal.index}`}</Headline>}
           right={() => <View>{Actions}</View>}
         />
-        {proposal.proposer && (
+        {proposal.proposer ? (
           <ItemRowBlock label="Proposer">
             <AccountTeaser account={proposal.proposer.account} />
           </ItemRowBlock>
-        )}
-        {proposal.payout && (
+        ) : null}
+        {proposal.payout ? (
           <ItemRowBlock label="Payout">
             <Caption>{proposal.payout}</Caption>
           </ItemRowBlock>
-        )}
-        {proposal.beneficiary && (
+        ) : null}
+        {proposal.beneficiary ? (
           <ItemRowBlock label="Beneficiary">
             <AccountTeaser account={proposal.beneficiary.account} />
           </ItemRowBlock>
-        )}
-        {proposal.payout && (
+        ) : null}
+        {proposal.payout ? (
           <ItemRowBlock label="Bond">
             <Caption>{proposal.bond}</Caption>
           </ItemRowBlock>
-        )}
-        <ProposalCall proposal={motion.proposal} />
+        ) : null}
+        {motion.proposal ? <ProposalCall proposal={motion.proposal} /> : null}
       </Card.Content>
       <Padder scale={1} />
       <Divider />
