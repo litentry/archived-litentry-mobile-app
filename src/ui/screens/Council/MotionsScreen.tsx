@@ -209,7 +209,7 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
   };
 
   const Actions = (
-    <View style={globalStyles.rowAlignCenter}>
+    <View style={globalStyles.rowAlignCenter} testID="motion-container">
       <Subheading>{`Aye ${votes?.ayes?.length}/${votes?.threshold} `}</Subheading>
       <Padder scale={0.5} />
       {(() => {
