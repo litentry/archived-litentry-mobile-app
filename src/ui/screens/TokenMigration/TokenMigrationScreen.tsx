@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Linking, ScrollView, Dimensions} from 'react-native';
+import * as yup from 'yup';
 import {useWeb3Wallet} from 'context/Web3WalletContext';
 import {useNetwork} from 'context/NetworkContext';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
@@ -9,7 +10,7 @@ import {SelectAccount} from '@ui/components/SelectAccount';
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
 import {decimalKeypad} from 'src/utils';
-import {Text, Card, Button, Subheading, Title, Icon, TextInput, useBottomSheet, useTheme} from '@ui/library';
+import {Text, Card, Button, Subheading, Title, Caption, Icon, TextInput, useBottomSheet, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {useTransactionWizard, WizardStep} from './TransactionWizard';
 import {WalletConnectButton} from './WalletConnectButton';
@@ -31,6 +32,7 @@ export function TokenMigrationScreen() {
   const [txHash, setTxHash] = React.useState('');
   const [amount, setAmount] = React.useState('');
   const [error, setError] = React.useState<string | null>(null);
+  const maxAmount = wallet.isConnected ? wallet.connectedAccount?.balance.lit.toNumber() ?? 0 : 0;
 
   const retry = React.useCallback(() => {
     setIsRequestingPermission(false);
@@ -88,11 +90,11 @@ export function TokenMigrationScreen() {
           <Padder scale={0.5} />
           <Icon name="swap-horizontal" size={25} />
           <Padder scale={0.5} />
-          <Text>Litmus</Text>
+          <Text>{currentNetwork.name}</Text>
         </View>
       </View>
     );
-  }, []);
+  }, [currentNetwork.name]);
 
   const renderPreviewContent = () => {
     if (!wallet.isConnected) {
@@ -219,13 +221,21 @@ export function TokenMigrationScreen() {
               onChangeText={(_amount) => {
                 setAmount(decimalKeypad(_amount));
               }}
+              error={wallet.isConnected && amount !== '' && !isAmountValid(maxAmount, Number(amount))}
             />
+            {wallet.isConnected ? (
+              <View style={styles.balance}>
+                <Caption>
+                  Balance: {formatBalance(stringToBn(wallet.connectedAccount?.balance.lit.toString() || '0'))}
+                </Caption>
+              </View>
+            ) : null}
             <Padder scale={2} />
             <Button
               mode="contained"
               compact
               onPress={openPreview}
-              disabled={!amount || !destinationAddress || !wallet.isConnected}>
+              disabled={!wallet.isConnected || !destinationAddress || !isAmountValid(maxAmount, Number(amount))}>
               Preview
             </Button>
           </Card.Content>
@@ -253,6 +263,12 @@ export function TokenMigrationScreen() {
       </Preview>
     </View>
   );
+}
+
+function isAmountValid(balance: number, amount: number): boolean {
+  const amountSchema = yup.number().positive().max(balance);
+
+  return amountSchema.isValidSync(amount);
 }
 
 function openOnEtherscan(txHash: string) {
@@ -315,5 +331,8 @@ const styles = StyleSheet.create({
   errorMessageContainer: {
     height: height * 0.3,
     paddingBottom: standardPadding * 2,
+  },
+  balance: {
+    alignItems: 'flex-end',
   },
 });
