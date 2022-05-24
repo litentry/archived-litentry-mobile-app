@@ -23,7 +23,7 @@ export function ReceiveFund({address, onClose}: Props) {
   useEffect(() => {
     setTimeout(() => {
       setImageUri(getAccountQRCode(address));
-    }, 1000);
+    }, 500);
   }, [address]);
 
   const copyToClipboard = () => {

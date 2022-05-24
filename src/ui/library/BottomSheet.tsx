@@ -9,21 +9,32 @@ import RNBottomSheet, {
 import {View, Text, StyleSheet} from 'react-native';
 import {useTheme} from './index';
 
-export type BottomSheetProps = Omit<RNBottomSheetProps, 'snapPoints'>;
+interface BottomSheetProps extends Omit<RNBottomSheetProps, 'snapPoints' | 'children'> {
+  children?: React.ReactNode;
+}
 
 export function useBottomSheet() {
   const {colors} = useTheme();
   const bottomSheetRef = React.useRef<RNBottomSheet>(null);
+  const [bottomSheetContent, setBottomSheetContent] = React.useState<React.ReactNode>();
   const initialSnapPoints = React.useMemo(() => ['25%', 'CONTENT_HEIGHT'], []);
   const {animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout} =
     useBottomSheetDynamicSnapPoints(initialSnapPoints);
 
-  const openBottomSheet = React.useCallback(() => {
-    bottomSheetRef.current?.expand();
+  const openBottomSheet = React.useCallback((content?: React.ReactNode) => {
+    if (content) {
+      setBottomSheetContent(content);
+    }
+    setTimeout(() => {
+      bottomSheetRef.current?.expand();
+    }, 200);
   }, []);
 
   const closeBottomSheet = React.useCallback(() => {
     bottomSheetRef.current?.close();
+    setTimeout(() => {
+      setBottomSheetContent(undefined);
+    }, 200);
   }, []);
 
   const Backdrop = React.useCallback(
@@ -54,10 +65,21 @@ export function useBottomSheet() {
         enablePanDownToClose={true}
         animateOnMount={true}
         {...props}>
-        <BottomSheetView onLayout={handleContentLayout}>{children ? children : noContent}</BottomSheetView>
+        <BottomSheetView onLayout={handleContentLayout}>
+          {children ? children : bottomSheetContent ? bottomSheetContent : noContent}
+        </BottomSheetView>
       </RNBottomSheet>
     ),
-    [colors, Backdrop, animatedSnapPoints, animatedHandleHeight, animatedContentHeight, handleContentLayout, noContent],
+    [
+      colors,
+      Backdrop,
+      animatedSnapPoints,
+      animatedHandleHeight,
+      animatedContentHeight,
+      handleContentLayout,
+      noContent,
+      bottomSheetContent,
+    ],
   );
 
   return {

@@ -3,7 +3,7 @@ import {Alert, StyleSheet, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Layout} from '@ui/components/Layout';
-import {Button, List, Icon, Caption, Divider, IconButton} from '@ui/library';
+import {Button, List, Icon, Caption, Divider, IconButton, useBottomSheet} from '@ui/library';
 import {useNetwork} from 'context/NetworkContext';
 import IdentityInfoForm, {IdentityPayload} from '@ui/components/IdentityInfoForm';
 import InfoBanner from '@ui/components/InfoBanner';
@@ -24,7 +24,6 @@ import {useSubAccounts} from 'src/api/hooks/useSubAccounts';
 import {AccountRegistration} from '@ui/components/Account/AccountRegistration';
 import {IdentityGuide} from '@ui/components/IdentityGuide';
 import {RequestJudgement} from '@ui/components/RequestJudgement';
-import {useDynamicBottomSheet} from 'src/hooks/useDynamicBottomSheet';
 
 type ScreenProps = {
   navigation: NavigationProp<AccountsStackParamList>;
@@ -42,7 +41,7 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
   const judgementCount = judgements?.length || 0;
   const hasJudgements = judgements && judgementCount > 0;
 
-  const {closeBottomSheet, openBottomSheet, BottomSheet} = useDynamicBottomSheet();
+  const {closeBottomSheet, openBottomSheet, BottomSheet} = useBottomSheet();
 
   const onSubmitIdentityInfo = useCallback(
     async (info: IdentityPayload) => {

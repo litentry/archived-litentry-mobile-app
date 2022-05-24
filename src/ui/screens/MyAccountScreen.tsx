@@ -7,7 +7,17 @@ import Identicon from '@polkadot/reactnative-identicon';
 import {useAccounts} from 'context/AccountsContext';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {Button, Caption, IconButton, IconSource, Card, useTheme, Subheading, Divider} from '@ui/library';
+import {
+  Button,
+  Caption,
+  IconButton,
+  IconSource,
+  Card,
+  useTheme,
+  Subheading,
+  Divider,
+  useBottomSheet,
+} from '@ui/library';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {AccountsStackParamList, CompleteNavigatorParamList} from '@ui/navigation/navigation';
@@ -18,7 +28,6 @@ import {Layout} from '@ui/components/Layout';
 import {AccountBalance} from '@ui/components/Account/AccountBalance';
 import {SendFund} from '@ui/components/SendFund';
 import {ReceiveFund} from '@ui/components/ReceiveFund';
-import {useDynamicBottomSheet} from 'src/hooks/useDynamicBottomSheet';
 
 type ScreenProps = {
   navigation: NavigationProp<CompleteNavigatorParamList>;
@@ -37,7 +46,7 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
     snackbar('Address copied to clipboard!');
   };
 
-  const {closeBottomSheet, openBottomSheet, BottomSheet} = useDynamicBottomSheet();
+  const {closeBottomSheet, openBottomSheet, BottomSheet} = useBottomSheet();
 
   return (
     <SafeView edges={noTopEdges}>

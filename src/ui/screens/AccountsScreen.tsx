@@ -3,7 +3,7 @@ import {FlatList, View, StyleSheet, TouchableOpacity} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp} from '@react-navigation/native';
 import {Account as AccountType, useAccounts} from 'context/AccountsContext';
-import {useTheme, Divider, IconButton, List, FAB, Caption, Menu, Subheading, Icon} from '@ui/library';
+import {useTheme, Divider, IconButton, List, FAB, Caption, Menu, Subheading, Icon, useBottomSheet} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {CompleteNavigatorParamList} from '@ui/navigation/navigation';
 import {accountsScreen, importAccountScreen, mnemonicScreen, myAccountScreen} from '@ui/navigation/routeKeys';
@@ -14,7 +14,6 @@ import {Account} from '@ui/components/Account/Account';
 import {Padder} from '@ui/components/Padder';
 import {AccountsGuide} from '@ui/components/Account/AccountsGuide';
 import {AddExternalAccount} from '@ui/components/Account/AddExternalAccount';
-import {useDynamicBottomSheet} from 'src/hooks/useDynamicBottomSheet';
 
 type Props = {
   navigation: NavigationProp<CompleteNavigatorParamList, typeof accountsScreen>;
@@ -37,7 +36,7 @@ export function AccountsScreen({navigation}: Props) {
     setSortMenuVisible(false);
   };
 
-  const {closeBottomSheet, openBottomSheet, BottomSheet} = useDynamicBottomSheet();
+  const {closeBottomSheet, openBottomSheet, BottomSheet} = useBottomSheet();
 
   React.useEffect(() => {
     navigation.setOptions({
