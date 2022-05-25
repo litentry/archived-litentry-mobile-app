@@ -47,7 +47,12 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
                     <Identicon value={candidate.account.address} size={30} />
                     <Padder scale={0.5} />
                     {accountInfo && (
-                      <AccountTeaser account={accountInfo} onPress={() => toAccountDetails(accountInfo.address)} />
+                      <AccountTeaser
+                        account={accountInfo}
+                        onPress={() => toAccountDetails(accountInfo.address)}
+                        testID={'accountsDetails'}
+                        name={accountInfo.display}
+                      />
                     )}
                   </View>
                   <Padder scale={0.5} />
