@@ -7,10 +7,10 @@ import PagerView from 'react-native-pager-view';
 import {Padder} from './Padder';
 
 type Props = {
-  onClose: () => void;
+  onSkip: () => void;
 };
 
-export function IdentityGuide({onClose}: Props) {
+export function IdentityGuide({onSkip}: Props) {
   return (
     <Layout>
       <Subheading style={globalStyles.textCenter}>{`Identity Guid`}</Subheading>
@@ -55,7 +55,7 @@ export function IdentityGuide({onClose}: Props) {
       </PagerView>
       <Padder scale={1} />
       <View style={styles.footer}>
-        <Button mode="outlined" onPress={onClose}>{`Skip`}</Button>
+        <Button mode="outlined" onPress={onSkip}>{`Skip`}</Button>
       </View>
       <Padder scale={2} />
     </Layout>

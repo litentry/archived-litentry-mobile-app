@@ -75,7 +75,7 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
         <IconButton
           icon="information"
           onPress={() => {
-            openBottomSheet(<IdentityGuide onClose={closeBottomSheet} />);
+            openBottomSheet(<IdentityGuide onSkip={closeBottomSheet} />);
           }}
         />
       ),

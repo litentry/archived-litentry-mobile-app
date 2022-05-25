@@ -68,7 +68,7 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
                 icon="send"
                 title="Send"
                 onPress={() => {
-                  openBottomSheet(<SendFund address={address} onClose={closeBottomSheet} />);
+                  openBottomSheet(<SendFund address={address} onFundsSent={closeBottomSheet} />);
                 }}
               />
 

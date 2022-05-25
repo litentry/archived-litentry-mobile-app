@@ -17,10 +17,10 @@ import {Layout} from '@ui/components/Layout';
 
 type Props = {
   address: string;
-  onClose: () => void;
+  onFundsSent: () => void;
 };
 
-export function SendFund({address, onClose}: Props) {
+export function SendFund({address, onFundsSent}: Props) {
   const {data: accountInfo} = useAccount(address);
   const [amount, setAmount] = React.useState('');
   const [toAddress, setToAddress] = React.useState<string>();
@@ -84,7 +84,7 @@ export function SendFund({address, onClose}: Props) {
               })
                 .then(() => {
                   snackbar('Funds transferred');
-                  onClose();
+                  onFundsSent();
                 })
                 .catch(() => {
                   snackbar('Error while transferring funds');

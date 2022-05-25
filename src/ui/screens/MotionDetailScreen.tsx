@@ -4,7 +4,6 @@ import {RouteProp} from '@react-navigation/native';
 import {Card, Icon, Caption, Subheading, Paragraph, useBottomSheet} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {useNetwork} from 'context/NetworkContext';
-import {capitalize} from 'lodash';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -102,7 +101,9 @@ export function MotionDetailScreen({route, navigation}: PropTypes) {
         <View style={globalStyles.spaceBetweenRowContainer}>
           <Card style={[styles.item, styles.left]}>
             <Card.Content>
-              <StatInfoBlock title="Section">{capitalize(proposal.section)}</StatInfoBlock>
+              <StatInfoBlock title="Section">
+                {<Caption style={styles.textCapitalize}>{proposal.section}</Caption>}
+              </StatInfoBlock>
               <Padder scale={0.5} />
               <StatInfoBlock title="Method">{proposal.method}</StatInfoBlock>
             </Card.Content>
@@ -182,7 +183,9 @@ export function MotionDetailScreen({route, navigation}: PropTypes) {
 }
 
 const styles = StyleSheet.create({
-  container: {flex: 1},
+  container: {
+    flex: 1,
+  },
   item: {
     flex: 1,
   },
@@ -197,5 +200,8 @@ const styles = StyleSheet.create({
   },
   voteContainer: {
     paddingVertical: standardPadding / 2,
+  },
+  textCapitalize: {
+    textTransform: 'capitalize',
   },
 });
