@@ -15,6 +15,7 @@ import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {useBountiesSummary} from 'src/api/hooks/useBountiesSummary';
 import type {BN} from '@polkadot/util';
 import {formattedStringToBn} from 'src/utils/balance';
+import {countUtf8Bytes} from 'src/utils';
 
 type Props = {
   onClose: () => void;
@@ -146,9 +147,6 @@ export function AddBounty({onClose}: Props) {
 
 function calculateBountyBond(description: string, depositBase: BN, depositPerByte: BN): BN {
   return depositBase.add(depositPerByte.muln(countUtf8Bytes(description)));
-}
-function countUtf8Bytes(str: string): number {
-  return new Blob([str]).size;
 }
 
 const styles = StyleSheet.create({

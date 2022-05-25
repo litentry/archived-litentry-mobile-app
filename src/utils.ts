@@ -11,3 +11,7 @@ export function decimalKeypad(numericValue: string): string {
   const number = numericValue.replace(',', '.');
   return number.split('.').length <= 2 ? number : number.slice(0, -1);
 }
+
+export function countUtf8Bytes(str: string): number {
+  return new Blob([str]).size;
+}

@@ -6,6 +6,7 @@ export const councilMotionsHandler = graphql.query('getCouncilMotions', (_, res,
       substrateChainCouncilMotions: [
         {
           proposal: {
+            __typename: 'SubstrateChainMotionProposal',
             index: '180',
             meta: 'Schedule a majority-carries referendum to be tabled next once it is legal to schedule an external referendum.',
             method: 'externalProposeMajority',
@@ -265,6 +266,7 @@ export const councilMotionsHandler = graphql.query('getCouncilMotions', (_, res,
         },
         {
           proposal: {
+            __typename: 'SubstrateChainMotionProposal',
             index: '181',
             meta: 'Approve a proposal. At a later time, the proposal will be allocated to the beneficiary and the original deposit will be returned.',
             method: 'approveProposal',

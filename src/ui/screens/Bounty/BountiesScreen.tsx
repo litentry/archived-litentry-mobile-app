@@ -36,7 +36,7 @@ export function BountiesScreen({navigation}: ScreenProps) {
           keyExtractor={({index}) => index.toString()}
           ListHeaderComponent={
             <View style={styles.bounty}>
-              <Button style={{}} icon="plus" mode="outlined" onPress={openBottomSheet}>
+              <Button icon="plus" mode="outlined" onPress={openBottomSheet}>
                 Add Bounty
               </Button>
             </View>
