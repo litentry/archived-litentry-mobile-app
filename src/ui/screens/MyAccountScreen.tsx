@@ -14,9 +14,9 @@ import {
   IconSource,
   Card,
   useTheme,
-  useBottomSheet,
   Subheading,
   Divider,
+  useBottomSheet,
 } from '@ui/library';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useAccount} from 'src/api/hooks/useAccount';
@@ -28,8 +28,6 @@ import {Layout} from '@ui/components/Layout';
 import {AccountBalance} from '@ui/components/Account/AccountBalance';
 import {SendFund} from '@ui/components/SendFund';
 import {ReceiveFund} from '@ui/components/ReceiveFund';
-
-type BOTTOM_SHEET_TYPE = 'BALANCE' | 'SEND_FUND' | 'RECEIVE_FUND';
 
 type ScreenProps = {
   navigation: NavigationProp<CompleteNavigatorParamList>;
@@ -48,39 +46,7 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
     snackbar('Address copied to clipboard!');
   };
 
-  const {openBottomSheet, closeBottomSheet, BottomSheet} = useBottomSheet();
-  const [bottomSheetType, setBottomSheetType] = React.useState<BOTTOM_SHEET_TYPE>();
-
-  const onOpenBottomSheet = (type: BOTTOM_SHEET_TYPE) => {
-    setBottomSheetType(type);
-    setTimeout(() => {
-      openBottomSheet();
-    }, 100);
-  };
-
-  const bottomSheetContent = React.useMemo(() => {
-    switch (bottomSheetType) {
-      case 'BALANCE':
-        return (
-          <Layout style={styles.balanceContainer}>
-            <Subheading style={globalStyles.textCenter}>{`Account balance`}</Subheading>
-            <Padder scale={0.5} />
-            <Divider />
-            {accountInfo?.balance ? <AccountBalance balance={accountInfo.balance} /> : null}
-            <Divider />
-            <Padder scale={1} />
-            <Button onPress={closeBottomSheet}>Close</Button>
-            <Padder scale={2} />
-          </Layout>
-        );
-      case 'SEND_FUND':
-        return <SendFund address={address} onClose={closeBottomSheet} />;
-      case 'RECEIVE_FUND':
-        return <ReceiveFund address={address} onClose={closeBottomSheet} />;
-      default:
-        return null;
-    }
-  }, [bottomSheetType, closeBottomSheet, accountInfo?.balance, address]);
+  const {closeBottomSheet, openBottomSheet, BottomSheet} = useBottomSheet();
 
   return (
     <SafeView edges={noTopEdges}>
@@ -102,7 +68,7 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
                 icon="send"
                 title="Send"
                 onPress={() => {
-                  onOpenBottomSheet('SEND_FUND');
+                  openBottomSheet(<SendFund address={address} onClose={closeBottomSheet} />);
                 }}
               />
 
@@ -110,7 +76,7 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
                 icon="download"
                 title="Receive"
                 onPress={() => {
-                  onOpenBottomSheet('RECEIVE_FUND');
+                  openBottomSheet(<ReceiveFund address={address} onClose={closeBottomSheet} />);
                 }}
               />
               <ActionButton
@@ -142,7 +108,23 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
         </Card>
 
         <View style={styles.buttonGroup}>
-          <Button icon="credit-card" mode="text" onPress={() => onOpenBottomSheet('BALANCE')}>
+          <Button
+            icon="credit-card"
+            mode="text"
+            onPress={() =>
+              openBottomSheet(
+                <Layout style={styles.balanceContainer}>
+                  <Subheading style={globalStyles.textCenter}>{`Account balance`}</Subheading>
+                  <Padder scale={0.5} />
+                  <Divider />
+                  {accountInfo?.balance ? <AccountBalance balance={accountInfo.balance} /> : null}
+                  <Divider />
+                  <Padder scale={1} />
+                  <Button onPress={closeBottomSheet}>Close</Button>
+                  <Padder scale={2} />
+                </Layout>,
+              )
+            }>
             Balance details
           </Button>
           <Padder scale={1} />
@@ -150,7 +132,7 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
             icon="cog"
             mode="text"
             onPress={() => {
-              navigation.navigate(manageIdentityScreen, {address, showIdentityGuide: Boolean(account?.isExternal)});
+              navigation.navigate(manageIdentityScreen, {address});
             }}>
             Manage identity
           </Button>
@@ -187,7 +169,7 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
         </View>
       </ScrollView>
 
-      <BottomSheet>{bottomSheetContent}</BottomSheet>
+      <BottomSheet />
     </SafeView>
   );
 }

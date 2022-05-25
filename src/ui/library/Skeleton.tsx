@@ -11,7 +11,7 @@ type Props = {
 const AnimatedLG = Animated.createAnimatedComponent(LinearGradient);
 
 export function Skeleton({width, height, circle = false}: Props) {
-  const widthValue = !circle ? `${width}%` : width;
+  const widthValue = !circle && !height ? `${width}%` : width;
   const heightValue = height ? height : !circle && !height ? 25 : width;
   const borderRadius = circle ? Math.floor(width / 2) : 4;
 

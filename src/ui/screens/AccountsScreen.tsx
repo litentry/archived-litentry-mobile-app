@@ -21,12 +21,8 @@ type Props = {
 
 type SortBy = 'name' | 'favorites';
 
-type BOTTOM_SHEET_TYPE = 'ACCOUNT_GUIDE' | 'ADD_EXTERNAL_ACCOUNT';
-
 export function AccountsScreen({navigation}: Props) {
-  const {openBottomSheet, closeBottomSheet, BottomSheet} = useBottomSheet();
   const {networkAccounts, toggleFavorite} = useAccounts();
-
   const [sortBy, setSortBy] = React.useState<SortBy>('name');
   const sortByFunction = sortBy === 'name' ? sortByDisplayName : sortByIsFavorite;
   const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
@@ -35,17 +31,12 @@ export function AccountsScreen({navigation}: Props) {
     navigation.navigate(myAccountScreen, {address});
   };
 
-  const [bottomSheetType, setBottomSheetType] = React.useState<BOTTOM_SHEET_TYPE>();
+  const sortAccounts = (sort: SortBy) => {
+    setSortBy(sort);
+    setSortMenuVisible(false);
+  };
 
-  const onOpenBottomSheet = React.useCallback(
-    (type: BOTTOM_SHEET_TYPE) => {
-      setBottomSheetType(type);
-      setTimeout(() => {
-        openBottomSheet();
-      }, 100);
-    },
-    [openBottomSheet],
-  );
+  const {closeBottomSheet, openBottomSheet, BottomSheet} = useBottomSheet();
 
   React.useEffect(() => {
     navigation.setOptions({
@@ -53,28 +44,12 @@ export function AccountsScreen({navigation}: Props) {
         <IconButton
           icon="information"
           onPress={() => {
-            onOpenBottomSheet('ACCOUNT_GUIDE');
+            openBottomSheet(<AccountsGuide />);
           }}
         />
       ),
     });
-  }, [navigation, onOpenBottomSheet]);
-
-  const sortAccounts = (sort: SortBy) => {
-    setSortBy(sort);
-    setSortMenuVisible(false);
-  };
-
-  const bottomSheetContent = React.useMemo(() => {
-    switch (bottomSheetType) {
-      case 'ACCOUNT_GUIDE':
-        return <AccountsGuide />;
-      case 'ADD_EXTERNAL_ACCOUNT':
-        return <AddExternalAccount onClose={closeBottomSheet} />;
-      default:
-        return null;
-    }
-  }, [bottomSheetType, closeBottomSheet]);
+  }, [navigation, openBottomSheet]);
 
   return (
     <SafeView edges={noTopEdges}>
@@ -129,11 +104,10 @@ export function AccountsScreen({navigation}: Props) {
       <Buttons
         navigation={navigation}
         onAddAccount={() => {
-          onOpenBottomSheet('ADD_EXTERNAL_ACCOUNT');
+          openBottomSheet(<AddExternalAccount onClose={closeBottomSheet} />);
         }}
       />
-
-      <BottomSheet>{bottomSheetContent}</BottomSheet>
+      <BottomSheet />
     </SafeView>
   );
 }
