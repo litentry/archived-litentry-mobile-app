@@ -1,5 +1,3 @@
-import {NavigationProp} from '@react-navigation/native';
-import {ParachainsStackParamList} from '@ui/navigation/navigation';
 import React from 'react';
 import {render, waitFor} from 'src/testUtils';
 import {AuctionsScreen} from './AuctionsScreen';
@@ -9,10 +7,9 @@ test('render the loading component view when data is fetching', () => {
   expect(getByTestId('loading_view')).toBeTruthy();
 });
 
-test('render the component after is fetched', async () => {
-  const {getByText, getAllByText, debug} = render(<AuctionsScreen />);
+test('render the component after data is fetched', async () => {
+  const {getByText, getAllByText} = render(<AuctionsScreen />);
   await waitFor(() => {
-    debug();
     expect(getByText('Auctions')).toBeDefined();
     expect(getByText('Active')).toBeDefined();
     expect(getByText('First - Last')).toBeDefined();
