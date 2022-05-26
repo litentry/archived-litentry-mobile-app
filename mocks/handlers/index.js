@@ -1,3 +1,4 @@
+import {auctionsHandler} from './auctionsHandler';
 import {bountiesHandler} from './bountiesHandler';
 import {bountyHandler} from './bountyHandler';
 import {chainInfoHandler} from './chainInfoHandler';
@@ -20,5 +21,6 @@ export const handlers = [
   bountiesHandler,
   bountyHandler,
   chainInfoHandler,
+  auctionsHandler,
   // other handlers
 ];
