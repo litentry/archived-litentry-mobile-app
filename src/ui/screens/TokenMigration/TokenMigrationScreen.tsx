@@ -1,18 +1,22 @@
 import React from 'react';
-import {View, StyleSheet, Linking, ScrollView} from 'react-native';
-import {useWeb3Wallet} from 'context/Web3WalletContext';
+import {View, StyleSheet, Linking, ScrollView, Dimensions} from 'react-native';
+import * as yup from 'yup';
+import {useWeb3Wallet, TxResult} from 'context/Web3WalletContext';
 import {useNetwork} from 'context/NetworkContext';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {SuccessAnimation} from '@ui/components/SuccessAnimation';
+import {MessageTeaser} from '@ui/components/MessageTeaser';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
 import {decimalKeypad} from 'src/utils';
-import {Text, Card, Button, Subheading, Title, Icon, TextInput, useBottomSheet, useTheme} from '@ui/library';
+import {Text, Card, Button, Subheading, Title, Caption, Icon, TextInput, useBottomSheet, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {useTransactionWizard, WizardStep} from './TransactionWizard';
 import {WalletConnectButton} from './WalletConnectButton';
 import {toShortAddress} from 'src/utils/address';
+
+const {height} = Dimensions.get('window');
 
 export function TokenMigrationScreen() {
   const {colors} = useTheme();
@@ -27,6 +31,14 @@ export function TokenMigrationScreen() {
   const [destinationAddress, setDestinationAddress] = React.useState('');
   const [txHash, setTxHash] = React.useState('');
   const [amount, setAmount] = React.useState('');
+  const [error, setError] = React.useState<string | null>(null);
+  const maxAmount = wallet.isConnected ? wallet.connectedAccount?.balance.lit.toNumber() ?? 0 : 0;
+
+  const retry = React.useCallback(() => {
+    setIsRequestingPermission(false);
+    setIsRequestingTransfer(false);
+    setError(null);
+  }, []);
 
   const requestPermission = React.useCallback(async () => {
     if (!wallet.isConnected) {
@@ -36,14 +48,17 @@ export function TokenMigrationScreen() {
     if (!ethAddress) {
       throw new Error('No account connected');
     }
+
     setIsRequestingPermission(true);
-    const result = await wallet.approveForMigration(ethAddress);
+
+    const result = await Promise.race([wallet.approveForMigration(ethAddress), timeoutPromise]);
+
     if (result?.ok) {
       wallet.updateAccount(ethAddress);
     }
     if (result?.error) {
-      // TODO: handle error
-      console.error(result.error);
+      setError(result.error);
+      return;
     }
     nextStep(WizardStep.RequestTransfer);
     setIsRequestingPermission(false);
@@ -54,18 +69,25 @@ export function TokenMigrationScreen() {
       throw new Error('The wallet must be connected to call this method');
     }
     const ethAddress = wallet.connectedAccount?.address;
+
     if (!ethAddress) {
       throw new Error('No account connected');
     }
+
     setIsRequestingTransfer(true);
-    const result = await wallet.depositForMigration(ethAddress, Number(amount), destinationAddress);
+
+    const result = await Promise.race([
+      wallet.depositForMigration(ethAddress, Number(amount), destinationAddress),
+      timeoutPromise,
+    ]);
+
     if (result?.ok) {
       wallet.updateAccount(ethAddress);
       setTxHash(result.ok);
     }
     if (result?.error) {
-      // TODO: handle error
-      console.error(result.error);
+      setError(result.error);
+      return;
     }
     nextStep(WizardStep.Completed);
     setIsRequestingTransfer(false);
@@ -80,16 +102,17 @@ export function TokenMigrationScreen() {
           <Padder scale={0.5} />
           <Icon name="swap-horizontal" size={25} />
           <Padder scale={0.5} />
-          <Text>Litmus</Text>
+          <Text>{currentNetwork.name}</Text>
         </View>
       </View>
     );
-  }, []);
+  }, [currentNetwork.name]);
 
   const renderPreviewContent = () => {
     if (!wallet.isConnected) {
       return null;
     }
+
     return (
       <>
         <TransactionWizard />
@@ -126,7 +149,7 @@ export function TokenMigrationScreen() {
             <Padder />
             <View style={styles.summaryRow}>
               <Subheading>ETH Balance</Subheading>
-              <Text>{formatBalance(stringToBn(wallet.connectedAccount?.balance.eth.toString() ?? ''))}</Text>
+              <Text>{`${wallet.connectedAccount?.balance.eth.toFixed(4)} ETH` ?? ''}</Text>
             </View>
             <Padder />
             <View style={styles.summaryRow}>
@@ -142,6 +165,9 @@ export function TokenMigrationScreen() {
   };
 
   const renderPreviewButton = () => {
+    if (error) {
+      return null;
+    }
     if (currentStep === WizardStep.RequestPermission) {
       return (
         <Button loading={isRequestingPermission} mode="contained" onPress={requestPermission}>
@@ -184,7 +210,7 @@ export function TokenMigrationScreen() {
                   left={<TextInput.Icon name="check-network-outline" color={colors.primary} />}
                   mode="outlined"
                   value={toShortAddress(wallet.connectedAccount?.address ?? '')}
-                  disabled
+                  editable={false}
                 />
                 <View style={styles.disconnectWalletContainer}>
                   <Button compact onPress={() => wallet.disconnect()}>
@@ -207,13 +233,21 @@ export function TokenMigrationScreen() {
               onChangeText={(_amount) => {
                 setAmount(decimalKeypad(_amount));
               }}
+              error={wallet.isConnected && amount !== '' && !isAmountValid(maxAmount, Number(amount))}
             />
+            {wallet.isConnected ? (
+              <View style={styles.balance}>
+                <Caption>
+                  Balance: {formatBalance(stringToBn(wallet.connectedAccount?.balance.lit.toString() || '0'))}
+                </Caption>
+              </View>
+            ) : null}
             <Padder scale={2} />
             <Button
               mode="contained"
               compact
               onPress={openPreview}
-              disabled={!amount || !destinationAddress || !wallet.isConnected}>
+              disabled={!wallet.isConnected || !destinationAddress || !isAmountValid(maxAmount, Number(amount))}>
               Preview
             </Button>
           </Card.Content>
@@ -222,16 +256,37 @@ export function TokenMigrationScreen() {
 
       <Preview>
         <Layout style={globalStyles.paddedContainer}>
-          {renderPreviewHeader()}
-          <Padder />
-          {renderPreviewContent()}
-          <Padder />
-          {renderPreviewButton()}
-          <Padder scale={2} />
+          {error ? (
+            <View style={styles.errorMessageContainer}>
+              <MessageTeaser title="An error has occurred" msg={error} type="error" />
+              <Button onPress={retry}>Close</Button>
+            </View>
+          ) : (
+            <>
+              {renderPreviewHeader()}
+              <Padder />
+              {renderPreviewContent()}
+              <Padder />
+              {renderPreviewButton()}
+              <Padder scale={2} />
+            </>
+          )}
         </Layout>
       </Preview>
     </View>
   );
+}
+
+const timeoutPromise = new Promise<TxResult>((resolve) => {
+  setTimeout(() => {
+    resolve({error: 'Transaction rejected.'});
+  }, 1000 * 60);
+});
+
+function isAmountValid(balance: number, amount: number): boolean {
+  const amountSchema = yup.number().positive().max(balance);
+
+  return amountSchema.isValidSync(amount);
 }
 
 function openOnEtherscan(txHash: string) {
@@ -290,5 +345,12 @@ const styles = StyleSheet.create({
   transactionCompletedContainer: {
     padding: standardPadding * 2,
     borderRadius: 10,
+  },
+  errorMessageContainer: {
+    height: height * 0.3,
+    paddingBottom: standardPadding * 2,
+  },
+  balance: {
+    alignItems: 'flex-end',
   },
 });
