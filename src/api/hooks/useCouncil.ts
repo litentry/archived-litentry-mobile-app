@@ -14,10 +14,7 @@ const COUNCIL_QUERY = gql`
         }
         backing
         formattedBacking
-        voters {
-          address
-          display
-        }
+        voters
       }
       runnersUp {
         account {
@@ -26,10 +23,7 @@ const COUNCIL_QUERY = gql`
         }
         backing
         formattedBacking
-        voters {
-          address
-          display
-        }
+        voters
       }
       candidates {
         account {
@@ -38,10 +32,7 @@ const COUNCIL_QUERY = gql`
         }
         backing
         formattedBacking
-        voters {
-          address
-          display
-        }
+        voters
       }
       totalCandidates
       primeMember {
@@ -51,10 +42,7 @@ const COUNCIL_QUERY = gql`
         }
         backing
         formattedBacking
-        voters {
-          address
-          display
-        }
+        voters
       }
       desiredSeats
       totalMembers
