@@ -1,12 +1,11 @@
 import React, {useState} from 'react';
-import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {SignerPayloadJSON} from '@polkadot/types/types';
 import {BN} from '@polkadot/util';
-import ModalTitle from '@ui/components/ModalTitle';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {HashBlock} from '@ui/components/HashBlock';
 import {Padder} from '@ui/components/Padder';
-import {Button, Caption, Icon, Divider, Text, useTheme} from '@ui/library';
+import {Button, Caption, Icon, Subheading, Text, useTheme} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 
 type PropTypes = {
@@ -28,44 +27,42 @@ export function TxPreview(props: PropTypes): React.ReactElement {
 
   return (
     <Layout style={styles.container}>
-      <ModalTitle title="Preview" />
-      <Divider />
-      <ScrollView style={styles.content}>
-        <HashBlock text={txPayload.blockHash} title={'call hash'} />
-        <Padder scale={0.5} />
-        <TouchableOpacity
-          style={styles.infoContainer}
-          onPress={() => {
-            setOpen(!open);
-          }}>
-          <View style={globalStyles.flex}>
-            <Text>{transactionTitle}</Text>
-            <Padder scale={0.3} />
-            <Caption>{transactionInfo}</Caption>
-          </View>
-          <Icon name={open ? 'chevron-up' : 'chevron-down'} />
-        </TouchableOpacity>
-        {open ? <Text style={[styles.payload]}>{stringifyParams(params)}</Text> : undefined}
-        <Text>{`Fees of ${partialFee / 10 ** 6} micro Unit will be applied to the submission`}</Text>
-        <Padder scale={1} />
-        <View style={styles.buttonGroup}>
-          <Button mode="outlined" onPress={onCancel} color={colors.accent}>
-            Cancel
-          </Button>
-          <Padder scale={1} />
-          <Button mode="contained" compact onPress={onConfirm} icon={isExternalAccount ? 'qrcode-scan' : undefined}>
-            Continue
-          </Button>
+      <Subheading style={globalStyles.textCenter}>{`Preview`}</Subheading>
+      <Padder scale={1} />
+      <HashBlock text={txPayload.blockHash} title={'call hash'} />
+      <Padder scale={0.5} />
+      <TouchableOpacity
+        style={styles.infoContainer}
+        onPress={() => {
+          setOpen(!open);
+        }}>
+        <View style={globalStyles.flex}>
+          <Text>{transactionTitle}</Text>
+          <Padder scale={0.3} />
+          <Caption>{transactionInfo}</Caption>
         </View>
-      </ScrollView>
+        <Icon name={open ? 'chevron-up' : 'chevron-down'} />
+      </TouchableOpacity>
+      {open ? <Text style={[styles.payload]}>{stringifyParams(params)}</Text> : undefined}
+      <Text>{`Fees of ${partialFee / 10 ** 6} micro Unit will be applied to the submission`}</Text>
+      <Padder scale={2} />
+      <View style={styles.buttonGroup}>
+        <Button mode="outlined" onPress={onCancel} color={colors.accent}>
+          Cancel
+        </Button>
+        <Padder scale={1} />
+        <Button mode="contained" compact onPress={onConfirm} icon={isExternalAccount ? 'qrcode-scan' : undefined}>
+          Continue
+        </Button>
+      </View>
+      <Padder scale={2} />
     </Layout>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: standardPadding * 2,
-    marginBottom: standardPadding * 2,
+    paddingHorizontal: standardPadding * 2,
   },
   content: {padding: standardPadding * 2},
   infoContainer: {
@@ -75,7 +72,7 @@ const styles = StyleSheet.create({
   },
   buttonGroup: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
   },
   payload: {fontSize: 9, padding: standardPadding, marginVertical: standardPadding},
 });

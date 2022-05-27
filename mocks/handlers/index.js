@@ -1,5 +1,6 @@
 import {bountiesHandler} from './bountiesHandler';
 import {bountyHandler} from './bountyHandler';
+import {bountiesSummaryHandler} from './bountiesSummaryHandler';
 import {chainInfoHandler} from './chainInfoHandler';
 import {councilMotionsHandler} from './councilMotionsHandler';
 import {democracyHandler} from './democracyHandler';
@@ -18,6 +19,7 @@ export const handlers = [
   democracySummaryHandler,
   eventsCalendarHandler,
   bountiesHandler,
+  bountiesSummaryHandler,
   bountyHandler,
   chainInfoHandler,
   // other handlers

@@ -1,27 +1,27 @@
 import React, {useCallback, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Modal, Button, TextInput, Subheading, Caption, Icon} from '@ui/library';
+import {Button, TextInput, Subheading, Caption, Icon} from '@ui/library';
 import {Registrar} from 'src/api/hooks/useRegistrarsSummary';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {SelectRegistrar} from '@ui/components/SelectRegistrar';
+import {Layout} from '@ui/components/Layout';
 
-type PropTypes = {
-  visible: boolean;
+type Props = {
   onClose: () => void;
-  onSelect: (registrar: Registrar) => void;
+  onRequest: (registrar: Registrar) => void;
 };
 
-function RegistrarSelectionModal({onSelect, visible, onClose}: PropTypes) {
+export function RequestJudgement({onRequest, onClose}: Props) {
   const {formatBalance} = useFormatBalance();
   const [registrar, setRegistrar] = useState<Registrar>();
 
-  const handleSelect = useCallback(() => {
+  const handleRequest = useCallback(() => {
     if (registrar) {
-      onSelect(registrar);
+      onRequest(registrar);
     }
-  }, [onSelect, registrar]);
+  }, [onRequest, registrar]);
 
   const handleClose = () => {
     setRegistrar(undefined);
@@ -31,10 +31,8 @@ function RegistrarSelectionModal({onSelect, visible, onClose}: PropTypes) {
   const feeDisplay = registrar ? formatBalance(registrar.fee) : '';
 
   return (
-    <Modal visible={visible} onDismiss={onClose}>
-      <View style={globalStyles.alignCenter}>
-        <Subheading>{`Choose registrar`}</Subheading>
-      </View>
+    <Layout style={styles.container}>
+      <Subheading style={globalStyles.textCenter}>{`Choose registrar`}</Subheading>
       <Padder scale={1} />
       <SelectRegistrar
         onSelect={(selectedRegistrar) => {
@@ -53,15 +51,19 @@ function RegistrarSelectionModal({onSelect, visible, onClose}: PropTypes) {
         <Button onPress={handleClose} mode="outlined">
           Cancel
         </Button>
-        <Button mode="contained" disabled={!registrar} onPress={handleSelect}>
+        <Button mode="contained" disabled={!registrar} onPress={handleRequest}>
           Submit
         </Button>
       </View>
-    </Modal>
+      <Padder scale={2} />
+    </Layout>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: standardPadding * 2,
+  },
   buttons: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -75,5 +77,3 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
 });
-
-export default RegistrarSelectionModal;

@@ -5,6 +5,7 @@ export const bountiesHandler = graphql.query('getBounties', (_, res, ctx) => {
     ctx.data({
       substrateChainBounties: [
         {
+          __typename: 'SubstrateChainBounty',
           index: '13',
           description: 'ORML Security Bounty',
           formattedFee: '0.0000 DOT',
@@ -17,6 +18,7 @@ export const bountiesHandler = graphql.query('getBounties', (_, res, ctx) => {
             },
           },
           bountyStatus: {
+            __typename: 'SubstrateChainBountyStatus',
             beneficiary: null,
             status: 'Active',
             curator: {
@@ -31,6 +33,7 @@ export const bountiesHandler = graphql.query('getBounties', (_, res, ctx) => {
           },
         },
         {
+          __typename: 'SubstrateChainBounty',
           index: '16',
           description: 'go',
           formattedFee: '0.0000 DOT',
@@ -43,6 +46,7 @@ export const bountiesHandler = graphql.query('getBounties', (_, res, ctx) => {
             },
           },
           bountyStatus: {
+            __typename: 'SubstrateChainBountyStatus',
             beneficiary: null,
             status: 'Proposed',
             curator: null,
@@ -53,6 +57,7 @@ export const bountiesHandler = graphql.query('getBounties', (_, res, ctx) => {
           },
         },
         {
+          __typename: 'SubstrateChainBounty',
           index: '15',
           description: 'Polkascan Foundation Budget | Common Good Organization',
           formattedFee: '0.0000 DOT',
@@ -65,6 +70,7 @@ export const bountiesHandler = graphql.query('getBounties', (_, res, ctx) => {
             },
           },
           bountyStatus: {
+            __typename: 'SubstrateChainBountyStatus',
             beneficiary: null,
             status: 'Proposed',
             curator: null,
@@ -75,6 +81,7 @@ export const bountiesHandler = graphql.query('getBounties', (_, res, ctx) => {
           },
         },
         {
+          __typename: 'SubstrateChainBounty',
           index: '10',
           description: 'Polkadot Pioneers Prize, an Incentive Prize Program',
           formattedFee: '0.0000 DOT',
@@ -87,6 +94,7 @@ export const bountiesHandler = graphql.query('getBounties', (_, res, ctx) => {
             },
           },
           bountyStatus: {
+            __typename: 'SubstrateChainBountyStatus',
             beneficiary: null,
             status: 'Active',
             curator: {
@@ -101,6 +109,7 @@ export const bountiesHandler = graphql.query('getBounties', (_, res, ctx) => {
           },
         },
         {
+          __typename: 'SubstrateChainBounty',
           index: '11',
           description: 'Anti-Scam Bounty',
           formattedFee: '0.0000 DOT',
@@ -113,6 +122,7 @@ export const bountiesHandler = graphql.query('getBounties', (_, res, ctx) => {
             },
           },
           bountyStatus: {
+            __typename: 'SubstrateChainBountyStatus',
             beneficiary: null,
             status: 'Active',
             curator: {

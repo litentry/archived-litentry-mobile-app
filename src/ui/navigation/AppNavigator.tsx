@@ -2,8 +2,6 @@ import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createStackNavigator, StackNavigationOptions} from '@react-navigation/stack';
 import {AccountsScreen} from '@ui/screens/AccountsScreen';
-import {AddAccountScreen} from '@ui/screens/AddAccountScreen/AddAccountScreen';
-import {BalanceScreen} from '@ui/screens/BalanceScreen';
 import {BountiesScreen} from '@ui/screens/Bounty/BountiesScreen';
 import {BountyDetailScreen} from '@ui/screens/Bounty/BountyDetailScreen';
 import {CandidateScreen} from '@ui/screens/Council/CandidateScreen';
@@ -22,8 +20,7 @@ import {ExportAccountWithJsonFileScreen} from '@ui/screens/ExportAccountWithJson
 import {ImportAccountScreen} from '@ui/screens/ImportAccountScreen';
 import {MotionDetailScreen} from '@ui/screens/MotionDetailScreen';
 import {MyAccountScreen} from '@ui/screens/MyAccountScreen';
-import {IdentityGuideScreen} from '@ui/screens/MyIdentityScreen/IdentityGuideScreen';
-import ManageIdentityScreen from '@ui/screens/MyIdentityScreen/ManageIdentity';
+import {ManageIdentityScreen} from '@ui/screens/MyIdentityScreen/ManageIdentityScreen';
 import {NotificationSettingsScreen} from '@ui/screens/NotificationSettingsScreen';
 import {AuctionsScreen} from '@ui/screens/Parachains/AuctionsScreen';
 import {CrowdloanFundDetailScreen} from '@ui/screens/Parachains/CrowdloanFundDetailScreen';
@@ -56,13 +53,9 @@ import {
   PolkassemblyDiscussionStackParamList,
 } from '@ui/navigation/navigation';
 import * as routeKeys from '@ui/navigation/routeKeys';
-import {AppBar, IconButton} from '@ui/library';
-import {AccountsGuideScreen} from '@ui/screens/AccountsGuideScreen';
-import {ReceiveFundScreen} from '@ui/screens/ReceiveFundScreen';
-import {SendFundScreen} from '@ui/screens/SendFundScreen';
+import {AppBar} from '@ui/library';
 import {FeedbackScreen} from '@ui/screens/FeedbackScreen';
 import {AccountScreen} from '@ui/screens/AccountScreen';
-import {AddBountyScreen} from '@ui/screens/AddBountyScreen';
 import {OnboardingScreen} from '@ui/screens/Onboarding/OnboardingScreen';
 import {usePersistedState} from '@hooks/usePersistedState';
 
@@ -99,11 +92,6 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.bountiesScreen} component={BountiesScreen} />
       <DashboardStack.Screen name={routeKeys.bountyDetailScreen} component={BountyDetailScreen} />
       <DashboardStack.Screen name={routeKeys.eventsCalendarScreen} component={EventsCalendarScreen} />
-      <DashboardStack.Screen
-        name={routeKeys.addBountyScreen}
-        component={AddBountyScreen}
-        options={overlayScreenOptions}
-      />
     </DashboardStack.Navigator>
   );
 }
@@ -113,15 +101,7 @@ const AccountsStack = createStackNavigator<AccountsStackParamList>();
 export function AccountsNavigator() {
   return (
     <AccountsStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
-      <AccountsStack.Screen
-        name={routeKeys.accountsScreen}
-        component={AccountsScreen}
-        options={({navigation}) => ({
-          headerRight: () => (
-            <IconButton icon="information" onPress={() => navigation.navigate(routeKeys.accountsGuideScreen)} />
-          ),
-        })}
-      />
+      <AccountsStack.Screen name={routeKeys.accountsScreen} component={AccountsScreen} />
       <AccountsStack.Screen name={routeKeys.manageIdentityScreen} component={ManageIdentityScreen} />
       <AccountsStack.Screen name={routeKeys.myAccountScreen} component={MyAccountScreen} />
       <AccountsStack.Screen name={routeKeys.registerSubIdentitiesScreen} component={RegisterSubIdentitiesScreen} />
@@ -132,28 +112,6 @@ export function AccountsNavigator() {
       <AccountsStack.Screen
         name={routeKeys.exportAccountWithJsonFileScreen}
         component={ExportAccountWithJsonFileScreen}
-      />
-      <AccountsStack.Screen
-        name={routeKeys.receiveFundScreen}
-        component={ReceiveFundScreen}
-        options={overlayScreenOptions}
-      />
-      <AccountsStack.Screen name={routeKeys.sendFundScreen} component={SendFundScreen} options={overlayScreenOptions} />
-      <AccountsStack.Screen
-        name={routeKeys.addAccountScreen}
-        component={AddAccountScreen}
-        options={overlayScreenOptions}
-      />
-      <AccountsStack.Screen name={routeKeys.balanceScreen} component={BalanceScreen} options={overlayScreenOptions} />
-      <AccountsStack.Screen
-        name={routeKeys.identityGuideScreen}
-        component={IdentityGuideScreen}
-        options={overlayScreenOptions}
-      />
-      <AccountsStack.Screen
-        name={routeKeys.accountsGuideScreen}
-        component={AccountsGuideScreen}
-        options={overlayScreenOptions}
       />
     </AccountsStack.Navigator>
   );

@@ -1,18 +1,16 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Layout} from '@ui/components/Layout';
-import {Button, List, Icon, Caption, Divider} from '@ui/library';
+import {Button, List, Icon, Caption, Divider, IconButton, useBottomSheet} from '@ui/library';
 import {useNetwork} from 'context/NetworkContext';
-import RegistrarSelectionModal from '@ui/components/RegistrarSelectionModal';
 import IdentityInfoForm, {IdentityPayload} from '@ui/components/IdentityInfoForm';
 import InfoBanner from '@ui/components/InfoBanner';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SuccessDialog} from '@ui/components/SuccessDialog';
 import {ScrollView} from 'react-native-gesture-handler';
-import {Modalize} from 'react-native-modalize';
 import WebView from 'react-native-webview';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
@@ -24,32 +22,30 @@ import {stringShorten} from '@polkadot/util';
 import {Account} from '@ui/components/Account/Account';
 import {useSubAccounts} from 'src/api/hooks/useSubAccounts';
 import {AccountRegistration} from '@ui/components/Account/AccountRegistration';
+import {IdentityGuide} from '@ui/components/IdentityGuide';
+import {RequestJudgement} from '@ui/components/RequestJudgement';
 
-function ManageIdentity({
-  navigation,
-  route: {
-    params: {address},
-  },
-}: {
+type ScreenProps = {
   navigation: NavigationProp<AccountsStackParamList>;
   route: RouteProp<AccountsStackParamList, typeof manageIdentityScreen>;
-}) {
+};
+
+export function ManageIdentityScreen({navigation, route}: ScreenProps) {
+  const {currentNetwork} = useNetwork();
+  const {address} = route.params;
+
   const startTx = useApiTx();
   const {data: accountInfo, refetch: refetchAccount} = useSubAccounts(address);
-
-  const {currentNetwork} = useNetwork();
-  const [registrarSelectionOpen, setRegistrarSelectionOpen] = useState(false);
 
   const judgements = accountInfo?.registration?.judgements;
   const judgementCount = judgements?.length || 0;
   const hasJudgements = judgements && judgementCount > 0;
 
-  const identityModalRef = useRef<Modalize>(null);
-  const polkascanViewRef = useRef<Modalize>(null);
+  const {closeBottomSheet, openBottomSheet, BottomSheet} = useBottomSheet();
 
   const onSubmitIdentityInfo = useCallback(
     async (info: IdentityPayload) => {
-      identityModalRef.current?.close();
+      closeBottomSheet();
       await startTx({address, txMethod: 'identity.setIdentity', params: [info]})
         .then(() => refetchAccount({address}))
         .catch((e) => {
@@ -57,12 +53,12 @@ function ManageIdentity({
           console.error(e);
         });
     },
-    [address, startTx, refetchAccount],
+    [address, startTx, refetchAccount, closeBottomSheet],
   );
 
   const handleRequestJudgement = useCallback(
     ({id, fee}: Registrar) => {
-      setRegistrarSelectionOpen(false);
+      closeBottomSheet();
       startTx({address, txMethod: 'identity.requestJudgement', params: [id, fee]})
         .then(() => refetchAccount({address}))
         .catch((e) => {
@@ -70,8 +66,21 @@ function ManageIdentity({
           console.error(e);
         });
     },
-    [startTx, address, refetchAccount],
+    [startTx, address, refetchAccount, closeBottomSheet],
   );
+
+  React.useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <IconButton
+          icon="information"
+          onPress={() => {
+            openBottomSheet(<IdentityGuide onSkip={closeBottomSheet} />);
+          }}
+        />
+      ),
+    });
+  }, [navigation, openBottomSheet, closeBottomSheet]);
 
   const clearIdentity = () => {
     Alert.alert('Clear Identity', `Clear identity of account: \n ${address}`, [
@@ -128,13 +137,25 @@ function ManageIdentity({
           />
           {accountInfo?.registration ? <AccountRegistration registration={accountInfo.registration} /> : null}
           <Padder scale={1} />
-          <Button onPress={() => identityModalRef.current?.open()} mode="outlined">
+          <Button
+            onPress={() => {
+              openBottomSheet(
+                <Layout>
+                  <IdentityInfoForm onSubmit={onSubmitIdentityInfo} accountInfo={accountInfo} />
+                </Layout>,
+              );
+            }}
+            mode="outlined">
             {accountInfo?.hasIdentity ? 'Update Identity' : 'Set Identity'}
           </Button>
           {accountInfo?.hasIdentity ? (
             <>
               <Padder scale={1} />
-              <Button onPress={() => setRegistrarSelectionOpen(true)} mode="outlined">
+              <Button
+                onPress={() => {
+                  openBottomSheet(<RequestJudgement onRequest={handleRequestJudgement} onClose={closeBottomSheet} />);
+                }}
+                mode="outlined">
                 Request Judgement
               </Button>
               <Padder scale={1} />
@@ -172,7 +193,19 @@ function ManageIdentity({
 
           <List.Item
             title="View externally"
-            onPress={() => polkascanViewRef.current?.open()}
+            onPress={() => {
+              openBottomSheet(
+                <WebView
+                  injectedJavaScript={`(function() {
+            // remove some html element
+            document.querySelectorAll('.navbar')[1].remove()
+        })();`}
+                  source={{uri: buildAddressDetailUrl(address || '', currentNetwork?.key || 'polkadot')}}
+                  style={styles.polkascanWebView}
+                  onMessage={() => null}
+                />,
+              );
+            }}
             left={() => <LeftIcon icon="share" />}
             right={() => (
               <ItemRight>
@@ -181,53 +214,12 @@ function ManageIdentity({
             )}
           />
         </View>
-
-        <RegistrarSelectionModal
-          onClose={() => setRegistrarSelectionOpen(false)}
-          onSelect={handleRequestJudgement}
-          visible={registrarSelectionOpen}
-        />
-        <Modalize
-          ref={identityModalRef}
-          threshold={250}
-          scrollViewProps={{showsVerticalScrollIndicator: false}}
-          adjustToContentHeight
-          handlePosition="outside"
-          closeOnOverlayTap
-          withReactModal
-          useNativeDriver
-          panGestureEnabled>
-          <Layout>
-            <IdentityInfoForm onSubmit={onSubmitIdentityInfo} accountInfo={accountInfo} />
-          </Layout>
-        </Modalize>
-
-        <Modalize
-          ref={polkascanViewRef}
-          threshold={250}
-          scrollViewProps={{showsVerticalScrollIndicator: false}}
-          adjustToContentHeight
-          handlePosition="outside"
-          closeOnOverlayTap
-          withReactModal
-          useNativeDriver
-          panGestureEnabled>
-          <WebView
-            injectedJavaScript={`(function() {
-                // remove some html element
-                document.querySelectorAll('.navbar')[1].remove()
-            })();`}
-            source={{uri: buildAddressDetailUrl(address || '', currentNetwork?.key || 'polkadot')}}
-            style={styles.polkascanWebView}
-            onMessage={() => null}
-          />
-        </Modalize>
       </ScrollView>
+
+      <BottomSheet />
     </SafeView>
   );
 }
-
-export default ManageIdentity;
 
 const styles = StyleSheet.create({
   content: {padding: standardPadding * 2},
