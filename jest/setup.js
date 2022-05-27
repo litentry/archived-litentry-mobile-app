@@ -14,3 +14,7 @@ global.__reanimatedWorkletInit = jest.fn();
 
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
 jest.mock('react-native-mmkv');
+
+jest.mock('react-native-qrcode-scanner/node_modules/react-native-permissions', () =>
+  require('react-native-permissions/mock'),
+);
