@@ -45,7 +45,7 @@ export function useBottomSheet() {
   const noContent = React.useMemo(
     () => (
       <View style={styles.noContent}>
-        <Text>{`No content`}</Text>
+        <Text>{``}</Text>
       </View>
     ),
     [],
