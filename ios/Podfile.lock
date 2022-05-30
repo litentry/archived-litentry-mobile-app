@@ -423,7 +423,7 @@ PODS:
     - React-Core
   - react-native-document-picker (8.0.0):
     - React-Core
-  - react-native-flipper (0.142.0):
+  - react-native-flipper (0.146.1):
     - React-Core
   - react-native-flipper-performance-plugin (0.2.1):
     - React-Core
@@ -900,7 +900,7 @@ SPEC CHECKSUMS:
   Flipper-RSocket: d9d9ade67cbecf6ac10730304bf5607266dd2541
   FlipperKit: de934d365bfc0af358d3b7b7d453c24ffddd7cac
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: 85ecdd10ee8d8ec362ef519a6a45ff9aa27b2e85
+  glog: 5337263514dd6f09803962437687240c5dc39aa4
   GoogleAppMeasurement: 4c19f031220c72464d460c9daa1fb5d1acce958e
   GoogleDataTransport: 629c20a4d363167143f30ea78320d5a7eb8bd940
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
@@ -913,7 +913,7 @@ SPEC CHECKSUMS:
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
   Permission-Camera: bae27a8503530770c35aadfecbb97ec71823382a
   PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72
-  RCT-Folly: 803a9cfd78114b2ec0f140cfa6fa2a6bafb2d685
+  RCT-Folly: a21c126816d8025b547704b777a2ba552f3d9fa9
   RCTRequired: 3c77b683474faf23920fbefc71c4e13af21470c0
   RCTTypeSafety: 720b1841260dac692444c2822b27403178da8b28
   React: 25970dd74abbdac449ca66dec4107652cacc606d
@@ -929,7 +929,7 @@ SPEC CHECKSUMS:
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-config: 6502b1879f97ed5ac570a029961fc35ea606cd14
   react-native-document-picker: 429972f7ece4463aa5bcdd789622b3a674a3c5d1
-  react-native-flipper: 6504d02aadad2cce9083b6437fc1927f8e2083bb
+  react-native-flipper: 4bfe0a324e663f1ae2f76ad0da75673de6895efe
   react-native-flipper-performance-plugin: ab280430bbdd17deffb7a30d94b604738cd04150
   react-native-in-app-message: 00952df970f85d162b9100f6b767ae37c6520dda
   react-native-mmkv: 5f6f070d2dbd0e4785aabfd94fb7fccc29b70462
