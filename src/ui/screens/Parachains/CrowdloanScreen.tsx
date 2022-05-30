@@ -22,6 +22,16 @@ import {CrowdloanSummaryTeaser} from '@ui/components/CrowdloanSummaryTeaser';
 import {useNetwork} from 'context/NetworkContext';
 import {InputLabel} from '@ui/library/InputLabel';
 
+function CrowdloanHeader() {
+  return (
+    <>
+      <Padder />
+      <CrowdloanSummaryTeaser />
+      <Padder scale={1.5} />
+    </>
+  );
+}
+
 export function CrowdloanScreen() {
   const [openContributeId, setOpenContributeId] = React.useState<string>();
   const {activeCrowdloans, endedCrowdloans, loading} = useAllCrowdloans();
@@ -42,13 +52,7 @@ export function CrowdloanScreen() {
         <LoadingView />
       ) : (
         <SectionList
-          ListHeaderComponent={() => (
-            <>
-              <Padder />
-              <CrowdloanSummaryTeaser />
-              <Padder scale={1.5} />
-            </>
-          )}
+          ListHeaderComponent={CrowdloanHeader}
           contentContainerStyle={styles.listContent}
           style={styles.container}
           sections={sectionData}
