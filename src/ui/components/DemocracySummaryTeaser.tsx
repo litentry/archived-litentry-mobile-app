@@ -8,6 +8,7 @@ import {ProgressChartWidget} from '@ui/components/ProgressChartWidget';
 import {standardPadding} from '@ui/styles';
 import {Card} from '@ui/library';
 import {DashboardTeaserSkeleton} from '@ui/components/DashboardTeaserSkeleton';
+import {EmptyStateTeaser} from './EmptyStateTeaser';
 
 type Props = {
   onPress: () => void;
@@ -45,7 +46,9 @@ export function DemocracySummaryTeaser(props: Props) {
             )}
           </Card>
         </View>
-      ) : null}
+      ) : (
+        <EmptyStateTeaser subheading="No Democracy Proposals" caption="Check back soon" />
+      )}
     </SectionTeaserContainer>
   );
 }
