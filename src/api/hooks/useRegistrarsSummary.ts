@@ -26,8 +26,9 @@ const REGISTRARS_SUMMARY_QUERY = gql`
 `;
 
 export function useRegistrarsSummary() {
-  const {data, ...rest} =
-    useQuery<{substrateChainRegistrarsSummary: SubstrateChainRegistrarsSummary}>(REGISTRARS_SUMMARY_QUERY);
+  const {data, ...rest} = useQuery<{substrateChainRegistrarsSummary: SubstrateChainRegistrarsSummary}>(
+    REGISTRARS_SUMMARY_QUERY,
+  );
 
   return {
     data: data?.substrateChainRegistrarsSummary,
