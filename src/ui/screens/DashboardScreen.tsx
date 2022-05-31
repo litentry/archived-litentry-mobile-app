@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {CompositeNavigationProp} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {BountySummaryTeaser} from '@ui/components/BountySummaryTeaser';
 import {CouncilSummaryTeaser} from '@ui/components/CouncilSummaryTeaser';
 import {DemocracySummaryTeaser} from '@ui/components/DemocracySummaryTeaser';
@@ -35,7 +35,7 @@ const refetchQueries = [DEMOCRACY_SUMMARY_QUERY, COUNCIL_SUMMARY_QUERY, BOUNTIES
 
 type PropTypes = {
   navigation: CompositeNavigationProp<
-    StackNavigationProp<DashboardStackParamList>,
+    NativeStackNavigationProp<DashboardStackParamList>,
     DrawerNavigationProp<DrawerParamList>
   >;
 };

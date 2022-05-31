@@ -1,6 +1,7 @@
 import React from 'react';
 import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Card, Icon, Caption, Subheading, Paragraph, useBottomSheet} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {useNetwork} from 'context/NetworkContext';
@@ -15,14 +16,13 @@ import {AppStackParamList, DashboardStackParamList} from '@ui/navigation/navigat
 import {buildMotionDetailUrl} from 'src/service/Polkasembly';
 import globalStyles, {colorGreen, colorRed, standardPadding} from '@ui/styles';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
-import {StackNavigationProp} from '@react-navigation/stack/lib/typescript/src/types';
 import {accountScreen} from '@ui/navigation/routeKeys';
 
 const {height} = Dimensions.get('window');
 
 type PropTypes = {
   route: RouteProp<DashboardStackParamList, 'Motion'>;
-  navigation: StackNavigationProp<AppStackParamList>;
+  navigation: NativeStackNavigationProp<AppStackParamList>;
 };
 
 type VoteItemProps = {

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {AppStackParamList, DashboardStackParamList} from '@ui/navigation/navigation';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useBounty} from 'src/api/hooks/useBounty';
@@ -12,7 +12,7 @@ import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {accountScreen} from '@ui/navigation/routeKeys';
 
 type ScreenProps = {
-  navigation: StackNavigationProp<AppStackParamList>;
+  navigation: NativeStackNavigationProp<AppStackParamList>;
   route: RouteProp<DashboardStackParamList, 'Bounty'>;
 };
 

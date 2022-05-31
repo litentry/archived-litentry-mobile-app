@@ -1,6 +1,6 @@
 import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import {createStackNavigator, StackNavigationOptions} from '@react-navigation/stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AccountsScreen} from '@ui/screens/AccountsScreen';
 import {BountiesScreen} from '@ui/screens/Bounty/BountiesScreen';
 import {BountyDetailScreen} from '@ui/screens/Bounty/BountyDetailScreen';
@@ -53,13 +53,12 @@ import {
   PolkassemblyDiscussionStackParamList,
 } from '@ui/navigation/navigation';
 import * as routeKeys from '@ui/navigation/routeKeys';
-import {AppBar} from '@ui/library';
 import {FeedbackScreen} from '@ui/screens/FeedbackScreen';
 import {AccountScreen} from '@ui/screens/AccountScreen';
 import {OnboardingScreen} from '@ui/screens/Onboarding/OnboardingScreen';
 import {usePersistedState} from '@hooks/usePersistedState';
 
-const DashboardStack = createStackNavigator<DashboardStackParamList>();
+const DashboardStack = createNativeStackNavigator<DashboardStackParamList>();
 
 function DashboardStackNavigator() {
   const [onboardingSeen] = usePersistedState<boolean>('onboarding_seen');
@@ -96,7 +95,7 @@ function DashboardStackNavigator() {
   );
 }
 
-const AccountsStack = createStackNavigator<AccountsStackParamList>();
+const AccountsStack = createNativeStackNavigator<AccountsStackParamList>();
 
 export function AccountsNavigator() {
   return (
@@ -117,7 +116,7 @@ export function AccountsNavigator() {
   );
 }
 
-const DiscussionNavigator = createStackNavigator<PolkassemblyDiscussionStackParamList>();
+const DiscussionNavigator = createNativeStackNavigator<PolkassemblyDiscussionStackParamList>();
 
 function PolkassemblyDiscussionsNavigator() {
   return (
@@ -177,41 +176,29 @@ function DrawerNavigator() {
   );
 }
 
-const ParachainsStack = createStackNavigator<ParachainsStackParamList>();
+const ParachainsStack = createNativeStackNavigator<ParachainsStackParamList>();
 
 function ParachainsNavigator() {
   return (
     <ParachainsStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
-      <ParachainsStack.Screen
-        name={routeKeys.parachainsOverviewScreen}
-        component={ParachainsOverviewScreen}
-        options={{
-          headerLeft: (props) => <AppBar.Action icon="menu" {...props} />,
-        }}
-      />
+      <ParachainsStack.Screen name={routeKeys.parachainsOverviewScreen} component={ParachainsOverviewScreen} />
       <ParachainsStack.Screen name={routeKeys.parachainDetailScreen} component={ParachainDetailScreen} />
     </ParachainsStack.Navigator>
   );
 }
 
-const CrowdloansStack = createStackNavigator<CrowdloansStackParamList>();
+const CrowdloansStack = createNativeStackNavigator<CrowdloansStackParamList>();
 
 function CrowdloansNavigator() {
   return (
     <CrowdloansStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
-      <CrowdloansStack.Screen
-        name={routeKeys.crowdloanScreen}
-        component={CrowdloanScreen}
-        options={{
-          headerLeft: (props) => <AppBar.Action icon="menu" {...props} />,
-        }}
-      />
+      <CrowdloansStack.Screen name={routeKeys.crowdloanScreen} component={CrowdloanScreen} />
       <CrowdloansStack.Screen name={routeKeys.crowdloanFundDetailScreen} component={CrowdloanFundDetailScreen} />
     </CrowdloansStack.Navigator>
   );
 }
 
-const AppStack = createStackNavigator<AppStackParamList>();
+const AppStack = createNativeStackNavigator<AppStackParamList>();
 
 function AppNavigator() {
   useTurnOnAllNotificationsOnAppStartForAndroid();
@@ -246,14 +233,3 @@ function AppNavigator() {
 }
 
 export default AppNavigator;
-
-export const overlayScreenOptions: StackNavigationOptions = {
-  presentation: 'transparentModal',
-  headerShown: false,
-  animationEnabled: false,
-  cardStyle: {
-    backgroundColor: 'transparent',
-    opacity: 1,
-  },
-  gestureEnabled: false,
-};

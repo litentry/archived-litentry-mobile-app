@@ -1,8 +1,8 @@
 import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {MainDrawerAppBar, MainAppBar, MainStackAppBar} from '@ui/navigation/AppBars';
-import {AccountsNavigator, overlayScreenOptions} from '@ui/navigation/AppNavigator';
+import {AccountsNavigator} from '@ui/navigation/AppNavigator';
 import {accountsNavigator, feedbackScreen, tokenMigrationScreen, webviewScreen} from '@ui/navigation/routeKeys';
 import DrawerScreen from '@ui/screens/Drawer/DrawerScreen';
 import {TokenMigrationScreen} from '@ui/screens/TokenMigration/TokenMigrationScreen';
@@ -23,10 +23,10 @@ type TokenMigrationStackParamList = {
   'Token Migration': undefined;
 };
 
-const AppStack = createStackNavigator<AppStackParamList>();
-const TokenMigrationStack = createStackNavigator<TokenMigrationStackParamList>();
+const AppStack = createNativeStackNavigator<AppStackParamList>();
+const TokenMigrationStack = createNativeStackNavigator<TokenMigrationStackParamList>();
 const Drawer = createDrawerNavigator<DrawerParamList>();
-const HomeStack = createStackNavigator<{home: undefined}>();
+const HomeStack = createNativeStackNavigator<{home: undefined}>();
 
 function TokenMigrationNavigator() {
   return (
@@ -69,7 +69,7 @@ function DrawerNavigator() {
 
 export function ParachainAppNavigator() {
   return (
-    <AppStack.Navigator screenOptions={overlayScreenOptions}>
+    <AppStack.Navigator screenOptions={{headerShown: false}}>
       <AppStack.Screen name={'Drawer'} component={DrawerNavigator} />
     </AppStack.Navigator>
   );
