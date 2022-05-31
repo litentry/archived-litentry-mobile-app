@@ -8,6 +8,7 @@ import {StyleSheet, View} from 'react-native';
 import {useTreasurySummary} from 'src/api/hooks/useTreasurySummary';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {DashboardTeaserSkeleton} from '@ui/components/DashboardTeaserSkeleton';
+import {EmptyStateTeaser} from './EmptyStateTeaser';
 
 type PropTypes = {
   onPress: () => void;
@@ -21,7 +22,7 @@ export function TreasurySummaryTeaser(props: PropTypes) {
       {loading && !treasurySummary ? (
         <DashboardTeaserSkeleton />
       ) : treasurySummary ? (
-        <>
+        <View>
           <View style={styles.container}>
             <Card mode="outlined" style={styles.card}>
               <View style={globalStyles.spaceBetweenRowContainer}>
@@ -51,8 +52,10 @@ export function TreasurySummaryTeaser(props: PropTypes) {
               <StatInfoBlock title="Next Burn">{treasurySummary.nextBurn}</StatInfoBlock>
             </View>
           </Card>
-        </>
-      ) : null}
+        </View>
+      ) : (
+        <EmptyStateTeaser subheading="No Treasury Proposals" caption="Check back soon" />
+      )}
     </SectionTeaserContainer>
   );
 }

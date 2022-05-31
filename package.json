@@ -72,7 +72,7 @@
     "react-native-config": "^1.4.5",
     "react-native-crypto": "^2.2.0",
     "react-native-device-info": "^8.7.1",
-    "react-native-document-picker": "^8.0.0",
+    "react-native-document-picker": "^8.1.0",
     "react-native-fs": "^2.19.0",
     "react-native-gesture-handler": "^2.4.2",
     "react-native-hyperlink": "^0.0.19",
