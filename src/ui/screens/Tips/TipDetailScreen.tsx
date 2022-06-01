@@ -1,7 +1,7 @@
 import React from 'react';
 import {FlatList, StyleSheet, View, RefreshControl} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Card, Subheading, Caption, Divider, useTheme} from '@ui/library';
 import {TipReason} from '@ui/components/Tips/TipReason';
 import LoadingView from '@ui/components/LoadingView';
@@ -69,7 +69,7 @@ function TipDetailContent({tip, toAccountDetails}: TipDetailProps) {
 }
 
 type ScreenProps = {
-  navigation: StackNavigationProp<AppStackParamList>;
+  navigation: NativeStackNavigationProp<AppStackParamList>;
   route: RouteProp<DashboardStackParamList, 'Tip'>;
 };
 

@@ -1,5 +1,5 @@
 import {RouteProp} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {AppStackParamList, DashboardStackParamList} from '@ui/navigation/navigation';
 import React from 'react';
 import {render, waitFor, fireEvent} from 'src/testUtils';
@@ -9,7 +9,7 @@ import {stringShorten} from '@polkadot/util';
 const navigation = {
   navigate: () => jest.fn(),
   goBack: () => jest.fn,
-} as unknown as StackNavigationProp<AppStackParamList>;
+} as unknown as NativeStackNavigationProp<AppStackParamList>;
 
 const route = {
   params: {
