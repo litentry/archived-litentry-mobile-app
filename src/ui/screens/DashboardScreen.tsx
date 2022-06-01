@@ -1,13 +1,11 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {CompositeNavigationProp} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {BountySummaryTeaser} from '@ui/components/BountySummaryTeaser';
 import {CouncilSummaryTeaser} from '@ui/components/CouncilSummaryTeaser';
 import {DemocracySummaryTeaser} from '@ui/components/DemocracySummaryTeaser';
 import {TreasurySummaryTeaser} from '@ui/components/TreasurySummaryTeaser';
-import {DashboardStackParamList, DrawerParamList} from '@ui/navigation/navigation';
+import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {
   bountiesScreen,
   councilScreen,
@@ -16,6 +14,7 @@ import {
   treasuryScreen,
 } from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
+import {MainAppBar} from '@ui/navigation/AppBars';
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
 import {ScrollViewRefetch} from '@ui/components/ScrollViewRefetch';
@@ -24,7 +23,7 @@ import {COUNCIL_SUMMARY_QUERY} from 'src/api/hooks/useCouncilSummary';
 import {BOUNTIES_SUMMARY_QUERY} from 'src/api/hooks/useBountiesSummary';
 import {TREASURY_SUMMARY_QUERY} from 'src/api/hooks/useTreasurySummary';
 import {EventsCalendarTeaser} from '@ui/components/EventsCalendarTeaser';
-import {useBottomSheet} from '@ui/library/BottomSheet';
+import {useBottomSheet} from '@ui/library';
 import NetworkSelectionList from '@ui/components/NetworkSelectionList';
 import {useNetwork} from 'context/NetworkContext';
 import {NetworkType} from 'src/types';
@@ -33,14 +32,9 @@ import {useParachainAppEnabled} from 'src/hooks/useParachainAppEnabled';
 
 const refetchQueries = [DEMOCRACY_SUMMARY_QUERY, COUNCIL_SUMMARY_QUERY, BOUNTIES_SUMMARY_QUERY, TREASURY_SUMMARY_QUERY];
 
-type PropTypes = {
-  navigation: CompositeNavigationProp<
-    StackNavigationProp<DashboardStackParamList>,
-    DrawerNavigationProp<DrawerParamList>
-  >;
-};
+type Props = NativeStackScreenProps<DashboardStackParamList, 'Dashboard'>;
 
-function DashboardScreen({navigation}: PropTypes) {
+function DashboardScreen({navigation, route}: Props) {
   const {closeBottomSheet, openBottomSheet, BottomSheet} = useBottomSheet();
   const {currentNetwork, getAvailableNetworks, select} = useNetwork();
   const {parachainAppEnabled} = useParachainAppEnabled();
@@ -50,14 +44,15 @@ function DashboardScreen({navigation}: PropTypes) {
     closeBottomSheet();
   };
 
-  React.useEffect(() => {
-    navigation.setOptions({
+  const appBarOptions = React.useMemo(() => {
+    return {
       headerRight: () => <NetworkSwitch onPress={openBottomSheet} />,
-    });
-  }, [navigation, openBottomSheet]);
+    };
+  }, [openBottomSheet]);
 
   return (
     <Layout style={styles.container}>
+      <MainAppBar navigation={navigation} route={route} options={appBarOptions} />
       <ScrollViewRefetch contentContainerStyle={styles.scrollView} refetchQueries={refetchQueries}>
         <EventsCalendarTeaser onPress={() => navigation.navigate(eventsCalendarScreen)} />
         <Padder scale={0.6} />
