@@ -60,7 +60,7 @@
     "lottie-ios": "3.2.3",
     "lottie-react-native": "^5.0.1",
     "patch-package": "^6.4.7",
-    "path-to-regexp": "^6.2.0",
+    "path-to-regexp": "^6.2.1",
     "proxy-polyfill": "^0.3.2",
     "qrcode-generator": "^1.4.4",
     "react": "17.0.2",
