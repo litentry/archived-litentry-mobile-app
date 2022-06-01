@@ -440,7 +440,7 @@ PODS:
     - React-Core
   - react-native-randombytes (3.6.1):
     - React-Core
-  - react-native-safe-area-context (4.1.2):
+  - react-native-safe-area-context (4.2.5):
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
@@ -935,7 +935,7 @@ SPEC CHECKSUMS:
   react-native-mmkv: 5f6f070d2dbd0e4785aabfd94fb7fccc29b70462
   react-native-pager-view: 7f00d63688f7df9fad86dfb0154814419cc5eb8d
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
-  react-native-safe-area-context: 114e9a74df2643012b9d6cc1460b94f3b6a90780
+  react-native-safe-area-context: ebf8c413eb8b5f7c392a036a315eb7b46b96845f
   react-native-sensitive-info: 400c6e3d27945e15c8cddb5b4b92233c85ee06f8
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   react-native-startup-trace: b58c82b61e0b10817fcc7bc8312033440248f2b8
