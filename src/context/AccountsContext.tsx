@@ -30,6 +30,8 @@ type Accounts = Record<string, Account>;
 
 type Context = {
   accounts: Accounts;
+  activeAccount?: Account;
+  setActiveAccount: (account: Account) => void;
   addAccount: (account: Account) => void;
   toggleFavorite: (address: string) => void;
   removeAccount: (address: string) => void;
@@ -37,22 +39,21 @@ type Context = {
 
 const AccountsContext = createContext<Context>({
   accounts: {},
-  addAccount: () => {
-    return;
-  },
-  toggleFavorite: () => {
-    return;
-  },
-  removeAccount: () => {
-    return;
-  },
+  activeAccount: undefined,
+  setActiveAccount: () => void 0,
+  addAccount: () => void 0,
+  toggleFavorite: () => void 0,
+  removeAccount: () => void 0,
 });
 
 function AccountsProvider({children}: {children: React.ReactNode}) {
   const [accounts, setAccounts] = usePersistedState<Accounts>('accounts', {});
+  const [activeAccount, setActiveAccount] = usePersistedState<Account>('activeAccount');
 
   const value = {
     accounts,
+    activeAccount,
+    setActiveAccount,
     addAccount: (account: Account) => {
       setAccounts({...accounts, [account.address]: account});
     },
