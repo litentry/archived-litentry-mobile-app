@@ -1,21 +1,12 @@
 import React from 'react';
 import {Keyboard, StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
-import {ParamListBase, Route, RouteProp} from '@react-navigation/core';
-import {DrawerNavigationOptions, DrawerNavigationProp} from '@react-navigation/drawer';
-import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack';
+import {DrawerHeaderProps} from '@react-navigation/drawer';
+import {NativeStackHeaderProps} from '@react-navigation/native-stack';
 import {DrawerActions} from '@react-navigation/native';
 import {dashboardScreen, tokenMigrationScreen} from '@ui/navigation/routeKeys';
 import {AppBar, AppHeader, Title, useTheme} from '@ui/library';
 
-export function MainDrawerAppBar({
-  navigation,
-  options,
-  route,
-}: {
-  route: Route<string>;
-  options: DrawerNavigationOptions;
-  navigation: DrawerNavigationProp<ParamListBase>;
-}) {
+export function MainDrawerAppBar({navigation, options, route}: DrawerHeaderProps) {
   const {colors} = useTheme();
   const openDrawer = () => {
     Keyboard.dismiss();
@@ -33,17 +24,7 @@ export function MainDrawerAppBar({
   );
 }
 
-export function MainStackAppBar({
-  navigation,
-  back,
-  options,
-  route,
-}: {
-  back?: {title: string};
-  route: Route<string>;
-  options: StackNavigationOptions;
-  navigation: StackNavigationProp<ParamListBase>;
-}) {
+export function MainStackAppBar({navigation, back, options, route}: NativeStackHeaderProps) {
   const {colors} = useTheme();
 
   const openDrawer = () => {
@@ -51,36 +32,21 @@ export function MainStackAppBar({
   };
 
   const goBack = () => {
-    const navIndex = navigation.getState().index;
-    if (navIndex > 0) {
+    if (navigation.canGoBack()) {
       navigation.goBack();
     }
   };
 
   return (
     <AppHeader style={{backgroundColor: colors.background}}>
-      {options.headerLeft ? (
-        options.headerLeft({onPress: openDrawer})
-      ) : back ? (
-        <AppBar.BackAction onPress={goBack} />
-      ) : (
-        <AppBar.Action onPress={openDrawer} icon={'menu'} />
-      )}
+      {back ? <AppBar.BackAction onPress={goBack} /> : <AppBar.Action onPress={openDrawer} icon={'menu'} />}
       <AppBar.Content title={options.title ?? route.name} />
-      {options.headerRight ? options.headerRight({}) : null}
+      {options.headerRight ? options.headerRight({canGoBack: navigation.canGoBack()}) : null}
     </AppHeader>
   );
 }
 
-export function MainAppBar({
-  navigation,
-  route,
-  options,
-}: {
-  navigation: StackNavigationProp<ParamListBase>;
-  route: RouteProp<ParamListBase>;
-  options: StackNavigationOptions;
-}) {
+export function MainAppBar({navigation, route, options}: NativeStackHeaderProps) {
   const showMenu = route.name === dashboardScreen || tokenMigrationScreen;
   const {colors} = useTheme();
 
@@ -99,7 +65,7 @@ export function MainAppBar({
           </View>
         }
       />
-      {options.headerRight ? options.headerRight({}) : null}
+      {options.headerRight ? options.headerRight({canGoBack: navigation.canGoBack()}) : null}
     </AppHeader>
   );
 }
