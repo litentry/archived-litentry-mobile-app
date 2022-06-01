@@ -84,7 +84,7 @@
     "react-native-modalize": "^2.0.13",
     "react-native-os": "^1.2.6",
     "react-native-pager-view": "^5.4.11",
-    "react-native-paper": "^4.12.0",
+    "react-native-paper": "^4.12.1",
     "react-native-paper-tabs": "^0.7.0",
     "react-native-permissions": "^3.3.1",
     "react-native-popable": "^0.4.3",
@@ -115,9 +115,9 @@
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.9",
+    "@babel/core": "^7.18.2",
     "@babel/preset-typescript": "^7.17.12",
-    "@babel/runtime": "^7.17.9",
+    "@babel/runtime": "^7.18.3",
     "@graphql-codegen/cli": "2.6.2",
     "@graphql-codegen/fragment-matcher": "3.2.1",
     "@graphql-codegen/typescript": "2.4.11",
