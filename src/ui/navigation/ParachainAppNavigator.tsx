@@ -1,7 +1,7 @@
 import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {MainDrawerAppBar, MainAppBar, MainStackAppBar} from '@ui/navigation/AppBars';
+import {MainDrawerAppBar, MainStackAppBar} from '@ui/navigation/AppBars';
 import {AccountsNavigator} from '@ui/navigation/AppNavigator';
 import {accountsNavigator, feedbackScreen, tokenMigrationScreen, webviewScreen} from '@ui/navigation/routeKeys';
 import DrawerScreen from '@ui/screens/Drawer/DrawerScreen';
@@ -40,7 +40,7 @@ function TokenMigrationNavigator() {
 function HomeNavigator() {
   return (
     <HomeStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
-      <HomeStack.Screen name={'home'} component={HomeScreen} options={{header: (props) => <MainAppBar {...props} />}} />
+      <HomeStack.Screen name={'home'} component={HomeScreen} options={{headerShown: false}} />
     </HomeStack.Navigator>
   );
 }

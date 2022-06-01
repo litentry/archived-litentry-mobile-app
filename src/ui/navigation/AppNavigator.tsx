@@ -42,7 +42,7 @@ import WebviewScreen from '@ui/screens/WebviewScreen';
 import {useFirebase} from '@hooks/useFirebase';
 import {useTurnOnAllNotificationsOnAppStartForAndroid} from '@hooks/useTurnOnAllNotificationsOnAppStartForAndroid';
 import {usePushAuthorizationStatus} from '@hooks/usePushNotificationsPermissions';
-import {MainAppBar, MainDrawerAppBar, MainStackAppBar} from '@ui/navigation/AppBars';
+import {MainDrawerAppBar, MainStackAppBar} from '@ui/navigation/AppBars';
 import {
   AccountsStackParamList,
   AppStackParamList,
@@ -76,7 +76,7 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen
         name={routeKeys.dashboardScreen}
         component={DashboardScreen}
-        options={{header: (props) => <MainAppBar {...props} />}}
+        options={{headerShown: false}}
       />
       <DashboardStack.Screen name={routeKeys.motionDetailScreen} component={MotionDetailScreen} />
       <DashboardStack.Screen name={routeKeys.tipDetailScreen} component={TipDetailScreen} />
