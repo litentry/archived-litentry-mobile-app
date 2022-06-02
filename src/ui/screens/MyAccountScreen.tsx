@@ -46,7 +46,21 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
     snackbar('Address copied to clipboard!');
   };
 
-  const {closeBottomSheet, openBottomSheet, BottomSheet} = useBottomSheet();
+  const {
+    closeBottomSheet: closeSendFund,
+    openBottomSheet: openSendFund,
+    BottomSheet: SendFundBottomSheet,
+  } = useBottomSheet();
+  const {
+    closeBottomSheet: closeReceiveFund,
+    openBottomSheet: openReceiveFund,
+    BottomSheet: ReceiveFundBottomSheet,
+  } = useBottomSheet();
+  const {
+    closeBottomSheet: closeBalanceDetails,
+    openBottomSheet: openBalanceDetails,
+    BottomSheet: BalanceBottomSheet,
+  } = useBottomSheet();
 
   return (
     <SafeView edges={noTopEdges}>
@@ -64,21 +78,9 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
             </TouchableOpacity>
             <Padder scale={0.5} />
             <View style={styles.row}>
-              <ActionButton
-                icon="send"
-                title="Send"
-                onPress={() => {
-                  openBottomSheet(<SendFund address={address} onFundsSent={closeBottomSheet} />);
-                }}
-              />
+              <ActionButton icon="send" title="Send" onPress={openSendFund} />
 
-              <ActionButton
-                icon="download"
-                title="Receive"
-                onPress={() => {
-                  openBottomSheet(<ReceiveFund address={address} onClose={closeBottomSheet} />);
-                }}
-              />
+              <ActionButton icon="download" title="Receive" onPress={openReceiveFund} />
               <ActionButton
                 icon="share-variant"
                 title="Share"
@@ -108,23 +110,7 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
         </Card>
 
         <View style={styles.buttonGroup}>
-          <Button
-            icon="credit-card"
-            mode="text"
-            onPress={() =>
-              openBottomSheet(
-                <Layout style={styles.balanceContainer}>
-                  <Subheading style={globalStyles.textCenter}>{`Account balance`}</Subheading>
-                  <Padder scale={0.5} />
-                  <Divider />
-                  {accountInfo?.balance ? <AccountBalance balance={accountInfo.balance} /> : null}
-                  <Divider />
-                  <Padder scale={1} />
-                  <Button onPress={closeBottomSheet}>Close</Button>
-                  <Padder scale={2} />
-                </Layout>,
-              )
-            }>
+          <Button icon="credit-card" mode="text" onPress={openBalanceDetails}>
             Balance details
           </Button>
           <Padder scale={1} />
@@ -169,7 +155,26 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
         </View>
       </ScrollView>
 
-      <BottomSheet />
+      <SendFundBottomSheet>
+        <SendFund address={address} onFundsSent={closeSendFund} />
+      </SendFundBottomSheet>
+
+      <ReceiveFundBottomSheet>
+        <ReceiveFund address={address} onClose={closeReceiveFund} />
+      </ReceiveFundBottomSheet>
+
+      <BalanceBottomSheet>
+        <Layout style={styles.balanceContainer}>
+          <Subheading style={globalStyles.textCenter}>{`Account balance`}</Subheading>
+          <Padder scale={0.5} />
+          <Divider />
+          {accountInfo?.balance ? <AccountBalance balance={accountInfo.balance} /> : null}
+          <Divider />
+          <Padder scale={1} />
+          <Button onPress={closeBalanceDetails}>Close</Button>
+          <Padder scale={2} />
+        </Layout>
+      </BalanceBottomSheet>
     </SafeView>
   );
 }

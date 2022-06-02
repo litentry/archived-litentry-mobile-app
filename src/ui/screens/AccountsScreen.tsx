@@ -36,20 +36,18 @@ export function AccountsScreen({navigation}: Props) {
     setSortMenuVisible(false);
   };
 
-  const {closeBottomSheet, openBottomSheet, BottomSheet} = useBottomSheet();
+  const {openBottomSheet: openAccountGuide, BottomSheet: AccountGuideBottomSheet} = useBottomSheet();
+  const {
+    closeBottomSheet: closeExternalAccount,
+    openBottomSheet: openExternalAccount,
+    BottomSheet: ExternalAccountBottomSheet,
+  } = useBottomSheet();
 
   React.useEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
-        <IconButton
-          icon="information"
-          onPress={() => {
-            openBottomSheet(<AccountsGuide />);
-          }}
-        />
-      ),
+      headerRight: () => <IconButton icon="information" onPress={openAccountGuide} />,
     });
-  }, [navigation, openBottomSheet]);
+  }, [navigation, openAccountGuide]);
 
   return (
     <SafeView edges={noTopEdges}>
@@ -101,13 +99,15 @@ export function AccountsScreen({navigation}: Props) {
         ItemSeparatorComponent={Divider}
         ListEmptyComponent={EmptyView}
       />
-      <Buttons
-        navigation={navigation}
-        onAddAccount={() => {
-          openBottomSheet(<AddExternalAccount onClose={closeBottomSheet} />);
-        }}
-      />
-      <BottomSheet />
+      <Buttons navigation={navigation} onAddAccount={openExternalAccount} />
+
+      <AccountGuideBottomSheet>
+        <AccountsGuide />
+      </AccountGuideBottomSheet>
+
+      <ExternalAccountBottomSheet>
+        <AddExternalAccount onClose={closeExternalAccount} />
+      </ExternalAccountBottomSheet>
     </SafeView>
   );
 }
