@@ -40,10 +40,10 @@ type Context = {
 const AccountsContext = createContext<Context>({
   accounts: {},
   activeAccount: undefined,
-  setActiveAccount: () => void 0,
-  addAccount: () => void 0,
-  toggleFavorite: () => void 0,
-  removeAccount: () => void 0,
+  setActiveAccount: () => undefined,
+  addAccount: () => undefined,
+  toggleFavorite: () => undefined,
+  removeAccount: () => undefined,
 });
 
 function AccountsProvider({children}: {children: React.ReactNode}) {
