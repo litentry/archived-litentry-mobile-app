@@ -436,7 +436,7 @@ PODS:
   - react-native-mmkv (2.1.2):
     - MMKV
     - React-Core
-  - react-native-pager-view (5.4.11):
+  - react-native-pager-view (5.4.24):
     - React-Core
   - react-native-randombytes (3.6.1):
     - React-Core
@@ -933,7 +933,7 @@ SPEC CHECKSUMS:
   react-native-flipper-performance-plugin: ab280430bbdd17deffb7a30d94b604738cd04150
   react-native-in-app-message: 00952df970f85d162b9100f6b767ae37c6520dda
   react-native-mmkv: 5f6f070d2dbd0e4785aabfd94fb7fccc29b70462
-  react-native-pager-view: 7f00d63688f7df9fad86dfb0154814419cc5eb8d
+  react-native-pager-view: 95d0418c3c74279840abec6926653d32447bafb6
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: ebf8c413eb8b5f7c392a036a315eb7b46b96845f
   react-native-sensitive-info: 400c6e3d27945e15c8cddb5b4b92233c85ee06f8
