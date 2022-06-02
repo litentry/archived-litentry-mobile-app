@@ -24,6 +24,7 @@ function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const routeParams = currentRoute?.params as any;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const navigateToScreen = (screen: Route, params?: Record<string, any>) => () => {
     navigation.closeDrawer();
     navigation.navigate(screen as string, params);
