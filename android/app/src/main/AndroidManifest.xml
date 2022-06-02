@@ -16,6 +16,18 @@
             <action android:name="android.intent.action.VIEW" />
             <data android:scheme="https"/>
         </intent>
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:scheme="mailto" android:host="*" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.SENDTO"/>
+            <data android:scheme="mailto" android:host="*" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.SEND_MULTIPLE" />
+            <data android:scheme="mailto" android:host="*" />
+        </intent>
     </queries>
 
     <application
