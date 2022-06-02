@@ -1,3 +1,4 @@
+global.__reanimatedWorkletInit = () => {};
 import '@polkadot/wasm-crypto/initWasmAsm';
 import './shim';
 import 'proxy-polyfill'; // added for android hermes engine, double check when upgrade RN to 0.64

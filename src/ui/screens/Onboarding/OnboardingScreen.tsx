@@ -1,8 +1,8 @@
 import React, {useRef, useCallback, useState} from 'react';
 import {View, Image, ImageProps, StyleSheet, Dimensions} from 'react-native';
-import Carousel, {ICarouselInstance} from 'react-native-reanimated-carousel';
 import {useNavigation, StackActions} from '@react-navigation/native';
 import Animated, {FadeIn, FadeOut, useSharedValue} from 'react-native-reanimated';
+import Carousel, {ICarouselInstance} from 'react-native-reanimated-carousel';
 import {useTheme, Headline, Subheading, Button} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles from '@ui/styles';
@@ -97,7 +97,7 @@ export function OnboardingScreen() {
               carouselRef.current?.next();
             }}
             onSkipPress={() => {
-              carouselRef.current?.goToIndex(lastItemIndex, true);
+              carouselRef.current?.scrollTo({index: lastItemIndex});
             }}
             activeIndex={activeIndex}
           />
@@ -107,7 +107,9 @@ export function OnboardingScreen() {
   );
 }
 const styles = StyleSheet.create({
-  paginatorContainer: {top: '-6%'},
+  paginatorContainer: {
+    top: '-6%',
+  },
 });
 
 function CarouselItem({item}: {item: CarouselItem}) {

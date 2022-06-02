@@ -8,6 +8,11 @@ import globalStyles, {standardPadding} from '@ui/styles';
 import {useNetwork} from 'context/NetworkContext';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useConvictions} from 'src/api/hooks/useConvictions';
+import {SelectAccount} from '@ui/components/SelectAccount';
+import {useAccounts} from 'context/AccountsContext';
+import {useAccount} from 'src/api/hooks/useAccount';
+import {Padder} from '@ui/components/Padder';
+import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 
 function DevScreen() {
   const {colors} = useTheme();
@@ -15,6 +20,8 @@ function DevScreen() {
   const {data: convictions} = useConvictions();
   const {trigger} = useContext(InAppNotificationContext);
   const {status} = useApi();
+  const {activeAccount, setActiveAccount} = useAccounts();
+  const {data: accountInfo} = useAccount(activeAccount?.address);
 
   return (
     <SafeView edges={noTopEdges}>
@@ -30,7 +37,7 @@ function DevScreen() {
         />
         <Divider />
 
-        <View style={{padding: standardPadding * 2}}>
+        <View style={globalStyles.paddedContainer}>
           <Subheading>Conviction selection</Subheading>
           <Select
             items={convictions ?? []}
@@ -38,6 +45,21 @@ function DevScreen() {
               console.log(selectedItem);
             }}
           />
+        </View>
+
+        <View style={globalStyles.paddedContainer}>
+          <Subheading>Select active account</Subheading>
+          <SelectAccount
+            onSelect={(selectedAccount) => {
+              setActiveAccount(selectedAccount.account);
+            }}
+          />
+          <Padder scale={1} />
+
+          <View style={globalStyles.rowAlignCenter}>
+            <Subheading>{`Active account: `}</Subheading>
+            {accountInfo ? <AccountTeaser account={accountInfo} name={activeAccount?.meta.name} /> : null}
+          </View>
         </View>
 
         <List.Item
