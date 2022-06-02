@@ -8,7 +8,7 @@ import {Padder} from '@ui/components/Padder';
 import globalStyles from '@ui/styles';
 import {dashboardScreen} from '@ui/navigation/routeKeys';
 import {usePersistedState} from '@hooks/usePersistedState';
-import {Paginator} from './Paginator';
+import {Paginator} from '@ui/components/Paginator';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
