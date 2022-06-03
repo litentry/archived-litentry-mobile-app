@@ -67,7 +67,7 @@ export function IdentityGuide({onSkip}: Props) {
 
   return (
     <Layout>
-      <Subheading style={globalStyles.textCenter}>{`Identity Guid`}</Subheading>
+      <Subheading style={globalStyles.textCenter}>{`Identity Guide`}</Subheading>
       <Padder scale={1} />
 
       <Carousel
