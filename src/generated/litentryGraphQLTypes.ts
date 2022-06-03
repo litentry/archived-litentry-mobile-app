@@ -2596,6 +2596,7 @@ export type SubstrateChainAccountInfo = {
 export type SubstrateChainAuction = {
   __typename?: 'SubstrateChainAuction';
   endingPeriod?: Maybe<SubstrateChainAuctionEndingPeriod>;
+  formattedRaised: Scalars['String'];
   leasePeriod?: Maybe<SubstrateChainAuctionLeasePeriod>;
   raised: Scalars['String'];
   raisedPercent: Scalars['Float'];

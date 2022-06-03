@@ -13,8 +13,10 @@ import {EmptyView} from '@ui/components/EmptyView';
 import Clipboard from '@react-native-community/clipboard';
 import {useSnackbar} from 'context/SnackbarContext';
 import {EmptyStateTeaser} from '@ui/components/EmptyStateTeaser';
+import {useFormatBalance} from 'src/hooks/useFormatBalance';
 
 export function AuctionsScreen() {
+  const {formatBalance} = useFormatBalance();
   const {data: auction, loading} = useAuctionsSummary();
   const snackbar = useSnackbar();
 
@@ -36,6 +38,7 @@ export function AuctionsScreen() {
 
   const {auctionsInfo, latestAuction} = auction;
   const {winningBid, leasePeriod, endingPeriod, raised, raisedPercent} = latestAuction;
+  const formattedRaised = formatBalance(raised, {isShort: true});
   const remainingPercent =
     typeof endingPeriod?.remainingPercent === 'number' && endingPeriod.remainingPercent > 100
       ? 100
@@ -62,22 +65,24 @@ export function AuctionsScreen() {
 
               <Padder scale={2} />
               <View style={styles.itemRow}>
-                <View>
+                <>
                   {endingPeriod && (
                     <ProgressChartWidget
+                      chartTextStyle={styles.chartTextStyle}
                       title={`Ending period`}
                       detail={`${remainingPercent}%\n${endingPeriod.remaining.slice(0, 2).join('\n')}`}
                       progress={remainingPercent / 100}
                     />
                   )}
-                </View>
-                <View>
+                </>
+                <>
                   <ProgressChartWidget
+                    chartTextStyle={styles.chartTextStyle}
                     title={`Total Raised`}
-                    detail={`${raisedPercent}%\n${raised.split(' ').join('\n')}`}
+                    detail={`${raisedPercent}%\n${formattedRaised?.split(' ').join('\n')}`}
                     progress={raisedPercent / 100}
                   />
-                </View>
+                </>
               </View>
             </Card.Content>
           </Card>
@@ -132,5 +137,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
+  },
+  chartTextStyle: {
+    left: '33%',
   },
 });
