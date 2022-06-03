@@ -8,7 +8,7 @@ import Carousel, {ICarouselInstance} from 'react-native-reanimated-carousel';
 import {Padder} from './Padder';
 import {Paginator} from '@ui/components/Paginator';
 
-const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
+const {width: SCREEN_WIDTH} = Dimensions.get('window');
 
 type Props = {
   onSkip: () => void;
