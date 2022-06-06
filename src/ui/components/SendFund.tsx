@@ -69,7 +69,11 @@ export function SendFund({address, onFundsSent}: Props) {
             isKeepAliveActive ? 'Transfer with account keep-alive checks' : 'Normal transfer without keep-alive checks'
           }`}</HelperText>
         </View>
-        <Switch value={isKeepAliveActive} onValueChange={() => setIsKeepAliveActive(!isKeepAliveActive)} />
+        <Switch
+          value={isKeepAliveActive}
+          onValueChange={() => setIsKeepAliveActive(!isKeepAliveActive)}
+          testID={'keep_alive_switch'}
+        />
       </View>
       <Padder scale={1} />
       <View style={styles.buttons}>
