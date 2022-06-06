@@ -1,5 +1,3 @@
-import {NavigationProp} from '@react-navigation/native';
-import {AppStackParamList} from '@ui/navigation/navigation';
 import React from 'react';
 import {Alert} from 'react-native';
 import {render, fireEvent} from 'src/testUtils';
@@ -16,7 +14,7 @@ test('render the AddExternalAccount component, test for wrong address', () => {
 });
 
 test('render the AddExternalAccount component, with right address', () => {
-  const {getByPlaceholderText, getByText, debug, getByA11yState} = render(<AddExternalAccount onClose={closeModel} />);
+  const {getByPlaceholderText, getByText, getByA11yState} = render(<AddExternalAccount onClose={closeModel} />);
   const inputAddress = getByPlaceholderText('👉 Paste address here, e.g. 167r...14h');
   expect(inputAddress).toBeTruthy();
   getByA11yState({disabled: true});
