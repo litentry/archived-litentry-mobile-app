@@ -115,7 +115,7 @@ function Fund({item, active, onPressContribute, navigation}: FundsProps) {
       onPress={() => {
         navigation.navigate(crowdloanFundDetailScreen, {title: item.name ?? `# ${item.paraId}`, paraId: item.paraId});
       }}>
-      <View style={[globalStyles.rowAlignCenter]}>
+      <View style={[globalStyles.rowAlignCenter]} testID={item.paraId}>
         <View style={styles.shrink}>
           <Subheading numberOfLines={1} adjustsFontSizeToFit style={{color: isSpecial ? colors.primary : colors.text}}>
             {item.name}

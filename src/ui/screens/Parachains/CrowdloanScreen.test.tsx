@@ -16,12 +16,12 @@ test('render the loading component view when data is fetching', () => {
 });
 
 test('render the component view when data is fetched', async () => {
-  const {getByText, getAllByText} = render(<CrowdloanScreen navigation={navigation} />);
+  const {getByText, getAllByText, getByTestId} = render(<CrowdloanScreen navigation={navigation} />);
   const navigationSpy = jest.spyOn(navigation, 'navigate');
   await waitFor(() => {
     expect(getByText('Litentry')).toBeTruthy();
     expect(getAllByText('+ Contribute').length).toBe(9);
-    fireEvent.press(getAllByText('+ Contribute') as unknown as ReactTestInstance);
+    fireEvent.press(getByTestId('2013') as unknown as ReactTestInstance);
     expect(navigationSpy).toHaveBeenCalledTimes(1);
   });
 });
