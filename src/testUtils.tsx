@@ -1,9 +1,11 @@
 /* eslint-disable no-restricted-imports */
+
 import React from 'react';
 import {render, RenderOptions} from '@testing-library/react-native';
 import {ApolloProvider, ApolloClient, InMemoryCache, HttpLink} from '@apollo/client';
 import fetch from 'cross-fetch';
 import ThemeProvider from 'context/ThemeContext';
+import {act} from 'react-test-renderer';
 
 export const client = new ApolloClient({
   cache: new InMemoryCache(),
@@ -24,15 +26,9 @@ function customRender(ui: React.ReactElement, options?: CustomRenderOptions) {
   return render(ui, {wrapper: Providers, ...options});
 }
 
-const mockedNavigation = jest.fn();
-
-jest.mock('@react-navigation/native', () => {
-  return {
-    useNavigation: () => ({
-      navigate: mockedNavigation,
-    }),
-  };
-});
-
 export * from '@testing-library/react-native';
 export {customRender as render};
+
+export function wait(timeOut = 500) {
+  return act(() => new Promise((resolve) => setTimeout(resolve, timeOut)));
+}

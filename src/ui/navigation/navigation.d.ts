@@ -1,11 +1,7 @@
 import {
   accountScreen,
-  accountsGuideScreen,
   accountsNavigator,
   accountsScreen,
-  addAccountScreen,
-  addBountyScreen,
-  balanceScreen,
   bountiesScreen,
   bountyDetailScreen,
   candidateScreen,
@@ -23,7 +19,6 @@ import {
   eventsCalendarScreen,
   exportAccountWithJsonFileScreen,
   feedbackScreen,
-  identityGuideScreen,
   importAccountScreen,
   manageIdentityScreen,
   mnemonicScreen,
@@ -43,11 +38,9 @@ import {
   polkassemblyDiscussions,
   polkassemblyDiscussionsNavigator,
   proposeTipScreen,
-  receiveFundScreen,
   referendumScreen,
   registerSubIdentitiesScreen,
   registrarListScreen,
-  sendFundScreen,
   technicalCommitteeScreen,
   tipDetailScreen,
   tipsScreen,
@@ -80,7 +73,6 @@ type DashboardStackParamList = {
   [democracyProposalScreen]: {proposal: DemocracyProposal};
   [bountiesScreen]: undefined;
   [bountyDetailScreen]: {index: string};
-  [addBountyScreen]: undefined;
   [eventsCalendarScreen]: undefined;
   [onboardingScreen]: undefined;
 };
@@ -133,12 +125,6 @@ type AccountsStackParamList = {
   [registerSubIdentitiesScreen]: {address: string};
   [importAccountScreen]: undefined;
   [exportAccountWithJsonFileScreen]: {address: string};
-  [receiveFundScreen]: {address: string};
-  [sendFundScreen]: {address: string};
-  [addAccountScreen]: undefined;
-  [balanceScreen]: {address: string};
-  [identityGuideScreen]: undefined;
-  [accountsGuideScreen]: undefined;
 };
 
 type CompleteNavigatorParamList = AppStackParamList &

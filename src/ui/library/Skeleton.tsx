@@ -11,15 +11,15 @@ type Props = {
 const AnimatedLG = Animated.createAnimatedComponent(LinearGradient);
 
 export function Skeleton({width, height, circle = false}: Props) {
-  const widthValue = !circle ? `${width}%` : width;
+  const widthValue = !circle && !height ? `${width}%` : width;
   const heightValue = height ? height : !circle && !height ? 25 : width;
   const borderRadius = circle ? Math.floor(width / 2) : 4;
 
-  const animatedValue = React.useRef(new Animated.Value(0)).current;
+  const animatedValue = React.useRef(new Animated.Value(0));
 
   React.useEffect(() => {
     Animated.loop(
-      Animated.timing(animatedValue, {
+      Animated.timing(animatedValue.current, {
         toValue: 1,
         duration: (150 - width) * 25,
         easing: Easing.linear,
@@ -29,7 +29,7 @@ export function Skeleton({width, height, circle = false}: Props) {
   }, [animatedValue, width]);
 
   const interpolateWidth = Dimensions.get('window').width - (250 - width);
-  const translateX = animatedValue.interpolate({
+  const translateX = animatedValue.current.interpolate({
     inputRange: [0, 1],
     outputRange: [-interpolateWidth, interpolateWidth],
   });

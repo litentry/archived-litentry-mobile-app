@@ -41,6 +41,7 @@ module.exports = {
         ],
       },
     ],
+    'react/no-unstable-nested-components': 'off', // @TODO: https://github.com/litentry/litentry-app/issues/1199
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': 'warn',
     '@typescript-eslint/explicit-function-return-type': 'off',

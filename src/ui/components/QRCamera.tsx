@@ -42,8 +42,8 @@ const styles = StyleSheet.create({
   },
   cameraBase: {
     overflow: 'hidden',
-    width: width * 0.8,
-    height: width * 0.8,
+    width: width * 0.5,
+    height: width * 0.5,
     justifyContent: 'center',
     alignSelf: 'center',
     alignItems: 'center',

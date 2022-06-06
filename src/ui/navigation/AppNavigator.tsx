@@ -1,9 +1,7 @@
 import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import {createStackNavigator, StackNavigationOptions} from '@react-navigation/stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AccountsScreen} from '@ui/screens/AccountsScreen';
-import {AddAccountScreen} from '@ui/screens/AddAccountScreen/AddAccountScreen';
-import {BalanceScreen} from '@ui/screens/BalanceScreen';
 import {BountiesScreen} from '@ui/screens/Bounty/BountiesScreen';
 import {BountyDetailScreen} from '@ui/screens/Bounty/BountyDetailScreen';
 import {CandidateScreen} from '@ui/screens/Council/CandidateScreen';
@@ -22,8 +20,7 @@ import {ExportAccountWithJsonFileScreen} from '@ui/screens/ExportAccountWithJson
 import {ImportAccountScreen} from '@ui/screens/ImportAccountScreen';
 import {MotionDetailScreen} from '@ui/screens/MotionDetailScreen';
 import {MyAccountScreen} from '@ui/screens/MyAccountScreen';
-import {IdentityGuideScreen} from '@ui/screens/MyIdentityScreen/IdentityGuideScreen';
-import ManageIdentityScreen from '@ui/screens/MyIdentityScreen/ManageIdentity';
+import {ManageIdentityScreen} from '@ui/screens/MyIdentityScreen/ManageIdentityScreen';
 import {NotificationSettingsScreen} from '@ui/screens/NotificationSettingsScreen';
 import {AuctionsScreen} from '@ui/screens/Parachains/AuctionsScreen';
 import {CrowdloanFundDetailScreen} from '@ui/screens/Parachains/CrowdloanFundDetailScreen';
@@ -45,7 +42,7 @@ import WebviewScreen from '@ui/screens/WebviewScreen';
 import {useFirebase} from '@hooks/useFirebase';
 import {useTurnOnAllNotificationsOnAppStartForAndroid} from '@hooks/useTurnOnAllNotificationsOnAppStartForAndroid';
 import {usePushAuthorizationStatus} from '@hooks/usePushNotificationsPermissions';
-import {MainAppBar, MainDrawerAppBar, MainStackAppBar} from '@ui/navigation/AppBars';
+import {MainDrawerAppBar, MainStackAppBar} from '@ui/navigation/AppBars';
 import {
   AccountsStackParamList,
   AppStackParamList,
@@ -56,17 +53,12 @@ import {
   PolkassemblyDiscussionStackParamList,
 } from '@ui/navigation/navigation';
 import * as routeKeys from '@ui/navigation/routeKeys';
-import {AppBar, IconButton} from '@ui/library';
-import {AccountsGuideScreen} from '@ui/screens/AccountsGuideScreen';
-import {ReceiveFundScreen} from '@ui/screens/ReceiveFundScreen';
-import {SendFundScreen} from '@ui/screens/SendFundScreen';
 import {FeedbackScreen} from '@ui/screens/FeedbackScreen';
 import {AccountScreen} from '@ui/screens/AccountScreen';
-import {AddBountyScreen} from '@ui/screens/AddBountyScreen';
 import {OnboardingScreen} from '@ui/screens/Onboarding/OnboardingScreen';
 import {usePersistedState} from '@hooks/usePersistedState';
 
-const DashboardStack = createStackNavigator<DashboardStackParamList>();
+const DashboardStack = createNativeStackNavigator<DashboardStackParamList>();
 
 function DashboardStackNavigator() {
   const [onboardingSeen] = usePersistedState<boolean>('onboarding_seen');
@@ -84,7 +76,7 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen
         name={routeKeys.dashboardScreen}
         component={DashboardScreen}
-        options={{header: (props) => <MainAppBar {...props} />}}
+        options={{headerShown: false}}
       />
       <DashboardStack.Screen name={routeKeys.motionDetailScreen} component={MotionDetailScreen} />
       <DashboardStack.Screen name={routeKeys.tipDetailScreen} component={TipDetailScreen} />
@@ -99,29 +91,16 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.bountiesScreen} component={BountiesScreen} />
       <DashboardStack.Screen name={routeKeys.bountyDetailScreen} component={BountyDetailScreen} />
       <DashboardStack.Screen name={routeKeys.eventsCalendarScreen} component={EventsCalendarScreen} />
-      <DashboardStack.Screen
-        name={routeKeys.addBountyScreen}
-        component={AddBountyScreen}
-        options={overlayScreenOptions}
-      />
     </DashboardStack.Navigator>
   );
 }
 
-const AccountsStack = createStackNavigator<AccountsStackParamList>();
+const AccountsStack = createNativeStackNavigator<AccountsStackParamList>();
 
 export function AccountsNavigator() {
   return (
     <AccountsStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
-      <AccountsStack.Screen
-        name={routeKeys.accountsScreen}
-        component={AccountsScreen}
-        options={({navigation}) => ({
-          headerRight: () => (
-            <IconButton icon="information" onPress={() => navigation.navigate(routeKeys.accountsGuideScreen)} />
-          ),
-        })}
-      />
+      <AccountsStack.Screen name={routeKeys.accountsScreen} component={AccountsScreen} />
       <AccountsStack.Screen name={routeKeys.manageIdentityScreen} component={ManageIdentityScreen} />
       <AccountsStack.Screen name={routeKeys.myAccountScreen} component={MyAccountScreen} />
       <AccountsStack.Screen name={routeKeys.registerSubIdentitiesScreen} component={RegisterSubIdentitiesScreen} />
@@ -133,33 +112,11 @@ export function AccountsNavigator() {
         name={routeKeys.exportAccountWithJsonFileScreen}
         component={ExportAccountWithJsonFileScreen}
       />
-      <AccountsStack.Screen
-        name={routeKeys.receiveFundScreen}
-        component={ReceiveFundScreen}
-        options={overlayScreenOptions}
-      />
-      <AccountsStack.Screen name={routeKeys.sendFundScreen} component={SendFundScreen} options={overlayScreenOptions} />
-      <AccountsStack.Screen
-        name={routeKeys.addAccountScreen}
-        component={AddAccountScreen}
-        options={overlayScreenOptions}
-      />
-      <AccountsStack.Screen name={routeKeys.balanceScreen} component={BalanceScreen} options={overlayScreenOptions} />
-      <AccountsStack.Screen
-        name={routeKeys.identityGuideScreen}
-        component={IdentityGuideScreen}
-        options={overlayScreenOptions}
-      />
-      <AccountsStack.Screen
-        name={routeKeys.accountsGuideScreen}
-        component={AccountsGuideScreen}
-        options={overlayScreenOptions}
-      />
     </AccountsStack.Navigator>
   );
 }
 
-const DiscussionNavigator = createStackNavigator<PolkassemblyDiscussionStackParamList>();
+const DiscussionNavigator = createNativeStackNavigator<PolkassemblyDiscussionStackParamList>();
 
 function PolkassemblyDiscussionsNavigator() {
   return (
@@ -219,41 +176,29 @@ function DrawerNavigator() {
   );
 }
 
-const ParachainsStack = createStackNavigator<ParachainsStackParamList>();
+const ParachainsStack = createNativeStackNavigator<ParachainsStackParamList>();
 
 function ParachainsNavigator() {
   return (
     <ParachainsStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
-      <ParachainsStack.Screen
-        name={routeKeys.parachainsOverviewScreen}
-        component={ParachainsOverviewScreen}
-        options={{
-          headerLeft: (props) => <AppBar.Action icon="menu" {...props} />,
-        }}
-      />
+      <ParachainsStack.Screen name={routeKeys.parachainsOverviewScreen} component={ParachainsOverviewScreen} />
       <ParachainsStack.Screen name={routeKeys.parachainDetailScreen} component={ParachainDetailScreen} />
     </ParachainsStack.Navigator>
   );
 }
 
-const CrowdloansStack = createStackNavigator<CrowdloansStackParamList>();
+const CrowdloansStack = createNativeStackNavigator<CrowdloansStackParamList>();
 
 function CrowdloansNavigator() {
   return (
     <CrowdloansStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
-      <CrowdloansStack.Screen
-        name={routeKeys.crowdloanScreen}
-        component={CrowdloanScreen}
-        options={{
-          headerLeft: (props) => <AppBar.Action icon="menu" {...props} />,
-        }}
-      />
+      <CrowdloansStack.Screen name={routeKeys.crowdloanScreen} component={CrowdloanScreen} />
       <CrowdloansStack.Screen name={routeKeys.crowdloanFundDetailScreen} component={CrowdloanFundDetailScreen} />
     </CrowdloansStack.Navigator>
   );
 }
 
-const AppStack = createStackNavigator<AppStackParamList>();
+const AppStack = createNativeStackNavigator<AppStackParamList>();
 
 function AppNavigator() {
   useTurnOnAllNotificationsOnAppStartForAndroid();
@@ -288,14 +233,3 @@ function AppNavigator() {
 }
 
 export default AppNavigator;
-
-export const overlayScreenOptions: StackNavigationOptions = {
-  presentation: 'transparentModal',
-  headerShown: false,
-  animationEnabled: false,
-  cardStyle: {
-    backgroundColor: 'transparent',
-    opacity: 1,
-  },
-  gestureEnabled: false,
-};

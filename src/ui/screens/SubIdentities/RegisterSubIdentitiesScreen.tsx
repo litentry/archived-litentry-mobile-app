@@ -1,11 +1,9 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Alert, FlatList, View} from 'react-native';
-import {Modalize} from 'react-native-modalize';
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {Button, Caption, Subheading, List, Divider, IconButton, useTheme} from '@ui/library';
+import {Button, Caption, Subheading, List, Divider, IconButton, useTheme, useBottomSheet} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
-import ModalTitle from '@ui/components/ModalTitle';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useApiTx} from 'src/api/hooks/useApiTx';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
@@ -30,9 +28,9 @@ type ScreenProps = {
 };
 
 export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
+  const {closeBottomSheet, openBottomSheet, BottomSheet} = useBottomSheet();
   const {colors} = useTheme();
   const address = route.params.address;
-  const modalRef = useRef<Modalize>(null);
   const {data: accountInfo, refetch: refetchAccount} = useSubAccounts(address);
   const [subIdentities, setSubIdentities] = useState<AccountType[]>();
   const [submitSubsDisabled, setSubmitSubsDisabled] = useState(true);
@@ -46,13 +44,9 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
 
   useEffect(() => {
     navigation.setOptions({
-      headerRight: () => <IconButton size={30} icon="plus-circle-outline" onPress={onAddSubIdentityPress} />,
+      headerRight: () => <IconButton size={30} icon="plus-circle-outline" onPress={openBottomSheet} />,
     });
-  }, [navigation]);
-
-  const onAddSubIdentityPress = () => {
-    modalRef.current?.open();
-  };
+  }, [navigation, openBottomSheet]);
 
   const onSetSubIdentitiesPress = async () => {
     startTx({
@@ -86,7 +80,7 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
       return prevInfos;
     });
     setSubmitSubsDisabled(false);
-    modalRef.current?.close();
+    closeBottomSheet();
   };
 
   const onRemovePress = (accountId: string) => {
@@ -145,21 +139,14 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
           ListEmptyComponent={<EmptyView height={200}>{`No sub-identities set.`}</EmptyView>}
         />
       </View>
-      <Modalize
-        ref={modalRef}
-        threshold={250}
-        scrollViewProps={{showsVerticalScrollIndicator: false}}
-        adjustToContentHeight
-        handlePosition="outside"
-        closeOnOverlayTap
-        withReactModal
-        useNativeDriver
-        panGestureEnabled>
+      <BottomSheet>
         <Layout>
-          <ModalTitle title="Add sub-identity" />
-          <AddSubIdentity onAddPress={onAddPress} subIdentities={subIdentities} />
+          <Subheading style={globalStyles.textCenter}>{`Add sub-identity`}</Subheading>
+          <Padder scale={1} />
+          <AddSubIdentity onAddPress={onAddPress} subIdentities={subIdentities} onClose={closeBottomSheet} />
+          <Padder scale={1} />
         </Layout>
-      </Modalize>
+      </BottomSheet>
     </SafeView>
   );
 }

@@ -2596,6 +2596,7 @@ export type SubstrateChainAccountInfo = {
 export type SubstrateChainAuction = {
   __typename?: 'SubstrateChainAuction';
   endingPeriod?: Maybe<SubstrateChainAuctionEndingPeriod>;
+  formattedRaised: Scalars['String'];
   leasePeriod?: Maybe<SubstrateChainAuctionLeasePeriod>;
   raised: Scalars['String'];
   raisedPercent: Scalars['Float'];
@@ -2753,7 +2754,7 @@ export type SubstrateChainCouncilMember = {
   address: Scalars['String'];
   backing: Scalars['String'];
   formattedBacking: Scalars['String'];
-  voters: Array<SubstrateChainAccount>;
+  voters: Array<Scalars['String']>;
 };
 
 export type SubstrateChainCouncilMotion = {
