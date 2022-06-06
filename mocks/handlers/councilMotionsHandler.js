@@ -13,6 +13,7 @@ export const councilMotionsHandler = graphql.query('getCouncilMotions', (_, res,
             section: 'democracy',
             hash: '0xa695e805d1b6cbfd46699c2997dfac9d37c6996bcac539074af7ba215061dffe',
             payout: null,
+            bond: '1 DOT',
             args: [
               {
                 name: 'proposalHash',
@@ -273,6 +274,7 @@ export const councilMotionsHandler = graphql.query('getCouncilMotions', (_, res,
             section: 'treasury',
             hash: '0x647e0a8e3ef845c0c5e3bd0f31dec9f6fa1521b889a3fd27c8fce3c210601ac6',
             payout: '3,950.9700 DOT',
+            bond: '1 DOT',
             args: [
               {
                 name: 'proposalId',
