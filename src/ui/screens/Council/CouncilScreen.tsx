@@ -56,7 +56,7 @@ type ScreenProps = {
   navigation: NavigationProp<DashboardStackParamList>;
 };
 
-function CouncilOverviewScreen({navigation}: ScreenProps) {
+export function CouncilOverviewScreen({navigation}: ScreenProps) {
   const {data: council, loading} = useCouncil();
   const {data: moduleElection} = useModuleElection();
   const [councilVoteVisible, setCouncilVoteVisible] = useState(false);
