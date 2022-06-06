@@ -3,9 +3,8 @@ import {graphql} from 'msw';
 export const crowdloanHandler = graphql.query('getCrowdloans', (_, res, ctx) => {
   return res(
     ctx.data({
-      SubstrateChainCrowdloan: [
+      substrateChainCrowdloans: [
         {
-          __typename: 'SubstrateChainCrowdloan',
           paraId: '2013',
           name: 'Litentry',
           formattedRaised: '943,842.0909 DOT',
@@ -14,25 +13,22 @@ export const crowdloanHandler = graphql.query('getCrowdloans', (_, res, ctx) => 
           raisedPercentage: '0.3146',
         },
         {
-          __typename: 'SubstrateChainCrowdloan',
           paraId: '2038',
           name: 'Geminis',
-          formattedRaised: '24,583.9104 DOT',
+          formattedRaised: '24,613.9104 DOT',
           formattedCap: '3.0000  MDOT',
           homepage: 'https://geminis.network/',
-          raisedPercentage: '0.0081',
+          raisedPercentage: '0.0082',
         },
         {
-          __typename: 'SubstrateChainCrowdloan',
           paraId: '2030',
           name: '#2030',
-          formattedRaised: '399,701.5211 DOT',
+          formattedRaised: '400,217.5629 DOT',
           formattedCap: '1.0000  MDOT',
           homepage: null,
-          raisedPercentage: '0.3997',
+          raisedPercentage: '0.4002',
         },
         {
-          __typename: 'SubstrateChainCrowdloan',
           paraId: '2007',
           name: 'Kapex',
           formattedRaised: '19,317.9375 DOT',
@@ -41,16 +37,14 @@ export const crowdloanHandler = graphql.query('getCrowdloans', (_, res, ctx) => 
           raisedPercentage: '0.0034',
         },
         {
-          __typename: 'SubstrateChainCrowdloan',
           paraId: '2027',
           name: 'Coinversation',
-          formattedRaised: '63,577.9002 DOT',
+          formattedRaised: '63,592.9002 DOT',
           formattedCap: '3.0000  MDOT',
           homepage: 'http://www.coinversation.io/',
           raisedPercentage: '0.0211',
         },
         {
-          __typename: 'SubstrateChainCrowdloan',
           paraId: '2040',
           name: 'Polkadex',
           formattedRaised: '973,323.6135 DOT',
@@ -59,7 +53,6 @@ export const crowdloanHandler = graphql.query('getCrowdloans', (_, res, ctx) => 
           raisedPercentage: '0.9733',
         },
         {
-          __typename: 'SubstrateChainCrowdloan',
           paraId: '2043',
           name: '#2043',
           formattedRaised: '754,563.9078 DOT',
@@ -68,7 +61,6 @@ export const crowdloanHandler = graphql.query('getCrowdloans', (_, res, ctx) => 
           raisedPercentage: '0.1509',
         },
         {
-          __typename: 'SubstrateChainCrowdloan',
           paraId: '2037',
           name: 'Unique Network',
           formattedRaised: '822,942.6309 DOT',
@@ -77,7 +69,6 @@ export const crowdloanHandler = graphql.query('getCrowdloans', (_, res, ctx) => 
           raisedPercentage: '0.0548',
         },
         {
-          __typename: 'SubstrateChainCrowdloan',
           paraId: '2004',
           name: 'Moonbeam',
           formattedRaised: '35.7599  MDOT',
@@ -86,7 +77,6 @@ export const crowdloanHandler = graphql.query('getCrowdloans', (_, res, ctx) => 
           raisedPercentage: '0.3575',
         },
         {
-          __typename: 'SubstrateChainCrowdloan',
           paraId: '2000',
           name: 'Acala',
           formattedRaised: '32.5159  MDOT',
@@ -95,7 +85,6 @@ export const crowdloanHandler = graphql.query('getCrowdloans', (_, res, ctx) => 
           raisedPercentage: '0.6503',
         },
         {
-          __typename: 'SubstrateChainCrowdloan',
           paraId: '2002',
           name: 'Clover',
           formattedRaised: '9.7524  MDOT',
@@ -104,7 +93,6 @@ export const crowdloanHandler = graphql.query('getCrowdloans', (_, res, ctx) => 
           raisedPercentage: '0.195',
         },
         {
-          __typename: 'SubstrateChainCrowdloan',
           paraId: '2006',
           name: 'Astar',
           formattedRaised: '10.3335  MDOT',
@@ -113,7 +101,6 @@ export const crowdloanHandler = graphql.query('getCrowdloans', (_, res, ctx) => 
           raisedPercentage: '0.2952',
         },
         {
-          __typename: 'SubstrateChainCrowdloan',
           paraId: '2012',
           name: 'Parallel',
           formattedRaised: '10.7515  MDOT',
@@ -122,7 +109,6 @@ export const crowdloanHandler = graphql.query('getCrowdloans', (_, res, ctx) => 
           raisedPercentage: '0.2687',
         },
         {
-          __typename: 'SubstrateChainCrowdloan',
           paraId: '2019',
           name: 'Composable Finance',
           formattedRaised: '6.0754  MDOT',
@@ -131,7 +117,6 @@ export const crowdloanHandler = graphql.query('getCrowdloans', (_, res, ctx) => 
           raisedPercentage: '0.243',
         },
         {
-          __typename: 'SubstrateChainCrowdloan',
           paraId: '2021',
           name: 'Efinity',
           formattedRaised: '7.6953  MDOT',
@@ -140,7 +125,6 @@ export const crowdloanHandler = graphql.query('getCrowdloans', (_, res, ctx) => 
           raisedPercentage: '0.1539',
         },
         {
-          __typename: 'SubstrateChainCrowdloan',
           paraId: '2026',
           name: 'Nodle',
           formattedRaised: '2.4755  MDOT',
@@ -149,7 +133,6 @@ export const crowdloanHandler = graphql.query('getCrowdloans', (_, res, ctx) => 
           raisedPercentage: '0.099',
         },
         {
-          __typename: 'SubstrateChainCrowdloan',
           paraId: '2031',
           name: 'Centrifuge',
           formattedRaised: '5.4351  MDOT',
@@ -158,7 +141,6 @@ export const crowdloanHandler = graphql.query('getCrowdloans', (_, res, ctx) => 
           raisedPercentage: '0.2717',
         },
         {
-          __typename: 'SubstrateChainCrowdloan',
           paraId: '2032',
           name: 'Interlay',
           formattedRaised: '2.7519  MDOT',
@@ -167,7 +149,6 @@ export const crowdloanHandler = graphql.query('getCrowdloans', (_, res, ctx) => 
           raisedPercentage: '0.055',
         },
         {
-          __typename: 'SubstrateChainCrowdloan',
           paraId: '2034',
           name: 'HydraDX',
           formattedRaised: '2.4625  MDOT',
@@ -176,7 +157,6 @@ export const crowdloanHandler = graphql.query('getCrowdloans', (_, res, ctx) => 
           raisedPercentage: '0.3078',
         },
         {
-          __typename: 'SubstrateChainCrowdloan',
           paraId: '2011',
           name: 'Equilibrium',
           formattedRaised: '625,505.2871 DOT',
@@ -185,7 +165,6 @@ export const crowdloanHandler = graphql.query('getCrowdloans', (_, res, ctx) => 
           raisedPercentage: '0.2085',
         },
         {
-          __typename: 'SubstrateChainCrowdloan',
           paraId: '2035',
           name: 'Phala Network',
           formattedRaised: '610,759.0297 DOT',
