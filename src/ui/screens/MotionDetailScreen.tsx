@@ -1,30 +1,28 @@
-import React, {useRef} from 'react';
+import React from 'react';
 import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
-import {Card, Icon, Caption, Subheading, Paragraph} from '@ui/library';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {Card, Icon, Caption, Subheading, Paragraph, useBottomSheet} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {useNetwork} from 'context/NetworkContext';
-import _ from 'lodash';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import StatInfoBlock from '@ui/components/StatInfoBlock';
 import {ScrollView} from 'react-native-gesture-handler';
-import {Modalize} from 'react-native-modalize';
 import WebView from 'react-native-webview';
 import {useMotionDetail} from 'src/api/hooks/useMotionDetail';
 import {AppStackParamList, DashboardStackParamList} from '@ui/navigation/navigation';
 import {buildMotionDetailUrl} from 'src/service/Polkasembly';
 import globalStyles, {colorGreen, colorRed, standardPadding} from '@ui/styles';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
-import {StackNavigationProp} from '@react-navigation/stack/lib/typescript/src/types';
 import {accountScreen} from '@ui/navigation/routeKeys';
 
 const {height} = Dimensions.get('window');
 
 type PropTypes = {
   route: RouteProp<DashboardStackParamList, 'Motion'>;
-  navigation: StackNavigationProp<AppStackParamList>;
+  navigation: NativeStackNavigationProp<AppStackParamList>;
 };
 
 type VoteItemProps = {
@@ -46,9 +44,8 @@ function VoteItem({type, children}: VoteItemProps) {
 }
 
 export function MotionDetailScreen({route, navigation}: PropTypes) {
-  const modalRef = useRef<Modalize>(null);
+  const {openBottomSheet, BottomSheet} = useBottomSheet();
   const {currentNetwork} = useNetwork();
-
   const {data: motion, loading} = useMotionDetail(route.params.hash);
 
   if (loading && !motion) {
@@ -76,7 +73,7 @@ export function MotionDetailScreen({route, navigation}: PropTypes) {
               <StatInfoBlock title="ID">{motion?.proposal.index || ''}</StatInfoBlock>
               <StatInfoBlock title="Detail">
                 {['kusama', 'polkadot'].includes(currentNetwork.key) ? (
-                  <TouchableOpacity onPress={() => modalRef.current?.open()}>
+                  <TouchableOpacity onPress={openBottomSheet}>
                     <View style={globalStyles.rowAlignCenter}>
                       <Caption numberOfLines={1}>on Polkassembly</Caption>
                       <Padder scale={0.3} />
@@ -104,7 +101,9 @@ export function MotionDetailScreen({route, navigation}: PropTypes) {
         <View style={globalStyles.spaceBetweenRowContainer}>
           <Card style={[styles.item, styles.left]}>
             <Card.Content>
-              <StatInfoBlock title="Section">{_.capitalize(proposal.section)}</StatInfoBlock>
+              <StatInfoBlock title="Section">
+                {<Caption style={styles.textCapitalize}>{proposal.section}</Caption>}
+              </StatInfoBlock>
               <Padder scale={0.5} />
               <StatInfoBlock title="Method">{proposal.method}</StatInfoBlock>
             </Card.Content>
@@ -161,16 +160,7 @@ export function MotionDetailScreen({route, navigation}: PropTypes) {
           </View>
         ) : null}
       </ScrollView>
-      <Modalize
-        ref={modalRef}
-        threshold={250}
-        scrollViewProps={{showsVerticalScrollIndicator: false}}
-        adjustToContentHeight
-        handlePosition="outside"
-        closeOnOverlayTap
-        withReactModal
-        useNativeDriver
-        panGestureEnabled>
+      <BottomSheet>
         <Layout>
           <WebView
             injectedJavaScript={`(function() {
@@ -187,13 +177,15 @@ export function MotionDetailScreen({route, navigation}: PropTypes) {
             onMessage={() => null}
           />
         </Layout>
-      </Modalize>
+      </BottomSheet>
     </SafeView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {flex: 1},
+  container: {
+    flex: 1,
+  },
   item: {
     flex: 1,
   },
@@ -208,5 +200,8 @@ const styles = StyleSheet.create({
   },
   voteContainer: {
     paddingVertical: standardPadding / 2,
+  },
+  textCapitalize: {
+    textTransform: 'capitalize',
   },
 });

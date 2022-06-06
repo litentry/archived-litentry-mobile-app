@@ -1,6 +1,6 @@
 import {ApiPromise} from '@polkadot/api';
 import {useApi} from 'context/ChainApiContext';
-import {useTx, StartConfig} from 'context/TxContext';
+import {StartConfig, useTx} from 'context/TxContext';
 
 type TxConfig = Omit<StartConfig, 'api'>;
 

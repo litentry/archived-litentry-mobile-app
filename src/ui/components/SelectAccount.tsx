@@ -39,6 +39,7 @@ export function SelectAccount({onSelect, accounts}: Props) {
       anchor={
         <TextInput
           mode="outlined"
+          dense
           render={(_props) => {
             return (
               <TouchableOpacity style={styles.anchorContent} onPress={openMenu}>

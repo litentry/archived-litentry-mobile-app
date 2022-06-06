@@ -1,6 +1,6 @@
 import React, {useCallback, useState, useRef} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
-import {TextInput, Button, Tabs, TabScreen, useTabNavigation, useTabIndex, useTheme} from '@ui/library';
+import {TextInput, Button, Tabs, TabScreen, useTabNavigation, useTabIndex, useTheme, HelperText} from '@ui/library';
 import {useNetwork} from 'context/NetworkContext';
 import QRCamera, {QRCameraRef} from '@ui/components/QRCamera';
 import {Padder} from '@ui/components/Padder';
@@ -9,40 +9,41 @@ import {isAddressValid, parseAddress} from 'src/utils/address';
 import type {Account} from 'src/api/hooks/useAccount';
 import type {SubIdentity} from './RegisterSubIdentitiesScreen';
 
-export function AddSubIdentity({
-  onAddPress,
-  subIdentities,
-}: {
+type Props = {
+  onClose: () => void;
   onAddPress: (subIdentity: SubIdentity) => void;
   subIdentities?: Account[];
-}) {
+};
+
+export function AddSubIdentity({onClose, onAddPress, subIdentities}: Props) {
   const {currentNetwork} = useNetwork();
   const [subAddress, setSubAddress] = useState('');
   const [subName, setSubName] = useState('');
   const {colors} = useTheme();
 
+  const isValidAddress = React.useMemo(() => {
+    return isAddressValid(currentNetwork, subAddress);
+  }, [subAddress, currentNetwork]);
+
   const addSubIdentity = () => {
-    if (isAddressValid(currentNetwork, subAddress)) {
-      if (subIdentities?.some((sub) => sub.address === subAddress)) {
-        Alert.alert(
-          'Validation Failed',
-          'The account is already registered. Remove the account first if you want to change its name',
-        );
-      } else {
-        onAddPress({
-          address: subAddress,
-          display: subName,
-        });
-      }
+    if (subIdentities?.some((sub) => sub.address === subAddress)) {
+      Alert.alert(
+        'Validation Failed',
+        'The account is already registered. Remove the account first if you want to change its name',
+      );
     } else {
-      Alert.alert('Validation Failed', 'The address provided is invalid');
+      onAddPress({
+        address: subAddress,
+        display: subName,
+      });
     }
   };
 
   return (
     <>
-      <View style={{marginHorizontal: standardPadding * 2}}>
+      <View style={styles.accountName}>
         <TextInput
+          dense
           mode="outlined"
           placeholder="Sub account name (optional)"
           value={subName}
@@ -62,6 +63,11 @@ export function AddSubIdentity({
                 style={styles.input}
                 placeholder="👉 Paste address here, e.g. 167r...14h"
               />
+              <HelperText
+                type="error"
+                visible={
+                  Boolean(subAddress) && !isValidAddress
+                }>{`${subAddress} is not a valid address for ${currentNetwork.name} network`}</HelperText>
             </View>
           </TabScreen>
           <TabScreen label="Via QR" icon="qrcode">
@@ -69,12 +75,16 @@ export function AddSubIdentity({
           </TabScreen>
         </Tabs>
       </View>
-      <View style={globalStyles.paddedContainer}>
-        <Button onPress={addSubIdentity} mode="contained">
-          Add
+
+      <View style={styles.row}>
+        <Button mode="outlined" onPress={onClose}>
+          Cancel
+        </Button>
+        <Button mode="contained" disabled={!isValidAddress} onPress={addSubIdentity}>
+          Add Identity
         </Button>
       </View>
-      <Padder scale={2} />
+      <Padder scale={1.5} />
     </>
   );
 }
@@ -117,10 +127,17 @@ function ScanAddressTab({onScanSuccess}: {onScanSuccess: (address: string) => vo
 }
 
 const styles = StyleSheet.create({
+  accountName: {
+    marginHorizontal: standardPadding * 2,
+  },
   tabViewContainer: {
-    minHeight: 400,
+    minHeight: 300,
   },
   input: {
     minHeight: 100,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
   },
 });

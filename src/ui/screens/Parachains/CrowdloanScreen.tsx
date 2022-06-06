@@ -26,6 +26,16 @@ type ScreenProps = {
   navigation: NavigationProp<CrowdloansStackParamList>;
 };
 
+function CrowdloanHeader() {
+  return (
+    <>
+      <Padder />
+      <CrowdloanSummaryTeaser />
+      <Padder scale={1.5} />
+    </>
+  );
+}
+
 export function CrowdloanScreen({navigation}: ScreenProps) {
   const [openContributeId, setOpenContributeId] = React.useState<string>();
   const {activeCrowdloans, endedCrowdloans, loading} = useAllCrowdloans();
@@ -46,13 +56,7 @@ export function CrowdloanScreen({navigation}: ScreenProps) {
         <LoadingView />
       ) : (
         <SectionList
-          ListHeaderComponent={() => (
-            <>
-              <Padder />
-              <CrowdloanSummaryTeaser />
-              <Padder scale={1.5} />
-            </>
-          )}
+          ListHeaderComponent={CrowdloanHeader}
           contentContainerStyle={styles.listContent}
           style={styles.container}
           sections={sectionData}

@@ -8,6 +8,7 @@ import {Padder} from '@ui/components/Padder';
 import {ProgressChartWidget} from '@ui/components/ProgressChartWidget';
 import {Card} from '@ui/library';
 import {DashboardTeaserSkeleton} from '@ui/components/DashboardTeaserSkeleton';
+import {EmptyStateTeaser} from './EmptyStateTeaser';
 
 type Props = {
   onPress: () => void;
@@ -44,7 +45,9 @@ export function BountySummaryTeaser(props: Props) {
             )}
           </Card>
         </View>
-      ) : null}
+      ) : (
+        <EmptyStateTeaser subheading="No Bounties" caption="Check back soon" />
+      )}
     </SectionTeaserContainer>
   );
 }
