@@ -17,13 +17,13 @@ import {useApi} from 'context/ChainApiContext';
 import LoadingView from '@ui/components/LoadingView';
 import {AuthenticateView} from '@ui/components/Tx/AuthenticateView';
 import {PayloadQrCodeView} from '@ui/components/Tx/PayloadQrCodeView';
-import {ErrorDialog} from '@ui/components/Tx/ErrorDialog';
 import {SuccessDialog} from '@ui/components/SuccessDialog';
-import {WarningDialog} from '@ui/components/Tx/WarningDialog';
 import {Layout} from '@ui/components/Layout';
 import {TxPreview} from '@ui/components/Tx/Preview';
+import {MessageTeaser} from '@ui/components/MessageTeaser';
 import {Subheading, Caption, Icon, useBottomSheet} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
+import {Padder} from '@ui/components/Padder';
 
 let id = 0;
 
@@ -236,6 +236,8 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
       case 'scan_signature_view':
         return (
           <Layout style={globalStyles.paddedContainer}>
+            <Subheading style={globalStyles.textCenter}>{`Scan QR code`}</Subheading>
+            <Padder scale={1} />
             <QRCodeScanner
               onRead={(data) => {
                 dispatch({type: 'SHOW_SUBMITTING_VIEW'});
@@ -245,7 +247,6 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
                 });
               }}
               showMarker
-              topContent={<Caption>Scanning ...</Caption>}
               markerStyle={styles.marker}
               cameraStyle={styles.cameraBase}
               notAuthorizedView={
@@ -257,6 +258,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
                 </Layout>
               }
             />
+            <Padder scale={2} />
           </Layout>
         );
 
@@ -283,14 +285,14 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
       case 'error_view':
         return (
           <Layout style={styles.infoContainer}>
-            <ErrorDialog text="Tx Failed" msg={state.error} />
+            <MessageTeaser title="Tx Failed" msg={'this is an error message'} type="warning" />
           </Layout>
         );
 
       case 'warning_view':
         return (
           <Layout style={styles.infoContainer}>
-            <WarningDialog text="Tx Sent" msg={state.warning} />
+            <MessageTeaser title="Tx Sent" msg={state.warning} type="warning" />
           </Layout>
         );
 
@@ -355,8 +357,8 @@ const styles = StyleSheet.create({
   },
   cameraBase: {
     overflow: 'hidden',
-    width: width * 0.8,
-    height: width * 0.8,
+    width: width * 0.7,
+    height: width * 0.7,
     justifyContent: 'center',
     alignSelf: 'center',
     alignItems: 'center',

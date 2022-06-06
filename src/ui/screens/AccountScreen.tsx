@@ -85,7 +85,7 @@ export function AccountScreen({route}: {route: RouteProp<AppStackParamList, type
                   </View>
                   <View style={styles.balance}>
                     <Caption>Locked</Caption>
-                    <Caption>{account?.balance.formattedFreeFrozen}</Caption>
+                    <Caption>{account?.balance.formattedFeeFrozen}</Caption>
                   </View>
                 </Card.Content>
               </Card>

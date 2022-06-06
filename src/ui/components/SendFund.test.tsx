@@ -1,13 +1,8 @@
-/* eslint-disable no-restricted-imports */
-import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {fireEvent} from '@testing-library/react-native';
-import {AccountsStackParamList} from '@ui/navigation/navigation';
-import {sendFundScreen} from '@ui/navigation/routeKeys';
 import React from 'react';
-import * as useApiTx from 'src/api/hooks/useApiTx';
-import {render, waitFor} from 'src/testUtils';
-import {SendFundScreen} from './SendFundScreen';
+import {render, waitFor, fireEvent} from 'src/testUtils';
+import {SendFund} from './SendFund';
 
+// TODO: mock the implementation of the sendTx method
 jest.mock('src/api/hooks/useApiTx');
 
 const sendTx = jest.fn(() => {
@@ -20,21 +15,14 @@ sendTx.mockImplementation(() => {
   return {sendTx: sendTx};
 });
 
-const navigation = {
-  goBack: () => jest.fn(),
-} as unknown as NavigationProp<AccountsStackParamList, typeof sendFundScreen>;
+const address = '';
 
-const route = {
-  params: {
-    address: '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a',
-  },
-} as RouteProp<AccountsStackParamList, typeof sendFundScreen>;
+const onFundsSent = jest.fn();
 
 test('component loaded successfully with the "Make transfer" button disabled', async () => {
   const {getAllByText, queryByText, getByText, getByA11yState} = render(
-    <SendFundScreen navigation={navigation} route={route} />,
+    <SendFund address={address} onFundsSent={onFundsSent} />,
   );
-  const navigationSpy = jest.spyOn(navigation, 'goBack');
   await waitFor(() => {
     expect(getAllByText('Send funds').length).toBe(1);
     getAllByText('Enter amount');
@@ -46,13 +34,12 @@ test('component loaded successfully with the "Make transfer" button disabled', a
     getByA11yState({disabled: true});
 
     fireEvent.press(getByText('Cancel'));
-    expect(navigationSpy).toBeCalledTimes(1);
   });
 });
 
 test('When user enter correct values and checked keep alive check to make transfer', async () => {
   const {queryAllByText, getByPlaceholderText, getByText} = render(
-    <SendFundScreen navigation={navigation} route={route} />,
+    <SendFund address={address} onFundsSent={onFundsSent} />,
   );
   await waitFor(() => {
     fireEvent.changeText(getByPlaceholderText('Enter amount'), '2588');
@@ -70,7 +57,7 @@ test('When user enter correct values and checked keep alive check to make transf
 
 test('When user enter correct values and normal transfer to make transfer', async () => {
   const {queryAllByText, getByPlaceholderText, getByText, getByTestId, queryByText} = render(
-    <SendFundScreen navigation={navigation} route={route} />,
+    <SendFund address={address} onFundsSent={onFundsSent} />,
   );
 
   await waitFor(() => {

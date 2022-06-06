@@ -51,6 +51,7 @@ function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps): React
   return (
     <ScrollView style={styles.container}>
       <TextInput
+        dense
         mode="outlined"
         label="Display Name"
         placeholder="My On-Chain Name"
@@ -61,6 +62,7 @@ function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps): React
       />
       <Padder scale={1} />
       <TextInput
+        dense
         mode="outlined"
         label="Legal Name"
         placeholder="Full Legal Name"
@@ -71,6 +73,7 @@ function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps): React
       />
       <Padder scale={1} />
       <TextInput
+        dense
         mode="outlined"
         label="Email"
         placeholder="somebody@example.com"
@@ -82,6 +85,7 @@ function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps): React
       />
       <Padder scale={1} />
       <TextInput
+        dense
         mode="outlined"
         label="Web"
         placeholder="https://example.com"
@@ -93,6 +97,7 @@ function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps): React
       />
       <Padder scale={1} />
       <TextInput
+        dense
         mode="outlined"
         label="Twitter"
         placeholder="@YourTwitterName"
@@ -104,6 +109,7 @@ function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps): React
       />
       <Padder scale={1} />
       <TextInput
+        dense
         mode="outlined"
         label="Riot"
         placeholder="@yourName:matrix.org"

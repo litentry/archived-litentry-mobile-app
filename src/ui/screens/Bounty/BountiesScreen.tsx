@@ -1,19 +1,29 @@
 import React from 'react';
 import {StyleSheet, View, FlatList} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 import {useBounties, Bounty} from 'src/api/hooks/useBounties';
 import {EmptyView} from '@ui/components/EmptyView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import LoadingView from '@ui/components/LoadingView';
-import {Text, Caption, Card, Headline, List, Button} from '@ui/library';
+import {Text, Caption, Card, Headline, List, Button, useBottomSheet} from '@ui/library';
 import {bountyDetailScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
-import * as routeKeys from '@ui/navigation/routeKeys';
+import {AddBounty} from '@ui/components/AddBounty';
+import {NavigationProp} from '@react-navigation/native';
+import {DashboardStackParamList} from '@ui/navigation/navigation';
 
-export function BountiesScreen() {
+type ScreenProps = {
+  navigation: NavigationProp<DashboardStackParamList>;
+};
+
+export function BountiesScreen({navigation}: ScreenProps) {
+  const {openBottomSheet, closeBottomSheet, BottomSheet} = useBottomSheet();
   const {data: bounties, loading} = useBounties();
-  const navigation = useNavigation();
+
+  const toBountyDetails = (index: string) => {
+    navigation.navigate(bountyDetailScreen, {index});
+  };
+
   return (
     <SafeView edges={noTopEdges}>
       {loading && !bounties ? (
@@ -26,30 +36,34 @@ export function BountiesScreen() {
           keyExtractor={({index}) => index.toString()}
           ListHeaderComponent={
             <View style={styles.bounty}>
-              <Button
-                style={{}}
-                icon="plus"
-                mode="outlined"
-                onPress={() => navigation.navigate(routeKeys.addBountyScreen)}>
+              <Button icon="plus" mode="outlined" onPress={openBottomSheet}>
                 Add Bounty
               </Button>
             </View>
           }
-          renderItem={({item}) => <BountyItem bounty={item} />}
+          renderItem={({item}) => <BountyItem bounty={item} onPress={toBountyDetails} />}
           ItemSeparatorComponent={() => <Padder scale={0.5} />}
           ListEmptyComponent={EmptyView}
         />
       )}
+
+      <BottomSheet>
+        <AddBounty onClose={closeBottomSheet} />
+      </BottomSheet>
     </SafeView>
   );
 }
 
-function BountyItem({bounty}: {bounty: Bounty}) {
-  const navigation = useNavigation();
+type BountyItemProps = {
+  bounty: Bounty;
+  onPress: (index: string) => void;
+};
+
+function BountyItem({bounty, onPress}: BountyItemProps) {
   const {formattedValue, index, bountyStatus, description} = bounty;
 
   return (
-    <Card onPress={() => navigation.navigate(bountyDetailScreen, {index})}>
+    <Card onPress={() => onPress(index)}>
       <List.Item
         left={() => (
           <View style={globalStyles.justifyCenter}>

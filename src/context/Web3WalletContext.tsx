@@ -14,6 +14,8 @@ import {
   Result,
 } from 'src/service/TokenMigration';
 
+export type TxResult = Result;
+
 interface Web3Account {
   address: string;
   balance: {

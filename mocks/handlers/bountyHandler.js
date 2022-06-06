@@ -1,0 +1,122 @@
+import {graphql} from 'msw';
+
+export const bountyHandler = graphql.query('getBounty', (_, res, ctx) => {
+  return res(
+    ctx.data({
+      substrateChainBounty: {
+        __typename: 'SubstrateChainBounty',
+        index: '13',
+        description: 'ORML Security Bounty',
+        formattedFee: '0.0000 DOT',
+        formattedCuratorDeposit: '0.0000 DOT',
+        formattedValue: '100,000.0000 DOT',
+        formattedBond: '1.2000 DOT',
+        proposer: {
+          __typename: 'SubstrateChainAccountInfo',
+          account: {
+            __typename: 'SubstrateChainAccount',
+            address: '12Y8b4C9ar162cBgycxYgxxHG7cLVs8gre9Y5xeMjW3izqer',
+            display: 'Acala Foundation',
+            hasIdentity: true,
+            registration: {
+              __typename: 'SubstrateChainDeriveAccountRegistration',
+              display: 'Acala Foundation',
+              displayParent: null,
+              email: 'hello@acala.network',
+              image: null,
+              legal: null,
+              pgp: null,
+              riot: null,
+              twitter: '@AcalaNetwork',
+              web: 'https://acala.network',
+              judgements: [
+                {
+                  __typename: 'SubstrateChainRegistrationJudgement',
+                  registrarIndex: 1,
+                  judgement: {
+                    __typename: 'SubstrateChainIdentityJudgement',
+                    isUnknown: false,
+                    isFeePaid: false,
+                    isReasonable: true,
+                    isKnownGood: false,
+                    isOutOfDate: false,
+                    isLowQuality: false,
+                    isErroneous: false,
+                  },
+                },
+              ],
+            },
+            balance: {
+              __typename: 'SubstrateChainAccountBalance',
+              total: '2820000000000',
+              formattedTotal: '282.0000 DOT',
+              reserved: '400740000000',
+              formattedReserved: '40.0740 DOT',
+              free: '2419260000000',
+              formattedFree: '241.9260 DOT',
+              feeFrozen: '0',
+              formattedFeeFrozen: '0.0000 DOT',
+            },
+          },
+        },
+        bountyStatus: {
+          __typename: 'SubstrateChainBountyStatus',
+          beneficiary: null,
+          status: 'Active',
+          curator: {
+            __typename: 'SubstrateChainAccountInfo',
+            account: {
+              __typename: 'SubstrateChainAccount',
+              address: '13f2dPGgzj33ARCdKCQsCZ19JfCDUfsNqoAphVjASCMbZgBc',
+              display: 'ORML Security Bounty Curator',
+              hasIdentity: true,
+              registration: {
+                __typename: 'SubstrateChainDeriveAccountRegistration',
+                display: 'ORML Security Bounty Curator',
+                displayParent: null,
+                email: 'hello@acala.network',
+                image: null,
+                legal: null,
+                pgp: null,
+                riot: null,
+                twitter: null,
+                web: null,
+                judgements: [
+                  {
+                    __typename: 'SubstrateChainRegistrationJudgement',
+                    registrarIndex: 0,
+                    judgement: {
+                      __typename: 'SubstrateChainIdentityJudgement',
+                      isUnknown: false,
+                      isFeePaid: false,
+                      isReasonable: true,
+                      isKnownGood: false,
+                      isOutOfDate: false,
+                      isLowQuality: false,
+                      isErroneous: false,
+                    },
+                  },
+                ],
+              },
+              balance: {
+                __typename: 'SubstrateChainAccountBalance',
+                total: '228980000000',
+                formattedTotal: '22.8980 DOT',
+                reserved: '202580000000',
+                formattedReserved: '20.2580 DOT',
+                free: '26400000000',
+                formattedFree: '2.6400 DOT',
+                feeFrozen: '0',
+                formattedFeeFrozen: '0.0000 DOT',
+              },
+            },
+          },
+          unlockAt: null,
+          unlockAtTime: null,
+          updateDue: '10743134',
+          updateDueTime: ['33 days', '13 hrs', '44 mins', '18 s'],
+        },
+      },
+    }),
+  );
+});

@@ -2573,12 +2573,16 @@ export type SubstrateChainAccount = {
 
 export type SubstrateChainAccountBalance = {
   __typename?: 'SubstrateChainAccountBalance';
+  feeFrozen: Scalars['String'];
+  formattedFeeFrozen: Scalars['String'];
   formattedFree: Scalars['String'];
   formattedFreeFrozen: Scalars['String'];
+  formattedMiscFrozen: Scalars['String'];
   formattedReserved: Scalars['String'];
   formattedTotal: Scalars['String'];
   free: Scalars['String'];
   freeFrozen: Scalars['String'];
+  miscFrozen: Scalars['String'];
   reserved: Scalars['String'];
   total: Scalars['String'];
 };
@@ -2592,6 +2596,7 @@ export type SubstrateChainAccountInfo = {
 export type SubstrateChainAuction = {
   __typename?: 'SubstrateChainAuction';
   endingPeriod?: Maybe<SubstrateChainAuctionEndingPeriod>;
+  formattedRaised: Scalars['String'];
   leasePeriod?: Maybe<SubstrateChainAuctionLeasePeriod>;
   raised: Scalars['String'];
   raisedPercent: Scalars['Float'];
@@ -2645,10 +2650,16 @@ export type SubstrateChainBalance = {
 
 export type SubstrateChainBalanceData = {
   __typename?: 'SubstrateChainBalanceData';
-  feeFrozen: Scalars['Float'];
-  free: Scalars['Float'];
-  miscFrozen: Scalars['Float'];
-  reserved: Scalars['Float'];
+  feeFrozen: Scalars['String'];
+  formattedFeeFrozen: Scalars['String'];
+  formattedFree: Scalars['String'];
+  formattedMiscFrozen: Scalars['String'];
+  formattedReserved: Scalars['String'];
+  formattedTotal: Scalars['String'];
+  free: Scalars['String'];
+  miscFrozen: Scalars['String'];
+  reserved: Scalars['String'];
+  total: Scalars['String'];
 };
 
 export type SubstrateChainBountiesSummary = {
@@ -2743,7 +2754,7 @@ export type SubstrateChainCouncilMember = {
   address: Scalars['String'];
   backing: Scalars['String'];
   formattedBacking: Scalars['String'];
-  voters: Array<SubstrateChainAccount>;
+  voters: Array<Scalars['String']>;
 };
 
 export type SubstrateChainCouncilMotion = {

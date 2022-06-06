@@ -1,9 +1,9 @@
 diff --git a/node_modules/metro-react-native-babel-preset/src/configs/main.js b/node_modules/metro-react-native-babel-preset/src/configs/main.js
-index edc8263..acfa105 100644
+index 8c05035..ebcc3f8 100644
 --- a/node_modules/metro-react-native-babel-preset/src/configs/main.js
 +++ b/node_modules/metro-react-native-babel-preset/src/configs/main.js
-@@ -132,11 +132,11 @@ const getPreset = (src, options) => {
-     }
+@@ -135,11 +135,11 @@ const getPreset = (src, options) => {
+     extraPlugins.push([require("@babel/plugin-transform-async-to-generator")]);
    }
  
 -  if (!isHermes && (isNull || src.indexOf("**") !== -1)) {
@@ -17,5 +17,5 @@ index edc8263..acfa105 100644
 +  //   ]);
 +  // }
  
-   if (!isHermes && (isNull || src.indexOf("Object.assign")) !== -1) {
-     extraPlugins.push([require("@babel/plugin-transform-object-assign")]);
+   if (
+     isNull ||
