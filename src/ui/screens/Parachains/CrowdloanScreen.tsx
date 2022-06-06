@@ -22,7 +22,11 @@ import {CrowdloanSummaryTeaser} from '@ui/components/CrowdloanSummaryTeaser';
 import {useNetwork} from 'context/NetworkContext';
 import {InputLabel} from '@ui/library/InputLabel';
 
-export function CrowdloanScreen() {
+type ScreenProps = {
+  navigation: NavigationProp<CrowdloansStackParamList>;
+};
+
+export function CrowdloanScreen({navigation}: ScreenProps) {
   const [openContributeId, setOpenContributeId] = React.useState<string>();
   const {activeCrowdloans, endedCrowdloans, loading} = useAllCrowdloans();
   const ongoingKey = `Ongoing (${activeCrowdloans.length ?? 0})`;
@@ -62,6 +66,7 @@ export function CrowdloanScreen() {
                 onPressContribute={() => {
                   setOpenContributeId(item.paraId);
                 }}
+                navigation={navigation}
               />
             );
           }}
@@ -84,8 +89,14 @@ export function CrowdloanScreen() {
   );
 }
 
-function Fund({item, active, onPressContribute}: {item: Crowdloan; active: boolean; onPressContribute: () => void}) {
-  const navigation = useNavigation<NavigationProp<CrowdloansStackParamList>>();
+type FundsProps = {
+  item: Crowdloan;
+  active: boolean;
+  onPressContribute: () => void;
+  navigation: NavigationProp<CrowdloansStackParamList>;
+};
+
+function Fund({item, active, onPressContribute, navigation}: FundsProps) {
   const {colors} = useTheme();
   const {currentNetwork} = useNetwork();
 
