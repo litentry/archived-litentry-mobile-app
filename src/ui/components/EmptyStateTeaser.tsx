@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, Image, View} from 'react-native';
 import EmptyList from 'image/EmptyList.png';
 import {Subheading, Caption} from '@ui/library';
+import {standardPadding} from '@ui/styles';
 
 type Props = {
   subheading: string;
@@ -26,6 +27,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: standardPadding,
   },
   imageContainer: {
     flex: 1,

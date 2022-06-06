@@ -3,21 +3,17 @@ import {FlatList, View, StyleSheet, TouchableOpacity} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp} from '@react-navigation/native';
 import {Account as AccountType, useAccounts} from 'context/AccountsContext';
-import {useTheme, Divider, IconButton, List, FAB, Caption, Menu, Subheading, Icon} from '@ui/library';
+import {useTheme, Divider, IconButton, List, FAB, Caption, Menu, Subheading, Icon, useBottomSheet} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {CompleteNavigatorParamList} from '@ui/navigation/navigation';
-import {
-  accountsScreen,
-  addAccountScreen,
-  importAccountScreen,
-  mnemonicScreen,
-  myAccountScreen,
-} from '@ui/navigation/routeKeys';
+import {accountsScreen, importAccountScreen, mnemonicScreen, myAccountScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {EmptyView} from '@ui/components/EmptyView';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {Account} from '@ui/components/Account/Account';
 import {Padder} from '@ui/components/Padder';
+import {AccountsGuide} from '@ui/components/Account/AccountsGuide';
+import {AddExternalAccount} from '@ui/components/Account/AddExternalAccount';
 
 type Props = {
   navigation: NavigationProp<CompleteNavigatorParamList, typeof accountsScreen>;
@@ -27,7 +23,6 @@ type SortBy = 'name' | 'favorites';
 
 export function AccountsScreen({navigation}: Props) {
   const {networkAccounts, toggleFavorite} = useAccounts();
-
   const [sortBy, setSortBy] = React.useState<SortBy>('name');
   const sortByFunction = sortBy === 'name' ? sortByDisplayName : sortByIsFavorite;
   const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
@@ -40,6 +35,19 @@ export function AccountsScreen({navigation}: Props) {
     setSortBy(sort);
     setSortMenuVisible(false);
   };
+
+  const {openBottomSheet: openAccountGuide, BottomSheet: AccountGuideBottomSheet} = useBottomSheet();
+  const {
+    closeBottomSheet: closeExternalAccount,
+    openBottomSheet: openExternalAccount,
+    BottomSheet: ExternalAccountBottomSheet,
+  } = useBottomSheet();
+
+  React.useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => <IconButton icon="information" onPress={openAccountGuide} />,
+    });
+  }, [navigation, openAccountGuide]);
 
   return (
     <SafeView edges={noTopEdges}>
@@ -91,7 +99,15 @@ export function AccountsScreen({navigation}: Props) {
         ItemSeparatorComponent={Divider}
         ListEmptyComponent={EmptyView}
       />
-      <Buttons navigation={navigation} />
+      <Buttons navigation={navigation} onAddAccount={openExternalAccount} />
+
+      <AccountGuideBottomSheet>
+        <AccountsGuide />
+      </AccountGuideBottomSheet>
+
+      <ExternalAccountBottomSheet>
+        <AddExternalAccount onClose={closeExternalAccount} />
+      </ExternalAccountBottomSheet>
     </SafeView>
   );
 }
@@ -160,7 +176,12 @@ function AccountItem({
   );
 }
 
-const Buttons = ({navigation}: {navigation: Props['navigation']}) => {
+type FabProps = {
+  navigation: Props['navigation'];
+  onAddAccount: () => void;
+};
+
+const Buttons = ({navigation, onAddAccount}: FabProps) => {
   const [state, setState] = React.useState({open: false});
   const onStateChange = ({open}: {open: boolean}) => setState({open});
   const {open} = state;
@@ -179,7 +200,7 @@ const Buttons = ({navigation}: {navigation: Props['navigation']}) => {
         {
           icon: 'plus',
           label: 'Add External Account',
-          onPress: () => navigation.navigate(addAccountScreen),
+          onPress: onAddAccount,
         },
         {
           icon: 'key-plus',

@@ -9,6 +9,7 @@ import {Card} from '@ui/library';
 import {useCouncilSummary} from 'src/api/hooks/useCouncilSummary';
 import {AccountTeaser} from './Account/AccountTeaser';
 import {DashboardTeaserSkeleton} from '@ui/components/DashboardTeaserSkeleton';
+import {EmptyStateTeaser} from './EmptyStateTeaser';
 
 type PropTypes = {
   onPress: () => void;
@@ -21,39 +22,39 @@ export function CouncilSummaryTeaser(props: PropTypes) {
     <SectionTeaserContainer onPress={props.onPress} title="Council">
       {loading && !council ? (
         <DashboardTeaserSkeleton />
-      ) : (
-        <>
+      ) : council ? (
+        <View>
           <View style={globalStyles.spaceBetweenRowContainer}>
             <Card mode="outlined" style={styles.card}>
               <View style={globalStyles.spaceBetweenRowContainer}>
-                <StatInfoBlock title="Seats">{`${council?.totalMembers}/${council?.desiredSeats}`}</StatInfoBlock>
-                <StatInfoBlock title="Runners up">{`${council?.totalRunnersUp}/${council?.desiredRunnersUp}`}</StatInfoBlock>
+                <StatInfoBlock title="Seats">{`${council.totalMembers}/${council.desiredSeats}`}</StatInfoBlock>
+                <StatInfoBlock title="Runners up">{`${council.totalRunnersUp}/${council.desiredRunnersUp}`}</StatInfoBlock>
               </View>
               <Padder scale={1} />
-              <StatInfoBlock title="Candidates">{`${council?.totalCandidates}`}</StatInfoBlock>
+              <StatInfoBlock title="Candidates">{`${council.totalCandidates}`}</StatInfoBlock>
             </Card>
             <Padder scale={0.2} />
             <Card mode="outlined" style={styles.card}>
-              {council ? (
-                <ProgressChartWidget
-                  title={`Term Progress (${council.termProgress.termDurationParts[0]})`}
-                  detail={`${council.termProgress.percentage}%\n${council.termProgress.termLeftParts
-                    ?.slice(0, 2)
-                    .join('\n')}`}
-                  progress={council.termProgress.percentage / 100}
-                />
-              ) : null}
+              <ProgressChartWidget
+                title={`Term Progress (${council.termProgress.termDurationParts[0]})`}
+                detail={`${council.termProgress.percentage}%\n${council.termProgress.termLeftParts
+                  ?.slice(0, 2)
+                  .join('\n')}`}
+                progress={council.termProgress.percentage / 100}
+              />
             </Card>
           </View>
           <Padder scale={0.2} />
-          {council?.primeMember ? (
+          {council.primeMember ? (
             <Card mode="outlined" style={[styles.card]}>
               <StatInfoBlock title="Prime Voter">
                 <AccountTeaser account={council.primeMember.account} />
               </StatInfoBlock>
             </Card>
           ) : null}
-        </>
+        </View>
+      ) : (
+        <EmptyStateTeaser subheading="No Council members" caption="Check back soon" />
       )}
     </SectionTeaserContainer>
   );

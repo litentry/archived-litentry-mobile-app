@@ -5,17 +5,17 @@ import {List, Icon, Caption} from '@ui/library';
 import {JudgmentStatus} from '@ui/components/Account/JudgmentStatus';
 import LoadingView from '@ui/components/LoadingView';
 import {useAccount} from 'src/api/hooks/useAccount';
-import {NetworkType} from 'src/types';
 import globalStyles from '@ui/styles';
 import {stringShorten} from '@polkadot/util';
+import {useNetwork} from 'context/NetworkContext';
 
 type PropTypes = {
-  network: NetworkType;
   address: string;
 };
 
 function AddressInfoPreview(props: PropTypes) {
-  const {address, network} = props;
+  const {address} = props;
+  const {currentNetwork} = useNetwork();
   const {data: accountInfo, loading} = useAccount(address);
 
   return (
@@ -89,7 +89,7 @@ function AddressInfoPreview(props: PropTypes) {
                 <Icon name="earth" size={20} />
               </View>
             )}
-            right={() => <Caption>{network.name}</Caption>}
+            right={() => <Caption>{currentNetwork.name}</Caption>}
           />
         </>
       )}

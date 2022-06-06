@@ -7,6 +7,7 @@ const logger = createLogger('usePersistedState');
 export type PersistedStateKey =
   | 'network'
   | 'accounts'
+  | 'activeAccount'
   | 'theme'
   | 'selected_push_topics'
   | 'is_pn_permission_skipped'

@@ -1,14 +1,13 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {ExtrinsicPayload} from '@polkadot/types/interfaces';
-import {standardPadding} from '@ui/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {SignerPayloadJSON} from '@polkadot/types/types';
 import {createFrames, QrCode} from 'src/utils/qrCode';
 import {createSignPayload} from 'src/utils/signer';
 import {CMD_HASH, CMD_MORTAL} from 'src/constants';
-import ModalTitle from '@ui/components/ModalTitle';
 import {ChainApiContext} from 'context/ChainApiContext';
-import {Button, Divider, useTheme} from '@ui/library';
+import {Button, useTheme, Subheading} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {Layout} from '@ui/components/Layout';
 
@@ -52,28 +51,28 @@ export function PayloadQrCodeView({payload, onConfirm, onCancel}: PropTypes): Re
 
   return (
     <Layout style={styles.container}>
-      <ModalTitle title="Authorization required" />
-      <Divider />
-      <View style={styles.content}>
-        <View style={styles.qrContainer}>
-          <Image
-            source={{
-              uri: imageUri,
-              width: QR_CODE_DIMENSION.width - standardPadding,
-              height: QR_CODE_DIMENSION.height - standardPadding,
-            }}
-          />
-        </View>
-        <View style={styles.buttonGroup}>
-          <Button mode="outlined" color={colors.accent} onPress={onCancel}>
-            Cancel
-          </Button>
-          <Padder scale={1} />
-          <Button compact mode="contained" onPress={onConfirm} icon="qrcode-scan">
-            Scan Signature
-          </Button>
-        </View>
+      <Subheading style={globalStyles.textCenter}>{`Authorization required`}</Subheading>
+      <Padder scale={1} />
+      <View style={styles.qrContainer}>
+        <Image
+          source={{
+            uri: imageUri,
+            width: QR_CODE_DIMENSION.width - standardPadding,
+            height: QR_CODE_DIMENSION.height - standardPadding,
+          }}
+        />
       </View>
+      <Padder scale={1} />
+      <View style={styles.buttonGroup}>
+        <Button mode="outlined" color={colors.accent} onPress={onCancel}>
+          Cancel
+        </Button>
+        <Padder scale={1} />
+        <Button compact mode="contained" onPress={onConfirm} icon="qrcode-scan">
+          Scan Signature
+        </Button>
+      </View>
+      <Padder scale={2} />
     </Layout>
   );
 }
@@ -81,11 +80,8 @@ export function PayloadQrCodeView({payload, onConfirm, onCancel}: PropTypes): Re
 const QR_CODE_DIMENSION = {width: 180, height: 180};
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: standardPadding * 2,
-    alignItems: 'center',
-    marginBottom: standardPadding * 2,
+    paddingHorizontal: standardPadding * 2,
   },
-  content: {padding: standardPadding * 2},
   qrContainer: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -93,5 +89,6 @@ const styles = StyleSheet.create({
   },
   buttonGroup: {
     flexDirection: 'row',
+    justifyContent: 'space-around',
   },
 });
