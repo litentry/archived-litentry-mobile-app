@@ -1,10 +1,8 @@
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {NavigationProp} from '@react-navigation/native';
 import React from 'react';
-import {render, waitFor} from 'src/testUtils';
+import {render, waitFor, fireEvent} from 'src/testUtils';
 import {CouncilOverviewScreen} from './CouncilScreen';
-
-jest.useFakeTimers();
 
 const navigation = {
   navigate: () => jest.fn(),
@@ -18,13 +16,22 @@ test('should render loading state when fetching data', () => {
 });
 
 test('should render component when data is fetched', async () => {
-  const {getByText, debug} = render(<CouncilOverviewScreen navigation={navigation} />);
+  const {getByText} = render(<CouncilOverviewScreen navigation={navigation} />);
   await waitFor(() => {
-    expect(getByText('Candidate')).toBeTruthy();
-    expect(getByText('Runners Up')).toBeTruthy();
     expect(getByText('Submit candidacy')).toBeTruthy();
     expect(getByText('Vote')).toBeTruthy();
-    expect(getByText('Member')).toBeTruthy();
+    expect(getByText('Runners Up 17/20')).toBeTruthy();
     expect(getByText('Prime voter')).toBeTruthy();
+    expect(getByText('RTTI-5220 (POLKADOT)')).toBeTruthy();
+  });
+});
+
+test('navigation test case', async () => {
+  const navigateSpy = jest.spyOn(navigation, 'navigate');
+  const {getByText} = render(<CouncilOverviewScreen navigation={navigation} />);
+  await waitFor(() => {
+    expect(getByText('RTTI-5220 (POLKADOT)')).toBeTruthy();
+    fireEvent.press(getByText('RTTI-5220 (POLKADOT)'));
+    expect(navigateSpy).toBeCalledTimes(1);
   });
 });
