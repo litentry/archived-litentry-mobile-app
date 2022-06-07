@@ -17,7 +17,14 @@ test('should render loading state when fetching data', () => {
   expect(getByTestId('loading_view')).toBeTruthy();
 });
 
-test('should render component when data is fetched', () => {
-  const {getByTestId} = render(<CouncilOverviewScreen navigation={navigation} />);
-  expect(getByTestId('loading_view')).toBeTruthy();
+test('should render component when data is fetched', async () => {
+  const {getByText, debug} = render(<CouncilOverviewScreen navigation={navigation} />);
+  await waitFor(() => {
+    expect(getByText('Candidate')).toBeTruthy();
+    expect(getByText('Runners Up')).toBeTruthy();
+    expect(getByText('Submit candidacy')).toBeTruthy();
+    expect(getByText('Vote')).toBeTruthy();
+    expect(getByText('Member')).toBeTruthy();
+    expect(getByText('Prime voter')).toBeTruthy();
+  });
 });
