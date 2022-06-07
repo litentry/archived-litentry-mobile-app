@@ -18,7 +18,7 @@ export const accountHandler = graphql.query('getAccount', (_, res, ctx) => {
           pgp: null,
           riot: '@raul.rtti:matrix.parity.io',
           twitter: '@nachortti',
-          web: null,
+          web: 'www.nachortti.com',
           judgements: [
             {
               __typename: 'SubstrateChainRegistrationJudgement',

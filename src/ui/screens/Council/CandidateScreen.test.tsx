@@ -1,8 +1,9 @@
 import {AppStackParamList, DashboardStackParamList} from '@ui/navigation/navigation';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import React from 'react';
-import {render, waitFor} from 'src/testUtils';
+import {render, waitFor, fireEvent, cleanup} from 'src/testUtils';
 import {CandidateScreen} from './CandidateScreen';
+import {Linking} from 'react-native';
 
 const navigation = {
   navigate: () => jest.fn(),
@@ -31,10 +32,54 @@ test('should render loading state when fetching data', () => {
 });
 
 test('should render component when the data is fetched', async () => {
-  const {getByText, getAllByText, getAllByTestId, debug} = render(
-    <CandidateScreen navigation={navigation} route={route} />,
-  );
+  const {getByText} = render(<CandidateScreen navigation={navigation} route={route} />);
   await waitFor(() => {
-    debug();
+    expect(getByText('Legal')).toBeTruthy();
+    expect(getByText('Email')).toBeTruthy();
+    expect(getByText('Twitter')).toBeTruthy();
+    expect(getByText('Riot')).toBeTruthy();
+    expect(getByText('Web')).toBeTruthy();
+    expect(getByText('Backing')).toBeTruthy();
+    expect(getByText('Voters')).toBeTruthy();
+  });
+});
+
+test('twitter navigation', async () => {
+  const openURLSpy = jest.spyOn(Linking, 'openURL');
+  const {getByText} = render(<CandidateScreen navigation={navigation} route={route} />);
+  await waitFor(() => {
+    expect(getByText('Twitter')).toBeTruthy();
+    fireEvent.press(getByText('@nachortti'));
+    expect(openURLSpy).toBeCalled();
+  });
+});
+
+test('riot navigation', async () => {
+  const openURLSpy = jest.spyOn(Linking, 'openURL');
+  const {getByText} = render(<CandidateScreen navigation={navigation} route={route} />);
+  await waitFor(() => {
+    expect(getByText('Riot')).toBeTruthy();
+    fireEvent.press(getByText('@raul.rtti:matrix.parity.io'));
+    expect(openURLSpy).toBeCalled();
+  });
+});
+
+test('web navigation', async () => {
+  const openURLSpy = jest.spyOn(Linking, 'openURL');
+  const {getByText} = render(<CandidateScreen navigation={navigation} route={route} />);
+  await waitFor(() => {
+    expect(getByText('Web')).toBeTruthy();
+    fireEvent.press(getByText('www.nachortti.com'));
+    expect(openURLSpy).toBeCalled();
+  });
+});
+
+test('web navigation', async () => {
+  const navigateSpy = jest.spyOn(navigation, 'navigate');
+  const {getByText} = render(<CandidateScreen navigation={navigation} route={route} />);
+  await waitFor(() => {
+    expect(getByText('RTTI-5220 (POLKADOT)')).toBeTruthy();
+    fireEvent.press(getByText('RTTI-5220 (POLKADOT)'));
+    expect(navigateSpy).toBeCalled();
   });
 });
