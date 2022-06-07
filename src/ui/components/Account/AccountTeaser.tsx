@@ -22,7 +22,7 @@ export function AccountTeaser({account, onPress, children, testID, name, identic
         <Identicon value={account.address} size={identiconSize} />
         <Padder scale={0.5} />
         <View>
-          <Account account={account} name={account.display} />
+          <Account account={account} name={name} />
           {children}
         </View>
       </View>

@@ -51,7 +51,6 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
                         account={accountInfo}
                         onPress={() => toAccountDetails(accountInfo.address)}
                         testID={'accountsDetails'}
-                        name={accountInfo.display}
                       />
                     )}
                   </View>
