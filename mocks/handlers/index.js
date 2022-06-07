@@ -1,4 +1,4 @@
-import {accountHandler} from './accountsHandler';
+import {accountHandler} from './accountHandler';
 import {bountiesHandler} from './bountiesHandler';
 import {bountiesSummaryHandler} from './bountiesSummaryHandler';
 import {bountyHandler} from './bountyHandler';
