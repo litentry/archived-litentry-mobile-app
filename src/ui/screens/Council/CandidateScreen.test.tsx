@@ -4,6 +4,7 @@ import React from 'react';
 import {render, waitFor, fireEvent, cleanup} from 'src/testUtils';
 import {CandidateScreen} from './CandidateScreen';
 import {Linking} from 'react-native';
+import {ReactTestInstance} from 'react-test-renderer';
 
 const navigation = {
   navigate: () => jest.fn(),
@@ -80,6 +81,17 @@ test('web navigation', async () => {
   await waitFor(() => {
     expect(getByText('RTTI-5220 (POLKADOT)')).toBeTruthy();
     fireEvent.press(getByText('RTTI-5220 (POLKADOT)'));
+    expect(navigateSpy).toBeCalled();
+  });
+});
+
+test('account navigation', async () => {
+  const navigateSpy = jest.spyOn(navigation, 'navigate');
+  const {getAllByTestId} = render(<CandidateScreen navigation={navigation} route={route} />);
+  await waitFor(() => {
+    const accountDetails = getAllByTestId('accountsDetails') as ReactTestInstance[];
+    expect(accountDetails.length).toBe(1);
+    fireEvent.press(accountDetails[0] as ReactTestInstance);
     expect(navigateSpy).toBeCalled();
   });
 });
