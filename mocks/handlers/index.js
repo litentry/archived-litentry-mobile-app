@@ -4,12 +4,15 @@ import {bountiesSummaryHandler} from './bountiesSummaryHandler';
 import {bountyHandler} from './bountyHandler';
 import {chainInfoHandler} from './chainInfoHandler';
 import {councilMotionsHandler} from './councilMotionsHandler';
+import {councilSummaryHandler} from './councilSummaryHandler';
+import {crowdloanSummaryHandler} from './crowdloanSummaryHandler';
 import {democracyHandler} from './democracyHandler';
 import {democracySummaryHandler} from './democracySummaryHandler';
 import {eventsCalendarHandler} from './eventsCalendarHandler';
 import {parachainSummaryHandler} from './parachainSummaryHandler';
 import {parathreadsHandler} from './parathreadHandler';
 import {registrarsHandler} from './registrarsHandler';
+import {treasurySummaryHandler} from './treasurySummaryHandler';
 
 export const handlers = [
   registrarsHandler,
@@ -25,5 +28,8 @@ export const handlers = [
   bountiesSummaryHandler,
   bountyHandler,
   chainInfoHandler,
+  councilSummaryHandler,
+  crowdloanSummaryHandler,
+  treasurySummaryHandler,
   // other handlers
 ];
