@@ -19,7 +19,6 @@ test('render the loading component view when data is fetching', () => {
 
 test('render the component after data is fetched', async () => {
   const {getByText, getAllByText} = render(<CrowdloanFundDetailScreen route={route} />);
-  const linkingSpy = jest.spyOn(Linking, 'canOpenURL');
 
   await waitFor(() => {
     expect(getAllByText('Litentry').length).toBe(1);
@@ -29,6 +28,15 @@ test('render the component after data is fetched', async () => {
     expect(getByText('Leases:')).toBeDefined();
     expect(getByText('Raised:')).toBeDefined();
     expect(getByText('Contributors:')).toBeDefined();
+    expect(getByText('Homepage')).toBeDefined();
+  });
+});
+
+test('Homepage navigation', async () => {
+  const {getByText} = render(<CrowdloanFundDetailScreen route={route} />);
+  const linkingSpy = jest.spyOn(Linking, 'canOpenURL');
+
+  await waitFor(() => {
     expect(getByText('Homepage')).toBeDefined();
     fireEvent.press(getByText('Homepage'));
     expect(linkingSpy).toHaveBeenCalledTimes(1);
