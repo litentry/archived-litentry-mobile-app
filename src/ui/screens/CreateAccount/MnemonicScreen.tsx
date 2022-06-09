@@ -7,7 +7,8 @@ import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {Button, Caption, TextInput} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {verifyMnemonicScreen} from '@ui/navigation/routeKeys';
-import SubstrateSign from 'react-native-substrate-sign';
+// import SubstrateSign from 'react-native-substrate-sign';
+import {useGenerateMnemonic} from '@polkadotApi/useGenerateMnemonic';
 
 function consoleLogMnemonic(mnemonic: string) {
   if (__DEV__) {
@@ -17,20 +18,28 @@ function consoleLogMnemonic(mnemonic: string) {
 
 export function MnemonicScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const [mnemonic, setMnemonic] = React.useState<string>();
+  const {generateMnemonic} = useGenerateMnemonic();
+
+  // React.useEffect(() => {
+  //   SubstrateSign.randomPhrase(12).then((_mnemonic) => {
+  //     consoleLogMnemonic(_mnemonic);
+  //     setMnemonic(_mnemonic);
+  //   });
+  // }, []);
 
   React.useEffect(() => {
-    SubstrateSign.randomPhrase(12).then((_mnemonic) => {
+    generateMnemonic().then((_mnemonic) => {
       consoleLogMnemonic(_mnemonic);
       setMnemonic(_mnemonic);
     });
-  }, []);
+  }, [generateMnemonic]);
 
   return (
     <SafeView edges={noTopEdges}>
       <View style={[globalStyles.paddedContainer, globalStyles.flex]}>
         <TextInput
           autoComplete="off"
-          label={'Generated mnemonic seed'}
+          label={'Mnemonic seed'}
           style={styles.input}
           value={mnemonic}
           disabled

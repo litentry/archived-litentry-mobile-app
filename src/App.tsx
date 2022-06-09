@@ -20,6 +20,8 @@ import {useRemoteConfig} from 'src/hooks/useRemoteConfig';
 // init type registry
 import 'src/typeRegistry';
 import {ParachainAppNavigator} from '@ui/navigation/ParachainAppNavigator';
+import {PolkadotApiWebView} from '@polkadotApi/PolkadotApiWebView';
+import {RecoilRoot} from 'recoil';
 
 const queryClient = new QueryClient();
 
@@ -64,7 +66,10 @@ export default function App() {
                       <ErrorBoundary>
                         <TxProvider>
                           <SnackbarProvider>
-                            <LitentryApps />
+                            <RecoilRoot>
+                              <LitentryApps />
+                              <PolkadotApiWebView />
+                            </RecoilRoot>
                           </SnackbarProvider>
                         </TxProvider>
                       </ErrorBoundary>
