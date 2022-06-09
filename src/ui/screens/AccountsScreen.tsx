@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, View, StyleSheet, TouchableOpacity} from 'react-native';
+import {FlatList, View, StyleSheet, TouchableOpacity, Keyboard} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp} from '@react-navigation/native';
 import {Account as AccountType, useAccounts} from 'context/AccountsContext';
@@ -105,7 +105,7 @@ export function AccountsScreen({navigation}: Props) {
         <AccountsGuide />
       </AccountGuideBottomSheet>
 
-      <ExternalAccountBottomSheet>
+      <ExternalAccountBottomSheet onClose={Keyboard.dismiss}>
         <AddExternalAccount onClose={closeExternalAccount} />
       </ExternalAccountBottomSheet>
     </SafeView>
