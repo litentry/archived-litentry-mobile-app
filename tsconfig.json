@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@ui/*": ["src/ui/*"],
+      "@polkadotApi/*": ["src/polkadotApi/*"],
       "context/*": ["src/context/*"],
       "src/*": ["src/*"],
       "image/*": ["src/image/*"],

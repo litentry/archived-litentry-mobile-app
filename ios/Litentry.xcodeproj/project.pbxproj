@@ -29,6 +29,7 @@
 		973BF00854C44A979F82A9CC /* DMSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7C1E214184154FFA98A940FD /* DMSans-Medium.ttf */; };
 		AEBE897542274D5BA4677D1C /* DMSans-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 599B5A7EDF20464887C94196 /* DMSans-MediumItalic.ttf */; };
 		C6A5683056BED6919802D6E6 /* libPods-Litentry-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93B327CEEC8ECC7F12EB8885 /* libPods-Litentry-tvOSTests.a */; };
+		CA72E6E52851FFD4006A94AD /* polkadotApi.html in Resources */ = {isa = PBXBuildFile; fileRef = CA72E6E42851FFD3006A94AD /* polkadotApi.html */; };
 		ED5645098B3345A491E48F73 /* DMSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9E03F1CF171D4C44A1D63AE2 /* DMSans-Regular.ttf */; };
 /* End PBXBuildFile section */
 
@@ -82,6 +83,7 @@
 		9E7F73C68E2F409C8734E436 /* DMSans-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "DMSans-BoldItalic.ttf"; path = "../assets/DMSans-BoldItalic.ttf"; sourceTree = "<group>"; };
 		B3C5624626DD4EB58CA220E6 /* DMSans-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "DMSans-Italic.ttf"; path = "../assets/DMSans-Italic.ttf"; sourceTree = "<group>"; };
 		C22922F4D75E981DCA9984DF /* Pods-Litentry-LitentryTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Litentry-LitentryTests.release.xcconfig"; path = "Target Support Files/Pods-Litentry-LitentryTests/Pods-Litentry-LitentryTests.release.xcconfig"; sourceTree = "<group>"; };
+		CA72E6E42851FFD3006A94AD /* polkadotApi.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = polkadotApi.html; path = ../polkadotApi/dist/polkadotApi.html; sourceTree = "<group>"; };
 		D391DFFC5928ADB157439CF1 /* Pods-Litentry.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Litentry.release.xcconfig"; path = "Target Support Files/Pods-Litentry/Pods-Litentry.release.xcconfig"; sourceTree = "<group>"; };
 		E3603F54669F8FCD786DA83A /* Pods-Litentry.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Litentry.debug.xcconfig"; path = "Target Support Files/Pods-Litentry/Pods-Litentry.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -183,6 +185,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				CA72E6E42851FFD3006A94AD /* polkadotApi.html */,
 				299A9112265E2DED00002549 /* File.swift */,
 				13B07FAE1A68108700A75B9A /* Litentry */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -388,6 +391,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CA72E6E52851FFD4006A94AD /* polkadotApi.html in Resources */,
 				8804DE6E2576F18D00D915D3 /* logo-256.png in Resources */,
 				2902EEF926820A6F009FB826 /* GoogleService-Info.plist in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
