@@ -98,18 +98,6 @@ export function PolkadotApiWebView() {
   useInitKeyring(isWebviewLoaded, initKeyring(webViewRef));
   useSetSS58Format(isWebviewLoaded, setSS58Format(webViewRef));
 
-  // React.useEffect(() => {
-  //   if (isWebviewLoaded) {
-  //     setTimeout(() => {
-  //       webViewRef.current?.postMessage(
-  //         JSON.stringify({
-  //           type: 'GET_PAIRS',
-  //         }),
-  //       );
-  //     }, 5000);
-  //   }
-  // }, [isWebviewLoaded]);
-
   React.useEffect(() => {
     setMnemonicState({
       mnemonic: '',
