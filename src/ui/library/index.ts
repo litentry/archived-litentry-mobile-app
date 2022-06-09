@@ -42,5 +42,5 @@ export {Modal} from './Modal';
 export {Select} from './Select';
 export {Calendar} from './Calendar';
 export {Tabs, TabScreen, useTabIndex, useTabNavigation} from 'react-native-paper-tabs';
-export {useBottomSheet} from './BottomSheet';
+export {useBottomSheet, BottomSheetTextInput} from './BottomSheet';
 export {Skeleton} from './Skeleton';

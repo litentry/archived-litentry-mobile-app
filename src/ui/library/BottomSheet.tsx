@@ -8,6 +8,8 @@ import RNBottomSheet, {
 } from '@gorhom/bottom-sheet';
 import {useTheme} from './index';
 
+export {BottomSheetTextInput} from '@gorhom/bottom-sheet';
+
 type BottomSheetProps = Omit<RNBottomSheetProps, 'snapPoints'>;
 
 export function useBottomSheet() {
