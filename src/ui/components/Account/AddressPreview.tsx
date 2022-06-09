@@ -13,7 +13,7 @@ type PropTypes = {
   address: string;
 };
 
-function AddressInfoPreview(props: PropTypes) {
+export function AddressInfoPreview(props: PropTypes) {
   const {address} = props;
   const {currentNetwork} = useNetwork();
   const {data: accountInfo, loading} = useAccount(address);
