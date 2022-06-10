@@ -14,10 +14,7 @@ test('render the AddExternalAccount component, test for wrong address', () => {
 });
 
 test('render the AddExternalAccount component, with right address', () => {
-  const {getByPlaceholderText, getByText, getByA11yState, getAllByA11yRole} = render(
-    <AddExternalAccount onClose={closeModel} />,
-  );
-  getByText('Add External Account');
+  const {getByPlaceholderText, getByText, getAllByA11yRole} = render(<AddExternalAccount onClose={closeModel} />);
   const confirm = getAllByA11yRole('button')[3];
   const inputAddress = getByPlaceholderText('👉 Paste address here, e.g. 167r...14h');
   expect(inputAddress).toBeTruthy();
@@ -29,7 +26,6 @@ test('render the AddExternalAccount component, with right address', () => {
 
 test('render the AddExternalAccount component', () => {
   const {getByText, getAllByA11yRole} = render(<AddExternalAccount onClose={closeModel} />);
-  getByText('Add External Account');
   const cancel = getAllByA11yRole('button')[2];
   expect(cancel).toHaveTextContent('Cancel');
   const confirm = getAllByA11yRole('button')[3];
