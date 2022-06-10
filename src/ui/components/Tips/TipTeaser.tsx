@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Card, Caption} from '@ui/library';
 import {TipReason} from '@ui/components/Tips/TipReason';
 import {Padder} from '@ui/components/Padder';
@@ -20,8 +20,14 @@ function Teaser({tip, onPress}: TipTeaserProps) {
     <Card style={styles.card} onPress={() => onPress(id)}>
       <Card.Content>
         <AccountTeaser account={who} />
-        <Caption>{`Created: ${fromNow(createdAt)}`}</Caption>
-        <Caption>{`Status: ${status}`}</Caption>
+        <View style={styles.row}>
+          <Caption>Created:</Caption>
+          <Caption>{fromNow(createdAt)}</Caption>
+        </View>
+        <View style={styles.row}>
+          <Caption>Status:</Caption>
+          <Caption>{status}</Caption>
+        </View>
         <Padder scale={0.5} />
         <TipReason reason={reason} />
       </Card.Content>
@@ -34,5 +40,10 @@ export const TipTeaser = React.memo(Teaser);
 const styles = StyleSheet.create({
   card: {
     marginBottom: standardPadding,
+  },
+  row: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
 });
