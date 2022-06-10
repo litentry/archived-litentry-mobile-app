@@ -10,6 +10,8 @@ import {eventsCalendarHandler} from './eventsCalendarHandler';
 import {parachainSummaryHandler} from './parachainSummaryHandler';
 import {parathreadsHandler} from './parathreadHandler';
 import {registrarsHandler} from './registrarsHandler';
+import {tipDetailHandler} from './tipDetailHandler';
+import {tipsHandler} from './tipsHandler';
 
 export const handlers = [
   registrarsHandler,
@@ -26,5 +28,7 @@ export const handlers = [
   bountiesSummaryHandler,
   bountyHandler,
   chainInfoHandler,
+  tipDetailHandler,
+  tipsHandler,
   // other handlers
 ];
