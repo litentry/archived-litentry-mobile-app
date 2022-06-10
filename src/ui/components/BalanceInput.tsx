@@ -1,5 +1,5 @@
 import React, {useMemo, useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, TextInputProps} from 'react-native';
 import {TextInput} from '@ui/library';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {decimalKeypad} from 'src/utils';
@@ -11,10 +11,12 @@ type PropTypes = {
   account?: Account;
   onChangeBalance: (dispatch: string) => void;
   initialBalance?: string;
+  onFocus?: TextInputProps['onFocus'];
+  onBlur?: TextInputProps['onBlur'];
 };
 
 export function BalanceInput(props: PropTypes) {
-  const {account} = props;
+  const {account, onBlur, onFocus} = props;
   const [amount, setAmount] = useState(props.initialBalance ?? '');
   const {formatBalance, stringToBn} = useFormatBalance();
 
@@ -31,6 +33,7 @@ export function BalanceInput(props: PropTypes) {
   return (
     <>
       <TextInput
+        {...{onFocus, onBlur}}
         dense
         style={styles.textInput}
         error={Boolean(!hasEnoughBalance && amount)}
