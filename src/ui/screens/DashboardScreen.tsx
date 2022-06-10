@@ -34,7 +34,7 @@ const refetchQueries = [DEMOCRACY_SUMMARY_QUERY, COUNCIL_SUMMARY_QUERY, BOUNTIES
 
 type Props = NativeStackScreenProps<DashboardStackParamList, 'Dashboard'>;
 
-function DashboardScreen({navigation, route}: Props) {
+export function DashboardScreen({navigation, route}: Props) {
   const {closeBottomSheet, openBottomSheet, BottomSheet} = useBottomSheet();
   const {currentNetwork, getAvailableNetworks, select} = useNetwork();
   const {parachainAppEnabled} = useParachainAppEnabled();
