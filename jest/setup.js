@@ -54,3 +54,14 @@ jest.mock('@react-navigation/native', () => {
     }),
   };
 });
+
+jest.mock('react-native-substrate-sign', () => {
+  return {
+    __esModule: true,
+    default: {
+      substrateAddress: jest.fn(() => Promise.resolve()),
+      encryptData: jest.fn(),
+      randomPhrase: jest.fn(() => Promise.resolve('random')),
+    },
+  };
+});
