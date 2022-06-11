@@ -15,7 +15,7 @@ import {Drawer, Switch, Text, Divider} from '@ui/library';
 type RouteKey = keyof typeof routeKeys;
 type Route = typeof routeKeys[RouteKey];
 
-function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
+export function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
   const {currentNetwork} = useNetwork();
   const {theme, toggleTheme} = useToggleTheme();
   const isParachainAvailable = useIsParachainAvailable();
