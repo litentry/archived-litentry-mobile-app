@@ -31,7 +31,7 @@ cryptoWaitReady().then(function () {
       }
 
       case 'GENERATE_MNEMONIC': {
-        const mnemonic = mnemonicGenerate();
+        const mnemonic = mnemonicGenerate(payload.length);
         window.ReactNativeWebView.postMessage(
           JSON.stringify({
             type: 'GENERATE_MNEMONIC',

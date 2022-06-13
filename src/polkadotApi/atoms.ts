@@ -1,6 +1,6 @@
 import {atom, RecoilState} from 'recoil';
 import {recoilPersist} from 'recoil-persist';
-import type {AddAccountPayload, AddExternalAccountPayload, Accounts} from './types';
+import type {MnemonicLength, AddAccountPayload, AddExternalAccountPayload, Accounts} from './types';
 import * as Storage from 'src/service/PersistedObjectStorage';
 
 const {persistAtom} = recoilPersist({
@@ -14,42 +14,18 @@ export const appAccountsState: RecoilState<Accounts> = atom({
   effects: [persistAtom],
 });
 
-export const mnemonicState = atom({
-  key: 'mnemonic',
+export const cryptoUtilState = atom({
+  key: 'cryptoUtil',
   default: {
-    mnemonic: '',
-    generate: () => {
-      return;
-    },
+    generateMnemonic: (_?: MnemonicLength) => Promise.resolve(''),
   },
 });
 
-export const addressState = atom({
-  key: 'address',
+export const keyringState = atom({
+  key: 'keyring',
   default: {
-    address: '',
-    generate: (_: string) => {
-      return;
-    },
-  },
-});
-
-export const accountState = atom({
-  key: 'account',
-  default: {
-    account: {},
-    create: (_: AddAccountPayload) => {
-      return;
-    },
-  },
-});
-
-export const externalAccountState = atom({
-  key: 'externalAccount',
-  default: {
-    account: {},
-    add: (_: AddExternalAccountPayload) => {
-      return;
-    },
+    createAccount: (_: string) => Promise.resolve(''),
+    addAccount: (_: AddAccountPayload) => Promise.resolve({}),
+    addExternalAccount: (_: AddExternalAccountPayload) => Promise.resolve({}),
   },
 });

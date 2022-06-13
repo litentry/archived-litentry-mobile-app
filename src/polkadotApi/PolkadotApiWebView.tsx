@@ -2,9 +2,9 @@ import React from 'react';
 import WebView, {WebViewMessageEvent} from 'react-native-webview';
 import {View, Platform, StyleSheet} from 'react-native';
 import RNFS from 'react-native-fs';
-import {useRecoilState} from 'recoil';
-import {mnemonicState, addressState, accountState, externalAccountState} from './atoms';
-import type {AddAccountPayload, AddExternalAccountPayload, Accounts} from './types';
+import {useSetRecoilState} from 'recoil';
+import {cryptoUtilState, keyringState} from './atoms';
+import type {MnemonicLength, AddAccountPayload, AddExternalAccountPayload, Accounts} from './types';
 import {useNetwork} from 'context/NetworkContext';
 import {decodeAddress} from '@polkadot/keyring';
 import {u8aToHex} from '@polkadot/util';
@@ -89,98 +89,98 @@ export function PolkadotApiWebView() {
   const [html, setHtml] = React.useState('');
   const [isWebviewLoaded, setIsWebviewLoaded] = React.useState(false);
   const {accounts, setAccounts} = useAppAccounts();
-  const [mnemonic, setMnemonicState] = useRecoilState(mnemonicState);
-  const [address, setAddressState] = useRecoilState(addressState);
-  const [account, setAccountState] = useRecoilState(accountState);
-  const [externalAccount, setExternalAccountState] = useRecoilState(externalAccountState);
+  const setCryptoUtilState = useSetRecoilState(cryptoUtilState);
+  const setKeyringState = useSetRecoilState(keyringState);
 
   useLoadHtml(setHtml);
   useInitWebViewStore(isWebviewLoaded, accounts, initWebviewStore(webViewRef));
   useInitKeyring(isWebviewLoaded, initKeyring(webViewRef));
   useSetSS58Format(isWebviewLoaded, setSS58Format(webViewRef));
 
-  React.useEffect(() => {
-    setMnemonicState({
-      mnemonic: '',
-      generate: () => {
-        if (isWebviewLoaded) {
-          webViewRef.current?.postMessage(
-            JSON.stringify({
-              type: 'GENERATE_MNEMONIC',
-            }),
-          );
-        }
-      },
-    });
-  }, [isWebviewLoaded, setMnemonicState]);
+  const resolveRef = React.useRef({
+    resolveMnemonic: (_: string) => {
+      return;
+    },
+    resolveCreateAccount: (_: string) => {
+      return;
+    },
+    resolveAddAccount: (_: Record<string, unknown>) => {
+      return;
+    },
+    resolveAddExternalAccount: (_: Record<string, unknown>) => {
+      return;
+    },
+  });
 
   React.useEffect(() => {
-    setAddressState({
-      address: '',
-      generate: (_mnemonic: string) => {
-        if (isWebviewLoaded) {
-          webViewRef.current?.postMessage(
-            JSON.stringify({
-              type: 'CREATE_ACCOUNT',
-              payload: {mnemonic: _mnemonic},
-            }),
-          );
-        }
-      },
-    });
-  }, [isWebviewLoaded, setAddressState]);
+    if (isWebviewLoaded) {
+      setCryptoUtilState({
+        generateMnemonic: (length?: MnemonicLength) =>
+          new Promise((resolve) => {
+            resolveRef.current.resolveMnemonic = resolve;
+            webViewRef.current?.postMessage(
+              JSON.stringify({
+                type: 'GENERATE_MNEMONIC',
+                payload: {length},
+              }),
+            );
+          }),
+      });
+    }
+  }, [isWebviewLoaded, setCryptoUtilState]);
 
   React.useEffect(() => {
-    setAccountState({
-      account: {},
-      create: (payload: AddAccountPayload) => {
-        if (isWebviewLoaded) {
-          webViewRef.current?.postMessage(
-            JSON.stringify({
-              type: 'ADD_ACCOUNT',
-              payload,
-            }),
-          );
-        }
-      },
-    });
-  }, [isWebviewLoaded, setAccountState]);
-
-  React.useEffect(() => {
-    setExternalAccountState({
-      account: {},
-      add: (payload: AddExternalAccountPayload) => {
-        if (isWebviewLoaded) {
-          webViewRef.current?.postMessage(
-            JSON.stringify({
-              type: 'ADD_EXTERNAL_ACCOUNT',
-              payload,
-            }),
-          );
-        }
-      },
-    });
-  }, [isWebviewLoaded, setExternalAccountState]);
+    if (isWebviewLoaded) {
+      setKeyringState({
+        createAccount: (mnemonic: string) =>
+          new Promise((resolve) => {
+            resolveRef.current.resolveCreateAccount = resolve;
+            webViewRef.current?.postMessage(
+              JSON.stringify({
+                type: 'CREATE_ACCOUNT',
+                payload: {mnemonic},
+              }),
+            );
+          }),
+        addAccount: (payload: AddAccountPayload) =>
+          new Promise((resolve) => {
+            resolveRef.current.resolveAddAccount = resolve;
+            webViewRef.current?.postMessage(
+              JSON.stringify({
+                type: 'ADD_ACCOUNT',
+                payload,
+              }),
+            );
+          }),
+        addExternalAccount: (payload: AddExternalAccountPayload) =>
+          new Promise((resolve) => {
+            resolveRef.current.resolveAddExternalAccount = resolve;
+            webViewRef.current?.postMessage(
+              JSON.stringify({
+                type: 'ADD_EXTERNAL_ACCOUNT',
+                payload,
+              }),
+            );
+          }),
+      });
+    }
+  }, [isWebviewLoaded, setKeyringState]);
 
   const onMessage = (event: WebViewMessageEvent) => {
+    console.log('WebView Response :::: ', event.nativeEvent.data);
+
     const data = JSON.parse(event.nativeEvent.data);
     const {type, payload} = data;
 
-    console.log('WebView Response :::: ', JSON.stringify(data));
+    const {resolveMnemonic, resolveCreateAccount, resolveAddAccount, resolveAddExternalAccount} = resolveRef.current;
 
     switch (type) {
       case 'GENERATE_MNEMONIC':
-        setMnemonicState({
-          ...mnemonic,
-          mnemonic: payload.mnemonic,
-        });
+        resolveMnemonic(payload.mnemonic);
         break;
 
       case 'CREATE_ACCOUNT':
-        setAddressState({
-          ...address,
-          address: payload.address,
-        });
+        resolveCreateAccount(payload.address);
         break;
 
       case 'ADD_ACCOUNT':
@@ -188,10 +188,7 @@ export function PolkadotApiWebView() {
           ...accounts,
           [payload.account.address]: payload.account,
         });
-        setAccountState({
-          ...account,
-          account: payload.account,
-        });
+        resolveAddAccount(payload.account);
         break;
 
       case 'ADD_EXTERNAL_ACCOUNT':
@@ -199,10 +196,7 @@ export function PolkadotApiWebView() {
           ...accounts,
           [payload.account.address]: payload.account,
         });
-        setExternalAccountState({
-          ...externalAccount,
-          account: payload.account,
-        });
+        resolveAddExternalAccount(payload.account);
         break;
     }
   };

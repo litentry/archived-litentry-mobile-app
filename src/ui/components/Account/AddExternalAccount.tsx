@@ -10,7 +10,7 @@ import globalStyles, {standardPadding} from '@ui/styles';
 import {isAddressValid, parseAddress} from 'src/utils/address';
 // import {useAccounts} from 'context/AccountsContext';
 import AddressInfoPreview from './AddressPreview';
-import {useAddExternalAccount} from '@polkadotApi/useAddExternalAccount';
+import {useKeyring} from '@polkadotApi/useKeyring';
 
 type StepType = 'input' | 'preview' | 'success';
 
@@ -57,7 +57,7 @@ export function AddExternalAccount({onClose}: Props) {
   const [state, dispatch] = React.useReducer(addAccountReducer, initialState);
   // const {addAccount} = useAccounts();
 
-  const {addExternalAccount} = useAddExternalAccount();
+  const {addExternalAccount} = useKeyring();
   const {colors} = useTheme();
 
   const handleInputChange = (text: string) => {

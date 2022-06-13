@@ -17,8 +17,7 @@ import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {SecureKeychain} from 'src/service/SecureKeychain';
 import {useKeyboardStatus} from 'src/hooks/useKeyboardStatus';
-import {useCreateAddress} from '@polkadotApi/useCreateAddress';
-import {useAddAccount} from '@polkadotApi/useAddAccount';
+import {useKeyring} from '@polkadotApi/useKeyring';
 
 type Account = {
   title: string;
@@ -48,16 +47,15 @@ export function CreateAccountScreen({
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
   const [address, setAddress] = React.useState('');
 
-  const {generateAddress} = useCreateAddress();
-  const {addAccount} = useAddAccount();
+  const {createAccount, addAccount} = useKeyring();
 
   // React.useEffect(() => {
   //   SubstrateSign.substrateAddress(mnemonic, currentNetwork.ss58Format).then(setAddress);
   // }, [mnemonic, currentNetwork.ss58Format]);
 
   React.useEffect(() => {
-    generateAddress(mnemonic).then(setAddress);
-  }, [generateAddress, mnemonic]);
+    createAccount(mnemonic).then(setAddress);
+  }, [createAccount, mnemonic]);
 
   const passwordStrength = zxcvbn(account.password).score;
   const isDisabled = !account.password || !(account.password === account.confirmPassword);

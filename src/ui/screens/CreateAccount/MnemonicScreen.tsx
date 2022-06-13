@@ -8,7 +8,7 @@ import {Button, Caption, TextInput} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {verifyMnemonicScreen} from '@ui/navigation/routeKeys';
 // import SubstrateSign from 'react-native-substrate-sign';
-import {useGenerateMnemonic} from '@polkadotApi/useGenerateMnemonic';
+import {useCryptoUtil} from '@polkadotApi/useCryptoUtil';
 
 function consoleLogMnemonic(mnemonic: string) {
   if (__DEV__) {
@@ -18,7 +18,7 @@ function consoleLogMnemonic(mnemonic: string) {
 
 export function MnemonicScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const [mnemonic, setMnemonic] = React.useState<string>();
-  const {generateMnemonic} = useGenerateMnemonic();
+  const {generateMnemonic} = useCryptoUtil();
 
   // React.useEffect(() => {
   //   SubstrateSign.randomPhrase(12).then((_mnemonic) => {

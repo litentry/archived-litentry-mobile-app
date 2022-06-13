@@ -1,5 +1,7 @@
 import {SupportedNetworkType} from 'src/types';
 
+export type MnemonicLength = 12 | 15 | 18 | 21 | 24;
+
 export type AddAccountPayload = {
   mnemonic: string;
   password: string;
