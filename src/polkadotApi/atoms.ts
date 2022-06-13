@@ -27,5 +27,8 @@ export const keyringState = atom({
     createAccount: (_: string) => Promise.resolve(''),
     addAccount: (_: AddAccountPayload) => Promise.resolve({}),
     addExternalAccount: (_: AddExternalAccountPayload) => Promise.resolve({}),
+    forgetAccount: (_: string) => {
+      return;
+    },
   },
 });

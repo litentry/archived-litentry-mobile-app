@@ -162,44 +162,59 @@ export function PolkadotApiWebView() {
               }),
             );
           }),
+        forgetAccount: (address: string) => {
+          webViewRef.current?.postMessage(
+            JSON.stringify({
+              type: 'FORGET_ACCOUNT',
+              payload: {address},
+            }),
+          );
+        },
       });
     }
   }, [isWebviewLoaded, setKeyringState]);
 
-  const onMessage = (event: WebViewMessageEvent) => {
-    console.log('WebView Response :::: ', event.nativeEvent.data);
+  const onMessage = React.useCallback(
+    (event: WebViewMessageEvent) => {
+      console.log('WebView Response :::: ', event.nativeEvent.data);
 
-    const data = JSON.parse(event.nativeEvent.data);
-    const {type, payload} = data;
+      const data = JSON.parse(event.nativeEvent.data);
+      const {type, payload} = data;
 
-    const {resolveMnemonic, resolveCreateAccount, resolveAddAccount, resolveAddExternalAccount} = resolveRef.current;
+      const {resolveMnemonic, resolveCreateAccount, resolveAddAccount, resolveAddExternalAccount} = resolveRef.current;
 
-    switch (type) {
-      case 'GENERATE_MNEMONIC':
-        resolveMnemonic(payload.mnemonic);
-        break;
+      switch (type) {
+        case 'GENERATE_MNEMONIC':
+          resolveMnemonic(payload.mnemonic);
+          break;
 
-      case 'CREATE_ACCOUNT':
-        resolveCreateAccount(payload.address);
-        break;
+        case 'CREATE_ACCOUNT':
+          resolveCreateAccount(payload.address);
+          break;
 
-      case 'ADD_ACCOUNT':
-        setAccounts({
-          ...accounts,
-          [payload.account.address]: payload.account,
-        });
-        resolveAddAccount(payload.account);
-        break;
+        case 'ADD_ACCOUNT':
+          setAccounts({
+            ...accounts,
+            [payload.account.address]: payload.account,
+          });
+          resolveAddAccount(payload.account);
+          break;
 
-      case 'ADD_EXTERNAL_ACCOUNT':
-        setAccounts({
-          ...accounts,
-          [payload.account.address]: payload.account,
-        });
-        resolveAddExternalAccount(payload.account);
-        break;
-    }
-  };
+        case 'ADD_EXTERNAL_ACCOUNT':
+          setAccounts({
+            ...accounts,
+            [payload.account.address]: payload.account,
+          });
+          resolveAddExternalAccount(payload.account);
+          break;
+
+        case 'FORGET_ACCOUNT':
+          const {[payload.address]: removedAccount, ...rest} = accounts;
+          setAccounts(rest);
+      }
+    },
+    [accounts, setAccounts],
+  );
 
   return (
     <View style={styles.webview}>
