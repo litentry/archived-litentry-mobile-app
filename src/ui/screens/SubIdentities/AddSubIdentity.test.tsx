@@ -1,9 +1,6 @@
 import React from 'react';
-import {NavigationProp} from '@react-navigation/native';
-import {DashboardStackParamList} from '@ui/navigation/navigation';
-import {render, waitFor, fireEvent} from 'src/testUtils';
+import {render, fireEvent} from 'src/testUtils';
 import {AddSubIdentity} from './AddSubIdentity';
-import {useBottomSheetModal} from '@gorhom/bottom-sheet';
 
 jest.useFakeTimers();
 
