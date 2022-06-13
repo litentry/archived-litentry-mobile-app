@@ -43,10 +43,15 @@ cryptoWaitReady().then(function () {
 
       case 'VALIDATE_MNEMONIC': {
         const isValid = mnemonicValidate(payload.mnemonic);
+        let address;
+        if (isValid) {
+          const account = keyring.createFromUri(payload.mnemonic);
+          address = account.address;
+        }
         window.ReactNativeWebView.postMessage(
           JSON.stringify({
             type: 'VALIDATE_MNEMONIC',
-            payload: {isValid},
+            payload: {isValid, address},
           }),
         );
         break;

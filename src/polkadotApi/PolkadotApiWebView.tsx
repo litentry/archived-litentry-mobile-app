@@ -9,6 +9,9 @@ import {useNetwork} from 'context/NetworkContext';
 import {decodeAddress} from '@polkadot/keyring';
 import {u8aToHex} from '@polkadot/util';
 import {useAppAccounts} from './useAppAccounts';
+import {createLogger} from 'src/utils/logger';
+
+const logger = createLogger('WebView');
 
 type WebViewRef = React.RefObject<WebView<Record<string, unknown>>>;
 
@@ -101,6 +104,9 @@ export function PolkadotApiWebView() {
     resolveMnemonic: (_: string) => {
       return;
     },
+    resolveVerifyMnemonic: (_: {isValid: false; address: undefined}) => {
+      return;
+    },
     resolveCreateAccount: (_: string) => {
       return;
     },
@@ -122,6 +128,16 @@ export function PolkadotApiWebView() {
               JSON.stringify({
                 type: 'GENERATE_MNEMONIC',
                 payload: {length},
+              }),
+            );
+          }),
+        verifyMnemonic: (mnemonic: string) =>
+          new Promise((resolve) => {
+            resolveRef.current.resolveVerifyMnemonic = resolve;
+            webViewRef.current?.postMessage(
+              JSON.stringify({
+                type: 'VALIDATE_MNEMONIC',
+                payload: {mnemonic},
               }),
             );
           }),
@@ -176,16 +192,26 @@ export function PolkadotApiWebView() {
 
   const onMessage = React.useCallback(
     (event: WebViewMessageEvent) => {
-      console.log('WebView Response :::: ', event.nativeEvent.data);
+      logger.info('WebView Response: ', event.nativeEvent.data);
 
       const data = JSON.parse(event.nativeEvent.data);
       const {type, payload} = data;
 
-      const {resolveMnemonic, resolveCreateAccount, resolveAddAccount, resolveAddExternalAccount} = resolveRef.current;
+      const {
+        resolveMnemonic,
+        resolveVerifyMnemonic,
+        resolveCreateAccount,
+        resolveAddAccount,
+        resolveAddExternalAccount,
+      } = resolveRef.current;
 
       switch (type) {
         case 'GENERATE_MNEMONIC':
           resolveMnemonic(payload.mnemonic);
+          break;
+
+        case 'VALIDATE_MNEMONIC':
+          resolveVerifyMnemonic(payload);
           break;
 
         case 'CREATE_ACCOUNT':
@@ -209,7 +235,7 @@ export function PolkadotApiWebView() {
           break;
 
         case 'FORGET_ACCOUNT':
-          const {[payload.address]: removedAccount, ...rest} = accounts;
+          const {[payload.address]: _, ...rest} = accounts;
           setAccounts(rest);
       }
     },

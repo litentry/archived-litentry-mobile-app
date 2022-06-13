@@ -18,6 +18,7 @@ export const cryptoUtilState = atom({
   key: 'cryptoUtil',
   default: {
     generateMnemonic: (_?: MnemonicLength) => Promise.resolve(''),
+    verifyMnemonic: (_: string) => Promise.resolve({isValid: false, address: undefined}),
   },
 });
 
@@ -25,8 +26,8 @@ export const keyringState = atom({
   key: 'keyring',
   default: {
     createAccount: (_: string) => Promise.resolve(''),
-    addAccount: (_: AddAccountPayload) => Promise.resolve({}),
-    addExternalAccount: (_: AddExternalAccountPayload) => Promise.resolve({}),
+    addAccount: (_: AddAccountPayload) => Promise.resolve<Record<string, unknown>>({}),
+    addExternalAccount: (_: AddExternalAccountPayload) => Promise.resolve<Record<string, unknown>>({}),
     forgetAccount: (_: string) => {
       return;
     },
