@@ -107,7 +107,7 @@ export function AddExternalAccount({onClose}: Props) {
     currentNetwork,
     state.address,
     state.step,
-    onClose,
+    close,
   ]);
 
   const handleScan = React.useCallback(
