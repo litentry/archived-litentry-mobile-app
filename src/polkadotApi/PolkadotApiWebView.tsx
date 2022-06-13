@@ -9,9 +9,6 @@ import {useNetwork} from 'context/NetworkContext';
 import {decodeAddress} from '@polkadot/keyring';
 import {u8aToHex} from '@polkadot/util';
 import {useAppAccounts} from './useAppAccounts';
-import {createLogger} from 'src/utils/logger';
-
-const logger = createLogger('WebView');
 
 type WebViewRef = React.RefObject<WebView<Record<string, unknown>>>;
 
@@ -192,7 +189,7 @@ export function PolkadotApiWebView() {
 
   const onMessage = React.useCallback(
     (event: WebViewMessageEvent) => {
-      logger.info('WebView Response: ', event.nativeEvent.data);
+      console.info('WebView Response: ', event.nativeEvent.data);
 
       const data = JSON.parse(event.nativeEvent.data);
       const {type, payload} = data;
