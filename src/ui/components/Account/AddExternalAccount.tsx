@@ -8,8 +8,9 @@ import QRCamera, {QRCameraRef} from '@ui/components/QRCamera';
 import {SuccessDialog} from '@ui/components/SuccessDialog';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {isAddressValid, parseAddress} from 'src/utils/address';
-import {useAccounts} from 'context/AccountsContext';
+// import {useAccounts} from 'context/AccountsContext';
 import AddressInfoPreview from './AddressPreview';
+import {useAddExternalAccount} from '@polkadotApi/useAddExternalAccount';
 
 type StepType = 'input' | 'preview' | 'success';
 
@@ -54,7 +55,9 @@ export function AddExternalAccount({onClose}: Props) {
   const qrCameraRef = React.useRef<QRCameraRef>(null);
   const {currentNetwork} = useNetwork();
   const [state, dispatch] = React.useReducer(addAccountReducer, initialState);
-  const {addAccount} = useAccounts();
+  // const {addAccount} = useAccounts();
+
+  const {addExternalAccount} = useAddExternalAccount();
   const {colors} = useTheme();
 
   const handleInputChange = (text: string) => {
@@ -78,11 +81,18 @@ export function AddExternalAccount({onClose}: Props) {
     }
 
     if (state.step === 'preview') {
-      addAccount({
+      // addAccount({
+      //   address: state.address,
+      //   meta: {name: '', network: currentNetwork.key, isFavorite: false},
+      //   isExternal: true,
+      // });
+
+      addExternalAccount({
         address: state.address,
-        meta: {name: '', network: currentNetwork.key, isFavorite: false},
-        isExternal: true,
+        network: currentNetwork.key,
+        isFavorite: false,
       });
+
       dispatch({type: 'SET_STEP', payload: 'success'});
       return;
     }
@@ -91,7 +101,14 @@ export function AddExternalAccount({onClose}: Props) {
       close();
       return;
     }
-  }, [addAccount, currentNetwork, state.address, state.step, close]);
+  }, [
+    // addAccount,
+    addExternalAccount,
+    currentNetwork,
+    state.address,
+    state.step,
+    onClose,
+  ]);
 
   const handleScan = React.useCallback(
     ({data}: {data: string}) => {

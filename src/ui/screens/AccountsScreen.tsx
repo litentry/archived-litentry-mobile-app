@@ -130,7 +130,9 @@ const styles = StyleSheet.create({
 });
 
 function sortByDisplayName(accounts: AppAccount[]) {
-  return accounts.sort((a, b) => a.meta.name.localeCompare(b.meta.name));
+  // return accounts.sort((a, b) => a.meta.name.localeCompare(b.meta.name));
+
+  return accounts;
 }
 
 function sortByIsFavorite(accounts: AppAccount[]) {

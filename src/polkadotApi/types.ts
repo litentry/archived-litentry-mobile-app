@@ -9,6 +9,12 @@ export type AddAccountPayload = {
   isExternal: boolean;
 };
 
+export type AddExternalAccountPayload = {
+  address: string;
+  isFavorite: boolean;
+  network: SupportedNetworkType;
+};
+
 export type InternalAccount = {
   encoded: string;
   address: string;

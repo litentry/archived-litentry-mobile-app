@@ -1,6 +1,6 @@
 import {atom, RecoilState} from 'recoil';
 import {recoilPersist} from 'recoil-persist';
-import type {AddAccountPayload, Accounts} from './types';
+import type {AddAccountPayload, AddExternalAccountPayload, Accounts} from './types';
 import * as Storage from 'src/service/PersistedObjectStorage';
 
 const {persistAtom} = recoilPersist({
@@ -39,6 +39,16 @@ export const accountState = atom({
   default: {
     account: {},
     create: (_: AddAccountPayload) => {
+      return;
+    },
+  },
+});
+
+export const externalAccountState = atom({
+  key: 'externalAccount',
+  default: {
+    account: {},
+    add: (_: AddExternalAccountPayload) => {
       return;
     },
   },

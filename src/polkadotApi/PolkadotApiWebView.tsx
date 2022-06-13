@@ -3,8 +3,8 @@ import WebView, {WebViewMessageEvent} from 'react-native-webview';
 import {View, Platform, StyleSheet} from 'react-native';
 import RNFS from 'react-native-fs';
 import {useRecoilState} from 'recoil';
-import {mnemonicState, addressState, accountState} from './atoms';
-import type {AddAccountPayload, Accounts} from './types';
+import {mnemonicState, addressState, accountState, externalAccountState} from './atoms';
+import type {AddAccountPayload, AddExternalAccountPayload, Accounts} from './types';
 import {useNetwork} from 'context/NetworkContext';
 import {decodeAddress} from '@polkadot/keyring';
 import {u8aToHex} from '@polkadot/util';
@@ -92,6 +92,7 @@ export function PolkadotApiWebView() {
   const [mnemonic, setMnemonicState] = useRecoilState(mnemonicState);
   const [address, setAddressState] = useRecoilState(addressState);
   const [account, setAccountState] = useRecoilState(accountState);
+  const [externalAccount, setExternalAccountState] = useRecoilState(externalAccountState);
 
   useLoadHtml(setHtml);
   useInitWebViewStore(isWebviewLoaded, accounts, initWebviewStore(webViewRef));
@@ -145,6 +146,22 @@ export function PolkadotApiWebView() {
     });
   }, [isWebviewLoaded, setAccountState]);
 
+  React.useEffect(() => {
+    setExternalAccountState({
+      account: {},
+      add: (payload: AddExternalAccountPayload) => {
+        if (isWebviewLoaded) {
+          webViewRef.current?.postMessage(
+            JSON.stringify({
+              type: 'ADD_EXTERNAL_ACCOUNT',
+              payload,
+            }),
+          );
+        }
+      },
+    });
+  }, [isWebviewLoaded, setExternalAccountState]);
+
   const onMessage = (event: WebViewMessageEvent) => {
     const data = JSON.parse(event.nativeEvent.data);
     const {type, payload} = data;
@@ -173,6 +190,17 @@ export function PolkadotApiWebView() {
         });
         setAccountState({
           ...account,
+          account: payload.account,
+        });
+        break;
+
+      case 'ADD_EXTERNAL_ACCOUNT':
+        setAccounts({
+          ...accounts,
+          [payload.account.address]: payload.account,
+        });
+        setExternalAccountState({
+          ...externalAccount,
           account: payload.account,
         });
         break;
