@@ -29,3 +29,13 @@ test('Cancel button pressed', () => {
   fireEvent.press(getByText('Cancel'));
   // expect(bottomSheetsSpy).toBeCalled()
 });
+
+// TODO: onAddPress needs a test case
+test('add new identity', () => {
+  const {getByText, getByPlaceholderText} = render(<AddSubIdentity onClose={close} onAddPress={addPress} />);
+  fireEvent.changeText(
+    getByPlaceholderText('👉 Paste address here, e.g. 167r...14h'),
+    '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a',
+  );
+  expect(getByText(/Add Identity/i) as unknown as HTMLElement).toBeEnabled();
+});
