@@ -98,7 +98,11 @@ export function CreateAccountScreen({
         <ScrollView style={styles.container}>
           <List.Item
             title={() => <Text>{account.title}</Text>}
-            left={() => <IdentityIcon value={address} size={40} />}
+            left={() => (
+              <View style={globalStyles.justifyCenter}>
+                <IdentityIcon value={address} size={40} />
+              </View>
+            )}
             description={address}
           />
           <Padder scale={1} />

@@ -169,7 +169,11 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
             <>
               <List.Item
                 title={account.title}
-                left={() => <IdentityIcon value={address} size={40} />}
+                left={() => (
+                  <View style={globalStyles.justifyCenter}>
+                    <IdentityIcon value={address} size={40} />
+                  </View>
+                )}
                 description={address}
               />
               <Padder scale={1} />

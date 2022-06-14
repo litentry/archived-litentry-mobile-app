@@ -161,6 +161,7 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
             </>
           ) : null}
         </View>
+        <Padder scale={2} />
       </ScrollView>
 
       <SendFundBottomSheet onClose={Keyboard.dismiss}>
