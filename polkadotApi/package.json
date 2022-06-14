@@ -7,6 +7,7 @@
   "scripts": {
     "lint": "eslint --fix --ext .ts .",
     "check-types": "tsc --noEmit",
+    "validate": "yarn lint && yarn check-types",
     "build": "webpack",
     "postinstall": "yarn build"
   },

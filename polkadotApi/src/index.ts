@@ -179,6 +179,28 @@ cryptoWaitReady().then(function () {
         break;
       }
 
+      case 'EXPORT_ACCOUNT': {
+        const pair = keyring.getPair(payload.address);
+        try {
+          const json = pair.toJson(payload.password);
+          pair.lock();
+          window.ReactNativeWebView.postMessage(
+            JSON.stringify({
+              type: 'EXPORT_ACCOUNT',
+              payload: {account: json},
+            }),
+          );
+        } catch {
+          window.ReactNativeWebView.postMessage(
+            JSON.stringify({
+              type: 'EXPORT_ACCOUNT',
+              payload: {isError: true, message: 'Unable to decode using the supplied password.'},
+            }),
+          );
+        }
+        break;
+      }
+
       case 'TOGGLE_FAVORITE': {
         const pair = keyring.getPair(payload.address);
         keyring.saveAccountMeta(pair, {...pair.meta, isFavorite: !pair.meta.isFavorite});

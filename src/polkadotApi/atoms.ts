@@ -5,6 +5,7 @@ import type {
   AddAccountPayload,
   AddExternalAccountPayload,
   RestoreAccountPayload,
+  ExportAccountPayload,
   Accounts,
 } from './types';
 import * as Storage from 'src/service/PersistedObjectStorage';
@@ -38,5 +39,6 @@ export const keyringState = atom({
       return;
     },
     restoreAccount: (_: RestoreAccountPayload) => Promise.resolve<Record<string, unknown>>({}),
+    exportAccount: (_: ExportAccountPayload) => Promise.resolve<Record<string, unknown>>({}),
   },
 });

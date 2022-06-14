@@ -8,15 +8,20 @@ import type {
   MnemonicLength,
   AddAccountPayload,
   AddExternalAccountPayload,
-  Accounts,
   RestoreAccountPayload,
-  RestoreAccountError,
+  ExportAccountPayload,
+  WebViewError,
+  Accounts,
 } from './types';
 import {useNetwork} from 'context/NetworkContext';
 import {decodeAddress} from '@polkadot/keyring';
 import {u8aToHex} from '@polkadot/util';
 import {useAppAccounts} from './useAppAccounts';
 
+type WebViewPromiseResponse = {
+  resolve: (_: Record<string, unknown>) => void;
+  reject: (_: WebViewError) => void;
+};
 type WebViewRef = React.RefObject<WebView<Record<string, unknown>>>;
 type ResolversRef = React.MutableRefObject<{
   resolveMnemonic: (_: string) => void;
@@ -24,10 +29,8 @@ type ResolversRef = React.MutableRefObject<{
   resolveCreateAccount: (_: string) => void;
   resolveAddAccount: (_: Record<string, unknown>) => void;
   resolveAddExternalAccount: (_: Record<string, unknown>) => void;
-  restoreAccountPromise: {
-    resolve: (_: Record<string, unknown>) => void;
-    reject: (_: RestoreAccountError) => void;
-  };
+  restoreAccountPromise: WebViewPromiseResponse;
+  exportAccountPromise: WebViewPromiseResponse;
 }>;
 
 function getAccountKey(address: string) {
@@ -179,6 +182,17 @@ function useKeyringUtils(isWebviewLoaded: boolean, webViewRef: WebViewRef, resol
               }),
             );
           }),
+        exportAccount: (payload: ExportAccountPayload) =>
+          new Promise((resolve, reject) => {
+            resolversRef.current.exportAccountPromise.resolve = resolve;
+            resolversRef.current.exportAccountPromise.reject = reject;
+            webViewRef.current?.postMessage(
+              JSON.stringify({
+                type: 'EXPORT_ACCOUNT',
+                payload,
+              }),
+            );
+          }),
       });
     }
   }, [isWebviewLoaded, setKeyringState, webViewRef, resolversRef]);
@@ -210,7 +224,15 @@ export function PolkadotApiWebView() {
       resolve: (_: Record<string, unknown>) => {
         return;
       },
-      reject: (_: RestoreAccountError) => {
+      reject: (_: WebViewError) => {
+        return;
+      },
+    },
+    exportAccountPromise: {
+      resolve: (_: Record<string, unknown>) => {
+        return;
+      },
+      reject: (_: WebViewError) => {
         return;
       },
     },
@@ -237,6 +259,7 @@ export function PolkadotApiWebView() {
         resolveAddAccount,
         resolveAddExternalAccount,
         restoreAccountPromise,
+        exportAccountPromise,
       } = resolversRef.current;
 
       switch (type) {
@@ -282,6 +305,14 @@ export function PolkadotApiWebView() {
               [payload.account.address]: payload.account,
             });
             restoreAccountPromise.resolve(payload.account);
+          }
+          break;
+
+        case 'EXPORT_ACCOUNT':
+          if (payload.isError) {
+            exportAccountPromise.reject(payload);
+          } else {
+            exportAccountPromise.resolve(payload.account);
           }
       }
     },

@@ -2,6 +2,11 @@ import {SupportedNetworkType} from 'src/types';
 
 export type MnemonicLength = 12 | 15 | 18 | 21 | 24;
 
+export type WebViewError = {
+  isError: boolean;
+  message: string;
+};
+
 export type AddAccountPayload = {
   mnemonic: string;
   password: string;
@@ -25,9 +30,9 @@ export type RestoreAccountPayload = {
   isExternal: boolean;
 };
 
-export type RestoreAccountError = {
-  isError: boolean;
-  message: string;
+export type ExportAccountPayload = {
+  address: string;
+  password: string;
 };
 
 export type InternalAccount = {
