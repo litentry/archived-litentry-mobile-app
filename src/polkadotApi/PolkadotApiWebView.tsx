@@ -198,57 +198,12 @@ function useKeyringUtils(isWebviewLoaded: boolean, webViewRef: WebViewRef, resol
   }, [isWebviewLoaded, setKeyringState, webViewRef, resolversRef]);
 }
 
-export function PolkadotApiWebView() {
-  const webViewRef = React.useRef<WebView>(null);
-  const [html, setHtml] = React.useState('');
-  const [isWebviewLoaded, setIsWebviewLoaded] = React.useState(false);
+function useWebViewOnMessage(resolversRef: ResolversRef) {
   const {accounts, setAccounts} = useAppAccounts();
 
-  const resolversRef = React.useRef({
-    resolveMnemonic: (_: string) => {
-      return;
-    },
-    resolveVerifyMnemonic: (_: {isValid: false; address: undefined}) => {
-      return;
-    },
-    resolveCreateAccount: (_: string) => {
-      return;
-    },
-    resolveAddAccount: (_: Record<string, unknown>) => {
-      return;
-    },
-    resolveAddExternalAccount: (_: Record<string, unknown>) => {
-      return;
-    },
-    restoreAccountPromise: {
-      resolve: (_: Record<string, unknown>) => {
-        return;
-      },
-      reject: (_: WebViewError) => {
-        return;
-      },
-    },
-    exportAccountPromise: {
-      resolve: (_: Record<string, unknown>) => {
-        return;
-      },
-      reject: (_: WebViewError) => {
-        return;
-      },
-    },
-  });
-
-  useLoadHtml(setHtml);
-  useInitWebViewStore(isWebviewLoaded, accounts, webViewRef);
-  useInitKeyring(isWebviewLoaded, webViewRef);
-  useSetSS58Format(isWebviewLoaded, webViewRef);
-  useCryptoUtils(isWebviewLoaded, webViewRef, resolversRef);
-  useKeyringUtils(isWebviewLoaded, webViewRef, resolversRef);
-
-  const onMessage = React.useCallback(
+  const webViewOnMessage = React.useCallback(
     (event: WebViewMessageEvent) => {
       console.info('WebView Response: ', event.nativeEvent.data);
-
       const data = JSON.parse(event.nativeEvent.data);
       const {type, payload} = data;
 
@@ -316,15 +271,66 @@ export function PolkadotApiWebView() {
           }
       }
     },
-    [accounts, setAccounts],
+    [accounts, setAccounts, resolversRef],
   );
+
+  return {webViewOnMessage};
+}
+
+export function PolkadotApiWebView() {
+  const webViewRef = React.useRef<WebView>(null);
+  const [html, setHtml] = React.useState('');
+  const [isWebviewLoaded, setIsWebviewLoaded] = React.useState(false);
+  const {accounts} = useAppAccounts();
+
+  const resolversRef = React.useRef({
+    resolveMnemonic: (_: string) => {
+      return;
+    },
+    resolveVerifyMnemonic: (_: {isValid: false; address: undefined}) => {
+      return;
+    },
+    resolveCreateAccount: (_: string) => {
+      return;
+    },
+    resolveAddAccount: (_: Record<string, unknown>) => {
+      return;
+    },
+    resolveAddExternalAccount: (_: Record<string, unknown>) => {
+      return;
+    },
+    restoreAccountPromise: {
+      resolve: (_: Record<string, unknown>) => {
+        return;
+      },
+      reject: (_: WebViewError) => {
+        return;
+      },
+    },
+    exportAccountPromise: {
+      resolve: (_: Record<string, unknown>) => {
+        return;
+      },
+      reject: (_: WebViewError) => {
+        return;
+      },
+    },
+  });
+
+  useLoadHtml(setHtml);
+  useInitWebViewStore(isWebviewLoaded, accounts, webViewRef);
+  useInitKeyring(isWebviewLoaded, webViewRef);
+  useSetSS58Format(isWebviewLoaded, webViewRef);
+  useCryptoUtils(isWebviewLoaded, webViewRef, resolversRef);
+  useKeyringUtils(isWebviewLoaded, webViewRef, resolversRef);
+  const {webViewOnMessage} = useWebViewOnMessage(resolversRef);
 
   return (
     <View style={styles.webview}>
       {html ? (
         <WebView
           ref={webViewRef}
-          onMessage={onMessage}
+          onMessage={webViewOnMessage}
           onLoadEnd={() => {
             setIsWebviewLoaded(true);
           }}
