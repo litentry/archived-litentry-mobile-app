@@ -17,6 +17,19 @@ export type AddExternalAccountPayload = {
   network: SupportedNetworkType;
 };
 
+export type RestoreAccountPayload = {
+  json: Record<string, string>;
+  password: string;
+  network: SupportedNetworkType;
+  isFavorite: boolean;
+  isExternal: boolean;
+};
+
+export type RestoreAccountError = {
+  isError: boolean;
+  message: string;
+};
+
 export type InternalAccount = {
   encoded: string;
   address: string;

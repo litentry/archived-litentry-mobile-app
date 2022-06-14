@@ -4,7 +4,14 @@ import {View, Platform, StyleSheet} from 'react-native';
 import RNFS from 'react-native-fs';
 import {useSetRecoilState} from 'recoil';
 import {cryptoUtilState, keyringState} from './atoms';
-import type {MnemonicLength, AddAccountPayload, AddExternalAccountPayload, Accounts} from './types';
+import type {
+  MnemonicLength,
+  AddAccountPayload,
+  AddExternalAccountPayload,
+  Accounts,
+  RestoreAccountPayload,
+  RestoreAccountError,
+} from './types';
 import {useNetwork} from 'context/NetworkContext';
 import {decodeAddress} from '@polkadot/keyring';
 import {u8aToHex} from '@polkadot/util';
@@ -17,6 +24,10 @@ type ResolversRef = React.MutableRefObject<{
   resolveCreateAccount: (_: string) => void;
   resolveAddAccount: (_: Record<string, unknown>) => void;
   resolveAddExternalAccount: (_: Record<string, unknown>) => void;
+  restoreAccountPromise: {
+    resolve: (_: Record<string, unknown>) => void;
+    reject: (_: RestoreAccountError) => void;
+  };
 }>;
 
 function getAccountKey(address: string) {
@@ -157,6 +168,17 @@ function useKeyringUtils(isWebviewLoaded: boolean, webViewRef: WebViewRef, resol
             }),
           );
         },
+        restoreAccount: (payload: RestoreAccountPayload) =>
+          new Promise((resolve, reject) => {
+            resolversRef.current.restoreAccountPromise.resolve = resolve;
+            resolversRef.current.restoreAccountPromise.reject = reject;
+            webViewRef.current?.postMessage(
+              JSON.stringify({
+                type: 'RESTORE_ACCOUNT',
+                payload,
+              }),
+            );
+          }),
       });
     }
   }, [isWebviewLoaded, setKeyringState, webViewRef, resolversRef]);
@@ -184,6 +206,14 @@ export function PolkadotApiWebView() {
     resolveAddExternalAccount: (_: Record<string, unknown>) => {
       return;
     },
+    restoreAccountPromise: {
+      resolve: (_: Record<string, unknown>) => {
+        return;
+      },
+      reject: (_: RestoreAccountError) => {
+        return;
+      },
+    },
   });
 
   useLoadHtml(setHtml);
@@ -206,6 +236,7 @@ export function PolkadotApiWebView() {
         resolveCreateAccount,
         resolveAddAccount,
         resolveAddExternalAccount,
+        restoreAccountPromise,
       } = resolversRef.current;
 
       switch (type) {
@@ -240,6 +271,18 @@ export function PolkadotApiWebView() {
         case 'FORGET_ACCOUNT':
           const {[payload.address]: _, ...rest} = accounts;
           setAccounts(rest);
+          break;
+
+        case 'RESTORE_ACCOUNT':
+          if (payload.isError) {
+            restoreAccountPromise.reject(payload);
+          } else {
+            setAccounts({
+              ...accounts,
+              [payload.account.address]: payload.account,
+            });
+            restoreAccountPromise.resolve(payload.account);
+          }
       }
     },
     [accounts, setAccounts],

@@ -1,6 +1,12 @@
 import {atom, RecoilState} from 'recoil';
 import {recoilPersist} from 'recoil-persist';
-import type {MnemonicLength, AddAccountPayload, AddExternalAccountPayload, Accounts} from './types';
+import type {
+  MnemonicLength,
+  AddAccountPayload,
+  AddExternalAccountPayload,
+  RestoreAccountPayload,
+  Accounts,
+} from './types';
 import * as Storage from 'src/service/PersistedObjectStorage';
 
 const {persistAtom} = recoilPersist({
@@ -31,5 +37,6 @@ export const keyringState = atom({
     forgetAccount: (_: string) => {
       return;
     },
+    restoreAccount: (_: RestoreAccountPayload) => Promise.resolve<Record<string, unknown>>({}),
   },
 });

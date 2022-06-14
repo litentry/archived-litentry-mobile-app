@@ -118,19 +118,28 @@ cryptoWaitReady().then(function () {
       }
 
       case 'RESTORE_ACCOUNT': {
-        const pair = keyring.restoreAccount(payload.json, payload.password);
-        keyring.saveAccountMeta(pair, {
-          network: payload.network,
-          isExternal: payload.isExternal,
-          isFavorite: payload.isFavorite,
-        });
-        const json = pair.toJson(payload.password);
-        window.ReactNativeWebView.postMessage(
-          JSON.stringify({
-            type: 'RESTORE_ACCOUNT',
-            payload: {account: json},
-          }),
-        );
+        try {
+          const pair = keyring.restoreAccount(payload.json, payload.password);
+          keyring.saveAccountMeta(pair, {
+            network: payload.network,
+            isExternal: payload.isExternal,
+            isFavorite: payload.isFavorite,
+          });
+          const json = pair.toJson(payload.password);
+          window.ReactNativeWebView.postMessage(
+            JSON.stringify({
+              type: 'RESTORE_ACCOUNT',
+              payload: {account: json},
+            }),
+          );
+        } catch {
+          window.ReactNativeWebView.postMessage(
+            JSON.stringify({
+              type: 'RESTORE_ACCOUNT',
+              payload: {isError: true, message: 'Unable to decode using the supplied password.'},
+            }),
+          );
+        }
         break;
       }
 
