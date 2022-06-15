@@ -1,7 +1,7 @@
 import React from 'react';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {AccountsStackParamList, DashboardStackParamList} from '@ui/navigation/navigation';
-import {render, waitFor, fireEvent} from 'src/testUtils';
+import {AccountsStackParamList} from '@ui/navigation/navigation';
+import {render} from 'src/testUtils';
 import {RegisterSubIdentitiesScreen} from './RegisterSubIdentitiesScreen';
 import {registerSubIdentitiesScreen} from '@ui/navigation/routeKeys';
 
@@ -21,6 +21,7 @@ const route = {
 test('render the AddSubIdentity component', () => {
   const {getByText} = render(<RegisterSubIdentitiesScreen navigation={navigation} route={route} />);
   expect(getByText('Set Sub-identities')).toBeTruthy();
+  expect(getByText('Sub-identities (0)')).toBeTruthy();
   expect(getByText('Set sub-identities after adding/removing your accounts.')).toBeTruthy();
   expect(getByText('No sub-identities set.')).toBeTruthy();
 });
