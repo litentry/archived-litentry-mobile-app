@@ -28,12 +28,10 @@
     "webpack-cli": "^4.9.2"
   },
   "dependencies": {
-    "@polkadot/keyring": "^9.4.1",
+    "@polkadot/api": "^8.8.1",
     "@polkadot/networks": "^9.4.1",
     "@polkadot/ui-keyring": "^2.4.1",
     "@polkadot/ui-settings": "^2.4.1",
-    "@polkadot/util": "^9.4.1",
-    "@polkadot/util-crypto": "^9.4.1",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
     "store": "^2.0.12",
