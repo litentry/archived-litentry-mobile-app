@@ -23,15 +23,13 @@ test('render the MnemonicScreen component', () => {
 test('click on next button', async () => {
   const navigationSpy = jest.spyOn(navigation, 'navigate');
 
-  const setMnemonic = jest.fn();
-  const useStateMock: any = (useState: any) => [useState, setMnemonic];
+  const setStateMock = jest.fn();
+  const useStateMock: any = (useState: any) => [useState, setStateMock];
   jest.spyOn(React, 'useState').mockImplementation(useStateMock);
 
   const {getByText, debug} = render(<MnemonicScreen navigation={navigation} />);
-
   await waitFor(() => {
     fireEvent.press(getByText('Next'));
-    // debug()
-    // expect(navigationSpy).toBeCalled()
+    expect(setStateMock).toHaveBeenLastCalledWith('random');
   });
 });

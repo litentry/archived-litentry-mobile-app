@@ -17,7 +17,7 @@ const route = {
 } as RouteProp<AccountsStackParamList, typeof createAccountScreen>;
 
 test('render the CreateAccountScreen component', () => {
-  const {getAllByText, getByText} = render(<CreateAccountScreen navigation={navigation} route={route} />);
+  const {getAllByText, getByText, queryByText} = render(<CreateAccountScreen navigation={navigation} route={route} />);
   expect(getAllByText('Mnemonic seed')).toBeTruthy();
   expect(
     getByText(
@@ -27,14 +27,19 @@ test('render the CreateAccountScreen component', () => {
   expect(getAllByText('Descriptive name for the account')).toBeTruthy();
   expect(getAllByText('New password for the account')).toBeTruthy();
   expect(getAllByText('Confirm password')).toBeTruthy();
-  expect(getByText('Password is too weak')).toBeTruthy();
+  expect(queryByText('Password is too weak')).toBeTruthy();
   expect(getByText('75% required')).toBeTruthy();
   expect(getByText('Submit')).toBeTruthy();
 });
 
-// test('Weak password confirmation', () => {
-//   const {getByPlaceholderText, getByText} = render(<CreateAccountScreen navigation={navigation} route={route} />);
-//   expect(getByPlaceholderText('New password for the account')).toBeTruthy()
-//   expect(getByText('Password is too weak')).toBeTruthy()
-
-// });
+test('Weak password confirmation', () => {
+  const {getByPlaceholderText, getByText, debug, queryByText} = render(
+    <CreateAccountScreen navigation={navigation} route={route} />,
+  );
+  // debug()
+  fireEvent.changeText(getByPlaceholderText('New password'), 'weak');
+  expect(getByText('Password is too weak')).toBeTruthy();
+  fireEvent.changeText(getByPlaceholderText('New password'), 'NotWeakPassword');
+  // debug()
+  // expect(queryByText('Password is too weak')).toBeTruthy()
+});
