@@ -8,6 +8,7 @@ import type {
   ExportAccountPayload,
   Accounts,
 } from './types';
+
 import * as Storage from 'src/service/PersistedObjectStorage';
 
 const {persistAtom} = recoilPersist({
@@ -42,3 +43,18 @@ export const keyringState = atom({
     exportAccount: (_: ExportAccountPayload) => Promise.resolve<Record<string, unknown>>({}),
   },
 });
+
+// export const apiState = atom({
+//   key: 'polkadot-api',
+//   default: {
+//     isConnecting: false,
+//     isReady: false,
+//   },
+// });
+
+// export const txState = atom({
+//   key: 'tx',
+//   default: {
+//     getChainName: () => Promise.resolve(''),
+//   },
+// });

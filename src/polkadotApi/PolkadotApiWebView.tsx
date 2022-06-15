@@ -1,9 +1,11 @@
 import React from 'react';
 import WebView, {WebViewMessageEvent} from 'react-native-webview';
 import {View, Platform, StyleSheet} from 'react-native';
-import RNFS from 'react-native-fs';
+import {decodeAddress} from '@polkadot/keyring';
+import {u8aToHex} from '@polkadot/util';
 import {useSetRecoilState} from 'recoil';
-import {cryptoUtilState, keyringState} from './atoms';
+import RNFS from 'react-native-fs';
+import {cryptoUtilState, keyringState /* apiState, txState */} from './atoms';
 import type {
   MnemonicLength,
   AddAccountPayload,
@@ -14,8 +16,6 @@ import type {
   Accounts,
 } from './types';
 import {useNetwork} from 'context/NetworkContext';
-import {decodeAddress} from '@polkadot/keyring';
-import {u8aToHex} from '@polkadot/util';
 import {useAppAccounts} from './useAppAccounts';
 
 type WebViewPromiseResponse = {
@@ -23,6 +23,7 @@ type WebViewPromiseResponse = {
   reject: (_: WebViewError) => void;
 };
 type WebViewRef = React.RefObject<WebView<Record<string, unknown>>>;
+
 type ResolversRef = React.MutableRefObject<{
   resolveMnemonic: (_: string) => void;
   resolveVerifyMnemonic: (_: {isValid: false; address: undefined}) => void;
@@ -31,6 +32,7 @@ type ResolversRef = React.MutableRefObject<{
   resolveAddExternalAccount: (_: Record<string, unknown>) => void;
   restoreAccountPromise: WebViewPromiseResponse;
   exportAccountPromise: WebViewPromiseResponse;
+  // resolveChainName: (_: string) => void;
 }>;
 
 function getAccountKey(address: string) {
@@ -198,8 +200,48 @@ function useKeyringUtils(isWebviewLoaded: boolean, webViewRef: WebViewRef, resol
   }, [isWebviewLoaded, setKeyringState, webViewRef, resolversRef]);
 }
 
-function useWebViewOnMessage(resolversRef: ResolversRef) {
+// function useInitApi(isWebviewLoaded: boolean, webViewRef: WebViewRef) {
+//   const {currentNetwork} = useNetwork();
+//   const setApiState = useSetRecoilState(apiState);
+
+//   React.useEffect(() => {
+//     if (isWebviewLoaded) {
+//       webViewRef.current?.postMessage(
+//         JSON.stringify({
+//           type: 'INIT_API',
+//           payload: {wsEndpoint: currentNetwork.ws},
+//         }),
+//       );
+//       setApiState({isReady: false, isConnecting: true});
+//     }
+//   }, [isWebviewLoaded, webViewRef, setApiState, currentNetwork.ws]);
+// }
+
+// function useTx(isWebviewLoaded: boolean, webViewRef: WebViewRef, resolversRef: ResolversRef) {
+//   const setTxState = useSetRecoilState(txState);
+
+//   React.useEffect(() => {
+//     if (isWebviewLoaded) {
+//       setTxState({
+//         // example method: add here all tx methods (e.g: setIdentity)
+//         getChainName: () => {
+//           return new Promise((resolve) => {
+//             resolversRef.current.resolveChainName = resolve;
+//             webViewRef.current?.postMessage(
+//               JSON.stringify({
+//                 type: 'GET_CHAIN_NAME',
+//               }),
+//             );
+//           });
+//         },
+//       });
+//     }
+//   }, [isWebviewLoaded, setTxState, webViewRef, resolversRef]);
+// }
+
+function useWebViewOnMessage(resolversRef: ResolversRef, webViewRef: WebViewRef) {
   const {accounts, setAccounts} = useAppAccounts();
+  // const setApiState = useSetRecoilState(apiState);
 
   const webViewOnMessage = React.useCallback(
     (event: WebViewMessageEvent) => {
@@ -215,43 +257,55 @@ function useWebViewOnMessage(resolversRef: ResolversRef) {
         resolveAddExternalAccount,
         restoreAccountPromise,
         exportAccountPromise,
+        // resolveChainName,
       } = resolversRef.current;
 
       switch (type) {
-        case 'GENERATE_MNEMONIC':
+        // case 'CHAIN_NAME': {
+        //   resolveChainName(payload.chainName);
+        //   break;
+        // }
+
+        case 'GENERATE_MNEMONIC': {
           resolveMnemonic(payload.mnemonic);
           break;
+        }
 
-        case 'VALIDATE_MNEMONIC':
+        case 'VALIDATE_MNEMONIC': {
           resolveVerifyMnemonic(payload);
           break;
+        }
 
-        case 'CREATE_ACCOUNT':
+        case 'CREATE_ACCOUNT': {
           resolveCreateAccount(payload.address);
           break;
+        }
 
-        case 'ADD_ACCOUNT':
+        case 'ADD_ACCOUNT': {
           setAccounts({
             ...accounts,
             [payload.account.address]: payload.account,
           });
           resolveAddAccount(payload.account);
           break;
+        }
 
-        case 'ADD_EXTERNAL_ACCOUNT':
+        case 'ADD_EXTERNAL_ACCOUNT': {
           setAccounts({
             ...accounts,
             [payload.account.address]: payload.account,
           });
           resolveAddExternalAccount(payload.account);
           break;
+        }
 
-        case 'FORGET_ACCOUNT':
+        case 'FORGET_ACCOUNT': {
           const {[payload.address]: _, ...rest} = accounts;
           setAccounts(rest);
           break;
+        }
 
-        case 'RESTORE_ACCOUNT':
+        case 'RESTORE_ACCOUNT': {
           if (payload.isError) {
             restoreAccountPromise.reject(payload);
           } else {
@@ -262,13 +316,38 @@ function useWebViewOnMessage(resolversRef: ResolversRef) {
             restoreAccountPromise.resolve(payload.account);
           }
           break;
+        }
 
-        case 'EXPORT_ACCOUNT':
+        case 'EXPORT_ACCOUNT': {
           if (payload.isError) {
             exportAccountPromise.reject(payload);
           } else {
             exportAccountPromise.resolve(payload.account);
           }
+          break;
+        }
+
+        // case 'API_CONNECTED': {
+        //   setApiState((state) => ({...state, isConnecting: false}));
+        //   break;
+        // }
+        // case 'API_READY': {
+        //   setApiState((state) => ({...state, isReady: true}));
+        //   break;
+        // }
+        // case 'API_DISCONNECTED': {
+        //   webViewRef.current?.postMessage(
+        //     JSON.stringify({
+        //       type: 'RECONNECT_API',
+        //     }),
+        //   );
+        //   setApiState({isReady: false, isConnecting: true});
+        //   break;
+        // }
+
+        // case 'API_ERROR': {
+        //   console.error(`API ERROR`, payload);
+        // }
       }
     },
     [accounts, setAccounts, resolversRef],
@@ -315,15 +394,20 @@ export function PolkadotApiWebView() {
         return;
       },
     },
+    // resolveChainName: (_: string) => {
+    //   return;
+    // },
   });
 
   useLoadHtml(setHtml);
   useInitWebViewStore(isWebviewLoaded, accounts, webViewRef);
   useInitKeyring(isWebviewLoaded, webViewRef);
+  // useInitApi(isWebviewLoaded, webViewRef);
+  // useTx(isWebviewLoaded, webViewRef, resolversRef);
   useSetSS58Format(isWebviewLoaded, webViewRef);
   useCryptoUtils(isWebviewLoaded, webViewRef, resolversRef);
   useKeyringUtils(isWebviewLoaded, webViewRef, resolversRef);
-  const {webViewOnMessage} = useWebViewOnMessage(resolversRef);
+  const {webViewOnMessage} = useWebViewOnMessage(resolversRef, webViewRef);
 
   return (
     <View style={styles.webview}>

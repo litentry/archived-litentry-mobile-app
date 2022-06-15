@@ -1,5 +1,6 @@
 /* eslint @typescript-eslint/no-explicit-any: off */
 
+import {ApiPromise, WsProvider} from '@polkadot/api';
 import keyring from '@polkadot/ui-keyring';
 import {cryptoWaitReady, mnemonicGenerate, mnemonicValidate} from '@polkadot/util-crypto';
 import {keyringStore, initStore} from './keyringStore';
@@ -10,11 +11,49 @@ declare const document: any;
 cryptoWaitReady().then(function () {
   const userAgent = navigator.userAgent.toLocaleLowerCase();
   const windowDocument = userAgent.includes('iphone') ? window : document;
+  let api: ApiPromise | undefined;
+
+  const runApiListeners = () => {
+    api?.on('connected', () => {
+      window.ReactNativeWebView.postMessage(JSON.stringify({type: 'API_CONNECTED'}));
+    });
+    api?.on('ready', () => {
+      window.ReactNativeWebView.postMessage(JSON.stringify({type: 'API_READY'}));
+    });
+    api?.on('disconnected', () => {
+      window.ReactNativeWebView.postMessage(JSON.stringify({type: 'API_DISCONNECTED'}));
+    });
+    api?.on('error', (error) => {
+      window.ReactNativeWebView.postMessage(JSON.stringify({type: 'API_ERROR', payload: {error}}));
+    });
+  };
 
   windowDocument.addEventListener('message', function (event: MessageEvent) {
     const {type, payload} = JSON.parse(event.data);
 
     switch (type) {
+      case 'INIT_API':
+      case 'RECONNECT_API': {
+        const provider = new WsProvider(payload.wsEndpoint, false);
+        api = new ApiPromise({provider});
+        api.connect();
+        runApiListeners();
+        break;
+      }
+
+      case 'GET_CHAIN_NAME': {
+        api?.rpc.system.chain().then((chainName) => {
+          window.ReactNativeWebView.postMessage(
+            JSON.stringify({
+              type: 'CHAIN_NAME',
+              payload: {chainName},
+            }),
+          );
+        });
+
+        break;
+      }
+
       case 'INIT_STORE': {
         initStore(payload.key, payload.value);
         break;
