@@ -1,8 +1,8 @@
-import {useRecoilState} from 'recoil';
+import {useRecoilValue} from 'recoil';
 import {keyringState} from './atoms';
 
 export function useKeyring() {
-  const [keyring] = useRecoilState(keyringState);
+  const keyring = useRecoilValue(keyringState);
 
   return keyring;
 }
