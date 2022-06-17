@@ -64,14 +64,14 @@ export default function App() {
                   <ThemeProvider>
                     <InAppNotificationContextProvider>
                       <ErrorBoundary>
-                        <TxProvider>
-                          <SnackbarProvider>
-                            <RecoilRoot>
+                        <RecoilRoot>
+                          <TxProvider>
+                            <SnackbarProvider>
                               <LitentryApps />
                               <PolkadotApiWebView />
-                            </RecoilRoot>
-                          </SnackbarProvider>
-                        </TxProvider>
+                            </SnackbarProvider>
+                          </TxProvider>
+                        </RecoilRoot>
                       </ErrorBoundary>
                     </InAppNotificationContextProvider>
                   </ThemeProvider>
