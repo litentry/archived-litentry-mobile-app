@@ -86,7 +86,6 @@ export function CreateAccountScreen({
       name: account.title,
       network: currentNetwork.key,
       isFavorite: false,
-      isExternal: false,
     });
     SecureKeychain.setPasswordByServiceId(account.password, 'BIOMETRICS', address);
     navigation.navigate(accountsScreen, {reload: true});
