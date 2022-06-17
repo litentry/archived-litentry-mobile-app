@@ -3,27 +3,32 @@ import {StyleSheet} from 'react-native';
 import {TextInput, Button, Caption, useTheme, Subheading} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
-import SubstrateSign from 'react-native-substrate-sign';
-import {Account, InternalAccount, useAccounts} from 'context/AccountsContext';
+// import SubstrateSign from 'react-native-substrate-sign';
+// import {Account, InternalAccount} from 'context/AccountsContext';
 import {SecureKeychain} from 'src/service/SecureKeychain';
 import globalStyles, {standardPadding} from '@ui/styles';
+import {useKeyring} from '@polkadotApi/useKeyring';
+// import {useAppAccounts} from '@polkadotApi/useAppAccounts';
+import {SignCredentials} from '@polkadotApi/types';
 
 type Props = {
   address: string;
-  onAuthenticate: (seed: string) => void;
+  onAuthenticate: (credentials: SignCredentials) => void;
 };
 
-function isInternal(a: Account): a is InternalAccount {
-  return a.isExternal === false;
-}
+// function isInternal(a: Account): a is InternalAccount {
+//   return a.isExternal === false;
+// }
 
 export function AuthenticateView({onAuthenticate, address}: Props) {
   const {colors} = useTheme();
   const [password, setPassword] = useState('');
   const [isValid, setIsValid] = useState<boolean | undefined>();
-  const {accounts} = useAccounts();
-  const account = accounts[address];
-  const encoded = account && isInternal(account) ? account.encoded : null;
+  const {verifyCrendentials} = useKeyring();
+  // const {accounts} = useAccounts();
+  // const {accounts} = useAppAccounts();
+  // const account = accounts[address];
+  // const encoded = account && isInternal(account) ? account.encoded : null;
 
   useEffect(() => {
     (async () => {
@@ -35,17 +40,29 @@ export function AuthenticateView({onAuthenticate, address}: Props) {
   }, [address]);
 
   const onPressUnlock = async () => {
-    if (!encoded) {
-      throw new Error('No encoded found');
-    }
-    try {
-      const seed = await SubstrateSign.decryptData(encoded, password);
+    const credentials = {address, password};
+    const {valid} = await verifyCrendentials(credentials);
+    if (valid) {
       setIsValid(true);
-      onAuthenticate(seed);
-    } catch (e) {
+      onAuthenticate(credentials);
+    } else {
       setIsValid(false);
     }
   };
+
+  // const onPressUnlock = async () => {
+  //   if (!encoded) {
+  //     throw new Error('No encoded found');
+  //   }
+  //   try {
+  //     const seed = await SubstrateSign.decryptData(encoded, password);
+
+  //     setIsValid(true);
+  //     onAuthenticate(seed);
+  //   } catch (e) {
+  //     setIsValid(false);
+  //   }
+  // };
 
   return (
     <Layout style={styles.container}>
