@@ -59,8 +59,6 @@ export type Account = InternalAccount | ExternalAccount;
 
 export type Accounts = Record<string, Account>;
 
-export type HexString = `0x${string}`;
-
 export type SignCredentials = {
   address: string;
   password: string;

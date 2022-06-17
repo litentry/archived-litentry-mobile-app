@@ -3,6 +3,7 @@
 // import {ApiPromise, WsProvider} from '@polkadot/api';
 import keyring from '@polkadot/ui-keyring';
 import {cryptoWaitReady, mnemonicGenerate, mnemonicValidate} from '@polkadot/util-crypto';
+import {u8aToHex, hexToU8a} from '@polkadot/util';
 import {keyringStore, initStore} from './keyringStore';
 
 declare const window: any;
@@ -118,30 +119,30 @@ cryptoWaitReady().then(function () {
         break;
       }
 
-      case 'GET_PAIRS': {
-        const pairs = keyring.getPairs();
+      case 'SIGN': {
+        const {message, credentials} = payload;
+        const pair = keyring.getPair(credentials.address);
+        if (pair.isLocked) {
+          try {
+            pair.decodePkcs8(credentials.password);
+          } catch (error) {
+            window.ReactNativeWebView.postMessage(
+              JSON.stringify({
+                type: 'SIGN_RESULT',
+                payload: {isError: true, message: 'Unable to decode using the supplied password.'},
+              }),
+            );
+          }
+        }
+        const signed = pair.sign(hexToU8a(message), {withType: true});
         window.ReactNativeWebView.postMessage(
-          JSON.stringify({
-            type: 'GET_PAIRS',
-            payload: {pairs},
-          }),
-        );
-        break;
-      }
-
-      case 'GET_PAIR': {
-        const pair = keyring.getPair(payload.address);
-        window.ReactNativeWebView.postMessage(
-          JSON.stringify({
-            type: 'GET_PAIR',
-            payload: {pair},
-          }),
+          JSON.stringify({type: 'SIGN_RESULT', payload: {signed: u8aToHex(signed)}}),
         );
         break;
       }
 
       case 'ADD_ACCOUNT': {
-        const {json} = keyring.addUri(payload.mnemonic, payload.password, {
+        const {json, pair} = keyring.addUri(payload.mnemonic, payload.password, {
           name: payload.name,
           network: payload.network,
           isFavorite: payload.isFavorite,
@@ -153,6 +154,25 @@ cryptoWaitReady().then(function () {
             payload: {account: json},
           }),
         );
+        pair.lock();
+        break;
+      }
+
+      case 'VERIFY_CREDENTIALS': {
+        const pair = keyring.getPair(payload.address);
+        if (!pair.isLocked) {
+          pair.lock();
+        }
+        try {
+          pair.decodePkcs8(payload.password);
+          window.ReactNativeWebView.postMessage(
+            JSON.stringify({type: 'VERIFY_CREDENTIALS_RESULT', payload: {valid: true}}),
+          );
+        } catch (error) {
+          window.ReactNativeWebView.postMessage(
+            JSON.stringify({type: 'VERIFY_CREDENTIALS_RESULT', payload: {valid: false}}),
+          );
+        }
         break;
       }
 
@@ -161,7 +181,7 @@ cryptoWaitReady().then(function () {
           const pair = keyring.restoreAccount(payload.json, payload.password);
           keyring.saveAccountMeta(pair, {
             network: payload.network,
-            isExternal: payload.isExternal,
+            isExternal: false,
             isFavorite: payload.isFavorite,
           });
           const json = pair.toJson(payload.password);
