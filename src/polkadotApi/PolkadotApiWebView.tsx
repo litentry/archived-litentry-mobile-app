@@ -1,7 +1,7 @@
 import React from 'react';
 import WebView, {WebViewMessageEvent} from 'react-native-webview';
 import {View, Platform, StyleSheet} from 'react-native';
-import {decodeAddress} from '@polkadot/keyring';
+import {decodeAddress} from '@polkadot/util-crypto';
 import {u8aToHex} from '@polkadot/util';
 import {useSetRecoilState} from 'recoil';
 import RNFS from 'react-native-fs';
@@ -14,6 +14,7 @@ import type {
   ExportAccountPayload,
   WebViewError,
   Accounts,
+  SignCredentials,
 } from './types';
 import {useNetwork} from 'context/NetworkContext';
 import {useAppAccounts} from './useAppAccounts';
@@ -30,8 +31,10 @@ type ResolversRef = React.MutableRefObject<{
   resolveCreateAccount: (_: string) => void;
   resolveAddAccount: (_: Record<string, unknown>) => void;
   resolveAddExternalAccount: (_: Record<string, unknown>) => void;
+  resolveVerifyCredentials: (_: {valid: boolean}) => void;
   restoreAccountPromise: WebViewPromiseResponse;
   exportAccountPromise: WebViewPromiseResponse;
+  signPromise: WebViewPromiseResponse;
   // resolveChainName: (_: string) => void;
 }>;
 
@@ -195,6 +198,17 @@ function useKeyringUtils(isWebviewLoaded: boolean, webViewRef: WebViewRef, resol
               }),
             );
           }),
+        sign: (message: string, credentials: SignCredentials) =>
+          new Promise((resolve, reject) => {
+            resolversRef.current.signPromise.resolve = resolve;
+            resolversRef.current.signPromise.reject = reject;
+            webViewRef.current?.postMessage(JSON.stringify({type: 'SIGN', payload: {message, credentials}}));
+          }),
+        verifyCrendentials: (credentials: SignCredentials) =>
+          new Promise((resolve) => {
+            resolversRef.current.resolveVerifyCredentials = resolve;
+            webViewRef.current?.postMessage(JSON.stringify({type: 'VERIFY_CREDENTIALS', payload: credentials}));
+          }),
       });
     }
   }, [isWebviewLoaded, setKeyringState, webViewRef, resolversRef]);
@@ -255,8 +269,10 @@ function useWebViewOnMessage(resolversRef: ResolversRef, webViewRef: WebViewRef)
         resolveCreateAccount,
         resolveAddAccount,
         resolveAddExternalAccount,
+        resolveVerifyCredentials,
         restoreAccountPromise,
         exportAccountPromise,
+        signPromise,
         // resolveChainName,
       } = resolversRef.current;
 
@@ -327,6 +343,20 @@ function useWebViewOnMessage(resolversRef: ResolversRef, webViewRef: WebViewRef)
           break;
         }
 
+        case 'SIGN_RESULT': {
+          if (payload.isError) {
+            signPromise.reject(payload);
+          } else {
+            signPromise.resolve(payload.signed);
+          }
+          break;
+        }
+
+        case 'VERIFY_CREDENTIALS_RESULT': {
+          resolveVerifyCredentials(payload);
+          break;
+        }
+
         // case 'API_CONNECTED': {
         //   setApiState((state) => ({...state, isConnecting: false}));
         //   break;
@@ -378,6 +408,9 @@ export function PolkadotApiWebView() {
     resolveAddExternalAccount: (_: Record<string, unknown>) => {
       return;
     },
+    resolveVerifyCredentials: (_: {valid: boolean}) => {
+      return;
+    },
     restoreAccountPromise: {
       resolve: (_: Record<string, unknown>) => {
         return;
@@ -387,6 +420,14 @@ export function PolkadotApiWebView() {
       },
     },
     exportAccountPromise: {
+      resolve: (_: Record<string, unknown>) => {
+        return;
+      },
+      reject: (_: WebViewError) => {
+        return;
+      },
+    },
+    signPromise: {
       resolve: (_: Record<string, unknown>) => {
         return;
       },
