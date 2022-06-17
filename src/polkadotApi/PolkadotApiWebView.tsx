@@ -347,7 +347,7 @@ function useWebViewOnMessage(resolversRef: ResolversRef, webViewRef: WebViewRef)
           if (payload.isError) {
             signPromise.reject(payload);
           } else {
-            signPromise.resolve(payload.signed);
+            signPromise.resolve(payload);
           }
           break;
         }
