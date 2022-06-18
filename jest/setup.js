@@ -56,9 +56,14 @@ jest.mock('@react-navigation/native', () => {
 });
 
 jest.mock('react-native-in-app-message', () => {
-  const MockNotification = require('jest/notificationMock');
   return {
-    __esModule: true,
-    ...MockNotification,
+    show: () => {},
+    hide: () => {},
+  };
+});
+
+jest.mock('react-native-share', () => {
+  return {
+    open: jest.fn(),
   };
 });
