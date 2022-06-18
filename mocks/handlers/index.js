@@ -3,6 +3,7 @@ import {bountiesHandler} from './bountiesHandler';
 import {bountiesSummaryHandler} from './bountiesSummaryHandler';
 import {bountyHandler} from './bountyHandler';
 import {chainInfoHandler} from './chainInfoHandler';
+import {convictionsHandler} from './convictionsHandler';
 import {councilMotionsHandler} from './councilMotionsHandler';
 import {democracyHandler} from './democracyHandler';
 import {democracySummaryHandler} from './democracySummaryHandler';
@@ -29,5 +30,6 @@ export const handlers = [
   chainInfoHandler,
   tipDetailHandler,
   tipsHandler,
+  convictionsHandler,
   // other handlers
 ];
