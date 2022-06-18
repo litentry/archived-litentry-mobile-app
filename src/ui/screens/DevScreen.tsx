@@ -14,7 +14,7 @@ import {useAccount} from 'src/api/hooks/useAccount';
 import {Padder} from '@ui/components/Padder';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 
-function DevScreen() {
+export function DevScreen() {
   const {colors} = useTheme();
   const {currentNetwork} = useNetwork();
   const {data: convictions} = useConvictions();
