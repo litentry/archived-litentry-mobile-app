@@ -54,3 +54,11 @@ jest.mock('@react-navigation/native', () => {
     }),
   };
 });
+
+jest.mock('react-native-in-app-message', () => {
+  const MockNotification = require('jest/notificationMock');
+  return {
+    __esModule: true,
+    ...MockNotification,
+  };
+});
