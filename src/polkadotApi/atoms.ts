@@ -43,7 +43,7 @@ export const keyringState = atom({
     restoreAccount: (_: RestoreAccountPayload) => Promise.resolve<Record<string, unknown>>({}),
     exportAccount: (_: ExportAccountPayload) => Promise.resolve<Record<string, unknown>>({}),
     sign: (_: string, __: SignCredentials) => Promise.resolve<Record<string, unknown>>({}),
-    verifyCrendentials: (_: SignCredentials) => Promise.resolve({valid: false}),
+    verifyCredentials: (_: SignCredentials) => Promise.resolve({valid: false}),
   },
 });
 

@@ -204,7 +204,7 @@ function useKeyringUtils(isWebviewLoaded: boolean, webViewRef: WebViewRef, resol
             resolversRef.current.signPromise.reject = reject;
             webViewRef.current?.postMessage(JSON.stringify({type: 'SIGN', payload: {message, credentials}}));
           }),
-        verifyCrendentials: (credentials: SignCredentials) =>
+        verifyCredentials: (credentials: SignCredentials) =>
           new Promise((resolve) => {
             resolversRef.current.resolveVerifyCredentials = resolve;
             webViewRef.current?.postMessage(JSON.stringify({type: 'VERIFY_CREDENTIALS', payload: credentials}));

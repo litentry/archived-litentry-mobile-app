@@ -24,7 +24,7 @@ export function AuthenticateView({onAuthenticate, address}: Props) {
   const {colors} = useTheme();
   const [password, setPassword] = useState('');
   const [isValid, setIsValid] = useState<boolean | undefined>();
-  const {verifyCrendentials} = useKeyring();
+  const {verifyCredentials} = useKeyring();
   // const {accounts} = useAccounts();
   // const {accounts} = useAppAccounts();
   // const account = accounts[address];
@@ -41,7 +41,7 @@ export function AuthenticateView({onAuthenticate, address}: Props) {
 
   const onPressUnlock = async () => {
     const credentials = {address, password};
-    const {valid} = await verifyCrendentials(credentials);
+    const {valid} = await verifyCredentials(credentials);
     if (valid) {
       setIsValid(true);
       onAuthenticate(credentials);

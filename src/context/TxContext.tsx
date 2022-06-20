@@ -6,7 +6,7 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import {SubmittableExtrinsic} from '@polkadot/api/submittable/types';
 import {SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
 import {ExtrinsicPayload} from '@polkadot/types/interfaces';
-import {BN_ZERO, hexToU8a, u8aConcat, u8aToHex} from '@polkadot/util';
+import {BN_ZERO, /* hexToU8a, u8aConcat, */ u8aToHex} from '@polkadot/util';
 import {ApiPromise} from '@polkadot/api';
 import {get} from 'lodash';
 
