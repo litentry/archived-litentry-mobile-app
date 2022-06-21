@@ -221,11 +221,9 @@ android {
     }
 
     applicationVariants.all { variant ->
-        variant.mergeResources.doLast {
-            copy {
-                from ("../../polkadotApi/dist")
-                into ("src/main/assets")
-            }
+        copy {
+            from ("../../polkadotApi/dist")
+            into ("src/main/assets")
         }
     }
 }

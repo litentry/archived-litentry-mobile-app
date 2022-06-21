@@ -5,7 +5,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   mode: 'production',
-  entry: path.resolve(__dirname, './src/index.ts'),
+  entry: path.resolve(__dirname, './src/polkadotApi.ts'),
   module: {
     rules: [
       {
@@ -37,7 +37,6 @@ module.exports = {
     },
   },
   output: {
-    filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
   },
   plugins: [

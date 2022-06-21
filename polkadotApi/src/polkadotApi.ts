@@ -119,24 +119,13 @@ cryptoWaitReady().then(function () {
         break;
       }
 
-      case 'SIGN': {
-        const {message, credentials} = payload;
-        const pair = keyring.getPair(credentials.address);
-        if (pair.isLocked) {
-          try {
-            pair.decodePkcs8(credentials.password);
-          } catch (error) {
-            window.ReactNativeWebView.postMessage(
-              JSON.stringify({
-                type: 'SIGN_RESULT',
-                payload: {isError: true, message: 'Unable to decode using the supplied password.'},
-              }),
-            );
-          }
-        }
-        const signed = pair.sign(hexToU8a(message), {withType: true});
+      case 'CREATE_ACCOUNT': {
+        const {address} = keyring.createFromUri(payload.mnemonic);
         window.ReactNativeWebView.postMessage(
-          JSON.stringify({type: 'SIGN_RESULT', payload: {signed: u8aToHex(signed)}}),
+          JSON.stringify({
+            type: 'CREATE_ACCOUNT',
+            payload: {address},
+          }),
         );
         break;
       }
@@ -155,24 +144,6 @@ cryptoWaitReady().then(function () {
           }),
         );
         pair.lock();
-        break;
-      }
-
-      case 'VERIFY_CREDENTIALS': {
-        const pair = keyring.getPair(payload.address);
-        if (!pair.isLocked) {
-          pair.lock();
-        }
-        try {
-          pair.decodePkcs8(payload.password);
-          window.ReactNativeWebView.postMessage(
-            JSON.stringify({type: 'VERIFY_CREDENTIALS_RESULT', payload: {valid: true}}),
-          );
-        } catch (error) {
-          window.ReactNativeWebView.postMessage(
-            JSON.stringify({type: 'VERIFY_CREDENTIALS_RESULT', payload: {valid: false}}),
-          );
-        }
         break;
       }
 
@@ -195,6 +166,28 @@ cryptoWaitReady().then(function () {
           window.ReactNativeWebView.postMessage(
             JSON.stringify({
               type: 'RESTORE_ACCOUNT',
+              payload: {isError: true, message: 'Unable to decode using the supplied password.'},
+            }),
+          );
+        }
+        break;
+      }
+
+      case 'EXPORT_ACCOUNT': {
+        const pair = keyring.getPair(payload.address);
+        try {
+          const json = pair.toJson(payload.password);
+          pair.lock();
+          window.ReactNativeWebView.postMessage(
+            JSON.stringify({
+              type: 'EXPORT_ACCOUNT',
+              payload: {account: json},
+            }),
+          );
+        } catch {
+          window.ReactNativeWebView.postMessage(
+            JSON.stringify({
+              type: 'EXPORT_ACCOUNT',
               payload: {isError: true, message: 'Unable to decode using the supplied password.'},
             }),
           );
@@ -227,47 +220,54 @@ cryptoWaitReady().then(function () {
         break;
       }
 
-      case 'CREATE_ACCOUNT': {
-        const {address} = keyring.createFromUri(payload.mnemonic);
-        window.ReactNativeWebView.postMessage(
-          JSON.stringify({
-            type: 'CREATE_ACCOUNT',
-            payload: {address},
-          }),
-        );
-        break;
-      }
+      // case 'TOGGLE_FAVORITE': {
+      //   const pair = keyring.getPair(payload.address);
+      //   keyring.saveAccountMeta(pair, {...pair.meta, isFavorite: !pair.meta.isFavorite});
+      //   window.ReactNativeWebView.postMessage(
+      //     JSON.stringify({
+      //       type: 'TOGGLE_FAVORITE',
+      //       payload: {address: payload.address},
+      //     }),
+      //   );
+      //   break;
+      // }
 
-      case 'EXPORT_ACCOUNT': {
+      case 'VERIFY_CREDENTIALS': {
         const pair = keyring.getPair(payload.address);
-        try {
-          const json = pair.toJson(payload.password);
+        if (!pair.isLocked) {
           pair.lock();
+        }
+        try {
+          pair.decodePkcs8(payload.password);
           window.ReactNativeWebView.postMessage(
-            JSON.stringify({
-              type: 'EXPORT_ACCOUNT',
-              payload: {account: json},
-            }),
+            JSON.stringify({type: 'VERIFY_CREDENTIALS_RESULT', payload: {valid: true}}),
           );
-        } catch {
+        } catch (error) {
           window.ReactNativeWebView.postMessage(
-            JSON.stringify({
-              type: 'EXPORT_ACCOUNT',
-              payload: {isError: true, message: 'Unable to decode using the supplied password.'},
-            }),
+            JSON.stringify({type: 'VERIFY_CREDENTIALS_RESULT', payload: {valid: false}}),
           );
         }
         break;
       }
 
-      case 'TOGGLE_FAVORITE': {
-        const pair = keyring.getPair(payload.address);
-        keyring.saveAccountMeta(pair, {...pair.meta, isFavorite: !pair.meta.isFavorite});
+      case 'SIGN': {
+        const {message, credentials} = payload;
+        const pair = keyring.getPair(credentials.address);
+        if (pair.isLocked) {
+          try {
+            pair.decodePkcs8(credentials.password);
+          } catch (error) {
+            window.ReactNativeWebView.postMessage(
+              JSON.stringify({
+                type: 'SIGN_RESULT',
+                payload: {isError: true, message: 'Unable to decode using the supplied password.'},
+              }),
+            );
+          }
+        }
+        const signed = pair.sign(hexToU8a(message), {withType: true});
         window.ReactNativeWebView.postMessage(
-          JSON.stringify({
-            type: 'TOGGLE_FAVORITE',
-            payload: {address: payload.address},
-          }),
+          JSON.stringify({type: 'SIGN_RESULT', payload: {signed: u8aToHex(signed)}}),
         );
         break;
       }
