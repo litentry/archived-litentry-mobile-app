@@ -35,7 +35,7 @@ describe('SendFund', () => {
   });
 
   test.only('make transfer with keep alive check enabled', async () => {
-    const {getByPlaceholderText, getByTestId, getByA11yRole, queryByA11yRole, debug} = render(
+    const {getByPlaceholderText, getByTestId, getByA11yRole, queryByA11yRole} = render(
       <SendFund address={address} onFundsSent={onFundsSent} />,
     );
 
@@ -68,7 +68,6 @@ describe('SendFund', () => {
       expect(queryByA11yRole('progressbar')).toBeNull();
     });
 
-    debug();
     expect(onFundsSent).toHaveBeenCalled();
   });
 
