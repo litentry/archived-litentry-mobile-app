@@ -1,62 +1,114 @@
 import React from 'react';
-import {render, waitFor, fireEvent} from 'src/testUtils';
+import {SubstrateChainRegistry} from 'src/generated/litentryGraphQLTypes';
+import {render, fireEvent, waitFor} from 'src/testUtils';
+import {stringToBn as stringToBnUtil} from 'src/utils/balance';
 import {SendFund} from './SendFund';
-jest.useFakeTimers();
 
-// TODO: mock the implementation of the sendTx method
-jest.mock('src/api/hooks/useApiTx');
+const mockStartTx = jest.fn(() => Promise.resolve());
 
-const sendTx = jest.fn(() => {
-  return Promise.resolve();
+jest.mock('src/api/hooks/useApiTx', () => {
+  return {
+    useApiTx: () => mockStartTx,
+  };
 });
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore Ignore the mocker
-sendTx.mockImplementation(() => {
-  return {sendTx: sendTx};
-});
+describe('SendFund', () => {
+  const address = '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a';
+  const onFundsSent = jest.fn();
+  const mockChainRegistry = {
+    __typename: 'SubstrateChainRegistry',
+    decimals: 10,
+    token: 'DOT',
+  } as SubstrateChainRegistry;
 
-const address = '';
+  test('component initial state', async () => {
+    const {queryByText, getByTestId, findByText} = render(<SendFund address={address} onFundsSent={onFundsSent} />);
 
-const onFundsSent = jest.fn();
+    await findByText('Enter amount');
+    await findByText('Send to address');
+    await findByText('Existential deposit');
+    await findByText('Transfer with account keep-alive checks');
 
-test('component loaded successfully with the "Make transfer" button disabled', () => {
-  const {queryByText, getByText, getByA11yState} = render(<SendFund address={address} onFundsSent={onFundsSent} />);
-  getByText('Enter amount');
-  getByText('Send to address');
-  getByText('Existential deposit');
-  getByText('Transfer with account keep-alive checks');
-  expect(queryByText('Normal transfer without keep-alive checks')).toBe(null);
-  expect(getByText(/Make Transfer/i)).toBeDisabled();
-  getByA11yState({disabled: true});
-});
+    expect(queryByText('Normal transfer without keep-alive checks')).toBe(null);
+    const makeTransferButton = getByTestId('make-transfer-button');
+    expect(makeTransferButton).toBeDisabled();
+  });
 
-test('When user enter correct values and checked keep alive check to make transfer', () => {
-  const {queryAllByText, getByPlaceholderText, getByText} = render(
-    <SendFund address={address} onFundsSent={onFundsSent} />,
-  );
-  fireEvent.changeText(getByPlaceholderText('Enter amount'), '2588');
-  fireEvent.changeText(getByPlaceholderText('Account address'), '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a');
-  expect(queryAllByText('Enter a valid address').length).toEqual(0);
+  test.only('make transfer with keep alive check enabled', async () => {
+    const {getByPlaceholderText, getByTestId, getByA11yRole, queryByA11yRole, debug} = render(
+      <SendFund address={address} onFundsSent={onFundsSent} />,
+    );
 
-  getByText('Transfer with account keep-alive checks');
-  expect(getByText(/Make Transfer/i)).toBeEnabled();
-  const button = getByText('Make Transfer');
-  fireEvent.press(button);
-});
+    const amount = '100';
+    const toAddress = '12NLgzqfhuJkc9mZ5XUTTG85N8yhhzfptwqF1xVhtK3ZX7f6';
+    const _amountBN = stringToBnUtil(mockChainRegistry, amount);
 
-test('When user enter correct values and normal transfer to make transfer', async () => {
-  const {queryAllByText, getByPlaceholderText, getByText, getByTestId, queryByText} = render(
-    <SendFund address={address} onFundsSent={onFundsSent} />,
-  );
-  fireEvent.changeText(getByPlaceholderText('Enter amount'), '2588');
-  fireEvent.changeText(getByPlaceholderText('Account address'), '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a');
-  expect(queryAllByText('Enter a valid address').length).toEqual(0);
-  const switchComponent = getByTestId('keep_alive_switch');
-  fireEvent(switchComponent, 'valueChange', false);
-  queryByText('Normal transfer without keep-alive checks');
-  expect(queryByText('Transfer with account keep-alive checks')).toBe(null);
-  expect(getByText(/Make Transfer/i)).toBeEnabled();
-  const button = getByText('Make Transfer');
-  fireEvent.press(button);
+    fireEvent.changeText(getByPlaceholderText('Enter amount'), amount);
+    fireEvent.changeText(getByPlaceholderText('Account address'), toAddress);
+
+    const makeTransferButton = getByTestId('make-transfer-button');
+
+    await waitFor(() => {
+      expect(makeTransferButton).not.toBeDisabled();
+    });
+
+    fireEvent.press(makeTransferButton);
+
+    await waitFor(() => {
+      expect(getByA11yRole('progressbar')).toBeTruthy();
+    });
+
+    expect(mockStartTx).toHaveBeenCalledWith({
+      address,
+      params: [toAddress, _amountBN],
+      txMethod: 'balances.transferKeepAlive',
+    });
+
+    await waitFor(() => {
+      expect(queryByA11yRole('progressbar')).toBeNull();
+    });
+
+    debug();
+    expect(onFundsSent).toHaveBeenCalled();
+  });
+
+  test('make transfer with keep alive check disabled', async () => {
+    const {getByPlaceholderText, getByTestId, getByText, getByA11yRole, queryByA11yRole} = render(
+      <SendFund address={address} onFundsSent={onFundsSent} />,
+    );
+
+    const amount = '100';
+    const toAddress = '12NLgzqfhuJkc9mZ5XUTTG85N8yhhzfptwqF1xVhtK3ZX7f6';
+    const _amountBN = stringToBnUtil(mockChainRegistry, amount);
+
+    fireEvent.changeText(getByPlaceholderText('Enter amount'), amount);
+    fireEvent.changeText(getByPlaceholderText('Account address'), toAddress);
+    fireEvent(getByTestId('keep_alive_switch'), 'valueChange', false);
+
+    const makeTransferButton = getByTestId('make-transfer-button');
+
+    await waitFor(() => {
+      expect(makeTransferButton).not.toBeDisabled();
+    });
+
+    expect(getByText('Normal transfer without keep-alive checks')).not.toBeNull();
+
+    fireEvent.press(makeTransferButton);
+
+    await waitFor(() => {
+      expect(getByA11yRole('progressbar')).toBeTruthy();
+    });
+
+    expect(mockStartTx).toHaveBeenCalledWith({
+      address,
+      params: [toAddress, _amountBN],
+      txMethod: 'balances.transfer',
+    });
+
+    await waitFor(() => {
+      expect(queryByA11yRole('progressbar')).toBeNull();
+    });
+
+    expect(onFundsSent).toHaveBeenCalled();
+  });
 });
