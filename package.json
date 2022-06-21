@@ -18,7 +18,7 @@
     "assemble:android": "cd android/ && ./gradlew clean && ./gradlew assembleRelease",
     "ios-certificates:dev": "fastlane match development --readonly",
     "codegen": "graphql-codegen --config codegen.yml",
-    "build-polkadotApi": "yarn --cwd ./polkadotApi"
+    "build-polkadotApi": "yarn --cwd ./polkadot-api"
   },
   "resolutions": {
     "@polkadot/types": "8.3.1",

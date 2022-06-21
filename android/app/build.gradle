@@ -222,7 +222,7 @@ android {
 
     applicationVariants.all { variant ->
         copy {
-            from ("../../polkadotApi/dist")
+            from ("../../polkadot-api/dist")
             into ("src/main/assets")
         }
     }

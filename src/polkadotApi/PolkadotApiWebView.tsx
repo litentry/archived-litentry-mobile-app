@@ -19,6 +19,24 @@ import type {
 import {useNetwork} from 'context/NetworkContext';
 import {useAppAccounts} from './useAppAccounts';
 
+import {
+  ACTION_TYPES,
+  getResultType,
+  initStore,
+  initKeyring,
+  setSS58Format,
+  generateMnemonic,
+  validateMnemonic,
+  createAccount,
+  addAccount,
+  addExternalAccount,
+  forgetAccount,
+  restoreAccount,
+  exportAccount,
+  sign,
+  verifyCredentials,
+} from 'polkadot-api';
+
 type WebViewPromiseResponse = {
   resolve: (_: Record<string, unknown>) => void;
   reject: (_: WebViewError) => void;
@@ -59,12 +77,9 @@ function useInitWebViewStore(isWebviewLoaded: boolean, accounts: Accounts, webVi
     if (isWebviewLoaded) {
       Object.values(accounts).forEach((account) => {
         webViewRef.current?.postMessage(
-          JSON.stringify({
-            type: 'INIT_STORE',
-            payload: {
-              key: getAccountKey(account.address),
-              value: account,
-            },
+          initStore({
+            key: getAccountKey(account.address),
+            value: account,
           }),
         );
       });
@@ -75,11 +90,7 @@ function useInitWebViewStore(isWebviewLoaded: boolean, accounts: Accounts, webVi
 function useInitKeyring(isWebviewLoaded: boolean, webViewRef: WebViewRef) {
   React.useEffect(() => {
     if (isWebviewLoaded) {
-      webViewRef.current?.postMessage(
-        JSON.stringify({
-          type: 'INIT_KEYRING',
-        }),
-      );
+      webViewRef.current?.postMessage(initKeyring());
     }
   }, [isWebviewLoaded, webViewRef]);
 }
@@ -91,12 +102,7 @@ function useSetSS58Format(isWebviewLoaded: boolean, webViewRef: WebViewRef) {
 
   React.useEffect(() => {
     if (isWebviewLoaded) {
-      webViewRef.current?.postMessage(
-        JSON.stringify({
-          type: 'SET_SS58_FORMAT',
-          payload: {ss58Format},
-        }),
-      );
+      webViewRef.current?.postMessage(setSS58Format({ss58Format}));
     }
   }, [isWebviewLoaded, ss58Format, webViewRef]);
 }
@@ -110,22 +116,12 @@ function useCryptoUtils(isWebviewLoaded: boolean, webViewRef: WebViewRef, resolv
         generateMnemonic: (length?: MnemonicLength) =>
           new Promise((resolve) => {
             resolversRef.current.resolveMnemonic = resolve;
-            webViewRef.current?.postMessage(
-              JSON.stringify({
-                type: 'GENERATE_MNEMONIC',
-                payload: {length},
-              }),
-            );
+            webViewRef.current?.postMessage(generateMnemonic({length}));
           }),
         verifyMnemonic: (mnemonic: string) =>
           new Promise((resolve) => {
             resolversRef.current.resolveVerifyMnemonic = resolve;
-            webViewRef.current?.postMessage(
-              JSON.stringify({
-                type: 'VALIDATE_MNEMONIC',
-                payload: {mnemonic},
-              }),
-            );
+            webViewRef.current?.postMessage(validateMnemonic({mnemonic}));
           }),
       });
     }
@@ -141,73 +137,44 @@ function useKeyringUtils(isWebviewLoaded: boolean, webViewRef: WebViewRef, resol
         createAccount: (mnemonic: string) =>
           new Promise((resolve) => {
             resolversRef.current.resolveCreateAccount = resolve;
-            webViewRef.current?.postMessage(
-              JSON.stringify({
-                type: 'CREATE_ACCOUNT',
-                payload: {mnemonic},
-              }),
-            );
+            webViewRef.current?.postMessage(createAccount({mnemonic}));
           }),
         addAccount: (payload: AddAccountPayload) =>
           new Promise((resolve) => {
             resolversRef.current.resolveAddAccount = resolve;
-            webViewRef.current?.postMessage(
-              JSON.stringify({
-                type: 'ADD_ACCOUNT',
-                payload,
-              }),
-            );
+            webViewRef.current?.postMessage(addAccount(payload));
           }),
         addExternalAccount: (payload: AddExternalAccountPayload) =>
           new Promise((resolve) => {
             resolversRef.current.resolveAddExternalAccount = resolve;
-            webViewRef.current?.postMessage(
-              JSON.stringify({
-                type: 'ADD_EXTERNAL_ACCOUNT',
-                payload,
-              }),
-            );
+            webViewRef.current?.postMessage(addExternalAccount(payload));
           }),
         forgetAccount: (address: string) => {
-          webViewRef.current?.postMessage(
-            JSON.stringify({
-              type: 'FORGET_ACCOUNT',
-              payload: {address},
-            }),
-          );
+          webViewRef.current?.postMessage(forgetAccount({address}));
         },
         restoreAccount: (payload: RestoreAccountPayload) =>
           new Promise((resolve, reject) => {
             resolversRef.current.restoreAccountPromise.resolve = resolve;
             resolversRef.current.restoreAccountPromise.reject = reject;
-            webViewRef.current?.postMessage(
-              JSON.stringify({
-                type: 'RESTORE_ACCOUNT',
-                payload,
-              }),
-            );
+            webViewRef.current?.postMessage(restoreAccount(payload));
           }),
         exportAccount: (payload: ExportAccountPayload) =>
           new Promise((resolve, reject) => {
             resolversRef.current.exportAccountPromise.resolve = resolve;
             resolversRef.current.exportAccountPromise.reject = reject;
-            webViewRef.current?.postMessage(
-              JSON.stringify({
-                type: 'EXPORT_ACCOUNT',
-                payload,
-              }),
-            );
-          }),
-        sign: (message: string, credentials: SignCredentials) =>
-          new Promise((resolve, reject) => {
-            resolversRef.current.signPromise.resolve = resolve;
-            resolversRef.current.signPromise.reject = reject;
-            webViewRef.current?.postMessage(JSON.stringify({type: 'SIGN', payload: {message, credentials}}));
+            webViewRef.current?.postMessage(exportAccount(payload));
           }),
         verifyCredentials: (credentials: SignCredentials) =>
           new Promise((resolve) => {
             resolversRef.current.resolveVerifyCredentials = resolve;
-            webViewRef.current?.postMessage(JSON.stringify({type: 'VERIFY_CREDENTIALS', payload: credentials}));
+            webViewRef.current?.postMessage(verifyCredentials(credentials));
+          }),
+        sign: (message: string, credentials: SignCredentials) =>
+          new Promise((resolve, reject) => {
+            console.log(message, credentials);
+            resolversRef.current.signPromise.resolve = resolve;
+            resolversRef.current.signPromise.reject = reject;
+            webViewRef.current?.postMessage(sign({message, credentials}));
           }),
       });
     }
@@ -282,22 +249,22 @@ function useWebViewOnMessage(resolversRef: ResolversRef, webViewRef: WebViewRef)
         //   break;
         // }
 
-        case 'GENERATE_MNEMONIC': {
+        case getResultType(ACTION_TYPES.GENERATE_MNEMONIC): {
           resolveMnemonic(payload.mnemonic);
           break;
         }
 
-        case 'VALIDATE_MNEMONIC': {
+        case getResultType(ACTION_TYPES.VALIDATE_MNEMONIC): {
           resolveVerifyMnemonic(payload);
           break;
         }
 
-        case 'CREATE_ACCOUNT': {
+        case getResultType(ACTION_TYPES.CREATE_ACCOUNT): {
           resolveCreateAccount(payload.address);
           break;
         }
 
-        case 'ADD_ACCOUNT': {
+        case getResultType(ACTION_TYPES.ADD_ACCOUNT): {
           setAccounts({
             ...accounts,
             [payload.account.address]: payload.account,
@@ -306,7 +273,7 @@ function useWebViewOnMessage(resolversRef: ResolversRef, webViewRef: WebViewRef)
           break;
         }
 
-        case 'ADD_EXTERNAL_ACCOUNT': {
+        case getResultType(ACTION_TYPES.ADD_EXTERNAL_ACCOUNT): {
           setAccounts({
             ...accounts,
             [payload.account.address]: payload.account,
@@ -315,13 +282,13 @@ function useWebViewOnMessage(resolversRef: ResolversRef, webViewRef: WebViewRef)
           break;
         }
 
-        case 'FORGET_ACCOUNT': {
+        case getResultType(ACTION_TYPES.FORGET_ACCOUNT): {
           const {[payload.address]: _, ...rest} = accounts;
           setAccounts(rest);
           break;
         }
 
-        case 'RESTORE_ACCOUNT': {
+        case getResultType(ACTION_TYPES.RESTORE_ACCOUNT): {
           if (payload.isError) {
             restoreAccountPromise.reject(payload);
           } else {
@@ -334,7 +301,7 @@ function useWebViewOnMessage(resolversRef: ResolversRef, webViewRef: WebViewRef)
           break;
         }
 
-        case 'EXPORT_ACCOUNT': {
+        case getResultType(ACTION_TYPES.EXPORT_ACCOUNT): {
           if (payload.isError) {
             exportAccountPromise.reject(payload);
           } else {
@@ -343,7 +310,7 @@ function useWebViewOnMessage(resolversRef: ResolversRef, webViewRef: WebViewRef)
           break;
         }
 
-        case 'SIGN_RESULT': {
+        case getResultType(ACTION_TYPES.SIGN): {
           if (payload.isError) {
             signPromise.reject(payload);
           } else {
@@ -352,7 +319,7 @@ function useWebViewOnMessage(resolversRef: ResolversRef, webViewRef: WebViewRef)
           break;
         }
 
-        case 'VERIFY_CREDENTIALS_RESULT': {
+        case getResultType(ACTION_TYPES.VERIFY_CREDENTIALS): {
           resolveVerifyCredentials(payload);
           break;
         }
