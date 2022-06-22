@@ -129,50 +129,6 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
         }
       };
 
-      // showPreviewRef.current = async (txPayload: SignerPayloadJSON, seed?: string) => {
-      //   const info = await transaction.paymentInfo(address);
-      //   if (isExternal) {
-      //     dispatch({
-      //       type: 'SHOW_TX_PREVIEW',
-      //       payload: {
-      //         txPayload: txPayload,
-      //         params,
-      //         title,
-      //         description,
-      //         partialFee: info.partialFee.toNumber(),
-      //         isExternalAccount: true,
-      //       },
-      //     });
-      //   } else {
-      //     if (!seed) {
-      //       throw new Error('Seed is required for non-external accounts');
-      //     }
-      //     const wrapper: ExtrinsicPayload = transaction.registry.createType('ExtrinsicPayload', txPayload, {
-      //       version: txPayload.version,
-      //     });
-
-      //     const signable = u8aToHex(wrapper.toU8a(true), -1, false);
-      //     let signed = await SubstrateSign.substrateSign(seed, signable);
-      //     signed = '0x' + signed;
-      //     const SIG_TYPE_SR25519 = new Uint8Array([1]);
-      //     const sig = u8aConcat(SIG_TYPE_SR25519, hexToU8a(signed));
-      //     const signature = u8aToHex(sig, -1);
-
-      //     dispatch({
-      //       type: 'SHOW_TX_PREVIEW',
-      //       payload: {
-      //         txPayload: txPayload,
-      //         params,
-      //         title,
-      //         description,
-      //         partialFee: info.partialFee.toNumber(),
-      //         isExternalAccount: false,
-      //         signature: {id: ++id, signature},
-      //       },
-      //     });
-      //   }
-      // };
-
       try {
         const f = await transaction.signAsync(address, {
           nonce: -1,
