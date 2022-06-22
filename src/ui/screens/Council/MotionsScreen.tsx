@@ -287,7 +287,10 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
       <Padder scale={1} />
       <Divider />
       <View style={styles.polkaLink}>
-        <Button icon="open-in-new" onPress={openInPolkassembly(motion)}>{`Polkassembly`}</Button>
+        <Button
+          icon="open-in-new"
+          onPress={openInPolkassembly(motion)}
+          testID="polkassembly-button">{`Polkassembly`}</Button>
       </View>
     </Card>
   );
