@@ -17,6 +17,8 @@ import {SecureKeychain} from 'src/service/SecureKeychain';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {ImportAccountWithJsonFileScreen} from './ImportAccountWithJsonFileScreen';
 import {useKeyboardStatus} from 'src/hooks/useKeyboardStatus';
+import {NavigationContainer} from '@react-navigation/native';
+import {InputLabel} from '@ui/library/InputLabel';
 
 type Account = {
   title: string;
@@ -44,7 +46,7 @@ export function ImportAccountScreen() {
   );
 }
 
-function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
+export function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const theme = useTheme();
   const {status: keyboardStatus} = useKeyboardStatus();
   const {currentNetwork} = useNetwork();

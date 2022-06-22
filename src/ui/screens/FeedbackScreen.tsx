@@ -4,7 +4,7 @@ import {Padder} from '@ui/components/Padder';
 import {Caption, Text, TextInput, Button, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {noop} from 'lodash';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View} from 'react-native';
 import {sendEmail} from 'src/utils/email';
 import HyperLink from 'react-native-hyperlink';
@@ -18,12 +18,17 @@ export function FeedbackScreen() {
   const [body, setBody] = React.useState('');
   const {status: keyboardStatus} = useKeyboardStatus();
   const [status, setStatus] = React.useState<'INITIAL' | 'ERROR' | 'SUCCESS'>('INITIAL');
-  useFocusEffect(
-    React.useCallback(() => {
-      setStatus('INITIAL');
-      setBody('');
-    }, []),
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     setStatus('INITIAL');
+  //     setBody('');
+  //   }, []),
+  // );
+
+  useEffect(() => {
+    setStatus('INITIAL');
+    setBody('');
+  }, []);
 
   const sendFeedback = async () => {
     sendEmail({to: FEEDBACK_EMAIL, subject: 'Litentry Feedback', body})

@@ -12,7 +12,7 @@ type Props = {
   allowSkip?: boolean;
 };
 
-function PermissionGrantingPromptScreen({skipPnPermission, allowSkip = true}: Props) {
+export function PermissionGrantingPromptScreen({skipPnPermission, allowSkip = true}: Props) {
   const {colors} = useTheme();
   const {requestPermissions} = usePushNotificationsPermissions();
   const [error, setError] = React.useState<string>();

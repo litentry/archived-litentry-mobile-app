@@ -3,7 +3,7 @@ import {graphql} from 'msw';
 export const democracyHandler = graphql.query('getDemocracy', (_, res, ctx) => {
   return res(
     ctx.data({
-      proposals: [
+      substrateChainDemocracyProposals: [
         {
           __typename: 'SubstrateChainDemocracyProposal',
           index: '56',
@@ -57,7 +57,7 @@ export const democracyHandler = graphql.query('getDemocracy', (_, res, ctx) => {
           ],
         },
       ],
-      referendums: [
+      substrateChainDemocracyReferendums: [
         {
           __typename: 'SubstrateChainDemocracyReferendum',
           index: '64',

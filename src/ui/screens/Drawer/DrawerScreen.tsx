@@ -169,7 +169,7 @@ function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
             label="Feedback"
             icon="comment-question-outline"
             active={activeScreen === routeKeys.feedbackScreen}
-            onPress={navigateToScreen(routeKeys.feedbackScreen)}
+            onPress={navigateToScreen(routeKeys.feedbackScreen, {reload: true})}
           />
         </Drawer.Section>
         <Footer />
