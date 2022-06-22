@@ -84,9 +84,9 @@ describe('candidateScreen', () => {
 
   it('should navigate to the account details page when clicked account', async () => {
     const {findAllByTestId} = render(<CandidateScreen navigation={navigation} route={route} />);
-    const accountInfo = (await findAllByTestId('accountsDetails')) as ReactTestInstance[];
-    expect(accountInfo.length).toBe(1);
-    fireEvent.press(accountInfo[0] as ReactTestInstance);
+    const accountsInfo = (await findAllByTestId('accountsDetails')) as ReactTestInstance[];
+    expect(accountsInfo.length).toBe(1);
+    fireEvent.press(accountsInfo[0] as ReactTestInstance);
     expect(navigateSpy).toHaveBeenCalledWith(accountScreen, {
       address: accountAddress,
     });
