@@ -35,6 +35,14 @@ describe('candidateScreen', () => {
 
   const accountAddress = '13RDY9nrJpyTDBSUdBw12dGwhk19sGwsrVZ2bxkzYHBSagP2';
 
+  const accountInfo = {
+    twitterId: '@nachortti',
+    twitterURL: 'https://twitter.com/@nachortti',
+    riotId: '@raul.rtti:matrix.parity.io',
+    riotURL: 'https://matrix.to/#/@raul.rtti:matrix.parity.io',
+    webURL: 'www.nachortti.com',
+  };
+
   beforeEach(() => {
     jest.resetAllMocks();
   });
@@ -58,29 +66,29 @@ describe('candidateScreen', () => {
 
   it('should navigate to the linked twitter url', async () => {
     const {findByText} = render(<CandidateScreen navigation={navigation} route={route} />);
-    fireEvent.press(await findByText('@nachortti'));
-    expect(openURLSpy).toHaveBeenCalledWith('https://twitter.com/@nachortti');
+    fireEvent.press(await findByText(accountInfo.twitterId));
+    expect(openURLSpy).toHaveBeenCalledWith(accountInfo.twitterURL);
   });
 
   it('should navigate to the linked riot url', async () => {
     const {findByText} = render(<CandidateScreen navigation={navigation} route={route} />);
-    fireEvent.press(await findByText('@raul.rtti:matrix.parity.io'));
-    expect(openURLSpy).toHaveBeenCalledWith('https://matrix.to/#/@raul.rtti:matrix.parity.io');
+    fireEvent.press(await findByText(accountInfo.riotId));
+    expect(openURLSpy).toHaveBeenCalledWith(accountInfo.riotURL);
   });
 
   it('should navigate to the linked web url', async () => {
     const {findByText} = render(<CandidateScreen navigation={navigation} route={route} />);
-    fireEvent.press(await findByText('www.nachortti.com'));
-    expect(openURLSpy).toHaveBeenCalledWith('www.nachortti.com');
+    fireEvent.press(await findByText(accountInfo.webURL));
+    expect(openURLSpy).toHaveBeenCalledWith(accountInfo.webURL);
   });
 
   it('should navigate to the account details page when clicked account', async () => {
     const {findAllByTestId} = render(<CandidateScreen navigation={navigation} route={route} />);
-    const accountDetails = (await findAllByTestId('accountsDetails')) as ReactTestInstance[];
-    expect(accountDetails.length).toBe(1);
-    fireEvent.press(accountDetails[0] as ReactTestInstance);
+    const accountInfo = (await findAllByTestId('accountsDetails')) as ReactTestInstance[];
+    expect(accountInfo.length).toBe(1);
+    fireEvent.press(accountInfo[0] as ReactTestInstance);
     expect(navigateSpy).toHaveBeenCalledWith(accountScreen, {
-      address: '13RDY9nrJpyTDBSUdBw12dGwhk19sGwsrVZ2bxkzYHBSagP2',
+      address: accountAddress,
     });
   });
 });
