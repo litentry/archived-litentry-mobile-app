@@ -4,7 +4,7 @@ import {render, fireEvent, waitFor} from 'src/testUtils';
 import {stringToBn as stringToBnUtil} from 'src/utils/balance';
 import {SendFund} from './SendFund';
 
-const mockStartTx = jest.fn(() => Promise.resolve());
+const mockStartTx = jest.fn();
 
 jest.mock('src/api/hooks/useApiTx', () => {
   return {
@@ -39,6 +39,7 @@ describe('SendFund', () => {
   });
 
   it('should make the transaction with `balances.transfer` method when keep alive check is enabled', async () => {
+    mockStartTx.mockImplementation(() => Promise.resolve());
     const {getByPlaceholderText, getByTestId, getByA11yRole, queryByA11yRole} = render(
       <SendFund address={address} onFundsSent={onFundsSent} />,
     );
@@ -76,6 +77,7 @@ describe('SendFund', () => {
   });
 
   it('should make the transaction with `balances.transfer` method when keep alive check is disabled', async () => {
+    mockStartTx.mockImplementation(() => Promise.resolve());
     const {getByPlaceholderText, getByTestId, getByText, getByA11yRole, queryByA11yRole} = render(
       <SendFund address={address} onFundsSent={onFundsSent} />,
     );
