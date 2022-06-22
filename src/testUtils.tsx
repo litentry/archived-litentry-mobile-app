@@ -5,7 +5,6 @@ import {render, RenderOptions} from '@testing-library/react-native';
 import {ApolloProvider, ApolloClient, InMemoryCache, HttpLink} from '@apollo/client';
 import fetch from 'cross-fetch';
 import ThemeProvider from 'context/ThemeContext';
-import {act} from 'react-test-renderer';
 
 export const client = new ApolloClient({
   cache: new InMemoryCache(),
@@ -28,7 +27,3 @@ function customRender(ui: React.ReactElement, options?: CustomRenderOptions) {
 
 export * from '@testing-library/react-native';
 export {customRender as render};
-
-export function wait(timeOut = 500) {
-  return act(() => new Promise((resolve) => setTimeout(resolve, timeOut)));
-}
