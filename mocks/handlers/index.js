@@ -14,6 +14,8 @@ import {parachainDetailHandler} from './parachainDetailHandler';
 import {parachainSummaryHandler} from './parachainSummaryHandler';
 import {parathreadsHandler} from './parathreadHandler';
 import {registrarsHandler} from './registrarsHandler';
+import {tipDetailHandler} from './tipDetailHandler';
+import {tipsHandler} from './tipsHandler';
 
 export const handlers = [
   registrarsHandler,
@@ -33,5 +35,7 @@ export const handlers = [
   parachainCrowdloanHandler,
   crowdloanHandler,
   parachainDetailHandler,
+  tipDetailHandler,
+  tipsHandler,
   // other handlers
 ];

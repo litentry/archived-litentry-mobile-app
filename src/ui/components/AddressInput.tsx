@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Alert, Modal, StyleSheet, View} from 'react-native';
+import {Alert, Modal, StyleSheet, View, TextInputProps} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import {TextInput, HelperText, Button, Title, IconButton} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
@@ -12,9 +12,11 @@ import {Padder} from './Padder';
 type Props = {
   onValidateAddress: (isValid: boolean) => void;
   onAddressChanged: (address: string) => void;
+  onFocus?: TextInputProps['onFocus'];
+  onBlur?: TextInputProps['onBlur'];
 };
 
-export function AddressInput({onAddressChanged, onValidateAddress}: Props) {
+export function AddressInput({onAddressChanged, onValidateAddress, onFocus, onBlur}: Props) {
   const [inputAddress, setInputAddress] = useState<string>();
   const [addressValid, setAddressValid] = useState(false);
   const {currentNetwork} = useNetwork();
@@ -74,6 +76,7 @@ export function AddressInput({onAddressChanged, onValidateAddress}: Props) {
     <>
       <View style={globalStyles.spaceBetweenRowContainer}>
         <TextInput
+          {...{onFocus, onBlur}}
           autoCorrect={false}
           placeholder="Account address"
           dense

@@ -3,8 +3,9 @@ import {render} from 'src/testUtils';
 import {ErrorText} from './ErrorText';
 
 test('should render with children data', () => {
-  const {findByText} = render(<ErrorText>Mocked Error Text</ErrorText>);
-  expect(findByText('Mocked Error Text')).toBeTruthy();
+  const {getByText} = render(<ErrorText>Mocked Error Text</ErrorText>);
+
+  expect(getByText('Mocked Error Text')).not.toBeNull();
 });
 
 test('snapshot match', () => {

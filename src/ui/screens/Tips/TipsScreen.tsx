@@ -1,6 +1,6 @@
 import React from 'react';
 import {FlatList, StyleSheet, View, RefreshControl} from 'react-native';
-import {useNavigation} from '@react-navigation/core';
+import {NavigationProp} from '@react-navigation/core';
 import {TipTeaser} from '@ui/components/Tips/TipTeaser';
 import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
@@ -10,10 +10,14 @@ import {tipDetailScreen} from '@ui/navigation/routeKeys';
 import {proposeTipScreen} from '@ui/navigation/routeKeys';
 import globalStyles from '@ui/styles';
 import {Button, useTheme} from '@ui/library';
+import {DashboardStackParamList} from '@ui/navigation/navigation';
 
-function TipsScreen() {
+type ScreenProps = {
+  navigation: NavigationProp<DashboardStackParamList>;
+};
+
+export function TipsScreen({navigation}: ScreenProps) {
   const {data: tips, loading, refetch, refetching} = useTips(['Opened']);
-  const navigation = useNavigation();
   const {colors} = useTheme();
 
   const toTipDetails = (id: string) => {

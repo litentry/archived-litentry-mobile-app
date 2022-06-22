@@ -1,6 +1,6 @@
 import React from 'react';
-import {Alert, StyleSheet, View} from 'react-native';
-import {Divider, Button, Tabs, TabScreen, TextInput, useTheme, Subheading} from '@ui/library';
+import {Alert, StyleSheet, View, Keyboard} from 'react-native';
+import {Divider, Button, Tabs, TabScreen, useTheme, Subheading, BottomSheetTextInput} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {useNetwork} from 'context/NetworkContext';
 import {Padder} from '@ui/components/Padder';
@@ -61,6 +61,12 @@ export function AddExternalAccount({onClose}: Props) {
     dispatch({type: 'SET_ADDRESS', payload: text});
   };
 
+  const close = React.useCallback(() => {
+    Keyboard.dismiss();
+    onClose();
+    dispatch({type: 'RESET'});
+  }, [onClose]);
+
   const handleConfirm = React.useCallback(() => {
     if (state.step === 'input') {
       if (isAddressValid(currentNetwork, state.address)) {
@@ -82,10 +88,10 @@ export function AddExternalAccount({onClose}: Props) {
     }
 
     if (state.step === 'success') {
-      onClose();
+      close();
       return;
     }
-  }, [addAccount, currentNetwork, state.address, state.step, onClose]);
+  }, [addAccount, currentNetwork, state.address, state.step, close]);
 
   const handleScan = React.useCallback(
     ({data}: {data: string}) => {
@@ -126,9 +132,8 @@ export function AddExternalAccount({onClose}: Props) {
                 <Tabs style={{backgroundColor: colors.background}} onChangeIndex={(index) => setTabIndex(index)}>
                   <TabScreen label="Type in" icon="keyboard">
                     <View style={globalStyles.paddedContainer}>
-                      <TextInput
-                        style={styles.input}
-                        mode="outlined"
+                      <BottomSheetTextInput
+                        style={[styles.input, {borderColor: colors.placeholder}]}
                         onChangeText={handleInputChange}
                         value={state.address}
                         multiline={true}
@@ -155,7 +160,7 @@ export function AddExternalAccount({onClose}: Props) {
       <Padder scale={1} />
       <View style={styles.btnContainer}>
         {state.step !== 'success' ? (
-          <Button mode="outlined" onPress={onClose}>
+          <Button mode="outlined" onPress={close}>
             {'Cancel'}
           </Button>
         ) : undefined}
@@ -171,6 +176,10 @@ export function AddExternalAccount({onClose}: Props) {
 const styles = StyleSheet.create({
   input: {
     minHeight: 90,
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: standardPadding * 2,
+    paddingTop: standardPadding * 2,
   },
   btnContainer: {
     flexDirection: 'row',
