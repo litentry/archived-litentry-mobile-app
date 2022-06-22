@@ -30,6 +30,7 @@ const config = {
     '^service/(.*)$': '<rootDir>/src/service/$1',
     '^@hooks/(.*)$': '<rootDir>/src/hooks/$1',
     '^assets/(.*)$': '<rootDir>/src/assets/$1',
+    '^@atoms/(.*)$': '<rootDir>/src/atoms/$1',
   },
   verbose: true,
 };

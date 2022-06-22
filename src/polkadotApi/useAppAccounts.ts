@@ -1,16 +1,19 @@
-import {useMemo} from 'react';
-import {useNetwork} from 'context/NetworkContext';
-import {useRecoilState} from 'recoil';
+import {networkState} from '@atoms/network';
+import {selector, useRecoilState, useRecoilValue} from 'recoil';
 import {appAccountsState} from './atoms';
 
-export function useAppAccounts() {
-  const {currentNetwork} = useNetwork();
-  const [accounts, setAccounts] = useRecoilState(appAccountsState);
+const netWorkAccountState = selector({
+  key: 'networkAccounts',
+  get: ({get}) => {
+    const accounts = get(appAccountsState);
+    const network = get(networkState);
+    return Object.values(accounts).filter((account) => account.meta.network === network.key);
+  },
+});
 
-  // TODO: create a selector for networkAccounts (the currentNetwork needs to be moved to a atom)
-  const networkAccounts = useMemo(() => {
-    return Object.values(accounts).filter((account) => account.meta.network === currentNetwork.key);
-  }, [accounts, currentNetwork]);
+export function useAppAccounts() {
+  const [accounts, setAccounts] = useRecoilState(appAccountsState);
+  const networkAccounts = useRecoilValue(netWorkAccountState);
 
   return {
     accounts,

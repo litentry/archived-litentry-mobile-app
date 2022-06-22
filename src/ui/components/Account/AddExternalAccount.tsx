@@ -2,13 +2,12 @@ import React from 'react';
 import {Alert, StyleSheet, View, Keyboard} from 'react-native';
 import {Divider, Button, Tabs, TabScreen, useTheme, Subheading, BottomSheetTextInput} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 import {Padder} from '@ui/components/Padder';
 import QRCamera, {QRCameraRef} from '@ui/components/QRCamera';
 import {SuccessDialog} from '@ui/components/SuccessDialog';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {isAddressValid, parseAddress} from 'src/utils/address';
-// import {useAccounts} from 'context/AccountsContext';
 import AddressInfoPreview from './AddressPreview';
 import {useKeyring} from '@polkadotApi/useKeyring';
 
@@ -55,8 +54,6 @@ export function AddExternalAccount({onClose}: Props) {
   const qrCameraRef = React.useRef<QRCameraRef>(null);
   const {currentNetwork} = useNetwork();
   const [state, dispatch] = React.useReducer(addAccountReducer, initialState);
-  // const {addAccount} = useAccounts();
-
   const {addExternalAccount} = useKeyring();
   const {colors} = useTheme();
 
@@ -81,12 +78,6 @@ export function AddExternalAccount({onClose}: Props) {
     }
 
     if (state.step === 'preview') {
-      // addAccount({
-      //   address: state.address,
-      //   meta: {name: '', network: currentNetwork.key, isFavorite: false},
-      //   isExternal: true,
-      // });
-
       addExternalAccount({
         address: state.address,
         network: currentNetwork.key,
@@ -101,14 +92,7 @@ export function AddExternalAccount({onClose}: Props) {
       close();
       return;
     }
-  }, [
-    // addAccount,
-    addExternalAccount,
-    currentNetwork,
-    state.address,
-    state.step,
-    close,
-  ]);
+  }, [addExternalAccount, currentNetwork, state.address, state.step, close]);
 
   const handleScan = React.useCallback(
     ({data}: {data: string}) => {

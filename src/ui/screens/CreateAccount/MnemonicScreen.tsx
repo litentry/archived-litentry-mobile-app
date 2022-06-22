@@ -7,7 +7,6 @@ import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {Button, Caption, TextInput} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {verifyMnemonicScreen} from '@ui/navigation/routeKeys';
-// import SubstrateSign from 'react-native-substrate-sign';
 import {useCryptoUtil} from '@polkadotApi/useCryptoUtil';
 
 function consoleLogMnemonic(mnemonic: string) {
@@ -19,13 +18,6 @@ function consoleLogMnemonic(mnemonic: string) {
 export function MnemonicScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const [mnemonic, setMnemonic] = React.useState<string>();
   const {generateMnemonic} = useCryptoUtil();
-
-  // React.useEffect(() => {
-  //   SubstrateSign.randomPhrase(12).then((_mnemonic) => {
-  //     consoleLogMnemonic(_mnemonic);
-  //     setMnemonic(_mnemonic);
-  //   });
-  // }, []);
 
   React.useEffect(() => {
     generateMnemonic().then((_mnemonic) => {

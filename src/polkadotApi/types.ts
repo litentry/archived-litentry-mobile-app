@@ -34,28 +34,16 @@ export type ExportAccountPayload = {
   password: string;
 };
 
-export type InternalAccount = {
+export type Account = {
+  address: string;
   encoded: string;
-  address: string;
   meta: {
     name: string;
     isFavorite: boolean;
     network: SupportedNetworkType;
+    isExternal: boolean;
   };
-  isExternal: false;
 };
-
-export type ExternalAccount = {
-  address: string;
-  meta: {
-    name: string;
-    isFavorite: boolean;
-    network: SupportedNetworkType;
-  };
-  isExternal: true;
-};
-
-export type Account = InternalAccount | ExternalAccount;
 
 export type Accounts = Record<string, Account>;
 

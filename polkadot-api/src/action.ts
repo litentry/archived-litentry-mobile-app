@@ -14,6 +14,7 @@ export enum ACTION_TYPES {
   EXPORT_ACCOUNT = 'EXPORT_ACCOUNT',
   ADD_EXTERNAL_ACCOUNT = 'ADD_EXTERNAL_ACCOUNT',
   FORGET_ACCOUNT = 'FORGET_ACCOUNT',
+  TOGGLE_FAVORITE = 'TOGGLE_FAVORITE',
   VERIFY_CREDENTIALS = 'VERIFY_CREDENTIALS',
   SIGN = 'SIGN',
 }
@@ -43,5 +44,6 @@ export const restoreAccount = createAction(ACTION_TYPES.RESTORE_ACCOUNT);
 export const exportAccount = createAction(ACTION_TYPES.EXPORT_ACCOUNT);
 export const addExternalAccount = createAction(ACTION_TYPES.ADD_EXTERNAL_ACCOUNT);
 export const forgetAccount = createAction(ACTION_TYPES.FORGET_ACCOUNT);
+export const toggleFavorite = createAction(ACTION_TYPES.TOGGLE_FAVORITE);
 export const verifyCredentials = createAction(ACTION_TYPES.VERIFY_CREDENTIALS);
 export const sign = createAction(ACTION_TYPES.SIGN);

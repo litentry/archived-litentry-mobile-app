@@ -23,7 +23,8 @@
       "svg/*": ["src/svg/*"],
       "service/*": ["src/service/*"],
       "@hooks/*": ["src/hooks/*"],
-      "assets/*": ["assets/*"]
+      "assets/*": ["assets/*"],
+      "@atoms/*": ["src/atoms/*"]
     },
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,

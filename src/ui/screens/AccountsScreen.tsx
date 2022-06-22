@@ -151,8 +151,7 @@ function AccountItem({
   const theme = useTheme();
   const {
     address,
-    isExternal,
-    meta: {isFavorite, name},
+    meta: {isFavorite, name, isExternal},
   } = account;
   const {data: accountInfo} = useAccount(address);
 

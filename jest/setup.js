@@ -58,3 +58,4 @@ jest.mock('@react-navigation/native', () => {
 jest.mock('@react-navigation/material-top-tabs', () => ({
   createMaterialTopTabNavigator: () => jest.fn(),
 }));
+jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');

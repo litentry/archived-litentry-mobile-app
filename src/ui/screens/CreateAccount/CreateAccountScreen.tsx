@@ -3,10 +3,8 @@ import {View, StyleSheet, KeyboardAvoidingView, Platform} from 'react-native';
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {ScrollView} from 'react-native-gesture-handler';
-// import SubstrateSign from 'react-native-substrate-sign';
 import zxcvbn from 'zxcvbn';
-// import {useAccounts} from 'context/AccountsContext';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 import {ProgressBar} from '@ui/components/ProgressBar';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
@@ -37,7 +35,6 @@ export function CreateAccountScreen({
   const theme = useTheme();
   const {status: keyboardStatus} = useKeyboardStatus();
   const {currentNetwork} = useNetwork();
-  // const {addAccount} = useAccounts();
 
   const [account, setAccountState] = React.useState<Account>({title: '', password: '', confirmPassword: ''});
   const setAccount = (acc: Account) => {
@@ -48,11 +45,6 @@ export function CreateAccountScreen({
   const [address, setAddress] = React.useState('');
 
   const {createAccount, addAccount} = useKeyring();
-
-  // React.useEffect(() => {
-  //   SubstrateSign.substrateAddress(mnemonic, currentNetwork.ss58Format).then(setAddress);
-  // }, [mnemonic, currentNetwork.ss58Format]);
-
   React.useEffect(() => {
     createAccount(mnemonic).then(setAddress);
   }, [createAccount, mnemonic]);
@@ -64,22 +56,6 @@ export function CreateAccountScreen({
   const confirmPasswordError = Boolean(account.confirmPassword) && !(account.password === account.confirmPassword);
 
   const onSubmit = async () => {
-    // const _address = await SubstrateSign.substrateAddress(mnemonic, currentNetwork.ss58Format);
-    // const encoded = await SubstrateSign.encryptData(mnemonic, account.password);
-    // const newAcc = {
-    //   address: _address,
-    //   encoded,
-    //   meta: {
-    //     name: account.title,
-    //     network: currentNetwork.key,
-    //     isFavorite: false,
-    //   },
-    //   isExternal: false,
-    // };
-    // addAccount(newAcc);
-    // SecureKeychain.setPasswordByServiceId(account.password, 'BIOMETRICS', _address);
-    // navigation.navigate(accountsScreen, {reload: true});
-
     await addAccount({
       mnemonic,
       password: account.password,

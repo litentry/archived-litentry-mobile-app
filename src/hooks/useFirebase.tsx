@@ -5,7 +5,7 @@ import {useLinkTo} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native';
 import {useCallback} from 'react';
 import {pathToRegexp} from 'path-to-regexp';
-import {useNetwork} from 'context/NetworkContext';
+import {useAvailableNetworks, useNetwork} from '@atoms/network';
 
 function getParamsFromDeeplink(deeplink: string) {
   const path = deeplink.replace('litentry://', '/');
@@ -20,7 +20,8 @@ function getParamsFromDeeplink(deeplink: string) {
 export function useFirebase() {
   const linkTo = useLinkTo();
   const {trigger} = useInAppNotification();
-  const {currentNetwork, select, getAvailableNetworks} = useNetwork();
+  const {currentNetwork, selectCurrentNetwork} = useNetwork();
+  const {availableNetworks} = useAvailableNetworks();
 
   if (!trigger) {
     throw new Error('InAppNotificationContext most be provided!');
@@ -35,15 +36,15 @@ export function useFirebase() {
           linkTo('/');
         } else {
           if (params.network !== currentNetwork.key) {
-            const selectedNetwork = getAvailableNetworks().find((n) => n.key === params.network) ?? currentNetwork;
-            select(selectedNetwork);
+            const selectedNetwork = availableNetworks.find((n) => n.key === params.network) ?? currentNetwork;
+            selectCurrentNetwork(selectedNetwork);
           }
 
           linkTo(`/${params.redirectTo ?? ''}`);
         }
       }
     },
-    [linkTo, currentNetwork, getAvailableNetworks, select],
+    [linkTo, currentNetwork, availableNetworks, selectCurrentNetwork],
   );
 
   React.useEffect(() => {

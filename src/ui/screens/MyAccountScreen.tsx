@@ -149,7 +149,7 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
             }}>
             Remove account
           </Button>
-          {!account?.isExternal ? (
+          {!account?.meta.isExternal ? (
             <>
               <Padder scale={1} />
               <Button

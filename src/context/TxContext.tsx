@@ -2,17 +2,14 @@
 import React, {createContext, useCallback, useEffect, useMemo, useReducer, useRef, useContext} from 'react';
 import {Dimensions, StyleSheet} from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
-// import SubstrateSign from 'react-native-substrate-sign';
 import {SubmittableExtrinsic} from '@polkadot/api/submittable/types';
 import {SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
 import {ExtrinsicPayload} from '@polkadot/types/interfaces';
 import {BN_ZERO, /* hexToU8a, u8aConcat, */ u8aToHex} from '@polkadot/util';
 import {ApiPromise} from '@polkadot/api';
 import {get} from 'lodash';
-
 import {formatCallMeta} from 'src/utils/callMetadata';
 import AsyncSigner from 'src/service/AsyncSigner';
-import {useAccounts} from 'context/AccountsContext';
 import {useApi} from 'context/ChainApiContext';
 import LoadingView from '@ui/components/LoadingView';
 import {AuthenticateView} from '@ui/components/Tx/AuthenticateView';
@@ -26,6 +23,7 @@ import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
 import {SignCredentials} from '@polkadotApi/types';
 import {useKeyring} from '@polkadotApi/useKeyring';
+import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 
 let id = 0;
 
@@ -66,7 +64,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
       });
     }
   }, [apiPromise?.isConnected, state.view]);
-  const {accounts} = useAccounts();
+  const {accounts} = useAppAccounts();
 
   const start = useCallback(
     async (config: StartConfig) => {
@@ -89,7 +87,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
       const args = meta?.args.map(({name}) => name).join(', ') || '';
       const title = `Sending transaction ${section}.${method}(${args})`;
       const description = formatCallMeta(meta);
-      const isExternal = Boolean(accounts[address]?.isExternal);
+      const isExternal = Boolean(accounts[address]?.meta.isExternal);
 
       showPreviewRef.current = async (txPayload: SignerPayloadJSON, credentials?: SignCredentials) => {
         const info = await transaction.paymentInfo(address);
@@ -130,50 +128,6 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
           });
         }
       };
-
-      // showPreviewRef.current = async (txPayload: SignerPayloadJSON, seed?: string) => {
-      //   const info = await transaction.paymentInfo(address);
-      //   if (isExternal) {
-      //     dispatch({
-      //       type: 'SHOW_TX_PREVIEW',
-      //       payload: {
-      //         txPayload: txPayload,
-      //         params,
-      //         title,
-      //         description,
-      //         partialFee: info.partialFee.toNumber(),
-      //         isExternalAccount: true,
-      //       },
-      //     });
-      //   } else {
-      //     if (!seed) {
-      //       throw new Error('Seed is required for non-external accounts');
-      //     }
-      //     const wrapper: ExtrinsicPayload = transaction.registry.createType('ExtrinsicPayload', txPayload, {
-      //       version: txPayload.version,
-      //     });
-
-      //     const signable = u8aToHex(wrapper.toU8a(true), -1, false);
-      //     let signed = await SubstrateSign.substrateSign(seed, signable);
-      //     signed = '0x' + signed;
-      //     const SIG_TYPE_SR25519 = new Uint8Array([1]);
-      //     const sig = u8aConcat(SIG_TYPE_SR25519, hexToU8a(signed));
-      //     const signature = u8aToHex(sig, -1);
-
-      //     dispatch({
-      //       type: 'SHOW_TX_PREVIEW',
-      //       payload: {
-      //         txPayload: txPayload,
-      //         params,
-      //         title,
-      //         description,
-      //         partialFee: info.partialFee.toNumber(),
-      //         isExternalAccount: false,
-      //         signature: {id: ++id, signature},
-      //       },
-      //     });
-      //   }
-      // };
 
       try {
         const f = await transaction.signAsync(address, {

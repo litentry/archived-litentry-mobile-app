@@ -20,6 +20,7 @@ import {
   exportAccount,
   addExternalAccount,
   forgetAccount,
+  toggleFavorite,
   verifyCredentials,
   sign,
 } from './action';
@@ -254,17 +255,21 @@ cryptoWaitReady().then(function () {
         break;
       }
 
-      // case 'TOGGLE_FAVORITE': {
-      //   const pair = keyring.getPair(payload.address);
-      //   keyring.saveAccountMeta(pair, {...pair.meta, isFavorite: !pair.meta.isFavorite});
-      //   window.ReactNativeWebView.postMessage(
-      //     JSON.stringify({
-      //       type: 'TOGGLE_FAVORITE',
-      //       payload: {address: payload.address},
-      //     }),
-      //   );
-      //   break;
-      // }
+      case toggleFavorite.type: {
+        const pair = keyring.getPair(payload.address);
+        keyring.saveAccountMeta(pair, {...pair.meta, isFavorite: !pair.meta.isFavorite});
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({
+            type: toggleFavorite.resultType,
+            payload: {address: payload.address},
+          }),
+        );
+
+        if (!pair.isLocked) {
+          pair.lock();
+        }
+        break;
+      }
 
       case verifyCredentials.type: {
         const pair = keyring.getPair(payload.address);

@@ -16,7 +16,7 @@ import type {
   Accounts,
   SignCredentials,
 } from './types';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 import {useAppAccounts} from './useAppAccounts';
 
 import {

@@ -16,14 +16,14 @@ import {SelectAccount} from '@ui/components/SelectAccount';
 import type {Account} from 'src/api/hooks/useAccount';
 import {InputLabel} from '@ui/library/InputLabel';
 import {useCouncilAccounts} from 'src/hooks/useCouncilAccounts';
-import type {Account as LocalAccount} from 'context/AccountsContext';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 import type {SupportedNetworkType} from 'src/types';
 import {Caption, Card, Divider} from 'react-native-paper';
 import {ProposalCall} from '@ui/components/ProposalCall';
 import {ItemRowBlock} from '@ui/components/ItemRowBlock';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {getProposalTitle} from 'src/utils/proposal';
+import type {Account as LocalAccount} from '@polkadotApi/types';
 
 type Vote = 'Aye' | 'Nay' | 'Close';
 

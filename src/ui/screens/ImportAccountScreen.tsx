@@ -2,11 +2,9 @@ import React from 'react';
 import {StyleSheet, useWindowDimensions, View, ScrollView, KeyboardAvoidingView, Platform} from 'react-native';
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {NavigationProp} from '@react-navigation/native';
-// import {useAccounts} from 'context/AccountsContext';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 import {ProgressBar} from '@ui/components/ProgressBar';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-// import SubstrateSign from 'react-native-substrate-sign';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {accountsScreen} from '@ui/navigation/routeKeys';
 import {Button, List, TextInput, useTheme, HelperText} from '@ui/library';
@@ -58,7 +56,6 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
   const {seed, setSeed, address, isSeedValid} = useVerifySeed();
 
-  // const {addAccount} = useAccounts();
   const {addAccount} = useKeyring();
 
   const passwordStrength = zxcvbn(account.password).score;
@@ -70,22 +67,6 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
   const isDisabled = !isSeedValid || !account.password || !(account.password === account.confirmPassword);
 
   const onSubmit = async () => {
-    // const encoded = await SubstrateSign.encryptData(seed, account.password);
-    // const _address = await SubstrateSign.substrateAddress(seed, currentNetwork.ss58Format);
-    // const newAcc = {
-    //   address: _address,
-    //   encoded,
-    //   meta: {
-    //     name: account.title,
-    //     network: currentNetwork.key,
-    //     isFavorite: false,
-    //   },
-    //   isExternal: false,
-    // };
-    // addAccount(newAcc);
-    // SecureKeychain.setPasswordByServiceId(account.password, 'BIOMETRICS', _address);
-    // navigation.navigate(accountsScreen, {reload: true});
-
     const addedAccount = await addAccount({
       mnemonic: seed,
       password: account.password,
@@ -207,25 +188,10 @@ const styles = StyleSheet.create({
 });
 
 function useVerifySeed() {
-  // const {currentNetwork} = useNetwork();
   const {verifyMnemonic} = useCryptoUtil();
   const [seed, setSeed] = React.useState('');
   const [address, setAddress] = React.useState<string>();
   const [isSeedValid, setIsSeedValid] = React.useState(false);
-
-  // React.useEffect(() => {
-  //   (async () => {
-  //     try {
-  //       if (seed) {
-  //         const _address = await SubstrateSign.substrateAddress(seed.trim(), currentNetwork.ss58Format);
-  //         setAddress(_address);
-  //         setIsSeedValid(true);
-  //       }
-  //     } catch (e) {
-  //       setIsSeedValid(false);
-  //     }
-  //   })();
-  // }, [currentNetwork.ss58Format, seed]);
 
   React.useEffect(() => {
     if (seed) {

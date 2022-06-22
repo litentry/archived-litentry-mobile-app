@@ -2,12 +2,10 @@ import React from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {NavigationProp} from '@react-navigation/core';
-// import {InternalAccount, useAccounts} from 'context/AccountsContext';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import DocumentPicker, {DocumentPickerResponse} from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
-// import SubstrateSign from 'react-native-substrate-sign';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {accountsScreen} from '@ui/navigation/routeKeys';
 import {Button, Caption, List, Text, TextInput, useTheme} from '@ui/library';
@@ -25,33 +23,10 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
   const parsedJson = jsonContent ? tryParseJson(jsonContent) : undefined;
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
   const [password, setPassword] = React.useState('');
-  // const {addAccount} = useAccounts();
 
   const {restoreAccount} = useKeyring();
 
   async function onRestoreAccount() {
-    // if (parsedJson && password) {
-    //   try {
-    //     // TODO: NOT WORKING WITH POLKADOT EXTENSION THE ENCODING IS DIFFERENT THERE
-    //     await SubstrateSign.decryptData(parsedJson.encoded, password);
-
-    //     const newAcc = {
-    //       address: parsedJson.address,
-    //       encoded: parsedJson.encoded,
-    //       meta: {...parsedJson.meta, network: currentNetwork.key, isFavorite: false},
-    //       isExternal: false,
-    //     };
-    //     addAccount(newAcc);
-    //     SecureKeychain.setPasswordByServiceId(password, 'BIOMETRICS', parsedJson.address);
-
-    //     navigation.navigate(accountsScreen, {reload: true});
-    //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //   } catch (e: any) {
-    //     console.warn(e);
-    //     setError('Password appears to be incorrect! Please try again.');
-    //   }
-    // }
-
     if (parsedJson && password) {
       try {
         const account = await restoreAccount({

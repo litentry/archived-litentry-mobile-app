@@ -18,6 +18,7 @@ module.exports = {
           '@hooks': './src/hooks',
           '@ui': './src/ui',
           '@polkadotApi': './src/polkadotApi',
+          '@atoms': './src/atoms',
         },
       },
     ],

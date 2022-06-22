@@ -9,8 +9,6 @@ import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {exportAccountWithJsonFileScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
 import Share from 'react-native-share';
-// import {useAccounts} from 'context/AccountsContext';
-// import SubstrateSign from 'react-native-substrate-sign';
 import {useSnackbar} from 'context/SnackbarContext';
 import {NavigationProp} from '@react-navigation/core';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
@@ -24,10 +22,6 @@ type ScreenProps = {
 
 export function ExportAccountWithJsonFileScreen({route, navigation}: ScreenProps) {
   const {address} = route.params;
-
-  // const {accounts} = useAccounts();
-  // const account = accounts[address];
-
   const {accounts} = useAppAccounts();
   const account = accounts[address];
   const {exportAccount} = useKeyring();
@@ -57,40 +51,6 @@ export function ExportAccountWithJsonFileScreen({route, navigation}: ScreenProps
       setError((e as Error).message);
     }
   };
-
-  // const verifyPassword = async (encoded: string) => {
-  //   try {
-  //     await SubstrateSign.decryptData(encoded, password);
-  //   } catch (e) {
-  //     throw new Error('Incorrect password');
-  //   }
-  // };
-
-  // const _doBackup = async () => {
-  //   setError('');
-  //   if (!account || account.isExternal) {
-  //     throw new Error('Account not found');
-  //   }
-  //   try {
-  //     await verifyPassword(account.encoded);
-  //     const blob = new Blob([JSON.stringify(account)], {type: 'application/json'});
-  // await Share.open({
-  //   title: address,
-  //   filename: `${address}.json`,
-  //   type: 'application/json',
-  //   saveToFiles: true,
-  //   url: await blobToBase64(blob),
-  // });
-  // snackbar('Account successfully exported!');
-  // navigation.goBack();
-  //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  //   } catch (e: any) {
-  //     if ('message' in e && e.message !== 'User did not share') {
-  //       setError(e.message);
-  //     }
-  //     console.warn(e);
-  //   }
-  // };
 
   return (
     <SafeView edges={noTopEdges}>

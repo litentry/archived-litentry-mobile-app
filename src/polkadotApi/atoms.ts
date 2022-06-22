@@ -1,5 +1,4 @@
 import {atom, RecoilState} from 'recoil';
-import {recoilPersist} from 'recoil-persist';
 import type {
   MnemonicLength,
   AddAccountPayload,
@@ -9,13 +8,7 @@ import type {
   Accounts,
   SignCredentials,
 } from './types';
-
-import * as Storage from 'src/service/PersistedObjectStorage';
-
-const {persistAtom} = recoilPersist({
-  key: 'recoil-persist',
-  storage: Storage,
-});
+import {persistAtom} from '@atoms/persist';
 
 export const appAccountsState: RecoilState<Accounts> = atom({
   key: 'appAccounts',
