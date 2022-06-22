@@ -65,7 +65,7 @@
     "proxy-polyfill": "^0.3.2",
     "qrcode-generator": "^1.4.4",
     "react": "17.0.2",
-    "react-native": "0.67.3",
+    "react-native": "0.68.2",
     "react-native-aes-crypto": "^2.1.0",
     "react-native-calendars": "^1.1279.0",
     "react-native-camera": "^4.2.1",
