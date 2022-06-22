@@ -13,6 +13,8 @@ import {moduleElectionHandler} from './moduleElectionHandler';
 import {parachainSummaryHandler} from './parachainSummaryHandler';
 import {parathreadsHandler} from './parathreadHandler';
 import {registrarsHandler} from './registrarsHandler';
+import {tipDetailHandler} from './tipDetailHandler';
+import {tipsHandler} from './tipsHandler';
 
 export const handlers = [
   registrarsHandler,
@@ -32,5 +34,7 @@ export const handlers = [
   councilHandler,
   moduleElectionHandler,
   councilVotesHandler,
+  tipDetailHandler,
+  tipsHandler,
   // other handlers
 ];

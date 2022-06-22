@@ -73,7 +73,7 @@ type ScreenProps = {
   route: RouteProp<DashboardStackParamList, 'Tip'>;
 };
 
-function TipDetailScreen({route, navigation}: ScreenProps) {
+export function TipDetailScreen({route, navigation}: ScreenProps) {
   const id = route.params?.id;
   const {data: tip, loading, refetching, refetch} = useTip(id);
   const {colors} = useTheme();
@@ -96,7 +96,7 @@ function TipDetailScreen({route, navigation}: ScreenProps) {
         renderItem={({item}) => (
           <View style={globalStyles.marginVertical}>
             <AccountTeaser account={item.account} onPress={() => toAccountDetails(item.account.address)}>
-              <Caption>{item.formattedBalance}</Caption>
+              <Caption testID={'account-details'}>{item.formattedBalance}</Caption>
             </AccountTeaser>
           </View>
         )}

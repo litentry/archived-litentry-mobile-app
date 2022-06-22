@@ -1,18 +1,19 @@
 import {graphql} from 'msw';
 
-export const accountHandler = graphql.query('getAccount', (_, res, ctx) => {
+export const accountHandler = graphql.query('getAccount', (req, res, ctx) => {
+  const address = req.variables.address;
   return res(
     ctx.data({
       substrateChainAccount: {
         __typename: 'SubstrateChainAccount',
-        address: '1hCMdtRsaRA4ZTEKpPKPvEjK9rZpGhyFnRHSDhqFMCEayRL',
-        display: 'RTTI-5220 (POLKADOT)',
+        address,
+        display: 'PureStake/01',
         hasIdentity: true,
         registration: {
           __typename: 'SubstrateChainDeriveAccountRegistration',
-          display: 'RTTI-5220 (POLKADOT)',
-          displayParent: null,
-          email: 'raul@justopensource.io',
+          display: '01',
+          displayParent: 'PureStake',
+          email: 'info@purestake.com',
           image: null,
           legal: 'Raul Romanutti',
           pgp: null,
@@ -38,14 +39,14 @@ export const accountHandler = graphql.query('getAccount', (_, res, ctx) => {
         },
         balance: {
           __typename: 'SubstrateChainAccountBalance',
-          total: '4896993298073',
-          formattedTotal: '489.6993 DOT',
-          reserved: '2609060000000',
-          formattedReserved: '260.9060 DOT',
-          free: '2287933298073',
-          formattedFree: '228.7933 DOT',
-          feeFrozen: '500000000000',
-          formattedFeeFrozen: '50.0000 DOT',
+          total: '200009333233899',
+          formattedTotal: '20,000.9333 DOT',
+          reserved: '200410000000',
+          formattedReserved: '20.0410 DOT',
+          free: '199808923233899',
+          formattedFree: '19,980.8923 DOT',
+          feeFrozen: '198480993716691',
+          formattedFeeFrozen: '19,848.0993 DOT',
         },
       },
     }),
