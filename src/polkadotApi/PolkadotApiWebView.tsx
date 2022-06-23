@@ -175,7 +175,6 @@ function useKeyringUtils(isWebviewLoaded: boolean, webViewRef: WebViewRef, resol
           }),
         sign: (message: string, credentials: SignCredentials) =>
           new Promise((resolve, reject) => {
-            console.log(message, credentials);
             resolversRef.current.signPromise.resolve = resolve;
             resolversRef.current.signPromise.reject = reject;
             webViewRef.current?.postMessage(sign.getAction({message, credentials}));
