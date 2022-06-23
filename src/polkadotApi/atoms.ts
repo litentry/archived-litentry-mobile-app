@@ -7,6 +7,7 @@ import type {
   ExportAccountPayload,
   Accounts,
   SignCredentials,
+  SignedMessage,
 } from './types';
 import {persistAtom} from '@atoms/persist';
 
@@ -38,7 +39,7 @@ export const keyringState = atom({
     },
     restoreAccount: (_: RestoreAccountPayload) => Promise.resolve<Record<string, unknown>>({}),
     exportAccount: (_: ExportAccountPayload) => Promise.resolve<Record<string, unknown>>({}),
-    sign: (_: string, __: SignCredentials) => Promise.resolve<Record<string, unknown>>({}),
+    sign: (_: string, __: SignCredentials) => Promise.resolve<SignedMessage>({signed: '0x...'}),
     verifyCredentials: (_: SignCredentials) => Promise.resolve({valid: false}),
   },
 });

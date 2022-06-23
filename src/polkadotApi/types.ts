@@ -2,6 +2,8 @@ import {SupportedNetworkType} from 'src/types';
 
 export type MnemonicLength = 12 | 15 | 18 | 21 | 24;
 
+export type SignedMessage = {signed: `0x${string}`};
+
 export type WebViewError = {
   isError: boolean;
   message: string;

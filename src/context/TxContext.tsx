@@ -123,7 +123,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
               description,
               partialFee: info.partialFee.toNumber(),
               isExternalAccount: false,
-              signerResult: {id: ++id, signature: signed as `0x${string}`},
+              signerResult: {id: ++id, signature: signed},
             },
           });
         }

@@ -15,6 +15,7 @@ import type {
   WebViewError,
   Accounts,
   SignCredentials,
+  SignedMessage,
 } from './types';
 import {useNetwork} from '@atoms/network';
 import {useAppAccounts} from './useAppAccounts';
@@ -46,6 +47,12 @@ type WebViewPromiseResponse = {
   resolve: (_: Record<string, unknown>) => void;
   reject: (_: WebViewError) => void;
 };
+
+type WebViewSignPromiseResponse = {
+  resolve: (_: SignedMessage) => void;
+  reject: (_: WebViewError) => void;
+};
+
 type WebViewRef = React.RefObject<WebView<Record<string, unknown>>>;
 
 type ResolversRef = React.MutableRefObject<{
@@ -57,7 +64,7 @@ type ResolversRef = React.MutableRefObject<{
   resolveVerifyCredentials: (_: {valid: boolean}) => void;
   restoreAccountPromise: WebViewPromiseResponse;
   exportAccountPromise: WebViewPromiseResponse;
-  signPromise: WebViewPromiseResponse;
+  signPromise: WebViewSignPromiseResponse;
   // resolveChainName: (_: string) => void;
 }>;
 
@@ -417,7 +424,7 @@ export function PolkadotApiWebView() {
       },
     },
     signPromise: {
-      resolve: (_: Record<string, unknown>) => {
+      resolve: (_: SignedMessage) => {
         return;
       },
       reject: (_: WebViewError) => {
