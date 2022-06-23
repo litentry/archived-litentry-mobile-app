@@ -20,7 +20,7 @@ import {
   exportAccount,
   addExternalAccount,
   forgetAccount,
-  toggleFavorite,
+  updateMeta,
   verifyCredentials,
   sign,
 } from './action';
@@ -159,8 +159,8 @@ cryptoWaitReady().then(function () {
         const {json, pair} = keyring.addUri(payload.mnemonic, payload.password, {
           name: payload.name,
           network: payload.network,
-          isFavorite: payload.isFavorite,
-          isExternal: payload.isExternal,
+          isFavorite: false,
+          isExternal: false,
         });
         window.ReactNativeWebView.postMessage(
           JSON.stringify({
@@ -181,7 +181,7 @@ cryptoWaitReady().then(function () {
           keyring.saveAccountMeta(pair, {
             network: payload.network,
             isExternal: false,
-            isFavorite: payload.isFavorite,
+            isFavorite: false,
           });
           const json = pair.toJson(payload.password);
           window.ReactNativeWebView.postMessage(
@@ -234,7 +234,7 @@ cryptoWaitReady().then(function () {
         const {json} = keyring.addExternal(payload.address, {
           name: payload.name,
           network: payload.network,
-          isFavorite: payload.isFavorite,
+          isFavorite: false,
         });
         window.ReactNativeWebView.postMessage(
           JSON.stringify({
@@ -256,13 +256,14 @@ cryptoWaitReady().then(function () {
         break;
       }
 
-      case toggleFavorite.type: {
-        const pair = keyring.getPair(payload.address);
-        keyring.saveAccountMeta(pair, {...pair.meta, isFavorite: !pair.meta.isFavorite});
+      case updateMeta.type: {
+        const {address, meta} = payload;
+        const pair = keyring.getPair(address);
+        keyring.saveAccountMeta(pair, {...pair.meta, ...meta});
         window.ReactNativeWebView.postMessage(
           JSON.stringify({
-            type: toggleFavorite.resultType,
-            payload: {address: payload.address},
+            type: updateMeta.resultType,
+            payload: {address, meta},
           }),
         );
 

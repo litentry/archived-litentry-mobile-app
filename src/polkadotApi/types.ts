@@ -14,13 +14,11 @@ export type AddAccountPayload = {
   password: string;
   name: string;
   network: SupportedNetworkType;
-  isFavorite: boolean;
 };
 
 export type AddExternalAccountPayload = {
   address: string;
   name: string;
-  isFavorite: boolean;
   network: SupportedNetworkType;
 };
 
@@ -28,8 +26,6 @@ export type RestoreAccountPayload = {
   json: Record<string, string>;
   password: string;
   network: SupportedNetworkType;
-  isFavorite: boolean;
-  isExternal: boolean;
 };
 
 export type ExportAccountPayload = {

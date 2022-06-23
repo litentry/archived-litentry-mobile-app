@@ -33,8 +33,6 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
           json: parsedJson,
           password,
           network: currentNetwork.key,
-          isFavorite: false,
-          isExternal: false,
         });
         SecureKeychain.setPasswordByServiceId(password, 'BIOMETRICS', account.address as string);
         navigation.navigate(accountsScreen, {reload: true});

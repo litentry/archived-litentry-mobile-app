@@ -82,7 +82,6 @@ export function AddExternalAccount({onClose}: Props) {
         name: '',
         address: state.address,
         network: currentNetwork.key,
-        isFavorite: false,
       });
 
       dispatch({type: 'SET_STEP', payload: 'success'});

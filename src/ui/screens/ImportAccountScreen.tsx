@@ -72,7 +72,6 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
       password: account.password,
       name: account.title,
       network: currentNetwork.key,
-      isFavorite: false,
     });
     SecureKeychain.setPasswordByServiceId(account.password, 'BIOMETRICS', addedAccount.address as string);
     navigation.navigate(accountsScreen, {reload: true});

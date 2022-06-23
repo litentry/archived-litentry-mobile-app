@@ -34,7 +34,7 @@ export const keyringState = atom({
     forgetAccount: (_: string) => {
       return;
     },
-    toggleFavorite: (_: string) => {
+    updateMeta: (_: string, __: Record<string, unknown>) => {
       return;
     },
     restoreAccount: (_: RestoreAccountPayload) => Promise.resolve<Record<string, unknown>>({}),

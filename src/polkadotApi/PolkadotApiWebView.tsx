@@ -33,7 +33,7 @@ import {
   forgetAccount,
   restoreAccount,
   exportAccount,
-  toggleFavorite,
+  updateMeta,
   sign,
   verifyCredentials,
 } from 'polkadot-api';
@@ -176,8 +176,8 @@ function useKeyringUtils(isWebviewLoaded: boolean, webViewRef: WebViewRef, resol
             resolversRef.current.exportAccountPromise.reject = reject;
             webViewRef.current?.postMessage(exportAccount.getAction(payload));
           }),
-        toggleFavorite: (address: string) => {
-          webViewRef.current?.postMessage(toggleFavorite.getAction({address}));
+        updateMeta: (address: string, meta: Record<string, unknown>) => {
+          webViewRef.current?.postMessage(updateMeta.getAction({address, meta}));
         },
         verifyCredentials: (credentials: SignCredentials) =>
           new Promise((resolve) => {
@@ -324,7 +324,7 @@ function useWebViewOnMessage(resolversRef: ResolversRef, webViewRef: WebViewRef)
           break;
         }
 
-        case toggleFavorite.resultType: {
+        case updateMeta.resultType: {
           const account = accounts[payload.address];
           setAccounts({
             ...accounts,
@@ -332,7 +332,7 @@ function useWebViewOnMessage(resolversRef: ResolversRef, webViewRef: WebViewRef)
               ...account,
               meta: {
                 ...account?.meta,
-                isFavorite: !account?.meta.isFavorite,
+                ...payload.meta,
               },
             },
           });

@@ -29,7 +29,7 @@ export function AccountsScreen({navigation}: Props) {
   const sortByFunction = sortBy === 'name' ? sortByDisplayName : sortByIsFavorite;
   const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
 
-  const {toggleFavorite} = useKeyring();
+  const {updateMeta} = useKeyring();
 
   const toAccountDetail = (address: string) => {
     navigation.navigate(myAccountScreen, {address});
@@ -62,9 +62,7 @@ export function AccountsScreen({navigation}: Props) {
         data={sortByFunction(networkAccounts)}
         showsVerticalScrollIndicator
         keyExtractor={(item) => item.address}
-        renderItem={({item}) => (
-          <AccountItem account={item} toggleFavorite={toggleFavorite} onPress={toAccountDetail} />
-        )}
+        renderItem={({item}) => <AccountItem account={item} toggleFavorite={updateMeta} onPress={toAccountDetail} />}
         ListHeaderComponent={
           <View style={styles.sortBy}>
             <Menu
@@ -144,7 +142,7 @@ function AccountItem({
   onPress,
 }: {
   account: AppAccount;
-  toggleFavorite: (address: string) => void;
+  toggleFavorite: (address: string, meta: Record<string, unknown>) => void;
   onPress: (address: string) => void;
 }) {
   const theme = useTheme();
@@ -170,7 +168,7 @@ function AccountItem({
       )}
       right={() => (
         <IconButton
-          onPress={() => toggleFavorite(address)}
+          onPress={() => toggleFavorite(address, {isFavorite: !account.meta.isFavorite})}
           color={isFavorite ? theme.colors.accent : theme.colors.disabled}
           icon={isFavorite ? 'star' : 'star-outline'}
         />
