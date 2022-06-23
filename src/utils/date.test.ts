@@ -1,8 +1,10 @@
+import dayjs from 'dayjs';
 import {formatDate, fromNow, getCurrentYear} from './date';
 
 test('fromNow function', () => {
-  const now = fromNow('12-12-2015');
-  expect(now).toBe('6 years ago');
+  const testDate = dayjs().subtract(5, 'year');
+  const fromNowDate = fromNow(testDate.format());
+  expect(fromNowDate).toBe('5 years ago');
 });
 
 test('getCurrentYear function', () => {
