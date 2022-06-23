@@ -6,6 +6,7 @@ import {bountyHandler} from './bountyHandler';
 import {chainInfoHandler} from './chainInfoHandler';
 import {councilMotionsHandler} from './councilMotionsHandler';
 import {crowdloanHandler} from './crowdloanHandler';
+import {crowdloansHandler} from './crowdloansHandler';
 import {democracyHandler} from './democracyHandler';
 import {democracySummaryHandler} from './democracySummaryHandler';
 import {eventsCalendarHandler} from './eventsCalendarHandler';
@@ -37,5 +38,6 @@ export const handlers = [
   parachainDetailHandler,
   tipDetailHandler,
   tipsHandler,
+  crowdloansHandler,
   // other handlers
 ];
