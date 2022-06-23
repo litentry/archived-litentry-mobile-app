@@ -1,26 +1,31 @@
 import {graphql} from 'msw';
 
-export const accountHandler = graphql.query('getAccount', (_, res, ctx) => {
+export const accountHandler = graphql.query('getAccount', (req, res, ctx) => {
+  const address = req.variables.address;
   return res(
     ctx.data({
       substrateChainAccount: {
-        address: '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a',
+        __typename: 'SubstrateChainAccount',
+        address,
         display: 'PureStake/01',
         hasIdentity: true,
         registration: {
+          __typename: 'SubstrateChainDeriveAccountRegistration',
           display: '01',
           displayParent: 'PureStake',
           email: 'info@purestake.com',
           image: null,
-          legal: 'PureStake Ltd',
+          legal: 'Raul Romanutti',
           pgp: null,
-          riot: null,
-          twitter: '@purestakeco',
-          web: 'https://www.purestake.com/',
+          riot: '@raul.rtti:matrix.parity.io',
+          twitter: '@nachortti',
+          web: 'www.nachortti.com',
           judgements: [
             {
+              __typename: 'SubstrateChainRegistrationJudgement',
               registrarIndex: 1,
               judgement: {
+                __typename: 'SubstrateChainIdentityJudgement',
                 isUnknown: false,
                 isFeePaid: false,
                 isReasonable: true,
@@ -33,14 +38,15 @@ export const accountHandler = graphql.query('getAccount', (_, res, ctx) => {
           ],
         },
         balance: {
-          total: '182675396161976',
-          formattedTotal: '18,267.5396 DOT',
+          __typename: 'SubstrateChainAccountBalance',
+          total: '200009333233899',
+          formattedTotal: '20,000.9333 DOT',
           reserved: '200410000000',
           formattedReserved: '20.0410 DOT',
-          free: '182474986161976',
-          formattedFree: '18,247.4986 DOT',
-          freeFrozen: '181215680471934',
-          formattedFreeFrozen: '18,121.5680 DOT',
+          free: '199808923233899',
+          formattedFree: '19,980.8923 DOT',
+          feeFrozen: '198480993716691',
+          formattedFeeFrozen: '19,848.0993 DOT',
         },
       },
     }),
