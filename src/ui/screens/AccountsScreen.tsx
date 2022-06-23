@@ -15,6 +15,7 @@ import {AccountsGuide} from '@ui/components/Account/AccountsGuide';
 import {AddExternalAccount} from '@ui/components/Account/AddExternalAccount';
 import type {Account as AppAccount} from '@polkadotApi/types';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
+import {useKeyring} from '@polkadotApi/useKeyring';
 
 type Props = {
   navigation: NavigationProp<CompleteNavigatorParamList, typeof accountsScreen>;
@@ -23,12 +24,12 @@ type Props = {
 type SortBy = 'name' | 'favorites';
 
 export function AccountsScreen({navigation}: Props) {
-  const toggleFavorite = () => ({});
-
   const {networkAccounts} = useAppAccounts();
   const [sortBy, setSortBy] = React.useState<SortBy>('name');
   const sortByFunction = sortBy === 'name' ? sortByDisplayName : sortByIsFavorite;
   const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
+
+  const {toggleFavorite} = useKeyring();
 
   const toAccountDetail = (address: string) => {
     navigation.navigate(myAccountScreen, {address});
