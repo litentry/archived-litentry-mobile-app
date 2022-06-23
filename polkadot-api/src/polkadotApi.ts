@@ -232,6 +232,7 @@ cryptoWaitReady().then(function () {
 
       case addExternalAccount.type: {
         const {json} = keyring.addExternal(payload.address, {
+          name: payload.name,
           network: payload.network,
           isFavorite: payload.isFavorite,
         });

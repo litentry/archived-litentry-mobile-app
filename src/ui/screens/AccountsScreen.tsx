@@ -131,13 +131,11 @@ const styles = StyleSheet.create({
 });
 
 function sortByDisplayName(accounts: AppAccount[]) {
-  // return accounts.sort((a, b) => a.meta.name.localeCompare(b.meta.name));
-
-  return accounts;
+  return [...accounts].sort((a, b) => a.meta.name.localeCompare(b.meta.name));
 }
 
 function sortByIsFavorite(accounts: AppAccount[]) {
-  return accounts.sort((a, b) => Number(b.meta.isFavorite) - Number(a.meta.isFavorite));
+  return [...accounts].sort((a, b) => Number(b.meta.isFavorite) - Number(a.meta.isFavorite));
 }
 
 function AccountItem({

@@ -17,6 +17,7 @@ export type AddAccountPayload = {
 
 export type AddExternalAccountPayload = {
   address: string;
+  name: string;
   isFavorite: boolean;
   network: SupportedNetworkType;
 };

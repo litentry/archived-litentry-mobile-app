@@ -79,6 +79,7 @@ export function AddExternalAccount({onClose}: Props) {
 
     if (state.step === 'preview') {
       addExternalAccount({
+        name: '',
         address: state.address,
         network: currentNetwork.key,
         isFavorite: false,
