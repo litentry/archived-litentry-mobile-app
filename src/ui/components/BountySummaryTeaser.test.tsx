@@ -1,20 +1,32 @@
 import React from 'react';
-import {render, waitFor} from 'src/testUtils';
+import {fireEvent, render} from 'src/testUtils';
 import {BountySummaryTeaser} from './BountySummaryTeaser';
 
-const onPressEvent = jest.fn();
+const onPressEvent = {
+  navigate: jest.fn(),
+};
 
-test('render the loading view while data is fetching', () => {
-  const {getByTestId} = render(<BountySummaryTeaser onPress={onPressEvent} />);
-  expect(getByTestId('loading_box')).toBeTruthy();
-});
+describe('BountySummaryTeaser', () => {
+  it('should render the loading view while data is fetching', () => {
+    const {getByTestId} = render(<BountySummaryTeaser onPress={onPressEvent.navigate} />);
+    expect(getByTestId('loading_box')).toBeTruthy();
+  });
 
-test('should render the teaser component when data is fetched', async () => {
-  const {getByText} = render(<BountySummaryTeaser onPress={onPressEvent} />);
-  await waitFor(() => {
-    expect(getByText('Active')).toBeTruthy();
-    expect(getByText('Past')).toBeTruthy();
-    expect(getByText('Active total')).toBeTruthy();
-    expect(getByText('Funding period (17 days)')).toBeTruthy();
+  it('should render the bountySummaryTeaser component with initial data', async () => {
+    const {findByText} = render(<BountySummaryTeaser onPress={onPressEvent.navigate} />);
+    await findByText('Bounties');
+    await findByText('Active');
+    await findByText('Past');
+    await findByText('Active total');
+    await findByText('Funding period (17 days)');
+  });
+
+  it('should navigate to bounty summary page on click of the teaser', async () => {
+    const bountiesTeaserSpy = jest.spyOn(onPressEvent, 'navigate');
+    const {findByText} = render(<BountySummaryTeaser onPress={onPressEvent.navigate} />);
+    await findByText('Bounties');
+    const bountiesTeaser = await findByText('Active');
+    fireEvent.press(bountiesTeaser);
+    expect(bountiesTeaserSpy).toBeCalledTimes(1);
   });
 });

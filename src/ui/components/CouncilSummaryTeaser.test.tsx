@@ -1,22 +1,33 @@
 import React from 'react';
-import {render, waitFor} from 'src/testUtils';
+import {fireEvent, render} from 'src/testUtils';
 import {CouncilSummaryTeaser} from './CouncilSummaryTeaser';
 
-const onPressEvent = jest.fn();
+const onPressEvent = {
+  navigate: jest.fn(),
+};
 
-test('render the loading view while data is fetching', () => {
-  const {getByTestId} = render(<CouncilSummaryTeaser onPress={onPressEvent} />);
-  expect(getByTestId('loading_box')).toBeTruthy();
-});
+describe('CouncilSummaryTeaser', () => {
+  it('should render the loading box component while data is fetching', () => {
+    const {getByTestId} = render(<CouncilSummaryTeaser onPress={onPressEvent.navigate} />);
+    expect(getByTestId('loading_box')).toBeTruthy();
+  });
 
-test('should render the teaser component when data is fetched', async () => {
-  const {getByText} = render(<CouncilSummaryTeaser onPress={onPressEvent} />);
-  await waitFor(() => {
-    expect(getByText('Council')).toBeTruthy();
-    expect(getByText('Seats')).toBeTruthy();
-    expect(getByText('Runners up')).toBeTruthy();
-    expect(getByText('Candidates')).toBeTruthy();
-    expect(getByText('Term Progress (1 day)')).toBeTruthy();
-    expect(getByText('Prime Voter')).toBeTruthy();
+  it('should render the CouncilSummaryTeaser component when data is fetched', async () => {
+    const {findByText} = render(<CouncilSummaryTeaser onPress={onPressEvent.navigate} />);
+    await findByText('Council');
+    await findByText('Seats');
+    await findByText('Runners up');
+    await findByText('Candidates');
+    await findByText('Term Progress (1 day)');
+    await findByText('Prime Voter');
+  });
+
+  it('should navigate to council summary page on click of the teaser', async () => {
+    const councilSummaryTeaserSpy = jest.spyOn(onPressEvent, 'navigate');
+    const {findByText} = render(<CouncilSummaryTeaser onPress={onPressEvent.navigate} />);
+    await findByText('Council');
+    const councilSummaryTeaser = await findByText('Seats');
+    fireEvent.press(councilSummaryTeaser);
+    expect(councilSummaryTeaserSpy).toBeCalledTimes(1);
   });
 });
