@@ -33,13 +33,8 @@ test('utility function decimalKeypad', () => {
 
 test('Utility function countUtf8Bytes', () => {
   const emptyDescription = countUtf8Bytes('');
-  expect(emptyDescription).toBe(1);
+  expect(emptyDescription).toBe(0);
 
   const smallDescription = countUtf8Bytes('Litentry');
-  expect(smallDescription).toBe(1);
-
-  const largeDescription = countUtf8Bytes(
-    `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris dignissim quam et mi dictum facilisis. Quisque maximus, risus rhoncus ultrices tincidunt, diam lectus convallis ligula, in pellentesque justo elit id ipsum. Phasellus tempus lobortis quam, nec euismod nisi. Pellentesque felis lorem, maximus eget elit consequat, dignissim dignissim tellus. Phasellus quis neque ut ex auctor pellentesque. Sed convallis ultrices est vel sollicitudin. Integer molestie rutrum purus sit amet eleifend.`,
-  );
-  expect(largeDescription).toBe(1);
+  expect(smallDescription).toBe(8);
 });
