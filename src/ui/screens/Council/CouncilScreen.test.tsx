@@ -62,7 +62,7 @@ describe('CouncilOverviewScreen', () => {
       expect(queryByText('Submit Council Candidacy')).toBeDefined();
       expect(queryByText('Candidate account:')).toBeDefined();
       expect(queryByText('Candidacy bond:')).toBeDefined();
-      const submitCancelButton = getByTestId('submit-cancel-button');
+      const submitCancelButton = getByTestId('submit-candidacy-cancel-button');
       fireEvent.press(submitCancelButton);
     });
 

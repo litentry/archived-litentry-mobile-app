@@ -360,10 +360,14 @@ function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandi
       ) : null}
       <Padder scale={1} />
       <View style={styles.buttons}>
-        <Button onPress={reset} mode="outlined" compact testID="submit-cancel-button">
+        <Button onPress={reset} mode="outlined" compact testID="submit-candidacy-cancel-button">
           Cancel
         </Button>
-        <Button mode="contained" disabled={submitCandidacy} onPress={onSubmitCandidacy} testID={'submit-button'}>
+        <Button
+          mode="contained"
+          disabled={submitCandidacy}
+          onPress={onSubmitCandidacy}
+          testID={'submit-candidacy-button'}>
           Submit
         </Button>
       </View>
