@@ -12,33 +12,35 @@ const route = {
   },
 } as RouteProp<CrowdloansStackParamList, 'Fund Detail'>;
 
-test('render the loading component view when data is fetching', () => {
-  const {getByTestId} = render(<CrowdloanFundDetailScreen route={route} />);
-  expect(getByTestId('loading_view')).toBeTruthy();
-});
-
-test('render the component after data is fetched', async () => {
-  const {getByText, getAllByText} = render(<CrowdloanFundDetailScreen route={route} />);
-
-  await waitFor(() => {
-    expect(getAllByText('Litentry').length).toBe(1);
-    expect(getByText('Depositor:')).toBeDefined();
-    expect(getByText('Ending:')).toBeDefined();
-    expect(getByText('Status:')).toBeDefined();
-    expect(getByText('Leases:')).toBeDefined();
-    expect(getByText('Raised:')).toBeDefined();
-    expect(getByText('Contributors:')).toBeDefined();
-    expect(getByText('Homepage')).toBeDefined();
+describe('CrowdloanFundDetailScreen', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
   });
-});
 
-test('Homepage navigation', async () => {
-  const {getByText} = render(<CrowdloanFundDetailScreen route={route} />);
-  const linkingSpy = jest.spyOn(Linking, 'canOpenURL');
+  it('should render loading component when data is fetching', () => {
+    const {getByTestId} = render(<CrowdloanFundDetailScreen route={route} />);
+    expect(getByTestId('loading_view')).toBeTruthy();
+  });
 
-  await waitFor(() => {
-    expect(getByText('Homepage')).toBeDefined();
-    fireEvent.press(getByText('Homepage'));
-    expect(linkingSpy).toHaveBeenCalledTimes(1);
+  it('should render CrowdloanFundDetailScreen component with initial states', async () => {
+    const {findByText} = render(<CrowdloanFundDetailScreen route={route} />);
+    await findByText('Index:');
+    await findByText('Depositor:');
+    await findByText('Ending:');
+    await findByText('Status:');
+    await findByText('Leases:');
+    await findByText('Raised:');
+    await findByText('Contributors:');
+    await findByText('Homepage');
+  });
+
+  it('should navigate to home page of the project', () => {
+    const linkingSpy = jest.spyOn(Linking, 'canOpenURL');
+    const {getByText} = render(<CrowdloanFundDetailScreen route={route} />);
+
+    waitFor(() => {
+      fireEvent.press(getByText('Homepage'));
+      expect(linkingSpy).toHaveBeenCalledWith('');
+    });
   });
 });
