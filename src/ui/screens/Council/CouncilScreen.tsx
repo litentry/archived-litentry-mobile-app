@@ -56,7 +56,7 @@ type ScreenProps = {
   navigation: NavigationProp<DashboardStackParamList>;
 };
 
-function CouncilOverviewScreen({navigation}: ScreenProps) {
+export function CouncilOverviewScreen({navigation}: ScreenProps) {
   const {data: council, loading} = useCouncil();
   const {data: moduleElection} = useModuleElection();
   const [councilVoteVisible, setCouncilVoteVisible] = useState(false);
@@ -111,11 +111,19 @@ function CouncilOverviewScreen({navigation}: ScreenProps) {
               <Subheading>{buildSectionHeaderTitle(title, council)}</Subheading>
               {title === 'Member' ? (
                 <View style={styles.voteActions}>
-                  <Button icon="vote" mode="outlined" onPress={() => setCouncilVoteVisible(true)}>
+                  <Button
+                    icon="vote"
+                    mode="outlined"
+                    onPress={() => setCouncilVoteVisible(true)}
+                    testID={'vote-button'}>
                     {`Vote`}
                   </Button>
                   <Padder scale={1} />
-                  <Button icon="vote" mode="outlined" onPress={() => setSubmitCandidacyVisible(true)}>
+                  <Button
+                    icon="vote"
+                    mode="outlined"
+                    onPress={() => setSubmitCandidacyVisible(true)}
+                    testID={'submit-candidacy-button'}>
                     {`Submit candidacy`}
                   </Button>
                 </View>
@@ -285,10 +293,10 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
       <Padder scale={1} />
 
       <View style={styles.buttons}>
-        <Button onPress={reset} mode="outlined" compact>
+        <Button onPress={reset} mode="outlined" compact testID="vote-cancel-button">
           Cancel
         </Button>
-        <Button mode="contained" disabled={disabled} onPress={onVote}>
+        <Button mode="contained" disabled={disabled} onPress={onVote} testID="vote-button">
           Vote
         </Button>
       </View>
@@ -352,10 +360,14 @@ function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandi
       ) : null}
       <Padder scale={1} />
       <View style={styles.buttons}>
-        <Button onPress={reset} mode="outlined" compact>
+        <Button onPress={reset} mode="outlined" compact testID="submit-candidacy-cancel-button">
           Cancel
         </Button>
-        <Button mode="contained" disabled={submitCandidacy} onPress={onSubmitCandidacy}>
+        <Button
+          mode="contained"
+          disabled={submitCandidacy}
+          onPress={onSubmitCandidacy}
+          testID={'submit-candidacy-button'}>
           Submit
         </Button>
       </View>

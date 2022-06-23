@@ -15,11 +15,11 @@ export const accountHandler = graphql.query('getAccount', (req, res, ctx) => {
           displayParent: 'PureStake',
           email: 'info@purestake.com',
           image: null,
-          legal: 'PureStake Ltd',
+          legal: 'Raul Romanutti',
           pgp: null,
-          riot: null,
-          twitter: '@purestakeco',
-          web: 'https://www.purestake.com/',
+          riot: '@raul.rtti:matrix.parity.io',
+          twitter: '@nachortti',
+          web: 'www.nachortti.com',
           judgements: [
             {
               __typename: 'SubstrateChainRegistrationJudgement',
