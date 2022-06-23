@@ -21,7 +21,7 @@ import {useNetwork} from '@atoms/network';
 import {useAppAccounts} from './useAppAccounts';
 
 import {
-  ACTION_TYPES,
+  ACTION_TYPE,
   initStore,
   initKeyring,
   setSS58Format,
@@ -39,7 +39,7 @@ import {
 } from 'polkadot-api';
 
 type WebViewResult = {
-  type: `${ACTION_TYPES}_RESULT`;
+  type: `${ACTION_TYPE}_RESULT`;
   payload: any;
 };
 

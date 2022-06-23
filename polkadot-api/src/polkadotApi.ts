@@ -6,7 +6,7 @@ import {cryptoWaitReady, mnemonicGenerate, mnemonicValidate} from '@polkadot/uti
 import {u8aToHex, hexToU8a} from '@polkadot/util';
 import {keyringStore, initStore} from './keyringStore';
 import {
-  ACTION_TYPES,
+  ACTION_TYPE,
   initStore as initStoreAction,
   generateMnemonic,
   initKeyring,
@@ -29,7 +29,7 @@ declare const window: any;
 declare const document: any;
 
 type Action = {
-  type: ACTION_TYPES;
+  type: ACTION_TYPE;
   payload: Record<string, any>;
 };
 
