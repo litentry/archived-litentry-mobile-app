@@ -14,10 +14,12 @@ const balance = {
   formattedFreeFrozen: '18,121.5680 DOT',
 } as AccountBalanceType;
 
-test('render the component with data', () => {
-  const {getByText} = render(<AccountBalance balance={balance} />);
-  expect(getByText('Total Balance')).toBeTruthy();
-  expect(getByText('Transferrable')).toBeTruthy();
-  expect(getByText('Reserved')).toBeTruthy();
-  expect(getByText('Locked')).toBeTruthy();
+describe('AccountBalance', () => {
+  it('should render the component with data', async () => {
+    const {findByText} = render(<AccountBalance balance={balance} />);
+    await findByText('Total Balance');
+    await findByText('Transferrable');
+    await findByText('Reserved');
+    await findByText('Locked');
+  });
 });

@@ -26,8 +26,10 @@ const account = {
   },
 } as unknown as AccountType;
 
-test('render the component with data', () => {
-  const {getByText} = render(<Account account={account} />);
-  expect(getByText('PolkadotIndia')).toBeTruthy();
-  expect(getByText(`"Unknown" provided by Registrar #0`)).toBeTruthy();
+describe('Account', () => {
+  it('should render the component with account details', async () => {
+    const {findByText} = render(<Account account={account} />);
+    await findByText('PolkadotIndia');
+    await findByText(`"Unknown" provided by Registrar #0`);
+  });
 });

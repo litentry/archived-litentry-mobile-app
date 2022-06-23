@@ -15,7 +15,9 @@ const judgements = {
   },
 };
 
-test('render the component with data', () => {
-  const {getByText} = render(<JudgmentStatus registrationJudgement={judgements} hasParent={false} />);
-  expect(getByText('"Reasonable" provided by Registrar #1')).toBeTruthy();
+describe('JudgmentStatus', () => {
+  it('should render the JudgmentStatus component with data', async () => {
+    const {findByText} = render(<JudgmentStatus registrationJudgement={judgements} hasParent={false} />);
+    await findByText('"Reasonable" provided by Registrar #1');
+  });
 });
