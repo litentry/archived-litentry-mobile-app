@@ -30,12 +30,12 @@ describe('CouncilOverviewScreen', () => {
   });
 
   it('should render the component and click on polkassembly and redirect to polkassembly motion on website', async () => {
-    const polkassemblySpy = jest.fn(Linking.openURL).mockImplementation(() => Promise.resolve());
+    const polkassemblySpy = jest.spyOn(Linking, 'canOpenURL');
     const {getAllByTestId} = render(<MotionsScreen navigation={navigation} />);
     await waitFor(() => {
       const polkaAssembly = getAllByTestId('polkassembly-button');
       fireEvent.press(polkaAssembly[0] as ReactTestInstance);
-      // expect(polkassemblySpy).toHaveBeenCalled();
+      expect(polkassemblySpy).toHaveBeenCalledWith('https://polkadot.polkassembly.io/motion/209');
     });
   });
 
