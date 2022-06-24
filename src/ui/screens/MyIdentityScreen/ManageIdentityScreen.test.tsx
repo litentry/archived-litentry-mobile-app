@@ -5,8 +5,6 @@ import {render, waitFor, fireEvent} from 'src/testUtils';
 import {ManageIdentityScreen} from './ManageIdentityScreen';
 import {manageIdentityScreen} from '@ui/navigation/routeKeys';
 import {Alert, Linking} from 'react-native';
-import {useBottomSheet} from '@gorhom/bottom-sheet';
-import {ReactTestInstance} from 'react-test-renderer';
 
 jest.useFakeTimers();
 
@@ -17,74 +15,80 @@ const navigation = {
 
 const route = {
   params: {
-    address: '',
+    address: '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a',
   },
 } as RouteProp<AccountsStackParamList, typeof manageIdentityScreen>;
 
-test('render the loading view when data is fetching', async () => {
-  const {getByText, getAllByText} = render(<ManageIdentityScreen navigation={navigation} route={route} />);
-  await waitFor(() => {
-    expect(getByText('Address')).toBeTruthy();
-    expect(getAllByText('Email')).toBeTruthy();
-    expect(getAllByText('Twitter')).toBeTruthy();
-    expect(getByText('Legal')).toBeTruthy();
-    expect(getAllByText('Web')).toBeTruthy();
-    expect(getAllByText('Update Identity')).toBeTruthy();
-    expect(getAllByText('Web')).toBeTruthy();
-    expect(getAllByText('Request Judgement')).toBeTruthy();
-    expect(getAllByText('Set Sub-identities')).toBeTruthy();
-    expect(getAllByText('Clear Identity')).toBeTruthy();
-  });
-});
+const accountInfo = {
+  twitterId: '@nachortti',
+  twitterURL: 'https://twitter.com/@nachortti',
+  riotId: '@raul.rtti:matrix.parity.io',
+  riotURL: 'https://matrix.to/#/@raul.rtti:matrix.parity.io',
+  webURL: 'www.nachortti.com',
+};
 
-test('twitter navigation', async () => {
-  const openURLSpy = jest.spyOn(Linking, 'openURL');
-  const {getByText} = render(<ManageIdentityScreen navigation={navigation} route={route} />);
-  await waitFor(() => {
-    expect(getByText('@purestakeco')).toBeTruthy();
-    fireEvent.press(getByText('@purestakeco'));
-    expect(openURLSpy).toBeCalled();
-  });
-});
+const openURLSpy = jest.spyOn(Linking, 'openURL');
 
-test('web navigation', async () => {
-  const openURLSpy = jest.spyOn(Linking, 'openURL');
-  const {getByText} = render(<ManageIdentityScreen navigation={navigation} route={route} />);
-  await waitFor(() => {
-    expect(getByText('https://www.purestake.com/')).toBeTruthy();
-    fireEvent.press(getByText('https://www.purestake.com/'));
-    expect(openURLSpy).toBeCalled();
+describe('ManageIdentityScreen', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
   });
-});
 
-test('set sub-identities navigation', async () => {
-  const navigationSpy = jest.spyOn(navigation, 'navigate');
-  const {getByText} = render(<ManageIdentityScreen navigation={navigation} route={route} />);
-  await waitFor(() => {
-    expect(getByText('Set Sub-identities')).toBeTruthy();
-    fireEvent.press(getByText('Set Sub-identities'));
-    expect(navigationSpy).toBeCalledTimes(1);
+  it('should render the loading view when data is fetching', async () => {
+    const {findByText, findAllByText} = render(<ManageIdentityScreen navigation={navigation} route={route} />);
+    await findByText('Address');
+    await findAllByText('Email');
+    await findByText('info@purestake.com');
+    await findAllByText('Twitter');
+    await findByText('@nachortti');
+    await findAllByText('Legal');
+    await findByText('Raul Romanutti');
+    await findAllByText('Riot');
+    await findByText('@raul.rtti:matrix.parity.io');
+    await findAllByText('Web');
+    await findByText('www.nachortti.com');
+    await findByText('Update Identity');
+    await findByText('Request Judgement');
+    await findByText('Set Sub-identities');
+    await findByText('Clear Identity');
+    await findByText('Polkascan');
+    await findByText('View externally');
   });
-});
 
-test('clear identity alert', async () => {
-  const alertSpy = jest.spyOn(Alert, 'alert');
-  const {getByText} = render(<ManageIdentityScreen navigation={navigation} route={route} />);
-  await waitFor(() => {
-    expect(getByText('Clear Identity')).toBeTruthy();
-    fireEvent.press(getByText('Clear Identity'));
+  it('should navigate to the linked twitter url', async () => {
+    const {findByText} = render(<ManageIdentityScreen navigation={navigation} route={route} />);
+    fireEvent.press(await findByText(accountInfo.twitterId));
+    expect(openURLSpy).toHaveBeenCalledWith(accountInfo.twitterURL);
+  });
+
+  it('should navigate to the linked riot url', async () => {
+    const {findByText} = render(<ManageIdentityScreen navigation={navigation} route={route} />);
+    fireEvent.press(await findByText(accountInfo.riotId));
+    expect(openURLSpy).toHaveBeenCalledWith(accountInfo.riotURL);
+  });
+
+  it('should navigate to the linked web url', async () => {
+    const {findByText} = render(<ManageIdentityScreen navigation={navigation} route={route} />);
+    fireEvent.press(await findByText(accountInfo.webURL));
+    expect(openURLSpy).toHaveBeenCalledWith(accountInfo.webURL);
+  });
+
+  it('should alert when pressed clear identity button', async () => {
+    const alertSpy = jest.spyOn(Alert, 'alert');
+    const {findByText} = render(<ManageIdentityScreen navigation={navigation} route={route} />);
+    fireEvent.press(await findByText('Clear Identity'));
     expect(alertSpy).toBeCalledTimes(1);
+    waitFor(async () => {
+      await findByText('Clear Identity');
+    });
   });
-});
 
-test('Manage Identity bottomSheet', async () => {
-  // TODO: button not getting clicked and look into how to mock the bottomsheets
-
-  // const bottomSheetSpy = jest.spyOn(useBottomSheet, 'expand')
-  const {getByText, debug, getAllByA11yRole} = render(<ManageIdentityScreen navigation={navigation} route={route} />);
-  await waitFor(() => {
-    expect(getByText('Clear Identity')).toBeTruthy();
-    fireEvent.press(getAllByA11yRole('button')[3] as ReactTestInstance);
-    // expect(bottomSheetSpy).toHaveBeenCalled()
+  it('should navigate to sub-identities on click of Set Sub-identities', async () => {
+    const navigationSpy = jest.spyOn(navigation, 'navigate');
+    const {findByText} = render(<ManageIdentityScreen navigation={navigation} route={route} />);
+    fireEvent.press(await findByText('Set Sub-identities'));
+    expect(navigationSpy).toBeCalledWith('Register Sub-Identities', {
+      address: '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a',
+    });
   });
 });
