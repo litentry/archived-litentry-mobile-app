@@ -21,7 +21,7 @@ import {SuccessDialog} from '@ui/components/SuccessDialog';
 import {Layout} from '@ui/components/Layout';
 import {TxPreview} from '@ui/components/Tx/Preview';
 import {MessageTeaser} from '@ui/components/MessageTeaser';
-import {Subheading, Caption, Icon, useBottomSheet} from '@ui/library';
+import {Subheading, Caption, Icon, useBottomSheet, Button} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
 
@@ -178,6 +178,11 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
     [accounts, openBottomSheet],
   );
 
+  const reset = React.useCallback(() => {
+    closeBottomSheet();
+    dispatch({type: 'RESET'});
+  }, [closeBottomSheet]);
+
   const modalContent = useMemo(() => {
     switch (state.view) {
       case 'initial_view':
@@ -205,10 +210,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
             txPayload={state.txPayload}
             params={state.params}
             partialFee={state.partialFee}
-            onCancel={() => {
-              closeBottomSheet();
-              dispatch({type: 'RESET'});
-            }}
+            onCancel={reset}
             isExternalAccount={state.isExternalAccount}
             onConfirm={() => {
               if (state.isExternalAccount) {
@@ -225,10 +227,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
         return (
           <PayloadQrCodeView
             payload={state.txPayload}
-            onCancel={() => {
-              closeBottomSheet();
-              dispatch({type: 'RESET'});
-            }}
+            onCancel={reset}
             onConfirm={() => dispatch({type: 'SHOW_SCAN_SIGNATURE_VIEW'})}
           />
         );
@@ -272,20 +271,15 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
       case 'success_view':
         return (
           <Layout style={styles.infoContainer}>
-            <SuccessDialog
-              text="Tx Success"
-              onClosePress={() => {
-                closeBottomSheet();
-                dispatch({type: 'RESET'});
-              }}
-            />
+            <SuccessDialog text="Tx Success" onClosePress={reset} />
           </Layout>
         );
 
       case 'error_view':
         return (
           <Layout style={styles.infoContainer}>
-            <MessageTeaser title="Tx Failed" msg={'this is an error message'} type="warning" />
+            <MessageTeaser title="Tx Failed" msg={state.error} type="warning" />
+            <Button onPress={reset}>Close</Button>
           </Layout>
         );
 
@@ -293,13 +287,14 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
         return (
           <Layout style={styles.infoContainer}>
             <MessageTeaser title="Tx Sent" msg={state.warning} type="warning" />
+            <Button onPress={reset}>Close</Button>
           </Layout>
         );
 
       default:
         return null;
     }
-  }, [state, closeBottomSheet]);
+  }, [state, reset]);
 
   const contextValue: TxContextValueType = useMemo(() => ({start}), [start]);
 
