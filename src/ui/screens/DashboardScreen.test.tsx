@@ -26,7 +26,7 @@ describe('DashboardScreen', () => {
     expect(getAllByTestId('loading_box').length).toBe(5);
   });
 
-  test('should render various teaser component when data is fetched', async () => {
+  it('should render various teaser component when data is fetched', async () => {
     const {findByText} = render(<DashboardScreen navigation={navigation} route={route} />);
     await findByText('Upcoming events');
     await findByText('Democracy');
@@ -35,43 +35,18 @@ describe('DashboardScreen', () => {
     await findByText('Bounties');
   });
 
-  test('should navigate to eventsCalendarScreen when clicked on upcoming events teaser', async () => {
+  it('should test onPress prop functionality of upcoming events', async () => {
     const {findByText} = render(<DashboardScreen navigation={navigation} route={route} />);
-    await findByText('Democracy');
-    const upcomingEvents = await findByText('Upcoming events');
-    fireEvent.press(upcomingEvents);
+    const events = await findByText('Upcoming events');
+    fireEvent.press(events);
     expect(navigationSpy).toBeCalledWith('Events');
   });
 
-  it('should navigate to democracyScreen when clicked on Democracy teaser', async () => {
+  const sections = ['Democracy', 'Council', 'Treasury', 'Bounties'];
+  it.each(sections)('should test onPress prop functionality of %s', async (expected) => {
     const {findByText} = render(<DashboardScreen navigation={navigation} route={route} />);
-    await findByText('Upcoming events');
-    const democracy = await findByText('Democracy');
-    fireEvent.press(democracy);
-    expect(navigationSpy).toBeCalledWith('Democracy');
-  });
-
-  it('should navigate to councilScreen when clicked on council teaser', async () => {
-    const {findByText} = render(<DashboardScreen navigation={navigation} route={route} />);
-    await findByText('Upcoming events');
-    const council = await findByText('Council');
-    fireEvent.press(council);
-    expect(navigationSpy).toBeCalledWith('Council');
-  });
-
-  it('should navigate to treasuryScreen when clicked on treasury teaser', async () => {
-    const {findByText} = render(<DashboardScreen navigation={navigation} route={route} />);
-    await findByText('Upcoming events');
-    const treasury = await findByText('Treasury');
-    fireEvent.press(treasury);
-    expect(navigationSpy).toBeCalledWith('Treasury');
-  });
-
-  test('should navigate to bountiesScreen when clicked on bounty teaser', async () => {
-    const {findByText} = render(<DashboardScreen navigation={navigation} route={route} />);
-    await findByText('Upcoming events');
-    const bounties = await findByText('Bounties');
-    fireEvent.press(bounties);
-    expect(navigationSpy).toBeCalledWith('Bounties');
+    const expectedEvent = await findByText(expected);
+    fireEvent.press(expectedEvent);
+    expect(navigationSpy).toBeCalledWith(expected);
   });
 });

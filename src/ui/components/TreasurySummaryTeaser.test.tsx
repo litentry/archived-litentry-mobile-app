@@ -9,7 +9,7 @@ test('render the loading view while data is fetching', () => {
   expect(getByTestId('loading_box')).toBeTruthy();
 });
 
-test('should render the teaser component when data is fetched', async () => {
+test('test onPress prop functionality', async () => {
   const {getByText} = render(<TreasurySummaryTeaser onPress={onPressEvent} />);
   await waitFor(() => {
     expect(getByText('Proposals')).toBeTruthy();

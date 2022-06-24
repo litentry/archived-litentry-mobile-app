@@ -16,13 +16,18 @@ describe('CouncilSummaryTeaser', () => {
     const {findByText} = render(<CouncilSummaryTeaser onPress={onPressEvent.navigate} />);
     await findByText('Council');
     await findByText('Seats');
+    await findByText('19/19');
     await findByText('Runners up');
+    await findByText('13/19');
     await findByText('Candidates');
+    await findByText('0');
     await findByText('Term Progress (1 day)');
+    await findByText('71% 6 hrs 53 mins');
     await findByText('Prime Voter');
+    await findByText('🍺 Gav 🥃');
   });
 
-  it('should navigate to council summary page on click of the teaser', async () => {
+  it('should test for onPress props when tapped on CouncilSummaryTeaser component', async () => {
     const councilSummaryTeaserSpy = jest.spyOn(onPressEvent, 'navigate');
     const {findByText} = render(<CouncilSummaryTeaser onPress={onPressEvent.navigate} />);
     await findByText('Council');
