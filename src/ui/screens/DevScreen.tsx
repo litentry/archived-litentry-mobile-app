@@ -9,7 +9,7 @@ import {useNetwork} from '@atoms/network';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useConvictions} from 'src/api/hooks/useConvictions';
 import {SelectAccount} from '@ui/components/SelectAccount';
-import {useActiveAccount} from 'src/atoms/activeAccount';
+import {useActiveAccount} from '@atoms/activeAccount';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {Padder} from '@ui/components/Padder';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';

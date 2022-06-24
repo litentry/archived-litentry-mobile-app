@@ -2,7 +2,7 @@ import {networkState} from '@atoms/network';
 import {selector, useRecoilState, useRecoilValue} from 'recoil';
 import {appAccountsState} from './atoms';
 
-const netWorkAccountState = selector({
+const netWorkAccountsState = selector({
   key: 'networkAccounts',
   get: ({get}) => {
     const accounts = get(appAccountsState);
@@ -13,7 +13,7 @@ const netWorkAccountState = selector({
 
 export function useAppAccounts() {
   const [accounts, setAccounts] = useRecoilState(appAccountsState);
-  const networkAccounts = useRecoilValue(netWorkAccountState);
+  const networkAccounts = useRecoilValue(netWorkAccountsState);
 
   return {
     accounts,

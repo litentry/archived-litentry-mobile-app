@@ -23,7 +23,7 @@ import {ProposalCall} from '@ui/components/ProposalCall';
 import {ItemRowBlock} from '@ui/components/ItemRowBlock';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {getProposalTitle} from 'src/utils/proposal';
-import type {Account as LocalAccount} from '@polkadotApi/types';
+import type {Account as AppAccount} from '@polkadotApi/types';
 
 type Vote = 'Aye' | 'Nay' | 'Close';
 
@@ -91,7 +91,7 @@ type VoteModalProps = {
   refetchMotions: () => MotionsQueryResult;
   voteType?: Vote;
   motion?: CouncilMotion;
-  councilAccounts?: LocalAccount[];
+  councilAccounts?: AppAccount[];
 };
 
 function VoteModal({visible, setVisible, refetchMotions, voteType, motion, councilAccounts}: VoteModalProps) {
