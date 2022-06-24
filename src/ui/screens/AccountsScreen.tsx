@@ -96,6 +96,7 @@ export function AccountsScreen({navigation}: Props) {
                 title="Favorite"
               />
             </Menu>
+            <Padder scale={0.5} />
           </View>
         }
         ItemSeparatorComponent={Divider}
