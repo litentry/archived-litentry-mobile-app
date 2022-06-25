@@ -48,6 +48,7 @@ export const accountHandler = graphql.query('getAccount', (req, res, ctx) => {
           feeFrozen: '198480993716691',
           formattedFeeFrozen: '19,848.0993 DOT',
         },
+        subAccounts: [],
       },
     }),
   );
