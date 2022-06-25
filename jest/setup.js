@@ -44,9 +44,6 @@ jest.mock('@gorhom/bottom-sheet', () => {
   return {
     __esModule: true,
     ...MockBottomSheet,
-    useBottomSheetModal: {
-      dismiss: jest.fn(),
-    },
   };
 });
 
