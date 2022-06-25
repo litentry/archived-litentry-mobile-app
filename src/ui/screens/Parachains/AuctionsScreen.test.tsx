@@ -1,24 +1,32 @@
 import React from 'react';
-import {render, waitFor} from 'src/testUtils';
+import {render} from 'src/testUtils';
 import {AuctionsScreen} from './AuctionsScreen';
 
-test('render the loading component view when data is fetching', () => {
-  const {getByTestId} = render(<AuctionsScreen />);
-  expect(getByTestId('loading_view')).toBeTruthy();
-});
+describe('AuctionsScreen', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+  it('should render the loading component view when data is fetching', () => {
+    const {getByTestId} = render(<AuctionsScreen />);
+    expect(getByTestId('loading_view')).toBeTruthy();
+  });
 
-test('render the component after data is fetched', async () => {
-  const {getByText, getAllByText} = render(<AuctionsScreen />);
-  await waitFor(() => {
-    expect(getByText('Auctions')).toBeDefined();
-    expect(getByText('Active')).toBeDefined();
-    expect(getByText('First - Last')).toBeDefined();
-    expect(getByText('Ending period')).toBeDefined();
-    expect(getByText('Total Raised')).toBeDefined();
-    expect(getByText('Winning Bid')).toBeDefined();
-    expect(getAllByText('ProjectID: 2030')).toBeDefined();
-    expect(getAllByText('Bid: 399,696.5211 DOT (crowdloan)')).toBeDefined();
-    expect(getAllByText('Block number:')).toBeDefined();
-    expect(getAllByText('Leases')).toBeDefined();
+  it('should render the auctionsScreen component after data is fetched', async () => {
+    const {findByText, findAllByText} = render(<AuctionsScreen />);
+    await findByText('Auctions');
+    await findByText('41');
+    await findByText('Active');
+    await findByText('Yes');
+    await findByText('First - Last');
+    await findByText('Ending period');
+    await findByText('78.1% 1 day 2 hrs');
+    await findByText('Total Raised');
+    await findByText('0.01% 174,900 DOT');
+    await findByText('Winning Bid');
+    await findAllByText('ProjectID: 2122');
+    await findAllByText('Bid: 1,749.0000 KSM');
+    await findAllByText('Block number:');
+    await findAllByText('Leases');
+    await findAllByText('22 - 29');
   });
 });
