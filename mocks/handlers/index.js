@@ -4,12 +4,15 @@ import {bountiesHandler} from './bountiesHandler';
 import {bountiesSummaryHandler} from './bountiesSummaryHandler';
 import {bountyHandler} from './bountyHandler';
 import {chainInfoHandler} from './chainInfoHandler';
+import {councilHandler} from './councilHandler';
 import {councilMotionsHandler} from './councilMotionsHandler';
+import {councilVotesHandler} from './councilVotesHandler';
 import {crowdloanHandler} from './crowdloanHandler';
 import {crowdloansHandler} from './crowdloansHandler';
 import {democracyHandler} from './democracyHandler';
 import {democracySummaryHandler} from './democracySummaryHandler';
 import {eventsCalendarHandler} from './eventsCalendarHandler';
+import {moduleElectionHandler} from './moduleElectionHandler';
 import {parachainCrowdloanHandler} from './parachainCrowdloanHandler';
 import {parachainDetailHandler} from './parachainDetailHandler';
 import {parachainSummaryHandler} from './parachainSummaryHandler';
@@ -36,6 +39,10 @@ export const handlers = [
   parachainCrowdloanHandler,
   crowdloanHandler,
   parachainDetailHandler,
+  accountHandler,
+  councilHandler,
+  moduleElectionHandler,
+  councilVotesHandler,
   tipDetailHandler,
   tipsHandler,
   crowdloansHandler,
