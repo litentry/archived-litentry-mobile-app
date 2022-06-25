@@ -18,10 +18,16 @@ const route = {
   },
 } as RouteProp<AccountsStackParamList, typeof registerSubIdentitiesScreen>;
 
-test('render the AddSubIdentity component', () => {
-  const {getByText} = render(<RegisterSubIdentitiesScreen navigation={navigation} route={route} />);
-  expect(getByText('Set Sub-identities')).toBeTruthy();
-  expect(getByText('Sub-identities (0)')).toBeTruthy();
-  expect(getByText('Set sub-identities after adding/removing your accounts.')).toBeTruthy();
-  expect(getByText('No sub-identities set.')).toBeTruthy();
+describe('RegisterSubIdentitiesScreen', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it('render the AddSubIdentity component', async () => {
+    const {findByText} = render(<RegisterSubIdentitiesScreen navigation={navigation} route={route} />);
+    expect(await findByText('Set Sub-identities')).toBeDisabled();
+    await findByText('Sub-identities (0)');
+    await findByText('Set sub-identities after adding/removing your accounts.');
+    await findByText('No sub-identities set.');
+  });
 });
