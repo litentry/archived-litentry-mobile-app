@@ -115,7 +115,7 @@ function Fund({item, active, onPressContribute, navigation}: FundsProps) {
       onPress={() => {
         navigation.navigate(crowdloanFundDetailScreen, {title: item.name ?? `# ${item.paraId}`, paraId: item.paraId});
       }}>
-      <View style={[globalStyles.rowAlignCenter]} testID={item.paraId}>
+      <View style={[globalStyles.rowAlignCenter]}>
         <View style={styles.shrink}>
           <Subheading numberOfLines={1} adjustsFontSizeToFit style={{color: isSpecial ? colors.primary : colors.text}}>
             {item.name}
@@ -133,7 +133,8 @@ function Fund({item, active, onPressContribute, navigation}: FundsProps) {
               uppercase={false}
               color={isSpecial ? colors.primary : colors.placeholder}
               compact
-              onPress={onPressContribute}>
+              onPress={onPressContribute}
+              testID="crowdloan-contribute-button">
               + Contribute
             </Button>
           )}
@@ -232,7 +233,7 @@ function ContributeBox({
 
       <Padder scale={2} />
       <View style={contributeBoxStyles.row}>
-        <Button mode="outlined" onPress={reset}>
+        <Button mode="outlined" onPress={reset} testID="cancel-button">
           CANCEL
         </Button>
         <Button
@@ -247,7 +248,8 @@ function ContributeBox({
               });
               reset();
             }
-          }}>
+          }}
+          testID="contribute-button">
           Contribute
         </Button>
       </View>
