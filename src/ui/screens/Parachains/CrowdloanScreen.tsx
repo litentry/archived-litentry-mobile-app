@@ -1,6 +1,6 @@
 import React from 'react';
 import {SectionList, StyleSheet, View} from 'react-native';
-import {NavigationProp, useNavigation} from '@react-navigation/core';
+import {NavigationProp} from '@react-navigation/core';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
 import {SelectAccount} from '@ui/components/SelectAccount';

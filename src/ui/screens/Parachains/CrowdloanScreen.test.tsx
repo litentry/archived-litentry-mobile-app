@@ -50,6 +50,4 @@ describe('CrowdloanScreen', () => {
     expect(await findByTestId('cancel-button')).toBeEnabled();
     expect(await findByTestId('contribute-button')).toBeDisabled();
   });
-
-  // TODO: contribute functionality needs to be tested
 });
