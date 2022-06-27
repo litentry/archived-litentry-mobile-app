@@ -14,6 +14,7 @@ import {NavigationProp} from '@react-navigation/core';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 import {useKeyring} from '@polkadotApi/useKeyring';
 import {ErrorText} from '@ui/components/ErrorText';
+import {Blob} from 'blob-polyfill';
 
 type ScreenProps = {
   route: RouteProp<AccountsStackParamList, typeof exportAccountWithJsonFileScreen>;
