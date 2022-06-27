@@ -19,14 +19,6 @@ const route = {
   },
 } as RouteProp<AccountsStackParamList, typeof manageIdentityScreen>;
 
-const accountInfo = {
-  twitterId: '@nachortti',
-  twitterURL: 'https://twitter.com/@nachortti',
-  riotId: '@raul.rtti:matrix.parity.io',
-  riotURL: 'https://matrix.to/#/@raul.rtti:matrix.parity.io',
-  webURL: 'www.nachortti.com',
-};
-
 const openURLSpy = jest.spyOn(Linking, 'openURL');
 
 describe('ManageIdentityScreen', () => {
@@ -55,22 +47,16 @@ describe('ManageIdentityScreen', () => {
     await findByText('View externally');
   });
 
-  it('should navigate to the linked twitter url', async () => {
-    const {findByText} = render(<ManageIdentityScreen navigation={navigation} route={route} />);
-    fireEvent.press(await findByText(accountInfo.twitterId));
-    expect(openURLSpy).toHaveBeenCalledWith(accountInfo.twitterURL);
-  });
+  const identities = [
+    ['@nachortti', 'https://twitter.com/@nachortti'],
+    ['@raul.rtti:matrix.parity.io', 'https://matrix.to/#/@raul.rtti:matrix.parity.io'],
+    ['www.nachortti.com', 'www.nachortti.com'],
+  ];
 
-  it('should navigate to the linked riot url', async () => {
+  it.each(identities)('should click on %s to navigate to %s url', async (id, url) => {
     const {findByText} = render(<ManageIdentityScreen navigation={navigation} route={route} />);
-    fireEvent.press(await findByText(accountInfo.riotId));
-    expect(openURLSpy).toHaveBeenCalledWith(accountInfo.riotURL);
-  });
-
-  it('should navigate to the linked web url', async () => {
-    const {findByText} = render(<ManageIdentityScreen navigation={navigation} route={route} />);
-    fireEvent.press(await findByText(accountInfo.webURL));
-    expect(openURLSpy).toHaveBeenCalledWith(accountInfo.webURL);
+    fireEvent.press(await findByText(id));
+    expect(openURLSpy).toHaveBeenCalledWith(url);
   });
 
   it('should alert when pressed clear identity button', async () => {
