@@ -4,7 +4,6 @@ import Clipboard from '@react-native-community/clipboard';
 import {stringShorten} from '@polkadot/util';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import Identicon from '@polkadot/reactnative-identicon';
-// import {useAccounts} from 'context/AccountsContext';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {
@@ -39,9 +38,6 @@ type ScreenProps = {
 export function MyAccountScreen({navigation, route}: ScreenProps) {
   const {address} = route.params;
   const {data: accountInfo} = useAccount(address);
-
-  // const {accounts, removeAccount} = useAccounts();
-  // const account = accounts[address];
 
   const {accounts} = useAppAccounts();
   const account = accounts[address];
@@ -139,7 +135,6 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
                 {
                   text: 'Delete',
                   onPress: () => {
-                    // removeAccount(address);
                     forgetAccount(address);
                     navigation.navigate(accountsScreen, {});
                   },

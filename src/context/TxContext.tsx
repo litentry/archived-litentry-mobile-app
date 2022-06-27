@@ -51,7 +51,6 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
   const {BottomSheet, openBottomSheet, closeBottomSheet} = useBottomSheet();
   const signTransactionRef = useRef<(value: SignerResult) => void>();
   const showPreviewRef = useRef<(txPayload: SignerPayloadJSON, credentials?: SignCredentials) => Promise<void>>();
-  // const showPreviewRef = useRef<(txPayload: SignerPayloadJSON, pair?: KeyPair?) => Promise<void>>();
   const [state, dispatch] = useReducer(reducer, initialState);
   const {api: apiPromise} = useApi();
   const {sign} = useKeyring();
