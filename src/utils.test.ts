@@ -1,4 +1,4 @@
-import {decimalKeypad, notEmpty} from './utils';
+import {countUtf8Bytes, decimalKeypad, notEmpty} from './utils';
 
 test('utility function notEmpty', () => {
   const emptyString = notEmpty('');
@@ -29,4 +29,12 @@ test('utility function decimalKeypad', () => {
 
   const decimalNumberValue = decimalKeypad('12.2');
   expect(decimalNumberValue).toBe('12.2');
+});
+
+test('Utility function countUtf8Bytes', () => {
+  const emptyDescription = countUtf8Bytes('');
+  expect(emptyDescription).toBe(0);
+
+  const smallDescription = countUtf8Bytes('Litentry');
+  expect(smallDescription).toBe(8);
 });
