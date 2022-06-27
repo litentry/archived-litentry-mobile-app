@@ -2,7 +2,7 @@ module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
   extends: ['@react-native-community', 'plugin:@typescript-eslint/recommended', 'prettier'],
-  plugins: ['@typescript-eslint', 'prettier'],
+  plugins: ['@typescript-eslint', 'prettier', 'testing-library'],
   rules: {
     'no-restricted-imports': [
       2,
@@ -46,5 +46,12 @@ module.exports = {
     '@typescript-eslint/no-shadow': 'warn',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
+    'testing-library/await-async-query': 'error',
+    'testing-library/no-await-sync-query': 'error',
+    'testing-library/no-debugging-utils': 'warn',
+    'testing-library/prefer-screen-queries': 'off', // there is no screen object so this rule shouldn't be used
+    'testing-library/prefer-user-event': 'off', // not available for react-native
+    'testing-library/prefer-wait-for': 'off', // the wait utility is no longer available
+    'testing-library/no-wait-for-empty-callback': 'off', // waitFor callback param is no longer optional
   },
 };

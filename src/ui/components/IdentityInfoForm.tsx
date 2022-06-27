@@ -25,17 +25,24 @@ type FormStatus = Record<
   boolean
 >;
 
-function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps): React.ReactElement {
-  const [state, dispatch] = React.useReducer(reducer, {
-    display: accountInfo?.registration?.display ?? '',
-    legal: accountInfo?.registration?.legal ?? '',
-    email: accountInfo?.registration?.email ?? '',
-    riot: accountInfo?.registration?.riot ?? '',
-    twitter: accountInfo?.registration?.twitter ?? '',
-    web: accountInfo?.registration?.web ?? '',
-  });
+function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps) {
+  const [state, dispatch] = React.useReducer(reducer, {});
   const {display, legal, email, riot, twitter, web} = state;
   const formStatus = validateForm(state);
+
+  React.useEffect(() => {
+    dispatch({
+      type: 'set_value',
+      payload: {
+        display: accountInfo?.registration?.display ?? '',
+        legal: accountInfo?.registration?.legal ?? '',
+        email: accountInfo?.registration?.email ?? '',
+        riot: accountInfo?.registration?.riot ?? '',
+        twitter: accountInfo?.registration?.twitter ?? '',
+        web: accountInfo?.registration?.web ?? '',
+      },
+    });
+  }, [accountInfo]);
 
   const onSubmitPress = () => {
     onSubmit({
@@ -57,7 +64,7 @@ function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps): React
         placeholder="My On-Chain Name"
         value={display}
         error={!formStatus.isDisplayValid}
-        onChangeText={(value) => dispatch({type: 'set_prop', value: {key: 'display', value}})}
+        onChangeText={(value) => dispatch({type: 'set_value', payload: {display: value}})}
         left={<TextInput.Icon name="account-outline" />}
       />
       <Padder scale={1} />
@@ -68,7 +75,7 @@ function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps): React
         placeholder="Full Legal Name"
         value={legal}
         error={!formStatus.isLegalValid}
-        onChangeText={(value) => dispatch({type: 'set_prop', value: {key: 'legal', value}})}
+        onChangeText={(value) => dispatch({type: 'set_value', payload: {legal: value}})}
         left={<TextInput.Icon name="card-text-outline" />}
       />
       <Padder scale={1} />
@@ -80,7 +87,7 @@ function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps): React
         autoCapitalize="none"
         value={email}
         error={!formStatus.isEmailValid}
-        onChangeText={(value) => dispatch({type: 'set_prop', value: {key: 'email', value}})}
+        onChangeText={(value) => dispatch({type: 'set_value', payload: {email: value}})}
         left={<TextInput.Icon name="email-outline" />}
       />
       <Padder scale={1} />
@@ -92,7 +99,7 @@ function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps): React
         value={web}
         autoCapitalize="none"
         error={!formStatus.isWebValid}
-        onChangeText={(value) => dispatch({type: 'set_prop', value: {key: 'web', value}})}
+        onChangeText={(value) => dispatch({type: 'set_value', payload: {web: value}})}
         left={<TextInput.Icon name="earth" />}
       />
       <Padder scale={1} />
@@ -104,7 +111,7 @@ function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps): React
         value={twitter}
         autoCapitalize="none"
         error={!formStatus.isTwitterValid}
-        onChangeText={(value) => dispatch({type: 'set_prop', value: {key: 'twitter', value}})}
+        onChangeText={(value) => dispatch({type: 'set_value', payload: {twitter: value}})}
         left={<TextInput.Icon name="twitter" />}
       />
       <Padder scale={1} />
@@ -116,7 +123,7 @@ function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps): React
         value={riot}
         autoCapitalize="none"
         error={!formStatus.isRiotValid}
-        onChangeText={(value) => dispatch({type: 'set_prop', value: {key: 'riot', value}})}
+        onChangeText={(value) => dispatch({type: 'set_value', payload: {riot: value}})}
         left={<TextInput.Icon name="message-outline" />}
       />
       <Padder scale={1} />
@@ -137,20 +144,25 @@ const styles = StyleSheet.create({
 });
 
 type State = {
-  display: string;
-  legal: string;
-  email: string;
-  riot: string;
-  twitter: string;
-  web: string;
+  display?: string;
+  legal?: string;
+  email?: string;
+  riot?: string;
+  twitter?: string;
+  web?: string;
 };
 
-function reducer(state: State, action: {type: 'set_prop'; value: {key: keyof State; value: string}}) {
+type Action = {
+  type: 'set_value';
+  payload: State;
+};
+
+function reducer(state: State, action: Action) {
   switch (action.type) {
-    case 'set_prop':
+    case 'set_value':
       return {
         ...state,
-        [action.value.key]: action.value.value,
+        ...action.payload,
       };
     default:
       return state;
