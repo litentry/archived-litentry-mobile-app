@@ -5,8 +5,6 @@ import {render} from 'src/testUtils';
 import {RegisterSubIdentitiesScreen} from './RegisterSubIdentitiesScreen';
 import {registerSubIdentitiesScreen} from '@ui/navigation/routeKeys';
 
-jest.useFakeTimers();
-
 const navigation = {
   navigate: () => jest.fn(),
   setOptions: () => jest.fn,

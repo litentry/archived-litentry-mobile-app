@@ -77,7 +77,7 @@ export function AddSubIdentity({onClose, onAddPress, subIdentities}: Props) {
       </View>
 
       <View style={styles.row}>
-        <Button mode="outlined" onPress={onClose} testID="cancel-identity-button">
+        <Button mode="outlined" onPress={onClose}>
           Cancel
         </Button>
         <Button mode="contained" disabled={!isValidAddress} onPress={addSubIdentity} testID="add-identity-button">
