@@ -63,6 +63,35 @@ jest.mock('react-native-substrate-sign', () => {
   };
 });
 
+jest.mock('react-native-aes-crypto', () => {
+  return {
+    __esModule: true,
+    default: {
+      randomKey: jest.fn(() => Promise.resolve()),
+      pbkdf2: jest.fn(),
+      encrypt: jest.fn(),
+    },
+  };
+});
+
+jest.mock('react-native-keychain', () => {
+  return {
+    __esModule: true,
+    default: {
+      setGenericPassword: jest.fn(() => Promise.resolve()),
+      ACCESSIBLE: {
+        WHEN_UNLOCKED: 'AccessibleWhenUnlocked',
+        AFTER_FIRST_UNLOCK: 'AccessibleAfterFirstUnlock',
+        ALWAYS: 'AccessibleAlways',
+        WHEN_PASSCODE_SET_THIS_DEVICE_ONLY: 'AccessibleWhenPasscodeSetThisDeviceOnly',
+        WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'AccessibleWhenUnlockedThisDeviceOnly',
+        AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY: 'AccessibleAfterFirstUnlockThisDeviceOnly',
+        ALWAYS_THIS_DEVICE_ONLY: 'AccessibleAlwaysThisDeviceOnly',
+      },
+    },
+  };
+});
+
 jest.mock('@react-navigation/material-top-tabs', () => ({
   createMaterialTopTabNavigator: () => jest.fn(),
 }));
