@@ -35,6 +35,8 @@ export function useBottomSheet() {
   const BottomSheet = React.useCallback(
     ({children, ...props}: BottomSheetProps) => (
       <RNBottomSheet
+        keyboardBehavior="fillParent"
+        keyboardBlurBehavior="restore"
         handleIndicatorStyle={{backgroundColor: colors.accent}}
         handleStyle={{backgroundColor: colors.background}}
         backdropComponent={Backdrop}
