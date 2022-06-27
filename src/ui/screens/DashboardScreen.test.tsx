@@ -45,8 +45,8 @@ describe('DashboardScreen', () => {
   const sections = ['Democracy', 'Council', 'Treasury', 'Bounties'];
   it.each(sections)('should test onPress prop functionality of %s', async (expected) => {
     const {findByText} = render(<DashboardScreen navigation={navigation} route={route} />);
-    const expectedEvent = await findByText(expected);
-    fireEvent.press(expectedEvent);
+    const expectedTeaser = await findByText(expected);
+    fireEvent.press(expectedTeaser);
     expect(navigationSpy).toBeCalledWith(expected);
   });
 });
