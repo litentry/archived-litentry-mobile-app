@@ -31,6 +31,7 @@ export function SendFund({address, onFundsSent}: Props) {
   const snackbar = useSnackbar();
   const {stringToBn} = useFormatBalance();
   const {shouldHandleKeyboardEvents} = useBottomSheetInternal();
+  const [transferInProgress, setTransferInProgress] = React.useState(false);
 
   const handleOnFocus = React.useCallback(() => {
     shouldHandleKeyboardEvents.value = true;
@@ -98,8 +99,11 @@ export function SendFund({address, onFundsSent}: Props) {
       <Padder scale={1} />
       <View style={styles.buttons}>
         <Button
+          testID="make-transfer-button"
+          loading={transferInProgress}
           onPress={() => {
             if (chainInfo) {
+              setTransferInProgress(true);
               const _amountBN = stringToBnUtil(chainInfo.registry, amount);
               startTx({
                 address,
@@ -112,6 +116,9 @@ export function SendFund({address, onFundsSent}: Props) {
                 })
                 .catch(() => {
                   snackbar('Error while transferring funds');
+                })
+                .finally(() => {
+                  setTransferInProgress(false);
                 });
             }
           }}
