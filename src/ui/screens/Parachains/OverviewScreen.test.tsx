@@ -8,7 +8,7 @@ const navigation = {
   navigate: jest.fn(),
 } as unknown as NavigationProp<ParachainsStackParamList>;
 
-describe('', () => {
+describe('ParachainsOverviewScreen', () => {
   it('should render the loading component view when data is fetching', async () => {
     const {getByTestId} = render(<ParachainsOverviewScreen navigation={navigation} />);
     expect(getByTestId('loading_view')).toBeTruthy();
@@ -34,7 +34,7 @@ describe('', () => {
     await findByText('542 days 21 hrs');
   });
 
-  it('should navigate to the parachainDetailScreen on click of the parachain', async () => {
+  it('should navigate to the parachainDetailScreen on press of the parachain', async () => {
     const navigationSpy = jest.spyOn(navigation, 'navigate');
     const {findByText} = render(<ParachainsOverviewScreen navigation={navigation} />);
 
