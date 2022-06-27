@@ -1502,10 +1502,10 @@
   resolved "https://registry.npmjs.org/@expo/sdk-runtime-versions/-/sdk-runtime-versions-1.0.0.tgz"
   integrity sha512-Doz2bfiPndXYFPMRwPyGa1k5QaKDVpY806UJj570epIiMzWaYyCtobasyfC++qfIXVb5Ocy7r3tP9d62hAQ7IQ==
 
-"@gorhom/bottom-sheet@^4.3.1":
-  version "4.3.1"
-  resolved "https://registry.yarnpkg.com/@gorhom/bottom-sheet/-/bottom-sheet-4.3.1.tgz#842790fd9f4c2470dc0682a1eb9616b68f93a71e"
-  integrity sha512-z7Mlo8GOqGAZsPJXL17v3o+I1TQBPZ+n+FmZybBCoM73m/aYXLCtpXo/knoPaZkI91eKuWQ3LLz+yCfGkNPiuA==
+"@gorhom/bottom-sheet@^4.3.2":
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/@gorhom/bottom-sheet/-/bottom-sheet-4.3.2.tgz#83de68387f54f6e3cc9419329b8e4f925a3426c8"
+  integrity sha512-kOnxKz3TuxbwagxhHvAyo2b1fgUCzw/Xs3OQD2lTE7vjGEdibsYnRaBxdpKKLV25VOQA6zVFmZq9apICj9foPw==
   dependencies:
     "@gorhom/portal" "1.0.13"
     invariant "^2.2.4"
@@ -4573,6 +4573,11 @@ blakejs@^1.1.0:
   version "1.1.1"
   resolved "https://registry.npmjs.org/blakejs/-/blakejs-1.1.1.tgz"
   integrity sha512-bLG6PHOCZJKNshTjGRBvET0vTciwQE6zFKOKKXPDJfwFBd4Ac0yBfPZqcGvGJap50l7ktvlpFqc2jGVaUgbJgg==
+
+blob-polyfill@^7.0.20220408:
+  version "7.0.20220408"
+  resolved "https://registry.yarnpkg.com/blob-polyfill/-/blob-polyfill-7.0.20220408.tgz#38bf5e046c41a21bb13654d9d19f303233b8218c"
+  integrity sha512-oD8Ydw+5lNoqq+en24iuPt1QixdPpe/nUF8azTHnviCZYu9zUC+TwdzIp5orpblJosNlgNbVmmAb//c6d6ImUQ==
 
 bluebird@^3.5.0:
   version "3.7.2"
