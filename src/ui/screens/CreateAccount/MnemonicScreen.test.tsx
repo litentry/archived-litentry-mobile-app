@@ -1,35 +1,28 @@
 import {NavigationProp} from '@react-navigation/native';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
-import {render, waitFor, fireEvent} from 'src/testUtils';
+import {render, fireEvent} from 'src/testUtils';
 import {MnemonicScreen} from './MnemonicScreen';
-import React, {useState as useStateMock} from 'react';
+import React from 'react';
 
 const navigation = {
   navigate: () => jest.fn(),
   goBack: () => jest.fn,
 } as unknown as NavigationProp<AccountsStackParamList>;
 
-test('render the MnemonicScreen component', () => {
-  const {getAllByText, getByText} = render(<MnemonicScreen navigation={navigation} />);
-  expect(getAllByText('Generated mnemonic seed')).toBeTruthy();
-  expect(
-    getByText(
+describe('MnemonicScreen', () => {
+  it('render the MnemonicScreen component', async () => {
+    const {findAllByText} = render(<MnemonicScreen navigation={navigation} />);
+    await findAllByText('Generated mnemonic seed');
+    await findAllByText(
       'Please write down the mnemonic seed and keep it in a safe place. The mnemonic can be used to restore your account. keep it carefully to not lose your assets.',
-    ),
-  ).toBeTruthy();
-  expect(getByText('Next')).toBeTruthy();
-});
+    );
+    await findAllByText('Next');
+  });
 
-test('click on next button', async () => {
-  const navigationSpy = jest.spyOn(navigation, 'navigate');
-
-  const setStateMock = jest.fn();
-  const useStateMock: any = (useState: any) => [useState, setStateMock];
-  jest.spyOn(React, 'useState').mockImplementation(useStateMock);
-
-  const {getByText, debug} = render(<MnemonicScreen navigation={navigation} />);
-  await waitFor(() => {
-    fireEvent.press(getByText('Next'));
-    expect(setStateMock).toHaveBeenLastCalledWith('random');
+  it('click on next button', async () => {
+    const navigationSpy = jest.spyOn(navigation, 'navigate');
+    const {findByText} = render(<MnemonicScreen navigation={navigation} />);
+    fireEvent.press(await findByText('Next'));
+    expect(navigationSpy).toHaveBeenLastCalledWith('Verify Mnemonic', {mnemonic: 'random'});
   });
 });

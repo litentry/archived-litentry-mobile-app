@@ -89,7 +89,8 @@ export function VerifyMnemonicScreen({
             mode="outlined"
             disabled={!isMnemonicVerified}
             icon="arrow-right-circle"
-            onPress={() => navigation.navigate(createAccountScreen, {mnemonic})}>
+            onPress={() => navigation.navigate(createAccountScreen, {mnemonic})}
+            testID="next-button">
             Next
           </Button>
         </View>

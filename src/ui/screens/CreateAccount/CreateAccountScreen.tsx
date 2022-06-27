@@ -120,7 +120,7 @@ export function CreateAccountScreen({
             autoComplete="off"
             error={Boolean(account.password) && passwordStrength < 3}
           />
-          <HelperText type="error" visible={passwordError}>
+          <HelperText type="error" visible={passwordError} testID="weak-password">
             {`Password is too weak`}
           </HelperText>
           <View style={styles.passwordMeter}>
@@ -131,6 +131,7 @@ export function CreateAccountScreen({
           <TextInput
             mode="outlined"
             secureTextEntry={!isPasswordVisible}
+            placeholder="Confirm password"
             value={account.confirmPassword}
             onChangeText={(text) => setAccount({...account, confirmPassword: text})}
             error={Boolean(account.confirmPassword) && account.password !== account.confirmPassword}
@@ -140,7 +141,7 @@ export function CreateAccountScreen({
             {`Confirm password doesn't match`}
           </HelperText>
           <Padder scale={2} />
-          <Button mode="outlined" onPress={onSubmit} disabled={isDisabled}>
+          <Button mode="outlined" onPress={onSubmit} disabled={isDisabled} testID="submit-button">
             Submit
           </Button>
           <Padder scale={keyboardStatus === 'visible' ? 9 : 2} />
