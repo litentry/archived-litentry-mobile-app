@@ -20,7 +20,7 @@ describe('CrowdloanScreen', () => {
     expect(getByTestId('loading_view')).toBeTruthy();
   });
 
-  it('should render the CrowdloanScreen component with fetched data', async () => {
+  it('should render the CrowdloanScreen component when the data is fetched', async () => {
     const {findByText, findAllByText} = render(<CrowdloanScreen navigation={navigation} />);
     await findByText('Active Raised / Cap');
     await findByText('4 MDOT / 33 MDOT');

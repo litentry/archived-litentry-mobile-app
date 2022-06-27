@@ -41,7 +41,7 @@ describe('CrowdloanFundDetailScreen', () => {
     await findByText('Homepage');
   });
 
-  it('should open home page of the project in browser ', async () => {
+  it('should open homepage of the project in browser ', async () => {
     const linkingSpy = jest.spyOn(Linking, 'canOpenURL');
     const {findByText} = render(<CrowdloanFundDetailScreen route={route} />);
     fireEvent.press(await findByText('Homepage'));
