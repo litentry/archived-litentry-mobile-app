@@ -60,17 +60,21 @@ describe('DrawerScreen', () => {
 
   it.each(drawerItems)('should navigate to %s screen when pressed on %s item', async (item, routeKey) => {
     const navigationSpy = jest.spyOn(navigation, 'navigate');
+    const drawerSpy = jest.spyOn(navigation, 'closeDrawer');
     const {findByText} = render(<DrawerScreen navigation={navigation} state={state} descriptors={descriptors} />);
     fireEvent.press(await findByText(item as string));
+    expect(drawerSpy).toBeCalled();
     expect(navigationSpy).toBeCalledWith(routeKey, undefined);
   });
 
   it('should navigate to Webview when pressed on About Litentry', () => {
     const navigationSpy = jest.spyOn(navigation, 'navigate');
+    const drawerSpy = jest.spyOn(navigation, 'closeDrawer');
     const {getByText} = render(<DrawerScreen navigation={navigation} state={state} descriptors={descriptors} />);
 
     expect(getByText('About Litentry')).toBeTruthy();
     fireEvent.press(getByText('About Litentry'));
+    expect(drawerSpy).toBeCalled();
     expect(navigationSpy).toBeCalledWith('Webview', {
       title: 'About Litentry',
       uri: 'https://www.litentry.com',
