@@ -13,6 +13,7 @@ import {useAccounts} from 'context/AccountsContext';
 import SubstrateSign from 'react-native-substrate-sign';
 import {useSnackbar} from 'context/SnackbarContext';
 import {NavigationProp} from '@react-navigation/core';
+import {Blob} from 'blob-polyfill';
 
 type ScreenProps = {
   route: RouteProp<AccountsStackParamList, typeof exportAccountWithJsonFileScreen>;
