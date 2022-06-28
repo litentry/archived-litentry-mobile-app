@@ -18,17 +18,12 @@ export function FeedbackScreen() {
   const [body, setBody] = React.useState('');
   const {status: keyboardStatus} = useKeyboardStatus();
   const [status, setStatus] = React.useState<'INITIAL' | 'ERROR' | 'SUCCESS'>('INITIAL');
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     setStatus('INITIAL');
-  //     setBody('');
-  //   }, []),
-  // );
-
-  useEffect(() => {
-    setStatus('INITIAL');
-    setBody('');
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      setStatus('INITIAL');
+      setBody('');
+    }, []),
+  );
 
   const sendFeedback = async () => {
     sendEmail({to: FEEDBACK_EMAIL, subject: 'Litentry Feedback', body})
@@ -72,7 +67,7 @@ export function FeedbackScreen() {
               value={body}
             />
             <Padder scale={1} />
-            <Button mode="outlined" disabled={!body} onPress={body ? sendFeedback : noop}>
+            <Button mode="outlined" disabled={!body} onPress={body ? sendFeedback : noop} testID="send-feedback-button">
               Send Feedback
             </Button>
           </View>
