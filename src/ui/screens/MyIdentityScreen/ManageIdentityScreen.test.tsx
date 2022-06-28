@@ -6,8 +6,6 @@ import {ManageIdentityScreen} from './ManageIdentityScreen';
 import {manageIdentityScreen} from '@ui/navigation/routeKeys';
 import {Alert, Linking} from 'react-native';
 
-jest.useFakeTimers();
-
 const navigation = {
   navigate: () => jest.fn(),
   setOptions: () => jest.fn,
@@ -22,10 +20,6 @@ const route = {
 const openURLSpy = jest.spyOn(Linking, 'openURL');
 
 describe('ManageIdentityScreen', () => {
-  beforeEach(() => {
-    jest.resetAllMocks();
-  });
-
   it('should render the loading view when data is fetching', async () => {
     const {findByText, findAllByText} = render(<ManageIdentityScreen navigation={navigation} route={route} />);
     await findByText('Address');
