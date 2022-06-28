@@ -144,7 +144,8 @@ export function DemocracyProposalScreen({
                   });
                   dispatch({type: 'RESET'});
                 }
-              }}>
+              }}
+              testID="second-button">
               {`Second`}
             </Button>
           </View>
