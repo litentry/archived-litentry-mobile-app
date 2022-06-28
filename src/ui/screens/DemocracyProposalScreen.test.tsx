@@ -1,7 +1,7 @@
 import React from 'react';
 import {RouteProp} from '@react-navigation/native';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
-import {render, fireEvent, waitFor} from 'src/testUtils';
+import {render, fireEvent} from 'src/testUtils';
 import {DemocracyProposalScreen} from './DemocracyProposalScreen';
 import {democracyProposalScreen} from '@ui/navigation/routeKeys';
 

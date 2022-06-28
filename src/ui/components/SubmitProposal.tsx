@@ -101,7 +101,7 @@ export function SubmitProposal() {
 
         <View style={styles.row}>
           <Button mode="outlined" onPress={reset}>{`Cancel`}</Button>
-          <Button mode="outlined" disabled={isDisabled} onPress={submit}>{`Submit`}</Button>
+          <Button mode="outlined" disabled={isDisabled} onPress={submit} testID="proposal-button">{`Submit`}</Button>
         </View>
       </Modal>
     </>
