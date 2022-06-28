@@ -69,6 +69,7 @@ export function ExportAccountWithJsonFileScreen({route, navigation}: ScreenProps
           secureTextEntry={!isPasswordVisible}
           label={'Password'}
           value={password}
+          placeholder={'Enter account password'}
           onChangeText={setPassword}
           right={
             <TextInput.Icon
@@ -83,7 +84,7 @@ export function ExportAccountWithJsonFileScreen({route, navigation}: ScreenProps
         <Padder scale={1} />
         {error ? <ErrorText>{error}</ErrorText> : null}
         <Padder scale={1} />
-        <Button disabled={!password} mode="outlined" onPress={doBackup}>
+        <Button disabled={!password} mode="outlined" onPress={doBackup} testID="export-button">
           Export
         </Button>
       </View>
