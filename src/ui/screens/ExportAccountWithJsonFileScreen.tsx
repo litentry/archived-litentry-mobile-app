@@ -14,7 +14,6 @@ import {NavigationProp} from '@react-navigation/core';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 import {useKeyring} from '@polkadotApi/useKeyring';
 import {ErrorText} from '@ui/components/ErrorText';
-import {Blob} from 'blob-polyfill';
 
 type ScreenProps = {
   route: RouteProp<AccountsStackParamList, typeof exportAccountWithJsonFileScreen>;
@@ -36,7 +35,6 @@ export function ExportAccountWithJsonFileScreen({route, navigation}: ScreenProps
   const doBackup = async () => {
     try {
       const encryptedJson = await exportAccount({address, password});
-      console.log(encryptedJson);
       const blob = new Blob([JSON.stringify(encryptedJson)], {type: 'application/json'});
       await Share.open({
         title: address,
