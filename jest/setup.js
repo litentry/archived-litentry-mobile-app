@@ -67,10 +67,8 @@ jest.mock('@react-navigation/native', () => ({
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
 
 jest.mock('react-native-fs', () => {
-  const nativeFileSystem = require('react-native-fs');
   return {
-    __esModule: true,
-    ...nativeFileSystem,
+    mkdir: jest.fn(),
   };
 });
 
