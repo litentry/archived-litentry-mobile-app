@@ -52,6 +52,12 @@ jest.mock('@react-navigation/native', () => {
   };
 });
 
+jest.mock('@react-native-community/clipboard', () => {
+  return {
+    setString: jest.fn(),
+  };
+});
+
 jest.mock('@react-navigation/material-top-tabs', () => ({
   createMaterialTopTabNavigator: () => jest.fn(),
 }));
