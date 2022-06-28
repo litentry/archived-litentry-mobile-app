@@ -2,12 +2,10 @@ import React from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {NavigationProp} from '@react-navigation/core';
-import {InternalAccount, useAccounts} from 'context/AccountsContext';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import DocumentPicker, {DocumentPickerResponse} from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
-import SubstrateSign from 'react-native-substrate-sign';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {accountsScreen} from '@ui/navigation/routeKeys';
 import {Button, Caption, List, Text, TextInput, useTheme} from '@ui/library';
@@ -15,6 +13,7 @@ import {ErrorText} from '@ui/components/ErrorText';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
 import {SecureKeychain} from 'src/service/SecureKeychain';
+import {useKeyring} from '@polkadotApi/useKeyring';
 
 export function ImportAccountWithJsonFileScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const theme = useTheme();
@@ -24,28 +23,22 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
   const parsedJson = jsonContent ? tryParseJson(jsonContent) : undefined;
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
   const [password, setPassword] = React.useState('');
-  const {addAccount} = useAccounts();
 
-  async function restoreAccount() {
+  const {restoreAccount} = useKeyring();
+
+  async function onRestoreAccount() {
     if (parsedJson && password) {
       try {
-        // TODO: NOT WORKING WITH POLKADOT EXTENSION THE ENCODING IS DIFFERENT THERE
-        await SubstrateSign.decryptData(parsedJson.encoded, password);
-
-        const newAcc = {
-          address: parsedJson.address,
-          encoded: parsedJson.encoded,
-          meta: {...parsedJson.meta, network: currentNetwork.key, isFavorite: false},
-          isExternal: false,
-        };
-        addAccount(newAcc);
-        SecureKeychain.setPasswordByServiceId(password, 'BIOMETRICS', parsedJson.address);
-
+        const account = await restoreAccount({
+          json: parsedJson,
+          password,
+          network: currentNetwork.key,
+        });
+        SecureKeychain.setPasswordByServiceId(password, 'BIOMETRICS', account.address as string);
         navigation.navigate(accountsScreen, {reload: true});
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (e: any) {
+      } catch (e) {
         console.warn(e);
-        setError('Password appears to be incorrect! Please try again.');
+        setError((e as Error).message);
       }
     }
   }
@@ -102,9 +95,8 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
         />
         <Padder scale={1} />
         <ErrorText>{error}</ErrorText>
-
-        <View style={globalStyles.flex} />
-        <Button mode="outlined" disabled={!password || !parsedJson} onPress={() => restoreAccount()}>
+        <Padder scale={2} />
+        <Button mode="outlined" disabled={!password || !parsedJson} onPress={() => onRestoreAccount()}>
           <Text>Restore</Text>
         </Button>
         <Padder scale={2} />
@@ -157,7 +149,7 @@ async function pickFile() {
   }
 }
 
-function tryParseJson(json: string): InternalAccount | undefined {
+function tryParseJson(json: string) {
   try {
     return JSON.parse(json);
   } catch (e) {

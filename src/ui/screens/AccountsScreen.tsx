@@ -2,7 +2,6 @@ import React from 'react';
 import {FlatList, View, StyleSheet, TouchableOpacity, Keyboard} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp} from '@react-navigation/native';
-import {Account as AccountType, useAccounts} from 'context/AccountsContext';
 import {useTheme, Divider, IconButton, List, FAB, Caption, Menu, Subheading, Icon, useBottomSheet} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {CompleteNavigatorParamList} from '@ui/navigation/navigation';
@@ -14,6 +13,9 @@ import {Account} from '@ui/components/Account/Account';
 import {Padder} from '@ui/components/Padder';
 import {AccountsGuide} from '@ui/components/Account/AccountsGuide';
 import {AddExternalAccount} from '@ui/components/Account/AddExternalAccount';
+import type {Account as AppAccount} from '@polkadotApi/types';
+import {useAppAccounts} from '@polkadotApi/useAppAccounts';
+import {useKeyring} from '@polkadotApi/useKeyring';
 
 type Props = {
   navigation: NavigationProp<CompleteNavigatorParamList, typeof accountsScreen>;
@@ -22,10 +24,12 @@ type Props = {
 type SortBy = 'name' | 'favorites';
 
 export function AccountsScreen({navigation}: Props) {
-  const {networkAccounts, toggleFavorite} = useAccounts();
+  const {networkAccounts} = useAppAccounts();
   const [sortBy, setSortBy] = React.useState<SortBy>('name');
   const sortByFunction = sortBy === 'name' ? sortByDisplayName : sortByIsFavorite;
   const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
+
+  const {updateMeta} = useKeyring();
 
   const toAccountDetail = (address: string) => {
     navigation.navigate(myAccountScreen, {address});
@@ -58,9 +62,7 @@ export function AccountsScreen({navigation}: Props) {
         data={sortByFunction(networkAccounts)}
         showsVerticalScrollIndicator
         keyExtractor={(item) => item.address}
-        renderItem={({item}) => (
-          <AccountItem account={item} toggleFavorite={toggleFavorite} onPress={toAccountDetail} />
-        )}
+        renderItem={({item}) => <AccountItem account={item} toggleFavorite={updateMeta} onPress={toAccountDetail} />}
         ListHeaderComponent={
           <View style={styles.sortBy}>
             <Menu
@@ -94,6 +96,7 @@ export function AccountsScreen({navigation}: Props) {
                 title="Favorite"
               />
             </Menu>
+            <Padder scale={0.5} />
           </View>
         }
         ItemSeparatorComponent={Divider}
@@ -120,18 +123,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: standardPadding * 2,
   },
   sortBy: {
-    padding: standardPadding * 2,
+    paddingLeft: standardPadding * 2,
   },
   emptyContainer: {alignItems: 'center', justifyContent: 'center', padding: standardPadding * 2},
   emptyText: {fontWeight: 'normal'},
 });
 
-function sortByDisplayName(accounts: AccountType[]) {
-  return accounts.sort((a, b) => a.meta.name.localeCompare(b.meta.name));
+function sortByDisplayName(accounts: AppAccount[]) {
+  return [...accounts].sort((a, b) => a.meta.name.localeCompare(b.meta.name));
 }
 
-function sortByIsFavorite(accounts: AccountType[]) {
-  return accounts.sort((a, b) => Number(b.meta.isFavorite) - Number(a.meta.isFavorite));
+function sortByIsFavorite(accounts: AppAccount[]) {
+  return [...accounts].sort((a, b) => Number(b.meta.isFavorite) - Number(a.meta.isFavorite));
 }
 
 function AccountItem({
@@ -139,15 +142,14 @@ function AccountItem({
   toggleFavorite,
   onPress,
 }: {
-  account: AccountType;
-  toggleFavorite: (address: string) => void;
+  account: AppAccount;
+  toggleFavorite: (address: string, meta: Record<string, unknown>) => void;
   onPress: (address: string) => void;
 }) {
   const theme = useTheme();
   const {
     address,
-    isExternal,
-    meta: {isFavorite, name},
+    meta: {isFavorite, name, isExternal},
   } = account;
   const {data: accountInfo} = useAccount(address);
 
@@ -167,7 +169,7 @@ function AccountItem({
       )}
       right={() => (
         <IconButton
-          onPress={() => toggleFavorite(address)}
+          onPress={() => toggleFavorite(address, {isFavorite: !account.meta.isFavorite})}
           color={isFavorite ? theme.colors.accent : theme.colors.disabled}
           icon={isFavorite ? 'star' : 'star-outline'}
         />

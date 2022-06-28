@@ -10,7 +10,7 @@ import {useTheme, Card, Subheading, Button, List, Headline, Divider, Caption} fr
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
 import {EmptyStateTeaser} from '@ui/components/EmptyStateTeaser';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {ItemRowBlock} from '@ui/components/ItemRowBlock';
 

@@ -1,8 +1,8 @@
-import {useAccounts} from 'context/AccountsContext';
+import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 import {useCouncil} from 'src/api/hooks/useCouncil';
 
 export function useCouncilAccounts() {
-  const {networkAccounts} = useAccounts();
+  const {networkAccounts} = useAppAccounts();
   const {data: council} = useCouncil();
 
   if (networkAccounts.length === 0 || !council) {

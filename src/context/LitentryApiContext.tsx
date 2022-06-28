@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {ApolloClient, ApolloProvider, InMemoryCache, NormalizedCacheObject, createHttpLink} from '@apollo/client';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 
 const LITENTRY_API_URI = 'https://graph.litentry.io/graphql';
 
