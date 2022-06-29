@@ -159,7 +159,12 @@ export function ImportAccount({navigation}: {navigation: NavigationProp<Accounts
             </>
           )}
           <View style={globalStyles.flex} />
-          <Button mode="outlined" icon={'download'} onPress={onSubmit} disabled={isDisabled}>
+          <Button
+            mode="outlined"
+            icon={'download'}
+            onPress={onSubmit}
+            disabled={isDisabled}
+            testID="import-seed-button">
             Import Seed
           </Button>
           <Padder scale={keyboardStatus === 'visible' ? 12 : 2} />
