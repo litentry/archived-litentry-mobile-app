@@ -27,7 +27,7 @@ const SUBSCRIPTION_INITIAL_STATE = {
   [SUBSCRIPTION_ID.NEW_REFERENDUM]: {isSubscribed: false},
 };
 
-const PUSH_TOPIC_LABEL = {
+const SUBSCRIPTION_LABEL = {
   [SUBSCRIPTION_ID.NEW_TREASURY_PROPOSAL]: 'New Treasury Proposal',
   [SUBSCRIPTION_ID.TIP_SUGGESTION]: 'Tip Suggestion',
   [SUBSCRIPTION_ID.NEW_REFERENDUM]: 'New Referendum',
@@ -55,7 +55,7 @@ export function usePushTopics() {
     return topicIds.map((topicId) => ({
       id: topicId,
       isSubscribed: subscriptionTopics[topicId].isSubscribed,
-      label: PUSH_TOPIC_LABEL[topicId],
+      label: SUBSCRIPTION_LABEL[topicId],
     }));
   }, [subscriptionTopics]);
 
