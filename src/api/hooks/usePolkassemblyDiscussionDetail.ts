@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 import gql from 'graphql-tag';
 import {print} from 'graphql/language/printer';
 import {useQuery} from 'react-query';

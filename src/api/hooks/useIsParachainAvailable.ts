@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 
 export function useIsParachainAvailable() {
   const {currentNetwork} = useNetwork();

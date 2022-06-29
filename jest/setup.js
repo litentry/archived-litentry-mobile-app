@@ -1,4 +1,5 @@
 import React from 'react';
+import {Blob} from 'blob-polyfill';
 import 'react-native-gesture-handler/jestSetup';
 
 jest.mock('react-native-reanimated', () => {
@@ -12,6 +13,7 @@ jest.mock('react-native-reanimated', () => {
 });
 
 global.__reanimatedWorkletInit = jest.fn();
+global.Blob = Blob;
 
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
 jest.mock('react-native-mmkv');
@@ -64,3 +66,4 @@ jest.mock('@react-native-community/clipboard', () => {
 jest.mock('@react-navigation/material-top-tabs', () => ({
   createMaterialTopTabNavigator: () => jest.fn(),
 }));
+jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');

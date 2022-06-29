@@ -6,6 +6,7 @@ import {ApolloClient, InMemoryCache, HttpLink} from '@apollo/client';
 import fetch from 'cross-fetch';
 import ThemeProvider from 'context/ThemeContext';
 import {LitentryApiClientProvider} from 'context/LitentryApiContext';
+import {RecoilRoot} from 'recoil';
 
 export const client = new ApolloClient({
   cache: new InMemoryCache(),
@@ -15,9 +16,11 @@ export const client = new ApolloClient({
 // TODO: https://github.com/litentry/litentry-app/issues/1275
 function Providers({children}: {children: React.ReactNode}) {
   return (
-    <LitentryApiClientProvider>
-      <ThemeProvider>{children}</ThemeProvider>
-    </LitentryApiClientProvider>
+    <RecoilRoot>
+      <LitentryApiClientProvider>
+        <ThemeProvider>{children}</ThemeProvider>
+      </LitentryApiClientProvider>
+    </RecoilRoot>
   );
 }
 

@@ -2,7 +2,7 @@ import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View, ScrollView} from 'react-native';
 import {DrawerContentComponentProps} from '@react-navigation/drawer';
 import {useToggleTheme} from 'context/ThemeContext';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 import logo from 'image/logo.png';
 import SafeView from '@ui/components/SafeView';
 import {useIsParachainAvailable} from 'src/api/hooks/useIsParachainAvailable';

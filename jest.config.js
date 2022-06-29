@@ -23,12 +23,14 @@ const config = {
   moduleNameMapper: {
     '^src/(.*)$': '<rootDir>/src/$1',
     '^@ui/(.*)$': '<rootDir>/src/ui/$1',
+    '^@polkadotApi/(.*)$': '<rootDir>/src/polkadotApi/$1',
     '^context/(.*)$': '<rootDir>/src/context/$1',
     '^image/(.*)$': '<rootDir>/src/image/$1',
     '^svg/(.*)$': '<rootDir>/src/svg/$1',
     '^service/(.*)$': '<rootDir>/src/service/$1',
     '^@hooks/(.*)$': '<rootDir>/src/hooks/$1',
     '^assets/(.*)$': '<rootDir>/src/assets/$1',
+    '^@atoms/(.*)$': '<rootDir>/src/atoms/$1',
   },
   verbose: true,
 };
