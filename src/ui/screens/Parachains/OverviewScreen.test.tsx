@@ -1,37 +1,44 @@
 import {NavigationProp} from '@react-navigation/native';
 import {ParachainsStackParamList} from '@ui/navigation/navigation';
 import React from 'react';
-import {render, waitFor} from 'src/testUtils';
+import {fireEvent, render} from 'src/testUtils';
 import {ParachainsOverviewScreen} from './OverviewScreen';
 
-let navigation: NavigationProp<ParachainsStackParamList>;
+const navigation = {
+  navigate: jest.fn(),
+} as unknown as NavigationProp<ParachainsStackParamList>;
 
-test('render the loading component view when data is fetching', async () => {
-  const {getByTestId} = render(<ParachainsOverviewScreen navigation={navigation} />);
-  expect(getByTestId('loading_view')).toBeTruthy();
-});
+describe('ParachainsOverviewScreen', () => {
+  it('should render the loading component view when data is fetching', async () => {
+    const {getByTestId} = render(<ParachainsOverviewScreen navigation={navigation} />);
+    expect(getByTestId('loading_view')).toBeTruthy();
+  });
 
-test('renders the component when data is fetched', async () => {
-  const {getByText} = render(<ParachainsOverviewScreen navigation={navigation} />);
-  await waitFor(() => {
-    expect(getByText('Parachains:')).toBeDefined();
-    expect(getByText('Total period:')).toBeDefined();
-    expect(getByText('Remaining:')).toBeDefined();
-    expect(getByText('Lease Period')).toBeDefined();
-    expect(getByText('Current lease:')).toBeDefined();
+  it('should renders the ParachainsOverviewScreen component when data is fetched', async () => {
+    const {findByText} = render(<ParachainsOverviewScreen navigation={navigation} />);
+    await findByText('Parachains:');
+    await findByText('14');
+    await findByText('Total period:');
+    await findByText('84 days');
+    await findByText('Remaining:');
+    await findByText('36 days');
+    await findByText('Lease Period');
+    await findByText('Current lease:');
+    await findByText('7');
+    await findByText('Parachains');
+    await findByText('Leases');
 
-    expect(getByText('Parachains')).toBeDefined();
-    expect(getByText('Leases')).toBeDefined();
+    await findByText('Statemint');
+    await findByText('1130 days 21 hrs');
+    await findByText('Acala');
+    await findByText('542 days 21 hrs');
+  });
 
-    expect(getByText('Statemint')).toBeTruthy();
-    expect(getByText('Acala')).toBeTruthy();
-    expect(getByText('Clover')).toBeTruthy();
-    expect(getByText('Moonbeam')).toBeTruthy();
-    expect(getByText('Astar')).toBeTruthy();
-    expect(getByText('Equilibrium')).toBeTruthy();
-    expect(getByText('Parallel')).toBeTruthy();
-    expect(getByText('Composable Finance')).toBeTruthy();
-    expect(getByText('Efinity')).toBeTruthy();
-    expect(getByText('Nodle')).toBeTruthy();
+  it('should navigate to the parachainDetailScreen on press of the parachain', async () => {
+    const navigationSpy = jest.spyOn(navigation, 'navigate');
+    const {findByText} = render(<ParachainsOverviewScreen navigation={navigation} />);
+
+    fireEvent.press(await findByText('Statemint'));
+    expect(navigationSpy).toBeCalledWith('Parachain', {parachainId: '1000'});
   });
 });

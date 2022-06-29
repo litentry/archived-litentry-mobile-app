@@ -16,22 +16,6 @@ export type DeviceType = {
   app_bundle_id: string;
 };
 
-export type NetworkType = {
-  name: string;
-  key: SupportedNetworkType;
-  ws: string[];
-  color?: string;
-  ss58Format: number;
-  isTestnet?: boolean;
-  isParachain?: boolean;
-};
-
-export type NetworkContextValueType = {
-  currentNetwork: NetworkType;
-  getAvailableNetworks: (options?: {parachainsEnabled: boolean}) => NetworkType[];
-  select: (network: NetworkType) => void;
-};
-
 export interface QRScannedPayload extends BarCodeReadEvent {
   bounds: {
     origin: {x: string; y: string};

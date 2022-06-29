@@ -2,7 +2,7 @@ import React from 'react';
 import {View} from 'react-native';
 import {Divider, Subheading, RadioButton} from '@ui/library';
 import globalStyles from '@ui/styles';
-import {NetworkType} from 'src/types';
+import type {NetworkType} from '@atoms/network';
 import {Padder} from '@ui/components/Padder';
 
 type PropTypes = {

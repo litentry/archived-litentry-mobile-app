@@ -3,10 +3,8 @@ import {View, StyleSheet, KeyboardAvoidingView, Platform} from 'react-native';
 import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {ScrollView} from 'react-native-gesture-handler';
-import SubstrateSign from 'react-native-substrate-sign';
 import zxcvbn from 'zxcvbn';
-import {useAccounts} from 'context/AccountsContext';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 import {ProgressBar} from '@ui/components/ProgressBar';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
@@ -17,6 +15,7 @@ import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {SecureKeychain} from 'src/service/SecureKeychain';
 import {useKeyboardStatus} from 'src/hooks/useKeyboardStatus';
+import {useKeyring} from '@polkadotApi/useKeyring';
 
 type Account = {
   title: string;
@@ -36,7 +35,6 @@ export function CreateAccountScreen({
   const theme = useTheme();
   const {status: keyboardStatus} = useKeyboardStatus();
   const {currentNetwork} = useNetwork();
-  const {addAccount} = useAccounts();
 
   const [account, setAccountState] = React.useState<Account>({title: '', password: '', confirmPassword: ''});
   const setAccount = (acc: Account) => {
@@ -46,9 +44,10 @@ export function CreateAccountScreen({
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
   const [address, setAddress] = React.useState('');
 
+  const {createAccount, addAccount} = useKeyring();
   React.useEffect(() => {
-    SubstrateSign.substrateAddress(mnemonic, currentNetwork.ss58Format).then(setAddress);
-  }, [mnemonic, currentNetwork.ss58Format]);
+    createAccount(mnemonic).then(setAddress);
+  }, [createAccount, mnemonic]);
 
   const passwordStrength = zxcvbn(account.password).score;
   const isDisabled = !account.password || !(account.password === account.confirmPassword);
@@ -57,22 +56,13 @@ export function CreateAccountScreen({
   const confirmPasswordError = Boolean(account.confirmPassword) && !(account.password === account.confirmPassword);
 
   const onSubmit = async () => {
-    const _address = await SubstrateSign.substrateAddress(mnemonic, currentNetwork.ss58Format);
-    const encoded = await SubstrateSign.encryptData(mnemonic, account.password);
-    const newAcc = {
-      address: _address,
-      encoded,
-      meta: {
-        name: account.title,
-        network: currentNetwork.key,
-        isFavorite: false,
-      },
-      isExternal: false,
-    };
-
-    addAccount(newAcc);
-    SecureKeychain.setPasswordByServiceId(account.password, 'BIOMETRICS', _address);
-
+    await addAccount({
+      mnemonic,
+      password: account.password,
+      name: account.title,
+      network: currentNetwork.key,
+    });
+    SecureKeychain.setPasswordByServiceId(account.password, 'BIOMETRICS', address);
     navigation.navigate(accountsScreen, {reload: true});
   };
 
@@ -82,7 +72,11 @@ export function CreateAccountScreen({
         <ScrollView style={styles.container}>
           <List.Item
             title={() => <Text>{account.title}</Text>}
-            left={() => <IdentityIcon value={address} size={40} />}
+            left={() => (
+              <View style={globalStyles.justifyCenter}>
+                <IdentityIcon value={address} size={40} />
+              </View>
+            )}
             description={address}
           />
           <Padder scale={1} />
