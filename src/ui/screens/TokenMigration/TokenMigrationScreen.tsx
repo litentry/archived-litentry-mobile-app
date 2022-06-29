@@ -2,7 +2,7 @@ import React from 'react';
 import {View, StyleSheet, Linking, ScrollView, Dimensions} from 'react-native';
 import * as yup from 'yup';
 import {useWeb3Wallet, TxResult} from 'context/Web3WalletContext';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {SuccessAnimation} from '@ui/components/SuccessAnimation';
 import {MessageTeaser} from '@ui/components/MessageTeaser';

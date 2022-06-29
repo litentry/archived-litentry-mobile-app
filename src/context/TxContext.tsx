@@ -2,17 +2,14 @@
 import React, {createContext, useCallback, useEffect, useMemo, useReducer, useRef, useContext} from 'react';
 import {Dimensions, StyleSheet} from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
-import SubstrateSign from 'react-native-substrate-sign';
 import {SubmittableExtrinsic} from '@polkadot/api/submittable/types';
 import {SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
 import {ExtrinsicPayload} from '@polkadot/types/interfaces';
-import {BN_ZERO, hexToU8a, u8aConcat, u8aToHex} from '@polkadot/util';
+import {BN_ZERO, /* hexToU8a, u8aConcat, */ u8aToHex} from '@polkadot/util';
 import {ApiPromise} from '@polkadot/api';
 import {get} from 'lodash';
-
 import {formatCallMeta} from 'src/utils/callMetadata';
 import AsyncSigner from 'src/service/AsyncSigner';
-import {useAccounts} from 'context/AccountsContext';
 import {useApi} from 'context/ChainApiContext';
 import LoadingView from '@ui/components/LoadingView';
 import {AuthenticateView} from '@ui/components/Tx/AuthenticateView';
@@ -24,6 +21,9 @@ import {MessageTeaser} from '@ui/components/MessageTeaser';
 import {Subheading, Caption, Icon, useBottomSheet, Button} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
+import {SignCredentials} from '@polkadotApi/types';
+import {useKeyring} from '@polkadotApi/useKeyring';
+import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 
 let id = 0;
 
@@ -50,9 +50,10 @@ export type StartConfig = {
 export function TxProvider({children}: TxProviderProps): React.ReactElement {
   const {BottomSheet, openBottomSheet, closeBottomSheet} = useBottomSheet();
   const signTransactionRef = useRef<(value: SignerResult) => void>();
-  const showPreviewRef = useRef<(txPayload: SignerPayloadJSON, seed?: string) => Promise<void>>();
+  const showPreviewRef = useRef<(txPayload: SignerPayloadJSON, credentials?: SignCredentials) => Promise<void>>();
   const [state, dispatch] = useReducer(reducer, initialState);
   const {api: apiPromise} = useApi();
+  const {sign} = useKeyring();
 
   useEffect(() => {
     if (!apiPromise?.isConnected && state.view === 'submitting_view') {
@@ -62,7 +63,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
       });
     }
   }, [apiPromise?.isConnected, state.view]);
-  const {accounts} = useAccounts();
+  const {accounts} = useAppAccounts();
 
   const start = useCallback(
     async (config: StartConfig) => {
@@ -85,9 +86,9 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
       const args = meta?.args.map(({name}) => name).join(', ') || '';
       const title = `Sending transaction ${section}.${method}(${args})`;
       const description = formatCallMeta(meta);
-      const isExternal = Boolean(accounts[address]?.isExternal);
+      const isExternal = Boolean(accounts[address]?.meta.isExternal);
 
-      showPreviewRef.current = async (txPayload: SignerPayloadJSON, seed?: string) => {
+      showPreviewRef.current = async (txPayload: SignerPayloadJSON, credentials?: SignCredentials) => {
         const info = await transaction.paymentInfo(address);
         if (isExternal) {
           dispatch({
@@ -102,19 +103,15 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
             },
           });
         } else {
-          if (!seed) {
-            throw new Error('Seed is required for non-external accounts');
+          if (!credentials) {
+            throw new Error('Credentials is required for non-external accounts');
           }
-          const wrapper: ExtrinsicPayload = transaction.registry.createType('ExtrinsicPayload', txPayload, {
+          const extrinsicPayload: ExtrinsicPayload = transaction.registry.createType('ExtrinsicPayload', txPayload, {
             version: txPayload.version,
           });
 
-          const signable = u8aToHex(wrapper.toU8a(true), -1, false);
-          let signed = await SubstrateSign.substrateSign(seed, signable);
-          signed = '0x' + signed;
-          const SIG_TYPE_SR25519 = new Uint8Array([1]);
-          const sig = u8aConcat(SIG_TYPE_SR25519, hexToU8a(signed));
-          const signature = u8aToHex(sig, -1);
+          const signable = u8aToHex(extrinsicPayload.toU8a({method: true}));
+          const {signed} = await sign(signable, credentials);
 
           dispatch({
             type: 'SHOW_TX_PREVIEW',
@@ -125,7 +122,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
               description,
               partialFee: info.partialFee.toNumber(),
               isExternalAccount: false,
-              signature: {id: ++id, signature},
+              signerResult: {id: ++id, signature: signed},
             },
           });
         }
@@ -175,7 +172,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
         dispatch({type: 'SHOW_ERROR', payload: String(e)});
       }
     },
-    [accounts, openBottomSheet],
+    [accounts, openBottomSheet, sign],
   );
 
   const reset = React.useCallback(() => {
@@ -196,8 +193,8 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
         return (
           <AuthenticateView
             address={state.address}
-            onAuthenticate={(seed) => {
-              showPreviewRef.current?.(state.txPayload, seed);
+            onAuthenticate={(credentials) => {
+              showPreviewRef.current?.(state.txPayload, credentials);
             }}
           />
         );
@@ -217,7 +214,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
                 dispatch({type: 'SHOW_QR_CODE_TX_PAYLOAD_VIEW', payload: {txPayload: state.txPayload}});
               } else {
                 dispatch({type: 'SHOW_SUBMITTING_VIEW'});
-                signTransactionRef.current?.(state.signature);
+                signTransactionRef.current?.(state.signerResult);
               }
             }}
           />
@@ -381,7 +378,7 @@ type State =
       description: string;
       partialFee: number;
       isExternalAccount: false;
-      signature: SignerResult;
+      signerResult: SignerResult;
     }
   | {view: 'qr_code_tx_payload_view'; txPayload: SignerPayloadJSON}
   | {view: 'scan_signature_view'}
@@ -418,7 +415,7 @@ type Action =
             title: string;
             description: string;
             isExternalAccount: false;
-            signature: SignerResult;
+            signerResult: SignerResult;
           };
     }
   | {

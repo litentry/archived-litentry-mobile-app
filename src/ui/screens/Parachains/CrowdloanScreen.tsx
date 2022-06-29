@@ -19,7 +19,7 @@ import {useChainInfo} from 'src/api/hooks/useChainInfo';
 import {BN_ZERO} from '@polkadot/util';
 import {formattedStringToBn} from 'src/utils/balance';
 import {CrowdloanSummaryTeaser} from '@ui/components/CrowdloanSummaryTeaser';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 import {InputLabel} from '@ui/library/InputLabel';
 
 type ScreenProps = {

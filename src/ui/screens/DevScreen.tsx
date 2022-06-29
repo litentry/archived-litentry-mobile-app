@@ -5,11 +5,11 @@ import {InAppNotificationContent, InAppNotificationContext} from 'context/InAppN
 import {useApi} from 'context/ChainApiContext';
 import {ScrollView} from 'react-native-gesture-handler';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useConvictions} from 'src/api/hooks/useConvictions';
 import {SelectAccount} from '@ui/components/SelectAccount';
-import {useAccounts} from 'context/AccountsContext';
+import {useActiveAccount} from '@atoms/activeAccount';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {Padder} from '@ui/components/Padder';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
@@ -20,7 +20,7 @@ function DevScreen() {
   const {data: convictions} = useConvictions();
   const {trigger} = useContext(InAppNotificationContext);
   const {status} = useApi();
-  const {activeAccount, setActiveAccount} = useAccounts();
+  const {activeAccount, selectActiveAccount} = useActiveAccount();
   const {data: accountInfo} = useAccount(activeAccount?.address);
 
   return (
@@ -51,7 +51,7 @@ function DevScreen() {
           <Subheading>Select active account</Subheading>
           <SelectAccount
             onSelect={(selectedAccount) => {
-              setActiveAccount(selectedAccount.account);
+              selectActiveAccount(selectedAccount.account);
             }}
           />
           <Padder scale={1} />
