@@ -2,18 +2,18 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Padder} from '@ui/components/Padder';
 import SafeView from '@ui/components/SafeView';
-import {usePushNotificationsPermission} from '@atoms/pushNotification';
+import {useRequestPermission} from '@atoms/pushNotification';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Caption, Headline, Button, Icon} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 
 type Props = {
-  skipPnPermission?: () => void;
+  skipPermission?: () => void;
   allowSkip?: boolean;
 };
 
-function PermissionGrantingPromptScreen({skipPnPermission, allowSkip = true}: Props) {
-  const {requestPermission} = usePushNotificationsPermission();
+function PermissionGrantingPromptScreen({skipPermission, allowSkip = true}: Props) {
+  const {requestPermission} = useRequestPermission();
 
   return (
     <Layout style={globalStyles.flex}>
@@ -31,7 +31,7 @@ function PermissionGrantingPromptScreen({skipPnPermission, allowSkip = true}: Pr
             Allow Notifications
           </Button>
           <Padder scale={0.5} />
-          {allowSkip && <Button onPress={skipPnPermission}>Skip</Button>}
+          {allowSkip && <Button onPress={skipPermission}>Skip</Button>}
         </View>
       </SafeView>
     </Layout>

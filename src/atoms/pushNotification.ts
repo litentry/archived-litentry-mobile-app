@@ -1,69 +1,77 @@
 import messaging, {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
-import {atom, RecoilState, useRecoilState} from 'recoil';
+import {atom, RecoilState, useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil';
 import {persistAtom} from '@atoms/persist';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useAppState} from 'src/hooks/useAppState';
 
 type AuthorizationStatus = FirebaseMessagingTypes.AuthorizationStatus;
 
-enum PUSH_TOPIC_ID {
+enum SUBSCRIPTION_ID {
   NEW_TREASURY_PROPOSAL = 'treasury.Proposed',
   TIP_SUGGESTION = 'tips.NewTip',
   NEW_REFERENDUM = 'democracy.Started',
 }
 
 type TogglePushTopicPayload = {
-  id: PUSH_TOPIC_ID;
+  id: SUBSCRIPTION_ID;
   subscribe: boolean;
 };
 
-type PushTopicSubscription = {
-  [key in PUSH_TOPIC_ID]: {isSubscribed: boolean};
+type Subscription = {
+  [key in SUBSCRIPTION_ID]: {isSubscribed: boolean};
 };
 
-const PUSH_TOPIC_SUBSCRIPTION_INITIAL_STATE = {
-  [PUSH_TOPIC_ID.NEW_TREASURY_PROPOSAL]: {isSubscribed: false},
-  [PUSH_TOPIC_ID.TIP_SUGGESTION]: {isSubscribed: false},
-  [PUSH_TOPIC_ID.NEW_REFERENDUM]: {isSubscribed: false},
+const SUBSCRIPTION_INITIAL_STATE = {
+  [SUBSCRIPTION_ID.NEW_TREASURY_PROPOSAL]: {isSubscribed: false},
+  [SUBSCRIPTION_ID.TIP_SUGGESTION]: {isSubscribed: false},
+  [SUBSCRIPTION_ID.NEW_REFERENDUM]: {isSubscribed: false},
 };
 
 const PUSH_TOPIC_LABEL = {
-  [PUSH_TOPIC_ID.NEW_TREASURY_PROPOSAL]: 'New Treasury Proposal',
-  [PUSH_TOPIC_ID.TIP_SUGGESTION]: 'Tip Suggestion',
-  [PUSH_TOPIC_ID.NEW_REFERENDUM]: 'New Referendum',
+  [SUBSCRIPTION_ID.NEW_TREASURY_PROPOSAL]: 'New Treasury Proposal',
+  [SUBSCRIPTION_ID.TIP_SUGGESTION]: 'Tip Suggestion',
+  [SUBSCRIPTION_ID.NEW_REFERENDUM]: 'New Referendum',
 };
 
-const pushNotificationSubscriptionState: RecoilState<PushTopicSubscription> = atom({
-  key: 'pushNotificationSubscriptionState',
-  default: PUSH_TOPIC_SUBSCRIPTION_INITIAL_STATE,
+const subscriptionState: RecoilState<Subscription> = atom({
+  key: 'pushNotificationSubscription',
+  default: SUBSCRIPTION_INITIAL_STATE,
   effects: [persistAtom],
 });
 
+const isPermissionGranted = (status: AuthorizationStatus) =>
+  status === messaging.AuthorizationStatus.AUTHORIZED || status === messaging.AuthorizationStatus.PROVISIONAL;
+
+const isPermissionDenied = (status: AuthorizationStatus) => status === messaging.AuthorizationStatus.DENIED;
+
+const isPermissionNotDetermined = (status: AuthorizationStatus) =>
+  status === messaging.AuthorizationStatus.NOT_DETERMINED;
+
 export function usePushTopics() {
-  const [pushTopics, setPushTopics] = useRecoilState(pushNotificationSubscriptionState);
+  const [subscriptionTopics, setSubscriptionTopics] = useRecoilState(subscriptionState);
 
   const topics = useMemo(() => {
-    const topicIds = Object.keys(pushTopics) as PUSH_TOPIC_ID[];
+    const topicIds = Object.keys(subscriptionTopics) as SUBSCRIPTION_ID[];
     return topicIds.map((topicId) => ({
       id: topicId,
-      isSubscribed: pushTopics[topicId].isSubscribed,
+      isSubscribed: subscriptionTopics[topicId].isSubscribed,
       label: PUSH_TOPIC_LABEL[topicId],
     }));
-  }, [pushTopics]);
+  }, [subscriptionTopics]);
 
   const toggleTopic = useCallback(
     ({id, subscribe}: TogglePushTopicPayload) => {
       subscribe ? messaging().subscribeToTopic(id) : messaging().unsubscribeFromTopic(id);
-      setPushTopics({
-        ...pushTopics,
+      setSubscriptionTopics({
+        ...subscriptionTopics,
         [id]: {isSubscribed: subscribe},
       });
     },
-    [pushTopics, setPushTopics],
+    [subscriptionTopics, setSubscriptionTopics],
   );
 
   const subscribeToAllTopics = useCallback(() => {
-    const ids = Object.keys(pushTopics) as PUSH_TOPIC_ID[];
+    const ids = Object.keys(subscriptionTopics) as SUBSCRIPTION_ID[];
     const subscriptionPromises = ids.map((topicId) => messaging().subscribeToTopic(topicId));
 
     Promise.all(subscriptionPromises);
@@ -71,13 +79,13 @@ export function usePushTopics() {
     const subscribedTopics = ids.reduce((subscription, topicId) => {
       subscription[topicId] = {isSubscribed: true};
       return subscription;
-    }, {} as PushTopicSubscription);
+    }, {} as Subscription);
 
-    setPushTopics(subscribedTopics);
-  }, [pushTopics, setPushTopics]);
+    setSubscriptionTopics(subscribedTopics);
+  }, [subscriptionTopics, setSubscriptionTopics]);
 
   const unSubscribeToAllTopics = useCallback(() => {
-    const ids = Object.keys(pushTopics) as PUSH_TOPIC_ID[];
+    const ids = Object.keys(subscriptionTopics) as SUBSCRIPTION_ID[];
     const subscriptionPromises = ids.map((topicId) => messaging().subscribeToTopic(topicId));
 
     Promise.all(subscriptionPromises);
@@ -85,10 +93,10 @@ export function usePushTopics() {
     const unSubscribedTopics = ids.reduce((subscription, topicId) => {
       subscription[topicId] = {isSubscribed: false};
       return subscription;
-    }, {} as PushTopicSubscription);
+    }, {} as Subscription);
 
-    setPushTopics(unSubscribedTopics);
-  }, [pushTopics, setPushTopics]);
+    setSubscriptionTopics(unSubscribedTopics);
+  }, [subscriptionTopics, setSubscriptionTopics]);
 
   return {
     topics,
@@ -98,97 +106,95 @@ export function usePushTopics() {
   };
 }
 
-const pushNotificationPermissionState: RecoilState<{isSkipped: boolean}> = atom({
-  key: 'pushNotificationPermissionState',
+const permissionState: RecoilState<{isSkipped: boolean}> = atom({
+  key: 'pushNotificationPermission',
   default: {isSkipped: false},
   effects: [persistAtom],
 });
 
-const isPermissionGranted = (status?: AuthorizationStatus) =>
-  status === messaging.AuthorizationStatus.AUTHORIZED || status === messaging.AuthorizationStatus.PROVISIONAL;
+export function useSkipPermission() {
+  const updatePermissionState = useSetRecoilState(permissionState);
 
-const isPermissionDenied = (status?: AuthorizationStatus) => status === messaging.AuthorizationStatus.DENIED;
+  const skipPermission = useCallback(() => {
+    updatePermissionState({isSkipped: true});
+  }, [updatePermissionState]);
 
-const isPermissionNotDetermined = (status?: AuthorizationStatus) => {
-  return status != null ? status === messaging.AuthorizationStatus.NOT_DETERMINED : true;
-};
+  return {
+    skipPermission,
+  };
+}
 
-function useCheckAuthorizationStatus() {
+const authorizationStatusState = atom({
+  key: 'pushNotificationAuthorizationStatus',
+  default: messaging.AuthorizationStatus.NOT_DETERMINED,
+});
+
+export function useAuthorizationStatus() {
+  const [authorizationStatus, setAuthorizationStatus] = useRecoilState(authorizationStatusState);
+
+  return {
+    authorizationStatus,
+    setAuthorizationStatus,
+  };
+}
+
+export function useRequestPermission() {
+  const {subscribeToAllTopics} = usePushTopics();
+  const updateAuthorizationStatus = useSetRecoilState(authorizationStatusState);
+
+  const requestPermission = useCallback(() => {
+    messaging()
+      .requestPermission()
+      .then((status) => {
+        updateAuthorizationStatus(status);
+        if (isPermissionGranted(status)) {
+          subscribeToAllTopics();
+        }
+      });
+  }, [updateAuthorizationStatus, subscribeToAllTopics]);
+
+  return {
+    requestPermission,
+  };
+}
+
+export function useCheckAuthorizationStatus() {
   const [isChecking, setIsChecking] = useState(true);
-  const [authorizationStatus, setAuthorizationStatus] = useState<AuthorizationStatus>();
+  const {didAppCameToForeground} = useAppState();
+  const updateAuthorizationStatus = useSetRecoilState(authorizationStatusState);
 
   useEffect(() => {
     messaging()
       .hasPermission()
       .then((status) => {
         setIsChecking(false);
-        setAuthorizationStatus(status);
+        updateAuthorizationStatus(status);
       });
-  }, []);
-
-  return {
-    isChecking,
-    authorizationStatus,
-    setAuthorizationStatus,
-  };
-}
-
-export function usePushNotificationsPermission() {
-  const {didAppCameToForeground} = useAppState();
-  const {subscribeToAllTopics} = usePushTopics();
-  const {isChecking, authorizationStatus, setAuthorizationStatus} = useCheckAuthorizationStatus();
-  const [permissionState, setPermissionState] = useRecoilState(pushNotificationPermissionState);
-
-  const skiPushNotificationPermission = useCallback(() => {
-    setPermissionState({isSkipped: true});
-  }, [setPermissionState]);
-
-  useEffect(() => {
-    messaging()
-      .hasPermission()
-      .then((status) => {
-        setAuthorizationStatus(status);
-      });
-  }, [setAuthorizationStatus]);
+  }, [updateAuthorizationStatus]);
 
   useEffect(() => {
     if (didAppCameToForeground) {
       messaging()
         .hasPermission()
         .then((status) => {
-          setAuthorizationStatus(status);
+          updateAuthorizationStatus(status);
         });
     }
-  }, [didAppCameToForeground, setAuthorizationStatus]);
-
-  useEffect(() => {
-    messaging()
-      .hasPermission()
-      .then((status) => {
-        setAuthorizationStatus(status);
-      });
-  }, [setAuthorizationStatus]);
-
-  const requestPermission = useCallback(() => {
-    messaging()
-      .requestPermission()
-      .then((status) => {
-        if (isPermissionGranted(status)) {
-          setAuthorizationStatus(status);
-          subscribeToAllTopics();
-        }
-      });
-  }, [subscribeToAllTopics, setAuthorizationStatus]);
+  }, [didAppCameToForeground, updateAuthorizationStatus]);
 
   return {
-    isCheckingAuthorizationStatus: isChecking,
-    skiPushNotificationPermission,
-    authorizationStatus,
-    isPermissionSkipped: permissionState.isSkipped,
-    isPermissionPromptNeeded: !permissionState.isSkipped && isPermissionNotDetermined(authorizationStatus),
-    requestPermission,
-    isPermissionDenied: isPermissionDenied(authorizationStatus),
-    isPermissionGranted: isPermissionGranted(authorizationStatus),
-    isPermissionNotDetermined: isPermissionNotDetermined(authorizationStatus),
+    isChecking,
+  };
+}
+
+export function usePermissions() {
+  const status = useRecoilValue(authorizationStatusState);
+  const permission = useRecoilValue(permissionState);
+
+  return {
+    isPermissionDenied: isPermissionDenied(status),
+    isPermissionGranted: isPermissionGranted(status),
+    isPermissionNotDetermined: isPermissionNotDetermined(status),
+    isPermissionPromptNeeded: !permission.isSkipped && isPermissionNotDetermined(status),
   };
 }

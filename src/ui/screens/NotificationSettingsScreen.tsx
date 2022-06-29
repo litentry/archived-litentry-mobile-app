@@ -3,14 +3,13 @@ import {StyleSheet, View} from 'react-native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {usePushTopics, usePushNotificationsPermission} from '@atoms/pushNotification';
+import {usePushTopics, usePermissions} from '@atoms/pushNotification';
 
 import {DrawerParamList} from '@ui/navigation/navigation';
 import {Text, List, Divider, Switch, Headline, Subheading, Button, Caption} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {PermissionGrantingPrompt} from './PermissionGrantingPrompt';
 import {Linking} from 'react-native';
-import LoadingView from '@ui/components/LoadingView';
 
 type PropTypes = {
   navigation: DrawerNavigationProp<DrawerParamList>;
@@ -18,16 +17,11 @@ type PropTypes = {
 
 export function NotificationSettingsScreen({}: PropTypes) {
   const {topics, toggleTopic} = usePushTopics();
-  const {isCheckingAuthorizationStatus, isPermissionNotDetermined, isPermissionDenied} =
-    usePushNotificationsPermission();
+  const {isPermissionNotDetermined, isPermissionDenied} = usePermissions();
 
   const openAppSetting = async () => {
     await Linking.openSettings();
   };
-
-  if (isCheckingAuthorizationStatus) {
-    return <LoadingView />;
-  }
 
   if (isPermissionNotDetermined) {
     return <PermissionGrantingPrompt allowSkip={false} />;

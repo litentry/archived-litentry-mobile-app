@@ -41,7 +41,7 @@ import {TreasuryScreen} from '@ui/screens/TreasuryScreen';
 import WebviewScreen from '@ui/screens/WebviewScreen';
 import {useFirebase} from '@hooks/useFirebase';
 import {useTurnOnAllNotificationsOnAppStartForAndroid} from '@hooks/useTurnOnAllNotificationsOnAppStartForAndroid';
-import {usePushNotificationsPermission} from '@atoms/pushNotification';
+import {useCheckAuthorizationStatus, usePermissions, useSkipPermission} from '@atoms/pushNotification';
 import {MainDrawerAppBar, MainStackAppBar} from '@ui/navigation/AppBars';
 import {
   AccountsStackParamList,
@@ -202,10 +202,11 @@ const AppStack = createNativeStackNavigator<AppStackParamList>();
 
 function AppNavigator() {
   useTurnOnAllNotificationsOnAppStartForAndroid();
-  const {isCheckingAuthorizationStatus, isPermissionPromptNeeded, skiPushNotificationPermission} =
-    usePushNotificationsPermission();
+  const {isChecking} = useCheckAuthorizationStatus();
+  const {isPermissionPromptNeeded} = usePermissions();
+  const {skipPermission} = useSkipPermission();
 
-  if (isCheckingAuthorizationStatus) {
+  if (isChecking) {
     return null;
   }
 
@@ -213,7 +214,7 @@ function AppNavigator() {
     <AppStack.Navigator screenOptions={{headerShown: false}}>
       {isPermissionPromptNeeded ? (
         <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen}>
-          {() => <PermissionGrantingPrompt skipPnPermission={skiPushNotificationPermission} />}
+          {() => <PermissionGrantingPrompt skipPermission={skipPermission} />}
         </AppStack.Screen>
       ) : undefined}
       <AppStack.Screen
