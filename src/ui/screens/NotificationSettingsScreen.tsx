@@ -1,48 +1,35 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {usePushTopics} from '@hooks/usePushTopics';
+import {usePushTopics, usePushNotificationsPermission} from '@atoms/pushNotification';
+
 import {DrawerParamList} from '@ui/navigation/navigation';
 import {Text, List, Divider, Switch, Headline, Subheading, Button, Caption} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {
-  hasPermissionsDenied,
-  hasPermissionsNotDetermined,
-  permissionAllowed,
-  usePushAuthorizationStatus,
-} from 'src/hooks/usePushNotificationsPermissions';
 import {PermissionGrantingPrompt} from './PermissionGrantingPrompt';
 import {Linking} from 'react-native';
-import {useUpdatePushAuthorizationStatus} from 'src/hooks/useUpdatePushAuthorizationStatus';
+import LoadingView from '@ui/components/LoadingView';
 
 type PropTypes = {
   navigation: DrawerNavigationProp<DrawerParamList>;
 };
 
 export function NotificationSettingsScreen({}: PropTypes) {
-  const {topics, toggleTopic, isLoading, unSubscribeToAllTopics} = usePushTopics();
-  const {pushAuthorizationStatus} = usePushAuthorizationStatus();
-  useUpdatePushAuthorizationStatus();
-  const [switchDisabled, setSwitchDisabled] = useState(false);
+  const {topics, toggleTopic} = usePushTopics();
+  const {isCheckingAuthorizationStatus, isPermissionNotDetermined, isPermissionDenied} =
+    usePushNotificationsPermission();
+
   const openAppSetting = async () => {
     await Linking.openSettings();
   };
 
-  useEffect(() => {
-    if (hasPermissionsDenied(pushAuthorizationStatus)) {
-      unSubscribeToAllTopics().then(() => {
-        setSwitchDisabled(true);
-      });
-    }
-    if (permissionAllowed(pushAuthorizationStatus)) {
-      setSwitchDisabled(false);
-    }
-  }, [pushAuthorizationStatus, unSubscribeToAllTopics]);
+  if (isCheckingAuthorizationStatus) {
+    return <LoadingView />;
+  }
 
-  if (hasPermissionsNotDetermined(pushAuthorizationStatus)) {
+  if (isPermissionNotDetermined) {
     return <PermissionGrantingPrompt allowSkip={false} />;
   }
 
@@ -54,26 +41,22 @@ export function NotificationSettingsScreen({}: PropTypes) {
         <Divider />
         <Padder scale={1} />
         <View style={globalStyles.flex}>
-          {isLoading ? (
-            <LoadingView />
-          ) : (
-            topics.map((item) => (
-              <List.Item
-                key={item.id}
-                title={item.label}
-                right={() => (
-                  <Switch
-                    value={item.selected}
-                    onValueChange={(subscribe) => toggleTopic({id: item.id, subscribe})}
-                    disabled={switchDisabled}
-                  />
-                )}
-              />
-            ))
-          )}
+          {topics.map((item) => (
+            <List.Item
+              key={item.id}
+              title={item.label}
+              right={() => (
+                <Switch
+                  value={item.isSubscribed}
+                  onValueChange={(subscribe) => toggleTopic({id: item.id, subscribe})}
+                  disabled={isPermissionDenied}
+                />
+              )}
+            />
+          ))}
           <Padder scale={1} />
           <Divider />
-          {!permissionAllowed(pushAuthorizationStatus) && (
+          {isPermissionDenied && (
             <View style={styles.container}>
               <View style={styles.infoContainer}>
                 <View style={[globalStyles.rowContainer, globalStyles.alignCenter, globalStyles.justifyCenter]}>

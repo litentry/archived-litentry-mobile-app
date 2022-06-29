@@ -41,7 +41,7 @@ import {TreasuryScreen} from '@ui/screens/TreasuryScreen';
 import WebviewScreen from '@ui/screens/WebviewScreen';
 import {useFirebase} from '@hooks/useFirebase';
 import {useTurnOnAllNotificationsOnAppStartForAndroid} from '@hooks/useTurnOnAllNotificationsOnAppStartForAndroid';
-import {usePushAuthorizationStatus} from '@hooks/usePushNotificationsPermissions';
+import {usePushNotificationsPermission} from '@atoms/pushNotification';
 import {MainDrawerAppBar, MainStackAppBar} from '@ui/navigation/AppBars';
 import {
   AccountsStackParamList,
@@ -202,20 +202,18 @@ const AppStack = createNativeStackNavigator<AppStackParamList>();
 
 function AppNavigator() {
   useTurnOnAllNotificationsOnAppStartForAndroid();
-  const {isPnPromptNeeded, skipPnPermission, isLoading} = usePushAuthorizationStatus();
+  const {isCheckingAuthorizationStatus, isPermissionPromptNeeded, skiPushNotificationPermission} =
+    usePushNotificationsPermission();
 
-  // We need this here, because otherwise PermissionGrantingPrompt
-  // wouldn't mount on the first render, loading indicator is not necessary
-  // because the promise is resolving almost immediately
-  if (isLoading) {
+  if (isCheckingAuthorizationStatus) {
     return null;
   }
 
   return (
     <AppStack.Navigator screenOptions={{headerShown: false}}>
-      {isPnPromptNeeded ? (
+      {isPermissionPromptNeeded ? (
         <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen}>
-          {() => <PermissionGrantingPrompt skipPnPermission={skipPnPermission} />}
+          {() => <PermissionGrantingPrompt skipPnPermission={skiPushNotificationPermission} />}
         </AppStack.Screen>
       ) : undefined}
       <AppStack.Screen

@@ -2,9 +2,9 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Padder} from '@ui/components/Padder';
 import SafeView from '@ui/components/SafeView';
-import {usePushNotificationsPermissions} from '@hooks/usePushNotificationsPermissions';
+import {usePushNotificationsPermission} from '@atoms/pushNotification';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {Caption, Headline, Button, useTheme, Subheading, Icon} from '@ui/library';
+import {Caption, Headline, Button, Icon} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 
 type Props = {
@@ -13,9 +13,7 @@ type Props = {
 };
 
 function PermissionGrantingPromptScreen({skipPnPermission, allowSkip = true}: Props) {
-  const {colors} = useTheme();
-  const {requestPermissions} = usePushNotificationsPermissions();
-  const [error, setError] = React.useState<string>();
+  const {requestPermission} = usePushNotificationsPermission();
 
   return (
     <Layout style={globalStyles.flex}>
@@ -28,23 +26,8 @@ function PermissionGrantingPromptScreen({skipPnPermission, allowSkip = true}: Pr
           <Caption style={globalStyles.textCenter}>
             Enable notifications to make sure you don't miss out on important events
           </Caption>
-          {error ? (
-            <>
-              <Padder scale={1} />
-              <Subheading style={[globalStyles.textCenter, {color: colors.error}]}>{error}</Subheading>
-            </>
-          ) : null}
           <Padder scale={2} />
-          <Button
-            mode="contained"
-            onPress={() =>
-              requestPermissions(undefined, {
-                onError(e) {
-                  console.log(e);
-                  setError('Permission denied, please turn the notification on in the settings app!');
-                },
-              })
-            }>
+          <Button mode="contained" onPress={() => requestPermission()}>
             Allow Notifications
           </Button>
           <Padder scale={0.5} />
