@@ -54,8 +54,8 @@ export enum MessageType {
   FORGET_ACCOUNT = 'FORGET_ACCOUNT',
   FORGET_ACCOUNT_RESULT = 'FORGET_ACCOUNT_RESULT',
 
-  UPDATE_META = 'UPDATE_META',
-  UPDATE_META_RESULT = 'UPDATE_META_RESULT',
+  UPDATE_ACCOUNT_META = 'UPDATE_ACCOUNT_META',
+  UPDATE_ACCOUNT_META_RESULT = 'UPDATE_ACCOUNT_META_RESULT',
 
   VERIFY_CREDENTIALS = 'VERIFY_CREDENTIALS',
   VERIFY_CREDENTIALS_RESULT = 'VERIFY_CREDENTIALS_RESULT',
@@ -120,6 +120,7 @@ type ValidateMnemonicResultMessage = {
   type: MessageType.VALIDATE_MNEMONIC_RESULT;
   payload: {
     isValid: boolean;
+    address: string;
   };
 };
 
@@ -190,12 +191,17 @@ type RestoreAccountMessage = {
   };
 };
 
-type RestoreAccountResultMessage = {
-  type: MessageType.RESTORE_ACCOUNT_RESULT;
-  payload: {
-    account: KeyringPair$Json;
-  };
-};
+type RestoreAccountResultMessage =
+  | {
+      type: MessageType.RESTORE_ACCOUNT_RESULT;
+      payload: {
+        account: KeyringPair$Json;
+      };
+    }
+  | {
+      type: MessageType.RESTORE_ACCOUNT_RESULT;
+      payload: ErrorPayload;
+    };
 
 type ExportAccountMessage = {
   type: MessageType.EXPORT_ACCOUNT;
@@ -247,16 +253,16 @@ type ForgetAccountResultMessage = {
   };
 };
 
-type UpdateMetaMessage = {
-  type: MessageType.UPDATE_META;
+type UpdateAccountMetaMessage = {
+  type: MessageType.UPDATE_ACCOUNT_META;
   payload: {
     address: string;
     meta: KeyringPair$Meta;
   };
 };
 
-type UpdateMetaResultMessage = {
-  type: MessageType.UPDATE_META_RESULT;
+type UpdateAccountMetaResultMessage = {
+  type: MessageType.UPDATE_ACCOUNT_META_RESULT;
   payload: {
     address: string;
     meta: KeyringPair$Meta;
@@ -307,6 +313,9 @@ type InitApiMessage = {
 
 type ReconnectApiMessage = {
   type: MessageType.RECONNECT_API;
+  payload: {
+    wsEndpoint: string;
+  };
 };
 
 type ApiConnectedMessage = {
@@ -352,8 +361,8 @@ export type Message =
   | AddExternalAccountResultMessage
   | ForgetAccountMessage
   | ForgetAccountResultMessage
-  | UpdateMetaMessage
-  | UpdateMetaResultMessage
+  | UpdateAccountMetaMessage
+  | UpdateAccountMetaResultMessage
   | VerifyCredentialsMessage
   | VerifyCredentialsResultMessage
   | SignMessage
@@ -486,6 +495,16 @@ export function restoreAccountMessage(payload: RestoreAccountMessage['payload'])
 export function restoreAccountResultMessage(
   payload: RestoreAccountResultMessage['payload'],
 ): RestoreAccountResultMessage {
+  if ('isError' in payload) {
+    return {
+      type: MessageType.RESTORE_ACCOUNT_RESULT,
+      payload: {
+        isError: true,
+        message: payload.message,
+      },
+    };
+  }
+
   return {
     type: MessageType.RESTORE_ACCOUNT_RESULT,
     payload,
@@ -545,16 +564,18 @@ export function forgetAccountResultMessage(payload: ForgetAccountResultMessage['
   };
 }
 
-export function updateMetaMessage(payload: UpdateMetaMessage['payload']): UpdateMetaMessage {
+export function updateAccountMetaMessage(payload: UpdateAccountMetaMessage['payload']): UpdateAccountMetaMessage {
   return {
-    type: MessageType.UPDATE_META,
+    type: MessageType.UPDATE_ACCOUNT_META,
     payload,
   };
 }
 
-export function updateMetaResultMessage(payload: UpdateMetaResultMessage['payload']): UpdateMetaResultMessage {
+export function updateAccountMetaResultMessage(
+  payload: UpdateAccountMetaResultMessage['payload'],
+): UpdateAccountMetaResultMessage {
   return {
-    type: MessageType.UPDATE_META_RESULT,
+    type: MessageType.UPDATE_ACCOUNT_META_RESULT,
     payload,
   };
 }
@@ -606,9 +627,10 @@ export function initApiMessage(payload: InitApiMessage['payload']): InitApiMessa
   };
 }
 
-export function reconnectApiMessage(): ReconnectApiMessage {
+export function reconnectApiMessage(payload: ReconnectApiMessage['payload']): ReconnectApiMessage {
   return {
     type: MessageType.RECONNECT_API,
+    payload,
   };
 }
 
