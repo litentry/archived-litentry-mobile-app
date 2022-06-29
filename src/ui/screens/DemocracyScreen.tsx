@@ -10,7 +10,7 @@ import {Card, Subheading, useTheme, Button, List, Headline, Caption, Divider} fr
 import globalStyles, {standardPadding} from '@ui/styles';
 import {useDemocracy, DemocracyProposal, DemocracyReferendum} from 'src/api/hooks/useDemocracy';
 import {EmptyStateTeaser} from '@ui/components/EmptyStateTeaser';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 import {NavigationProp} from '@react-navigation/native';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {ProposalCall} from '@ui/components/ProposalCall';

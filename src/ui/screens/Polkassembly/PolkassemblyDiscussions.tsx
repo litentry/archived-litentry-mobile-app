@@ -12,7 +12,7 @@ import {polkassemblyDiscussionDetail} from '@ui/navigation/routeKeys';
 import {Padder} from '@ui/components/Padder';
 import {ActivityIndicator} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {SupportedNetworkType} from 'src/types';

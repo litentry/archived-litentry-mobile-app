@@ -1,7 +1,7 @@
 import React, {useCallback, useState, useRef} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import {TextInput, Button, Tabs, TabScreen, useTabNavigation, useTabIndex, useTheme, HelperText} from '@ui/library';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 import QRCamera, {QRCameraRef} from '@ui/components/QRCamera';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';

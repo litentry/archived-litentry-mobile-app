@@ -7,7 +7,7 @@ import LoadingView from '@ui/components/LoadingView';
 import {useAccount} from 'src/api/hooks/useAccount';
 import globalStyles from '@ui/styles';
 import {stringShorten} from '@polkadot/util';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 
 type PropTypes = {
   address: string;

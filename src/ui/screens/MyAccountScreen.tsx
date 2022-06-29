@@ -4,7 +4,6 @@ import Clipboard from '@react-native-community/clipboard';
 import {stringShorten} from '@polkadot/util';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import Identicon from '@polkadot/reactnative-identicon';
-import {useAccounts} from 'context/AccountsContext';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {
@@ -28,6 +27,8 @@ import {Layout} from '@ui/components/Layout';
 import {AccountBalance} from '@ui/components/Account/AccountBalance';
 import {SendFund} from '@ui/components/SendFund';
 import {ReceiveFund} from '@ui/components/ReceiveFund';
+import {useAppAccounts} from '@polkadotApi/useAppAccounts';
+import {useKeyring} from '@polkadotApi/useKeyring';
 
 type ScreenProps = {
   navigation: NavigationProp<CompleteNavigatorParamList>;
@@ -37,8 +38,10 @@ type ScreenProps = {
 export function MyAccountScreen({navigation, route}: ScreenProps) {
   const {address} = route.params;
   const {data: accountInfo} = useAccount(address);
-  const {accounts, removeAccount} = useAccounts();
+
+  const {accounts} = useAppAccounts();
   const account = accounts[address];
+  const {forgetAccount} = useKeyring();
 
   const snackbar = useSnackbar();
   const copyToClipboard = () => {
@@ -132,7 +135,7 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
                 {
                   text: 'Delete',
                   onPress: () => {
-                    removeAccount(address);
+                    forgetAccount(address);
                     navigation.navigate(accountsScreen, {});
                   },
                   style: 'destructive',
@@ -141,7 +144,7 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
             }}>
             Remove account
           </Button>
-          {!account?.isExternal ? (
+          {!account?.meta.isExternal ? (
             <>
               <Padder scale={1} />
               <Button
@@ -153,6 +156,7 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
             </>
           ) : null}
         </View>
+        <Padder scale={2} />
       </ScrollView>
 
       <SendFundBottomSheet onClose={Keyboard.dismiss}>

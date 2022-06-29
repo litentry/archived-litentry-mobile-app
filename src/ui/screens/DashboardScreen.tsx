@@ -25,10 +25,8 @@ import {TREASURY_SUMMARY_QUERY} from 'src/api/hooks/useTreasurySummary';
 import {EventsCalendarTeaser} from '@ui/components/EventsCalendarTeaser';
 import {useBottomSheet} from '@ui/library';
 import NetworkSelectionList from '@ui/components/NetworkSelectionList';
-import {useNetwork} from 'context/NetworkContext';
-import {NetworkType} from 'src/types';
+import {NetworkType, useAvailableNetworks, useNetwork} from '@atoms/network';
 import {NetworkSwitch} from '@ui/components/NetworkSwitch';
-import {useParachainAppEnabled} from 'src/hooks/useParachainAppEnabled';
 
 const refetchQueries = [DEMOCRACY_SUMMARY_QUERY, COUNCIL_SUMMARY_QUERY, BOUNTIES_SUMMARY_QUERY, TREASURY_SUMMARY_QUERY];
 
@@ -36,11 +34,11 @@ type Props = NativeStackScreenProps<DashboardStackParamList, 'Dashboard'>;
 
 function DashboardScreen({navigation, route}: Props) {
   const {closeBottomSheet, openBottomSheet, BottomSheet} = useBottomSheet();
-  const {currentNetwork, getAvailableNetworks, select} = useNetwork();
-  const {parachainAppEnabled} = useParachainAppEnabled();
+  const {currentNetwork, selectCurrentNetwork} = useNetwork();
+  const {availableNetworks} = useAvailableNetworks();
 
   const changeNetwork = (network: NetworkType) => {
-    select(network);
+    selectCurrentNetwork(network);
     closeBottomSheet();
   };
 
@@ -67,11 +65,7 @@ function DashboardScreen({navigation, route}: Props) {
 
       <BottomSheet>
         <Layout style={globalStyles.paddedContainer}>
-          <NetworkSelectionList
-            items={getAvailableNetworks({parachainsEnabled: parachainAppEnabled})}
-            selected={currentNetwork}
-            onSelect={changeNetwork}
-          />
+          <NetworkSelectionList items={availableNetworks} selected={currentNetwork} onSelect={changeNetwork} />
           <Padder scale={2} />
         </Layout>
       </BottomSheet>

@@ -1,6 +1,6 @@
 import React from 'react';
 import {SectionList, StyleSheet, View} from 'react-native';
-import {NavigationProp, useNavigation} from '@react-navigation/core';
+import {NavigationProp} from '@react-navigation/core';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
 import {SelectAccount} from '@ui/components/SelectAccount';
@@ -19,8 +19,12 @@ import {useChainInfo} from 'src/api/hooks/useChainInfo';
 import {BN_ZERO} from '@polkadot/util';
 import {formattedStringToBn} from 'src/utils/balance';
 import {CrowdloanSummaryTeaser} from '@ui/components/CrowdloanSummaryTeaser';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 import {InputLabel} from '@ui/library/InputLabel';
+
+type ScreenProps = {
+  navigation: NavigationProp<CrowdloansStackParamList>;
+};
 
 function CrowdloanHeader() {
   return (
@@ -32,7 +36,7 @@ function CrowdloanHeader() {
   );
 }
 
-export function CrowdloanScreen() {
+export function CrowdloanScreen({navigation}: ScreenProps) {
   const [openContributeId, setOpenContributeId] = React.useState<string>();
   const {activeCrowdloans, endedCrowdloans, loading} = useAllCrowdloans();
   const ongoingKey = `Ongoing (${activeCrowdloans.length ?? 0})`;
@@ -66,6 +70,7 @@ export function CrowdloanScreen() {
                 onPressContribute={() => {
                   setOpenContributeId(item.paraId);
                 }}
+                navigation={navigation}
               />
             );
           }}
@@ -88,8 +93,14 @@ export function CrowdloanScreen() {
   );
 }
 
-function Fund({item, active, onPressContribute}: {item: Crowdloan; active: boolean; onPressContribute: () => void}) {
-  const navigation = useNavigation<NavigationProp<CrowdloansStackParamList>>();
+type FundsProps = {
+  item: Crowdloan;
+  active: boolean;
+  onPressContribute: () => void;
+  navigation: NavigationProp<CrowdloansStackParamList>;
+};
+
+function Fund({item, active, onPressContribute, navigation}: FundsProps) {
   const {colors} = useTheme();
   const {currentNetwork} = useNetwork();
 
@@ -122,7 +133,8 @@ function Fund({item, active, onPressContribute}: {item: Crowdloan; active: boole
               uppercase={false}
               color={isSpecial ? colors.primary : colors.placeholder}
               compact
-              onPress={onPressContribute}>
+              onPress={onPressContribute}
+              testID="crowdloan-contribute-button">
               + Contribute
             </Button>
           )}
@@ -221,7 +233,7 @@ function ContributeBox({
 
       <Padder scale={2} />
       <View style={contributeBoxStyles.row}>
-        <Button mode="outlined" onPress={reset}>
+        <Button mode="outlined" onPress={reset} testID="cancel-button">
           CANCEL
         </Button>
         <Button
@@ -236,7 +248,8 @@ function ContributeBox({
               });
               reset();
             }
-          }}>
+          }}
+          testID="contribute-button">
           Contribute
         </Button>
       </View>
