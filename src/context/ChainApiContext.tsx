@@ -2,7 +2,7 @@ import React, {createContext, useCallback, useContext, useEffect, useReducer} fr
 import '@polkadot/api-augment';
 import {ApiPromise, WsProvider} from '@polkadot/api';
 import {createLogger} from 'src/utils/logger';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 import {useNavigation} from '@react-navigation/core';
 
 const initialState: ChainApiContext = {
@@ -22,14 +22,14 @@ const logger = createLogger('ChainApiContext');
 export function ChainApiContextProvider({children}: {children: React.ReactNode}) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const {currentNetwork, select} = useNetwork();
+  const {currentNetwork, selectCurrentNetwork} = useNetwork();
   const navigation = useNavigation();
 
   const wsAddress = currentNetwork.ws[state.wsConnectionIndex];
 
   const reconnect = useCallback(() => {
-    select({...currentNetwork});
-  }, [currentNetwork, select]);
+    selectCurrentNetwork({...currentNetwork});
+  }, [currentNetwork, selectCurrentNetwork]);
 
   // automatic api reconnect
   useEffect(() => {
@@ -102,7 +102,7 @@ export function ChainApiContextProvider({children}: {children: React.ReactNode})
       apiPromise.off('error', handleError);
       // clearInterval(retryInterval);
     };
-  }, [currentNetwork, wsAddress, navigation, select]);
+  }, [currentNetwork, wsAddress, navigation]);
 
   return <ChainApiContext.Provider value={{...state, reconnect}}>{children}</ChainApiContext.Provider>;
 }
