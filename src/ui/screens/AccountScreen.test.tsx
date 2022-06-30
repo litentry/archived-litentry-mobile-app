@@ -22,6 +22,7 @@ describe('AccountScreen', () => {
     const {findByText, findAllByText} = render(<AccountScreen route={route} />);
     await findByText('ADDRESS');
     await findByText('14yx4vPAACZRhoDQm…RCe5tj1zPomhhS29a');
+    await findByText('Email');
     await findByText('info@purestake.com');
     await findByText('Twitter');
     await findByText('@nachortti');

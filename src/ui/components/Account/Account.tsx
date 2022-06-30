@@ -13,6 +13,7 @@ type Props = {
 
 export function Account({account, name}: Props) {
   const display = name || stringShorten(account.display, 10);
+
   return (
     <View style={styles.container}>
       <Caption style={styles.display}>{display}</Caption>
