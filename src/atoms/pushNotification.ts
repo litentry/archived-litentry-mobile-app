@@ -82,7 +82,7 @@ export function usePushTopics() {
 
     for (const id in subscriptionTopics) {
       const error = await messaging().subscribeToTopic(id);
-      if (error == undefined) {
+      if (error == null) {
         successResults[id as SUBSCRIPTION_ID] = {isSubscribed: true};
       }
     }
@@ -95,7 +95,7 @@ export function usePushTopics() {
 
     for (const id in subscriptionTopics) {
       const error = await messaging().unsubscribeFromTopic(id);
-      if (error == undefined) {
+      if (error == null) {
         successResults[id as SUBSCRIPTION_ID] = {isSubscribed: false};
       }
     }
