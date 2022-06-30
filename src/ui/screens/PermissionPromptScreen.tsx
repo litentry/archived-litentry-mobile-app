@@ -12,7 +12,7 @@ type Props = {
   allowSkip?: boolean;
 };
 
-function PermissionGrantingPromptScreen({skipPermission, allowSkip = true}: Props) {
+function PermissionPrompt({skipPermission, allowSkip = true}: Props) {
   const {requestPermission} = useRequestPermission();
 
   return (
@@ -38,7 +38,7 @@ function PermissionGrantingPromptScreen({skipPermission, allowSkip = true}: Prop
   );
 }
 
-export const PermissionGrantingPrompt = React.memo(PermissionGrantingPromptScreen);
+export const PermissionPromptScreen = React.memo(PermissionPrompt);
 
 const styles = StyleSheet.create({
   container: {alignItems: 'center', justifyContent: 'center', flex: 1, padding: standardPadding * 4},

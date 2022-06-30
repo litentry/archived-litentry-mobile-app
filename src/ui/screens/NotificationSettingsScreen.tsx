@@ -8,7 +8,7 @@ import {usePushTopics, usePermissions} from '@atoms/pushNotification';
 import {DrawerParamList} from '@ui/navigation/navigation';
 import {Text, List, Divider, Switch, Headline, Subheading, Button, Caption} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {PermissionGrantingPrompt} from './PermissionGrantingPrompt';
+import {PermissionPromptScreen} from '@ui/screens/PermissionPromptScreen';
 import {Linking} from 'react-native';
 
 type PropTypes = {
@@ -24,7 +24,7 @@ export function NotificationSettingsScreen({}: PropTypes) {
   };
 
   if (isPermissionNotDetermined) {
-    return <PermissionGrantingPrompt allowSkip={false} />;
+    return <PermissionPromptScreen allowSkip={false} />;
   }
 
   return (

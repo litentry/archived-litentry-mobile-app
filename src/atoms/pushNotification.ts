@@ -77,30 +77,30 @@ export function usePushTopics() {
     [subscriptionTopics, setSubscriptionTopics],
   );
 
-  const subscribeToAllTopics = useCallback(() => {
+  const subscribeToAllTopics = useCallback(async () => {
+    const successResults = {} as Subscription;
+
     for (const id in subscriptionTopics) {
-      messaging()
-        .subscribeToTopic(id)
-        .then(() => {
-          setSubscriptionTopics({
-            ...subscriptionTopics,
-            [id]: {isSubscribed: true},
-          });
-        });
+      const error = await messaging().subscribeToTopic(id);
+      if (error == undefined) {
+        successResults[id as SUBSCRIPTION_ID] = {isSubscribed: true};
+      }
     }
+
+    setSubscriptionTopics({...subscriptionTopics, ...successResults});
   }, [subscriptionTopics, setSubscriptionTopics]);
 
-  const unSubscribeToAllTopics = useCallback(() => {
+  const unSubscribeToAllTopics = useCallback(async () => {
+    const successResults = {} as Subscription;
+
     for (const id in subscriptionTopics) {
-      messaging()
-        .unsubscribeFromTopic(id)
-        .then(() => {
-          setSubscriptionTopics({
-            ...subscriptionTopics,
-            [id]: {isSubscribed: false},
-          });
-        });
+      const error = await messaging().unsubscribeFromTopic(id);
+      if (error == undefined) {
+        successResults[id as SUBSCRIPTION_ID] = {isSubscribed: false};
+      }
     }
+
+    setSubscriptionTopics({...subscriptionTopics, ...successResults});
   }, [subscriptionTopics, setSubscriptionTopics]);
 
   return {

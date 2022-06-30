@@ -28,7 +28,7 @@ import {CrowdloanScreen} from '@ui/screens/Parachains/CrowdloanScreen';
 import {ParachainsOverviewScreen} from '@ui/screens/Parachains/OverviewScreen';
 import {ParachainDetailScreen} from '@ui/screens/Parachains/ParachainDetailScreen';
 import {ParathreadsScreen} from '@ui/screens/Parachains/ParathreadsScreen';
-import {PermissionGrantingPrompt} from '@ui/screens/PermissionGrantingPrompt';
+import {PermissionPromptScreen} from '@ui/screens/PermissionPromptScreen';
 import {PolkassemblyDiscussionDetail} from '@ui/screens/Polkassembly/PolkassemblyDiscussionDetail';
 import {PolkassemblyDiscussions} from '@ui/screens/Polkassembly/PolkassemblyDiscussions';
 import {ProposeTipScreen} from '@ui/screens/ProposeTipScreen';
@@ -214,7 +214,7 @@ function AppNavigator() {
     <AppStack.Navigator screenOptions={{headerShown: false}}>
       {isPermissionPromptNeeded ? (
         <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen}>
-          {() => <PermissionGrantingPrompt skipPermission={skipPermission} />}
+          {() => <PermissionPromptScreen skipPermission={skipPermission} />}
         </AppStack.Screen>
       ) : undefined}
       <AppStack.Screen
