@@ -1,5 +1,5 @@
-import React from 'react';
 import {Blob} from 'blob-polyfill';
+import React from 'react';
 import 'react-native-gesture-handler/jestSetup';
 
 jest.mock('react-native-reanimated', () => {
@@ -59,13 +59,6 @@ jest.mock('react-native-share', () => {
   };
 });
 
-jest.mock('@react-navigation/native', () => ({
-  ...jest.requireActual('@react-navigation/native'),
-  useNavigation: () => {
-    return mockNavigation;
-  },
-}));
-
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
 
 jest.mock('react-native-fs', () => {
@@ -74,6 +67,15 @@ jest.mock('react-native-fs', () => {
   };
 });
 
+jest.mock('react-native-device-info', () => {
+  return {
+    __esModule: true,
+    default: {
+      getVersion: jest.fn(() => {}),
+      getBuildNumber: jest.fn(() => {}),
+    },
+  };
+});
 jest.mock('@react-native-community/clipboard', () => {
   return {
     setString: jest.fn(),
@@ -83,4 +85,3 @@ jest.mock('@react-native-community/clipboard', () => {
 jest.mock('@react-navigation/material-top-tabs', () => ({
   createMaterialTopTabNavigator: () => jest.fn(),
 }));
-jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
