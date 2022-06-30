@@ -12,11 +12,6 @@ enum SUBSCRIPTION_ID {
   NEW_REFERENDUM = 'democracy.Started',
 }
 
-type TogglePushTopicPayload = {
-  id: SUBSCRIPTION_ID;
-  subscribe: boolean;
-};
-
 type Subscription = {
   [key in SUBSCRIPTION_ID]: {isSubscribed: boolean};
 };
@@ -60,42 +55,52 @@ export function usePushTopics() {
   }, [subscriptionTopics]);
 
   const toggleTopic = useCallback(
-    ({id, subscribe}: TogglePushTopicPayload) => {
-      subscribe ? messaging().subscribeToTopic(id) : messaging().unsubscribeFromTopic(id);
+    ({id, subscribe}: {id: SUBSCRIPTION_ID; subscribe: boolean}) => {
+      // optimistic update
       setSubscriptionTopics({
         ...subscriptionTopics,
         [id]: {isSubscribed: subscribe},
+      });
+
+      const toggleSubscriptionPromise = subscribe
+        ? messaging().subscribeToTopic(id)
+        : messaging().unsubscribeFromTopic(id);
+
+      // restore previous state if failing
+      toggleSubscriptionPromise.catch(() => {
+        setSubscriptionTopics({
+          ...subscriptionTopics,
+          [id]: {isSubscribed: !subscribe},
+        });
       });
     },
     [subscriptionTopics, setSubscriptionTopics],
   );
 
   const subscribeToAllTopics = useCallback(() => {
-    const ids = Object.keys(subscriptionTopics) as SUBSCRIPTION_ID[];
-    const subscriptionPromises = ids.map((topicId) => messaging().subscribeToTopic(topicId));
-
-    Promise.all(subscriptionPromises);
-
-    const subscribedTopics = ids.reduce((subscription, topicId) => {
-      subscription[topicId] = {isSubscribed: true};
-      return subscription;
-    }, {} as Subscription);
-
-    setSubscriptionTopics(subscribedTopics);
+    for (const id in subscriptionTopics) {
+      messaging()
+        .subscribeToTopic(id)
+        .then(() => {
+          setSubscriptionTopics({
+            ...subscriptionTopics,
+            [id]: {isSubscribed: true},
+          });
+        });
+    }
   }, [subscriptionTopics, setSubscriptionTopics]);
 
   const unSubscribeToAllTopics = useCallback(() => {
-    const ids = Object.keys(subscriptionTopics) as SUBSCRIPTION_ID[];
-    const subscriptionPromises = ids.map((topicId) => messaging().subscribeToTopic(topicId));
-
-    Promise.all(subscriptionPromises);
-
-    const unSubscribedTopics = ids.reduce((subscription, topicId) => {
-      subscription[topicId] = {isSubscribed: false};
-      return subscription;
-    }, {} as Subscription);
-
-    setSubscriptionTopics(unSubscribedTopics);
+    for (const id in subscriptionTopics) {
+      messaging()
+        .unsubscribeFromTopic(id)
+        .then(() => {
+          setSubscriptionTopics({
+            ...subscriptionTopics,
+            [id]: {isSubscribed: false},
+          });
+        });
+    }
   }, [subscriptionTopics, setSubscriptionTopics]);
 
   return {
