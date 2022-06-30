@@ -4,7 +4,7 @@ import Clipboard from '@react-native-community/clipboard';
 import {TextInput, HelperText, Button, Title, IconButton} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {isAddressValid, parseAddress} from 'src/utils/address';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 import {useSnackbar} from 'context/SnackbarContext';
 import QRCamera, {QRCameraRef} from './QRCamera';
 import {Padder} from './Padder';

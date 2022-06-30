@@ -4,9 +4,7 @@ import {QueryClient, QueryClientProvider} from 'react-query';
 import {useStopStartupTrace} from 'react-native-startup-trace';
 import {ChainApiContextProvider} from 'context/ChainApiContext';
 import {TxProvider} from 'context/TxContext';
-import {AccountsProvider} from 'context/AccountsContext';
 import InAppNotificationContextProvider from 'context/InAppNotificationContext';
-import NetworkContextProvider, {useNetwork} from 'context/NetworkContext';
 import {ErrorBoundary} from '@ui/components/ErrorBoundary';
 import AppNavigator from '@ui/navigation/AppNavigator';
 import {NavigationContainer} from '@ui/navigation/NavigationContainer';
@@ -15,11 +13,14 @@ import SnackbarProvider from 'context/SnackbarContext';
 import {LitentryApiClientProvider} from 'context/LitentryApiContext';
 import {WalletConnectProvider} from 'context/WalletConnectProvider';
 import {Web3WalletProvider} from 'context/Web3WalletContext';
-import {useRemoteConfig} from 'src/hooks/useRemoteConfig';
 
 // init type registry
 import 'src/typeRegistry';
 import {ParachainAppNavigator} from '@ui/navigation/ParachainAppNavigator';
+import {PolkadotApiWebView} from '@polkadotApi/PolkadotApiWebView';
+import {RecoilRoot} from 'recoil';
+import {useNetwork} from '@atoms/network';
+import {useActivateFirebaseConfig} from './utils/firebaseConfig';
 
 const queryClient = new QueryClient();
 
@@ -49,33 +50,32 @@ function LitentryApps() {
 
 export default function App() {
   useStopStartupTrace();
-  useRemoteConfig();
+  useActivateFirebaseConfig();
 
   return (
-    <NetworkContextProvider>
+    <RecoilRoot>
       <LitentryApiClientProvider>
         <QueryClientProvider client={queryClient}>
           <NavigationContainer>
             <ChainApiContextProvider>
-              <AccountsProvider>
-                <SafeAreaProvider>
-                  <ThemeProvider>
-                    <InAppNotificationContextProvider>
-                      <ErrorBoundary>
-                        <TxProvider>
-                          <SnackbarProvider>
-                            <LitentryApps />
-                          </SnackbarProvider>
-                        </TxProvider>
-                      </ErrorBoundary>
-                    </InAppNotificationContextProvider>
-                  </ThemeProvider>
-                </SafeAreaProvider>
-              </AccountsProvider>
+              <SafeAreaProvider>
+                <ThemeProvider>
+                  <InAppNotificationContextProvider>
+                    <ErrorBoundary>
+                      <TxProvider>
+                        <SnackbarProvider>
+                          <LitentryApps />
+                          <PolkadotApiWebView />
+                        </SnackbarProvider>
+                      </TxProvider>
+                    </ErrorBoundary>
+                  </InAppNotificationContextProvider>
+                </ThemeProvider>
+              </SafeAreaProvider>
             </ChainApiContextProvider>
           </NavigationContainer>
         </QueryClientProvider>
       </LitentryApiClientProvider>
-    </NetworkContextProvider>
+    </RecoilRoot>
   );
 }

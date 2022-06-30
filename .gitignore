@@ -69,3 +69,5 @@ buck-out/
 /sentry/bundles/
 
 .env
+
+android/app/src/main/assets/polkadotApi.html

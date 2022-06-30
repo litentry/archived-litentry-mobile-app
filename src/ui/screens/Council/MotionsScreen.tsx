@@ -16,14 +16,14 @@ import {SelectAccount} from '@ui/components/SelectAccount';
 import type {Account} from 'src/api/hooks/useAccount';
 import {InputLabel} from '@ui/library/InputLabel';
 import {useCouncilAccounts} from 'src/hooks/useCouncilAccounts';
-import type {Account as LocalAccount} from 'context/AccountsContext';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 import type {SupportedNetworkType} from 'src/types';
 import {Caption, Card, Divider} from 'react-native-paper';
 import {ProposalCall} from '@ui/components/ProposalCall';
 import {ItemRowBlock} from '@ui/components/ItemRowBlock';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {getProposalTitle} from 'src/utils/proposal';
+import type {Account as AppAccount} from '@polkadotApi/types';
 
 type Vote = 'Aye' | 'Nay' | 'Close';
 
@@ -91,7 +91,7 @@ type VoteModalProps = {
   refetchMotions: () => MotionsQueryResult;
   voteType?: Vote;
   motion?: CouncilMotion;
-  councilAccounts?: LocalAccount[];
+  councilAccounts?: AppAccount[];
 };
 
 function VoteModal({visible, setVisible, refetchMotions, voteType, motion, councilAccounts}: VoteModalProps) {
@@ -209,7 +209,7 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
   };
 
   const Actions = (
-    <View style={globalStyles.rowAlignCenter}>
+    <View style={globalStyles.rowAlignCenter} testID="motion-container">
       <Subheading>{`Aye ${votes?.ayes?.length}/${votes?.threshold} `}</Subheading>
       <Padder scale={0.5} />
       {(() => {
@@ -262,32 +262,35 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
           left={() => <Headline>{`#${proposal.index}`}</Headline>}
           right={() => <View>{Actions}</View>}
         />
-        {proposal.proposer && (
+        {proposal.proposer ? (
           <ItemRowBlock label="Proposer">
             <AccountTeaser account={proposal.proposer.account} />
           </ItemRowBlock>
-        )}
-        {proposal.payout && (
+        ) : null}
+        {proposal.payout ? (
           <ItemRowBlock label="Payout">
             <Caption>{proposal.payout}</Caption>
           </ItemRowBlock>
-        )}
-        {proposal.beneficiary && (
+        ) : null}
+        {proposal.beneficiary ? (
           <ItemRowBlock label="Beneficiary">
             <AccountTeaser account={proposal.beneficiary.account} />
           </ItemRowBlock>
-        )}
-        {proposal.payout && (
+        ) : null}
+        {proposal.payout ? (
           <ItemRowBlock label="Bond">
             <Caption>{proposal.bond}</Caption>
           </ItemRowBlock>
-        )}
-        <ProposalCall proposal={motion.proposal} />
+        ) : null}
+        {motion.proposal ? <ProposalCall proposal={motion.proposal} /> : null}
       </Card.Content>
       <Padder scale={1} />
       <Divider />
       <View style={styles.polkaLink}>
-        <Button icon="open-in-new" onPress={openInPolkassembly(motion)}>{`Polkassembly`}</Button>
+        <Button
+          icon="open-in-new"
+          onPress={openInPolkassembly(motion)}
+          testID="polkassembly-button">{`Polkassembly`}</Button>
       </View>
     </Card>
   );

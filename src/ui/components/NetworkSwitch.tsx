@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 import {Icon, Text, useTheme} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {useApi} from 'context/ChainApiContext';

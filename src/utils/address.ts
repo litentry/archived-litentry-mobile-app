@@ -6,7 +6,8 @@ import {
   ADDRESS_PREFIX_LITMUS,
   ADDRESS_PREFIX_POLKADOT,
 } from 'src/constants';
-import {AccountAddressType, NetworkType} from 'src/types';
+import type {AccountAddressType} from 'src/types';
+import type {NetworkType} from '@atoms/network';
 
 export function parseAddress(payload: string): AccountAddressType {
   const parts = trim(payload).split(':').filter(Boolean);
