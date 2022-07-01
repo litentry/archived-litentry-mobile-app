@@ -132,31 +132,6 @@ export type ValidateMnemonicResultMessage = {
   };
 };
 
-// type GetAccountsMessage = {
-//   type: MessageType.GET_ACCOUNTS;
-// };
-
-// type GetAccountsResultMessage = {
-//   type: MessageType.GET_ACCOUNTS_RESULT;
-//   payload: {
-//     accounts: KeyringAccounts;
-//   };
-// };
-
-// type GetAccountMessage = {
-//   type: MessageType.GET_ACCOUNT;
-//   payload: {
-//     address: string;
-//   };
-// };
-
-// type GetAccountResultMessage = {
-//   type: MessageType.GET_ACCOUNT_RESULT;
-//   payload: {
-//     account: KeyringAccount;
-//   };
-// };
-
 export type CreateAddressFromMnemonicMessage = {
   type: MessageType.CREATE_ADDRESS_FROM_MNEMONIC;
   payload: {
@@ -418,33 +393,6 @@ export function validateMnemonicResultMessage(
     payload,
   };
 }
-
-// export function getAccountsMessage(): GetAccountsMessage {
-//   return {
-//     type: MessageType.GET_ACCOUNTS,
-//   };
-// }
-
-// export function getAccountsResultMessage(payload: GetAccountsResultMessage['payload']): GetAccountsResultMessage {
-//   return {
-//     type: MessageType.GET_ACCOUNTS_RESULT,
-//     payload,
-//   };
-// }
-
-// export function getAccountMessage(payload: GetAccountMessage['payload']): GetAccountMessage {
-//   return {
-//     type: MessageType.GET_ACCOUNT,
-//     payload,
-//   };
-// }
-
-// export function getAccountResultMessage(payload: GetAccountResultMessage['payload']): GetAccountResultMessage {
-//   return {
-//     type: MessageType.GET_ACCOUNT_RESULT,
-//     payload,
-//   };
-// }
 
 export function createAddressFromMnemonicMessage(
   payload: CreateAddressFromMnemonicMessage['payload'],
