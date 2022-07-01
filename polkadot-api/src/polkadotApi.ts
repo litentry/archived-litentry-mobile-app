@@ -30,7 +30,7 @@ declare const window: any;
 declare const document: any;
 
 function postMessage(message: Message): void {
-  window.postMessage(JSON.stringify(message));
+  window.ReactNativeWebView.postMessage(JSON.stringify(message));
 }
 
 cryptoWaitReady().then(function () {
