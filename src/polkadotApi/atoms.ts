@@ -5,7 +5,6 @@ import {
   AddAccountMessage,
   AddExternalAccountMessage,
   CreateAddressFromMnemonicMessage,
-  CreateAddressFromMnemonicResultMessage,
   ExportAccountMessage,
   ForgetAccountMessage,
   GenerateMnemonicMessage,

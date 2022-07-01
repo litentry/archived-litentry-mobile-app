@@ -21,7 +21,7 @@ import {MessageTeaser} from '@ui/components/MessageTeaser';
 import {Subheading, Caption, Icon, useBottomSheet, Button} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
-import {SignCredentials} from '@polkadotApi/types';
+import {SignCredentials} from 'polkadot-api';
 import {useKeyring} from '@polkadotApi/useKeyring';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 
