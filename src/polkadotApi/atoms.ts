@@ -54,7 +54,7 @@ export const keyringState = atom({
   key: 'keyring',
   default: {
     createAddressFromMnemonic: (_: CreateAddressFromMnemonicMessage['payload']) => {
-      return Promise.resolve<CreateAddressFromMnemonicResultMessage['payload']>({address: ''});
+      return Promise.resolve<string>('');
     },
     addAccount: (_: AddAccountMessage['payload']) => {
       return Promise.resolve<KeyringAccount>(emptyAccountJson);

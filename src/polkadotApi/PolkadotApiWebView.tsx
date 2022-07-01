@@ -61,7 +61,7 @@ type PostMessage = (message: Message) => void;
 type ResolversRef = React.MutableRefObject<{
   resolveMnemonic: (_result: GenerateMnemonicResultMessage['payload']) => void;
   resolveValidateMnemonic: (_result: ValidateMnemonicResultMessage['payload']) => void;
-  resolveCreateAddressFromMnemonic: (_result: CreateAddressFromMnemonicResultMessage['payload']) => void;
+  resolveCreateAddressFromMnemonic: (_result: CreateAddressFromMnemonicResultMessage['payload']['address']) => void;
   resolveAddAccount: (_result: AddAccountResultMessage['payload']['account']) => void;
   resolveAddExternalAccount: (_result: AddExternalAccountResultMessage['payload']['account']) => void;
   resolveVerifyCredentials: (_result: VerifyCredentialsResultMessage['payload']) => void;
@@ -284,7 +284,7 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
         }
 
         case MessageType.CREATE_ADDRESS_FROM_MNEMONIC_RESULT: {
-          resolveCreateAddressFromMnemonic(data.payload);
+          resolveCreateAddressFromMnemonic(data.payload.address);
           break;
         }
 

@@ -46,7 +46,7 @@ export function CreateAccountScreen({
 
   const {createAddressFromMnemonic, addAccount} = useKeyring();
   React.useEffect(() => {
-    createAddressFromMnemonic({mnemonic}).then(({address: addr}) => setAddress(addr));
+    createAddressFromMnemonic({mnemonic}).then((_address) => setAddress(_address));
   }, [createAddressFromMnemonic, mnemonic]);
 
   const passwordStrength = zxcvbn(account.password).score;
