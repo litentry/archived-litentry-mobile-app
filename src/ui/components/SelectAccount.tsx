@@ -1,10 +1,11 @@
 import React from 'react';
 import {View, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
-import {Account as AppAccount, useAccounts} from 'context/AccountsContext';
 import {useAccount, Account as SubstrateChainAccount} from 'src/api/hooks/useAccount';
 import {Menu, Caption, Divider, TextInput, Text, Icon, useTheme} from '@ui/library';
 import globalStyles from '@ui/styles';
 import {AccountTeaser} from './Account/AccountTeaser';
+import {useAppAccounts} from '@polkadotApi/useAppAccounts';
+import type {Account as AppAccount} from '@polkadotApi/types';
 
 type Props = {
   onSelect: (account: SelectedAccount) => void;
@@ -17,7 +18,7 @@ type SelectedAccount = {
 };
 
 export function SelectAccount({onSelect, accounts}: Props) {
-  const {networkAccounts} = useAccounts();
+  const {networkAccounts} = useAppAccounts();
   const [selectedAccount, setSelectedAccount] = React.useState<SelectedAccount>();
   const [visible, setVisible] = React.useState(false);
   const {colors} = useTheme();
@@ -83,8 +84,7 @@ type AccountProps = {
 
 export function Account({onSelect, account}: AccountProps) {
   const {
-    isExternal,
-    meta: {name},
+    meta: {name, isExternal},
   } = account;
   const {data: accountInfo} = useAccount(account.address);
 

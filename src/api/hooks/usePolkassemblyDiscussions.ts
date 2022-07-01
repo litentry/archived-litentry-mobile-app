@@ -1,7 +1,7 @@
 import {useInfiniteQuery} from 'react-query';
 import {gql} from 'graphql-tag';
 import {print} from 'graphql';
-import {useNetwork} from 'context/NetworkContext';
+import {useNetwork} from '@atoms/network';
 
 const orderByMap = {
   lastCommented: {last_update: {last_update: 'desc'}},
