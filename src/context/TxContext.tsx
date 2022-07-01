@@ -111,7 +111,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
           });
 
           const signable = u8aToHex(extrinsicPayload.toU8a({method: true}));
-          const {signed} = await sign(signable, credentials);
+          const signed = await sign({message: signable, credentials});
 
           dispatch({
             type: 'SHOW_TX_PREVIEW',
