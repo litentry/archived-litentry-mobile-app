@@ -172,7 +172,11 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
             <Button mode="outlined" onPress={reset}>
               {`Cancel`}
             </Button>
-            <Button mode="outlined" disabled={disabled} onPress={vote}>{`VOTE ${state.voting}`}</Button>
+            <Button
+              mode="outlined"
+              disabled={disabled}
+              onPress={vote}
+              testID="vote-button">{`VOTE ${state.voting}`}</Button>
           </View>
         </Modal>
       </SafeView>
