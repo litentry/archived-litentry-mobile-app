@@ -43,7 +43,7 @@ export function TechnicalCommitteeScreen() {
                 <StatInfoBlock title="Active proposals">
                   {String(technicalCommittee?.activeProposalCount || 0)}
                 </StatInfoBlock>
-                <StatInfoBlock title="Total proposal">{technicalCommittee?.totalProposalCount || '0'}</StatInfoBlock>
+                <StatInfoBlock title="Total proposals">{technicalCommittee?.totalProposalCount || '0'}</StatInfoBlock>
               </View>
             }
           />
