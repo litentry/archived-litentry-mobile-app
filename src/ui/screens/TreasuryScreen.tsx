@@ -31,7 +31,7 @@ export function TreasuryScreen() {
   );
 }
 
-function TreasuryOverviewScreen() {
+export function TreasuryOverviewScreen() {
   const {currentNetwork} = useNetwork();
   const {loading, data: treasuryInfo, refetch, refetching} = useTreasury();
   const {colors} = useTheme();
