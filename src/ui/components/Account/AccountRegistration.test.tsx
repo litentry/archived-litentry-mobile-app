@@ -30,6 +30,12 @@ const registration = {
   ],
 } as SubstrateChainAccountRegistration;
 
+const accountInfo = [
+  ['https://twitter.com/@purestakeco', '@purestakeco'],
+  ['https://matrix.to/#/@purestakeco:matrix.parity.io', '@purestakeco:matrix.parity.io'],
+  ['https://www.purestake.com/', 'https://www.purestake.com/'],
+];
+
 describe('AccountRegistration', () => {
   it('should render the AccountRegistration component with data', async () => {
     const {findByText} = render(<AccountRegistration registration={registration} />);
@@ -40,30 +46,10 @@ describe('AccountRegistration', () => {
     await findByText('Web');
   });
 
-  it('should navigate to twitter url when clicked on the twitter user name', async () => {
+  it.each(accountInfo)('should navigate to %s url when pressed on %s id', async (url, id) => {
     const openURLSpy = jest.spyOn(Linking, 'openURL');
-    const {findByText, getByText} = render(<AccountRegistration registration={registration} />);
-    const twitterUserId = String(registration.twitter);
-    await findByText('Twitter');
-    fireEvent.press(getByText(twitterUserId));
-    expect(openURLSpy).toBeCalledWith('https://twitter.com/@purestakeco');
-  });
-
-  it('should navigate to the riot url when clicked on the riot id', async () => {
-    const openURLSpy = jest.spyOn(Linking, 'openURL');
-    const {findByText, getByText} = render(<AccountRegistration registration={registration} />);
-    const riotUserId = String(registration.riot);
-    await findByText('Riot');
-    fireEvent.press(getByText(riotUserId));
-    expect(openURLSpy).toBeCalledWith('https://matrix.to/#/@purestakeco:matrix.parity.io');
-  });
-
-  it('should navigate to webpage when clicked on website', async () => {
-    const openURLSpy = jest.spyOn(Linking, 'openURL');
-    const {getByText, findByText} = render(<AccountRegistration registration={registration} />);
-    const webUrl = String(registration.web);
-    await findByText('Web');
-    fireEvent.press(getByText(webUrl));
-    expect(openURLSpy).toBeCalledWith(webUrl);
+    const {findByText} = render(<AccountRegistration registration={registration} />);
+    fireEvent.press(await findByText(id));
+    expect(openURLSpy).toBeCalledWith(url);
   });
 });
