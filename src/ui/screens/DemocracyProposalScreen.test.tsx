@@ -190,4 +190,6 @@ describe('DemocracyProposalScreen', () => {
     expect(await findByTestId('second-button')).toBeDisabled();
     fireEvent.press(await findByText('Cancel'));
   });
+
+  // TODO: test for vote with account
 });

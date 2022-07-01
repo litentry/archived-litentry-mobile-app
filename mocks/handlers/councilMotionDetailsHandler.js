@@ -27,7 +27,7 @@ export const councilMotionDetailsHandler = graphql.query('getSubstrateChainCounc
         },
         votes: {
           __typename: 'SubstrateChainProposalVotes',
-          threshold: 8,
+          threshold: 2,
           ayes: [
             {
               __typename: 'SubstrateChainAccountInfo',

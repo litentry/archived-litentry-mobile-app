@@ -85,6 +85,7 @@ export function ImportAccount({navigation}: {navigation: NavigationProp<Accounts
             autoComplete="off"
             autoCapitalize={'none'}
             label={'Existing mnemonic seed'}
+            testID="mnemonic-seed"
             numberOfLines={4}
             multiline={true}
             value={seed}
@@ -101,6 +102,8 @@ export function ImportAccount({navigation}: {navigation: NavigationProp<Accounts
             mode="outlined"
             autoComplete="off"
             label={'Descriptive name for the account'}
+            placeholder="Enter account description"
+            testID="account-description"
             value={account.title}
             onChangeText={(text) => setAccount({...account, title: text})}
           />
@@ -110,6 +113,7 @@ export function ImportAccount({navigation}: {navigation: NavigationProp<Accounts
             autoComplete="off"
             secureTextEntry={!isPasswordVisible}
             label={'New password for the account'}
+            testID="password"
             value={account.password}
             onChangeText={(text) => {
               setAccount({...account, password: text});
@@ -135,6 +139,7 @@ export function ImportAccount({navigation}: {navigation: NavigationProp<Accounts
             mode="outlined"
             secureTextEntry={!isPasswordVisible}
             label={'Confirm password'}
+            testID="confirm-password"
             style={styles.input}
             value={account.confirmPassword}
             onChangeText={(text) => setAccount({...account, confirmPassword: text})}

@@ -37,7 +37,8 @@ describe('MyAccountScreen', () => {
   it('should copy the address to clipboard when clicked on the address', async () => {
     const clipboardSpy = jest.spyOn(Clipboard, 'setString');
     const {findByText} = render(<MyAccountScreen navigation={navigation} route={route} />);
-    // fireEvent.press(await findByText('14yx4vPAACZRhoDQm…RCe5tj1zPomhhS29a'))
-    // expect(clipboardSpy).toBeCalledWith('14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a')
+    await findByText('Send');
+    fireEvent.press(await findByText('14yx4vPAACZRhoDQm…RCe5tj1zPomhhS29a'));
+    expect(clipboardSpy).toBeCalledWith('14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a');
   });
 });

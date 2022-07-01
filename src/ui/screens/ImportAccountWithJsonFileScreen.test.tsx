@@ -4,7 +4,9 @@ import React from 'react';
 import {render} from 'src/testUtils';
 import {ImportAccountWithJsonFileScreen} from './ImportAccountWithJsonFileScreen';
 
-const navigation = {} as unknown as NavigationProp<AccountsStackParamList>;
+const navigation = {
+  navigate: jest.fn(),
+} as unknown as NavigationProp<AccountsStackParamList>;
 
 test('render the ImportAccountScreen component', () => {
   const {getByText, getAllByText} = render(<ImportAccountWithJsonFileScreen navigation={navigation} />);

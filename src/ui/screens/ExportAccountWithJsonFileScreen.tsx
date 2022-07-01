@@ -69,7 +69,8 @@ export function ExportAccountWithJsonFileScreen({route, navigation}: ScreenProps
           secureTextEntry={!isPasswordVisible}
           label={'Password'}
           value={password}
-          placeholder={'Enter account password'}
+          testID="password-id"
+          placeholder="Enter password"
           onChangeText={setPassword}
           right={
             <TextInput.Icon

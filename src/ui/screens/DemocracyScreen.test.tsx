@@ -56,4 +56,6 @@ describe('DemocracyScreen', () => {
     expect(await findByTestId('proposal-button')).toBeDisabled();
     fireEvent.press(await findByText('Cancel'));
   });
+
+  // TODO: should select an account and provide enough data to complete the proposal
 });

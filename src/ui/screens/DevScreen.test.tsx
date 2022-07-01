@@ -1,8 +1,23 @@
+import {global} from '@apollo/client/utilities/globals';
 import React, {useRef} from 'react';
 import {Notification} from 'react-native-in-app-message';
 import {ReactTestInstance} from 'react-test-renderer';
+import {SetterOrUpdater} from 'recoil';
+import {Account} from 'src/api/hooks/useAccount';
 import {fireEvent, render} from 'src/testUtils';
 import DevScreen from './DevScreen';
+
+jest.mock('@atoms/activeAccount', () => {
+  return {
+    activeAccount: () => '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a',
+    selectActiveAccount: () =>
+      jest.fn(() =>
+        Promise.resolve({
+          json: () => Promise.resolve(),
+        }),
+      ),
+  };
+});
 
 describe('DevScreen', () => {
   it('should render the DevScreen component', async () => {
@@ -25,4 +40,6 @@ describe('DevScreen', () => {
     fireEvent.press(getAllByText('Trigger')[0] as ReactTestInstance);
     expect(notificationSpy).toBeCalledTimes(1);
   });
+
+  // TODO: TypeError: (0 , _activeAccount.useActiveAccount) is not a function and recoil
 });
