@@ -1,14 +1,22 @@
-import keyring from '@polkadot/ui-keyring';
-import {KeyringPair$Json, KeyringPair$Meta} from '@polkadot/keyring/types';
+import {KeyringPair$Json} from '@polkadot/keyring/types';
 
-type KeyringAccount = ReturnType<typeof keyring.getAccount>;
+export type AccountMeta = {
+  name: string;
+  network: string;
+  isFavorite: boolean;
+  isExternal: boolean;
+};
 
-type KeyringAccounts = ReturnType<typeof keyring.getAccounts>;
+export type KeyringAccount = KeyringPair$Json & {
+  meta: AccountMeta;
+};
 
-type HexString = `0x${string}`;
+export type HexString = `0x${string}`;
 
-type ErrorPayload = {
-  isError: true;
+export type MnemonicLength = 12 | 15 | 18 | 21 | 24;
+
+export type ErrorPayload = {
+  error: true;
   message: string;
 };
 
@@ -95,28 +103,28 @@ type SetSS58FormatMessage = {
   };
 };
 
-type GenerateMnemonicMessage = {
+export type GenerateMnemonicMessage = {
   type: MessageType.GENERATE_MNEMONIC;
   payload: {
-    numOfWords?: 12 | 15 | 18 | 21 | 24;
+    length?: MnemonicLength;
   };
 };
 
-type GenerateMnemonicResultMessage = {
+export type GenerateMnemonicResultMessage = {
   type: MessageType.GENERATE_MNEMONIC_RESULT;
   payload: {
     mnemonic: string;
   };
 };
 
-type ValidateMnemonicMessage = {
+export type ValidateMnemonicMessage = {
   type: MessageType.VALIDATE_MNEMONIC;
   payload: {
     mnemonic: string;
   };
 };
 
-type ValidateMnemonicResultMessage = {
+export type ValidateMnemonicResultMessage = {
   type: MessageType.VALIDATE_MNEMONIC_RESULT;
   payload: {
     isValid: boolean;
@@ -124,46 +132,46 @@ type ValidateMnemonicResultMessage = {
   };
 };
 
-type GetAccountsMessage = {
-  type: MessageType.GET_ACCOUNTS;
-};
+// type GetAccountsMessage = {
+//   type: MessageType.GET_ACCOUNTS;
+// };
 
-type GetAccountsResultMessage = {
-  type: MessageType.GET_ACCOUNTS_RESULT;
-  payload: {
-    accounts: KeyringAccounts;
-  };
-};
+// type GetAccountsResultMessage = {
+//   type: MessageType.GET_ACCOUNTS_RESULT;
+//   payload: {
+//     accounts: KeyringAccounts;
+//   };
+// };
 
-type GetAccountMessage = {
-  type: MessageType.GET_ACCOUNT;
-  payload: {
-    address: string;
-  };
-};
+// type GetAccountMessage = {
+//   type: MessageType.GET_ACCOUNT;
+//   payload: {
+//     address: string;
+//   };
+// };
 
-type GetAccountResultMessage = {
-  type: MessageType.GET_ACCOUNT_RESULT;
-  payload: {
-    account: KeyringAccount;
-  };
-};
+// type GetAccountResultMessage = {
+//   type: MessageType.GET_ACCOUNT_RESULT;
+//   payload: {
+//     account: KeyringAccount;
+//   };
+// };
 
-type CreateAddressFromMnemonicMessage = {
+export type CreateAddressFromMnemonicMessage = {
   type: MessageType.CREATE_ADDRESS_FROM_MNEMONIC;
   payload: {
     mnemonic: string;
   };
 };
 
-type CreateAddressFromMnemonicResultMessage = {
+export type CreateAddressFromMnemonicResultMessage = {
   type: MessageType.CREATE_ADDRESS_FROM_MNEMONIC_RESULT;
   payload: {
     address: string;
   };
 };
 
-type AddAccountMessage = {
+export type AddAccountMessage = {
   type: MessageType.ADD_ACCOUNT;
   payload: {
     mnemonic: string;
@@ -175,35 +183,33 @@ type AddAccountMessage = {
   };
 };
 
-type AddAccountResultMessage = {
+export type AddAccountResultMessage = {
   type: MessageType.ADD_ACCOUNT_RESULT;
   payload: {
-    account: KeyringPair$Json;
+    account: KeyringAccount;
   };
 };
 
-type RestoreAccountMessage = {
+export type RestoreAccountMessage = {
   type: MessageType.RESTORE_ACCOUNT;
   payload: {
-    json: KeyringPair$Json;
+    json: KeyringAccount;
     password: string;
     network: string;
   };
 };
 
-type RestoreAccountResultMessage =
-  | {
-      type: MessageType.RESTORE_ACCOUNT_RESULT;
-      payload: {
-        account: KeyringPair$Json;
-      };
-    }
-  | {
-      type: MessageType.RESTORE_ACCOUNT_RESULT;
-      payload: ErrorPayload;
-    };
+export type KeyringAccountPayload = {
+  account: KeyringAccount;
+  error: false;
+};
 
-type ExportAccountMessage = {
+export type RestoreAccountResultMessage = {
+  type: MessageType.RESTORE_ACCOUNT_RESULT;
+  payload: KeyringAccountPayload | ErrorPayload;
+};
+
+export type ExportAccountMessage = {
   type: MessageType.EXPORT_ACCOUNT;
   payload: {
     address: string;
@@ -211,19 +217,12 @@ type ExportAccountMessage = {
   };
 };
 
-type ExportAccountResultMessage =
-  | {
-      type: MessageType.EXPORT_ACCOUNT_RESULT;
-      payload: {
-        account: KeyringPair$Json;
-      };
-    }
-  | {
-      type: MessageType.EXPORT_ACCOUNT_RESULT;
-      payload: ErrorPayload;
-    };
+export type ExportAccountResultMessage = {
+  type: MessageType.EXPORT_ACCOUNT_RESULT;
+  payload: KeyringAccountPayload | ErrorPayload;
+};
 
-type AddExternalAccountMessage = {
+export type AddExternalAccountMessage = {
   type: MessageType.ADD_EXTERNAL_ACCOUNT;
   payload: {
     address: string;
@@ -232,44 +231,44 @@ type AddExternalAccountMessage = {
   };
 };
 
-type AddExternalAccountResultMessage = {
+export type AddExternalAccountResultMessage = {
   type: MessageType.ADD_EXTERNAL_ACCOUNT_RESULT;
   payload: {
-    account: KeyringPair$Json;
+    account: KeyringAccount;
   };
 };
 
-type ForgetAccountMessage = {
+export type ForgetAccountMessage = {
   type: MessageType.FORGET_ACCOUNT;
   payload: {
     address: string;
   };
 };
 
-type ForgetAccountResultMessage = {
+export type ForgetAccountResultMessage = {
   type: MessageType.FORGET_ACCOUNT_RESULT;
   payload: {
     address: string;
   };
 };
 
-type UpdateAccountMetaMessage = {
+export type UpdateAccountMetaMessage = {
   type: MessageType.UPDATE_ACCOUNT_META;
   payload: {
     address: string;
-    meta: KeyringPair$Meta;
+    meta: AccountMeta;
   };
 };
 
-type UpdateAccountMetaResultMessage = {
+export type UpdateAccountMetaResultMessage = {
   type: MessageType.UPDATE_ACCOUNT_META_RESULT;
   payload: {
     address: string;
-    meta: KeyringPair$Meta;
+    meta: AccountMeta;
   };
 };
 
-type VerifyCredentialsMessage = {
+export type VerifyCredentialsMessage = {
   type: MessageType.VERIFY_CREDENTIALS;
   payload: {
     address: string;
@@ -277,14 +276,14 @@ type VerifyCredentialsMessage = {
   };
 };
 
-type VerifyCredentialsResultMessage = {
+export type VerifyCredentialsResultMessage = {
   type: MessageType.VERIFY_CREDENTIALS_RESULT;
   payload: {
     valid: boolean;
   };
 };
 
-type SignMessage = {
+export type SignMessage = {
   type: MessageType.SIGN;
   payload: {
     message: string;
@@ -292,17 +291,15 @@ type SignMessage = {
   };
 };
 
-type SignResultMessage =
-  | {
-      type: MessageType.SIGN_RESULT;
-      payload: {
-        signed: HexString;
-      };
-    }
-  | {
-      type: MessageType.SIGN_RESULT;
-      payload: ErrorPayload;
-    };
+export type SignResultPayload = {
+  signed: HexString;
+  error: false;
+};
+
+export type SignResultMessage = {
+  type: MessageType.SIGN_RESULT;
+  payload: SignResultPayload | ErrorPayload;
+};
 
 type InitApiMessage = {
   type: MessageType.INIT_API;
@@ -345,10 +342,6 @@ export type Message =
   | GenerateMnemonicResultMessage
   | ValidateMnemonicMessage
   | ValidateMnemonicResultMessage
-  | GetAccountsMessage
-  | GetAccountsResultMessage
-  | GetAccountMessage
-  | GetAccountResultMessage
   | CreateAddressFromMnemonicMessage
   | CreateAddressFromMnemonicResultMessage
   | AddAccountMessage
@@ -426,32 +419,32 @@ export function validateMnemonicResultMessage(
   };
 }
 
-export function getAccountsMessage(): GetAccountsMessage {
-  return {
-    type: MessageType.GET_ACCOUNTS,
-  };
-}
+// export function getAccountsMessage(): GetAccountsMessage {
+//   return {
+//     type: MessageType.GET_ACCOUNTS,
+//   };
+// }
 
-export function getAccountsResultMessage(payload: GetAccountsResultMessage['payload']): GetAccountsResultMessage {
-  return {
-    type: MessageType.GET_ACCOUNTS_RESULT,
-    payload,
-  };
-}
+// export function getAccountsResultMessage(payload: GetAccountsResultMessage['payload']): GetAccountsResultMessage {
+//   return {
+//     type: MessageType.GET_ACCOUNTS_RESULT,
+//     payload,
+//   };
+// }
 
-export function getAccountMessage(payload: GetAccountMessage['payload']): GetAccountMessage {
-  return {
-    type: MessageType.GET_ACCOUNT,
-    payload,
-  };
-}
+// export function getAccountMessage(payload: GetAccountMessage['payload']): GetAccountMessage {
+//   return {
+//     type: MessageType.GET_ACCOUNT,
+//     payload,
+//   };
+// }
 
-export function getAccountResultMessage(payload: GetAccountResultMessage['payload']): GetAccountResultMessage {
-  return {
-    type: MessageType.GET_ACCOUNT_RESULT,
-    payload,
-  };
-}
+// export function getAccountResultMessage(payload: GetAccountResultMessage['payload']): GetAccountResultMessage {
+//   return {
+//     type: MessageType.GET_ACCOUNT_RESULT,
+//     payload,
+//   };
+// }
 
 export function createAddressFromMnemonicMessage(
   payload: CreateAddressFromMnemonicMessage['payload'],
@@ -495,16 +488,6 @@ export function restoreAccountMessage(payload: RestoreAccountMessage['payload'])
 export function restoreAccountResultMessage(
   payload: RestoreAccountResultMessage['payload'],
 ): RestoreAccountResultMessage {
-  if ('isError' in payload) {
-    return {
-      type: MessageType.RESTORE_ACCOUNT_RESULT,
-      payload: {
-        isError: true,
-        message: payload.message,
-      },
-    };
-  }
-
   return {
     type: MessageType.RESTORE_ACCOUNT_RESULT,
     payload,
@@ -519,15 +502,6 @@ export function exportAccountMessage(payload: ExportAccountMessage['payload']): 
 }
 
 export function exportAccountResultMessage(payload: ExportAccountResultMessage['payload']): ExportAccountResultMessage {
-  if ('isError' in payload) {
-    return {
-      type: MessageType.EXPORT_ACCOUNT_RESULT,
-      payload: {
-        isError: true,
-        message: payload.message,
-      },
-    };
-  }
   return {
     type: MessageType.EXPORT_ACCOUNT_RESULT,
     payload,
@@ -604,16 +578,6 @@ export function signMessageMessage(payload: SignMessage['payload']): SignMessage
 }
 
 export function signMessageResultMessage(payload: SignResultMessage['payload']): SignResultMessage {
-  if ('isError' in payload) {
-    return {
-      type: MessageType.SIGN_RESULT,
-      payload: {
-        isError: true,
-        message: payload.message,
-      },
-    };
-  }
-
   return {
     type: MessageType.SIGN_RESULT,
     payload,
