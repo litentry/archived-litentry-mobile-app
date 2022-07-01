@@ -16,8 +16,7 @@ import {
   exportAccountResultMessage,
   forgetAccountResultMessage,
   generateMnemonicResultMessage,
-  getAccountResultMessage,
-  getAccountsResultMessage,
+  KeyringAccount,
   Message,
   MessageType,
   restoreAccountResultMessage,
@@ -96,7 +95,7 @@ cryptoWaitReady().then(function () {
       }
 
       case MessageType.GENERATE_MNEMONIC: {
-        const mnemonic = mnemonicGenerate(message.payload.numOfWords);
+        const mnemonic = mnemonicGenerate(message.payload.length);
         postMessage(generateMnemonicResultMessage({mnemonic}));
         break;
       }
@@ -112,17 +111,17 @@ cryptoWaitReady().then(function () {
         break;
       }
 
-      case MessageType.GET_ACCOUNTS: {
-        const accounts = keyring.getAccounts();
-        postMessage(getAccountsResultMessage({accounts}));
-        break;
-      }
+      // case MessageType.GET_ACCOUNTS: {
+      //   const accounts = keyring.getAccounts();
+      //   postMessage(getAccountsResultMessage({accounts}));
+      //   break;
+      // }
 
-      case MessageType.GET_ACCOUNT: {
-        const account = keyring.getAccount(message.payload.address);
-        postMessage(getAccountResultMessage({account}));
-        break;
-      }
+      // case MessageType.GET_ACCOUNT: {
+      //   const account = keyring.getAccount(message.payload.address);
+      //   postMessage(getAccountResultMessage({account}));
+      //   break;
+      // }
 
       case MessageType.CREATE_ADDRESS_FROM_MNEMONIC: {
         const {address} = keyring.createFromUri(message.payload.mnemonic);
@@ -137,7 +136,7 @@ cryptoWaitReady().then(function () {
           isFavorite: false,
           isExternal: false,
         });
-        postMessage(addAccountResultMessage({account: json}));
+        postMessage(addAccountResultMessage({account: json as KeyringAccount}));
 
         if (!pair.isLocked) {
           pair.lock();
@@ -154,7 +153,7 @@ cryptoWaitReady().then(function () {
             isFavorite: false,
           });
           const json = pair.toJson(message.payload.password);
-          postMessage(restoreAccountResultMessage({account: json}));
+          postMessage(restoreAccountResultMessage({account: json as KeyringAccount, error: false}));
 
           if (!pair.isLocked) {
             pair.lock();
@@ -162,7 +161,7 @@ cryptoWaitReady().then(function () {
         } catch {
           postMessage(
             restoreAccountResultMessage({
-              isError: true,
+              error: true,
               message: 'Unable to decode using the supplied password.',
             }),
           );
@@ -174,7 +173,7 @@ cryptoWaitReady().then(function () {
         const pair = keyring.getPair(message.payload.address);
         try {
           const json = pair.toJson(message.payload.password);
-          postMessage(exportAccountResultMessage({account: json}));
+          postMessage(exportAccountResultMessage({account: json as KeyringAccount, error: false}));
 
           if (!pair.isLocked) {
             pair.lock();
@@ -182,7 +181,7 @@ cryptoWaitReady().then(function () {
         } catch {
           postMessage(
             exportAccountResultMessage({
-              isError: true,
+              error: true,
               message: 'Unable to decode using the supplied password.',
             }),
           );
@@ -196,7 +195,7 @@ cryptoWaitReady().then(function () {
           network: message.payload.network,
           isFavorite: false,
         });
-        postMessage(addExternalAccountResultMessage({account: json}));
+        postMessage(addExternalAccountResultMessage({account: json as KeyringAccount}));
         break;
       }
 
@@ -244,11 +243,11 @@ cryptoWaitReady().then(function () {
         try {
           pair.unlock(message.payload.credentials.password);
           const signed = pair.sign(hexToU8a(message.payload.message), {withType: true});
-          postMessage(signMessageResultMessage({signed: u8aToHex(signed)}));
+          postMessage(signMessageResultMessage({signed: u8aToHex(signed), error: false}));
         } catch {
           postMessage(
             signMessageResultMessage({
-              isError: true,
+              error: true,
               message: 'Unable to decode using the supplied password.',
             }),
           );
