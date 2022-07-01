@@ -20,8 +20,10 @@ import {parachainDetailHandler} from './parachainDetailHandler';
 import {parachainSummaryHandler} from './parachainSummaryHandler';
 import {parathreadsHandler} from './parathreadHandler';
 import {registrarsHandler} from './registrarsHandler';
+import {technicalCommitteeSummaryHandler} from './technicalCommitteeSummaryHandler';
 import {tipDetailHandler} from './tipDetailHandler';
 import {tipsHandler} from './tipsHandler';
+import {treasuryHandler} from './treasuryHandler';
 
 export const handlers = [
   registrarsHandler,
@@ -50,5 +52,7 @@ export const handlers = [
   convictionsHandler,
   councilMotionDetailsHandler,
   crowdloansHandler,
+  treasuryHandler,
+  technicalCommitteeSummaryHandler,
   // other handlers
 ];
