@@ -28,7 +28,7 @@ import {CrowdloanScreen} from '@ui/screens/Parachains/CrowdloanScreen';
 import {ParachainsOverviewScreen} from '@ui/screens/Parachains/OverviewScreen';
 import {ParachainDetailScreen} from '@ui/screens/Parachains/ParachainDetailScreen';
 import {ParathreadsScreen} from '@ui/screens/Parachains/ParathreadsScreen';
-import {PermissionGrantingPrompt} from '@ui/screens/PermissionGrantingPrompt';
+import {PermissionPromptScreen} from '@ui/screens/PermissionPromptScreen';
 import {PolkassemblyDiscussionDetail} from '@ui/screens/Polkassembly/PolkassemblyDiscussionDetail';
 import {PolkassemblyDiscussions} from '@ui/screens/Polkassembly/PolkassemblyDiscussions';
 import {ProposeTipScreen} from '@ui/screens/ProposeTipScreen';
@@ -41,7 +41,7 @@ import {TreasuryScreen} from '@ui/screens/TreasuryScreen';
 import WebviewScreen from '@ui/screens/WebviewScreen';
 import {useFirebase} from '@hooks/useFirebase';
 import {useTurnOnAllNotificationsOnAppStartForAndroid} from '@hooks/useTurnOnAllNotificationsOnAppStartForAndroid';
-import {usePushAuthorizationStatus} from '@hooks/usePushNotificationsPermissions';
+import {useCheckAuthorizationStatus, usePermissions, useSkipPermission} from '@atoms/pushNotification';
 import {MainDrawerAppBar, MainStackAppBar} from '@ui/navigation/AppBars';
 import {
   AccountsStackParamList,
@@ -202,20 +202,19 @@ const AppStack = createNativeStackNavigator<AppStackParamList>();
 
 function AppNavigator() {
   useTurnOnAllNotificationsOnAppStartForAndroid();
-  const {isPnPromptNeeded, skipPnPermission, isLoading} = usePushAuthorizationStatus();
+  const {isChecking} = useCheckAuthorizationStatus();
+  const {isPermissionPromptNeeded} = usePermissions();
+  const {skipPermission} = useSkipPermission();
 
-  // We need this here, because otherwise PermissionGrantingPrompt
-  // wouldn't mount on the first render, loading indicator is not necessary
-  // because the promise is resolving almost immediately
-  if (isLoading) {
+  if (isChecking) {
     return null;
   }
 
   return (
     <AppStack.Navigator screenOptions={{headerShown: false}}>
-      {isPnPromptNeeded ? (
+      {isPermissionPromptNeeded ? (
         <AppStack.Screen name={routeKeys.permissionGrantingPromptScreen}>
-          {() => <PermissionGrantingPrompt skipPnPermission={skipPnPermission} />}
+          {() => <PermissionPromptScreen skipPermission={skipPermission} />}
         </AppStack.Screen>
       ) : undefined}
       <AppStack.Screen
