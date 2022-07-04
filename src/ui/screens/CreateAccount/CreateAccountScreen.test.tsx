@@ -11,9 +11,20 @@ const navigation = {
 
 const route = {
   params: {
-    mnemonic: '',
+    mnemonic: 'west bar upon arena all remove return era local spoon edge use',
   },
 } as RouteProp<AccountsStackParamList, typeof createAccountScreen>;
+
+const mockKeyRingImp = {
+  addAccount: jest.fn(() => Promise.resolve()),
+  createAccount: jest.fn(() => Promise.resolve()),
+};
+
+jest.mock('@polkadotApi/useKeyring', () => {
+  return {
+    useKeyring: () => mockKeyRingImp,
+  };
+});
 
 describe('CreateAccountScreen', () => {
   it('should render the CreateAccountScreen component', async () => {
@@ -34,18 +45,15 @@ describe('CreateAccountScreen', () => {
   });
 
   it('should test if the entered password is weak or strong', async () => {
-    const {getByPlaceholderText, getByText, findByTestId, debug} = render(
-      <CreateAccountScreen navigation={navigation} route={route} />,
-    );
+    const {getByPlaceholderText, findByTestId} = render(<CreateAccountScreen navigation={navigation} route={route} />);
     const weakPassword = await findByTestId('weak-password');
     fireEvent.changeText(getByPlaceholderText('New password'), 'weak');
     expect(weakPassword).toBeTruthy();
     fireEvent.changeText(getByPlaceholderText('New password'), 'NotWeakPassword');
-    // expect(weakPassword).toBeFalsy()
   });
 
   it('should input all the fields to add a new account', async () => {
-    const navigationSpy = jest.spyOn(navigation, 'navigate');
+    const mockKeyRing = jest.spyOn(mockKeyRingImp, 'addAccount');
     const {findByPlaceholderText, getByText, findByTestId, findByLabelText} = render(
       <CreateAccountScreen navigation={navigation} route={route} />,
     );
@@ -54,9 +62,13 @@ describe('CreateAccountScreen', () => {
     fireEvent.changeText(await findByPlaceholderText('Descriptive name'), 'New Account');
     fireEvent.changeText(await findByPlaceholderText('New password'), 'NotWeakPassword');
     fireEvent.changeText(await findByPlaceholderText('Confirm password'), 'NotWeakPassword');
-    // expect(getByText('Password is too weak')).toBe(null)
     expect(submitButton).toBeEnabled();
     fireEvent.press(submitButton);
-    // expect(navigationSpy).toBeCalledWith('')
+    expect(mockKeyRing).toHaveBeenCalledWith({
+      mnemonic: 'west bar upon arena all remove return era local spoon edge use',
+      name: 'New Account',
+      network: 'polkadot',
+      password: 'NotWeakPassword',
+    });
   });
 });
