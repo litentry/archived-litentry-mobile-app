@@ -1,6 +1,6 @@
 import {atom, RecoilState} from 'recoil';
 import {persistAtom} from '@atoms/persist';
-import {
+import type {
   KeyringAccount,
   AddAccountMessage,
   AddExternalAccountMessage,
