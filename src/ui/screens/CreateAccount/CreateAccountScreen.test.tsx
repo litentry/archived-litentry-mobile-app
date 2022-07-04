@@ -26,6 +26,10 @@ jest.mock('@polkadotApi/useKeyring', () => {
   };
 });
 
+const accountName = 'New Account';
+const accountStrongPassword = 'NotWeakPassword@01';
+const accountWeakPassword = 'weak';
+
 describe('CreateAccountScreen', () => {
   it('should render the CreateAccountScreen component', async () => {
     const {findByText, findAllByText, findByTestId} = render(
@@ -47,28 +51,27 @@ describe('CreateAccountScreen', () => {
   it('should test if the entered password is weak or strong', async () => {
     const {getByPlaceholderText, findByTestId} = render(<CreateAccountScreen navigation={navigation} route={route} />);
     const weakPassword = await findByTestId('weak-password');
-    fireEvent.changeText(getByPlaceholderText('New password'), 'weak');
+    fireEvent.changeText(getByPlaceholderText('New password'), accountWeakPassword);
     expect(weakPassword).toBeTruthy();
-    fireEvent.changeText(getByPlaceholderText('New password'), 'NotWeakPassword');
+    fireEvent.changeText(getByPlaceholderText('New password'), accountStrongPassword);
+    expect(weakPassword).not.toBeDefined();
   });
 
   it('should input all the fields to add a new account', async () => {
     const mockKeyRing = jest.spyOn(mockKeyRingImp, 'addAccount');
-    const {findByPlaceholderText, getByText, findByTestId, findByLabelText} = render(
-      <CreateAccountScreen navigation={navigation} route={route} />,
-    );
+    const {findByPlaceholderText, findByTestId} = render(<CreateAccountScreen navigation={navigation} route={route} />);
     const submitButton = await findByTestId('submit-button');
     expect(submitButton).toBeDisabled();
-    fireEvent.changeText(await findByPlaceholderText('Descriptive name'), 'New Account');
-    fireEvent.changeText(await findByPlaceholderText('New password'), 'NotWeakPassword');
-    fireEvent.changeText(await findByPlaceholderText('Confirm password'), 'NotWeakPassword');
+    fireEvent.changeText(await findByPlaceholderText('Descriptive name'), accountName);
+    fireEvent.changeText(await findByPlaceholderText('New password'), accountStrongPassword);
+    fireEvent.changeText(await findByPlaceholderText('Confirm password'), accountStrongPassword);
     expect(submitButton).toBeEnabled();
     fireEvent.press(submitButton);
     expect(mockKeyRing).toHaveBeenCalledWith({
-      mnemonic: 'west bar upon arena all remove return era local spoon edge use',
-      name: 'New Account',
+      mnemonic: route.params.mnemonic,
+      name: accountName,
       network: 'polkadot',
-      password: 'NotWeakPassword',
+      password: accountStrongPassword,
     });
   });
 });

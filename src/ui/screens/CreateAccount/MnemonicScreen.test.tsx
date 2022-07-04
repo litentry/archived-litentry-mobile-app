@@ -12,7 +12,7 @@ const navigation = {
 describe('MnemonicScreen', () => {
   it('render the MnemonicScreen component', async () => {
     const {findAllByText} = render(<MnemonicScreen navigation={navigation} />);
-    await findAllByText('Generated mnemonic seed');
+    await findAllByText('Mnemonic seed');
     await findAllByText(
       'Please write down the mnemonic seed and keep it in a safe place. The mnemonic can be used to restore your account. keep it carefully to not lose your assets.',
     );
