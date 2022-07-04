@@ -7,12 +7,14 @@ import RNBottomSheet, {
   BottomSheetBackdropProps,
 } from '@gorhom/bottom-sheet';
 import {useTheme} from './index';
+import {useIsFocused} from '@react-navigation/native';
 
 export {BottomSheetTextInput, useBottomSheetInternal} from '@gorhom/bottom-sheet';
 
 type BottomSheetProps = Omit<RNBottomSheetProps, 'snapPoints'>;
 
 export function useBottomSheet() {
+  const isFocused = useIsFocused();
   const {colors} = useTheme();
   const bottomSheetRef = React.useRef<RNBottomSheet>(null);
   const initialSnapPoints = React.useMemo(() => ['25%', 'CONTENT_HEIGHT'], []);
@@ -31,6 +33,12 @@ export function useBottomSheet() {
     (props: BottomSheetBackdropProps) => <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} />,
     [],
   );
+
+  React.useEffect(() => {
+    if (!isFocused) {
+      closeBottomSheet();
+    }
+  }, [isFocused, closeBottomSheet]);
 
   const BottomSheet = React.useCallback(
     ({children, ...props}: BottomSheetProps) => (
