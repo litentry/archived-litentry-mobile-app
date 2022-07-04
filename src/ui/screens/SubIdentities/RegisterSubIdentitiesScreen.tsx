@@ -136,7 +136,12 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
                 </View>
               )}
               right={() => (
-                <IconButton icon="delete-outline" color={colors.error} onPress={() => onRemovePress(item.address)} />
+                <IconButton
+                  icon="delete-outline"
+                  color={colors.error}
+                  onPress={() => onRemovePress(item.address)}
+                  testID="delete-button"
+                />
               )}
             />
           )}
