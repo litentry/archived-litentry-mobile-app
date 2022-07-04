@@ -54,17 +54,6 @@ jest.mock('@react-navigation/native', () => {
   };
 });
 
-jest.mock('react-native-substrate-sign', () => {
-  return {
-    __esModule: true,
-    default: {
-      substrateAddress: jest.fn(() => Promise.resolve()),
-      encryptData: jest.fn(),
-      randomPhrase: jest.fn(() => Promise.resolve('random')),
-    },
-  };
-});
-
 jest.mock('react-native-aes-crypto', () => {
   return {
     __esModule: true,
@@ -76,23 +65,15 @@ jest.mock('react-native-aes-crypto', () => {
   };
 });
 
-jest.mock('react-native-keychain', () => {
-  return {
-    __esModule: true,
-    default: {
-      setGenericPassword: jest.fn(() => Promise.resolve()),
-      ACCESSIBLE: {
-        WHEN_UNLOCKED: 'AccessibleWhenUnlocked',
-        AFTER_FIRST_UNLOCK: 'AccessibleAfterFirstUnlock',
-        ALWAYS: 'AccessibleAlways',
-        WHEN_PASSCODE_SET_THIS_DEVICE_ONLY: 'AccessibleWhenPasscodeSetThisDeviceOnly',
-        WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'AccessibleWhenUnlockedThisDeviceOnly',
-        AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY: 'AccessibleAfterFirstUnlockThisDeviceOnly',
-        ALWAYS_THIS_DEVICE_ONLY: 'AccessibleAlwaysThisDeviceOnly',
-      },
-    },
-  };
-});
+jest.mock('react-native-keychain', () => ({
+  setGenericPassword: jest.fn(() => Promise.resolve()),
+  getGenericPassword: jest.fn(() => Promise.resolve()),
+  resetGenericPassword: jest.fn(() => Promise.resolve()),
+  setInternetCredentials: jest.fn().mockReturnValue(true),
+  getSupportedBiometryType: jest.fn().mockReturnValue(true),
+  ACCESS_CONTROL: {BIOMETRY_CURRENT_SET_OR_DEVICE_PASSCODE: 'mockedpwd'},
+  ACCESSIBLE: {WHEN_PASSCODE_SET_THIS_DEVICE_ONLY: true},
+}));
 
 jest.mock('react-native-device-info', () => {
   return {
