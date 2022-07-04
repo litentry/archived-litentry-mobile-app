@@ -21,7 +21,7 @@ import {MessageTeaser} from '@ui/components/MessageTeaser';
 import {Subheading, Caption, Icon, useBottomSheet, Button} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
-import {SignCredentials} from '@polkadotApi/types';
+import type {SignCredentials} from 'polkadot-api';
 import {useKeyring} from '@polkadotApi/useKeyring';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 
@@ -111,7 +111,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
           });
 
           const signable = u8aToHex(extrinsicPayload.toU8a({method: true}));
-          const {signed} = await sign(signable, credentials);
+          const signed = await sign({message: signable, credentials});
 
           dispatch({
             type: 'SHOW_TX_PREVIEW',
