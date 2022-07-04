@@ -1,9 +1,9 @@
-import {useEffect, useState} from 'react';
+import {useState, useEffect, useCallback} from 'react';
 import remoteConfig from '@react-native-firebase/remote-config';
 
 type ConfigKey = 'token_bridge_test'; // | 'other_config_keys'
 
-export function useActivateFirebaseConfig() {
+export function useRemoteConfig() {
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
@@ -16,9 +16,16 @@ export function useActivateFirebaseConfig() {
     activateFirebaseConfig().catch(console.error);
   }, []);
 
-  return {isActive};
-}
+  const getValue = useCallback(
+    (configKey: ConfigKey) => {
+      if (isActive) {
+        return JSON.parse(remoteConfig().getValue(configKey).asString());
+      }
+    },
+    [isActive],
+  );
 
-export function getRemoteConfig(configKey: ConfigKey) {
-  return JSON.parse(remoteConfig().getValue(configKey).asString());
+  return {
+    getValue,
+  };
 }
