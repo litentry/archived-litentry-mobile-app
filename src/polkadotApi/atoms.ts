@@ -82,17 +82,17 @@ export const keyringState = atom({
   },
 });
 
-// export const apiState = atom({
-//   key: 'polkadot-api',
-//   default: {
-//     isConnecting: false,
-//     isReady: false,
-//   },
-// });
+export const apiState = atom({
+  key: 'polkadot-api',
+  default: {
+    isConnecting: false,
+    isReady: false,
+  },
+});
 
-// export const txState = atom({
-//   key: 'tx',
-//   default: {
-//     getChainName: () => Promise.resolve(''),
-//   },
-// });
+export const txState = atom({
+  key: 'tx',
+  default: {
+    getChainName: () => Promise.resolve(''),
+  },
+});

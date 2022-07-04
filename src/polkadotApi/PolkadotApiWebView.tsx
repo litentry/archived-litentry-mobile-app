@@ -5,7 +5,7 @@ import {decodeAddress} from '@polkadot/util-crypto';
 import {u8aToHex} from '@polkadot/util';
 import {useSetRecoilState} from 'recoil';
 import RNFS from 'react-native-fs';
-import {cryptoUtilState, keyringState /* apiState, txState */} from './atoms';
+import {cryptoUtilState, keyringState, apiState, txState} from './atoms';
 import {useNetwork} from '@atoms/network';
 import {useAppAccounts} from './useAppAccounts';
 
@@ -45,8 +45,8 @@ import {
   verifyCredentialsMessage,
   SignMessage,
   signMessageMessage,
-  // initApiMessage,
-  // reconnectApiMessage,
+  initApiMessage,
+  reconnectApiMessage,
   KeyringAccountPayload,
   SignResultPayload,
 } from 'polkadot-api';
@@ -210,43 +210,43 @@ function useKeyringUtils(isWebviewLoaded: boolean, postMessage: PostMessage, res
   }, [isWebviewLoaded, setKeyringState, postMessage, resolversRef]);
 }
 
-// function useInitApi(isWebviewLoaded: boolean, postMessage: PostMessage) {
-//   const {currentNetwork} = useNetwork();
-//   const setApiState = useSetRecoilState(apiState);
+function useInitApi(isWebviewLoaded: boolean, postMessage: PostMessage) {
+  const {currentNetwork} = useNetwork();
+  const setApiState = useSetRecoilState(apiState);
 
-//   React.useEffect(() => {
-//     if (isWebviewLoaded) {
-//       postMessage(initApiMessage({wsEndpoint: currentNetwork.ws[0] as string}));
-//       setApiState({isReady: false, isConnecting: true});
-//     }
-//   }, [isWebviewLoaded, postMessage, setApiState, currentNetwork.ws]);
-// }
+  React.useEffect(() => {
+    if (isWebviewLoaded) {
+      postMessage(initApiMessage({wsEndpoint: currentNetwork.ws[0] as string}));
+      setApiState({isReady: false, isConnecting: true});
+    }
+  }, [isWebviewLoaded, postMessage, setApiState, currentNetwork.ws]);
+}
 
-// function useTx(isWebviewLoaded: boolean, postMessage: PostMessage, resolversRef: ResolversRef) {
-//   const setTxState = useSetRecoilState(txState);
+function useTx(isWebviewLoaded: boolean, postMessage: PostMessage, resolversRef: ResolversRef) {
+  const setTxState = useSetRecoilState(txState);
 
-//   React.useEffect(() => {
-//     if (isWebviewLoaded) {
-//       setTxState({
-//         // example method: add here all tx methods (e.g: setIdentity)
-//         getChainName: () => {
-//           return new Promise((resolve) => {
-//             resolversRef.current.resolveChainName = resolve;
-//             webViewRef.current?.postMessage(
-//               JSON.stringify({
-//                 type: 'GET_CHAIN_NAME',
-//               }),
-//             );
-//           });
-//         },
-//       });
-//     }
-//   }, [isWebviewLoaded, setTxState, postMessage, resolversRef]);
-// }
+  // React.useEffect(() => {
+  //   if (isWebviewLoaded) {
+  //     setTxState({
+  //       // example method: add here all tx methods (e.g: setIdentity)
+  //       getChainName: () => {
+  //         return new Promise((resolve) => {
+  //           resolversRef.current.resolveChainName = resolve;
+  //           webViewRef.current?.postMessage(
+  //             JSON.stringify({
+  //               type: 'GET_CHAIN_NAME',
+  //             }),
+  //           );
+  //         });
+  //       },
+  //     });
+  //   }
+  // }, [isWebviewLoaded, setTxState, postMessage, resolversRef]);
+}
 
 function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessage) {
   const {accounts, setAccounts} = useAppAccounts();
-  // const setApiState = useSetRecoilState(apiState);
+  const setApiState = useSetRecoilState(apiState);
   const {currentNetwork} = useNetwork();
 
   const webViewOnMessage = React.useCallback(
@@ -363,29 +363,29 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
           break;
         }
 
-        // case MessageType.API_CONNECTED: {
-        //   setApiState((state) => ({...state, isConnecting: false}));
-        //   break;
-        // }
-        // case MessageType.API_READY: {
-        //   setApiState((state) => ({...state, isReady: true}));
-        //   break;
-        // }
-        // case MessageType.API_DISCONNECTED: {
-        //   postMessage(reconnectApiMessage({wsEndpoint: currentNetwork.ws[0] as string}));
-        //   setApiState({isReady: false, isConnecting: true});
-        //   break;
-        // }
+        case MessageType.API_CONNECTED: {
+          setApiState((state) => ({...state, isConnecting: false}));
+          break;
+        }
+        case MessageType.API_READY: {
+          setApiState((state) => ({...state, isReady: true}));
+          break;
+        }
+        case MessageType.API_DISCONNECTED: {
+          postMessage(reconnectApiMessage({wsEndpoint: currentNetwork.ws[0] as string}));
+          setApiState({isReady: false, isConnecting: true});
+          break;
+        }
 
-        // case MessageType.API_ERROR: {
-        //   console.error('API ERROR', data.payload);
-        //   postMessage(reconnectApiMessage({wsEndpoint: currentNetwork.ws[0] as string}));
-        //   setApiState({isReady: false, isConnecting: true});
-        //   break;
-        // }
+        case MessageType.API_ERROR: {
+          console.error('API ERROR', data.payload);
+          postMessage(reconnectApiMessage({wsEndpoint: currentNetwork.ws[0] as string}));
+          setApiState({isReady: false, isConnecting: true});
+          break;
+        }
       }
     },
-    [accounts, setAccounts, resolversRef /*, setApiState, postMessage, currentNetwork.ws */],
+    [accounts, setAccounts, resolversRef, setApiState, postMessage, currentNetwork.ws],
   );
 
   return {webViewOnMessage};
@@ -435,8 +435,8 @@ export function PolkadotApiWebView() {
   useLoadHtml(setHtml);
   useInitWebViewStore(isWebviewLoaded, accounts, postMessage);
   useInitKeyring(isWebviewLoaded, postMessage);
-  // useInitApi(isWebviewLoaded, postMessage);
-  // useTx(isWebviewLoaded, postMessage, resolversRef);
+  useInitApi(isWebviewLoaded, postMessage);
+  useTx(isWebviewLoaded, postMessage, resolversRef);
   useSetSS58Format(isWebviewLoaded, postMessage);
   useCryptoUtils(isWebviewLoaded, postMessage, resolversRef);
   useKeyringUtils(isWebviewLoaded, postMessage, resolversRef);

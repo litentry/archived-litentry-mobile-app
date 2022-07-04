@@ -1,6 +1,6 @@
 /* eslint @typescript-eslint/no-explicit-any: off */
 
-// import {ApiPromise, WsProvider} from '@polkadot/api';
+import {ApiPromise, WsProvider} from '@polkadot/api';
 import keyring from '@polkadot/ui-keyring';
 import {cryptoWaitReady, mnemonicGenerate, mnemonicValidate} from '@polkadot/util-crypto';
 import {u8aToHex, hexToU8a} from '@polkadot/util';
@@ -8,10 +8,10 @@ import {keyringStore, initStore} from './keyringStore';
 import {
   addAccountResultMessage,
   addExternalAccountResultMessage,
-  // apiConnectedMessage,
-  // ApiDisconnectedMessage,
-  // ApiErrorMessage,
-  // ApiReadyMessage,
+  apiConnectedMessage,
+  ApiDisconnectedMessage,
+  ApiErrorMessage,
+  ApiReadyMessage,
   createAddressFromMnemonicResultMessage,
   exportAccountResultMessage,
   forgetAccountResultMessage,
@@ -36,35 +36,35 @@ function postMessage(message: Message): void {
 cryptoWaitReady().then(function () {
   const userAgent = navigator.userAgent.toLocaleLowerCase();
   const windowDocument = userAgent.includes('iphone') ? window : document;
-  // let api: ApiPromise | undefined;
+  let api: ApiPromise | undefined;
 
-  // const runApiListeners = () => {
-  //   api?.on('connected', () => {
-  //     postMessage(apiConnectedMessage());
-  //   });
-  //   api?.on('ready', () => {
-  //     postMessage(ApiReadyMessage());
-  //   });
-  //   api?.on('disconnected', () => {
-  //     postMessage(ApiDisconnectedMessage());
-  //   });
-  //   api?.on('error', (error) => {
-  //     postMessage(ApiErrorMessage({error}));
-  //   });
-  // };
+  const runApiListeners = () => {
+    api?.on('connected', () => {
+      postMessage(apiConnectedMessage());
+    });
+    api?.on('ready', () => {
+      postMessage(ApiReadyMessage());
+    });
+    api?.on('disconnected', () => {
+      postMessage(ApiDisconnectedMessage());
+    });
+    api?.on('error', (error) => {
+      postMessage(ApiErrorMessage({error}));
+    });
+  };
 
   function onMessageHandler(event: MessageEvent) {
     const message = JSON.parse(event.data) as Message;
 
     switch (message.type) {
-      // case MessageType.INIT_API:
-      // case MessageType.RECONNECT_API: {
-      //   const provider = new WsProvider(message.payload?.wsEndpoint, false);
-      //   api = new ApiPromise({provider});
-      //   api.connect();
-      //   runApiListeners();
-      //   break;
-      // }
+      case MessageType.INIT_API:
+      case MessageType.RECONNECT_API: {
+        const provider = new WsProvider(message.payload?.wsEndpoint, false);
+        api = new ApiPromise({provider});
+        api.connect();
+        runApiListeners();
+        break;
+      }
 
       // case 'GET_CHAIN_NAME': {
       //   api?.rpc.system.chain().then((chainName) => {
