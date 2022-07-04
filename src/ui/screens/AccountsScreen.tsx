@@ -13,7 +13,7 @@ import {Account} from '@ui/components/Account/Account';
 import {Padder} from '@ui/components/Padder';
 import {AccountsGuide} from '@ui/components/Account/AccountsGuide';
 import {AddExternalAccount} from '@ui/components/Account/AddExternalAccount';
-import type {Account as AppAccount} from '@polkadotApi/types';
+import type {AccountMeta, KeyringAccount} from 'polkadot-api';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 import {useKeyring} from '@polkadotApi/useKeyring';
 
@@ -29,7 +29,7 @@ export function AccountsScreen({navigation}: Props) {
   const sortByFunction = sortBy === 'name' ? sortByDisplayName : sortByIsFavorite;
   const [sortMenuVisible, setSortMenuVisible] = React.useState(false);
 
-  const {updateMeta} = useKeyring();
+  const {updateAccountMeta} = useKeyring();
 
   const toAccountDetail = (address: string) => {
     navigation.navigate(myAccountScreen, {address});
@@ -62,7 +62,9 @@ export function AccountsScreen({navigation}: Props) {
         data={sortByFunction(networkAccounts)}
         showsVerticalScrollIndicator
         keyExtractor={(item) => item.address}
-        renderItem={({item}) => <AccountItem account={item} toggleFavorite={updateMeta} onPress={toAccountDetail} />}
+        renderItem={({item}) => (
+          <AccountItem account={item} toggleFavorite={updateAccountMeta} onPress={toAccountDetail} />
+        )}
         ListHeaderComponent={
           <View style={styles.sortBy}>
             <Menu
@@ -129,11 +131,11 @@ const styles = StyleSheet.create({
   emptyText: {fontWeight: 'normal'},
 });
 
-function sortByDisplayName(accounts: AppAccount[]) {
+function sortByDisplayName(accounts: KeyringAccount[]) {
   return [...accounts].sort((a, b) => a.meta.name.localeCompare(b.meta.name));
 }
 
-function sortByIsFavorite(accounts: AppAccount[]) {
+function sortByIsFavorite(accounts: KeyringAccount[]) {
   return [...accounts].sort((a, b) => Number(b.meta.isFavorite) - Number(a.meta.isFavorite));
 }
 
@@ -142,8 +144,8 @@ function AccountItem({
   toggleFavorite,
   onPress,
 }: {
-  account: AppAccount;
-  toggleFavorite: (address: string, meta: Record<string, unknown>) => void;
+  account: KeyringAccount;
+  toggleFavorite: (account: {address: string; meta: AccountMeta}) => void;
   onPress: (address: string) => void;
 }) {
   const theme = useTheme();
@@ -169,7 +171,7 @@ function AccountItem({
       )}
       right={() => (
         <IconButton
-          onPress={() => toggleFavorite(address, {isFavorite: !account.meta.isFavorite})}
+          onPress={() => toggleFavorite({address, meta: {...account.meta, isFavorite: !account.meta.isFavorite}})}
           color={isFavorite ? theme.colors.accent : theme.colors.disabled}
           icon={isFavorite ? 'star' : 'star-outline'}
         />

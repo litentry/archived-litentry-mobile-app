@@ -45,10 +45,10 @@ export function CreateAccountScreen({
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
   const [address, setAddress] = React.useState('');
 
-  const {createAccount, addAccount} = useKeyring();
+  const {createAddressFromMnemonic, addAccount} = useKeyring();
   React.useEffect(() => {
-    createAccount(mnemonic).then(setAddress);
-  }, [createAccount, mnemonic]);
+    createAddressFromMnemonic({mnemonic}).then((_address) => setAddress(_address));
+  }, [createAddressFromMnemonic, mnemonic]);
 
   const passwordStrength = zxcvbn(account.password).score;
   const isDisabled = !account.password || !(account.password === account.confirmPassword);
@@ -62,6 +62,8 @@ export function CreateAccountScreen({
       password: account.password,
       name: account.title,
       network: currentNetwork.key,
+      isFavorite: false,
+      isExternal: false,
     });
     SecureKeychain.setPasswordByServiceId(account.password, 'BIOMETRICS', address);
     navigation.navigate(accountsScreen, {reload: true});

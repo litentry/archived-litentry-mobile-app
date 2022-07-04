@@ -135,7 +135,7 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
                 {
                   text: 'Delete',
                   onPress: () => {
-                    forgetAccount(address);
+                    forgetAccount({address});
                     navigation.navigate(accountsScreen, {});
                   },
                   style: 'destructive',

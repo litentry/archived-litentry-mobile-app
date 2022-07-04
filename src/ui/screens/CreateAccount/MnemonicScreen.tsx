@@ -20,9 +20,9 @@ export function MnemonicScreen({navigation}: {navigation: NavigationProp<Account
   const {generateMnemonic} = useCryptoUtil();
 
   React.useEffect(() => {
-    generateMnemonic().then((_mnemonic) => {
-      consoleLogMnemonic(_mnemonic);
-      setMnemonic(_mnemonic);
+    generateMnemonic().then((result) => {
+      consoleLogMnemonic(result.mnemonic);
+      setMnemonic(result.mnemonic);
     });
   }, [generateMnemonic]);
 
