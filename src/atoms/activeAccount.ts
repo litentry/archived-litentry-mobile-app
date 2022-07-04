@@ -1,8 +1,8 @@
 import {atom, RecoilState, useRecoilState} from 'recoil';
 import {persistAtom} from '@atoms/persist';
-import type {Account} from '@polkadotApi/types';
+import type {KeyringAccount} from 'polkadot-api';
 
-const activeAccountState: RecoilState<Account> = atom({
+const activeAccountState: RecoilState<KeyringAccount> = atom({
   key: 'activeAccount',
   default: {},
   effects: [persistAtom],
