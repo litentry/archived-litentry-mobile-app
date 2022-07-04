@@ -109,7 +109,11 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
   return (
     <SafeView edges={noTopEdges}>
       <View style={[globalStyles.paddedContainer, globalStyles.flex]}>
-        <Button mode="contained" onPress={onSetSubIdentitiesPress} disabled={submitSubsDisabled}>
+        <Button
+          mode="contained"
+          onPress={onSetSubIdentitiesPress}
+          disabled={submitSubsDisabled}
+          testID="set-sub-identity-button">
           Set Sub-identities
         </Button>
         <Padder scale={0.5} />
@@ -132,7 +136,12 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
                 </View>
               )}
               right={() => (
-                <IconButton icon="delete-outline" color={colors.error} onPress={() => onRemovePress(item.address)} />
+                <IconButton
+                  icon="delete-outline"
+                  color={colors.error}
+                  onPress={() => onRemovePress(item.address)}
+                  testID="delete-button"
+                />
               )}
             />
           )}
