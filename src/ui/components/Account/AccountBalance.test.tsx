@@ -12,14 +12,19 @@ const balance = {
   formattedFree: '18,247.4986 DOT',
   freeFrozen: '181215680471934',
   formattedFreeFrozen: '18,121.5680 DOT',
+  formattedFeeFrozen: '129.641 DOT',
 } as AccountBalanceType;
 
 describe('AccountBalance', () => {
   it('should render the component with data', async () => {
     const {findByText} = render(<AccountBalance balance={balance} />);
     await findByText('Total Balance');
+    await findByText('18,267.5396 DOT');
     await findByText('Transferrable');
+    await findByText('18,247.4986 DOT');
     await findByText('Reserved');
+    await findByText('20.0410 DOT');
     await findByText('Locked');
+    await findByText('129.641 DOT');
   });
 });

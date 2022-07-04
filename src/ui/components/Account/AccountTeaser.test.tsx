@@ -44,6 +44,6 @@ describe('AddressInfoPreview', () => {
     );
     const accountId = getByTestId('accounts');
     fireEvent.press(accountId);
-    expect(accountSpy).toBeCalledTimes(1);
+    expect(accountSpy).toHaveBeenCalledTimes(1);
   });
 });
