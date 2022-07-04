@@ -50,7 +50,11 @@ function LitentryApps() {
 
 export default function App() {
   useStopStartupTrace();
-  useActivateFirebaseConfig();
+  const {isActive} = useActivateFirebaseConfig();
+
+  if (!isActive) {
+    return null;
+  }
 
   return (
     <RecoilRoot>
