@@ -1,4 +1,6 @@
 import {KeyringPair$Json} from '@polkadot/keyring/types';
+import {TxInfo} from './txUtils';
+import type {TxConfig} from './txTypes';
 
 export type AccountMeta = {
   name: string;
@@ -82,6 +84,12 @@ export enum MessageType {
   API_DISCONNECTED = 'API_DISCONNECTED',
 
   API_ERROR = 'API_ERROR',
+
+  GET_TX_INFO = 'GET_TX_INFO',
+  GET_TX_INFO_RESULT = 'GET_TX_INFO_RESULT',
+
+  SEND_TX = 'SEND_TX',
+  SEND_TX_RESULT = 'SEND_TX_RESULT',
 }
 
 type InitStoreMessage = {
@@ -309,6 +317,33 @@ type ApiErrorMessage = {
   };
 };
 
+export type GetTxInfoMessage = {
+  type: MessageType.GET_TX_INFO;
+  payload: {
+    address: string;
+    txConfig: TxConfig;
+  };
+};
+
+export type GetTxInfoResultMessage = {
+  type: MessageType.GET_TX_INFO_RESULT;
+  payload: TxInfo;
+};
+
+export type SendTxMessage = {
+  type: MessageType.SEND_TX;
+  payload: {
+    address: string;
+    txConfig: TxConfig;
+    signature: string;
+  };
+};
+
+export type SendTxResultMessage = {
+  type: MessageType.SEND_TX_RESULT;
+  payload: {error: false | string};
+};
+
 export type Message =
   | InitStoreMessage
   | InitKeyringMessage
@@ -340,7 +375,11 @@ export type Message =
   | ApiConnectedMessage
   | ApiReadyMessage
   | ApiDisconnectedMessage
-  | ApiErrorMessage;
+  | ApiErrorMessage
+  | GetTxInfoMessage
+  | GetTxInfoResultMessage
+  | SendTxMessage
+  | SendTxResultMessage;
 
 export function initStoreMessage(payload: InitStoreMessage['payload']): InitStoreMessage {
   return {
@@ -552,21 +591,49 @@ export function apiConnectedMessage(): ApiConnectedMessage {
   };
 }
 
-export function ApiReadyMessage(): ApiReadyMessage {
+export function apiReadyMessage(): ApiReadyMessage {
   return {
     type: MessageType.API_READY,
   };
 }
 
-export function ApiDisconnectedMessage(): ApiDisconnectedMessage {
+export function apiDisconnectedMessage(): ApiDisconnectedMessage {
   return {
     type: MessageType.API_DISCONNECTED,
   };
 }
 
-export function ApiErrorMessage(payload: ApiErrorMessage['payload']): ApiErrorMessage {
+export function apiErrorMessage(payload: ApiErrorMessage['payload']): ApiErrorMessage {
   return {
     type: MessageType.API_ERROR,
+    payload,
+  };
+}
+
+export function getTxInfoMessage(payload: GetTxInfoMessage['payload']): GetTxInfoMessage {
+  return {
+    type: MessageType.GET_TX_INFO,
+    payload,
+  };
+}
+
+export function getTxInfoResultMessage(payload: GetTxInfoResultMessage['payload']): GetTxInfoResultMessage {
+  return {
+    type: MessageType.GET_TX_INFO_RESULT,
+    payload,
+  };
+}
+
+export function sendTxMessage(payload: SendTxMessage['payload']): SendTxMessage {
+  return {
+    type: MessageType.SEND_TX,
+    payload,
+  };
+}
+
+export function sendTxResultMessage(payload: SendTxResultMessage['payload']): SendTxResultMessage {
+  return {
+    type: MessageType.SEND_TX_RESULT,
     payload,
   };
 }
