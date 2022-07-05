@@ -326,9 +326,18 @@ export type GetTxInfoMessage = {
   };
 };
 
+export type GetTxInfoResultPayload = {
+  txInfo: TxInfo;
+  error: false;
+};
+
 export type GetTxInfoResultMessage = {
   type: MessageType.GET_TX_INFO_RESULT;
-  payload: TxInfo;
+  payload: GetTxInfoResultPayload | ErrorPayload;
+};
+
+export type SendTxSuccessful = {
+  error: false;
 };
 
 export type SendTxMessage = {
@@ -343,7 +352,7 @@ export type SendTxMessage = {
 
 export type SendTxResultMessage = {
   type: MessageType.SEND_TX_RESULT;
-  payload: {error: false | string};
+  payload: SendTxSuccessful | ErrorPayload;
 };
 
 export type Message =
