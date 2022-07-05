@@ -1,4 +1,5 @@
 import {KeyringPair$Json} from '@polkadot/keyring/types';
+import type {SignerPayloadJSON} from '@polkadot/types/types';
 import {TxInfo} from './txUtils';
 import type {TxConfig} from './txTypes';
 
@@ -335,7 +336,8 @@ export type SendTxMessage = {
   payload: {
     address: string;
     txConfig: TxConfig;
-    signature: string;
+    txPayload: SignerPayloadJSON;
+    signature: HexString;
   };
 };
 
