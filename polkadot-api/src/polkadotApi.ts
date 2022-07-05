@@ -9,9 +9,9 @@ import {
   addAccountResultMessage,
   addExternalAccountResultMessage,
   apiConnectedMessage,
-  ApiDisconnectedMessage,
-  ApiErrorMessage,
-  ApiReadyMessage,
+  apiDisconnectedMessage,
+  apiErrorMessage,
+  apiReadyMessage,
   createAddressFromMnemonicResultMessage,
   exportAccountResultMessage,
   forgetAccountResultMessage,
@@ -43,13 +43,13 @@ cryptoWaitReady().then(function () {
       postMessage(apiConnectedMessage());
     });
     api?.on('ready', () => {
-      postMessage(ApiReadyMessage());
+      postMessage(apiReadyMessage());
     });
     api?.on('disconnected', () => {
-      postMessage(ApiDisconnectedMessage());
+      postMessage(apiDisconnectedMessage());
     });
     api?.on('error', (error) => {
-      postMessage(ApiErrorMessage({error}));
+      postMessage(apiErrorMessage({error}));
     });
   };
 
