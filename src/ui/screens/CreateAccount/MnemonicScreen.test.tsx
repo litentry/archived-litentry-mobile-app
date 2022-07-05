@@ -9,6 +9,18 @@ const navigation = {
   goBack: () => jest.fn,
 } as unknown as NavigationProp<AccountsStackParamList>;
 
+const mnemonic = 'west bar upon arena all remove return era local spoon edge use';
+
+const mockgenerateMnemonic = jest.fn(() => Promise.resolve({mnemonic: mnemonic}));
+
+jest.mock('@polkadotApi/useCryptoUtil', () => {
+  return {
+    useCryptoUtil: () => ({
+      generateMnemonic: mockgenerateMnemonic,
+    }),
+  };
+});
+
 describe('MnemonicScreen', () => {
   it('render the MnemonicScreen component', async () => {
     const {findAllByText} = render(<MnemonicScreen navigation={navigation} />);
@@ -23,6 +35,6 @@ describe('MnemonicScreen', () => {
     const navigationSpy = jest.spyOn(navigation, 'navigate');
     const {findByText} = render(<MnemonicScreen navigation={navigation} />);
     fireEvent.press(await findByText('Next'));
-    expect(navigationSpy).toHaveBeenLastCalledWith('Verify Mnemonic', {mnemonic: 'random'});
+    expect(navigationSpy).toHaveBeenCalledWith('Verify Mnemonic', {mnemonic: mnemonic});
   });
 });
