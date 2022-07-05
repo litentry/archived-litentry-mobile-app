@@ -1,33 +1,35 @@
 import React from 'react';
-import {fireEvent, render} from 'src/testUtils';
+import {fireEvent, render, waitFor} from 'src/testUtils';
 import {FeedbackScreen} from './FeedbackScreen';
-import {NavigationContainer} from '@react-navigation/native';
 import {Linking} from 'react-native';
 
 const feedback = 'test feedback';
 
+const mockSendEmail = jest.fn(() => Promise.resolve());
+
+jest.mock('src/utils/email', () => {
+  return {
+    sendEmail: () => mockSendEmail(),
+  };
+});
+
 describe('FeedbackScreen', () => {
   it('should render the FeedbackScreen component', async () => {
-    const {findByText, findByTestId} = render(
-      <NavigationContainer>
-        <FeedbackScreen />
-      </NavigationContainer>,
-    );
+    const {findByText, findByTestId} = render(<FeedbackScreen />);
     await findByText('Please write down your feedback here:');
     expect(await findByTestId('send-feedback-button')).toBeDisabled();
   });
 
   it('should enter the feedback and press submit button', async () => {
     const linkingSpy = jest.spyOn(Linking, 'canOpenURL');
-    const {findByPlaceholderText, findByTestId} = render(
-      <NavigationContainer>
-        <FeedbackScreen />
-      </NavigationContainer>,
-    );
+    const {findByPlaceholderText, findByTestId} = render(<FeedbackScreen />);
     const sendFeedbackButton = await findByTestId('send-feedback-button');
     fireEvent.changeText(await findByPlaceholderText('feedback...'), feedback);
     expect(sendFeedbackButton).toBeEnabled();
     fireEvent.press(sendFeedbackButton);
-    expect(linkingSpy).toBeCalledWith('mailto:app-feedback@litentry.com?subject=Litentry+Feedback&body=test+feedback');
+    waitFor(() => {
+      expect(mockSendEmail).toBeCalledTimes(1);
+      expect(linkingSpy).toHaveBeenCalledTimes(1);
+    });
   });
 });

@@ -4,7 +4,7 @@ import {Padder} from '@ui/components/Padder';
 import {Caption, Text, TextInput, Button, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {noop} from 'lodash';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View} from 'react-native';
 import {sendEmail} from 'src/utils/email';
 import HyperLink from 'react-native-hyperlink';
