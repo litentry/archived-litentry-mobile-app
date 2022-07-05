@@ -1,5 +1,3 @@
-/* eslint @typescript-eslint/no-explicit-any: off */
-
 import {ApiPromise, WsProvider} from '@polkadot/api';
 import keyring from '@polkadot/ui-keyring';
 import {cryptoWaitReady, mnemonicGenerate, mnemonicValidate} from '@polkadot/util-crypto';
@@ -16,17 +14,22 @@ import {
   exportAccountResultMessage,
   forgetAccountResultMessage,
   generateMnemonicResultMessage,
+  getTxInfoResultMessage,
   KeyringAccount,
   Message,
   MessageType,
   restoreAccountResultMessage,
+  sendTxResultMessage,
   signMessageResultMessage,
   updateAccountMetaResultMessage,
   validateMnemonicResultMessage,
   verifyCredentialsResultMessage,
 } from './messages';
+import {getTxInfo, sendTx} from './txUtils';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const window: any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const document: any;
 
 function postMessage(message: Message): void {
@@ -66,18 +69,33 @@ cryptoWaitReady().then(function () {
         break;
       }
 
-      // case 'GET_CHAIN_NAME': {
-      //   api?.rpc.system.chain().then((chainName) => {
-      //     window.ReactNativeWebView.postMessage(
-      //       JSON.stringify({
-      //         type: 'CHAIN_NAME',
-      //         payload: {chainName},
-      //       }),
-      //     );
-      //   });
+      case MessageType.GET_TX_INFO: {
+        const {address, txConfig} = message.payload;
+        if (api) {
+          getTxInfo(api, address, txConfig)
+            .then((txInfo) => {
+              postMessage(getTxInfoResultMessage({error: false, txInfo}));
+            })
+            .catch((error: Error) => {
+              postMessage(getTxInfoResultMessage({error: true, message: error.message}));
+            });
+        }
+        break;
+      }
 
-      //   break;
-      // }
+      case MessageType.SEND_TX: {
+        const {address, txConfig, txPayload, signature} = message.payload;
+        if (api) {
+          sendTx(api, address, txConfig, txPayload, signature)
+            .then(() => {
+              postMessage(sendTxResultMessage({error: false}));
+            })
+            .catch((error) => {
+              postMessage(sendTxResultMessage({error}));
+            });
+        }
+        break;
+      }
 
       case MessageType.INIT_STORE: {
         initStore(message.payload.key, message.payload.value);
