@@ -22,7 +22,7 @@ jest.mock('@polkadotApi/useCryptoUtil', () => {
 });
 
 describe('MnemonicScreen', () => {
-  it('render the MnemonicScreen component', async () => {
+  it('should render the MnemonicScreen component', async () => {
     const {findAllByText} = render(<MnemonicScreen navigation={navigation} />);
     await findAllByText('Mnemonic seed');
     await findAllByText(
@@ -31,7 +31,7 @@ describe('MnemonicScreen', () => {
     await findAllByText('Next');
   });
 
-  it('click on next button', async () => {
+  it('should navigate to on press of next button', async () => {
     const navigationSpy = jest.spyOn(navigation, 'navigate');
     const {findByText} = render(<MnemonicScreen navigation={navigation} />);
     fireEvent.press(await findByText('Next'));
