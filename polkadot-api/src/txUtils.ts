@@ -29,25 +29,25 @@ const signerOptions: Partial<SignerOptions> = {
 };
 
 export async function getTxInfo(api: ApiPromise, address: string, txConfig: TxConfig): Promise<TxInfo> {
-  const transaction = buildTransaction(api, txConfig);
-  const {meta} = transaction.registry.findMetaCall(transaction.callIndex);
+  const tx = buildTx(api, txConfig);
+  const {meta} = tx.registry.findMetaCall(tx.callIndex);
   const args = meta?.args.map(({name}) => name).join(', ') || '';
   const title = `transaction ${txConfig.method}(${args})`;
   const description = formatCallMeta(meta);
-  const info = await transaction.paymentInfo(address);
+  const info = await tx.paymentInfo(address);
   const partialFee = info.partialFee.toNumber();
   const signingInfo = await api.derive.tx.signingInfo(address, signerOptions.nonce);
-  const eraOptions = makeEraOptions(api, transaction.registry, signerOptions, signingInfo);
-  const txPayload = transaction.registry
+  const eraOptions = makeEraOptions(api, tx.registry, signerOptions, signingInfo);
+  const txPayload = tx.registry
     .createTypeUnsafe<SignerPayload>('SignerPayload', [
       objectSpread({}, eraOptions, {
         address,
         blockNumber: signingInfo.header ? signingInfo.header.number : 0,
-        method: transaction.method,
+        method: tx.method,
       }),
     ])
     .toPayload();
-  const extrinsicPayload: ExtrinsicPayload = transaction.registry.createType('ExtrinsicPayload', txPayload, {
+  const extrinsicPayload: ExtrinsicPayload = tx.registry.createType('ExtrinsicPayload', txPayload, {
     version: txPayload.version,
   });
 
@@ -67,11 +67,11 @@ export async function sendTx(
   txPayload: SignerPayloadJSON,
   signature: HexString,
 ): Promise<void> {
-  const transaction = buildTransaction(api, txConfig);
-  transaction.addSignature(address, signature, txPayload);
+  const tx = buildTx(api, txConfig);
+  tx.addSignature(address, signature, txPayload);
 
   return new Promise((resolve, reject) => {
-    transaction.send((result) => {
+    tx.send((result) => {
       if (result.isFinalized && !result.isError) {
         resolve();
       }
@@ -91,7 +91,7 @@ export async function sendTx(
   });
 }
 
-function buildTransaction(api: ApiPromise, txConfig: TxConfig): SubmittableExtrinsic<'promise'> {
+function buildTx(api: ApiPromise, txConfig: TxConfig): SubmittableExtrinsic<'promise'> {
   const {method, params} = txConfig;
   const [section, txMethod] = method.split('.');
 
