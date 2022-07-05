@@ -17,7 +17,10 @@ import type {
   VerifyCredentialsMessage,
   VerifyCredentialsResultMessage,
   HexString,
+  GetTxInfoMessage,
+  SendTxMessage,
 } from 'polkadot-api';
+import {TxInfo} from 'polkadot-api/src/txUtils';
 
 export const appAccountsState: RecoilState<Record<string, KeyringAccount>> = atom({
   key: 'appAccounts',
@@ -93,6 +96,11 @@ export const apiState = atom({
 export const txState = atom({
   key: 'tx',
   default: {
-    getChainName: () => Promise.resolve(''),
+    getTxInfo: (_: GetTxInfoMessage['payload']) => {
+      return Promise.resolve<TxInfo>({} as TxInfo);
+    },
+    sendTx: (_: SendTxMessage['payload']) => {
+      return Promise.resolve();
+    },
   },
 });
