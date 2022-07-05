@@ -23,6 +23,9 @@ jest.mock('@react-navigation/native', () => {
     useNavigation: () => ({
       navigate: jest.fn(),
     }),
+    useIsFocused: () => ({
+      isFocused: false,
+    }),
   };
 });
 
@@ -43,14 +46,6 @@ jest.mock('@gorhom/bottom-sheet', () => {
   return {
     __esModule: true,
     ...MockBottomSheet,
-  };
-});
-
-jest.mock('@react-navigation/native', () => {
-  return {
-    useNavigation: () => ({
-      navigate: jest.fn(),
-    }),
   };
 });
 

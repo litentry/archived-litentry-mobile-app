@@ -6,7 +6,7 @@ import {Padder} from '@ui/components/Padder';
 import {SecureKeychain} from 'src/service/SecureKeychain';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {useKeyring} from '@polkadotApi/useKeyring';
-import {SignCredentials} from '@polkadotApi/types';
+import type {SignCredentials} from 'polkadot-api';
 
 type Props = {
   address: string;
