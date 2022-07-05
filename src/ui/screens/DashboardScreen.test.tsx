@@ -14,12 +14,6 @@ const route = {} as RouteProp<DashboardStackParamList, 'Dashboard'>;
 
 const navigationSpy = jest.spyOn(navigation, 'navigate');
 
-jest.mock('src/hooks/useParachainAppEnabled', () => ({
-  useParachainAppEnabled: () => {
-    return {parachainAppEnabled: false};
-  },
-}));
-
 describe('DashboardScreen', () => {
   it('should render all the loading view while data is fetching', () => {
     const {getAllByTestId} = render(<DashboardScreen navigation={navigation} route={route} />);
