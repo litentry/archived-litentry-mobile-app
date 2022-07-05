@@ -54,24 +54,26 @@ export function ImportAccount({navigation}: {navigation: NavigationProp<Accounts
   };
 
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
-  const {seed, setSeed, address, isSeedValid} = useVerifySeed();
+  const {mnemonic, setMnemonic, address, isMnemonicValid} = useVerifyMnemonic();
 
   const {addAccount} = useKeyring();
 
   const passwordStrength = zxcvbn(account.password).score;
 
-  const seedError = Boolean(seed) && !isSeedValid;
+  const mnemonicError = Boolean(mnemonic) && !isMnemonicValid;
   const passwordError = Boolean(account.password) && passwordStrength < 3;
   const confirmPasswordError = Boolean(account.confirmPassword) && !(account.password === account.confirmPassword);
 
-  const isDisabled = !isSeedValid || !account.password || !(account.password === account.confirmPassword);
+  const isDisabled = !isMnemonicValid || !account.password || !(account.password === account.confirmPassword);
 
   const onSubmit = async () => {
     const addedAccount = await addAccount({
-      mnemonic: seed,
+      mnemonic: mnemonic,
       password: account.password,
       name: account.title,
       network: currentNetwork.key,
+      isFavorite: false,
+      isExternal: false,
     });
     SecureKeychain.setPasswordByServiceId(account.password, 'BIOMETRICS', addedAccount.address as string);
     navigation.navigate(accountsScreen, {reload: true});
@@ -88,13 +90,13 @@ export function ImportAccount({navigation}: {navigation: NavigationProp<Accounts
             testID="mnemonic-seed"
             numberOfLines={4}
             multiline={true}
-            value={seed}
-            onChangeText={(_seed) => setSeed(_seed.trim())}
+            value={mnemonic}
+            onChangeText={(_mnemonic) => setMnemonic(_mnemonic.trim())}
             mode="outlined"
-            error={seedError}
+            error={mnemonicError}
             style={styles.seedInput}
           />
-          <HelperText type="error" visible={seedError}>
+          <HelperText type="error" visible={mnemonicError}>
             {`The seed appears to be invalid`}
           </HelperText>
           <Padder scale={1} />
@@ -196,20 +198,20 @@ const styles = StyleSheet.create({
   },
 });
 
-function useVerifySeed() {
-  const {verifyMnemonic} = useCryptoUtil();
-  const [seed, setSeed] = React.useState('');
+function useVerifyMnemonic() {
+  const {validateMnemonic} = useCryptoUtil();
+  const [mnemonic, setMnemonic] = React.useState('');
   const [address, setAddress] = React.useState<string>();
-  const [isSeedValid, setIsSeedValid] = React.useState(false);
+  const [isMnemonicValid, setIsMnemonicValid] = React.useState(false);
 
   React.useEffect(() => {
-    if (seed) {
-      verifyMnemonic(seed).then(({isValid, address: _address}) => {
-        setIsSeedValid(isValid);
+    if (mnemonic) {
+      validateMnemonic({mnemonic}).then(({isValid, address: _address}) => {
+        setIsMnemonicValid(isValid);
         setAddress(_address);
       });
     }
-  }, [seed, verifyMnemonic]);
+  }, [mnemonic, validateMnemonic]);
 
-  return {seed, setSeed, address, isSeedValid};
+  return {mnemonic, setMnemonic, address, isMnemonicValid};
 }

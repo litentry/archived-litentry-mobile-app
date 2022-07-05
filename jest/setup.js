@@ -22,6 +22,17 @@ jest.mock('react-native-qrcode-scanner/node_modules/react-native-permissions', (
   require('react-native-permissions/mock'),
 );
 
+jest.mock('@react-navigation/native', () => {
+  return {
+    useNavigation: () => ({
+      navigate: jest.fn(),
+    }),
+    useIsFocused: () => ({
+      isFocused: false,
+    }),
+  };
+});
+
 jest.mock('react-native/Libraries/Components/Switch/Switch', () => {
   const mockComponent = require('react-native/jest/mockComponent');
   return {
@@ -35,14 +46,6 @@ jest.mock('@gorhom/bottom-sheet', () => {
   return {
     __esModule: true,
     ...MockBottomSheet,
-  };
-});
-
-jest.mock('@react-navigation/native', () => {
-  return {
-    useNavigation: () => ({
-      navigate: jest.fn(),
-    }),
   };
 });
 
