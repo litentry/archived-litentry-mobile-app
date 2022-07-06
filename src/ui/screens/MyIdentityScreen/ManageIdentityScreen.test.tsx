@@ -19,7 +19,19 @@ const route = {
 
 const openURLSpy = jest.spyOn(Linking, 'openURL');
 
+const mockStartTx = jest.fn(() => Promise.resolve({}));
+
+jest.mock('src/api/hooks/useApiTx', () => {
+  return {
+    useApiTx: () => mockStartTx,
+  };
+});
+
 describe('ManageIdentityScreen', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+
   it('should render the loading view when data is fetching', async () => {
     const {findByText, findAllByText} = render(<ManageIdentityScreen navigation={navigation} route={route} />);
     await findByText('Address');
@@ -63,12 +75,51 @@ describe('ManageIdentityScreen', () => {
     });
   });
 
-  it('should navigate to sub-identities on click of Set Sub-identities', async () => {
+  it('should navigate to sub-identities when tapping on Set Sub-identities', async () => {
     const navigationSpy = jest.spyOn(navigation, 'navigate');
     const {findByText} = render(<ManageIdentityScreen navigation={navigation} route={route} />);
     fireEvent.press(await findByText('Set Sub-identities'));
     expect(navigationSpy).toBeCalledWith('Register Sub-Identities', {
       address: '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a',
+    });
+  });
+
+  it('should open bottom sheets to update the identity of the entered', async () => {
+    const {findByText, findByTestId} = render(<ManageIdentityScreen navigation={navigation} route={route} />);
+    fireEvent.press(await findByText('Update Identity'));
+    const identitySubmitButton = await findByTestId('identity-submit-button');
+    waitFor(async () => {
+      fireEvent.changeText(await findByTestId('display-name'), 'PureStake/01');
+      expect(identitySubmitButton).toBeEnabled();
+    });
+    fireEvent.press(identitySubmitButton);
+    waitFor(() => {
+      expect(mockStartTx).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('should open bottom sheets when pressed on request judgement to update the judgement of the account', async () => {
+    const {findByText, findByTestId, findByPlaceholderText} = render(
+      <ManageIdentityScreen navigation={navigation} route={route} />,
+    );
+    fireEvent.press(await findByText('Request Judgement'));
+
+    await findByText('Choose registrar');
+    await findByPlaceholderText('Fee for judgement');
+    await findByText('Fee paid to registrar to provide Judgement');
+
+    const judgementSubmitButton = await findByTestId('judgement-submit-button');
+    expect(judgementSubmitButton).toBeDisabled();
+
+    fireEvent.press(await findByTestId('select-registrar'));
+
+    fireEvent.press(await findByText('W3F/✍️'));
+
+    expect(judgementSubmitButton).toBeEnabled();
+
+    fireEvent.press(judgementSubmitButton);
+    waitFor(() => {
+      expect(mockStartTx).toHaveBeenCalledWith('');
     });
   });
 });
