@@ -50,13 +50,6 @@ jest.mock('@gorhom/bottom-sheet', () => {
   };
 });
 
-jest.mock('react-native-in-app-message', () => {
-  return {
-    show: () => {},
-    hide: () => {},
-  };
-});
-
 jest.mock('react-native-share', () => {
   return {
     open: jest.fn(),
@@ -90,23 +83,51 @@ jest.mock('@react-navigation/material-top-tabs', () => ({
   createMaterialTopTabNavigator: () => jest.fn(),
 }));
 
+const selectAccount = {
+  encoded: 'MFMCAQEwBQYDK2VwBCIEIKEjAyEAnHhgkOJZiuiE/50fAdahqbrxOp5h9zYzqJKPTYC/ff4=',
+  encoding: {content: ['pkcs8', 'sr25519'], type: ['none'], version: '3'},
+  address: 'G7UkJAutjbQyZGRiP8z5bBSBPBJ66JbTKAkFDq3cANwENyX',
+  meta: {
+    name: 'Test account name',
+    network: 'kusama',
+    isFavorite: false,
+    isExternal: true,
+    whenCreated: 1657023528984,
+  },
+};
+
 jest.mock('../src/polkadotApi/useAppAccounts', () => ({
   useAppAccounts: () => ({
     accounts: {},
-    networkAccounts: [
-      {
-        encoded: 'MFMCAQEwBQYDK2VwBCIEIKEjAyEAnHhgkOJZiuiE/50fAdahqbrxOp5h9zYzqJKPTYC/ff4=',
-        encoding: {content: ['pkcs8', 'sr25519'], type: ['none'], version: '3'},
-        address: 'G7UkJAutjbQyZGRiP8z5bBSBPBJ66JbTKAkFDq3cANwENyX',
-        meta: {
-          name: 'Test account name',
-          network: 'kusama',
-          isFavorite: false,
-          isExternal: true,
-          whenCreated: 1657023528984,
-        },
-      },
-    ],
+    networkAccounts: [selectAccount],
     setAccounts: () => jest.fn(),
   }),
+}));
+
+jest.mock('@atoms/activeAccount', () => ({
+  useActiveAccount: () => ({
+    activeAccount: selectAccount,
+    selectActiveAccount: () => selectAccount,
+  }),
+}));
+
+jest.mock('react-native-aes-crypto', () => {
+  return {
+    __esModule: true,
+    default: {
+      randomKey: jest.fn(),
+      pbkdf2: jest.fn(),
+      encrypt: jest.fn(() => Promise.resolve()),
+    },
+  };
+});
+
+jest.mock('react-native-keychain', () => ({
+  setGenericPassword: jest.fn(() => Promise.resolve()),
+  getGenericPassword: jest.fn(() => Promise.resolve()),
+  resetGenericPassword: jest.fn(() => Promise.resolve()),
+  setInternetCredentials: jest.fn().mockReturnValue(true),
+  getSupportedBiometryType: jest.fn().mockReturnValue(true),
+  ACCESS_CONTROL: {BIOMETRY_CURRENT_SET_OR_DEVICE_PASSCODE: 'mockedpwd'},
+  ACCESSIBLE: {WHEN_PASSCODE_SET_THIS_DEVICE_ONLY: true},
 }));
