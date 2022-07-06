@@ -8,13 +8,6 @@ import Share from 'react-native-share';
 
 jest.useFakeTimers();
 
-// const mockFileReader = {
-//   readAsDataURL: jest.fn(),
-//   onloadend: jest.fn(),
-// }
-
-// jest.spyOn(global, 'FileReader').mockImplementation();
-
 const navigation = {} as unknown as NavigationProp<AccountsStackParamList, typeof exportAccountWithJsonFileScreen>;
 
 const route = {
@@ -33,9 +26,8 @@ describe('ExportAccountWithJsonFileScreen', () => {
     await findByText('Export');
   });
 
-  // TODO: mock the file reader
-
   it('should backup the account details into JSON file', async () => {
+    const blobToBase64Spy = jest.spyOn(FileReader.prototype, 'readAsDataURL');
     const backUpAccountDetailsSpy = jest.spyOn(Share, 'open');
     const {findByTestId} = render(<ExportAccountWithJsonFileScreen navigation={navigation} route={route} />);
     const exportButton = await findByTestId('export-button');
@@ -47,5 +39,6 @@ describe('ExportAccountWithJsonFileScreen', () => {
     waitFor(() => {
       expect(backUpAccountDetailsSpy).not.toBeCalled();
     });
+    expect(blobToBase64Spy).toBeCalled();
   });
 });

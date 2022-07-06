@@ -4,7 +4,7 @@ import React from 'react';
 import {Linking} from 'react-native';
 import {debug} from 'react-native-reanimated';
 import {ReactTestInstance} from 'react-test-renderer';
-import {fireEvent, render} from 'src/testUtils';
+import {fireEvent, render, waitFor} from 'src/testUtils';
 import {TechnicalCommitteeScreen} from './TechnicalCommitteeScreen';
 
 const navigation = {
@@ -38,9 +38,11 @@ describe('TechnicalCommitteeScreen', () => {
 
   it('should navigate to account details screen on press of a technical committee', async () => {
     const navigationSpy = jest.spyOn(navigation, 'navigate');
-    const {findByText, debug} = render(<TechnicalCommitteeScreen />);
+    const {findByText} = render(<TechnicalCommitteeScreen />);
     await findByText('Members');
     fireEvent.press(await findByText('Parity/🦿'));
-    // expect(navigationSpy).toBeCalledTimes(1)
+    waitFor(() => {
+      expect(navigationSpy).toBeCalledWith(1);
+    });
   });
 });

@@ -58,7 +58,7 @@ export function DevScreen() {
 
           <View style={globalStyles.rowAlignCenter}>
             <Subheading>{`Active account: `}</Subheading>
-            {accountInfo ? <AccountTeaser account={accountInfo} name={activeAccount?.meta.name} /> : null}
+            {accountInfo ? <AccountTeaser account={accountInfo} name={activeAccount.meta.name} /> : null}
           </View>
         </View>
 

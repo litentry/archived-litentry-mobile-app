@@ -2,10 +2,19 @@ import {RouteProp} from '@react-navigation/native';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {referendumScreen} from '@ui/navigation/routeKeys';
 import React from 'react';
+import {debug} from 'react-native-reanimated';
 import {fireEvent, render} from 'src/testUtils';
 import {ReferendumScreen} from './ReferendumScreen';
 
 jest.useFakeTimers();
+
+const mockStartTx = jest.fn();
+
+jest.mock('src/api/hooks/useApiTx', () => {
+  return {
+    useApiTx: () => mockStartTx,
+  };
+});
 
 const route = {
   params: {
@@ -62,7 +71,7 @@ describe('ReferendumScreen', () => {
     await findByText('Vote Yes');
   });
 
-  it('should open a model to vote yes/no when clicked on yes/no', async () => {
+  it('should open a model to vote yes/no when pressed on yes/no button and close the model by pressing cancel', async () => {
     const {findByText, findByTestId} = render(<ReferendumScreen route={route} />);
     await findByText('211');
     fireEvent.press(await findByText('Vote No'));
@@ -72,7 +81,28 @@ describe('ReferendumScreen', () => {
     await findByText('Cancel');
     await findByText('Vote No');
     expect(await findByTestId('vote-button')).toBeDisabled();
+    fireEvent.press(await findByText('Vote No'));
   });
 
-  // TODO test case for vote
+  it('should open a model to vote yes/no when clicked on yes/no', async () => {
+    const {findByText, findByTestId, debug} = render(<ReferendumScreen route={route} />);
+    fireEvent.press(await findByText('Vote Yes'));
+    const yesButton = await findByTestId('vote-button');
+    expect(yesButton).toBeDisabled();
+    await findByText('Vote with account');
+    const selectAccount = await findByTestId('select-account');
+    fireEvent.press(selectAccount);
+    const accountItem = await findByText('Test account name');
+    fireEvent.press(accountItem);
+
+    fireEvent.changeText(await findByText('Vote Value'), '1');
+
+    const selectConviction = await findByTestId('select-conviction');
+    fireEvent.press(selectConviction);
+
+    const convictionItem = await findByText('1x voting balance, locked for 1x enactment (28.00 days)');
+    fireEvent.press(convictionItem);
+
+    debug();
+  });
 });

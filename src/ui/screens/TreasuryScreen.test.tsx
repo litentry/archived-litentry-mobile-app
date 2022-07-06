@@ -4,7 +4,7 @@ import {ReactTestInstance} from 'react-test-renderer';
 import {fireEvent, render} from 'src/testUtils';
 import {TreasuryOverviewScreen} from './TreasuryScreen';
 
-describe('ImportAccountWithJsonFileScreen', () => {
+describe('TreasuryOverviewScreen', () => {
   it('should render the loading component when data is fetching', () => {
     const {getByTestId} = render(<TreasuryOverviewScreen />);
     expect(getByTestId('loading_view')).toBeTruthy();
