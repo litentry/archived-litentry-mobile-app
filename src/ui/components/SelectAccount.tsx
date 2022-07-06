@@ -27,7 +27,6 @@ export function SelectAccount({onSelect, accounts}: Props) {
   const closeMenu = () => setVisible(false);
 
   const selectAccount = (accountSelected: SelectedAccount) => {
-    console.log('selected :: ', accountSelected);
     setSelectedAccount(accountSelected);
     onSelect(accountSelected);
     closeMenu();

@@ -114,7 +114,6 @@ export function DemocracyProposalScreen({
           <Padder scale={0.5} />
           <SelectAccount
             onSelect={(account) => {
-              console.log('selected account ::', account);
               dispatch({type: 'SELECT_ACCOUNT', payload: account.accountInfo});
             }}
           />

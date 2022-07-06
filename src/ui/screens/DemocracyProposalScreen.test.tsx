@@ -162,6 +162,14 @@ const route = {
   },
 } as unknown as RouteProp<DashboardStackParamList, typeof democracyProposalScreen>;
 
+const mockStartTx = jest.fn();
+
+jest.mock('src/api/hooks/useApiTx', () => {
+  return {
+    useApiTx: () => mockStartTx,
+  };
+});
+
 describe('DemocracyProposalScreen', () => {
   it('render the loading view when data is fetching', async () => {
     const {findByText} = render(<DemocracyProposalScreen route={route} />);
@@ -193,7 +201,7 @@ describe('DemocracyProposalScreen', () => {
     fireEvent.press(await findByText('Cancel'));
   });
 
-  it.only('should open voting model and vote by pressing second ', async () => {
+  it('should open voting model and vote by pressing second ', async () => {
     const {findByText, findByTestId, findAllByTestId, debug} = render(<DemocracyProposalScreen route={route} />);
     fireEvent.press(await findByText('Second'));
     await findByText('Vote with account');
@@ -210,9 +218,12 @@ describe('DemocracyProposalScreen', () => {
 
     expect(secondButton).toBeEnabled();
 
-    // expect(updatedState).toEqual({account: selectedAccount,  open: false});
-    // await findByText('Deposit required:');
-    // await findByText('Cancel');
-    // expect(await findByTestId('second-button')).toBeEnabled();
+    fireEvent.press(secondButton);
+
+    expect(mockStartTx).toHaveBeenCalledWith({
+      address: 'G7UkJAutjbQyZGRiP8z5bBSBPBJ66JbTKAkFDq3cANwENyX',
+      params: ['73'],
+      txMethod: 'democracy.second',
+    });
   });
 });
