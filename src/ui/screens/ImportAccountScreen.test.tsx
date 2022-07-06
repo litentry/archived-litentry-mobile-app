@@ -1,8 +1,8 @@
-import {NavigationContainerProps, NavigationProp} from '@react-navigation/native';
+import {NavigationProp} from '@react-navigation/native';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import React from 'react';
-import {debug} from 'react-native-reanimated';
-import {fireEvent, render} from 'src/testUtils';
+import {SecureKeychain} from 'src/service/SecureKeychain';
+import {fireEvent, render, waitFor} from 'src/testUtils';
 import {ImportAccount} from './ImportAccountScreen';
 
 const navigation = {
@@ -11,10 +11,33 @@ const navigation = {
 
 const mnemonic = 'sausage walk outdoor final inner moral unknown else upgrade slim excite seed';
 
+const mnemonicAddress = '16DY8qDD2E8Psayy53VjQQLu9j7kTP6JAFwBw9QmKfW2xwGW';
+
 const password = 'NewPassword@02';
 
+const mockKeyRingImp = {
+  addAccount: jest.fn(() => Promise.resolve({address: mnemonicAddress})),
+  createAccount: jest.fn(() => Promise.resolve()),
+};
+
+const mockCryptoUtil = {
+  validateMnemonic: jest.fn(() => Promise.resolve({isValid: true, address: mnemonicAddress})),
+};
+
+jest.mock('@polkadotApi/useKeyring', () => {
+  return {
+    useKeyring: () => mockKeyRingImp,
+  };
+});
+
+jest.mock('@polkadotApi/useCryptoUtil', () => {
+  return {
+    useCryptoUtil: () => mockCryptoUtil,
+  };
+});
+
 describe('ImportAccount', () => {
-  it('should render the ImportAccountScreen component', async () => {
+  it('should render the ImportAccountScreen component with initial states', async () => {
     const {findAllByText, findByText, findByTestId} = render(<ImportAccount navigation={navigation} />);
     await findByText('Import Seed');
     await findAllByText('Existing mnemonic seed');
@@ -26,18 +49,30 @@ describe('ImportAccount', () => {
   });
 
   it('should import an new account using the existing mnemonic seed', async () => {
-    const {findByText, findByPlaceholderText, findByTestId, debug, findByLabelText} = render(
-      <ImportAccount navigation={navigation} />,
-    );
+    const secureKeychainSpy = jest.spyOn(SecureKeychain, 'setPasswordByServiceId');
+    const navigationSpy = jest.spyOn(navigation, 'navigate');
+    const {findByText, findByTestId} = render(<ImportAccount navigation={navigation} />);
     await findByText('Import Seed');
+    const importSeedButton = await findByTestId('import-seed-button');
     fireEvent.changeText(await findByTestId('mnemonic-seed'), mnemonic);
-    expect(await findByTestId('import-seed-button')).toBeDisabled();
-    // fireEvent.changeText(await findByLabelText('Descriptive name for the account'))
-    // fireEvent.changeText(await findByPlaceholderText('Enter account description'))
-    fireEvent.changeText(await findByTestId('account-description'), 'NewAccount');
+
+    await findByText('16DY8qDD2E8Psayy53VjQQLu9j7kTP6JAFwBw9QmKfW2xwGW');
+
+    expect(importSeedButton).toBeDisabled();
+
+    const accountDescription = await findByTestId('account-description');
+    fireEvent.changeText(accountDescription, 'New Account');
+
     fireEvent.changeText(await findByTestId('password'), password);
+
     fireEvent.changeText(await findByTestId('confirm-password'), password);
-    // expect(await findByTestId('import-seed-button')).toBeEnabled();
-    debug();
+    expect(importSeedButton).toBeEnabled();
+
+    fireEvent.press(importSeedButton);
+
+    waitFor(() => {
+      expect(secureKeychainSpy).toHaveBeenCalledTimes(1);
+      expect(navigationSpy).toBeCalled();
+    });
   });
 });
