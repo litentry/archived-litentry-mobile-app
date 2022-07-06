@@ -15,6 +15,8 @@ type Props = {
   onSelect: (item: Item) => void;
 };
 
+const ItemRight = () => <Icon name="chevron-down" />;
+
 export function Select({items, onSelect}: Props) {
   const {colors} = useTheme();
   const [selectedItem, setSelectedItem] = React.useState<Item>({text: '', value: 0});
@@ -37,7 +39,7 @@ export function Select({items, onSelect}: Props) {
           <List.Item
             title={<Caption>{selectedItem.text ? selectedItem.text : 'Select item'}</Caption>}
             onPress={openMenu}
-            right={() => <Icon name="chevron-down" />}
+            right={ItemRight}
           />
         </View>
       }>
