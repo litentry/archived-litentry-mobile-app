@@ -23,6 +23,9 @@ jest.mock('@react-navigation/native', () => {
     useNavigation: () => ({
       navigate: jest.fn(),
     }),
+    useIsFocused: () => ({
+      isFocused: false,
+    }),
   };
 });
 
@@ -46,14 +49,17 @@ jest.mock('@gorhom/bottom-sheet', () => {
   };
 });
 
-jest.mock('@react-navigation/native', () => {
+jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
+
+jest.mock('react-native-device-info', () => {
   return {
-    useNavigation: () => ({
-      navigate: jest.fn(),
-    }),
+    __esModule: true,
+    default: {
+      getVersion: jest.fn(() => {}),
+      getBuildNumber: jest.fn(() => {}),
+    },
   };
 });
-
 jest.mock('@react-native-community/clipboard', () => {
   return {
     setString: jest.fn(),
