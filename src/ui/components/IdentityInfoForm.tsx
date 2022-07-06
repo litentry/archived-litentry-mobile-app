@@ -62,6 +62,7 @@ function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps) {
         mode="outlined"
         label="Display Name"
         placeholder="My On-Chain Name"
+        testID="display-name"
         value={display}
         error={!formStatus.isDisplayValid}
         onChangeText={(value) => dispatch({type: 'set_value', payload: {display: value}})}
@@ -127,7 +128,11 @@ function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps) {
         left={<TextInput.Icon name="message-outline" />}
       />
       <Padder scale={1} />
-      <Button mode="contained" onPress={onSubmitPress} disabled={!formStatus.isFormValid}>
+      <Button
+        mode="contained"
+        onPress={onSubmitPress}
+        disabled={!formStatus.isFormValid}
+        testID="identity-submit-button">
         Submit
       </Button>
     </ScrollView>
