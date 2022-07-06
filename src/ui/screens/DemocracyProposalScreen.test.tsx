@@ -1,7 +1,7 @@
 import React, {useReducer} from 'react';
 import {RouteProp} from '@react-navigation/native';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
-import {render, fireEvent} from 'src/testUtils';
+import {render, fireEvent, waitFor} from 'src/testUtils';
 import {DemocracyProposalScreen, reducer, State} from './DemocracyProposalScreen';
 import {democracyProposalScreen} from '@ui/navigation/routeKeys';
 import {Account} from 'src/api/hooks/useAccount';
@@ -193,19 +193,22 @@ describe('DemocracyProposalScreen', () => {
     fireEvent.press(await findByText('Cancel'));
   });
 
-  it('should open voting model and vote by pressing second ', async () => {
+  it.only('should open voting model and vote by pressing second ', async () => {
     const {findByText, findByTestId, findAllByTestId, debug} = render(<DemocracyProposalScreen route={route} />);
     fireEvent.press(await findByText('Second'));
     await findByText('Vote with account');
-    expect(await findByTestId('second-button')).toBeDisabled();
 
-    fireEvent.press(await findByTestId('select-account'));
-    // await findAllByTestId('network-accounts')
-    fireEvent.press((await findAllByTestId('testId-123'))[0] as ReactTestInstance);
-    // debug()
-    expect((await findAllByTestId('testId-123'))[0]).toBeEnabled();
+    const secondButton = await findByTestId('second-button');
 
-    expect(await findByTestId('second-button')).toBeEnabled();
+    expect(secondButton).toBeDisabled();
+
+    const selectAccount = await findByTestId('select-account');
+    fireEvent.press(selectAccount);
+
+    const accountItem = await findByText('Test account name');
+    fireEvent.press(accountItem);
+
+    expect(secondButton).toBeEnabled();
 
     // expect(updatedState).toEqual({account: selectedAccount,  open: false});
     // await findByText('Deposit required:');

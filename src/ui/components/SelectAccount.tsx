@@ -61,7 +61,7 @@ export function SelectAccount({onSelect, accounts}: Props) {
         ItemSeparatorComponent={Divider}
         data={accounts ?? networkAccounts}
         keyExtractor={(item) => item.address}
-        renderItem={({item}) => <Account onSelect={selectAccount} account={item} testID="network-accounts" />}
+        renderItem={({item}) => <Account onSelect={selectAccount} account={item} />}
         ListEmptyComponent={<EmptyAccounts />}
       />
     </Menu>
@@ -81,10 +81,9 @@ function EmptyAccounts() {
 type AccountProps = {
   onSelect: (account: SelectedAccount) => void;
   account: KeyringAccount;
-  testID: string;
 };
 
-export function Account({onSelect, account, testID}: AccountProps) {
+export function Account({onSelect, account}: AccountProps) {
   const {
     meta: {name, isExternal},
   } = account;
