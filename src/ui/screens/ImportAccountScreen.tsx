@@ -155,12 +155,12 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
             {`Confirm password doesn't match`}
           </HelperText>
           <Padder scale={2} />
-          {address && (
+          {address ? (
             <>
               <List.Item title={account.title} left={AccountIdentityIcon} description={address} />
               <Padder scale={1} />
             </>
-          )}
+          ) : null}
           <View style={globalStyles.flex} />
           <Button mode="outlined" icon={'download'} onPress={onSubmit} disabled={isDisabled}>
             Import Seed
