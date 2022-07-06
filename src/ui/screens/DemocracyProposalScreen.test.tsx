@@ -1,12 +1,9 @@
-import React, {useReducer} from 'react';
+import React from 'react';
 import {RouteProp} from '@react-navigation/native';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
-import {render, fireEvent, waitFor} from 'src/testUtils';
-import {DemocracyProposalScreen, reducer, State} from './DemocracyProposalScreen';
+import {render, fireEvent} from 'src/testUtils';
+import {DemocracyProposalScreen} from './DemocracyProposalScreen';
 import {democracyProposalScreen} from '@ui/navigation/routeKeys';
-import {Account} from 'src/api/hooks/useAccount';
-import {ReactTestInstance} from 'react-test-renderer';
-import {debug} from 'react-native-reanimated';
 
 jest.useFakeTimers();
 
@@ -191,7 +188,7 @@ describe('DemocracyProposalScreen', () => {
       await findByText('Seconding a proposal that indicates your backing for the proposal.');
   });
 
-  it('should open voting model when pressed on second button', async () => {
+  it('should open voting model verify its initial state and press cancel', async () => {
     const {findByText, findByTestId} = render(<DemocracyProposalScreen route={route} />);
     fireEvent.press(await findByText('Second'));
     await findByText('Vote with account');
@@ -201,8 +198,8 @@ describe('DemocracyProposalScreen', () => {
     fireEvent.press(await findByText('Cancel'));
   });
 
-  it('should open voting model and vote by pressing second ', async () => {
-    const {findByText, findByTestId, findAllByTestId, debug} = render(<DemocracyProposalScreen route={route} />);
+  it('should open voting model and vote proposal by pressing second button', async () => {
+    const {findByText, findByTestId} = render(<DemocracyProposalScreen route={route} />);
     fireEvent.press(await findByText('Second'));
     await findByText('Vote with account');
 

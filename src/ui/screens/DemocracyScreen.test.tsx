@@ -12,6 +12,16 @@ const navigation = {
   navigate: jest.fn(),
 } as unknown as NavigationProp<DashboardStackParamList>;
 
+const preImage = '0x66cb3ecc23fd2ef262f8f451e4f0e0dfcfd2e276b3438dc800522df4863659db';
+
+const mockStartTx = jest.fn();
+
+jest.mock('src/api/hooks/useApiTx', () => {
+  return {
+    useApiTx: () => mockStartTx,
+  };
+});
+
 describe('DemocracyScreen', () => {
   it('should render the loading component when data is fetching', () => {
     const {getByTestId} = render(<DemocracyScreen navigation={navigation} />);
@@ -44,7 +54,7 @@ describe('DemocracyScreen', () => {
     expect(linkingSpy).toBeCalledWith('https://polkadot.polkassembly.io/referendum/211');
   });
 
-  it('should open submit proposal model when pressed on submit proposal', async () => {
+  it('should open submit proposal model verify its initial state and press cancel button', async () => {
     const {findByText, findAllByText, findByTestId} = render(<DemocracyScreen navigation={navigation} />);
     fireEvent.press(await findByText('Submit proposal'));
     await findAllByText('Submit proposal');
@@ -57,5 +67,43 @@ describe('DemocracyScreen', () => {
     fireEvent.press(await findByText('Cancel'));
   });
 
-  // TODO: should select an account and provide enough data to complete the proposal
+  it('should open submit proposal model when pressed on submit proposal', async () => {
+    const {findByText, findByTestId, findByPlaceholderText} = render(<DemocracyScreen navigation={navigation} />);
+    fireEvent.press(await findByText('Submit proposal'));
+
+    const proposalButton = await findByTestId('proposal-button');
+    expect(proposalButton).toBeDisabled();
+
+    const selectAccount = await findByTestId('select-account');
+    fireEvent.press(selectAccount);
+
+    const accountItem = await findByText('Test account name');
+    fireEvent.press(accountItem);
+    expect(proposalButton).toBeDisabled();
+
+    fireEvent.changeText(await findByPlaceholderText('Place your Text'), preImage);
+    expect(proposalButton).toBeDisabled();
+
+    fireEvent.changeText(await findByPlaceholderText('Enter amount'), '24');
+    expect(proposalButton).toBeDisabled();
+
+    fireEvent.changeText(await findByPlaceholderText('Enter amount'), '120');
+    expect(proposalButton).toBeEnabled();
+
+    fireEvent.press(proposalButton);
+
+    expect(mockStartTx).toHaveBeenCalledWith({
+      address: 'G7UkJAutjbQyZGRiP8z5bBSBPBJ66JbTKAkFDq3cANwENyX',
+      params: [
+        '0x66cb3ecc23fd2ef262f8f451e4f0e0dfcfd2e276b3438dc800522df4863659db',
+        {
+          length: 2,
+          negative: 0,
+          red: null,
+          words: [26402816, 17881, ,],
+        },
+      ],
+      txMethod: 'democracy.propose',
+    });
+  });
 });
