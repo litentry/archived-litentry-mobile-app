@@ -8,7 +8,6 @@ import RNFS from 'react-native-fs';
 import {cryptoUtilState, keyringState, apiState, txState} from './atoms';
 import {useNetwork} from '@atoms/network';
 import {useAppAccounts} from './useAppAccounts';
-
 import {
   addAccountMessage,
   AddAccountMessage,
@@ -49,6 +48,11 @@ import {
   reconnectApiMessage,
   KeyringAccountPayload,
   SignResultPayload,
+  GetTxInfoResultPayload,
+  GetTxInfoMessage,
+  getTxInfoMessage,
+  SendTxMessage,
+  sendTxMessage,
 } from 'polkadot-api';
 
 type WebViewPromiseResponse<Payload> = {
@@ -68,7 +72,8 @@ type ResolversRef = React.MutableRefObject<{
   restoreAccountPromise: WebViewPromiseResponse<KeyringAccountPayload['account']>;
   exportAccountPromise: WebViewPromiseResponse<KeyringAccountPayload['account']>;
   signPromise: WebViewPromiseResponse<SignResultPayload['signed']>;
-  // resolveChainName: (_: string) => void;
+  getTxInfoPromise: WebViewPromiseResponse<GetTxInfoResultPayload['txInfo']>;
+  sendTxPromise: WebViewPromiseResponse<void>;
 }>;
 
 function getAccountKey(address: string) {
@@ -222,26 +227,29 @@ function useInitApi(isWebviewLoaded: boolean, postMessage: PostMessage) {
   }, [isWebviewLoaded, postMessage, setApiState, currentNetwork.ws]);
 }
 
-function useTx(isWebviewLoaded: boolean, postMessage: PostMessage, resolversRef: ResolversRef) {
+function useApiTx(isWebviewLoaded: boolean, postMessage: PostMessage, resolversRef: ResolversRef) {
   const setTxState = useSetRecoilState(txState);
 
-  // React.useEffect(() => {
-  //   if (isWebviewLoaded) {
-  //     setTxState({
-  //       // example method: add here all tx methods (e.g: setIdentity)
-  //       getChainName: () => {
-  //         return new Promise((resolve) => {
-  //           resolversRef.current.resolveChainName = resolve;
-  //           webViewRef.current?.postMessage(
-  //             JSON.stringify({
-  //               type: 'GET_CHAIN_NAME',
-  //             }),
-  //           );
-  //         });
-  //       },
-  //     });
-  //   }
-  // }, [isWebviewLoaded, setTxState, postMessage, resolversRef]);
+  React.useEffect(() => {
+    if (isWebviewLoaded) {
+      setTxState({
+        getTxInfo: (payload: GetTxInfoMessage['payload']) => {
+          return new Promise((resolve, reject) => {
+            resolversRef.current.getTxInfoPromise.resolve = resolve;
+            resolversRef.current.getTxInfoPromise.reject = reject;
+            postMessage(getTxInfoMessage(payload));
+          });
+        },
+        sendTx: (payload: SendTxMessage['payload']) => {
+          return new Promise((resolve, reject) => {
+            resolversRef.current.sendTxPromise.resolve = resolve;
+            resolversRef.current.sendTxPromise.reject = reject;
+            postMessage(sendTxMessage(payload));
+          });
+        },
+      });
+    }
+  }, [isWebviewLoaded, setTxState, postMessage, resolversRef]);
 }
 
 function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessage) {
@@ -264,15 +272,11 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
         restoreAccountPromise,
         exportAccountPromise,
         signPromise,
-        // resolveChainName,
+        getTxInfoPromise,
+        sendTxPromise,
       } = resolversRef.current;
 
       switch (data.type) {
-        // case 'CHAIN_NAME': {
-        //   resolveChainName(payload.chainName);
-        //   break;
-        // }
-
         case MessageType.GENERATE_MNEMONIC_RESULT: {
           resolveMnemonic(data.payload);
           break;
@@ -383,6 +387,26 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
           setApiState({isReady: false, isConnecting: true});
           break;
         }
+
+        case MessageType.GET_TX_INFO_RESULT: {
+          const payload = data.payload;
+          if (payload.error) {
+            getTxInfoPromise.reject(payload);
+          } else {
+            getTxInfoPromise.resolve(payload.txInfo);
+          }
+          break;
+        }
+
+        case MessageType.SEND_TX_RESULT: {
+          const payload = data.payload;
+          if (payload.error) {
+            sendTxPromise.reject(payload);
+          } else {
+            sendTxPromise.resolve();
+          }
+          break;
+        }
       }
     },
     [accounts, setAccounts, resolversRef, setApiState, postMessage, currentNetwork.ws],
@@ -420,9 +444,14 @@ export function PolkadotApiWebView() {
       resolve: initialResolver,
       reject: initialResolver,
     },
-    // resolveChainName: (_: string) => {
-    //   return;
-    // },
+    getTxInfoPromise: {
+      resolve: initialResolver,
+      reject: initialResolver,
+    },
+    sendTxPromise: {
+      resolve: initialResolver,
+      reject: initialResolver,
+    },
   });
 
   const postMessage = React.useCallback(
@@ -436,7 +465,7 @@ export function PolkadotApiWebView() {
   useInitWebViewStore(isWebviewLoaded, accounts, postMessage);
   useInitKeyring(isWebviewLoaded, postMessage);
   useInitApi(isWebviewLoaded, postMessage);
-  useTx(isWebviewLoaded, postMessage, resolversRef);
+  useApiTx(isWebviewLoaded, postMessage, resolversRef);
   useSetSS58Format(isWebviewLoaded, postMessage);
   useCryptoUtils(isWebviewLoaded, postMessage, resolversRef);
   useKeyringUtils(isWebviewLoaded, postMessage, resolversRef);
