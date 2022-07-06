@@ -27,6 +27,7 @@ export function SelectAccount({onSelect, accounts}: Props) {
   const closeMenu = () => setVisible(false);
 
   const selectAccount = (accountSelected: SelectedAccount) => {
+    console.log('selected :: ', accountSelected);
     setSelectedAccount(accountSelected);
     onSelect(accountSelected);
     closeMenu();
@@ -43,7 +44,7 @@ export function SelectAccount({onSelect, accounts}: Props) {
           dense
           render={(_props) => {
             return (
-              <TouchableOpacity style={styles.anchorContent} onPress={openMenu}>
+              <TouchableOpacity style={styles.anchorContent} onPress={openMenu} testID="select-account">
                 {selectedAccount?.accountInfo ? (
                   <AccountTeaser account={selectedAccount.accountInfo} />
                 ) : (
@@ -60,7 +61,7 @@ export function SelectAccount({onSelect, accounts}: Props) {
         ItemSeparatorComponent={Divider}
         data={accounts ?? networkAccounts}
         keyExtractor={(item) => item.address}
-        renderItem={({item}) => <Account onSelect={selectAccount} account={item} />}
+        renderItem={({item}) => <Account onSelect={selectAccount} account={item} testID="network-accounts" />}
         ListEmptyComponent={<EmptyAccounts />}
       />
     </Menu>
@@ -80,9 +81,10 @@ function EmptyAccounts() {
 type AccountProps = {
   onSelect: (account: SelectedAccount) => void;
   account: KeyringAccount;
+  testID: string;
 };
 
-export function Account({onSelect, account}: AccountProps) {
+export function Account({onSelect, account, testID}: AccountProps) {
   const {
     meta: {name, isExternal},
   } = account;
@@ -94,7 +96,11 @@ export function Account({onSelect, account}: AccountProps) {
 
   return (
     <View style={globalStyles.paddedContainer}>
-      <AccountTeaser account={accountInfo} onPress={() => onSelect({account, accountInfo})} name={name}>
+      <AccountTeaser
+        account={accountInfo}
+        onPress={() => onSelect({account, accountInfo})}
+        name={name}
+        testID="account-teaser">
         {isExternal && <Caption style={styles.caption}>{`External`}</Caption>}
       </AccountTeaser>
     </View>

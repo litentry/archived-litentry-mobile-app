@@ -1,9 +1,12 @@
-import React from 'react';
+import React, {useReducer} from 'react';
 import {RouteProp} from '@react-navigation/native';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {render, fireEvent} from 'src/testUtils';
-import {DemocracyProposalScreen} from './DemocracyProposalScreen';
+import {DemocracyProposalScreen, reducer, State} from './DemocracyProposalScreen';
 import {democracyProposalScreen} from '@ui/navigation/routeKeys';
+import {Account} from 'src/api/hooks/useAccount';
+import {ReactTestInstance} from 'react-test-renderer';
+import {debug} from 'react-native-reanimated';
 
 jest.useFakeTimers();
 
@@ -162,7 +165,6 @@ const route = {
 describe('DemocracyProposalScreen', () => {
   it('render the loading view when data is fetching', async () => {
     const {findByText} = render(<DemocracyProposalScreen route={route} />);
-
     await findByText('73');
     await findByText('batch.utility');
     await findByText('Send a batch of dispatch calls.');
@@ -191,5 +193,23 @@ describe('DemocracyProposalScreen', () => {
     fireEvent.press(await findByText('Cancel'));
   });
 
-  // TODO: test for vote with account
+  it('should open voting model and vote by pressing second ', async () => {
+    const {findByText, findByTestId, findAllByTestId, debug} = render(<DemocracyProposalScreen route={route} />);
+    fireEvent.press(await findByText('Second'));
+    await findByText('Vote with account');
+    expect(await findByTestId('second-button')).toBeDisabled();
+
+    fireEvent.press(await findByTestId('select-account'));
+    // await findAllByTestId('network-accounts')
+    fireEvent.press((await findAllByTestId('testId-123'))[0] as ReactTestInstance);
+    // debug()
+    expect((await findAllByTestId('testId-123'))[0]).toBeEnabled();
+
+    expect(await findByTestId('second-button')).toBeEnabled();
+
+    // expect(updatedState).toEqual({account: selectedAccount,  open: false});
+    // await findByText('Deposit required:');
+    // await findByText('Cancel');
+    // expect(await findByTestId('second-button')).toBeEnabled();
+  });
 });

@@ -89,3 +89,18 @@ jest.mock('@react-native-community/clipboard', () => {
 jest.mock('@react-navigation/material-top-tabs', () => ({
   createMaterialTopTabNavigator: () => jest.fn(),
 }));
+
+const selectedAccount = {
+  encoded: 'MFMCAQEwBQYDK2VwBCIEIKEjAyEAnHhgkOJZiuiE/50fAdahqbrxOp5h9zYzqJKPTYC/ff4=',
+  encoding: {content: ['pkcs8', 'sr25519'], type: ['none'], version: '3'},
+  address: 'G7UkJAutjbQyZGRiP8z5bBSBPBJ66JbTKAkFDq3cANwENyX',
+  meta: {name: '', network: 'kusama', isFavorite: false, isExternal: true, whenCreated: 1657023528984},
+};
+
+jest.mock('../src/polkadotApi/useAppAccounts', () => ({
+  useAppAccounts: () => ({
+    accounts: {},
+    networkAccounts: [selectedAccount],
+    setAccounts: () => jest.fn(),
+  }),
+}));
