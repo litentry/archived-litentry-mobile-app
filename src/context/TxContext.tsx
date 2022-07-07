@@ -12,12 +12,10 @@ import {MessageTeaser} from '@ui/components/MessageTeaser';
 import {Subheading, Caption, Icon, useBottomSheet, Button} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
-import type {HexString, SendTxMessage, SignCredentials} from 'polkadot-api';
+import type {HexString, SendTxMessage, SignCredentials, TxConfig, TxInfo} from 'polkadot-api';
 import {useKeyring} from '@polkadotApi/useKeyring';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 import {useTx} from '@polkadotApi/useTx';
-import {TxConfig} from 'polkadot-api/src/txTypes';
-import {TxInfo} from 'polkadot-api/src/txUtils';
 import {usePolkadotApiState} from '@polkadotApi/usePolkadotApiState';
 
 const {width, height} = Dimensions.get('window');

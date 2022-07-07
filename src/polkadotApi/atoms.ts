@@ -19,8 +19,8 @@ import type {
   HexString,
   GetTxInfoMessage,
   SendTxMessage,
+  TxInfo,
 } from 'polkadot-api';
-import {TxInfo} from 'polkadot-api/src/txUtils';
 
 export const appAccountsState: RecoilState<Record<string, KeyringAccount>> = atom({
   key: 'appAccounts',
