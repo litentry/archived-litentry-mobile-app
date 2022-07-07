@@ -15,3 +15,17 @@ export function decimalKeypad(numericValue: string): string {
 export function countUtf8Bytes(str: string): number {
   return new Blob([str]).size;
 }
+
+export function blobToBase64(blob: Blob) {
+  return new Promise<string>((resolve, _) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (typeof reader.result === 'string') {
+        return resolve(reader.result);
+      } else {
+        throw new Error('blobToBase64: failed to convert blob to base64');
+      }
+    };
+    reader.readAsDataURL(blob);
+  });
+}

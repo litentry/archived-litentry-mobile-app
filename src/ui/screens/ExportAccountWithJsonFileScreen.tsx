@@ -14,6 +14,7 @@ import {NavigationProp} from '@react-navigation/core';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 import {useKeyring} from '@polkadotApi/useKeyring';
 import {ErrorText} from '@ui/components/ErrorText';
+import {blobToBase64} from 'src/utils';
 
 type ScreenProps = {
   route: RouteProp<AccountsStackParamList, typeof exportAccountWithJsonFileScreen>;
@@ -107,17 +108,3 @@ const styles = StyleSheet.create({
     height: 20,
   },
 });
-
-function blobToBase64(blob: Blob) {
-  return new Promise<string>((resolve, _) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      if (typeof reader.result === 'string') {
-        return resolve(reader.result);
-      } else {
-        throw new Error('blobToBase64: failed to convert blob to base64');
-      }
-    };
-    reader.readAsDataURL(blob);
-  });
-}
