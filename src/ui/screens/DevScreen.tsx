@@ -2,7 +2,6 @@ import React, {useContext} from 'react';
 import {View} from 'react-native';
 import {Divider, Button, List, Subheading, useTheme, Select} from '@ui/library';
 import {InAppNotificationContent, InAppNotificationContext} from 'context/InAppNotificationContext';
-import {useApi} from 'context/ChainApiContext';
 import {ScrollView} from 'react-native-gesture-handler';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {useNetwork} from '@atoms/network';
@@ -13,13 +12,14 @@ import {useActiveAccount} from '@atoms/activeAccount';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {Padder} from '@ui/components/Padder';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
+import {usePolkadotApiState} from '@polkadotApi/usePolkadotApiState';
 
 function DevScreen() {
   const {colors} = useTheme();
   const {currentNetwork} = useNetwork();
   const {data: convictions} = useConvictions();
   const {trigger} = useContext(InAppNotificationContext);
-  const {status} = useApi();
+  const apiState = usePolkadotApiState();
   const {activeAccount, selectActiveAccount} = useActiveAccount();
   const {data: accountInfo} = useAccount(activeAccount?.address);
 
@@ -31,7 +31,9 @@ function DevScreen() {
           description={currentNetwork.ws}
           right={() => (
             <ItemRight>
-              <Subheading style={{color: colors.success, marginRight: standardPadding * 2}}>{status}</Subheading>
+              <Subheading style={{color: colors.success, marginRight: standardPadding * 2}}>
+                {apiState.isReady ? 'ready' : 'disconnected'}
+              </Subheading>
             </ItemRight>
           )}
         />
