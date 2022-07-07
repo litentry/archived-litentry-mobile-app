@@ -11,7 +11,6 @@ import {NavigationProp} from '@react-navigation/native';
 import {motionDetailScreen} from '@ui/navigation/routeKeys';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import LoadingView from '@ui/components/LoadingView';
-import {useApiTx} from 'src/api/hooks/useApiTx';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import type {Account} from 'src/api/hooks/useAccount';
 import {InputLabel} from '@ui/library/InputLabel';
@@ -24,6 +23,7 @@ import {ItemRowBlock} from '@ui/components/ItemRowBlock';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {getProposalTitle} from 'src/utils/proposal';
 import type {KeyringAccount} from 'polkadot-api';
+import {useStartTx} from 'context/TxContext';
 
 type Vote = 'Aye' | 'Nay' | 'Close';
 
@@ -96,7 +96,7 @@ type VoteModalProps = {
 
 function VoteModal({visible, setVisible, refetchMotions, voteType, motion, councilAccounts}: VoteModalProps) {
   const {api} = useApi();
-  const startTx = useApiTx();
+  const {startTx} = useStartTx();
   const heading = voteType === 'Aye' || voteType === 'Nay' ? `Vote ${voteType}` : 'Close';
   const [account, setAccount] = React.useState<Account>();
 
@@ -113,16 +113,20 @@ function VoteModal({visible, setVisible, refetchMotions, voteType, motion, counc
     if (account && api && motion) {
       closeModal();
       const {proposal} = motion;
-      startTx({
-        address: account.address,
-        params: [proposal.hash, proposal.index, vote],
-        txMethod: 'council.vote',
-      })
-        .then(() => {
-          reset();
-          refetchMotions();
+      if (proposal.index) {
+        startTx({
+          address: account.address,
+          txConfig: {
+            method: 'council.vote',
+            params: [proposal.hash, proposal.index, vote],
+          },
         })
-        .catch((e) => console.warn(e));
+          .then(() => {
+            reset();
+            refetchMotions();
+          })
+          .catch((e) => console.warn(e));
+      }
     }
   };
 
@@ -130,19 +134,23 @@ function VoteModal({visible, setVisible, refetchMotions, voteType, motion, counc
     if (account && api && motion) {
       closeModal();
       const {proposal} = motion;
-      startTx({
-        address: account.address,
-        params:
-          api?.tx.council.close?.meta.args.length === 4
-            ? [proposal.hash, proposal.index, 0, 0]
-            : [proposal.hash, proposal.index],
-        txMethod: 'council.close',
-      })
-        .then(() => {
-          reset();
-          refetchMotions();
+      if (proposal.index) {
+        startTx({
+          address: account.address,
+          txConfig: {
+            method: 'council.close',
+            params:
+              api?.tx.council.close?.meta.args.length === 4
+                ? [proposal.hash, proposal.index, 0, 0]
+                : [proposal.hash, proposal.index],
+          },
         })
-        .catch((e) => console.warn(e));
+          .then(() => {
+            reset();
+            refetchMotions();
+          })
+          .catch((e) => console.warn(e));
+      }
     }
   };
 

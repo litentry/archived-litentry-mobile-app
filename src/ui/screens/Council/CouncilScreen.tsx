@@ -18,7 +18,6 @@ import {MotionsScreen} from './MotionsScreen';
 import {useModuleElection, ModuleElection} from 'src/api/hooks/useModuleElection';
 import Badge from '@ui/components/Badge';
 import {noop} from 'lodash';
-import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 import BalanceInput from '@ui/components/BalanceInput';
 import type {Account} from 'src/api/hooks/useAccount';
@@ -29,6 +28,7 @@ import {useSnackbar} from 'context/SnackbarContext';
 import {InputLabel} from '@ui/library/InputLabel';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {BN_ZERO} from '@polkadot/util';
+import {useStartTx} from 'context/TxContext';
 
 const MAX_VOTES = 16;
 
@@ -206,7 +206,7 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
     }
   }, [councilVote, candidates]);
 
-  const startTx = useApiTx();
+  const {startTx} = useStartTx();
   const {formatBalance} = useFormatBalance();
 
   const onCandidateSelect = (accountId: string, isSelected: boolean) => {
@@ -247,8 +247,10 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
     if (account) {
       startTx({
         address: account.address,
-        txMethod: `${moduleElection.module}.vote`,
-        params: [selectedCandidates, amount],
+        txConfig: {
+          method: `${moduleElection.module}.vote`,
+          params: [selectedCandidates, amount],
+        },
       });
       reset();
     }
@@ -306,7 +308,7 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
 
 function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandidacyProps) {
   const [account, setAccount] = React.useState<Account>();
-  const startTx = useApiTx();
+  const {startTx} = useStartTx();
   const {api} = useApi();
   const balance = useFormatBalance();
   const formattedBalance = balance.formatBalance(moduleElection.candidacyBond);
@@ -323,10 +325,14 @@ function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandi
     if (account && api && moduleElection.module) {
       startTx({
         address: account.address,
-        txMethod: `${moduleElection.module}.submitCandidacy`,
-        params: [
-          api.tx[moduleElection.module]?.submitCandidacy?.meta.args.length === 1 ? [council?.candidates.length] : [],
-        ],
+        txConfig: {
+          method: `${moduleElection.module}.submitCandidacy`,
+          params: [
+            api.tx[moduleElection.module]?.submitCandidacy?.meta.args.length === 1
+              ? [council?.candidates.length ?? 0]
+              : [],
+          ],
+        },
       })
         .then(() => {
           snackbar('Candidacy submitted successfully');

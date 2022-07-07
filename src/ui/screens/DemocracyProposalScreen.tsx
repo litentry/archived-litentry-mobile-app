@@ -6,7 +6,6 @@ import {useApi} from 'context/ChainApiContext';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SelectAccount} from '@ui/components/SelectAccount';
-import {useApiTx} from 'src/api/hooks/useApiTx';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {democracyProposalScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
@@ -15,13 +14,14 @@ import {Layout} from '@ui/components/Layout';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {ProposalCall} from '@ui/components/ProposalCall';
 import {Account} from 'src/api/hooks/useAccount';
+import {useStartTx} from 'context/TxContext';
 
 export function DemocracyProposalScreen({
   route,
 }: {
   route: RouteProp<DashboardStackParamList, typeof democracyProposalScreen>;
 }) {
-  const startTx = useApiTx();
+  const {startTx} = useStartTx();
   const {api} = useApi();
 
   const [secondsOpen, setSecondsOpen] = useState(false);
@@ -136,11 +136,13 @@ export function DemocracyProposalScreen({
                 if (state.account) {
                   startTx({
                     address: state.account.address,
-                    txMethod: 'democracy.second',
-                    params:
-                      api?.tx.democracy.second.meta.args.length === 2
-                        ? [proposal.index, proposal.seconds.length]
-                        : [proposal.index],
+                    txConfig: {
+                      method: 'democracy.second',
+                      params:
+                        api?.tx.democracy.second.meta.args.length === 2
+                          ? [proposal.index, proposal.seconds.length]
+                          : [proposal.index],
+                    },
                   });
                   dispatch({type: 'RESET'});
                 }

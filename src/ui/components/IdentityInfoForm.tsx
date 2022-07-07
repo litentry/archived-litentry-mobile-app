@@ -5,15 +5,7 @@ import {WHITESPACE, validateFormField} from 'src/utils/form';
 import {Account} from 'src/api/hooks/useAccount';
 import {Padder} from './Padder';
 import {standardPadding} from '@ui/styles';
-
-export type IdentityPayload = {
-  display: {raw: string} | {none: null};
-  legal: {raw: string} | {none: null};
-  email: {raw: string} | {none: null};
-  riot: {raw: string} | {none: null};
-  twitter: {raw: string} | {none: null};
-  web: {raw: string} | {none: null};
-};
+import type {IdentityPayload} from 'polkadot-api';
 
 type IdentityInfoFormProps = {
   accountInfo?: Account;

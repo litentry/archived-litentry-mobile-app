@@ -1,21 +1,22 @@
 import React, {useEffect, useState} from 'react';
 import {Alert, FlatList, View} from 'react-native';
 import Identicon from '@polkadot/reactnative-identicon';
+import {stringShorten} from '@polkadot/util';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Button, Caption, Subheading, List, Divider, IconButton, useTheme, useBottomSheet} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {useApiTx} from 'src/api/hooks/useApiTx';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {registerSubIdentitiesScreen} from '@ui/navigation/routeKeys';
 import globalStyles from '@ui/styles';
 import {AddSubIdentity} from './AddSubIdentity';
 import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
-import {stringShorten} from '@polkadot/util';
 import {useSubAccounts} from 'src/api/hooks/useSubAccounts';
 import {Account} from '@ui/components/Account/Account';
+import {useStartTx} from 'context/TxContext';
 import type {Account as AccountType, AccountBalance, AccountRegistration} from 'src/api/hooks/useAccount';
+import type {SubIdentityPayload} from 'polkadot-api';
 
 export type SubIdentity = {
   address: string;
@@ -34,7 +35,7 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
   const {data: accountInfo, refetch: refetchAccount} = useSubAccounts(address);
   const [subIdentities, setSubIdentities] = useState<AccountType[]>();
   const [submitSubsDisabled, setSubmitSubsDisabled] = useState(true);
-  const startTx = useApiTx();
+  const {startTx} = useStartTx();
 
   useEffect(() => {
     if (accountInfo?.subAccounts?.length) {
@@ -49,18 +50,28 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
   }, [navigation, openBottomSheet]);
 
   const onSetSubIdentitiesPress = async () => {
-    startTx({
-      address,
-      txMethod: 'identity.setSubs',
-      params: [subIdentities?.map((sub) => [sub.address, {raw: sub.registration?.display}])],
-    })
-      .then(() => {
-        refetchAccount({address});
-        setSubmitSubsDisabled(true);
+    const subs = subIdentities?.reduce((_subIdentities, sub) => {
+      if (sub.registration?.display) {
+        _subIdentities.push([sub.address, {raw: sub.registration.display}]);
+      }
+      return _subIdentities;
+    }, [] as Array<SubIdentityPayload>);
+    if (subs) {
+      startTx({
+        address,
+        txConfig: {
+          method: 'identity.setSubs',
+          params: subs,
+        },
       })
-      .catch((e: Error) => {
-        console.warn(e);
-      });
+        .then(() => {
+          refetchAccount({address});
+          setSubmitSubsDisabled(true);
+        })
+        .catch((e: Error) => {
+          console.warn(e);
+        });
+    }
   };
 
   const onAddPress = (subIdentity: SubIdentity) => {
