@@ -1,3 +1,4 @@
+import 'react-native-reanimated';
 global.__reanimatedWorkletInit = () => {};
 import '@polkadot/wasm-crypto/initWasmAsm';
 import './shim';

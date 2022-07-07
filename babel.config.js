@@ -22,6 +22,12 @@ module.exports = {
         },
       },
     ],
-    'react-native-reanimated/plugin', // This has to be listed last.
+    // 'react-native-reanimated/plugin', // This has to be listed last.
+    [
+      'react-native-reanimated/plugin',
+      {
+        globals: ['__scanCodes'],
+      },
+    ],
   ],
 };
