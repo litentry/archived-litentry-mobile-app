@@ -6,7 +6,6 @@ import globalStyles, {standardPadding} from '@ui/styles';
 import {Account} from 'src/api/hooks/useAccount';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {Padder} from '@ui/components/Padder';
-import {useApi} from 'context/ChainApiContext';
 import {useSnackbar} from 'context/SnackbarContext';
 import {InputLabel} from '@ui/library/InputLabel';
 import {decimalKeypad} from 'src/utils';
@@ -30,7 +29,6 @@ export function AddBounty({onClose}: Props) {
 
   const [account, setAccount] = React.useState<Account>();
   const {startTx} = useStartTx();
-  const {api} = useApi();
   const snackbar = useSnackbar();
 
   const {calculatedBountyBond, bountyAllocationBN, isBountyValid, isBountyTitleValid} = useMemo(() => {
@@ -64,11 +62,11 @@ export function AddBounty({onClose}: Props) {
   const disabled = !bountyAllocation || !account || !isBountyValid || !isBountyTitleValid;
 
   const submitBounty = () => {
-    if (account && api && bountyAllocationBN) {
+    if (account && bountyAllocationBN) {
       startTx({
         address: account.address,
         txConfig: {
-          method: `${api.tx.bounties ? `bounties.proposeBounty` : `treasury.proposeBounty`}`,
+          method: 'bounties.proposeBounty',
           params: [bountyAllocationBN, bountyTitle],
         },
       })
