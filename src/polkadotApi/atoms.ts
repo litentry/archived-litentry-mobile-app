@@ -86,7 +86,7 @@ export const keyringState = atom({
 });
 
 export const apiState = atom({
-  key: 'polkadot-api',
+  key: 'polkadot-api-state',
   default: {
     isConnecting: false,
     isReady: false,
