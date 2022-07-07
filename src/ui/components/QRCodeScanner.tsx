@@ -20,7 +20,7 @@ export function QRCodeScanner({onScan}: Props) {
     await Linking.openSettings();
   };
 
-  const processScannedQRCode = (QRcodes: Barcode[]) => {
+  const processScannedResults = (QRcodes: Barcode[]) => {
     QRcodes.forEach((code) => {
       if (code.displayValue) {
         onScan(code.displayValue);
@@ -31,7 +31,7 @@ export function QRCodeScanner({onScan}: Props) {
   const frameProcessor = useFrameProcessor((frame) => {
     'worklet';
     const QRcodes = scanBarcodes(frame, [BarcodeFormat.QR_CODE], {checkInverted: true});
-    runOnJS(processScannedQRCode)(QRcodes);
+    runOnJS(processScannedResults)(QRcodes);
   }, []);
 
   if (!device) {

@@ -1,4 +1,3 @@
-import React from 'react';
 import {Blob} from 'blob-polyfill';
 import 'react-native-gesture-handler/jestSetup';
 
@@ -29,17 +28,12 @@ jest.mock('@react-navigation/native', () => {
   };
 });
 
-jest.mock('react-native-qrcode-scanner/node_modules/react-native-permissions', () =>
-  require('react-native-permissions/mock'),
-);
-
 jest.mock('react-native/Libraries/Components/Switch/Switch', () => {
   const mockComponent = require('react-native/jest/mockComponent');
   return {
     default: mockComponent('react-native/Libraries/Components/Switch/Switch'),
   };
 });
-jest.mock('react-native-qrcode-scanner', () => <></>);
 
 jest.mock('@gorhom/bottom-sheet', () => {
   const MockBottomSheet = require('@gorhom/bottom-sheet/mock');

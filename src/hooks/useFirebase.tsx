@@ -60,7 +60,6 @@ export function useFirebase() {
     const unsubscribeFromOnNotification = messaging().onNotificationOpenedApp(handleNotification);
 
     const unsubscribeFromOnMessage = messaging().onMessage(async (remoteMessage) => {
-      console.log('onMessage', remoteMessage);
       trigger({
         type: 'Component',
         renderContent: () => (

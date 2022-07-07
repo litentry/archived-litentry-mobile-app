@@ -96,7 +96,6 @@ function ScanAddressTab({onScanSuccess}: {onScanSuccess: (address: string) => vo
 
   const handleScan = useCallback(
     (data: string) => {
-      console.log(data);
       try {
         const parsed = parseAddress(data);
         if (isAddressValid(currentNetwork, parsed.address)) {
