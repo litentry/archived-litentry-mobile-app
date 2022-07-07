@@ -53,7 +53,7 @@ type TipsReportAwesomeTx = {
 
 type CrowdloanContributeTx = {
   method: 'crowdloan.contribute';
-  params: [parachainId: string, balance: BN, unknown: null];
+  params: [parachainId: string, balance: BN, signature: string | null];
 };
 
 type CouncilVoteTx = {
@@ -65,7 +65,7 @@ type CouncilCloseTx = {
   method: 'council.close';
   params:
     | [proposalHash: string, proposalIndex: string]
-    | [proposalHash: string, proposalIndex: string, unknown: 0, unknown: 0];
+    | [proposalHash: string, proposalIndex: string, WEIGHT_BOUND: 0, LENGTH_BOUND: 0];
 };
 
 type CouncilModuleElectionVoteTx = {
@@ -78,8 +78,8 @@ type CouncilModuleElectionSubmitCandidacyTx = {
   params: [[candidatesCount: number] | []];
 };
 
-type ProposeBountyTx = {
-  method: 'treasury.proposeBounty' | 'bounties.proposeBounty';
+type BountiesProposeBountyTx = {
+  method: 'bounties.proposeBounty';
   params: [bountyAllocation: BN, title: string];
 };
 
@@ -102,5 +102,5 @@ export type TxConfig =
   | CouncilCloseTx
   | CouncilModuleElectionVoteTx
   | CouncilModuleElectionSubmitCandidacyTx
-  | ProposeBountyTx
+  | BountiesProposeBountyTx
   | BalancesTransferTx;
