@@ -2,7 +2,6 @@ import React from 'react';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {QueryClient, QueryClientProvider} from 'react-query';
 import {useStopStartupTrace} from 'react-native-startup-trace';
-import {ChainApiContextProvider} from 'context/ChainApiContext';
 import {TxProvider} from 'context/TxContext';
 import InAppNotificationContextProvider from 'context/InAppNotificationContext';
 import {ErrorBoundary} from '@ui/components/ErrorBoundary';
@@ -13,14 +12,14 @@ import SnackbarProvider from 'context/SnackbarContext';
 import {LitentryApiClientProvider} from 'context/LitentryApiContext';
 import {WalletConnectProvider} from 'context/WalletConnectProvider';
 import {Web3WalletProvider} from 'context/Web3WalletContext';
-
-// init type registry
-import 'src/typeRegistry';
 import {ParachainAppNavigator} from '@ui/navigation/ParachainAppNavigator';
 import {PolkadotApiWebView} from '@polkadotApi/PolkadotApiWebView';
 import {RecoilRoot} from 'recoil';
 import {useNetwork} from '@atoms/network';
 import {useActivateFirebaseConfig} from './utils/firebaseConfig';
+
+// init type registry
+import 'src/typeRegistry';
 
 const queryClient = new QueryClient();
 
@@ -57,22 +56,20 @@ export default function App() {
       <LitentryApiClientProvider>
         <QueryClientProvider client={queryClient}>
           <NavigationContainer>
-            <ChainApiContextProvider>
-              <SafeAreaProvider>
-                <ThemeProvider>
-                  <InAppNotificationContextProvider>
-                    <ErrorBoundary>
-                      <TxProvider>
-                        <SnackbarProvider>
-                          <LitentryApps />
-                          <PolkadotApiWebView />
-                        </SnackbarProvider>
-                      </TxProvider>
-                    </ErrorBoundary>
-                  </InAppNotificationContextProvider>
-                </ThemeProvider>
-              </SafeAreaProvider>
-            </ChainApiContextProvider>
+            <SafeAreaProvider>
+              <ThemeProvider>
+                <InAppNotificationContextProvider>
+                  <ErrorBoundary>
+                    <TxProvider>
+                      <SnackbarProvider>
+                        <LitentryApps />
+                        <PolkadotApiWebView />
+                      </SnackbarProvider>
+                    </TxProvider>
+                  </ErrorBoundary>
+                </InAppNotificationContextProvider>
+              </ThemeProvider>
+            </SafeAreaProvider>
           </NavigationContainer>
         </QueryClientProvider>
       </LitentryApiClientProvider>
