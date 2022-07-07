@@ -12,7 +12,7 @@ type Props = {
 };
 
 export function QRCodeScanner({onScan}: Props) {
-  const {hasPermission, isAppForeground} = useCameraPermission();
+  const {hasPermission, isAppActive} = useCameraPermission();
   const devices = useCameraDevices();
   const device = devices.back;
 
@@ -59,7 +59,7 @@ export function QRCodeScanner({onScan}: Props) {
       <Camera
         style={styles.cameraView}
         device={device}
-        isActive={isAppForeground}
+        isActive={isAppActive}
         frameProcessor={frameProcessor}
         frameProcessorFps={1}
       />

@@ -4,20 +4,20 @@ import {useAppState} from 'src/hooks/useAppState';
 
 export function useCameraPermission() {
   const [hasPermission, setHasPermission] = useState(false);
-  const {isAppForeground, didAppCameToForeground} = useAppState();
+  const {isAppActive, didAppCameToForeground} = useAppState();
 
   useEffect(() => {
-    if (isAppForeground || didAppCameToForeground) {
+    if (isAppActive || didAppCameToForeground) {
       const requestCameraPermission = async () => {
         const status = await Camera.requestCameraPermission();
         setHasPermission(status === 'authorized');
       };
       requestCameraPermission();
     }
-  }, [isAppForeground, didAppCameToForeground]);
+  }, [isAppActive, didAppCameToForeground]);
 
   return {
     hasPermission,
-    isAppForeground,
+    isAppActive,
   };
 }
