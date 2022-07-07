@@ -151,7 +151,7 @@ export function ImportAccount({navigation}: {navigation: NavigationProp<Accounts
             {`Confirm password doesn't match`}
           </HelperText>
           <Padder scale={2} />
-          {address && (
+          {address ? (
             <>
               <List.Item
                 title={account.title}
@@ -164,7 +164,7 @@ export function ImportAccount({navigation}: {navigation: NavigationProp<Accounts
               />
               <Padder scale={1} />
             </>
-          )}
+          ) : null}
           <View style={globalStyles.flex} />
           <Button
             mode="outlined"
