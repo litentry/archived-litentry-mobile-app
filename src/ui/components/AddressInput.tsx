@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, Modal, StyleSheet, View, TextInputProps} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import {TextInput, HelperText, Button, Title, IconButton} from '@ui/library';
@@ -6,8 +6,8 @@ import globalStyles, {standardPadding} from '@ui/styles';
 import {isAddressValid, parseAddress} from 'src/utils/address';
 import {useNetwork} from '@atoms/network';
 import {useSnackbar} from 'context/SnackbarContext';
-import QRCamera, {QRCameraRef} from './QRCamera';
-import {Padder} from './Padder';
+import {Padder} from '@ui/components/Padder';
+import {QRCodeScanner} from '@ui/components/QRCodeScanner';
 
 type Props = {
   onValidateAddress: (isValid: boolean) => void;
@@ -20,7 +20,6 @@ export function AddressInput({onAddressChanged, onValidateAddress, onFocus, onBl
   const [inputAddress, setInputAddress] = useState<string>();
   const [addressValid, setAddressValid] = useState(false);
   const {currentNetwork} = useNetwork();
-  const qrCameraRef = useRef<QRCameraRef>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const snackbar = useSnackbar();
 
@@ -39,7 +38,7 @@ export function AddressInput({onAddressChanged, onValidateAddress, onFocus, onBl
   }, [updateInputAddress, snackbar]);
 
   const handleScan = useCallback(
-    ({data}: {data: string}) => {
+    (data: string) => {
       try {
         const parsed = parseAddress(data);
         if (isAddressValid(currentNetwork, parsed.address)) {
@@ -49,13 +48,11 @@ export function AddressInput({onAddressChanged, onValidateAddress, onFocus, onBl
           Alert.alert(
             'Validation Failed',
             `${parsed.address} is not a valid address for the ${currentNetwork.name} network.`,
-            [{text: 'Ok', onPress: () => qrCameraRef.current?.reactivate()}],
+            [{text: 'Ok'}],
           );
         }
       } catch (e) {
-        Alert.alert('Validation Failed', 'Address is invalid.', [
-          {text: 'Ok', onPress: () => qrCameraRef.current?.reactivate()},
-        ]);
+        Alert.alert('Validation Failed', 'Address is invalid.', [{text: 'Ok'}]);
       }
     },
     [currentNetwork, updateInputAddress],
@@ -108,7 +105,7 @@ export function AddressInput({onAddressChanged, onValidateAddress, onFocus, onBl
           <View style={styles.modalView}>
             <Title style={globalStyles.textCenter}>Scan the address QR code</Title>
             <Padder scale={1.5} />
-            <QRCamera onRead={handleScan} ref={qrCameraRef} />
+            <QRCodeScanner onScan={handleScan} />
             <Padder scale={3} />
             <Button compact onPress={() => setModalVisible(!modalVisible)}>
               Close
@@ -142,6 +139,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     elevation: 5,
     height: 400,
+    width: '100%',
     paddingVertical: 30,
   },
 });

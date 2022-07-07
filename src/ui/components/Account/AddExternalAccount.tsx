@@ -4,7 +4,7 @@ import {Divider, Button, Tabs, TabScreen, useTheme, Subheading, BottomSheetTextI
 import {Layout} from '@ui/components/Layout';
 import {useNetwork} from '@atoms/network';
 import {Padder} from '@ui/components/Padder';
-import QRCamera, {QRCameraRef} from '@ui/components/QRCamera';
+import {QRCodeScanner} from '@ui/components/QRCodeScanner';
 import {SuccessDialog} from '@ui/components/SuccessDialog';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {isAddressValid, parseAddress} from 'src/utils/address';
@@ -51,7 +51,6 @@ type Props = {
 };
 
 export function AddExternalAccount({onClose}: Props) {
-  const qrCameraRef = React.useRef<QRCameraRef>(null);
   const {currentNetwork} = useNetwork();
   const [state, dispatch] = React.useReducer(addAccountReducer, initialState);
   const {addExternalAccount} = useKeyring();
@@ -95,7 +94,7 @@ export function AddExternalAccount({onClose}: Props) {
   }, [addExternalAccount, currentNetwork, state.address, state.step, close]);
 
   const handleScan = React.useCallback(
-    ({data}: {data: string}) => {
+    (data: string) => {
       try {
         const parsed = parseAddress(data);
         if (isAddressValid(currentNetwork, parsed.address)) {
@@ -105,13 +104,11 @@ export function AddExternalAccount({onClose}: Props) {
           Alert.alert(
             'Validation Failed',
             `${parsed.address} is not a valid address for the ${currentNetwork.name} network.`,
-            [{text: 'Ok', onPress: () => qrCameraRef.current?.reactivate()}],
+            [{text: 'Ok'}],
           );
         }
       } catch (e) {
-        Alert.alert('Validation Failed', 'Address is invalid.', [
-          {text: 'Ok', onPress: () => qrCameraRef.current?.reactivate()},
-        ]);
+        Alert.alert('Validation Failed', 'Address is invalid.', [{text: 'Ok'}]);
       }
     },
     [currentNetwork],
@@ -144,9 +141,7 @@ export function AddExternalAccount({onClose}: Props) {
                     </View>
                   </TabScreen>
                   <TabScreen label="Via QR" icon="qrcode">
-                    <View style={globalStyles.paddedContainer}>
-                      {tabIndex === 1 && <QRCamera onRead={handleScan} ref={qrCameraRef} />}
-                    </View>
+                    <View style={globalStyles.flex}>{tabIndex === 1 && <QRCodeScanner onScan={handleScan} />}</View>
                   </TabScreen>
                 </Tabs>
               </View>

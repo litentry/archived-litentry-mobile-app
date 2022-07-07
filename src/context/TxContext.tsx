@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, {createContext, useCallback, useEffect, useMemo, useReducer, useRef, useContext} from 'react';
 import {Dimensions, StyleSheet} from 'react-native';
-import QRCodeScanner from 'react-native-qrcode-scanner';
 import {SubmittableExtrinsic} from '@polkadot/api/submittable/types';
 import {SignerPayloadJSON, SignerResult} from '@polkadot/types/types';
 import {ExtrinsicPayload} from '@polkadot/types/interfaces';
@@ -18,16 +17,17 @@ import {SuccessDialog} from '@ui/components/SuccessDialog';
 import {Layout} from '@ui/components/Layout';
 import {TxPreview} from '@ui/components/Tx/Preview';
 import {MessageTeaser} from '@ui/components/MessageTeaser';
-import {Subheading, Caption, Icon, useBottomSheet, Button} from '@ui/library';
+import {Subheading, Icon, useBottomSheet, Button} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
 import type {SignCredentials} from 'polkadot-api';
 import {useKeyring} from '@polkadotApi/useKeyring';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
+import {QRCodeScanner} from '@ui/components/QRCodeScanner';
 
 let id = 0;
 
-const {width, height} = Dimensions.get('window');
+const {height} = Dimensions.get('window');
 
 type TxProviderProps = {
   children: React.ReactNode;
@@ -231,28 +231,17 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
 
       case 'scan_signature_view':
         return (
-          <Layout style={globalStyles.paddedContainer}>
+          <Layout style={styles.scanner}>
             <Subheading style={globalStyles.textCenter}>{`Scan QR code`}</Subheading>
             <Padder scale={1} />
             <QRCodeScanner
-              onRead={(data) => {
+              onScan={(data) => {
                 dispatch({type: 'SHOW_SUBMITTING_VIEW'});
                 signTransactionRef.current?.({
                   id: id++,
-                  signature: `0x${data.data}`,
+                  signature: `0x${data}`,
                 });
               }}
-              showMarker
-              markerStyle={styles.marker}
-              cameraStyle={styles.cameraBase}
-              notAuthorizedView={
-                <Layout style={styles.notAuthorized}>
-                  <Layout style={styles.notAuthorizedHack}>
-                    <Icon name="alert-outline" size={30} />
-                    <Caption>This requires your Camera permission to scan.</Caption>
-                  </Layout>
-                </Layout>
-              }
             />
             <Padder scale={2} />
           </Layout>
@@ -347,14 +336,10 @@ const styles = StyleSheet.create({
     marginTop: -100,
     alignItems: 'center',
   },
-  cameraBase: {
-    overflow: 'hidden',
-    width: width * 0.7,
-    height: width * 0.7,
+  scanner: {
+    flex: 1,
     justifyContent: 'center',
-    alignSelf: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
+    height: 400,
   },
 });
 

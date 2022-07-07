@@ -1,13 +1,13 @@
-import React, {useCallback, useState, useRef} from 'react';
+import React, {useCallback, useState} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import {TextInput, Button, Tabs, TabScreen, useTabNavigation, useTabIndex, useTheme, HelperText} from '@ui/library';
 import {useNetwork} from '@atoms/network';
-import QRCamera, {QRCameraRef} from '@ui/components/QRCamera';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {isAddressValid, parseAddress} from 'src/utils/address';
 import type {Account} from 'src/api/hooks/useAccount';
 import type {SubIdentity} from './RegisterSubIdentitiesScreen';
+import {QRCodeScanner} from '@ui/components/QRCodeScanner';
 
 type Props = {
   onClose: () => void;
@@ -92,38 +92,31 @@ export function AddSubIdentity({onClose, onAddPress, subIdentities}: Props) {
 function ScanAddressTab({onScanSuccess}: {onScanSuccess: (address: string) => void}) {
   const goToTabIndex = useTabNavigation();
   const tabIndex = useTabIndex();
-  const qrCameraRef = useRef<QRCameraRef>(null);
   const {currentNetwork} = useNetwork();
 
   const handleScan = useCallback(
-    ({data}: {data: string}) => {
+    (data: string) => {
+      console.log(data);
       try {
         const parsed = parseAddress(data);
         if (isAddressValid(currentNetwork, parsed.address)) {
           onScanSuccess(parsed.address);
           goToTabIndex(0);
-          qrCameraRef.current?.reactivate();
         } else {
           Alert.alert(
             'Validation Failed',
             `${parsed.address} is not a valid address for the ${currentNetwork.name} network.`,
-            [{text: 'Ok', onPress: () => qrCameraRef.current?.reactivate()}],
+            [{text: 'Ok'}],
           );
         }
       } catch (e) {
-        Alert.alert('Validation Failed', 'Address is invalid.', [
-          {text: 'Ok', onPress: () => qrCameraRef.current?.reactivate()},
-        ]);
+        Alert.alert('Validation Failed', 'Address is invalid.', [{text: 'Ok'}]);
       }
     },
     [currentNetwork, onScanSuccess, goToTabIndex],
   );
 
-  return (
-    <View style={globalStyles.paddedContainer}>
-      {tabIndex === 1 && <QRCamera onRead={handleScan} ref={qrCameraRef} />}
-    </View>
-  );
+  return <View style={globalStyles.flex}>{tabIndex === 1 && <QRCodeScanner onScan={handleScan} />}</View>;
 }
 
 const styles = StyleSheet.create({
