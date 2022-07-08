@@ -38,6 +38,10 @@ module.exports = {
             name: '@testing-library/react-native',
             message: 'Please use src/testUtils instead',
           },
+          {
+            name: '@polkadot/util-crypto',
+            message: 'Please use @polkadotApi/useCryptoUtil instead.',
+          },
         ],
       },
     ],
