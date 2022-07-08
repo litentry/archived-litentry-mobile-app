@@ -3,11 +3,12 @@ import {Alert, Modal, StyleSheet, View, TextInputProps} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import {TextInput, HelperText, Button, Title, IconButton} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {isAddressValid, parseAddress} from 'src/utils/address';
+import {parseAddress} from 'src/utils/address';
 import {useNetwork} from '@atoms/network';
 import {useSnackbar} from 'context/SnackbarContext';
 import QRCamera, {QRCameraRef} from './QRCamera';
 import {Padder} from './Padder';
+import {useIsAddressValid} from 'src/hooks/useIsAddressValid';
 
 type Props = {
   onValidateAddress: (isValid: boolean) => void;
@@ -23,6 +24,7 @@ export function AddressInput({onAddressChanged, onValidateAddress, onFocus, onBl
   const qrCameraRef = useRef<QRCameraRef>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const snackbar = useSnackbar();
+  const {isAddressValid} = useIsAddressValid(currentNetwork);
 
   const updateInputAddress = useCallback(
     (address: string) => {
@@ -42,34 +44,37 @@ export function AddressInput({onAddressChanged, onValidateAddress, onFocus, onBl
     ({data}: {data: string}) => {
       try {
         const parsed = parseAddress(data);
-        if (isAddressValid(currentNetwork, parsed.address)) {
-          updateInputAddress(parsed.address);
-          setModalVisible(false);
-        } else {
-          Alert.alert(
-            'Validation Failed',
-            `${parsed.address} is not a valid address for the ${currentNetwork.name} network.`,
-            [{text: 'Ok', onPress: () => qrCameraRef.current?.reactivate()}],
-          );
-        }
+        isAddressValid(parsed.address).then((isValid) => {
+          if (isValid) {
+            updateInputAddress(parsed.address);
+            setModalVisible(false);
+          } else {
+            Alert.alert(
+              'Validation Failed',
+              `${parsed.address} is not a valid address for the ${currentNetwork.name} network.`,
+              [{text: 'Ok', onPress: () => qrCameraRef.current?.reactivate()}],
+            );
+          }
+        });
       } catch (e) {
         Alert.alert('Validation Failed', 'Address is invalid.', [
           {text: 'Ok', onPress: () => qrCameraRef.current?.reactivate()},
         ]);
       }
     },
-    [currentNetwork, updateInputAddress],
+    [currentNetwork, updateInputAddress, isAddressValid],
   );
 
   useEffect(
     function validateAddress() {
       if (inputAddress) {
-        const isValid = isAddressValid(currentNetwork, inputAddress);
-        onValidateAddress(isValid);
-        setAddressValid(isValid);
+        isAddressValid(inputAddress).then((isValid) => {
+          onValidateAddress(isValid);
+          setAddressValid(isValid);
+        });
       }
     },
-    [inputAddress, onValidateAddress, currentNetwork],
+    [inputAddress, onValidateAddress, currentNetwork, isAddressValid],
   );
 
   return (
