@@ -1,6 +1,6 @@
 import {atom, RecoilState} from 'recoil';
 import {persistAtom} from '@atoms/persist';
-import type {
+import {
   KeyringAccount,
   AddAccountMessage,
   AddExternalAccountMessage,
@@ -23,6 +23,8 @@ import type {
   GetTxMethodArgsLengthMessage,
   DecodeAddressMessage,
   DecodeAddressResultMessage,
+  CheckAddressMessage,
+  CheckAddressResultMessage,
 } from 'polkadot-api';
 
 export const appAccountsState: RecoilState<Record<string, KeyringAccount>> = atom({
@@ -42,6 +44,9 @@ export const cryptoUtilState = atom({
     },
     decodeAddress: (_: DecodeAddressMessage['payload']) => {
       return Promise.resolve<DecodeAddressResultMessage['payload']>(new Uint8Array());
+    },
+    checkAddress: (_: CheckAddressMessage['payload']) => {
+      return Promise.resolve<CheckAddressResultMessage['payload']>({isValid: false, reason: ''});
     },
   },
 });

@@ -1,6 +1,6 @@
 import {ApiPromise, WsProvider} from '@polkadot/api';
 import keyring from '@polkadot/ui-keyring';
-import {cryptoWaitReady, mnemonicGenerate, mnemonicValidate, decodeAddress} from '@polkadot/util-crypto';
+import {cryptoWaitReady, mnemonicGenerate, mnemonicValidate, decodeAddress, checkAddress} from '@polkadot/util-crypto';
 import {u8aToHex, hexToU8a} from '@polkadot/util';
 import {keyringStore, initStore} from './keyringStore';
 import {
@@ -10,6 +10,7 @@ import {
   apiDisconnectedMessage,
   apiErrorMessage,
   apiReadyMessage,
+  checkAddressResultMessage,
   createAddressFromMnemonicResultMessage,
   decodeAddressResultMessage,
   exportAccountResultMessage,
@@ -275,6 +276,17 @@ cryptoWaitReady().then(function () {
         const {encoded, ignoreChecksum, ss58Format} = message.payload;
         const decoded = decodeAddress(encoded, ignoreChecksum, ss58Format);
         postMessage(decodeAddressResultMessage(decoded));
+        break;
+      }
+
+      case MessageType.CHECK_ADDRESS: {
+        const {address, prefix} = message.payload;
+        const result = checkAddress(address, prefix);
+        if (result[0] === true) {
+          postMessage(checkAddressResultMessage({isValid: true}));
+        } else {
+          postMessage(checkAddressResultMessage({isValid: false, reason: result[1] ?? ''}));
+        }
         break;
       }
     }

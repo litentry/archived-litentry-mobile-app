@@ -57,6 +57,9 @@ import {
   DecodeAddressResultMessage,
   DecodeAddressMessage,
   decodeAddressMessage,
+  CheckAddressResultMessage,
+  CheckAddressMessage,
+  checkAddressMessage,
 } from 'polkadot-api';
 
 type WebViewPromiseResponse<Payload> = {
@@ -80,6 +83,7 @@ type ResolversRef = React.MutableRefObject<{
   sendTxPromise: WebViewPromiseResponse<void>;
   resolveGetTxMethodArgsLength: (_result: GetTxMethodArgsLengthResultMessage['payload']) => void;
   resolveDecodeAddress: (_result: DecodeAddressResultMessage['payload']) => void;
+  resolveCheckAddress: (_result: CheckAddressResultMessage['payload']) => void;
 }>;
 
 async function loadHtml() {
@@ -155,6 +159,12 @@ function useCryptoUtils(isWebviewLoaded: boolean, postMessage: PostMessage, reso
           return new Promise((resolve) => {
             resolversRef.current.resolveDecodeAddress = resolve;
             postMessage(decodeAddressMessage(payload));
+          });
+        },
+        checkAddress: (payload: CheckAddressMessage['payload']) => {
+          return new Promise((resolve) => {
+            resolversRef.current.resolveCheckAddress = resolve;
+            postMessage(checkAddressMessage(payload));
           });
         },
       });
@@ -291,6 +301,7 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
         sendTxPromise,
         resolveGetTxMethodArgsLength,
         resolveDecodeAddress,
+        resolveCheckAddress,
       } = resolversRef.current;
 
       switch (data.type) {
@@ -434,6 +445,11 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
           resolveDecodeAddress(data.payload);
           break;
         }
+
+        case MessageType.CHECK_ADDRESS_RESULT: {
+          resolveCheckAddress(data.payload);
+          break;
+        }
       }
     },
     [accounts, setAccounts, resolversRef, setApiState, postMessage, currentNetwork.ws],
@@ -481,6 +497,7 @@ export function PolkadotApiWebView() {
     },
     resolveGetTxMethodArgsLength: initialResolver,
     resolveDecodeAddress: initialResolver,
+    resolveCheckAddress: initialResolver,
   });
 
   const postMessage = React.useCallback(

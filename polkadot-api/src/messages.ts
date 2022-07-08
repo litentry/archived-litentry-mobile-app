@@ -91,6 +91,9 @@ export enum MessageType {
 
   DECODE_ADDRESS = 'DECODE_ADDRESS',
   DECODE_ADDRESS_RESULT = 'DECODE_ADDRESS_RESULT',
+
+  CHECK_ADDRESS = 'CHECK_ADDRESS',
+  CHECK_ADDRESS_RESULT = 'CHECK_ADDRESS_RESULT',
 }
 
 type InitStoreMessage = {
@@ -379,6 +382,28 @@ export type DecodeAddressResultMessage = {
   payload: Uint8Array;
 };
 
+export type CheckAddressMessage = {
+  type: MessageType.CHECK_ADDRESS;
+  payload: {
+    address: HexString | string;
+    prefix: number;
+  };
+};
+
+type ValidAddressPayload = {
+  isValid: true;
+};
+
+type InvalidAddressPayload = {
+  isValid: false;
+  reason: string;
+};
+
+export type CheckAddressResultMessage = {
+  type: MessageType.CHECK_ADDRESS_RESULT;
+  payload: ValidAddressPayload | InvalidAddressPayload;
+};
+
 export type Message =
   | InitStoreMessage
   | InitKeyringMessage
@@ -418,7 +443,9 @@ export type Message =
   | GetTxMethodArgsLengthMessage
   | GetTxMethodArgsLengthResultMessage
   | DecodeAddressMessage
-  | DecodeAddressResultMessage;
+  | DecodeAddressResultMessage
+  | CheckAddressMessage
+  | CheckAddressResultMessage;
 
 export function initStoreMessage(payload: InitStoreMessage['payload']): InitStoreMessage {
   return {
@@ -705,6 +732,20 @@ export function decodeAddressMessage(payload: DecodeAddressMessage['payload']): 
 export function decodeAddressResultMessage(payload: DecodeAddressResultMessage['payload']): DecodeAddressResultMessage {
   return {
     type: MessageType.DECODE_ADDRESS_RESULT,
+    payload,
+  };
+}
+
+export function checkAddressMessage(payload: CheckAddressMessage['payload']): CheckAddressMessage {
+  return {
+    type: MessageType.CHECK_ADDRESS,
+    payload,
+  };
+}
+
+export function checkAddressResultMessage(payload: CheckAddressResultMessage['payload']): CheckAddressResultMessage {
+  return {
+    type: MessageType.CHECK_ADDRESS_RESULT,
     payload,
   };
 }
