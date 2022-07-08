@@ -5,15 +5,15 @@ import {Menu, Caption, Divider, TextInput, Text, Icon, useTheme} from '@ui/libra
 import globalStyles from '@ui/styles';
 import {AccountTeaser} from './Account/AccountTeaser';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
-import type {Account as AppAccount} from '@polkadotApi/types';
+import type {KeyringAccount} from 'polkadot-api';
 
 type Props = {
   onSelect: (account: SelectedAccount) => void;
-  accounts?: AppAccount[];
+  accounts?: KeyringAccount[];
 };
 
 type SelectedAccount = {
-  account: AppAccount;
+  account: KeyringAccount;
   accountInfo?: SubstrateChainAccount;
 };
 
@@ -79,7 +79,7 @@ function EmptyAccounts() {
 
 type AccountProps = {
   onSelect: (account: SelectedAccount) => void;
-  account: AppAccount;
+  account: KeyringAccount;
 };
 
 export function Account({onSelect, account}: AccountProps) {
