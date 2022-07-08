@@ -21,6 +21,8 @@ import type {
   SendTxMessage,
   TxInfo,
   GetTxMethodArgsLengthMessage,
+  DecodeAddressMessage,
+  DecodeAddressResultMessage,
 } from 'polkadot-api';
 
 export const appAccountsState: RecoilState<Record<string, KeyringAccount>> = atom({
@@ -37,6 +39,9 @@ export const cryptoUtilState = atom({
     },
     validateMnemonic: (_: ValidateMnemonicMessage['payload']) => {
       return Promise.resolve<ValidateMnemonicResultMessage['payload']>({isValid: false, address: ''});
+    },
+    decodeAddress: (_: DecodeAddressMessage['payload']) => {
+      return Promise.resolve<DecodeAddressResultMessage['payload']>(new Uint8Array());
     },
   },
 });

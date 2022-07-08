@@ -88,6 +88,9 @@ export enum MessageType {
 
   GET_TX_METHOD_ARGS_LENGTH = 'GET_TX_METHOD_ARGS_LENGTH',
   GET_TX_METHOD_ARGS_LENGTH_RESULT = 'GET_TX_METHOD_ARGS_LENGTH_RESULT',
+
+  DECODE_ADDRESS = 'DECODE_ADDRESS',
+  DECODE_ADDRESS_RESULT = 'DECODE_ADDRESS_RESULT',
 }
 
 type InitStoreMessage = {
@@ -362,6 +365,20 @@ export type GetTxMethodArgsLengthResultMessage = {
   payload: number;
 };
 
+export type DecodeAddressMessage = {
+  type: MessageType.DECODE_ADDRESS;
+  payload: {
+    encoded: HexString | string | Uint8Array | null;
+    ignoreChecksum?: boolean;
+    ss58Format?: number;
+  };
+};
+
+export type DecodeAddressResultMessage = {
+  type: MessageType.DECODE_ADDRESS_RESULT;
+  payload: Uint8Array;
+};
+
 export type Message =
   | InitStoreMessage
   | InitKeyringMessage
@@ -399,7 +416,9 @@ export type Message =
   | SendTxMessage
   | SendTxResultMessage
   | GetTxMethodArgsLengthMessage
-  | GetTxMethodArgsLengthResultMessage;
+  | GetTxMethodArgsLengthResultMessage
+  | DecodeAddressMessage
+  | DecodeAddressResultMessage;
 
 export function initStoreMessage(payload: InitStoreMessage['payload']): InitStoreMessage {
   return {
@@ -672,6 +691,20 @@ export function getTxMethodArgsLengthResultMessage(
 ): GetTxMethodArgsLengthResultMessage {
   return {
     type: MessageType.GET_TX_METHOD_ARGS_LENGTH_RESULT,
+    payload,
+  };
+}
+
+export function decodeAddressMessage(payload: DecodeAddressMessage['payload']): DecodeAddressMessage {
+  return {
+    type: MessageType.DECODE_ADDRESS,
+    payload,
+  };
+}
+
+export function decodeAddressResultMessage(payload: DecodeAddressResultMessage['payload']): DecodeAddressResultMessage {
+  return {
+    type: MessageType.DECODE_ADDRESS_RESULT,
     payload,
   };
 }

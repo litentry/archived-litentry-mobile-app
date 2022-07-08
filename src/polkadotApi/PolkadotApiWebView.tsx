@@ -1,8 +1,6 @@
 import React from 'react';
 import WebView, {WebViewMessageEvent} from 'react-native-webview';
 import {View, Platform, StyleSheet} from 'react-native';
-import {decodeAddress} from '@polkadot/util-crypto';
-import {u8aToHex} from '@polkadot/util';
 import {useSetRecoilState} from 'recoil';
 import RNFS from 'react-native-fs';
 import {cryptoUtilState, keyringState, apiState, txState} from './atoms';
@@ -56,6 +54,9 @@ import {
   GetTxMethodArgsLengthMessage,
   GetTxMethodArgsLengthResultMessage,
   getTxMethodArgsLengthMessage,
+  DecodeAddressResultMessage,
+  DecodeAddressMessage,
+  decodeAddressMessage,
 } from 'polkadot-api';
 
 type WebViewPromiseResponse<Payload> = {
@@ -78,11 +79,8 @@ type ResolversRef = React.MutableRefObject<{
   getTxInfoPromise: WebViewPromiseResponse<GetTxInfoResultPayload['txInfo']>;
   sendTxPromise: WebViewPromiseResponse<void>;
   resolveGetTxMethodArgsLength: (_result: GetTxMethodArgsLengthResultMessage['payload']) => void;
+  resolveDecodeAddress: (_result: DecodeAddressResultMessage['payload']) => void;
 }>;
-
-function getAccountKey(address: string) {
-  return `account:${u8aToHex(decodeAddress(address, true))}`;
-}
 
 async function loadHtml() {
   return Platform.OS === 'android'
@@ -106,7 +104,7 @@ function useInitWebViewStore(
       Object.values(accounts).forEach((account) => {
         postMessage(
           initStoreMessage({
-            key: getAccountKey(account.address),
+            key: account.address,
             value: account,
           }),
         );
@@ -141,17 +139,24 @@ function useCryptoUtils(isWebviewLoaded: boolean, postMessage: PostMessage, reso
   React.useEffect(() => {
     if (isWebviewLoaded) {
       setCryptoUtilState({
-        generateMnemonic: (payload?: GenerateMnemonicMessage['payload']) =>
-          new Promise((resolve) => {
+        generateMnemonic: (payload?: GenerateMnemonicMessage['payload']) => {
+          return new Promise((resolve) => {
             resolversRef.current.resolveMnemonic = resolve;
             postMessage(generateMnemonicMessage({length: payload?.length}));
-          }),
-        validateMnemonic: (payload: ValidateMnemonicMessage['payload']) =>
-          new Promise((resolve) => {
+          });
+        },
+        validateMnemonic: (payload: ValidateMnemonicMessage['payload']) => {
+          return new Promise((resolve) => {
             resolversRef.current.resolveValidateMnemonic = resolve;
-
             postMessage(validateMnemonicMessage(payload));
-          }),
+          });
+        },
+        decodeAddress: (payload: DecodeAddressMessage['payload']) => {
+          return new Promise((resolve) => {
+            resolversRef.current.resolveDecodeAddress = resolve;
+            postMessage(decodeAddressMessage(payload));
+          });
+        },
       });
     }
   }, [isWebviewLoaded, setCryptoUtilState, postMessage, resolversRef]);
@@ -285,6 +290,7 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
         getTxInfoPromise,
         sendTxPromise,
         resolveGetTxMethodArgsLength,
+        resolveDecodeAddress,
       } = resolversRef.current;
 
       switch (data.type) {
@@ -423,6 +429,11 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
           resolveGetTxMethodArgsLength(data.payload);
           break;
         }
+
+        case MessageType.DECODE_ADDRESS_RESULT: {
+          resolveDecodeAddress(data.payload);
+          break;
+        }
       }
     },
     [accounts, setAccounts, resolversRef, setApiState, postMessage, currentNetwork.ws],
@@ -469,6 +480,7 @@ export function PolkadotApiWebView() {
       reject: initialResolver,
     },
     resolveGetTxMethodArgsLength: initialResolver,
+    resolveDecodeAddress: initialResolver,
   });
 
   const postMessage = React.useCallback(
