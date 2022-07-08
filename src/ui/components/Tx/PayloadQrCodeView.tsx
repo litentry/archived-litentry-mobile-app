@@ -8,6 +8,7 @@ import {Button, useTheme, Subheading} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {Layout} from '@ui/components/Layout';
 import {TxInfo} from 'polkadot-api';
+import {useCryptoUtil} from '@polkadotApi/useCryptoUtil';
 
 const TX_SIZE_LIMIT = 5000;
 
@@ -20,27 +21,30 @@ type PropTypes = {
 export function PayloadQrCodeView({txInfo, onConfirm, onCancel}: PropTypes): React.ReactElement {
   const [imageUri, setImageUri] = useState<string>();
   const {colors} = useTheme();
+  const {decodeAddress} = useCryptoUtil();
 
   useEffect(() => {
     // limit size of the transaction
     const isQrHashed = txInfo.txPayload.method.length > TX_SIZE_LIMIT;
-    const signPayload = createSignPayload(
-      txInfo.txPayload.address,
-      isQrHashed ? CMD_HASH : CMD_MORTAL,
-      txInfo.signablePayload,
-      txInfo.txPayload.genesisHash,
-    );
-    // TODO: not supporting multi frame
-    const frames = createFrames(signPayload);
-    const qr = QrCode(0, 'M');
+    decodeAddress({encoded: txInfo.txPayload.address}).then((decodedAddress) => {
+      const signPayload = createSignPayload(
+        decodedAddress,
+        isQrHashed ? CMD_HASH : CMD_MORTAL,
+        txInfo.signablePayload,
+        txInfo.txPayload.genesisHash,
+      );
+      // TODO: not supporting multi frame
+      const frames = createFrames(signPayload);
+      const qr = QrCode(0, 'M');
 
-    // TODO: check me!
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    qr.addData(frames[0] as any, 'Byte');
-    qr.make();
+      // TODO: check me!
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      qr.addData(frames[0] as any, 'Byte');
+      qr.make();
 
-    setImageUri(qr.createDataURL(16, 0));
-  }, [txInfo]);
+      setImageUri(qr.createDataURL(16, 0));
+    });
+  }, [txInfo, decodeAddress]);
 
   return (
     <Layout style={styles.container}>

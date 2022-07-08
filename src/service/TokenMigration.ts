@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import Web3 from 'web3';
 import * as ethers from 'ethers';
-import {decodeAddress} from '@polkadot/util-crypto';
 import BigNumber from 'bignumber.js';
 
 const ERC20 = require('../../abi/ERC20.json');
@@ -34,13 +33,13 @@ export async function approveForMigration(address: string, wallet: Web3): Promis
 export async function depositForMigration(
   address: string,
   amount: number,
-  recipientAddress: string,
+  recipientAddress: Uint8Array,
   wallet: Web3,
 ): Promise<Result> {
   const contract = new wallet.eth.Contract(BRIDGE.abi, DEPOSIT_CONTRACT_ADDRESS, {
     from: address,
   });
-  const recipientHex = Buffer.from(decodeAddress(recipientAddress)).toString('hex');
+  const recipientHex = Buffer.from(recipientAddress).toString('hex');
   const data = hexifyData(amount, recipientHex);
 
   try {
