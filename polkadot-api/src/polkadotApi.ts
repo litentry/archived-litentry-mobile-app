@@ -15,6 +15,7 @@ import {
   forgetAccountResultMessage,
   generateMnemonicResultMessage,
   getTxInfoResultMessage,
+  getTxMethodArgsLengthResultMessage,
   KeyringAccount,
   Message,
   MessageType,
@@ -25,7 +26,7 @@ import {
   validateMnemonicResultMessage,
   verifyCredentialsResultMessage,
 } from './messages';
-import {getTxInfo, sendTx} from './txUtils';
+import {getTxInfo, sendTx, getTxMethodArgsLength} from './txUtils';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const window: any;
@@ -93,6 +94,14 @@ cryptoWaitReady().then(function () {
             .catch((error) => {
               postMessage(sendTxResultMessage({error}));
             });
+        }
+        break;
+      }
+
+      case MessageType.GET_TX_METHOD_ARGS_LENGTH: {
+        if (api) {
+          const length = getTxMethodArgsLength(api, message.payload);
+          postMessage(getTxMethodArgsLengthResultMessage(length));
         }
         break;
       }

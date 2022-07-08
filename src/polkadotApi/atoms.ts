@@ -20,6 +20,7 @@ import type {
   GetTxInfoMessage,
   SendTxMessage,
   TxInfo,
+  GetTxMethodArgsLengthMessage,
 } from 'polkadot-api';
 
 export const appAccountsState: RecoilState<Record<string, KeyringAccount>> = atom({
@@ -101,6 +102,9 @@ export const txState = atom({
     },
     sendTx: (_: SendTxMessage['payload']) => {
       return Promise.resolve();
+    },
+    getTxMethodArgsLength: (_: GetTxMethodArgsLengthMessage['payload']) => {
+      return Promise.resolve(0);
     },
   },
 });

@@ -91,6 +91,16 @@ export async function sendTx(
   });
 }
 
+export function getTxMethodArgsLength(api: ApiPromise, method: TxConfig['method']) {
+  const [section, txMethod] = method.split('.');
+
+  if (!section || !txMethod) {
+    throw new Error(`Invalid method ${section}.${txMethod}`);
+  }
+
+  return api.tx[section]?.[txMethod]?.meta.args.length ?? 0;
+}
+
 function buildTx(api: ApiPromise, txConfig: TxConfig): SubmittableExtrinsic<'promise'> {
   const {method, params} = txConfig;
   const [section, txMethod] = method.split('.');

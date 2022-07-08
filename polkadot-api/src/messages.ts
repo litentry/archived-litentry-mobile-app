@@ -85,6 +85,9 @@ export enum MessageType {
 
   SEND_TX = 'SEND_TX',
   SEND_TX_RESULT = 'SEND_TX_RESULT',
+
+  GET_TX_METHOD_ARGS_LENGTH = 'GET_TX_METHOD_ARGS_LENGTH',
+  GET_TX_METHOD_ARGS_LENGTH_RESULT = 'GET_TX_METHOD_ARGS_LENGTH_RESULT',
 }
 
 type InitStoreMessage = {
@@ -349,6 +352,16 @@ export type SendTxResultMessage = {
   payload: SendTxSuccessful | ErrorPayload;
 };
 
+export type GetTxMethodArgsLengthMessage = {
+  type: MessageType.GET_TX_METHOD_ARGS_LENGTH;
+  payload: TxConfig['method'];
+};
+
+export type GetTxMethodArgsLengthResultMessage = {
+  type: MessageType.GET_TX_METHOD_ARGS_LENGTH_RESULT;
+  payload: number;
+};
+
 export type Message =
   | InitStoreMessage
   | InitKeyringMessage
@@ -384,7 +397,9 @@ export type Message =
   | GetTxInfoMessage
   | GetTxInfoResultMessage
   | SendTxMessage
-  | SendTxResultMessage;
+  | SendTxResultMessage
+  | GetTxMethodArgsLengthMessage
+  | GetTxMethodArgsLengthResultMessage;
 
 export function initStoreMessage(payload: InitStoreMessage['payload']): InitStoreMessage {
   return {
@@ -639,6 +654,24 @@ export function sendTxMessage(payload: SendTxMessage['payload']): SendTxMessage 
 export function sendTxResultMessage(payload: SendTxResultMessage['payload']): SendTxResultMessage {
   return {
     type: MessageType.SEND_TX_RESULT,
+    payload,
+  };
+}
+
+export function getTxMethodArgsLengthMessage(
+  payload: GetTxMethodArgsLengthMessage['payload'],
+): GetTxMethodArgsLengthMessage {
+  return {
+    type: MessageType.GET_TX_METHOD_ARGS_LENGTH,
+    payload,
+  };
+}
+
+export function getTxMethodArgsLengthResultMessage(
+  payload: GetTxMethodArgsLengthResultMessage['payload'],
+): GetTxMethodArgsLengthResultMessage {
+  return {
+    type: MessageType.GET_TX_METHOD_ARGS_LENGTH_RESULT,
     payload,
   };
 }

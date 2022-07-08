@@ -53,6 +53,9 @@ import {
   getTxInfoMessage,
   SendTxMessage,
   sendTxMessage,
+  GetTxMethodArgsLengthMessage,
+  GetTxMethodArgsLengthResultMessage,
+  getTxMethodArgsLengthMessage,
 } from 'polkadot-api';
 
 type WebViewPromiseResponse<Payload> = {
@@ -74,6 +77,7 @@ type ResolversRef = React.MutableRefObject<{
   signPromise: WebViewPromiseResponse<SignResultPayload['signed']>;
   getTxInfoPromise: WebViewPromiseResponse<GetTxInfoResultPayload['txInfo']>;
   sendTxPromise: WebViewPromiseResponse<void>;
+  resolveGetTxMethodArgsLength: (_result: GetTxMethodArgsLengthResultMessage['payload']) => void;
 }>;
 
 function getAccountKey(address: string) {
@@ -247,6 +251,12 @@ function useApiTx(isWebviewLoaded: boolean, postMessage: PostMessage, resolversR
             postMessage(sendTxMessage(payload));
           });
         },
+        getTxMethodArgsLength: (payload: GetTxMethodArgsLengthMessage['payload']) => {
+          return new Promise((resolve) => {
+            resolversRef.current.resolveGetTxMethodArgsLength = resolve;
+            postMessage(getTxMethodArgsLengthMessage(payload));
+          });
+        },
       });
     }
   }, [isWebviewLoaded, setTxState, postMessage, resolversRef]);
@@ -274,6 +284,7 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
         signPromise,
         getTxInfoPromise,
         sendTxPromise,
+        resolveGetTxMethodArgsLength,
       } = resolversRef.current;
 
       switch (data.type) {
@@ -407,6 +418,11 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
           }
           break;
         }
+
+        case MessageType.GET_TX_METHOD_ARGS_LENGTH_RESULT: {
+          resolveGetTxMethodArgsLength(data.payload);
+          break;
+        }
       }
     },
     [accounts, setAccounts, resolversRef, setApiState, postMessage, currentNetwork.ws],
@@ -452,6 +468,7 @@ export function PolkadotApiWebView() {
       resolve: initialResolver,
       reject: initialResolver,
     },
+    resolveGetTxMethodArgsLength: initialResolver,
   });
 
   const postMessage = React.useCallback(
