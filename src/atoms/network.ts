@@ -3,7 +3,7 @@ import {persistAtom} from '@atoms/persist';
 import {getRemoteConfig} from 'src/utils/firebaseConfig';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 
-export type SupportedNetworkType = 'ethereum' | 'polkadot' | 'kusama' | 'litentry_test' | 'litmus';
+export type SupportedNetworkType = 'polkadot' | 'kusama' | 'litentry_test' | 'litmus';
 
 export type NetworkType = {
   name: string;
