@@ -1,6 +1,5 @@
 import React from 'react';
 import {Subheading, Button, useTheme, Modal, List, Headline} from '@ui/library';
-import {useApi} from 'context/ChainApiContext';
 import {FlatList, StyleSheet, View, Linking} from 'react-native';
 import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
@@ -24,6 +23,7 @@ import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {getProposalTitle} from 'src/utils/proposal';
 import type {KeyringAccount} from 'polkadot-api';
 import {useStartTx} from 'context/TxContext';
+import {useTx} from '@polkadotApi/useTx';
 
 type Vote = 'Aye' | 'Nay' | 'Close';
 
@@ -95,8 +95,8 @@ type VoteModalProps = {
 };
 
 function VoteModal({visible, setVisible, refetchMotions, voteType, motion, councilAccounts}: VoteModalProps) {
-  const {api} = useApi();
   const {startTx} = useStartTx();
+  const {getTxMethodArgsLength} = useTx();
   const heading = voteType === 'Aye' || voteType === 'Nay' ? `Vote ${voteType}` : 'Close';
   const [account, setAccount] = React.useState<Account>();
 
@@ -110,7 +110,7 @@ function VoteModal({visible, setVisible, refetchMotions, voteType, motion, counc
   };
 
   const motionVote = (vote: boolean) => {
-    if (account && api && motion) {
+    if (account && motion) {
       closeModal();
       const {proposal} = motion;
       if (proposal.index) {
@@ -130,26 +130,26 @@ function VoteModal({visible, setVisible, refetchMotions, voteType, motion, counc
     }
   };
 
-  const closeMotion = () => {
-    if (account && api && motion) {
+  const closeMotion = async () => {
+    if (account && motion) {
       closeModal();
       const {proposal} = motion;
       if (proposal.index) {
-        startTx({
-          address: account.address,
-          txConfig: {
-            method: 'council.close',
-            params:
-              api?.tx.council.close?.meta.args.length === 4
-                ? [proposal.hash, proposal.index, 0, 0]
-                : [proposal.hash, proposal.index],
-          },
-        })
-          .then(() => {
-            reset();
-            refetchMotions();
-          })
-          .catch((e) => console.warn(e));
+        const method = 'council.close';
+        const argsLength = await getTxMethodArgsLength(method);
+        try {
+          await startTx({
+            address: account.address,
+            txConfig: {
+              method,
+              params: argsLength === 4 ? [proposal.hash, proposal.index, 0, 0] : [proposal.hash, proposal.index],
+            },
+          });
+          reset();
+          refetchMotions();
+        } catch (e) {
+          console.warn(e);
+        }
       }
     }
   };

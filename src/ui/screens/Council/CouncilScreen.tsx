@@ -23,12 +23,12 @@ import BalanceInput from '@ui/components/BalanceInput';
 import type {Account} from 'src/api/hooks/useAccount';
 import {formattedStringToBn} from 'src/utils/balance';
 import MaxBalance from '@ui/components/MaxBalance';
-import {useApi} from 'context/ChainApiContext';
 import {useSnackbar} from 'context/SnackbarContext';
 import {InputLabel} from '@ui/library/InputLabel';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {BN_ZERO} from '@polkadot/util';
 import {useStartTx} from 'context/TxContext';
+import {useTx} from '@polkadotApi/useTx';
 
 const MAX_VOTES = 16;
 
@@ -309,7 +309,7 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
 function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandidacyProps) {
   const [account, setAccount] = React.useState<Account>();
   const {startTx} = useStartTx();
-  const {api} = useApi();
+  const {getTxMethodArgsLength} = useTx();
   const balance = useFormatBalance();
   const formattedBalance = balance.formatBalance(moduleElection.candidacyBond);
   const {data: council} = useCouncil();
@@ -317,30 +317,27 @@ function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandi
   const candidacyBond = balance.stringToBn(moduleElection.candidacyBond) ?? BN_ZERO;
   const sufficientBalance =
     balance.stringToBn(accountFreeBalance)?.gt(BN_ZERO) && balance.stringToBn(accountFreeBalance)?.gt(candidacyBond);
-
   const submitCandidacy = !account || !sufficientBalance;
-
   const snackbar = useSnackbar();
-  const onSubmitCandidacy = () => {
-    if (account && api && moduleElection.module) {
-      startTx({
-        address: account.address,
-        txConfig: {
-          method: `${moduleElection.module}.submitCandidacy`,
-          params: [
-            api.tx[moduleElection.module]?.submitCandidacy?.meta.args.length === 1
-              ? [council?.candidates.length ?? 0]
-              : [],
-          ],
-        },
-      })
-        .then(() => {
-          snackbar('Candidacy submitted successfully');
-        })
-        .catch(() => {
-          snackbar('Error while submitting candidacy');
+
+  const onSubmitCandidacy = async () => {
+    if (account && moduleElection.module) {
+      const argsLength = await getTxMethodArgsLength(`${moduleElection.module}.submitCandidacy`);
+      try {
+        await startTx({
+          address: account.address,
+          txConfig: {
+            method: `${moduleElection.module}.submitCandidacy`,
+            params: [argsLength === 1 ? [council?.candidates.length ?? 0] : []],
+          },
         });
-      reset();
+        snackbar('Candidacy submitted successfully');
+      } catch (e) {
+        console.warn(e);
+        snackbar('Error while submitting candidacy');
+      } finally {
+        reset();
+      }
     }
   };
 

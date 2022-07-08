@@ -1,8 +1,7 @@
-import React, {useReducer, useState} from 'react';
+import React, {useCallback, useReducer, useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {RouteProp} from '@react-navigation/native';
-import {useApi} from 'context/ChainApiContext';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SelectAccount} from '@ui/components/SelectAccount';
@@ -15,6 +14,7 @@ import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {ProposalCall} from '@ui/components/ProposalCall';
 import {Account} from 'src/api/hooks/useAccount';
 import {useStartTx} from 'context/TxContext';
+import {useTx} from '@polkadotApi/useTx';
 
 export function DemocracyProposalScreen({
   route,
@@ -22,12 +22,26 @@ export function DemocracyProposalScreen({
   route: RouteProp<DashboardStackParamList, typeof democracyProposalScreen>;
 }) {
   const {startTx} = useStartTx();
-  const {api} = useApi();
-
+  const {getTxMethodArgsLength} = useTx();
   const [secondsOpen, setSecondsOpen] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
   const proposal = route.params.proposal;
   const title = `${proposal.method}.${proposal.section}`;
+
+  const onSecondPress = useCallback(async () => {
+    if (state.account) {
+      const method = 'democracy.second';
+      const argsLength = await getTxMethodArgsLength(method);
+      await startTx({
+        address: state.account.address,
+        txConfig: {
+          method,
+          params: argsLength === 2 ? [proposal.index, proposal.seconds.length] : [proposal.index],
+        },
+      });
+      dispatch({type: 'RESET'});
+    }
+  }, [startTx, proposal, state.account, getTxMethodArgsLength]);
 
   return (
     <Layout style={globalStyles.flex}>
@@ -129,24 +143,7 @@ export function DemocracyProposalScreen({
               {`Cancel`}
             </Button>
             <Padder scale={1} />
-            <Button
-              mode="outlined"
-              disabled={!state.account}
-              onPress={() => {
-                if (state.account) {
-                  startTx({
-                    address: state.account.address,
-                    txConfig: {
-                      method: 'democracy.second',
-                      params:
-                        api?.tx.democracy.second.meta.args.length === 2
-                          ? [proposal.index, proposal.seconds.length]
-                          : [proposal.index],
-                    },
-                  });
-                  dispatch({type: 'RESET'});
-                }
-              }}>
+            <Button mode="outlined" disabled={!state.account} onPress={onSecondPress}>
               {`Second`}
             </Button>
           </View>
