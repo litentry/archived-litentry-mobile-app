@@ -157,7 +157,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
       case 'qr_code_tx_payload_view':
         return (
           <PayloadQrCodeView
-            payload={state.txInfo.txPayload}
+            txInfo={state.txInfo}
             onCancel={reset}
             onConfirm={() =>
               dispatch({

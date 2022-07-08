@@ -1,41 +1,34 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
-import {ExtrinsicPayload} from '@polkadot/types/interfaces';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {SignerPayloadJSON} from '@polkadot/types/types';
 import {createFrames, QrCode} from 'src/utils/qrCode';
 import {createSignPayload} from 'src/utils/signer';
 import {CMD_HASH, CMD_MORTAL} from 'src/constants';
-import {ChainApiContext} from 'context/ChainApiContext';
 import {Button, useTheme, Subheading} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {Layout} from '@ui/components/Layout';
+import {TxInfo} from 'polkadot-api';
 
 const TX_SIZE_LIMIT = 5000;
 
 type PropTypes = {
-  payload: SignerPayloadJSON;
+  txInfo: TxInfo;
   onConfirm: () => void;
   onCancel: () => void;
 };
 
-export function PayloadQrCodeView({payload, onConfirm, onCancel}: PropTypes): React.ReactElement {
-  const {api} = useContext(ChainApiContext);
+export function PayloadQrCodeView({txInfo, onConfirm, onCancel}: PropTypes): React.ReactElement {
   const [imageUri, setImageUri] = useState<string>();
   const {colors} = useTheme();
 
   useEffect(() => {
-    if (!api) {
-      return;
-    }
     // limit size of the transaction
-    const isQrHashed = payload.method.length > TX_SIZE_LIMIT;
-    const wrapper: ExtrinsicPayload = api.registry.createType('ExtrinsicPayload', payload);
+    const isQrHashed = txInfo.txPayload.method.length > TX_SIZE_LIMIT;
     const signPayload = createSignPayload(
-      payload.address,
+      txInfo.txPayload.address,
       isQrHashed ? CMD_HASH : CMD_MORTAL,
-      wrapper.toU8a(),
-      payload.genesisHash,
+      txInfo.signablePayload,
+      txInfo.txPayload.genesisHash,
     );
     // TODO: not supporting multi frame
     const frames = createFrames(signPayload);
@@ -47,7 +40,7 @@ export function PayloadQrCodeView({payload, onConfirm, onCancel}: PropTypes): Re
     qr.make();
 
     setImageUri(qr.createDataURL(16, 0));
-  }, [api, payload]);
+  }, [txInfo]);
 
   return (
     <Layout style={styles.container}>
