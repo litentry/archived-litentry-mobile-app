@@ -80,12 +80,11 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
           payload: {
             txInfo,
             txConfig,
-            address,
             isExternalAccount: true,
           },
         });
       } else {
-        dispatch({type: 'SHOW_AUTHENTICATE_VIEW', payload: {address, txConfig, txInfo}});
+        dispatch({type: 'SHOW_AUTHENTICATE_VIEW', payload: {txConfig, txInfo}});
       }
     },
     [accounts, openBottomSheet, getTxInfo],
@@ -108,7 +107,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
       case 'authenticate_view':
         return (
           <AuthenticateView
-            address={state.address}
+            address={state.txInfo.txPayload.address}
             onAuthenticate={async (credentials) => {
               dispatch({
                 type: 'SHOW_TX_PREVIEW',
@@ -137,7 +136,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
               if (state.isExternalAccount) {
                 dispatch({
                   type: 'SHOW_QR_CODE_TX_PAYLOAD_VIEW',
-                  payload: {address: state.address, txConfig: state.txConfig, txInfo: state.txInfo},
+                  payload: {txConfig: state.txConfig, txInfo: state.txInfo},
                 });
               } else {
                 dispatch({type: 'SHOW_SUBMITTING_VIEW'});
@@ -162,7 +161,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
             onConfirm={() =>
               dispatch({
                 type: 'SHOW_SCAN_SIGNATURE_VIEW',
-                payload: {address: state.address, txConfig: state.txConfig, txInfo: state.txInfo},
+                payload: {txConfig: state.txConfig, txInfo: state.txInfo},
               })
             }
           />
@@ -178,7 +177,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
                 dispatch({type: 'SHOW_SUBMITTING_VIEW'});
                 const signature: HexString = `0x${data.data}`;
                 sendTransaction({
-                  address: state.address,
+                  address: state.txInfo.txPayload.address,
                   txConfig: state.txConfig,
                   txPayload: state.txInfo.txPayload,
                   signature,
@@ -301,12 +300,11 @@ const styles = StyleSheet.create({
 
 type State =
   | {view: 'initial_view' | 'submitting_view' | 'success_view'}
-  | {view: 'authenticate_view'; address: string; txConfig: TxConfig; txInfo: TxInfo}
+  | {view: 'authenticate_view'; txConfig: TxConfig; txInfo: TxInfo}
   | {
       view: 'tx_preview';
       txConfig: TxConfig;
       txInfo: TxInfo;
-      address: string;
       isExternalAccount: true;
     }
   | {
@@ -316,10 +314,9 @@ type State =
       credentials: SignCredentials;
       isExternalAccount: false;
     }
-  | {view: 'qr_code_tx_payload_view'; address: string; txConfig: TxConfig; txInfo: TxInfo}
+  | {view: 'qr_code_tx_payload_view'; txConfig: TxConfig; txInfo: TxInfo}
   | {
       view: 'scan_signature_view';
-      address: string;
       txConfig: TxConfig;
       txInfo: TxInfo;
       isExternalAccount: true;
@@ -334,7 +331,6 @@ type Action =
   | {
       type: 'SHOW_AUTHENTICATE_VIEW';
       payload: {
-        address: string;
         txConfig: TxConfig;
         txInfo: TxInfo;
       };
@@ -345,7 +341,6 @@ type Action =
         | {
             txInfo: TxInfo;
             txConfig: TxConfig;
-            address: string;
             isExternalAccount: true;
           }
         | {
@@ -358,14 +353,13 @@ type Action =
   | {
       type: 'SHOW_QR_CODE_TX_PAYLOAD_VIEW';
       payload: {
-        address: string;
         txConfig: TxConfig;
         txInfo: TxInfo;
       };
     }
   | {
       type: 'SHOW_SCAN_SIGNATURE_VIEW';
-      payload: {address: string; txConfig: TxConfig; txInfo: TxInfo};
+      payload: {txConfig: TxConfig; txInfo: TxInfo};
     }
   | {type: 'SHOW_SUBMITTING_VIEW'}
   | {type: 'SHOW_ERROR'; payload: string}
