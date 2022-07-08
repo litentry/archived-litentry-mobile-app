@@ -44,7 +44,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
   const apiState = usePolkadotApiState();
 
   useEffect(() => {
-    if (!apiState.isReady) {
+    if (!apiState.isReady && state.view === 'submitting_view') {
       dispatch({
         type: 'SHOW_WARNING',
         payload: 'The transaction was sent but you got disconnected from the chain. Please verify later.',
