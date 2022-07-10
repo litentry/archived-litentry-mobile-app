@@ -19,8 +19,7 @@ export type TxInfo = {
   title: string;
   description: string;
   partialFee: number;
-  txPayload: SignerPayloadJSON;
-  signablePayload: Uint8Array;
+  blockHash: string;
 };
 
 const signerOptions: Partial<SignerOptions> = {
@@ -29,13 +28,25 @@ const signerOptions: Partial<SignerOptions> = {
 };
 
 export async function getTxInfo(api: ApiPromise, address: string, txConfig: TxConfig): Promise<TxInfo> {
-  const tx = buildTx(api, txConfig);
+  const tx = makeTx(api, txConfig);
   const {meta} = tx.registry.findMetaCall(tx.callIndex);
   const args = meta?.args.map(({name}) => name).join(', ') || '';
   const title = `transaction ${txConfig.method}(${args})`;
   const description = formatCallMeta(meta);
   const info = await tx.paymentInfo(address);
   const partialFee = info.partialFee.toNumber();
+  const txPayload = await makeTxPayload(api, address, txConfig);
+
+  return {
+    title,
+    description,
+    partialFee,
+    blockHash: txPayload.blockHash,
+  };
+}
+
+export async function makeTxPayload(api: ApiPromise, address: string, txConfig: TxConfig): Promise<SignerPayloadJSON> {
+  const tx = makeTx(api, txConfig);
   const signingInfo = await api.derive.tx.signingInfo(address, signerOptions.nonce);
   const eraOptions = makeEraOptions(api, tx.registry, signerOptions, signingInfo);
   const txPayload = tx.registry
@@ -47,17 +58,16 @@ export async function getTxInfo(api: ApiPromise, address: string, txConfig: TxCo
       }),
     ])
     .toPayload();
+
+  return txPayload;
+}
+
+export function makeSignablePayload(tx: SubmittableExtrinsic<'promise'>, txPayload: SignerPayloadJSON) {
   const extrinsicPayload: ExtrinsicPayload = tx.registry.createType('ExtrinsicPayload', txPayload, {
     version: txPayload.version,
   });
 
-  return {
-    title,
-    description,
-    partialFee,
-    txPayload,
-    signablePayload: extrinsicPayload.toU8a({method: true}),
-  };
+  return extrinsicPayload.toU8a({method: true});
 }
 
 export async function sendTx(
@@ -67,7 +77,7 @@ export async function sendTx(
   txPayload: SignerPayloadJSON,
   signature: HexString,
 ): Promise<void> {
-  const tx = buildTx(api, txConfig);
+  const tx = makeTx(api, txConfig);
   tx.addSignature(address, signature, txPayload);
 
   return new Promise((resolve, reject) => {
@@ -101,7 +111,7 @@ export function getTxMethodArgsLength(api: ApiPromise, method: TxConfig['method'
   return api.tx[section]?.[txMethod]?.meta.args.length ?? 0;
 }
 
-function buildTx(api: ApiPromise, txConfig: TxConfig): SubmittableExtrinsic<'promise'> {
+function makeTx(api: ApiPromise, txConfig: TxConfig): SubmittableExtrinsic<'promise'> {
   const {method, params} = txConfig;
   const [section, txMethod] = method.split('.');
 

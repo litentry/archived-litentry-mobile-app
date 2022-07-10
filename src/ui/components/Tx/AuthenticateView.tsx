@@ -30,7 +30,9 @@ export function AuthenticateView({onAuthenticate, address}: Props) {
 
   const onPressUnlock = async () => {
     const credentials = {address, password};
+    console.log('verifyinng....');
     const {valid} = await verifyCredentials(credentials);
+    console.log('is valid', valid);
     if (valid) {
       setIsValid(true);
       onAuthenticate(credentials);

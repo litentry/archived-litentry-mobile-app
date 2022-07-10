@@ -7,31 +7,38 @@ import {CMD_HASH, CMD_MORTAL} from 'src/constants';
 import {Button, useTheme, Subheading} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {Layout} from '@ui/components/Layout';
-import {TxInfo} from 'polkadot-api';
+import {TxConfig} from 'polkadot-api';
 import {useCryptoUtil} from '@polkadotApi/useCryptoUtil';
+import {useTx} from '@polkadotApi/useTx';
+import LoadingView from '@ui/components/LoadingView';
 
 const TX_SIZE_LIMIT = 5000;
 
-type PropTypes = {
-  txInfo: TxInfo;
+type Props = {
+  address: string;
+  txConfig: TxConfig;
   onConfirm: () => void;
   onCancel: () => void;
 };
 
-export function PayloadQrCodeView({txInfo, onConfirm, onCancel}: PropTypes): React.ReactElement {
+export function PayloadQrCodeView({address, txConfig, onConfirm, onCancel}: Props): React.ReactElement {
   const [imageUri, setImageUri] = useState<string>();
   const {colors} = useTheme();
   const {decodeAddress} = useCryptoUtil();
+  const {getTxPayload, getTxSignablePayload} = useTx();
 
   useEffect(() => {
-    // limit size of the transaction
-    const isQrHashed = txInfo.txPayload.method.length > TX_SIZE_LIMIT;
-    decodeAddress({encoded: txInfo.txPayload.address}).then((decodedAddress) => {
+    (async () => {
+      const txPayload = await getTxPayload({address, txConfig});
+      // limit size of the transaction
+      const isQrHashed = txPayload.method.length > TX_SIZE_LIMIT;
+      const decodedAddress = await decodeAddress({encoded: address});
+      const signablePayload = await getTxSignablePayload({address, txConfig});
       const signPayload = createSignPayload(
         decodedAddress,
         isQrHashed ? CMD_HASH : CMD_MORTAL,
-        txInfo.signablePayload,
-        txInfo.txPayload.genesisHash,
+        signablePayload,
+        txPayload.genesisHash,
       );
       // TODO: not supporting multi frame
       const frames = createFrames(signPayload);
@@ -43,21 +50,25 @@ export function PayloadQrCodeView({txInfo, onConfirm, onCancel}: PropTypes): Rea
       qr.make();
 
       setImageUri(qr.createDataURL(16, 0));
-    });
-  }, [txInfo, decodeAddress]);
+    })();
+  }, [txConfig, decodeAddress, address, getTxSignablePayload, getTxPayload]);
 
   return (
     <Layout style={styles.container}>
       <Subheading style={globalStyles.textCenter}>{`Authorization required`}</Subheading>
       <Padder scale={1} />
       <View style={styles.qrContainer}>
-        <Image
-          source={{
-            uri: imageUri,
-            width: QR_CODE_DIMENSION.width - standardPadding,
-            height: QR_CODE_DIMENSION.height - standardPadding,
-          }}
-        />
+        {!imageUri ? (
+          <LoadingView />
+        ) : (
+          <Image
+            source={{
+              uri: imageUri,
+              width: QR_CODE_DIMENSION.width - standardPadding,
+              height: QR_CODE_DIMENSION.height - standardPadding,
+            }}
+          />
+        )}
       </View>
       <Padder scale={1} />
       <View style={styles.buttonGroup}>

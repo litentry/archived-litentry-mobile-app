@@ -16,6 +16,8 @@ export type KeyringAccount = KeyringPair$Json & {
 
 export type HexString = `0x${string}`;
 
+export type TxPayload = SignerPayloadJSON;
+
 export type MnemonicLength = 12 | 15 | 18 | 21 | 24;
 
 export type ErrorPayload = {
@@ -94,6 +96,12 @@ export enum MessageType {
 
   CHECK_ADDRESS = 'CHECK_ADDRESS',
   CHECK_ADDRESS_RESULT = 'CHECK_ADDRESS_RESULT',
+
+  GET_TX_PAYLOAD = 'GET_TX_PAYLOAD',
+  GET_TX_PAYLOAD_RESULT = 'GET_TX_PAYLOAD_RESULT',
+
+  GET_TX_SIGNABLE_PAYLOAD = 'GET_TX_SIGNABLE_PAYLOAD',
+  GET_TX_SIGNABLE_PAYLOAD_RESULT = 'GET_TX_SIGNABLE_PAYLOAD_RESULT',
 }
 
 type InitStoreMessage = {
@@ -339,6 +347,42 @@ export type GetTxInfoResultMessage = {
   payload: GetTxInfoResultPayload | ErrorPayload;
 };
 
+export type GetTxPayloadMessage = {
+  type: MessageType.GET_TX_PAYLOAD;
+  payload: {
+    address: string;
+    txConfig: TxConfig;
+  };
+};
+
+export type GetTxPayloadResultPayload = {
+  txPayload: TxPayload;
+  error: false;
+};
+
+export type GetTxPayloadResultMessage = {
+  type: MessageType.GET_TX_PAYLOAD_RESULT;
+  payload: GetTxPayloadResultPayload | ErrorPayload;
+};
+
+export type GetTxSignablePayloadMessage = {
+  type: MessageType.GET_TX_SIGNABLE_PAYLOAD;
+  payload: {
+    address: string;
+    txConfig: TxConfig;
+  };
+};
+
+export type GetTxSignablePayloadResultPayload = {
+  signablePayload: Uint8Array;
+  error: false;
+};
+
+export type GetTxSignablePayloadResultMessage = {
+  type: MessageType.GET_TX_SIGNABLE_PAYLOAD_RESULT;
+  payload: GetTxSignablePayloadResultPayload | ErrorPayload;
+};
+
 export type SendTxSuccessful = {
   error: false;
 };
@@ -348,7 +392,7 @@ export type SendTxMessage = {
   payload: {
     address: string;
     txConfig: TxConfig;
-    txPayload: SignerPayloadJSON;
+    txPayload: TxPayload;
     signature: HexString;
   };
 };
@@ -445,7 +489,11 @@ export type Message =
   | DecodeAddressMessage
   | DecodeAddressResultMessage
   | CheckAddressMessage
-  | CheckAddressResultMessage;
+  | CheckAddressResultMessage
+  | GetTxPayloadMessage
+  | GetTxPayloadResultMessage
+  | GetTxSignablePayloadMessage
+  | GetTxSignablePayloadResultMessage;
 
 export function initStoreMessage(payload: InitStoreMessage['payload']): InitStoreMessage {
   return {
@@ -746,6 +794,37 @@ export function checkAddressMessage(payload: CheckAddressMessage['payload']): Ch
 export function checkAddressResultMessage(payload: CheckAddressResultMessage['payload']): CheckAddressResultMessage {
   return {
     type: MessageType.CHECK_ADDRESS_RESULT,
+    payload,
+  };
+}
+
+export function getTxPayloadMessage(payload: GetTxPayloadMessage['payload']): GetTxPayloadMessage {
+  return {
+    type: MessageType.GET_TX_PAYLOAD,
+    payload,
+  };
+}
+
+export function getTxPayloadResultMessage(payload: GetTxPayloadResultMessage['payload']): GetTxPayloadResultMessage {
+  return {
+    type: MessageType.GET_TX_PAYLOAD_RESULT,
+    payload,
+  };
+}
+
+export function getTxSignablePayloadMessage(
+  payload: GetTxSignablePayloadMessage['payload'],
+): GetTxSignablePayloadMessage {
+  return {
+    type: MessageType.GET_TX_SIGNABLE_PAYLOAD,
+    payload,
+  };
+}
+export function getTxSignablePayloadResultMessage(
+  payload: GetTxSignablePayloadResultMessage['payload'],
+): GetTxSignablePayloadResultMessage {
+  return {
+    type: MessageType.GET_TX_SIGNABLE_PAYLOAD_RESULT,
     payload,
   };
 }

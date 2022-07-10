@@ -25,7 +25,10 @@ import {
   DecodeAddressResultMessage,
   CheckAddressMessage,
   CheckAddressResultMessage,
+  GetTxPayloadMessage,
+  GetTxSignablePayloadMessage,
 } from 'polkadot-api';
+import {SignerPayloadJSON} from '@polkadot/types/types';
 
 export const appAccountsState: RecoilState<Record<string, KeyringAccount>> = atom({
   key: 'appAccounts',
@@ -109,6 +112,12 @@ export const txState = atom({
   default: {
     getTxInfo: (_: GetTxInfoMessage['payload']) => {
       return Promise.resolve<TxInfo>({} as TxInfo);
+    },
+    getTxPayload: (_: GetTxPayloadMessage['payload']) => {
+      return Promise.resolve<SignerPayloadJSON>({} as SignerPayloadJSON);
+    },
+    getTxSignablePayload: (_: GetTxSignablePayloadMessage['payload']) => {
+      return Promise.resolve<Uint8Array>(new Uint8Array());
     },
     sendTx: (_: SendTxMessage['payload']) => {
       return Promise.resolve();

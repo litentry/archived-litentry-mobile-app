@@ -1,7 +1,6 @@
 import React, {createContext, useEffect, useCallback, useMemo, useReducer, useContext} from 'react';
 import {Dimensions, StyleSheet} from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
-import {u8aToHex} from '@polkadot/util';
 import LoadingView from '@ui/components/LoadingView';
 import {AuthenticateView} from '@ui/components/Tx/AuthenticateView';
 import {PayloadQrCodeView} from '@ui/components/Tx/PayloadQrCodeView';
@@ -12,10 +11,7 @@ import {MessageTeaser} from '@ui/components/MessageTeaser';
 import {Subheading, Caption, Icon, useBottomSheet, Button} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
-import type {HexString, SendTxMessage, SignCredentials, TxConfig, TxInfo} from 'polkadot-api';
-import {useKeyring} from '@polkadotApi/useKeyring';
-import {useAppAccounts} from '@polkadotApi/useAppAccounts';
-import {useTx} from '@polkadotApi/useTx';
+import type {HexString, SignCredentials, TxConfig} from 'polkadot-api';
 import {usePolkadotApiState} from '@polkadotApi/usePolkadotApiState';
 
 const {width, height} = Dimensions.get('window');
@@ -39,8 +35,6 @@ export type StartConfig = {
 export function TxProvider({children}: TxProviderProps): React.ReactElement {
   const {BottomSheet, openBottomSheet, closeBottomSheet} = useBottomSheet();
   const [state, dispatch] = useReducer(reducer, initialState);
-  const {sign} = useKeyring();
-  const {getTxInfo, sendTx} = useTx();
   const apiState = usePolkadotApiState();
 
   useEffect(() => {
@@ -52,42 +46,12 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
     }
   }, [apiState.isReady, state.view]);
 
-  const {accounts} = useAppAccounts();
-
-  const sendTransaction = useCallback(
-    (payload: SendTxMessage['payload']) => {
-      sendTx(payload)
-        .then(() => {
-          dispatch({type: 'SHOW_SUCCESS_VIEW'});
-        })
-        .catch((error) => {
-          dispatch({type: 'SHOW_ERROR', payload: error});
-        });
-    },
-    [sendTx],
-  );
-
   const startTx = useCallback(
     async (config: StartConfig) => {
+      dispatch({type: 'SHOW_TX_PREVIEW', payload: {address: config.address, txConfig: config.txConfig}});
       openBottomSheet();
-      const {address, txConfig} = config;
-      const txInfo = await getTxInfo({address, txConfig});
-      const isExternal = Boolean(accounts[address]?.meta.isExternal);
-
-      if (isExternal) {
-        dispatch({
-          type: 'SHOW_TX_PREVIEW',
-          payload: {
-            txInfo,
-            txConfig,
-            isExternalAccount: true,
-          },
-        });
-      } else {
-        dispatch({type: 'SHOW_AUTHENTICATE_VIEW', payload: {txConfig, txInfo}});
-      }
     },
-    [accounts, openBottomSheet, getTxInfo],
+    [openBottomSheet],
   );
 
   const reset = React.useCallback(() => {
@@ -97,58 +61,31 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
 
   const modalContent = useMemo(() => {
     switch (state.view) {
-      case 'initial_view':
+      case 'tx_preview':
         return (
-          <Layout style={styles.emptyState}>
-            <Subheading>Preparing transaction payload...</Subheading>
-          </Layout>
+          <TxPreview
+            address={state.address}
+            txConfig={state.txConfig}
+            onCancel={reset}
+            onConfirm={(isExternalAccount: boolean) => {
+              if (isExternalAccount) {
+                dispatch({type: 'SHOW_QR_CODE_TX_PAYLOAD_VIEW'});
+              } else {
+                dispatch({type: 'SHOW_AUTHENTICATE_VIEW'});
+              }
+            }}
+          />
         );
 
       case 'authenticate_view':
         return (
           <AuthenticateView
-            address={state.txInfo.txPayload.address}
+            address={state.address}
             onAuthenticate={async (credentials) => {
               dispatch({
-                type: 'SHOW_TX_PREVIEW',
-                payload: {
-                  txConfig: state.txConfig,
-                  txInfo: state.txInfo,
-                  credentials,
-                  isExternalAccount: false,
-                },
+                type: 'SHOW_SUBMITTING_VIEW',
+                payload: {credentials},
               });
-            }}
-          />
-        );
-
-      case 'tx_preview':
-        return (
-          <TxPreview
-            transactionInfo={state.txInfo.description}
-            transactionTitle={`Sending ${state.txInfo.title}`}
-            txPayload={state.txInfo.txPayload}
-            params={state.txConfig.params}
-            partialFee={state.txInfo.partialFee}
-            onCancel={reset}
-            isExternalAccount={state.isExternalAccount}
-            onConfirm={async () => {
-              if (state.isExternalAccount) {
-                dispatch({
-                  type: 'SHOW_QR_CODE_TX_PAYLOAD_VIEW',
-                  payload: {txConfig: state.txConfig, txInfo: state.txInfo},
-                });
-              } else {
-                dispatch({type: 'SHOW_SUBMITTING_VIEW'});
-                const signable = u8aToHex(state.txInfo.signablePayload);
-                const signed = await sign({message: signable, credentials: state.credentials});
-                sendTransaction({
-                  address: state.credentials.address,
-                  txConfig: state.txConfig,
-                  txPayload: state.txInfo.txPayload,
-                  signature: signed,
-                });
-              }
             }}
           />
         );
@@ -156,14 +93,10 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
       case 'qr_code_tx_payload_view':
         return (
           <PayloadQrCodeView
-            txInfo={state.txInfo}
+            txConfig={state.txConfig}
+            address={state.address}
             onCancel={reset}
-            onConfirm={() =>
-              dispatch({
-                type: 'SHOW_SCAN_SIGNATURE_VIEW',
-                payload: {txConfig: state.txConfig, txInfo: state.txInfo},
-              })
-            }
+            onConfirm={() => dispatch({type: 'SHOW_SCAN_SIGNATURE_VIEW'})}
           />
         );
 
@@ -174,14 +107,8 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
             <Padder scale={1} />
             <QRCodeScanner
               onRead={(data) => {
-                dispatch({type: 'SHOW_SUBMITTING_VIEW'});
                 const signature: HexString = `0x${data.data}`;
-                sendTransaction({
-                  address: state.txInfo.txPayload.address,
-                  txConfig: state.txConfig,
-                  txPayload: state.txInfo.txPayload,
-                  signature,
-                });
+                dispatch({type: 'SHOW_SUBMITTING_VIEW', payload: {signature}});
               }}
               showMarker
               markerStyle={styles.marker}
@@ -232,13 +159,15 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
       default:
         return null;
     }
-  }, [state, reset, sign, sendTransaction]);
+  }, [state, reset]);
 
   const contextValue: TxContextValueType = useMemo(() => ({startTx}), [startTx]);
 
   const onCloseBottomSheet = useCallback(() => {
     dispatch({type: 'RESET'});
   }, []);
+
+  console.log('Rendering TxContext.....');
 
   return (
     <TxContext.Provider value={contextValue}>
@@ -298,102 +227,96 @@ const styles = StyleSheet.create({
   },
 });
 
-type State =
-  | {view: 'initial_view' | 'submitting_view' | 'success_view'}
-  | {view: 'authenticate_view'; txConfig: TxConfig; txInfo: TxInfo}
+type TxState = {
+  txConfig: TxConfig;
+  address: string;
+};
+
+type ViewState =
+  | {view: 'submitting_view' | 'success_view'}
   | {
       view: 'tx_preview';
       txConfig: TxConfig;
-      txInfo: TxInfo;
-      isExternalAccount: true;
+      address: string;
+      credentials?: string;
     }
-  | {
-      view: 'tx_preview';
-      txConfig: TxConfig;
-      txInfo: TxInfo;
-      credentials: SignCredentials;
-      isExternalAccount: false;
-    }
-  | {view: 'qr_code_tx_payload_view'; txConfig: TxConfig; txInfo: TxInfo}
+  | {view: 'authenticate_view'; address: string; txConfig: TxConfig}
+  | {view: 'qr_code_tx_payload_view'; address: string; txConfig: TxConfig}
   | {
       view: 'scan_signature_view';
+      address: string;
       txConfig: TxConfig;
-      txInfo: TxInfo;
-      isExternalAccount: true;
     }
   | {view: 'error_view'; error: string}
   | {view: 'warning_view'; warning: string};
 
-const initialState: State = {view: 'initial_view'};
+type State = TxState & ViewState;
+
+const initialState: State = {
+  view: 'tx_preview',
+  address: '',
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  txConfig: {method: '', params: []},
+};
 
 type Action =
-  | {type: 'RESET'}
-  | {
-      type: 'SHOW_AUTHENTICATE_VIEW';
-      payload: {
-        txConfig: TxConfig;
-        txInfo: TxInfo;
-      };
-    }
   | {
       type: 'SHOW_TX_PREVIEW';
-      payload:
-        | {
-            txInfo: TxInfo;
-            txConfig: TxConfig;
-            isExternalAccount: true;
-          }
-        | {
-            txConfig: TxConfig;
-            txInfo: TxInfo;
-            credentials: SignCredentials;
-            isExternalAccount: false;
-          };
-    }
-  | {
-      type: 'SHOW_QR_CODE_TX_PAYLOAD_VIEW';
       payload: {
         txConfig: TxConfig;
-        txInfo: TxInfo;
+        address: string;
+        credentials?: string;
       };
     }
+  | {type: 'SHOW_AUTHENTICATE_VIEW'}
+  | {type: 'SHOW_QR_CODE_TX_PAYLOAD_VIEW'}
+  | {type: 'SHOW_SCAN_SIGNATURE_VIEW'}
   | {
-      type: 'SHOW_SCAN_SIGNATURE_VIEW';
-      payload: {txConfig: TxConfig; txInfo: TxInfo};
+      type: 'SHOW_SUBMITTING_VIEW';
+      payload:
+        | {
+            credentials: SignCredentials;
+            signature?: undefined;
+          }
+        | {
+            credentials?: undefined;
+            signature: HexString;
+          };
     }
-  | {type: 'SHOW_SUBMITTING_VIEW'}
   | {type: 'SHOW_ERROR'; payload: string}
   | {type: 'SHOW_WARNING'; payload: string}
-  | {type: 'SHOW_SUCCESS_VIEW'};
+  | {type: 'SHOW_SUCCESS_VIEW'}
+  | {type: 'RESET'};
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
     case 'RESET':
       return initialState;
 
-    case 'SHOW_AUTHENTICATE_VIEW':
-      return {view: 'authenticate_view', ...action.payload};
-
     case 'SHOW_TX_PREVIEW':
       return {view: 'tx_preview', ...action.payload};
 
+    case 'SHOW_AUTHENTICATE_VIEW':
+      return {...state, view: 'authenticate_view'};
+
     case 'SHOW_QR_CODE_TX_PAYLOAD_VIEW':
-      return {view: 'qr_code_tx_payload_view', ...action.payload};
+      return {...state, view: 'qr_code_tx_payload_view'};
 
     case 'SHOW_SCAN_SIGNATURE_VIEW':
-      return {view: 'scan_signature_view', ...action.payload, isExternalAccount: true};
+      return {...state, view: 'scan_signature_view'};
 
     case 'SHOW_SUBMITTING_VIEW':
-      return {view: 'submitting_view'};
+      return {...state, view: 'submitting_view', ...action.payload};
 
     case 'SHOW_SUCCESS_VIEW':
-      return {view: 'success_view'};
+      return {...state, view: 'success_view'};
 
     case 'SHOW_ERROR':
-      return {view: 'error_view', error: action.payload};
+      return {...state, view: 'error_view', error: action.payload};
 
     case 'SHOW_WARNING':
-      return {view: 'warning_view', warning: action.payload};
+      return {...state, view: 'warning_view', warning: action.payload};
 
     default:
       return state;

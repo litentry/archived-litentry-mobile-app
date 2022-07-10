@@ -60,6 +60,12 @@ import {
   CheckAddressResultMessage,
   CheckAddressMessage,
   checkAddressMessage,
+  GetTxPayloadResultPayload,
+  GetTxSignablePayloadResultPayload,
+  getTxPayloadMessage,
+  GetTxPayloadMessage,
+  GetTxSignablePayloadMessage,
+  getTxSignablePayloadMessage,
 } from 'polkadot-api';
 
 type WebViewPromiseResponse<Payload> = {
@@ -80,6 +86,8 @@ type ResolversRef = React.MutableRefObject<{
   exportAccountPromise: WebViewPromiseResponse<KeyringAccountPayload['account']>;
   signPromise: WebViewPromiseResponse<SignResultPayload['signed']>;
   getTxInfoPromise: WebViewPromiseResponse<GetTxInfoResultPayload['txInfo']>;
+  getTxPayloadPromise: WebViewPromiseResponse<GetTxPayloadResultPayload['txPayload']>;
+  getTxSignablePayloadPromise: WebViewPromiseResponse<GetTxSignablePayloadResultPayload['signablePayload']>;
   sendTxPromise: WebViewPromiseResponse<void>;
   resolveGetTxMethodArgsLength: (_result: GetTxMethodArgsLengthResultMessage['payload']) => void;
   resolveDecodeAddress: (_result: DecodeAddressResultMessage['payload']) => void;
@@ -259,6 +267,20 @@ function useApiTx(isWebviewLoaded: boolean, postMessage: PostMessage, resolversR
             postMessage(getTxInfoMessage(payload));
           });
         },
+        getTxPayload: (payload: GetTxPayloadMessage['payload']) => {
+          return new Promise((resolve, reject) => {
+            resolversRef.current.getTxPayloadPromise.resolve = resolve;
+            resolversRef.current.getTxPayloadPromise.reject = reject;
+            postMessage(getTxPayloadMessage(payload));
+          });
+        },
+        getTxSignablePayload: (payload: GetTxSignablePayloadMessage['payload']) => {
+          return new Promise((resolve, reject) => {
+            resolversRef.current.getTxSignablePayloadPromise.resolve = resolve;
+            resolversRef.current.getTxSignablePayloadPromise.reject = reject;
+            postMessage(getTxSignablePayloadMessage(payload));
+          });
+        },
         sendTx: (payload: SendTxMessage['payload']) => {
           return new Promise((resolve, reject) => {
             resolversRef.current.sendTxPromise.resolve = resolve;
@@ -302,6 +324,8 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
         resolveGetTxMethodArgsLength,
         resolveDecodeAddress,
         resolveCheckAddress,
+        getTxPayloadPromise,
+        getTxSignablePayloadPromise,
       } = resolversRef.current;
 
       switch (data.type) {
@@ -426,6 +450,26 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
           break;
         }
 
+        case MessageType.GET_TX_PAYLOAD_RESULT: {
+          const payload = data.payload;
+          if (payload.error) {
+            getTxPayloadPromise.reject(payload);
+          } else {
+            getTxPayloadPromise.resolve(payload.txPayload);
+          }
+          break;
+        }
+
+        case MessageType.GET_TX_SIGNABLE_PAYLOAD_RESULT: {
+          const payload = data.payload;
+          if (payload.error) {
+            getTxSignablePayloadPromise.reject(payload);
+          } else {
+            getTxSignablePayloadPromise.resolve(payload.signablePayload);
+          }
+          break;
+        }
+
         case MessageType.SEND_TX_RESULT: {
           const payload = data.payload;
           if (payload.error) {
@@ -488,6 +532,14 @@ export function PolkadotApiWebView() {
       reject: initialResolver,
     },
     getTxInfoPromise: {
+      resolve: initialResolver,
+      reject: initialResolver,
+    },
+    getTxPayloadPromise: {
+      resolve: initialResolver,
+      reject: initialResolver,
+    },
+    getTxSignablePayloadPromise: {
       resolve: initialResolver,
       reject: initialResolver,
     },
