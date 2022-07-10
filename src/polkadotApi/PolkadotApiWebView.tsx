@@ -434,7 +434,7 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
         }
 
         case MessageType.API_ERROR: {
-          console.error('API ERROR', data.payload);
+          console.warn('API ERROR', data.payload);
           postMessage(reconnectApiMessage({wsEndpoint: currentNetwork.ws[0] as string}));
           setApiState({isReady: false, isConnecting: true});
           break;
