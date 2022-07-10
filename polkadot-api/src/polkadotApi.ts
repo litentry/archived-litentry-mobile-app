@@ -109,7 +109,8 @@ cryptoWaitReady().then(function () {
       }
 
       case MessageType.INIT_STORE: {
-        initStore(message.payload.key, message.payload.value);
+        const key = `account:${u8aToHex(decodeAddress(message.payload.key, true))}`;
+        initStore(key, message.payload.value);
         break;
       }
 

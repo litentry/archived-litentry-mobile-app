@@ -108,7 +108,7 @@ type InitStoreMessage = {
   type: MessageType.INIT_STORE;
   payload: {
     key: string;
-    value: unknown;
+    value: KeyringAccount;
   };
 };
 
