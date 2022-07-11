@@ -11,8 +11,9 @@ import {MessageTeaser} from '@ui/components/MessageTeaser';
 import {Subheading, Caption, Icon, useBottomSheet, Button} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
-import type {HexString, SignCredentials, TxConfig} from 'polkadot-api';
+import type {HexString, SignCredentials, TxConfig, TxInfo} from 'polkadot-api';
 import {usePolkadotApiState} from '@polkadotApi/usePolkadotApiState';
+import {useTx} from '@polkadotApi/useTx';
 
 const {width, height} = Dimensions.get('window');
 
@@ -36,6 +37,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
   const {BottomSheet, openBottomSheet, closeBottomSheet} = useBottomSheet();
   const [state, dispatch] = useReducer(reducer, initialState);
   const apiState = usePolkadotApiState();
+  const {getTxInfo} = useTx();
 
   useEffect(() => {
     if (!apiState.isReady && state.view === 'submitting_view') {
@@ -48,10 +50,11 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
 
   const startTx = useCallback(
     async (config: StartConfig) => {
-      dispatch({type: 'SHOW_TX_PREVIEW', payload: {address: config.address, txConfig: config.txConfig}});
       openBottomSheet();
+      const txInfo = await getTxInfo({address: config.address, txConfig: config.txConfig});
+      dispatch({type: 'SHOW_TX_PREVIEW', payload: {address: config.address, txConfig: config.txConfig, txInfo}});
     },
-    [openBottomSheet],
+    [openBottomSheet, getTxInfo],
   );
 
   const reset = React.useCallback(() => {
@@ -61,11 +64,19 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
 
   const modalContent = useMemo(() => {
     switch (state.view) {
+      case 'initial_view':
+        return (
+          <Layout style={styles.emptyState}>
+            <Subheading>Preparing transaction payload...</Subheading>
+          </Layout>
+        );
+
       case 'tx_preview':
         return (
           <TxPreview
             address={state.address}
             txConfig={state.txConfig}
+            txInfo={state.txInfo}
             onCancel={reset}
             onConfirm={(isExternalAccount: boolean) => {
               if (isExternalAccount) {
@@ -167,8 +178,6 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
     dispatch({type: 'RESET'});
   }, []);
 
-  console.log('Rendering TxContext.....');
-
   return (
     <TxContext.Provider value={contextValue}>
       {children}
@@ -233,11 +242,12 @@ type TxState = {
 };
 
 type ViewState =
-  | {view: 'submitting_view' | 'success_view'}
+  | {view: 'initial_view' | 'submitting_view' | 'success_view'}
   | {
       view: 'tx_preview';
-      txConfig: TxConfig;
       address: string;
+      txConfig: TxConfig;
+      txInfo: TxInfo;
       credentials?: string;
     }
   | {view: 'authenticate_view'; address: string; txConfig: TxConfig}
@@ -253,7 +263,7 @@ type ViewState =
 type State = TxState & ViewState;
 
 const initialState: State = {
-  view: 'tx_preview',
+  view: 'initial_view',
   address: '',
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -264,8 +274,9 @@ type Action =
   | {
       type: 'SHOW_TX_PREVIEW';
       payload: {
-        txConfig: TxConfig;
         address: string;
+        txConfig: TxConfig;
+        txInfo: TxInfo;
         credentials?: string;
       };
     }
