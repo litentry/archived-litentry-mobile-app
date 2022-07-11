@@ -8,7 +8,6 @@ import {useAccount} from 'src/api/hooks/useAccount';
 import globalStyles from '@ui/styles';
 import {stringShorten} from '@polkadot/util';
 import {useNetwork} from '@atoms/network';
-import {isString} from 'lodash';
 
 type PropTypes = {
   address: string;
@@ -16,8 +15,12 @@ type PropTypes = {
 
 const ItemLeft = (children: React.ReactNode) => () => <View style={globalStyles.justifyCenter}>{children}</View>;
 
-const ItemRight = (children: string | React.ReactNode) => () =>
-  <View style={globalStyles.justifyCenter}>{isString(children) ? <Caption>{children}</Caption> : children}</View>;
+const ItemRight = (children: React.ReactNode) => () =>
+  (
+    <View style={globalStyles.justifyCenter}>
+      {typeof children === 'string' ? <Caption>{children}</Caption> : children}
+    </View>
+  );
 
 export function AddressInfoPreview(props: PropTypes) {
   const {address} = props;
