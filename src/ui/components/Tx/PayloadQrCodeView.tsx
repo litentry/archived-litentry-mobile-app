@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {createFrames, QrCode} from 'src/utils/qrCode';
@@ -7,7 +7,7 @@ import {CMD_HASH, CMD_MORTAL} from 'src/constants';
 import {Button, useTheme, Subheading} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {Layout} from '@ui/components/Layout';
-import {TxConfig} from 'polkadot-api';
+import {TxConfig, TxPayload} from 'polkadot-api';
 import {useCryptoUtil} from '@polkadotApi/useCryptoUtil';
 import {useTx} from '@polkadotApi/useTx';
 import LoadingView from '@ui/components/LoadingView';
@@ -17,7 +17,7 @@ const TX_SIZE_LIMIT = 5000;
 type Props = {
   address: string;
   txConfig: TxConfig;
-  onConfirm: () => void;
+  onConfirm: (txPayload: TxPayload) => void;
   onCancel: () => void;
 };
 
@@ -26,19 +26,20 @@ export function PayloadQrCodeView({address, txConfig, onConfirm, onCancel}: Prop
   const {colors} = useTheme();
   const {decodeAddress} = useCryptoUtil();
   const {getTxPayload, getTxSignablePayload} = useTx();
+  const [txPayload, setTxPayload] = useState<TxPayload>();
 
   useEffect(() => {
     (async () => {
-      const txPayload = await getTxPayload({address, txConfig});
+      const _txPayload = await getTxPayload({address, txConfig});
       // limit size of the transaction
-      const isQrHashed = txPayload.method.length > TX_SIZE_LIMIT;
+      const isQrHashed = _txPayload.method.length > TX_SIZE_LIMIT;
       const decodedAddress = await decodeAddress({encoded: address});
       const signablePayload = await getTxSignablePayload({address, txConfig});
       const signPayload = createSignPayload(
         decodedAddress,
         isQrHashed ? CMD_HASH : CMD_MORTAL,
         signablePayload,
-        txPayload.genesisHash,
+        _txPayload.genesisHash,
       );
       // TODO: not supporting multi frame
       const frames = createFrames(signPayload);
@@ -50,8 +51,15 @@ export function PayloadQrCodeView({address, txConfig, onConfirm, onCancel}: Prop
       qr.make();
 
       setImageUri(qr.createDataURL(16, 0));
+      setTxPayload(_txPayload);
     })();
   }, [txConfig, decodeAddress, address, getTxSignablePayload, getTxPayload]);
+
+  const onPress = useCallback(() => {
+    if (txPayload) {
+      onConfirm(txPayload);
+    }
+  }, [onConfirm, txPayload]);
 
   return (
     <Layout style={styles.container}>
@@ -76,7 +84,7 @@ export function PayloadQrCodeView({address, txConfig, onConfirm, onCancel}: Prop
           Cancel
         </Button>
         <Padder scale={1} />
-        <Button compact mode="contained" onPress={onConfirm} icon="qrcode-scan">
+        <Button compact mode="contained" onPress={onPress} icon="qrcode-scan">
           Scan Signature
         </Button>
       </View>

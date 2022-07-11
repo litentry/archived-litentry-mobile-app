@@ -11,7 +11,7 @@ import {MessageTeaser} from '@ui/components/MessageTeaser';
 import {Subheading, Caption, Icon, useBottomSheet, Button} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
-import type {HexString, SignCredentials, TxConfig, TxInfo} from 'polkadot-api';
+import type {HexString, TxConfig, TxInfo, TxPayload} from 'polkadot-api';
 import {usePolkadotApiState} from '@polkadotApi/usePolkadotApiState';
 import {useTx} from '@polkadotApi/useTx';
 
@@ -37,7 +37,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
   const {BottomSheet, openBottomSheet, closeBottomSheet} = useBottomSheet();
   const [state, dispatch] = useReducer(reducer, initialState);
   const apiState = usePolkadotApiState();
-  const {getTxInfo} = useTx();
+  const {getTxInfo, sendTx, signAndSendTx} = useTx();
 
   useEffect(() => {
     if (!apiState.isReady && state.view === 'submitting_view') {
@@ -92,11 +92,15 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
         return (
           <AuthenticateView
             address={state.address}
-            onAuthenticate={async (credentials) => {
-              dispatch({
-                type: 'SHOW_SUBMITTING_VIEW',
-                payload: {credentials},
-              });
+            onAuthenticate={(credentials) => {
+              dispatch({type: 'SHOW_SUBMITTING_VIEW'});
+              signAndSendTx({txConfig: state.txConfig, credentials})
+                .then(() => {
+                  dispatch({type: 'SHOW_SUCCESS_VIEW'});
+                })
+                .catch((error) => {
+                  dispatch({type: 'SHOW_ERROR', payload: error});
+                });
             }}
           />
         );
@@ -107,7 +111,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
             txConfig={state.txConfig}
             address={state.address}
             onCancel={reset}
-            onConfirm={() => dispatch({type: 'SHOW_SCAN_SIGNATURE_VIEW'})}
+            onConfirm={(txPayload: TxPayload) => dispatch({type: 'SHOW_SCAN_SIGNATURE_VIEW', payload: {txPayload}})}
           />
         );
 
@@ -118,8 +122,15 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
             <Padder scale={1} />
             <QRCodeScanner
               onRead={(data) => {
+                dispatch({type: 'SHOW_SUBMITTING_VIEW'});
                 const signature: HexString = `0x${data.data}`;
-                dispatch({type: 'SHOW_SUBMITTING_VIEW', payload: {signature}});
+                sendTx({address: state.address, txConfig: state.txConfig, txPayload: state.txPayload, signature})
+                  .then(() => {
+                    dispatch({type: 'SHOW_SUCCESS_VIEW'});
+                  })
+                  .catch((error) => {
+                    dispatch({type: 'SHOW_ERROR', payload: error});
+                  });
               }}
               showMarker
               markerStyle={styles.marker}
@@ -170,7 +181,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
       default:
         return null;
     }
-  }, [state, reset]);
+  }, [state, reset, sendTx, signAndSendTx]);
 
   const contextValue: TxContextValueType = useMemo(() => ({startTx}), [startTx]);
 
@@ -256,6 +267,7 @@ type ViewState =
       view: 'scan_signature_view';
       address: string;
       txConfig: TxConfig;
+      txPayload: TxPayload;
     }
   | {view: 'error_view'; error: string}
   | {view: 'warning_view'; warning: string};
@@ -282,19 +294,8 @@ type Action =
     }
   | {type: 'SHOW_AUTHENTICATE_VIEW'}
   | {type: 'SHOW_QR_CODE_TX_PAYLOAD_VIEW'}
-  | {type: 'SHOW_SCAN_SIGNATURE_VIEW'}
-  | {
-      type: 'SHOW_SUBMITTING_VIEW';
-      payload:
-        | {
-            credentials: SignCredentials;
-            signature?: undefined;
-          }
-        | {
-            credentials?: undefined;
-            signature: HexString;
-          };
-    }
+  | {type: 'SHOW_SCAN_SIGNATURE_VIEW'; payload: {txPayload: TxPayload}}
+  | {type: 'SHOW_SUBMITTING_VIEW'}
   | {type: 'SHOW_ERROR'; payload: string}
   | {type: 'SHOW_WARNING'; payload: string}
   | {type: 'SHOW_SUCCESS_VIEW'}
@@ -315,10 +316,10 @@ function reducer(state: State, action: Action): State {
       return {...state, view: 'qr_code_tx_payload_view'};
 
     case 'SHOW_SCAN_SIGNATURE_VIEW':
-      return {...state, view: 'scan_signature_view'};
+      return {...state, view: 'scan_signature_view', ...action.payload};
 
     case 'SHOW_SUBMITTING_VIEW':
-      return {...state, view: 'submitting_view', ...action.payload};
+      return {...state, view: 'submitting_view'};
 
     case 'SHOW_SUCCESS_VIEW':
       return {...state, view: 'success_view'};
