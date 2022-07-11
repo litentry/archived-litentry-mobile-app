@@ -18,7 +18,7 @@ type ScreenProps = {
 };
 
 export function TipsScreen({navigation}: ScreenProps) {
-  const {data: tips, loading, fetchMore, fetchingMore, refetch, refetching} = useTips({});
+  const {data: tips, loading, fetchMore, fetchingMore, refetch, refetching} = useTips();
   const {colors} = useTheme();
 
   const toTipDetails = (id: string) => {

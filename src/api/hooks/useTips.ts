@@ -37,12 +37,12 @@ type TipsQueryParams = {
   orderBy?: typeof TipsOrderByInput[keyof typeof TipsOrderByInput];
 };
 
-export function useTips({
-  status = ['Closed', 'Opened', 'Retracted', 'Slashed'],
-  limit = 20,
-  offset = 0,
-  orderBy = TipsOrderByInput.CreatedAtDesc,
-}: TipsQueryParams) {
+export function useTips(queryParams?: TipsQueryParams) {
+  const status = queryParams?.status ?? ['Closed', 'Opened', 'Retracted', 'Slashed'];
+  const limit = queryParams?.limit ?? 20;
+  const offset = queryParams?.offset ?? 0;
+  const orderBy = queryParams?.orderBy ?? TipsOrderByInput.CreatedAtDesc;
+
   const tipStatus = status.map((st) => SubstrateChainTipStatus[st]);
   const {data, networkStatus, ...rest} = useQuery<{substrateChainTips: SubstrateChainTip[]}>(TIPS_QUERY, {
     variables: {status: tipStatus, limit, offset, orderBy},
