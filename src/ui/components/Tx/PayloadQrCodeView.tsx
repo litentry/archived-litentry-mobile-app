@@ -25,21 +25,20 @@ export function PayloadQrCodeView({address, txConfig, onConfirm, onCancel}: Prop
   const [imageUri, setImageUri] = useState<string>();
   const {colors} = useTheme();
   const {decodeAddress} = useCryptoUtil();
-  const {getTxPayload, getTxSignablePayload} = useTx();
+  const {getTxPayload} = useTx();
   const [txPayload, setTxPayload] = useState<TxPayload>();
 
   useEffect(() => {
     (async () => {
-      const _txPayload = await getTxPayload({address, txConfig});
+      const _txPayloadData = await getTxPayload({address, txConfig});
       // limit size of the transaction
-      const isQrHashed = _txPayload.method.length > TX_SIZE_LIMIT;
+      const isQrHashed = _txPayloadData.txPayload.method.length > TX_SIZE_LIMIT;
       const decodedAddress = await decodeAddress({encoded: address});
-      const signablePayload = await getTxSignablePayload({address, txConfig});
       const signPayload = createSignPayload(
         decodedAddress,
         isQrHashed ? CMD_HASH : CMD_MORTAL,
-        signablePayload,
-        _txPayload.genesisHash,
+        _txPayloadData.signablePayload,
+        _txPayloadData.txPayload.genesisHash,
       );
       // TODO: not supporting multi frame
       const frames = createFrames(signPayload);
@@ -51,9 +50,9 @@ export function PayloadQrCodeView({address, txConfig, onConfirm, onCancel}: Prop
       qr.make();
 
       setImageUri(qr.createDataURL(16, 0));
-      setTxPayload(_txPayload);
+      setTxPayload(_txPayloadData.txPayload);
     })();
-  }, [txConfig, decodeAddress, address, getTxSignablePayload, getTxPayload]);
+  }, [txConfig, decodeAddress, address, getTxPayload]);
 
   const onPress = useCallback(() => {
     if (txPayload) {

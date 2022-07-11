@@ -60,15 +60,12 @@ import {
   CheckAddressResultMessage,
   CheckAddressMessage,
   checkAddressMessage,
-  GetTxPayloadResultPayload,
-  GetTxSignablePayloadResultPayload,
   getTxPayloadMessage,
   GetTxPayloadMessage,
-  GetTxSignablePayloadMessage,
-  getTxSignablePayloadMessage,
   SignAndSendTxMessage,
   TxSuccessful,
   signAndSendTxMessage,
+  TxPayloadData,
 } from 'polkadot-api';
 
 type WebViewPromiseResponse<Payload> = {
@@ -89,8 +86,7 @@ type ResolversRef = React.MutableRefObject<{
   exportAccountPromise: WebViewPromiseResponse<KeyringAccountPayload['account']>;
   signPromise: WebViewPromiseResponse<SignResultPayload['signed']>;
   getTxInfoPromise: WebViewPromiseResponse<GetTxInfoResultPayload['txInfo']>;
-  getTxPayloadPromise: WebViewPromiseResponse<GetTxPayloadResultPayload['txPayload']>;
-  getTxSignablePayloadPromise: WebViewPromiseResponse<GetTxSignablePayloadResultPayload['signablePayload']>;
+  getTxPayloadPromise: WebViewPromiseResponse<TxPayloadData>;
   sendTxPromise: WebViewPromiseResponse<TxSuccessful['txHash']>;
   signAndSendTxPromise: WebViewPromiseResponse<TxSuccessful['txHash']>;
   resolveGetTxMethodArgsLength: (_result: GetTxMethodArgsLengthResultMessage['payload']) => void;
@@ -278,13 +274,6 @@ function useApiTx(isWebviewLoaded: boolean, postMessage: PostMessage, resolversR
             postMessage(getTxPayloadMessage(payload));
           });
         },
-        getTxSignablePayload: (payload: GetTxSignablePayloadMessage['payload']) => {
-          return new Promise((resolve, reject) => {
-            resolversRef.current.getTxSignablePayloadPromise.resolve = resolve;
-            resolversRef.current.getTxSignablePayloadPromise.reject = reject;
-            postMessage(getTxSignablePayloadMessage(payload));
-          });
-        },
         sendTx: (payload: SendTxMessage['payload']) => {
           return new Promise((resolve, reject) => {
             resolversRef.current.sendTxPromise.resolve = resolve;
@@ -337,7 +326,6 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
         resolveDecodeAddress,
         resolveCheckAddress,
         getTxPayloadPromise,
-        getTxSignablePayloadPromise,
       } = resolversRef.current;
 
       switch (data.type) {
@@ -467,17 +455,7 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
           if (payload.error) {
             getTxPayloadPromise.reject(payload);
           } else {
-            getTxPayloadPromise.resolve(payload.txPayload);
-          }
-          break;
-        }
-
-        case MessageType.GET_TX_SIGNABLE_PAYLOAD_RESULT: {
-          const payload = data.payload;
-          if (payload.error) {
-            getTxSignablePayloadPromise.reject(payload);
-          } else {
-            getTxSignablePayloadPromise.resolve(payload.signablePayload);
+            getTxPayloadPromise.resolve({txPayload: payload.txPayload, signablePayload: payload.signablePayload});
           }
           break;
         }
