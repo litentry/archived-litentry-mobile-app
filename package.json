@@ -83,7 +83,7 @@
     "react-native-logs": "^4.0.1",
     "react-native-mmkv": "^2.1.2",
     "react-native-modalize": "^2.0.13",
-    "react-native-os": "^1.2.6",
+    "react-native-os": "aprock/react-native-os#master",
     "react-native-pager-view": "^5.4.24",
     "react-native-paper": "^4.12.1",
     "react-native-paper-tabs": "^0.7.0",

@@ -20,13 +20,16 @@ export function QRCodeScanner({onScan}: Props) {
     await Linking.openSettings();
   };
 
-  const processScannedResults = (QRcodes: Barcode[]) => {
-    QRcodes.forEach((code) => {
-      if (code.displayValue) {
-        onScan(code.displayValue);
-      }
-    });
-  };
+  const processScannedResults = React.useCallback(
+    (QRcodes: Barcode[]) => {
+      QRcodes.forEach((code) => {
+        if (code.displayValue) {
+          onScan(code.displayValue);
+        }
+      });
+    },
+    [onScan],
+  );
 
   const frameProcessor = useFrameProcessor((frame) => {
     'worklet';
