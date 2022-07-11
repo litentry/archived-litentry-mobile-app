@@ -358,32 +358,15 @@ export type GetTxPayloadMessage = {
   };
 };
 
-export type GetTxPayloadResultPayload = {
-  txPayload: TxPayload;
+export type TxPayloadData = {txPayload: TxPayload; signablePayload: Uint8Array};
+
+export type GetTxPayloadResultPayload = TxPayloadData & {
   error: false;
 };
 
 export type GetTxPayloadResultMessage = {
   type: MessageType.GET_TX_PAYLOAD_RESULT;
   payload: GetTxPayloadResultPayload | ErrorPayload;
-};
-
-export type GetTxSignablePayloadMessage = {
-  type: MessageType.GET_TX_SIGNABLE_PAYLOAD;
-  payload: {
-    address: string;
-    txConfig: TxConfig;
-  };
-};
-
-export type GetTxSignablePayloadResultPayload = {
-  signablePayload: Uint8Array;
-  error: false;
-};
-
-export type GetTxSignablePayloadResultMessage = {
-  type: MessageType.GET_TX_SIGNABLE_PAYLOAD_RESULT;
-  payload: GetTxSignablePayloadResultPayload | ErrorPayload;
 };
 
 export type TxSuccessful = {
@@ -510,9 +493,7 @@ export type Message =
   | CheckAddressMessage
   | CheckAddressResultMessage
   | GetTxPayloadMessage
-  | GetTxPayloadResultMessage
-  | GetTxSignablePayloadMessage
-  | GetTxSignablePayloadResultMessage;
+  | GetTxPayloadResultMessage;
 
 export function initStoreMessage(payload: InitStoreMessage['payload']): InitStoreMessage {
   return {
@@ -841,23 +822,6 @@ export function getTxPayloadMessage(payload: GetTxPayloadMessage['payload']): Ge
 export function getTxPayloadResultMessage(payload: GetTxPayloadResultMessage['payload']): GetTxPayloadResultMessage {
   return {
     type: MessageType.GET_TX_PAYLOAD_RESULT,
-    payload,
-  };
-}
-
-export function getTxSignablePayloadMessage(
-  payload: GetTxSignablePayloadMessage['payload'],
-): GetTxSignablePayloadMessage {
-  return {
-    type: MessageType.GET_TX_SIGNABLE_PAYLOAD,
-    payload,
-  };
-}
-export function getTxSignablePayloadResultMessage(
-  payload: GetTxSignablePayloadResultMessage['payload'],
-): GetTxSignablePayloadResultMessage {
-  return {
-    type: MessageType.GET_TX_SIGNABLE_PAYLOAD_RESULT,
     payload,
   };
 }

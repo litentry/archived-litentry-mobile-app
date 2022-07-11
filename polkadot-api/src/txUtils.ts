@@ -15,7 +15,7 @@ import type {SignerPayloadJSON, SignatureOptions} from '@polkadot/types/types';
 import type {Registry} from '@polkadot/types-codec/types';
 import {BN_ZERO, assert, isNumber, isUndefined, objectSpread} from '@polkadot/util';
 import type {TxConfig} from './txTypes';
-import {HexString} from './messages';
+import {HexString, TxPayloadData} from './messages';
 
 export type TxInfo = {
   title: string;
@@ -37,7 +37,7 @@ export async function getTxInfo(api: ApiPromise, address: string, txConfig: TxCo
   const description = formatCallMeta(meta);
   const info = await tx.paymentInfo(address);
   const partialFee = info.partialFee.toNumber();
-  const txPayload = await makeTxPayload(api, address, txConfig);
+  const txPayload = await makeTxPayload(tx, api, address);
 
   return {
     title,
@@ -47,8 +47,19 @@ export async function getTxInfo(api: ApiPromise, address: string, txConfig: TxCo
   };
 }
 
-export async function makeTxPayload(api: ApiPromise, address: string, txConfig: TxConfig): Promise<SignerPayloadJSON> {
+export async function getTxPayload(api: ApiPromise, address: string, txConfig: TxConfig): Promise<TxPayloadData> {
   const tx = makeTx(api, txConfig);
+  const txPayload = await makeTxPayload(tx, api, address);
+  const signablePayload = makeSignablePayload(tx, txPayload);
+
+  return {txPayload, signablePayload};
+}
+
+export async function makeTxPayload(
+  tx: SubmittableExtrinsic<'promise'>,
+  api: ApiPromise,
+  address: string,
+): Promise<SignerPayloadJSON> {
   const signingInfo = await api.derive.tx.signingInfo(address, signerOptions.nonce);
   const eraOptions = makeEraOptions(api, tx.registry, signerOptions, signingInfo);
   const txPayload = tx.registry

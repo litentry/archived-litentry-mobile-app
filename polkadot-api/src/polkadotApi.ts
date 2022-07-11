@@ -18,6 +18,8 @@ import {
   generateMnemonicResultMessage,
   getTxInfoResultMessage,
   getTxMethodArgsLengthResultMessage,
+  getTxPayloadMessage,
+  getTxPayloadResultMessage,
   KeyringAccount,
   Message,
   MessageType,
@@ -29,7 +31,7 @@ import {
   validateMnemonicResultMessage,
   verifyCredentialsResultMessage,
 } from './messages';
-import {getTxInfo, sendTx, getTxMethodArgsLength, signAndSendTx} from './txUtils';
+import {getTxInfo, sendTx, getTxMethodArgsLength, signAndSendTx, getTxPayload} from './txUtils';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const window: any;
@@ -80,8 +82,22 @@ cryptoWaitReady().then(function () {
             .then((txInfo) => {
               postMessage(getTxInfoResultMessage({error: false, txInfo}));
             })
-            .catch((error: Error) => {
-              postMessage(getTxInfoResultMessage({error: true, message: error.message}));
+            .catch((error) => {
+              postMessage(getTxInfoResultMessage({error: true, message: error}));
+            });
+        }
+        break;
+      }
+
+      case MessageType.GET_TX_PAYLOAD: {
+        const {address, txConfig} = message.payload;
+        if (api) {
+          getTxPayload(api, address, txConfig)
+            .then((result) => {
+              postMessage(getTxPayloadResultMessage({error: false, ...result}));
+            })
+            .catch((error) => {
+              postMessage(getTxPayloadResultMessage({error: true, message: error}));
             });
         }
         break;
