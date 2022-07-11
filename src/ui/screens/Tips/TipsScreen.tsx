@@ -9,20 +9,34 @@ import {useTips} from 'src/api/hooks/useTips';
 import {tipDetailScreen} from '@ui/navigation/routeKeys';
 import {proposeTipScreen} from '@ui/navigation/routeKeys';
 import globalStyles from '@ui/styles';
-import {Button, useTheme} from '@ui/library';
+import {ActivityIndicator, Button, useTheme} from '@ui/library';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
+import {Padder} from '@ui/components/Padder';
 
 type ScreenProps = {
   navigation: NavigationProp<DashboardStackParamList>;
 };
 
 export function TipsScreen({navigation}: ScreenProps) {
-  const {data: tips, loading, refetch, refetching} = useTips(['Opened']);
+  const {data: tips, loading, fetchMore, fetchingMore, refetch, refetching} = useTips({});
   const {colors} = useTheme();
 
   const toTipDetails = (id: string) => {
     navigation.navigate(tipDetailScreen, {id});
   };
+
+  const ListFooter = React.useCallback(() => {
+    if (fetchingMore) {
+      return (
+        <>
+          <Padder />
+          <ActivityIndicator />
+        </>
+      );
+    }
+
+    return null;
+  }, [fetchingMore]);
 
   return (
     <SafeView edges={noTopEdges}>
@@ -54,6 +68,14 @@ export function TipsScreen({navigation}: ScreenProps) {
                 colors={[colors.primary]}
               />
             }
+            onEndReached={() => {
+              fetchMore({
+                variables: {
+                  offset: tips?.length,
+                },
+              });
+            }}
+            ListFooterComponent={ListFooter}
           />
         )}
       </View>
