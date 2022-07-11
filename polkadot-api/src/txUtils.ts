@@ -1,4 +1,5 @@
 import {ApiPromise} from '@polkadot/api';
+import keyring from '@polkadot/ui-keyring';
 import type {SubmittableExtrinsic, SignerOptions} from '@polkadot/api/submittable/types';
 import type {
   FunctionMetadataLatest,
@@ -13,7 +14,7 @@ import type {SignerPayloadJSON, SignatureOptions} from '@polkadot/types/types';
 import type {Registry} from '@polkadot/types-codec/types';
 import {BN_ZERO, assert, isNumber, isUndefined, objectSpread} from '@polkadot/util';
 import type {TxConfig} from './txTypes';
-import {HexString} from './messages';
+import {HexString, SignCredentials} from './messages';
 
 export type TxInfo = {
   title: string;
@@ -76,14 +77,43 @@ export async function sendTx(
   txConfig: TxConfig,
   txPayload: SignerPayloadJSON,
   signature: HexString,
-): Promise<void> {
+): Promise<Hash> {
   const tx = makeTx(api, txConfig);
   tx.addSignature(address, signature, txPayload);
 
   return new Promise((resolve, reject) => {
     tx.send((result) => {
       if (result.isFinalized && !result.isError) {
-        resolve();
+        resolve(result.txHash);
+      }
+      if (result.isError && result.dispatchError) {
+        let error;
+        if (result.dispatchError.isModule) {
+          // for module errors, we have the section indexed, lookup
+          const decoded = api.registry.findMetaError(result.dispatchError.asModule);
+          const {docs} = decoded;
+          error = docs.join(' ').trim();
+        } else {
+          error = result.dispatchError.toString();
+        }
+        reject(error);
+      }
+    });
+  });
+}
+
+export async function signAndSendTx(api: ApiPromise, txConfig: TxConfig, credentials: SignCredentials): Promise<Hash> {
+  const pair = keyring.getPair(credentials.address);
+  const tx = makeTx(api, txConfig);
+
+  if (pair.isLocked) {
+    pair.unlock(credentials.password);
+  }
+
+  return new Promise((resolve, reject) => {
+    tx.signAndSend(pair, (result) => {
+      if (result.isFinalized && !result.isError) {
+        resolve(result.txHash);
       }
       if (result.isError && result.dispatchError) {
         let error;

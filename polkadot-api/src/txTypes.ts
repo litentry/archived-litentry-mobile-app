@@ -1,4 +1,7 @@
 import {BN} from '@polkadot/util';
+import type {Hash} from '@polkadot/types/interfaces';
+
+export type TxHash = Hash;
 
 export type IdentityPayload = {
   display: {raw: string} | {none: null};

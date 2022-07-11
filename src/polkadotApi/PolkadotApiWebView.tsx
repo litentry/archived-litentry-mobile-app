@@ -66,6 +66,9 @@ import {
   GetTxPayloadMessage,
   GetTxSignablePayloadMessage,
   getTxSignablePayloadMessage,
+  SignAndSendTxMessage,
+  TxSuccessful,
+  signAndSendTxMessage,
 } from 'polkadot-api';
 
 type WebViewPromiseResponse<Payload> = {
@@ -88,7 +91,8 @@ type ResolversRef = React.MutableRefObject<{
   getTxInfoPromise: WebViewPromiseResponse<GetTxInfoResultPayload['txInfo']>;
   getTxPayloadPromise: WebViewPromiseResponse<GetTxPayloadResultPayload['txPayload']>;
   getTxSignablePayloadPromise: WebViewPromiseResponse<GetTxSignablePayloadResultPayload['signablePayload']>;
-  sendTxPromise: WebViewPromiseResponse<void>;
+  sendTxPromise: WebViewPromiseResponse<TxSuccessful['txHash']>;
+  signAndSendTxPromise: WebViewPromiseResponse<TxSuccessful['txHash']>;
   resolveGetTxMethodArgsLength: (_result: GetTxMethodArgsLengthResultMessage['payload']) => void;
   resolveDecodeAddress: (_result: DecodeAddressResultMessage['payload']) => void;
   resolveCheckAddress: (_result: CheckAddressResultMessage['payload']) => void;
@@ -288,6 +292,13 @@ function useApiTx(isWebviewLoaded: boolean, postMessage: PostMessage, resolversR
             postMessage(sendTxMessage(payload));
           });
         },
+        signAndSendTx: (payload: SignAndSendTxMessage['payload']) => {
+          return new Promise((resolve, reject) => {
+            resolversRef.current.signAndSendTxPromise.resolve = resolve;
+            resolversRef.current.signAndSendTxPromise.reject = reject;
+            postMessage(signAndSendTxMessage(payload));
+          });
+        },
         getTxMethodArgsLength: (payload: GetTxMethodArgsLengthMessage['payload']) => {
           return new Promise((resolve) => {
             resolversRef.current.resolveGetTxMethodArgsLength = resolve;
@@ -321,6 +332,7 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
         signPromise,
         getTxInfoPromise,
         sendTxPromise,
+        signAndSendTxPromise,
         resolveGetTxMethodArgsLength,
         resolveDecodeAddress,
         resolveCheckAddress,
@@ -475,7 +487,17 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
           if (payload.error) {
             sendTxPromise.reject(payload);
           } else {
-            sendTxPromise.resolve();
+            sendTxPromise.resolve(payload.txHash);
+          }
+          break;
+        }
+
+        case MessageType.SIGN_AND_SEND_TX_RESULT: {
+          const payload = data.payload;
+          if (payload.error) {
+            signAndSendTxPromise.reject(payload);
+          } else {
+            signAndSendTxPromise.resolve(payload.txHash);
           }
           break;
         }
@@ -544,6 +566,10 @@ export function PolkadotApiWebView() {
       reject: initialResolver,
     },
     sendTxPromise: {
+      resolve: initialResolver,
+      reject: initialResolver,
+    },
+    signAndSendTxPromise: {
       resolve: initialResolver,
       reject: initialResolver,
     },

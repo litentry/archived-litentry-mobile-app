@@ -1,7 +1,7 @@
 import {KeyringPair$Json} from '@polkadot/keyring/types';
 import type {SignerPayloadJSON} from '@polkadot/types/types';
 import {TxInfo} from './txUtils';
-import type {TxConfig} from './txTypes';
+import type {TxConfig, TxHash} from './txTypes';
 
 export type AccountMeta = {
   name: string;
@@ -81,6 +81,9 @@ export enum MessageType {
   API_DISCONNECTED = 'API_DISCONNECTED',
 
   API_ERROR = 'API_ERROR',
+
+  SIGN_AND_SEND_TX = 'SIGN_AND_SEND_TX',
+  SIGN_AND_SEND_TX_RESULT = 'SIGN_AND_SEND_TX_RESULT',
 
   GET_TX_INFO = 'GET_TX_INFO',
   GET_TX_INFO_RESULT = 'GET_TX_INFO_RESULT',
@@ -383,7 +386,8 @@ export type GetTxSignablePayloadResultMessage = {
   payload: GetTxSignablePayloadResultPayload | ErrorPayload;
 };
 
-export type SendTxSuccessful = {
+export type TxSuccessful = {
+  txHash: TxHash;
   error: false;
 };
 
@@ -399,7 +403,20 @@ export type SendTxMessage = {
 
 export type SendTxResultMessage = {
   type: MessageType.SEND_TX_RESULT;
-  payload: SendTxSuccessful | ErrorPayload;
+  payload: TxSuccessful | ErrorPayload;
+};
+
+export type SignAndSendTxMessage = {
+  type: MessageType.SIGN_AND_SEND_TX;
+  payload: {
+    txConfig: TxConfig;
+    credentials: SignCredentials;
+  };
+};
+
+export type SignAndSendTxResultMessage = {
+  type: MessageType.SIGN_AND_SEND_TX_RESULT;
+  payload: TxSuccessful | ErrorPayload;
 };
 
 export type GetTxMethodArgsLengthMessage = {
@@ -474,6 +491,8 @@ export type Message =
   | VerifyCredentialsResultMessage
   | SignMessage
   | SignResultMessage
+  | SignAndSendTxMessage
+  | SignAndSendTxResultMessage
   | InitApiMessage
   | ReconnectApiMessage
   | ApiConnectedMessage
@@ -748,6 +767,20 @@ export function sendTxMessage(payload: SendTxMessage['payload']): SendTxMessage 
 export function sendTxResultMessage(payload: SendTxResultMessage['payload']): SendTxResultMessage {
   return {
     type: MessageType.SEND_TX_RESULT,
+    payload,
+  };
+}
+
+export function signAndSendTxMessage(payload: SignAndSendTxMessage['payload']): SignAndSendTxMessage {
+  return {
+    type: MessageType.SIGN_AND_SEND_TX,
+    payload,
+  };
+}
+
+export function signAndSendTxResultMessage(payload: SignAndSendTxResultMessage['payload']): SignAndSendTxResultMessage {
+  return {
+    type: MessageType.SIGN_AND_SEND_TX_RESULT,
     payload,
   };
 }

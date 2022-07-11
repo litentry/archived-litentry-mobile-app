@@ -23,12 +23,13 @@ import {
   MessageType,
   restoreAccountResultMessage,
   sendTxResultMessage,
+  signAndSendTxResultMessage,
   signMessageResultMessage,
   updateAccountMetaResultMessage,
   validateMnemonicResultMessage,
   verifyCredentialsResultMessage,
 } from './messages';
-import {getTxInfo, sendTx, getTxMethodArgsLength} from './txUtils';
+import {getTxInfo, sendTx, getTxMethodArgsLength, signAndSendTx} from './txUtils';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const window: any;
@@ -90,11 +91,25 @@ cryptoWaitReady().then(function () {
         const {address, txConfig, txPayload, signature} = message.payload;
         if (api) {
           sendTx(api, address, txConfig, txPayload, signature)
-            .then(() => {
-              postMessage(sendTxResultMessage({error: false}));
+            .then((txHash) => {
+              postMessage(sendTxResultMessage({error: false, txHash}));
             })
             .catch((error) => {
-              postMessage(sendTxResultMessage({error}));
+              postMessage(sendTxResultMessage({error: true, message: error}));
+            });
+        }
+        break;
+      }
+
+      case MessageType.SIGN_AND_SEND_TX: {
+        const {txConfig, credentials} = message.payload;
+        if (api) {
+          signAndSendTx(api, txConfig, credentials)
+            .then((txHash) => {
+              postMessage(signAndSendTxResultMessage({error: false, txHash}));
+            })
+            .catch((error) => {
+              postMessage(signAndSendTxResultMessage({error: true, message: error}));
             });
         }
         break;

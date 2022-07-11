@@ -27,6 +27,8 @@ import {
   CheckAddressResultMessage,
   GetTxPayloadMessage,
   GetTxSignablePayloadMessage,
+  TxHash,
+  SignAndSendTxMessage,
 } from 'polkadot-api';
 import {SignerPayloadJSON} from '@polkadot/types/types';
 
@@ -120,7 +122,10 @@ export const txState = atom({
       return Promise.resolve<Uint8Array>(new Uint8Array());
     },
     sendTx: (_: SendTxMessage['payload']) => {
-      return Promise.resolve();
+      return Promise.resolve<TxHash>({} as TxHash);
+    },
+    signAndSendTx: (_: SignAndSendTxMessage['payload']) => {
+      return Promise.resolve<TxHash>({} as TxHash);
     },
     getTxMethodArgsLength: (_: GetTxMethodArgsLengthMessage['payload']) => {
       return Promise.resolve(0);
