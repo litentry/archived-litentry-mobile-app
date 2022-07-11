@@ -17,11 +17,13 @@ import {useAccount} from 'src/api/hooks/useAccount';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {SupportedNetworkType} from 'src/types';
 
-export function PolkassemblyDiscussions({
-  navigation,
-}: {
+type ScreenProps = {
   navigation: NavigationProp<PolkassemblyDiscussionStackParamList>;
-}) {
+};
+
+const ItemSeparator = () => <Padder scale={0.5} />;
+
+export function PolkassemblyDiscussions({navigation}: ScreenProps) {
   const {colors} = useTheme();
   const [orderBy, setOrderBy] = React.useState<OrderByType>('lastCommented');
   const [topicId, setTopicId] = React.useState<number>();
@@ -126,7 +128,7 @@ export function PolkassemblyDiscussions({
               </Menu>
             </View>
           }
-          ListFooterComponent={() => (
+          ListFooterComponent={
             <View style={styles.footer}>
               {hasNextPage ? (
                 isFetching || isFetchingNextPage ? (
@@ -136,11 +138,11 @@ export function PolkassemblyDiscussions({
                 )
               ) : null}
             </View>
-          )}
+          }
           renderItem={({item}) => (
             <PolkassemblyDiscussionItem post={item} currentNetwork={currentNetwork.key} onPress={toDiscussionDetail} />
           )}
-          ItemSeparatorComponent={() => <Padder scale={0.5} />}
+          ItemSeparatorComponent={ItemSeparator}
           keyExtractor={(item) => String(item.id)}
         />
       )}
