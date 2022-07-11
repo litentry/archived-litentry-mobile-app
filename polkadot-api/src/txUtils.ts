@@ -1,5 +1,6 @@
 import {ApiPromise} from '@polkadot/api';
-import keyring from '@polkadot/ui-keyring';
+import type {KeyringPair} from '@polkadot/keyring/types';
+
 import type {SubmittableExtrinsic, SignerOptions} from '@polkadot/api/submittable/types';
 import type {
   FunctionMetadataLatest,
@@ -14,7 +15,7 @@ import type {SignerPayloadJSON, SignatureOptions} from '@polkadot/types/types';
 import type {Registry} from '@polkadot/types-codec/types';
 import {BN_ZERO, assert, isNumber, isUndefined, objectSpread} from '@polkadot/util';
 import type {TxConfig} from './txTypes';
-import {HexString, SignCredentials} from './messages';
+import {HexString} from './messages';
 
 export type TxInfo = {
   title: string;
@@ -102,13 +103,8 @@ export async function sendTx(
   });
 }
 
-export async function signAndSendTx(api: ApiPromise, txConfig: TxConfig, credentials: SignCredentials): Promise<Hash> {
-  const pair = keyring.getPair(credentials.address);
+export async function signAndSendTx(api: ApiPromise, txConfig: TxConfig, pair: KeyringPair): Promise<Hash> {
   const tx = makeTx(api, txConfig);
-
-  if (pair.isLocked) {
-    pair.unlock(credentials.password);
-  }
 
   return new Promise((resolve, reject) => {
     tx.signAndSend(pair, (result) => {

@@ -104,7 +104,12 @@ cryptoWaitReady().then(function () {
       case MessageType.SIGN_AND_SEND_TX: {
         const {txConfig, credentials} = message.payload;
         if (api) {
-          signAndSendTx(api, txConfig, credentials)
+          const pair = keyring.getPair(credentials.address);
+
+          if (pair.isLocked) {
+            pair.unlock(credentials.password);
+          }
+          signAndSendTx(api, txConfig, pair)
             .then((txHash) => {
               postMessage(signAndSendTxResultMessage({error: false, txHash}));
             })
