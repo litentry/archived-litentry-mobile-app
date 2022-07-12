@@ -21,16 +21,14 @@
     "build-polkadotApi": "yarn --cwd ./polkadot-api"
   },
   "resolutions": {
-    "@polkadot/types": "8.3.1",
-    "@polkadot/util": "9.1.1",
-    "@polkadot/util-crypto": "9.1.1",
     "react-native-svg": "^12.3.0"
   },
   "dependencies": {
     "@apollo/client": "^3.5.10",
     "@gorhom/bottom-sheet": "^4.3.2",
-    "@polkadot/api": "8.3.1",
-    "@polkadot/reactnative-identicon": "2.1.1",
+    "@polkadot/reactnative-identicon": "^2.8.2",
+    "@polkadot/types": "^8.12.2",
+    "@polkadot/util": "^10.0.2",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/clipboard": "^1.5.1",
     "@react-native-firebase/analytics": "^14.9.1",
