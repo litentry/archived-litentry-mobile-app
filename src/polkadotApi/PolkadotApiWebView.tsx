@@ -67,6 +67,9 @@ import {
   TxSuccessful,
   signAndSendTxMessage,
   TxPayloadData,
+  Blake2AsHexResultMessage,
+  Blake2AsHexMessage,
+  blake2AsHexMessage,
 } from 'polkadot-api';
 
 type WebViewPromiseResponse<Payload> = {
@@ -95,6 +98,7 @@ type ResolversRef = React.MutableRefObject<{
   signAndSendTxPromise: WebViewPromiseResponse<TxSuccessful['txHash']>;
   resolveGetTxMethodArgsLength: Record<string, (_result: GetTxMethodArgsLengthResultMessage['payload']) => void>;
   resolveDecodeAddress: Record<string, (_result: DecodeAddressResultMessage['payload']) => void>;
+  resolveBlake2AsHex: Record<string, (_result: Blake2AsHexResultMessage['payload']) => void>;
   resolveCheckAddress: Record<string, (_result: CheckAddressResultMessage['payload']) => void>;
 }>;
 
@@ -174,6 +178,13 @@ function useCryptoUtils(isWebviewLoaded: boolean, postMessage: PostMessage, reso
             const id = uuid4();
             resolversRef.current.resolveDecodeAddress[id] = resolve;
             postMessage(decodeAddressMessage(payload), id);
+          });
+        },
+        blake2AsHex: (payload: Blake2AsHexMessage['payload']) => {
+          return new Promise((resolve) => {
+            const id = uuid4();
+            resolversRef.current.resolveBlake2AsHex[id] = resolve;
+            postMessage(blake2AsHexMessage(payload), id);
           });
         },
         checkAddress: (payload: CheckAddressMessage['payload']) => {
@@ -344,6 +355,7 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
         signAndSendTxPromise,
         resolveGetTxMethodArgsLength,
         resolveDecodeAddress,
+        resolveBlake2AsHex,
         resolveCheckAddress,
         getTxPayloadPromise,
       } = resolversRef.current;
@@ -510,6 +522,11 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
           break;
         }
 
+        case MessageType.BLAKE2_AS_HEX_RESULT: {
+          resolveBlake2AsHex[id]?.(message.payload);
+          break;
+        }
+
         case MessageType.CHECK_ADDRESS_RESULT: {
           resolveCheckAddress[id]?.(message.payload);
           break;
@@ -569,6 +586,7 @@ export function PolkadotApiWebView() {
     },
     resolveGetTxMethodArgsLength: {},
     resolveDecodeAddress: {},
+    resolveBlake2AsHex: {},
     resolveCheckAddress: {},
   });
 

@@ -105,6 +105,9 @@ export enum MessageType {
 
   GET_TX_SIGNABLE_PAYLOAD = 'GET_TX_SIGNABLE_PAYLOAD',
   GET_TX_SIGNABLE_PAYLOAD_RESULT = 'GET_TX_SIGNABLE_PAYLOAD_RESULT',
+
+  BLAKE2_AS_HEX = 'BLAKE2_AS_HEX',
+  BLAKE2_AS_HEX_RESULT = 'BLAKE2_AS_HEX_RESULT',
 }
 
 type InitStoreMessage = {
@@ -426,6 +429,19 @@ export type DecodeAddressResultMessage = {
   payload: HexString;
 };
 
+export type Blake2AsHexMessage = {
+  type: MessageType.BLAKE2_AS_HEX;
+  payload: {
+    data: string | Uint8Array;
+    bitLength?: 256 | 512 | 64 | 128 | 384;
+  };
+};
+
+export type Blake2AsHexResultMessage = {
+  type: MessageType.BLAKE2_AS_HEX_RESULT;
+  payload: HexString;
+};
+
 export type CheckAddressMessage = {
   type: MessageType.CHECK_ADDRESS;
   payload: {
@@ -490,6 +506,8 @@ export type Message =
   | GetTxMethodArgsLengthResultMessage
   | DecodeAddressMessage
   | DecodeAddressResultMessage
+  | Blake2AsHexMessage
+  | Blake2AsHexResultMessage
   | CheckAddressMessage
   | CheckAddressResultMessage
   | GetTxPayloadMessage
@@ -794,6 +812,20 @@ export function decodeAddressMessage(payload: DecodeAddressMessage['payload']): 
 export function decodeAddressResultMessage(payload: DecodeAddressResultMessage['payload']): DecodeAddressResultMessage {
   return {
     type: MessageType.DECODE_ADDRESS_RESULT,
+    payload,
+  };
+}
+
+export function blake2AsHexMessage(payload: Blake2AsHexMessage['payload']): Blake2AsHexMessage {
+  return {
+    type: MessageType.BLAKE2_AS_HEX,
+    payload,
+  };
+}
+
+export function blake2AsHexResultMessage(payload: Blake2AsHexResultMessage['payload']): Blake2AsHexResultMessage {
+  return {
+    type: MessageType.BLAKE2_AS_HEX_RESULT,
     payload,
   };
 }
