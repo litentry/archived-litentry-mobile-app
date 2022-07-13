@@ -110,6 +110,7 @@
     "stream-browserify": "^3.0.0",
     "url": "^0.11.0",
     "util": "^0.10.4",
+    "uuid": "^8.3.2",
     "web3": "^1.7.1",
     "yup": "^0.32.11",
     "zxcvbn": "^4.4.2"
@@ -132,6 +133,7 @@
     "@types/react-native": "^0.67.3",
     "@types/react-native-vector-icons": "^6.4.10",
     "@types/react-test-renderer": "^17.0.1",
+    "@types/uuid": "^8.3.4",
     "@types/zxcvbn": "^4.4.1",
     "@typescript-eslint/eslint-plugin": "^5.26.0",
     "@typescript-eslint/parser": "^5.27.0",

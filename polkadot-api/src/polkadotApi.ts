@@ -37,8 +37,8 @@ declare const window: any;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const document: any;
 
-function postMessage(message: Message): void {
-  window.ReactNativeWebView.postMessage(JSON.stringify(message));
+function postMessage(message: Message, id?: string): void {
+  window.ReactNativeWebView.postMessage(JSON.stringify({message, id}));
 }
 
 cryptoWaitReady().then(function () {
@@ -62,7 +62,7 @@ cryptoWaitReady().then(function () {
   };
 
   function onMessageHandler(event: MessageEvent) {
-    const message = JSON.parse(event.data) as Message;
+    const {message, id} = JSON.parse(event.data) as {message: Message; id: string};
 
     switch (message.type) {
       case MessageType.INIT_API:
@@ -79,10 +79,10 @@ cryptoWaitReady().then(function () {
         if (api) {
           getTxInfo(api, address, txConfig)
             .then((txInfo) => {
-              postMessage(getTxInfoResultMessage({error: false, txInfo}));
+              postMessage(getTxInfoResultMessage({error: false, txInfo}), id);
             })
             .catch((error) => {
-              postMessage(getTxInfoResultMessage({error: true, message: error}));
+              postMessage(getTxInfoResultMessage({error: true, message: error}), id);
             });
         }
         break;
@@ -93,10 +93,10 @@ cryptoWaitReady().then(function () {
         if (api) {
           getTxPayload(api, address, txConfig)
             .then((result) => {
-              postMessage(getTxPayloadResultMessage({error: false, ...result}));
+              postMessage(getTxPayloadResultMessage({error: false, ...result}), id);
             })
             .catch((error) => {
-              postMessage(getTxPayloadResultMessage({error: true, message: error}));
+              postMessage(getTxPayloadResultMessage({error: true, message: error}), id);
             });
         }
         break;
@@ -107,10 +107,10 @@ cryptoWaitReady().then(function () {
         if (api) {
           sendTx(api, address, txConfig, txPayload, signature)
             .then((txHash) => {
-              postMessage(sendTxResultMessage({error: false, txHash}));
+              postMessage(sendTxResultMessage({error: false, txHash}), id);
             })
             .catch((error) => {
-              postMessage(sendTxResultMessage({error: true, message: error}));
+              postMessage(sendTxResultMessage({error: true, message: error}), id);
             });
         }
         break;
@@ -126,10 +126,10 @@ cryptoWaitReady().then(function () {
           }
           signAndSendTx(api, txConfig, pair)
             .then((txHash) => {
-              postMessage(signAndSendTxResultMessage({error: false, txHash}));
+              postMessage(signAndSendTxResultMessage({error: false, txHash}), id);
             })
             .catch((error) => {
-              postMessage(signAndSendTxResultMessage({error: true, message: error}));
+              postMessage(signAndSendTxResultMessage({error: true, message: error}), id);
             });
         }
         break;
@@ -138,7 +138,7 @@ cryptoWaitReady().then(function () {
       case MessageType.GET_TX_METHOD_ARGS_LENGTH: {
         if (api) {
           const length = getTxMethodArgsLength(api, message.payload);
-          postMessage(getTxMethodArgsLengthResultMessage(length));
+          postMessage(getTxMethodArgsLengthResultMessage(length), id);
         }
         break;
       }
@@ -161,7 +161,7 @@ cryptoWaitReady().then(function () {
 
       case MessageType.GENERATE_MNEMONIC: {
         const mnemonic = mnemonicGenerate(message.payload.length);
-        postMessage(generateMnemonicResultMessage({mnemonic}));
+        postMessage(generateMnemonicResultMessage({mnemonic}), id);
         break;
       }
 
@@ -172,13 +172,13 @@ cryptoWaitReady().then(function () {
           const account = keyring.createFromUri(message.payload.mnemonic);
           address = account.address;
         }
-        postMessage(validateMnemonicResultMessage({isValid, address}));
+        postMessage(validateMnemonicResultMessage({isValid, address}), id);
         break;
       }
 
       case MessageType.CREATE_ADDRESS_FROM_MNEMONIC: {
         const {address} = keyring.createFromUri(message.payload.mnemonic);
-        postMessage(createAddressFromMnemonicResultMessage({address}));
+        postMessage(createAddressFromMnemonicResultMessage({address}), id);
         break;
       }
 
@@ -189,7 +189,7 @@ cryptoWaitReady().then(function () {
           isFavorite: false,
           isExternal: false,
         });
-        postMessage(addAccountResultMessage({account: json as KeyringAccount}));
+        postMessage(addAccountResultMessage({account: json as KeyringAccount}), id);
 
         if (!pair.isLocked) {
           pair.lock();
@@ -206,7 +206,7 @@ cryptoWaitReady().then(function () {
             isFavorite: false,
           });
           const json = pair.toJson(message.payload.password);
-          postMessage(restoreAccountResultMessage({account: json as KeyringAccount, error: false}));
+          postMessage(restoreAccountResultMessage({account: json as KeyringAccount, error: false}), id);
 
           if (!pair.isLocked) {
             pair.lock();
@@ -217,6 +217,7 @@ cryptoWaitReady().then(function () {
               error: true,
               message: 'Unable to decode using the supplied password.',
             }),
+            id,
           );
         }
         break;
@@ -226,7 +227,7 @@ cryptoWaitReady().then(function () {
         const pair = keyring.getPair(message.payload.address);
         try {
           const json = pair.toJson(message.payload.password);
-          postMessage(exportAccountResultMessage({account: json as KeyringAccount, error: false}));
+          postMessage(exportAccountResultMessage({account: json as KeyringAccount, error: false}), id);
 
           if (!pair.isLocked) {
             pair.lock();
@@ -237,6 +238,7 @@ cryptoWaitReady().then(function () {
               error: true,
               message: 'Unable to decode using the supplied password.',
             }),
+            id,
           );
         }
         break;
@@ -248,13 +250,13 @@ cryptoWaitReady().then(function () {
           network: message.payload.network,
           isFavorite: false,
         });
-        postMessage(addExternalAccountResultMessage({account: json as KeyringAccount}));
+        postMessage(addExternalAccountResultMessage({account: json as KeyringAccount}), id);
         break;
       }
 
       case MessageType.FORGET_ACCOUNT: {
         keyring.forgetAccount(message.payload.address);
-        postMessage(forgetAccountResultMessage({address: message.payload.address}));
+        postMessage(forgetAccountResultMessage({address: message.payload.address}), id);
         break;
       }
 
@@ -262,7 +264,7 @@ cryptoWaitReady().then(function () {
         const {address, meta} = message.payload;
         const pair = keyring.getPair(address);
         keyring.saveAccountMeta(pair, {...pair.meta, ...meta});
-        postMessage(updateAccountMetaResultMessage({address, meta}));
+        postMessage(updateAccountMetaResultMessage({address, meta}), id);
 
         if (!pair.isLocked) {
           pair.lock();
@@ -279,9 +281,9 @@ cryptoWaitReady().then(function () {
 
         try {
           pair.unlock(message.payload.password);
-          postMessage(verifyCredentialsResultMessage({valid: true}));
+          postMessage(verifyCredentialsResultMessage({valid: true}), id);
         } catch {
-          postMessage(verifyCredentialsResultMessage({valid: false}));
+          postMessage(verifyCredentialsResultMessage({valid: false}), id);
         }
         break;
       }
@@ -296,13 +298,14 @@ cryptoWaitReady().then(function () {
         try {
           pair.unlock(message.payload.credentials.password);
           const signed = pair.sign(hexToU8a(message.payload.message), {withType: true});
-          postMessage(signMessageResultMessage({signed: u8aToHex(signed), error: false}));
+          postMessage(signMessageResultMessage({signed: u8aToHex(signed), error: false}), id);
         } catch {
           postMessage(
             signMessageResultMessage({
               error: true,
               message: 'Unable to decode using the supplied password.',
             }),
+            id,
           );
         }
         break;
@@ -311,7 +314,7 @@ cryptoWaitReady().then(function () {
       case MessageType.DECODE_ADDRESS: {
         const {encoded, ignoreChecksum, ss58Format} = message.payload;
         const decoded = decodeAddress(encoded, ignoreChecksum, ss58Format);
-        postMessage(decodeAddressResultMessage(u8aToHex(decoded)));
+        postMessage(decodeAddressResultMessage(u8aToHex(decoded)), id);
         break;
       }
 
@@ -319,9 +322,9 @@ cryptoWaitReady().then(function () {
         const {address, prefix} = message.payload;
         const result = checkAddress(address, prefix);
         if (result[0] === true) {
-          postMessage(checkAddressResultMessage({isValid: true}));
+          postMessage(checkAddressResultMessage({isValid: true}), id);
         } else {
-          postMessage(checkAddressResultMessage({isValid: false, reason: result[1] ?? ''}));
+          postMessage(checkAddressResultMessage({isValid: false, reason: result[1] ?? ''}), id);
         }
         break;
       }
