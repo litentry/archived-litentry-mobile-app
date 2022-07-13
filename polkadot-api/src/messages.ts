@@ -358,7 +358,7 @@ export type GetTxPayloadMessage = {
   };
 };
 
-export type TxPayloadData = {txPayload: TxPayload; signablePayload: Uint8Array};
+export type TxPayloadData = {txPayload: TxPayload; signablePayload: HexString};
 
 export type GetTxPayloadResultPayload = TxPayloadData & {
   error: false;
@@ -415,7 +415,7 @@ export type GetTxMethodArgsLengthResultMessage = {
 export type DecodeAddressMessage = {
   type: MessageType.DECODE_ADDRESS;
   payload: {
-    encoded: HexString | string | Uint8Array | null;
+    encoded: HexString | string | null;
     ignoreChecksum?: boolean;
     ss58Format?: number;
   };
@@ -423,7 +423,7 @@ export type DecodeAddressMessage = {
 
 export type DecodeAddressResultMessage = {
   type: MessageType.DECODE_ADDRESS_RESULT;
-  payload: Uint8Array;
+  payload: HexString;
 };
 
 export type CheckAddressMessage = {

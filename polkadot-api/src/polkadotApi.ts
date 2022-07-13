@@ -18,7 +18,6 @@ import {
   generateMnemonicResultMessage,
   getTxInfoResultMessage,
   getTxMethodArgsLengthResultMessage,
-  getTxPayloadMessage,
   getTxPayloadResultMessage,
   KeyringAccount,
   Message,
@@ -312,7 +311,7 @@ cryptoWaitReady().then(function () {
       case MessageType.DECODE_ADDRESS: {
         const {encoded, ignoreChecksum, ss58Format} = message.payload;
         const decoded = decodeAddress(encoded, ignoreChecksum, ss58Format);
-        postMessage(decodeAddressResultMessage(decoded));
+        postMessage(decodeAddressResultMessage(u8aToHex(decoded)));
         break;
       }
 

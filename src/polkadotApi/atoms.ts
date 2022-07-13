@@ -47,7 +47,7 @@ export const cryptoUtilState = atom({
       return Promise.resolve<ValidateMnemonicResultMessage['payload']>({isValid: false, address: ''});
     },
     decodeAddress: (_: DecodeAddressMessage['payload']) => {
-      return Promise.resolve<DecodeAddressResultMessage['payload']>(new Uint8Array());
+      return Promise.resolve<DecodeAddressResultMessage['payload']>('0x000');
     },
     checkAddress: (_: CheckAddressMessage['payload']) => {
       return Promise.resolve<CheckAddressResultMessage['payload']>({isValid: false, reason: ''});
