@@ -29,7 +29,7 @@ function DevScreen() {
       </View>
     ),
 
-    [ApiStatus.isReady],
+    [apiState.isReady],
   );
 
   const NotificationTrigger = React.useCallback(
