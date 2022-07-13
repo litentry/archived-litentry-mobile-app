@@ -4,7 +4,7 @@ import {View, Platform, StyleSheet} from 'react-native';
 import {useSetRecoilState} from 'recoil';
 import RNFS from 'react-native-fs';
 import {v4 as uuid4} from 'uuid';
-import {cryptoUtilState, keyringState, apiState, txState} from './atoms';
+import {webViewReadyState, cryptoUtilState, keyringState, apiState, txState} from './atoms';
 import {useNetwork} from '@atoms/network';
 import {useAppAccounts} from './useAppAccounts';
 import {
@@ -112,6 +112,16 @@ function useLoadHtml(setHtml: (html: string) => void) {
   React.useEffect(() => {
     loadHtml().then(setHtml);
   }, [setHtml]);
+}
+
+function useIsWebViewReady(isWebviewLoaded: boolean) {
+  const setIsReady = useSetRecoilState(webViewReadyState);
+
+  React.useEffect(() => {
+    if (isWebviewLoaded) {
+      setIsReady(isWebviewLoaded);
+    }
+  }, [isWebviewLoaded, setIsReady]);
 }
 
 function useInitWebViewStore(
@@ -598,6 +608,7 @@ export function PolkadotApiWebView() {
   );
 
   useLoadHtml(setHtml);
+  useIsWebViewReady(isWebviewLoaded);
   useInitWebViewStore(isWebviewLoaded, accounts, postMessage);
   useInitKeyring(isWebviewLoaded, postMessage);
   useInitApi(isWebviewLoaded, postMessage);

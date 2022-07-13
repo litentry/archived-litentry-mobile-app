@@ -33,6 +33,11 @@ import {
   Blake2AsHexResultMessage,
 } from 'polkadot-api';
 
+export const webViewReadyState = atom({
+  key: 'webViewReadyState',
+  default: false,
+});
+
 export const appAccountsState: RecoilState<Record<string, KeyringAccount>> = atom({
   key: 'appAccounts',
   default: {},
