@@ -432,7 +432,7 @@ export type DecodeAddressResultMessage = {
 export type Blake2AsHexMessage = {
   type: MessageType.BLAKE2_AS_HEX;
   payload: {
-    data: string | Uint8Array;
+    data: string;
     bitLength?: 256 | 512 | 64 | 128 | 384;
   };
 };
