@@ -68,7 +68,7 @@ export function MotionsScreen({navigation}: ScreenProps) {
               />
             );
           }}
-          ItemSeparatorComponent={() => <Padder scale={1} />}
+          ItemSeparatorComponent={Padder}
           keyExtractor={(item) => item.proposal.hash}
           ListEmptyComponent={EmptyView}
         />
@@ -216,50 +216,55 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
     });
   };
 
-  const Actions = (
-    <View style={globalStyles.rowAlignCenter} testID="motion-container">
-      <Subheading>{`Aye ${votes?.ayes?.length}/${votes?.threshold} `}</Subheading>
-      <Padder scale={0.5} />
-      {(() => {
-        if (isCouncilMember) {
-          if (motion.votingStatus?.isCloseable) {
-            return (
-              <Button
-                onPress={() => onVote('Close', motion)}
-                color={colors.error}
-                mode="outlined"
-                compact
-                uppercase={false}>
-                {`Close`}
-              </Button>
-            );
-          } else if (motion.votingStatus?.isVoteable) {
-            return (
-              <View style={globalStyles.rowAlignCenter}>
+  const ItemRight = React.useCallback(
+    () => (
+      <View style={globalStyles.rowAlignCenter} testID="motion-container">
+        <Subheading>{`Aye ${votes?.ayes?.length}/${votes?.threshold} `}</Subheading>
+        <Padder scale={0.5} />
+        {(() => {
+          if (isCouncilMember) {
+            if (motion.votingStatus?.isCloseable) {
+              return (
                 <Button
-                  onPress={() => onVote('Nay', motion)}
+                  onPress={() => onVote('Close', motion)}
                   color={colors.error}
                   mode="outlined"
                   compact
                   uppercase={false}>
-                  {`Nay`}
+                  {`Close`}
                 </Button>
-                <Padder scale={0.5} />
-                <Button
-                  onPress={() => onVote('Aye', motion)}
-                  color={colors.success}
-                  mode="outlined"
-                  compact
-                  uppercase={false}>
-                  {`Aye`}
-                </Button>
-              </View>
-            );
+              );
+            } else if (motion.votingStatus?.isVoteable) {
+              return (
+                <View style={globalStyles.rowAlignCenter}>
+                  <Button
+                    onPress={() => onVote('Nay', motion)}
+                    color={colors.error}
+                    mode="outlined"
+                    compact
+                    uppercase={false}>
+                    {`Nay`}
+                  </Button>
+                  <Padder scale={0.5} />
+                  <Button
+                    onPress={() => onVote('Aye', motion)}
+                    color={colors.success}
+                    mode="outlined"
+                    compact
+                    uppercase={false}>
+                    {`Aye`}
+                  </Button>
+                </View>
+              );
+            }
           }
-        }
-      })()}
-    </View>
+        })()}
+      </View>
+    ),
+    [colors, votes, isCouncilMember, motion, onVote],
   );
+
+  const getItemLeft = React.useCallback(() => <Headline>{`#${proposal.index}`}</Headline>, [proposal.index]);
 
   return (
     <Card onPress={() => onPress(motion.proposal)}>
@@ -267,8 +272,8 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
         <List.Item
           title={<Caption>{getProposalTitle(motion.proposal)}</Caption>}
           description={<Caption>{motion.votingStatus?.remainingBlocksTime?.slice(0, 2).join(' ')}</Caption>}
-          left={() => <Headline>{`#${proposal.index}`}</Headline>}
-          right={() => <View>{Actions}</View>}
+          left={getItemLeft}
+          right={ItemRight}
         />
         {proposal.proposer ? (
           <ItemRowBlock label="Proposer">

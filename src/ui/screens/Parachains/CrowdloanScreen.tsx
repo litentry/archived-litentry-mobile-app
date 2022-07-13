@@ -60,7 +60,7 @@ export function CrowdloanScreen({navigation}: ScreenProps) {
           contentContainerStyle={styles.listContent}
           style={styles.container}
           sections={sectionData}
-          SectionSeparatorComponent={() => <Padder scale={1} />}
+          SectionSeparatorComponent={Padder}
           renderSectionHeader={({section}) => <Title>{section.key}</Title>}
           renderItem={({item, section: {key}}) => {
             return (

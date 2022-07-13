@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
-import Identicon from '@polkadot/reactnative-identicon';
+import IdentityIcon from '@polkadot/reactnative-identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Layout} from '@ui/components/Layout';
 import {Button, List, Icon, Caption, Divider, IconButton, useBottomSheet} from '@ui/library';
@@ -30,6 +30,26 @@ type ScreenProps = {
   navigation: NavigationProp<AccountsStackParamList>;
   route: RouteProp<AccountsStackParamList, typeof manageIdentityScreen>;
 };
+
+const AccountIdentityIcon = (address: string) => () =>
+  (
+    <View style={globalStyles.justifyCenter}>
+      <IdentityIcon value={address} size={20} />
+    </View>
+  );
+
+const ViewExternallyIcon = () => (
+  <View style={globalStyles.justifyCenter}>
+    <Icon name="share" size={20} />
+  </View>
+);
+
+const ItemRight = (text: string) => () =>
+  (
+    <View style={globalStyles.justifyCenter}>
+      <Caption>{text}</Caption>
+    </View>
+  );
 
 export function ManageIdentityScreen({navigation, route}: ScreenProps) {
   const {currentNetwork} = useNetwork();
@@ -85,11 +105,16 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
     [startTx, address, refetchAccount, closeRequestJudgement],
   );
 
+  const HeaderRight = React.useCallback(
+    () => <IconButton icon="information" onPress={openIdentityGuide} />,
+    [openIdentityGuide],
+  );
+
   React.useEffect(() => {
     navigation.setOptions({
-      headerRight: () => <IconButton icon="information" onPress={openIdentityGuide} />,
+      headerRight: HeaderRight,
     });
-  }, [navigation, openIdentityGuide]);
+  }, [navigation, HeaderRight]);
 
   const clearIdentity = () => {
     Alert.alert('Clear Identity', `Clear identity of account: \n ${address}`, [
@@ -130,19 +155,7 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
         <Divider />
         <View>
           <Padder scale={1} />
-          <List.Item
-            title="Address"
-            left={() => (
-              <ItemRight>
-                <Identicon value={address} size={20} />
-              </ItemRight>
-            )}
-            right={() => (
-              <ItemRight>
-                <Caption>{stringShorten(address)}</Caption>
-              </ItemRight>
-            )}
-          />
+          <List.Item title="Address" left={AccountIdentityIcon(address)} right={ItemRight(stringShorten(address))} />
           {accountInfo?.registration ? <AccountRegistration registration={accountInfo.registration} /> : null}
           <Padder scale={1} />
           <Button onPress={openIdentityInfo} mode="outlined">
@@ -177,11 +190,7 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
                 <List.Item
                   key={String(subAccount.account.address)}
                   title={<Account account={subAccount.account} />}
-                  left={() => (
-                    <ItemRight>
-                      <Identicon value={subAccount.account.address} size={20} />
-                    </ItemRight>
-                  )}
+                  left={AccountIdentityIcon(subAccount.account.address)}
                 />
               ))}
             </List.Accordion>
@@ -190,12 +199,8 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
           <List.Item
             title="View externally"
             onPress={openPolkassembly}
-            left={() => <LeftIcon icon="share" />}
-            right={() => (
-              <ItemRight>
-                <Caption>{`Polkascan`}</Caption>
-              </ItemRight>
-            )}
+            left={ViewExternallyIcon}
+            right={ItemRight('Polkascan')}
           />
         </View>
       </ScrollView>
@@ -235,15 +240,3 @@ const styles = StyleSheet.create({
   address: {flex: 2},
   polkascanWebView: {height: 500},
 });
-
-function ItemRight({children}: {children: React.ReactNode}) {
-  return <View style={globalStyles.justifyCenter}>{children}</View>;
-}
-
-function LeftIcon({icon}: {icon: string}) {
-  return (
-    <View style={globalStyles.justifyCenter}>
-      <Icon name={icon} size={20} />
-    </View>
-  );
-}

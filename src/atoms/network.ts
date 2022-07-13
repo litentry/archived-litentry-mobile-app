@@ -1,6 +1,6 @@
 import {atom, useRecoilState, RecoilState} from 'recoil';
 import {persistAtom} from '@atoms/persist';
-import {getRemoteConfig} from 'src/utils/firebaseConfig';
+import {useRemoteConfig} from 'src/hooks/useRemoteConfig';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 
 export type SupportedNetworkType = 'polkadot' | 'kusama' | 'litentry_test' | 'litmus';
@@ -69,7 +69,8 @@ export function useNetwork() {
 
 export function useAvailableNetworks() {
   const {accounts} = useAppAccounts();
-  const config = getRemoteConfig('token_bridge_test');
+  const {getValue} = useRemoteConfig();
+  const config = getValue('token_bridge_test');
   const testAddress = config?.test_address ?? '';
   const isParachainAppEnabled = accounts[testAddress] ? true : false;
 

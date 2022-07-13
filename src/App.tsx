@@ -16,7 +16,6 @@ import {ParachainAppNavigator} from '@ui/navigation/ParachainAppNavigator';
 import {PolkadotApiWebView} from '@polkadotApi/PolkadotApiWebView';
 import {RecoilRoot} from 'recoil';
 import {useNetwork} from '@atoms/network';
-import {useActivateFirebaseConfig} from './utils/firebaseConfig';
 
 // init type registry
 import 'src/typeRegistry';
@@ -49,7 +48,6 @@ function LitentryApps() {
 
 export default function App() {
   useStopStartupTrace();
-  useActivateFirebaseConfig();
 
   return (
     <RecoilRoot>

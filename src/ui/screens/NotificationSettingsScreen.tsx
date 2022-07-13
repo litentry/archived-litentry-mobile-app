@@ -3,7 +3,7 @@ import {StyleSheet, View} from 'react-native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {usePushTopics, usePermissions} from '@atoms/pushNotification';
+import {usePushTopics, usePermissions, SUBSCRIPTION_ID} from '@atoms/pushNotification';
 
 import {DrawerParamList} from '@ui/navigation/navigation';
 import {Text, List, Divider, Switch, Headline, Subheading, Button, Caption} from '@ui/library';
@@ -11,12 +11,37 @@ import globalStyles, {standardPadding} from '@ui/styles';
 import {PermissionPromptScreen} from '@ui/screens/PermissionPromptScreen';
 import {Linking} from 'react-native';
 
-type PropTypes = {
+type ScreenProps = {
   navigation: DrawerNavigationProp<DrawerParamList>;
 };
 
-export function NotificationSettingsScreen({}: PropTypes) {
-  const {topics, toggleTopic} = usePushTopics();
+type SubscriptionItemProps = {
+  subscription: {
+    id: SUBSCRIPTION_ID;
+    isSubscribed: boolean;
+    label: string;
+  };
+  toggleSubscription: (_: {id: SUBSCRIPTION_ID; subscribe: boolean}) => void;
+  disabled: boolean;
+};
+
+function SubscriptionItem({subscription, toggleSubscription, disabled}: SubscriptionItemProps) {
+  const NotificationSwitch = React.useCallback(
+    () => (
+      <Switch
+        value={subscription.isSubscribed}
+        onValueChange={(subscribe) => toggleSubscription({id: subscription.id, subscribe})}
+        disabled={disabled}
+      />
+    ),
+    [subscription, toggleSubscription, disabled],
+  );
+
+  return <List.Item key={subscription.id} title={subscription.label} right={NotificationSwitch} />;
+}
+
+export function NotificationSettingsScreen({}: ScreenProps) {
+  const {subscriptions, toggleSubscription} = usePushTopics();
   const {isPermissionNotDetermined, isPermissionDenied} = usePermissions();
 
   const openAppSetting = async () => {
@@ -35,17 +60,12 @@ export function NotificationSettingsScreen({}: PropTypes) {
         <Divider />
         <Padder scale={1} />
         <View style={globalStyles.flex}>
-          {topics.map((item) => (
-            <List.Item
-              key={item.id}
-              title={item.label}
-              right={() => (
-                <Switch
-                  value={item.isSubscribed}
-                  onValueChange={(subscribe) => toggleTopic({id: item.id, subscribe})}
-                  disabled={isPermissionDenied}
-                />
-              )}
+          {subscriptions.map((subscription) => (
+            <SubscriptionItem
+              key={subscription.id}
+              subscription={subscription}
+              toggleSubscription={toggleSubscription}
+              disabled={isPermissionDenied}
             />
           ))}
           <Padder scale={1} />
