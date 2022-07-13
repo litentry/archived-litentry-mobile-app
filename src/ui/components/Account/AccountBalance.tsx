@@ -7,25 +7,15 @@ type Props = {
   balance: AccountBalanceType;
 };
 
+const ItemRight = (text: string) => () => <Caption style={styles.centerAlign}>{text}</Caption>;
+
 export function AccountBalance({balance}: Props) {
   return (
     <>
-      <List.Item
-        title="Total Balance"
-        right={() => <Caption style={styles.centerAlign}>{balance.formattedTotal}</Caption>}
-      />
-      <List.Item
-        title="Transferrable"
-        right={() => <Caption style={styles.centerAlign}>{balance.formattedFree}</Caption>}
-      />
-      <List.Item
-        title="Reserved"
-        right={() => <Caption style={styles.centerAlign}>{balance.formattedReserved}</Caption>}
-      />
-      <List.Item
-        title="Locked"
-        right={() => <Caption style={styles.centerAlign}>{balance.formattedFeeFrozen}</Caption>}
-      />
+      <List.Item title="Total Balance" right={ItemRight(balance.formattedTotal)} />
+      <List.Item title="Transferrable" right={ItemRight(balance.formattedFree)} />
+      <List.Item title="Reserved" right={ItemRight(balance.formattedReserved)} />
+      <List.Item title="Locked" right={ItemRight(balance.formattedFeeFrozen)} />
     </>
   );
 }

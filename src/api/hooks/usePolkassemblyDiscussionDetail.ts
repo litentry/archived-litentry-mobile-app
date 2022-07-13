@@ -131,7 +131,7 @@ type Scalars = {
   uuid: any;
 };
 
-type Posts = {
+export type Posts = {
   __typename?: 'posts';
   /** Remote relationship field */
   author?: Maybe<User>;

@@ -16,6 +16,8 @@ type ScreenProps = {
   navigation: NavigationProp<DashboardStackParamList>;
 };
 
+const ItemSeparator = () => <Padder scale={0.5} />;
+
 export function BountiesScreen({navigation}: ScreenProps) {
   const {openBottomSheet, closeBottomSheet, BottomSheet} = useBottomSheet();
   const {data: bounties, loading} = useBounties();
@@ -42,7 +44,7 @@ export function BountiesScreen({navigation}: ScreenProps) {
             </View>
           }
           renderItem={({item}) => <BountyItem bounty={item} onPress={toBountyDetails} />}
-          ItemSeparatorComponent={() => <Padder scale={0.5} />}
+          ItemSeparatorComponent={ItemSeparator}
           ListEmptyComponent={EmptyView}
         />
       )}
@@ -62,21 +64,31 @@ type BountyItemProps = {
 function BountyItem({bounty, onPress}: BountyItemProps) {
   const {formattedValue, index, bountyStatus, description} = bounty;
 
+  const ItemLeft = React.useCallback(
+    () => (
+      <View style={globalStyles.justifyCenter}>
+        <Headline>{index.toString()}</Headline>
+      </View>
+    ),
+    [index],
+  );
+
+  const getItemRight = React.useCallback(
+    () => (
+      <View style={globalStyles.justifyCenter}>
+        <Text>{formattedValue}</Text>
+      </View>
+    ),
+    [formattedValue],
+  );
+
   return (
     <Card onPress={() => onPress(index)}>
       <List.Item
-        left={() => (
-          <View style={globalStyles.justifyCenter}>
-            <Headline>{index.toString()}</Headline>
-          </View>
-        )}
+        left={ItemLeft}
         title={<Text>{bountyStatus.status}</Text>}
         description={<Caption>{description}</Caption>}
-        right={() => (
-          <View style={globalStyles.justifyCenter}>
-            <Text>{formattedValue}</Text>
-          </View>
-        )}
+        right={getItemRight}
       />
     </Card>
   );
@@ -91,7 +103,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  itemLeft: {alignItems: 'flex-end'},
+  itemLeft: {
+    alignItems: 'flex-end',
+  },
   itemContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',

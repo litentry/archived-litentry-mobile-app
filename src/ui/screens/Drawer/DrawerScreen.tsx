@@ -30,6 +30,11 @@ export function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
     navigation.navigate(screen as string, params);
   };
 
+  const ChangeTheme = React.useCallback(
+    () => <Switch value={theme === 'dark'} onValueChange={toggleTheme} />,
+    [theme, toggleTheme],
+  );
+
   return (
     <SafeView>
       <View>
@@ -131,11 +136,7 @@ export function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
           </Drawer.Section>
         ) : null}
         <Drawer.Section title="Settings">
-          <Drawer.Item
-            label="Dark theme"
-            icon="brightness-6"
-            right={() => <Switch value={theme === 'dark'} onValueChange={toggleTheme} />}
-          />
+          <Drawer.Item label="Dark theme" icon="brightness-6" right={ChangeTheme} />
           {!currentNetwork.isParachain ? (
             <>
               <Drawer.Item
