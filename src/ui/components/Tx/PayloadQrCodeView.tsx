@@ -33,7 +33,7 @@ export function PayloadQrCodeView({address, txConfig, onConfirm, onCancel}: Prop
       const _txPayloadData = await getTxPayload({address, txConfig});
       // limit size of the transaction
       const isQrHashed = _txPayloadData.txPayload.method.length > TX_SIZE_LIMIT;
-      const decodedAddress = await decodeAddress({encoded: address});
+      const decodedAddress = await decodeAddress({encoded: _txPayloadData.txPayload.address});
       const signPayload = createSignPayload(
         decodedAddress,
         isQrHashed ? CMD_HASH : CMD_MORTAL,
@@ -54,7 +54,7 @@ export function PayloadQrCodeView({address, txConfig, onConfirm, onCancel}: Prop
     })();
   }, [txConfig, decodeAddress, address, getTxPayload]);
 
-  const onPress = useCallback(() => {
+  const onScanSignature = useCallback(() => {
     if (txPayload) {
       onConfirm(txPayload);
     }
@@ -83,7 +83,7 @@ export function PayloadQrCodeView({address, txConfig, onConfirm, onCancel}: Prop
           Cancel
         </Button>
         <Padder scale={1} />
-        <Button compact mode="contained" onPress={onPress} icon="qrcode-scan">
+        <Button compact mode="contained" onPress={onScanSignature} icon="qrcode-scan">
           Scan Signature
         </Button>
       </View>

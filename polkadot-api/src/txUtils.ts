@@ -1,4 +1,5 @@
 import {ApiPromise} from '@polkadot/api';
+import {u8aToHex} from '@polkadot/util';
 import type {KeyringPair} from '@polkadot/keyring/types';
 
 import type {SubmittableExtrinsic, SignerOptions} from '@polkadot/api/submittable/types';
@@ -8,25 +9,20 @@ import type {
   ExtrinsicEra,
   Index,
   Header,
-  SignerPayload,
   ExtrinsicPayload,
 } from '@polkadot/types/interfaces';
 import type {SignerPayloadJSON, SignatureOptions} from '@polkadot/types/types';
 import type {Registry} from '@polkadot/types-codec/types';
 import {BN_ZERO, assert, isNumber, isUndefined, objectSpread} from '@polkadot/util';
 import type {TxConfig} from './txTypes';
-import {HexString, TxPayloadData} from './messages';
+import {HexString, TxPayload, TxPayloadData} from './messages';
+import AsyncSigner from './AsyncSigner';
 
 export type TxInfo = {
   title: string;
   description: string;
   partialFee: number;
   blockHash: string;
-};
-
-const signerOptions: Partial<SignerOptions> = {
-  nonce: -1,
-  tip: BN_ZERO,
 };
 
 export async function getTxInfo(api: ApiPromise, address: string, txConfig: TxConfig): Promise<TxInfo> {
@@ -37,7 +33,7 @@ export async function getTxInfo(api: ApiPromise, address: string, txConfig: TxCo
   const description = formatCallMeta(meta);
   const info = await tx.paymentInfo(address);
   const partialFee = info.partialFee.toNumber();
-  const txPayload = await makeTxPayload(tx, api, address);
+  const {txPayload} = await getTxPayload(api, address, txConfig);
 
   return {
     title,
@@ -49,38 +45,27 @@ export async function getTxInfo(api: ApiPromise, address: string, txConfig: TxCo
 
 export async function getTxPayload(api: ApiPromise, address: string, txConfig: TxConfig): Promise<TxPayloadData> {
   const tx = makeTx(api, txConfig);
-  const txPayload = await makeTxPayload(tx, api, address);
-  const signablePayload = makeSignablePayload(tx, txPayload);
+  const txPayload = await new Promise<TxPayload>((resolve) => {
+    tx.signAsync(address, {
+      nonce: -1,
+      tip: BN_ZERO,
+      signer: new AsyncSigner(async (txPayload) => {
+        resolve(txPayload);
+        // This is not used, it is just to implement the interface
+        return Promise.resolve({id: 1, signature: '0x'});
+      }),
+    });
+  });
+
+  const signablePayload = makeSignablePayload(api, txPayload);
 
   return {txPayload, signablePayload};
 }
 
-export async function makeTxPayload(
-  tx: SubmittableExtrinsic<'promise'>,
-  api: ApiPromise,
-  address: string,
-): Promise<SignerPayloadJSON> {
-  const signingInfo = await api.derive.tx.signingInfo(address, signerOptions.nonce);
-  const eraOptions = makeEraOptions(api, tx.registry, signerOptions, signingInfo);
-  const txPayload = tx.registry
-    .createTypeUnsafe<SignerPayload>('SignerPayload', [
-      objectSpread({}, eraOptions, {
-        address,
-        blockNumber: signingInfo.header ? signingInfo.header.number : 0,
-        method: tx.method,
-      }),
-    ])
-    .toPayload();
+export function makeSignablePayload(api: ApiPromise, txPayload: SignerPayloadJSON): HexString {
+  const extrinsicPayload: ExtrinsicPayload = api.registry.createType('ExtrinsicPayload', txPayload);
 
-  return txPayload;
-}
-
-export function makeSignablePayload(tx: SubmittableExtrinsic<'promise'>, txPayload: SignerPayloadJSON) {
-  const extrinsicPayload: ExtrinsicPayload = tx.registry.createType('ExtrinsicPayload', txPayload, {
-    version: txPayload.version,
-  });
-
-  return extrinsicPayload.toU8a({method: true});
+  return u8aToHex(extrinsicPayload.toU8a());
 }
 
 export async function sendTx(
