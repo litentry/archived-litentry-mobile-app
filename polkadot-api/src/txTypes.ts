@@ -68,7 +68,7 @@ type CouncilCloseTx = {
   method: 'council.close';
   params:
     | [proposalHash: string, proposalIndex: string]
-    | [proposalHash: string, proposalIndex: string, WEIGHT_BOUND: 0, LENGTH_BOUND: 0];
+    | [proposalHash: string, proposalIndex: string, WEIGHT_BOUND: number, LENGTH_BOUND: number];
 };
 
 type CouncilModuleElectionVoteTx = {
