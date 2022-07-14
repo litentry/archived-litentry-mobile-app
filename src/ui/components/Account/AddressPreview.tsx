@@ -1,7 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
-import Identicon from '@polkadot/reactnative-identicon';
-import {List, Icon, Caption} from '@ui/library';
+import {List, Icon, Caption, Identicon} from '@ui/library';
 import {JudgmentStatus} from '@ui/components/Account/JudgmentStatus';
 import LoadingView from '@ui/components/LoadingView';
 import {useAccount} from 'src/api/hooks/useAccount';

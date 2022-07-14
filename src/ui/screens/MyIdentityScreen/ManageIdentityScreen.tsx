@@ -1,9 +1,8 @@
 import React, {useCallback} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
-import IdentityIcon from '@polkadot/reactnative-identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Layout} from '@ui/components/Layout';
-import {Button, List, Icon, Caption, Divider, IconButton, useBottomSheet} from '@ui/library';
+import {Button, List, Icon, Caption, Divider, IconButton, useBottomSheet, Identicon} from '@ui/library';
 import {useNetwork} from '@atoms/network';
 import IdentityInfoForm from '@ui/components/IdentityInfoForm';
 import InfoBanner from '@ui/components/InfoBanner';
@@ -34,7 +33,7 @@ type ScreenProps = {
 const AccountIdentityIcon = (address: string) => () =>
   (
     <View style={globalStyles.justifyCenter}>
-      <IdentityIcon value={address} size={20} />
+      <Identicon value={address} size={20} />
     </View>
   );
 

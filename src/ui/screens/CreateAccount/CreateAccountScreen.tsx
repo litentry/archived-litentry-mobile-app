@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, StyleSheet, KeyboardAvoidingView, Platform} from 'react-native';
-import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {ScrollView} from 'react-native-gesture-handler';
 import zxcvbn from 'zxcvbn';
@@ -9,7 +8,7 @@ import {ProgressBar} from '@ui/components/ProgressBar';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {accountsScreen, createAccountScreen} from '@ui/navigation/routeKeys';
-import {Button, Caption, List, TextInput, HelperText} from '@ui/library';
+import {Button, Caption, List, TextInput, HelperText, Identicon} from '@ui/library';
 import {useTheme} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
@@ -71,7 +70,7 @@ export function CreateAccountScreen({
   const AccountIdentityIcon = React.useCallback(
     () => (
       <View style={globalStyles.justifyCenter}>
-        <IdentityIcon value={address} size={40} />
+        <Identicon value={address} size={40} />
       </View>
     ),
     [address],

@@ -3,7 +3,6 @@ import {Alert, StyleSheet, TouchableOpacity, View, Share, Keyboard} from 'react-
 import Clipboard from '@react-native-community/clipboard';
 import {stringShorten} from '@polkadot/util';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
-import Identicon from '@polkadot/reactnative-identicon';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {
@@ -16,6 +15,7 @@ import {
   Subheading,
   Divider,
   useBottomSheet,
+  Identicon,
 } from '@ui/library';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useAccount} from 'src/api/hooks/useAccount';

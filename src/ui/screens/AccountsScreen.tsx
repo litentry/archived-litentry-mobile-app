@@ -1,8 +1,19 @@
 import React from 'react';
 import {FlatList, View, StyleSheet, TouchableOpacity, Keyboard} from 'react-native';
-import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp} from '@react-navigation/native';
-import {useTheme, Divider, IconButton, List, FAB, Caption, Menu, Subheading, Icon, useBottomSheet} from '@ui/library';
+import {
+  useTheme,
+  Divider,
+  IconButton,
+  List,
+  FAB,
+  Caption,
+  Menu,
+  Subheading,
+  Icon,
+  useBottomSheet,
+  Identicon,
+} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {CompleteNavigatorParamList} from '@ui/navigation/navigation';
 import {accountsScreen, importAccountScreen, mnemonicScreen, myAccountScreen} from '@ui/navigation/routeKeys';

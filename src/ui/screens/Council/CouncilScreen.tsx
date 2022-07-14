@@ -1,6 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {ScrollView, TouchableOpacity, SectionList, StyleSheet, View, useWindowDimensions} from 'react-native';
-import Identicon from '@polkadot/reactnative-identicon';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {NavigationProp} from '@react-navigation/native';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
@@ -11,7 +10,18 @@ import {SelectAccount} from '@ui/components/SelectAccount';
 import {useCouncil, CouncilMember, Council} from 'src/api/hooks/useCouncil';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {candidateScreen} from '@ui/navigation/routeKeys';
-import {Button, Divider, Modal, useTheme, Caption, Subheading, Text, TextInput, HelperText} from '@ui/library';
+import {
+  Button,
+  Divider,
+  Modal,
+  useTheme,
+  Caption,
+  Subheading,
+  Text,
+  TextInput,
+  HelperText,
+  Identicon,
+} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {MotionsScreen} from './MotionsScreen';

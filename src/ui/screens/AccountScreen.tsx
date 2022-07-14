@@ -1,11 +1,10 @@
 import React from 'react';
-import {Divider, Card, Caption, useTheme, IconButton} from '@ui/library';
+import {Divider, Card, Caption, useTheme, IconButton, Identicon} from '@ui/library';
 import {RouteProp} from '@react-navigation/native';
 import {AppStackParamList} from '@ui/navigation/navigation';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {accountScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
-import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {Padder} from '@ui/components/Padder';
 import {AccountRegistration} from '@ui/components/Account/AccountRegistration';
@@ -36,7 +35,7 @@ export function AccountScreen({route}: {route: RouteProp<AppStackParamList, type
               <Card>
                 <Card.Content>
                   <View style={globalStyles.alignCenter}>
-                    <IdentityIcon value={account.address} size={50} />
+                    <Identicon value={account.address} size={50} />
                     <Padder scale={0.5} />
                     {account ? <AccountTeaser account={account} /> : null}
                   </View>
