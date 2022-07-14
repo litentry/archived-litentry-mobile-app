@@ -1,10 +1,16 @@
 import React from 'react';
 import {View} from 'react-native';
-import type {Circle} from '@polkadot/ui-shared/icons/types';
 import Svg, {Circle as SvgCircle} from 'react-native-svg';
 import {useCryptoUtil} from '@polkadotApi/useCryptoUtil';
 import {useNetwork} from 'src/atoms/network';
 import {hexToU8a, u8aToHex} from '@polkadot/util';
+
+type Circle = {
+  cx: number;
+  cy: number;
+  fill: string;
+  r: number;
+};
 
 type Scheme = {
   freq: number;
