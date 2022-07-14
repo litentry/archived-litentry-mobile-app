@@ -1,7 +1,8 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {RouteProp} from '@react-navigation/core';
-import {List, Button, TextInput, Identicon} from '@ui/library';
+import {List, Button, TextInput} from '@ui/library';
+import {Identicon} from '@ui/components/Identicon';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AccountsStackParamList} from '@ui/navigation/navigation';

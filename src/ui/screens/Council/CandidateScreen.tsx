@@ -1,7 +1,8 @@
 import React, {useEffect} from 'react';
 import {View, FlatList} from 'react-native';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {Divider, Card, Subheading, Paragraph, Caption, Skeleton, Identicon} from '@ui/library';
+import {Divider, Card, Subheading, Paragraph, Caption, Skeleton} from '@ui/library';
+import {Identicon} from '@ui/components/Identicon';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AppStackParamList, DashboardStackParamList} from '@ui/navigation/navigation';
 import {Padder} from '@ui/components/Padder';

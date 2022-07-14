@@ -1,12 +1,13 @@
 import React from 'react';
 import {View} from 'react-native';
-import {List, Icon, Caption, Identicon} from '@ui/library';
+import {List, Icon, Caption} from '@ui/library';
 import {JudgmentStatus} from '@ui/components/Account/JudgmentStatus';
 import LoadingView from '@ui/components/LoadingView';
 import {useAccount} from 'src/api/hooks/useAccount';
 import globalStyles from '@ui/styles';
 import {stringShorten} from '@polkadot/util';
 import {useNetwork} from '@atoms/network';
+import {Identicon} from '@ui/components/Identicon';
 
 type PropTypes = {
   address: string;

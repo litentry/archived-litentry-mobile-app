@@ -4,7 +4,7 @@ import {Padder} from '@ui/components/Padder';
 import {Account} from '@ui/components/Account/Account';
 import type {Account as SubstrateChainAccount} from 'src/api/hooks/useAccount';
 import globalStyles from '@ui/styles';
-import {Identicon} from '@ui/library';
+import {Identicon} from '@ui/components/Identicon';
 
 type Props = {
   account: SubstrateChainAccount;

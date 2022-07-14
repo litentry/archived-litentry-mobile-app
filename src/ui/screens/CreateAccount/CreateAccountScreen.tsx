@@ -8,13 +8,14 @@ import {ProgressBar} from '@ui/components/ProgressBar';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {accountsScreen, createAccountScreen} from '@ui/navigation/routeKeys';
-import {Button, Caption, List, TextInput, HelperText, Identicon} from '@ui/library';
+import {Button, Caption, List, TextInput, HelperText} from '@ui/library';
 import {useTheme} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {SecureKeychain} from 'src/service/SecureKeychain';
 import {useKeyboardStatus} from 'src/hooks/useKeyboardStatus';
 import {useKeyring} from '@polkadotApi/useKeyring';
+import {Identicon} from '@ui/components/Identicon';
 
 type Account = {
   title: string;

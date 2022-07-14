@@ -1,5 +1,5 @@
 import React from 'react';
-import {Divider, Card, Caption, useTheme, IconButton, Identicon} from '@ui/library';
+import {Divider, Card, Caption, useTheme, IconButton} from '@ui/library';
 import {RouteProp} from '@react-navigation/native';
 import {AppStackParamList} from '@ui/navigation/navigation';
 import {ScrollView, StyleSheet, View} from 'react-native';
@@ -15,6 +15,7 @@ import {useSnackbar} from 'context/SnackbarContext';
 import Clipboard from '@react-native-community/clipboard';
 import {stringShorten} from '@polkadot/util';
 import {mapStatusText} from 'src/utils/identity';
+import {Identicon} from '@ui/components/Identicon';
 
 export function AccountScreen({route}: {route: RouteProp<AppStackParamList, typeof accountScreen>}) {
   const {colors} = useTheme();

@@ -15,8 +15,8 @@ import {
   Subheading,
   Divider,
   useBottomSheet,
-  Identicon,
 } from '@ui/library';
+import {Identicon} from '@ui/components/Identicon';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {AccountsStackParamList, CompleteNavigatorParamList} from '@ui/navigation/navigation';
