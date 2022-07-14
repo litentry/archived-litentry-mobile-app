@@ -1,6 +1,5 @@
 import React from 'react';
 import {StyleSheet, useWindowDimensions, View, ScrollView, KeyboardAvoidingView, Platform} from 'react-native';
-import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {NavigationProp} from '@react-navigation/native';
 import {useNetwork} from '@atoms/network';
 import {ProgressBar} from '@ui/components/ProgressBar';
@@ -8,6 +7,7 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {accountsScreen} from '@ui/navigation/routeKeys';
 import {Button, List, TextInput, useTheme, HelperText} from '@ui/library';
+import {Identicon} from '@ui/components/Identicon';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
 import zxcvbn from 'zxcvbn';
@@ -80,11 +80,7 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
   };
 
   const AccountIdentityIcon = React.useCallback(
-    () => (
-      <View style={globalStyles.justifyCenter}>
-        <IdentityIcon value={address} size={40} />
-      </View>
-    ),
+    () => <View style={globalStyles.justifyCenter}>{address ? <Identicon value={address} size={40} /> : null}</View>,
     [address],
   );
 

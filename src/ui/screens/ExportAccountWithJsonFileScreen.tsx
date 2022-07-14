@@ -1,8 +1,8 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {RouteProp} from '@react-navigation/core';
 import {List, Button, TextInput} from '@ui/library';
+import {Identicon} from '@ui/components/Identicon';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
@@ -54,7 +54,7 @@ export function ExportAccountWithJsonFileScreen({route, navigation}: ScreenProps
   const AccountIdentityIcon = React.useCallback(
     () => (
       <View style={globalStyles.justifyCenter}>
-        <IdentityIcon value={address} size={40} />
+        <Identicon value={address} size={40} />
       </View>
     ),
     [address],

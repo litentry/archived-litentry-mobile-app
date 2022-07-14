@@ -5,7 +5,6 @@ import {AppStackParamList} from '@ui/navigation/navigation';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {accountScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
-import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {Padder} from '@ui/components/Padder';
 import {AccountRegistration} from '@ui/components/Account/AccountRegistration';
@@ -16,6 +15,7 @@ import {useSnackbar} from 'context/SnackbarContext';
 import Clipboard from '@react-native-community/clipboard';
 import {stringShorten} from '@polkadot/util';
 import {mapStatusText} from 'src/utils/identity';
+import {Identicon} from '@ui/components/Identicon';
 
 export function AccountScreen({route}: {route: RouteProp<AppStackParamList, typeof accountScreen>}) {
   const {colors} = useTheme();
@@ -36,7 +36,7 @@ export function AccountScreen({route}: {route: RouteProp<AppStackParamList, type
               <Card>
                 <Card.Content>
                   <View style={globalStyles.alignCenter}>
-                    <IdentityIcon value={account.address} size={50} />
+                    <Identicon value={account.address} size={50} />
                     <Padder scale={0.5} />
                     {account ? <AccountTeaser account={account} /> : null}
                   </View>
