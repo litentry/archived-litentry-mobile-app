@@ -72,23 +72,22 @@ import {
   blake2AsHexMessage,
 } from 'polkadot-api';
 
-type WebViewPromiseResponse<Payload> = {
-  resolve: Record<string, (_: Payload) => void>;
-  reject: Record<string, (_: ErrorPayload) => void>;
-};
-
 type PostMessage = (message: Message, id?: string) => void;
 
+type MessageResolver<MessageResultPayload> = Record<string, (_result: MessageResultPayload) => void>;
+
+type WebViewPromiseResponse<Payload> = {
+  resolve: MessageResolver<Payload>;
+  reject: MessageResolver<ErrorPayload>;
+};
+
 type ResolversRef = React.MutableRefObject<{
-  resolveMnemonic: Record<string, (_result: GenerateMnemonicResultMessage['payload']) => void>;
-  resolveValidateMnemonic: Record<string, (_result: ValidateMnemonicResultMessage['payload']) => void>;
-  resolveCreateAddressFromMnemonic: Record<
-    string,
-    (_result: CreateAddressFromMnemonicResultMessage['payload']['address']) => void
-  >;
-  resolveAddAccount: Record<string, (_result: AddAccountResultMessage['payload']['account']) => void>;
-  resolveAddExternalAccount: Record<string, (_result: AddExternalAccountResultMessage['payload']['account']) => void>;
-  resolveVerifyCredentials: Record<string, (_result: VerifyCredentialsResultMessage['payload']) => void>;
+  resolveMnemonic: MessageResolver<GenerateMnemonicResultMessage['payload']>;
+  resolveValidateMnemonic: MessageResolver<ValidateMnemonicResultMessage['payload']>;
+  resolveCreateAddressFromMnemonic: MessageResolver<CreateAddressFromMnemonicResultMessage['payload']['address']>;
+  resolveAddAccount: MessageResolver<AddAccountResultMessage['payload']['account']>;
+  resolveAddExternalAccount: MessageResolver<AddExternalAccountResultMessage['payload']['account']>;
+  resolveVerifyCredentials: MessageResolver<VerifyCredentialsResultMessage['payload']>;
   restoreAccountPromise: WebViewPromiseResponse<KeyringAccountPayload['account']>;
   exportAccountPromise: WebViewPromiseResponse<KeyringAccountPayload['account']>;
   signPromise: WebViewPromiseResponse<SignResultPayload['signed']>;
@@ -96,10 +95,10 @@ type ResolversRef = React.MutableRefObject<{
   getTxPayloadPromise: WebViewPromiseResponse<TxPayloadData>;
   sendTxPromise: WebViewPromiseResponse<TxSuccessful['txHash']>;
   signAndSendTxPromise: WebViewPromiseResponse<TxSuccessful['txHash']>;
-  resolveGetTxMethodArgsLength: Record<string, (_result: GetTxMethodArgsLengthResultMessage['payload']) => void>;
-  resolveDecodeAddress: Record<string, (_result: DecodeAddressResultMessage['payload']) => void>;
-  resolveBlake2AsHex: Record<string, (_result: Blake2AsHexResultMessage['payload']) => void>;
-  resolveCheckAddress: Record<string, (_result: CheckAddressResultMessage['payload']) => void>;
+  resolveGetTxMethodArgsLength: MessageResolver<GetTxMethodArgsLengthResultMessage['payload']>;
+  resolveDecodeAddress: MessageResolver<DecodeAddressResultMessage['payload']>;
+  resolveBlake2AsHex: MessageResolver<Blake2AsHexResultMessage['payload']>;
+  resolveCheckAddress: MessageResolver<CheckAddressResultMessage['payload']>;
 }>;
 
 async function loadHtml() {
