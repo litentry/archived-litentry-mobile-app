@@ -3,7 +3,8 @@ import WebView, {WebViewMessageEvent} from 'react-native-webview';
 import {View, Platform, StyleSheet} from 'react-native';
 import {useSetRecoilState} from 'recoil';
 import RNFS from 'react-native-fs';
-import {cryptoUtilState, keyringState, apiState, txState} from './atoms';
+import {v4 as uuid4} from 'uuid';
+import {webViewReadyState, cryptoUtilState, keyringState, apiState, txState} from './atoms';
 import {useNetwork} from '@atoms/network';
 import {useAppAccounts} from './useAppAccounts';
 import {
@@ -66,22 +67,27 @@ import {
   TxSuccessful,
   signAndSendTxMessage,
   TxPayloadData,
+  Blake2AsHexResultMessage,
+  Blake2AsHexMessage,
+  blake2AsHexMessage,
 } from 'polkadot-api';
 
+type PostMessage = (message: Message, id?: string) => void;
+
+type MessageResolver<MessageResultPayload> = Record<string, (_result: MessageResultPayload) => void>;
+
 type WebViewPromiseResponse<Payload> = {
-  resolve: (_: Payload) => void;
-  reject: (_: ErrorPayload) => void;
+  resolve: MessageResolver<Payload>;
+  reject: MessageResolver<ErrorPayload>;
 };
 
-type PostMessage = (message: Message) => void;
-
 type ResolversRef = React.MutableRefObject<{
-  resolveMnemonic: (_result: GenerateMnemonicResultMessage['payload']) => void;
-  resolveValidateMnemonic: (_result: ValidateMnemonicResultMessage['payload']) => void;
-  resolveCreateAddressFromMnemonic: (_result: CreateAddressFromMnemonicResultMessage['payload']['address']) => void;
-  resolveAddAccount: (_result: AddAccountResultMessage['payload']['account']) => void;
-  resolveAddExternalAccount: (_result: AddExternalAccountResultMessage['payload']['account']) => void;
-  resolveVerifyCredentials: (_result: VerifyCredentialsResultMessage['payload']) => void;
+  resolveMnemonic: MessageResolver<GenerateMnemonicResultMessage['payload']>;
+  resolveValidateMnemonic: MessageResolver<ValidateMnemonicResultMessage['payload']>;
+  resolveCreateAddressFromMnemonic: MessageResolver<CreateAddressFromMnemonicResultMessage['payload']['address']>;
+  resolveAddAccount: MessageResolver<AddAccountResultMessage['payload']['account']>;
+  resolveAddExternalAccount: MessageResolver<AddExternalAccountResultMessage['payload']['account']>;
+  resolveVerifyCredentials: MessageResolver<VerifyCredentialsResultMessage['payload']>;
   restoreAccountPromise: WebViewPromiseResponse<KeyringAccountPayload['account']>;
   exportAccountPromise: WebViewPromiseResponse<KeyringAccountPayload['account']>;
   signPromise: WebViewPromiseResponse<SignResultPayload['signed']>;
@@ -89,9 +95,10 @@ type ResolversRef = React.MutableRefObject<{
   getTxPayloadPromise: WebViewPromiseResponse<TxPayloadData>;
   sendTxPromise: WebViewPromiseResponse<TxSuccessful['txHash']>;
   signAndSendTxPromise: WebViewPromiseResponse<TxSuccessful['txHash']>;
-  resolveGetTxMethodArgsLength: (_result: GetTxMethodArgsLengthResultMessage['payload']) => void;
-  resolveDecodeAddress: (_result: DecodeAddressResultMessage['payload']) => void;
-  resolveCheckAddress: (_result: CheckAddressResultMessage['payload']) => void;
+  resolveGetTxMethodArgsLength: MessageResolver<GetTxMethodArgsLengthResultMessage['payload']>;
+  resolveDecodeAddress: MessageResolver<DecodeAddressResultMessage['payload']>;
+  resolveBlake2AsHex: MessageResolver<Blake2AsHexResultMessage['payload']>;
+  resolveCheckAddress: MessageResolver<CheckAddressResultMessage['payload']>;
 }>;
 
 async function loadHtml() {
@@ -104,6 +111,16 @@ function useLoadHtml(setHtml: (html: string) => void) {
   React.useEffect(() => {
     loadHtml().then(setHtml);
   }, [setHtml]);
+}
+
+function useIsWebViewReady(isWebviewLoaded: boolean) {
+  const setIsReady = useSetRecoilState(webViewReadyState);
+
+  React.useEffect(() => {
+    if (isWebviewLoaded) {
+      setIsReady(isWebviewLoaded);
+    }
+  }, [isWebviewLoaded, setIsReady]);
 }
 
 function useInitWebViewStore(
@@ -152,27 +169,38 @@ function useCryptoUtils(isWebviewLoaded: boolean, postMessage: PostMessage, reso
     if (isWebviewLoaded) {
       setCryptoUtilState({
         generateMnemonic: (payload?: GenerateMnemonicMessage['payload']) => {
+          const id = uuid4();
           return new Promise((resolve) => {
-            resolversRef.current.resolveMnemonic = resolve;
-            postMessage(generateMnemonicMessage({length: payload?.length}));
+            resolversRef.current.resolveMnemonic[id] = resolve;
+            postMessage(generateMnemonicMessage({length: payload?.length}), id);
           });
         },
         validateMnemonic: (payload: ValidateMnemonicMessage['payload']) => {
           return new Promise((resolve) => {
-            resolversRef.current.resolveValidateMnemonic = resolve;
-            postMessage(validateMnemonicMessage(payload));
+            const id = uuid4();
+            resolversRef.current.resolveValidateMnemonic[id] = resolve;
+            postMessage(validateMnemonicMessage(payload), id);
           });
         },
         decodeAddress: (payload: DecodeAddressMessage['payload']) => {
           return new Promise((resolve) => {
-            resolversRef.current.resolveDecodeAddress = resolve;
-            postMessage(decodeAddressMessage(payload));
+            const id = uuid4();
+            resolversRef.current.resolveDecodeAddress[id] = resolve;
+            postMessage(decodeAddressMessage(payload), id);
+          });
+        },
+        blake2AsHex: (payload: Blake2AsHexMessage['payload']) => {
+          return new Promise((resolve) => {
+            const id = uuid4();
+            resolversRef.current.resolveBlake2AsHex[id] = resolve;
+            postMessage(blake2AsHexMessage(payload), id);
           });
         },
         checkAddress: (payload: CheckAddressMessage['payload']) => {
           return new Promise((resolve) => {
-            resolversRef.current.resolveCheckAddress = resolve;
-            postMessage(checkAddressMessage(payload));
+            const id = uuid4();
+            resolversRef.current.resolveCheckAddress[id] = resolve;
+            postMessage(checkAddressMessage(payload), id);
           });
         },
       });
@@ -188,20 +216,23 @@ function useKeyringUtils(isWebviewLoaded: boolean, postMessage: PostMessage, res
       setKeyringState({
         createAddressFromMnemonic: (payload: CreateAddressFromMnemonicMessage['payload']) => {
           return new Promise((resolve) => {
-            resolversRef.current.resolveCreateAddressFromMnemonic = resolve;
-            postMessage(createAddressFromMnemonicMessage(payload));
+            const id = uuid4();
+            resolversRef.current.resolveCreateAddressFromMnemonic[id] = resolve;
+            postMessage(createAddressFromMnemonicMessage(payload), id);
           });
         },
         addAccount: (payload: AddAccountMessage['payload']) => {
           return new Promise((resolve) => {
-            resolversRef.current.resolveAddAccount = resolve;
-            postMessage(addAccountMessage(payload));
+            const id = uuid4();
+            resolversRef.current.resolveAddAccount[id] = resolve;
+            postMessage(addAccountMessage(payload), id);
           });
         },
         addExternalAccount: (payload: AddExternalAccountMessage['payload']) => {
           return new Promise((resolve) => {
-            resolversRef.current.resolveAddExternalAccount = resolve;
-            postMessage(addExternalAccountMessage(payload));
+            const id = uuid4();
+            resolversRef.current.resolveAddExternalAccount[id] = resolve;
+            postMessage(addExternalAccountMessage(payload), id);
           });
         },
         forgetAccount: (payload: ForgetAccountMessage['payload']) => {
@@ -209,16 +240,18 @@ function useKeyringUtils(isWebviewLoaded: boolean, postMessage: PostMessage, res
         },
         restoreAccount: (payload: RestoreAccountMessage['payload']) => {
           return new Promise((resolve, reject) => {
-            resolversRef.current.restoreAccountPromise.resolve = resolve;
-            resolversRef.current.restoreAccountPromise.reject = reject;
-            postMessage(restoreAccountMessage(payload));
+            const id = uuid4();
+            resolversRef.current.restoreAccountPromise.resolve[id] = resolve;
+            resolversRef.current.restoreAccountPromise.reject[id] = reject;
+            postMessage(restoreAccountMessage(payload), id);
           });
         },
         exportAccount: (payload: ExportAccountMessage['payload']) => {
           return new Promise((resolve, reject) => {
-            resolversRef.current.exportAccountPromise.resolve = resolve;
-            resolversRef.current.exportAccountPromise.reject = reject;
-            postMessage(exportAccountMessage(payload));
+            const id = uuid4();
+            resolversRef.current.exportAccountPromise.resolve[id] = resolve;
+            resolversRef.current.exportAccountPromise.reject[id] = reject;
+            postMessage(exportAccountMessage(payload), id);
           });
         },
         updateAccountMeta: (payload: UpdateAccountMetaMessage['payload']) => {
@@ -226,15 +259,17 @@ function useKeyringUtils(isWebviewLoaded: boolean, postMessage: PostMessage, res
         },
         verifyCredentials: (payload: VerifyCredentialsMessage['payload']) => {
           return new Promise((resolve) => {
-            resolversRef.current.resolveVerifyCredentials = resolve;
-            postMessage(verifyCredentialsMessage(payload));
+            const id = uuid4();
+            resolversRef.current.resolveVerifyCredentials[id] = resolve;
+            postMessage(verifyCredentialsMessage(payload), id);
           });
         },
         sign: (payload: SignMessage['payload']) => {
           return new Promise((resolve, reject) => {
-            resolversRef.current.signPromise.resolve = resolve;
-            resolversRef.current.signPromise.reject = reject;
-            postMessage(signMessageMessage(payload));
+            const id = uuid4();
+            resolversRef.current.signPromise.resolve[id] = resolve;
+            resolversRef.current.signPromise.reject[id] = reject;
+            postMessage(signMessageMessage(payload), id);
           });
         },
       });
@@ -262,36 +297,41 @@ function useApiTx(isWebviewLoaded: boolean, postMessage: PostMessage, resolversR
       setTxState({
         getTxInfo: (payload: GetTxInfoMessage['payload']) => {
           return new Promise((resolve, reject) => {
-            resolversRef.current.getTxInfoPromise.resolve = resolve;
-            resolversRef.current.getTxInfoPromise.reject = reject;
-            postMessage(getTxInfoMessage(payload));
+            const id = uuid4();
+            resolversRef.current.getTxInfoPromise.resolve[id] = resolve;
+            resolversRef.current.getTxInfoPromise.reject[id] = reject;
+            postMessage(getTxInfoMessage(payload), id);
           });
         },
         getTxPayload: (payload: GetTxPayloadMessage['payload']) => {
           return new Promise((resolve, reject) => {
-            resolversRef.current.getTxPayloadPromise.resolve = resolve;
-            resolversRef.current.getTxPayloadPromise.reject = reject;
-            postMessage(getTxPayloadMessage(payload));
+            const id = uuid4();
+            resolversRef.current.getTxPayloadPromise.resolve[id] = resolve;
+            resolversRef.current.getTxPayloadPromise.reject[id] = reject;
+            postMessage(getTxPayloadMessage(payload), id);
           });
         },
         sendTx: (payload: SendTxMessage['payload']) => {
           return new Promise((resolve, reject) => {
-            resolversRef.current.sendTxPromise.resolve = resolve;
-            resolversRef.current.sendTxPromise.reject = reject;
-            postMessage(sendTxMessage(payload));
+            const id = uuid4();
+            resolversRef.current.sendTxPromise.resolve[id] = resolve;
+            resolversRef.current.sendTxPromise.reject[id] = reject;
+            postMessage(sendTxMessage(payload), id);
           });
         },
         signAndSendTx: (payload: SignAndSendTxMessage['payload']) => {
           return new Promise((resolve, reject) => {
-            resolversRef.current.signAndSendTxPromise.resolve = resolve;
-            resolversRef.current.signAndSendTxPromise.reject = reject;
-            postMessage(signAndSendTxMessage(payload));
+            const id = uuid4();
+            resolversRef.current.signAndSendTxPromise.resolve[id] = resolve;
+            resolversRef.current.signAndSendTxPromise.reject[id] = reject;
+            postMessage(signAndSendTxMessage(payload), id);
           });
         },
         getTxMethodArgsLength: (payload: GetTxMethodArgsLengthMessage['payload']) => {
           return new Promise((resolve) => {
-            resolversRef.current.resolveGetTxMethodArgsLength = resolve;
-            postMessage(getTxMethodArgsLengthMessage(payload));
+            const id = uuid4();
+            resolversRef.current.resolveGetTxMethodArgsLength[id] = resolve;
+            postMessage(getTxMethodArgsLengthMessage(payload), id);
           });
         },
       });
@@ -307,7 +347,7 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
   const webViewOnMessage = React.useCallback(
     (event: WebViewMessageEvent) => {
       console.info('WebView Response: ', event.nativeEvent.data);
-      const data = JSON.parse(event.nativeEvent.data) as Message;
+      const {message, id} = JSON.parse(event.nativeEvent.data) as {message: Message; id: string};
 
       const {
         resolveMnemonic,
@@ -324,98 +364,111 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
         signAndSendTxPromise,
         resolveGetTxMethodArgsLength,
         resolveDecodeAddress,
+        resolveBlake2AsHex,
         resolveCheckAddress,
         getTxPayloadPromise,
       } = resolversRef.current;
 
-      switch (data.type) {
+      switch (message.type) {
         case MessageType.GENERATE_MNEMONIC_RESULT: {
-          resolveMnemonic(data.payload);
+          resolveMnemonic[id]?.(message.payload);
+          delete resolveMnemonic[id];
           break;
         }
 
         case MessageType.VALIDATE_MNEMONIC_RESULT: {
-          resolveValidateMnemonic(data.payload);
+          resolveValidateMnemonic[id]?.(message.payload);
+          delete resolveValidateMnemonic[id];
           break;
         }
 
         case MessageType.CREATE_ADDRESS_FROM_MNEMONIC_RESULT: {
-          resolveCreateAddressFromMnemonic(data.payload.address);
+          resolveCreateAddressFromMnemonic[id]?.(message.payload.address);
+          delete resolveCreateAddressFromMnemonic[id];
           break;
         }
 
         case MessageType.ADD_ACCOUNT_RESULT: {
           setAccounts((_accounts) => ({
             ..._accounts,
-            [data.payload.account.address]: data.payload.account,
+            [message.payload.account.address]: message.payload.account,
           }));
-          resolveAddAccount(data.payload.account);
+          resolveAddAccount[id]?.(message.payload.account);
+          delete resolveAddAccount[id];
           break;
         }
 
         case MessageType.ADD_EXTERNAL_ACCOUNT_RESULT: {
           setAccounts((_accounts) => ({
             ..._accounts,
-            [data.payload.account.address]: data.payload.account,
+            [message.payload.account.address]: message.payload.account,
           }));
-          resolveAddExternalAccount(data.payload.account);
+          resolveAddExternalAccount[id]?.(message.payload.account);
+          delete resolveAddExternalAccount[id];
           break;
         }
 
         case MessageType.FORGET_ACCOUNT_RESULT: {
-          const {[data.payload.address]: _, ...rest} = accounts;
+          const {[message.payload.address]: _, ...rest} = accounts;
           setAccounts(rest);
           break;
         }
 
         case MessageType.RESTORE_ACCOUNT_RESULT: {
-          const payload = data.payload;
+          const payload = message.payload;
           if (payload.error) {
-            restoreAccountPromise.reject(payload);
+            restoreAccountPromise.reject[id]?.(payload);
           } else {
             setAccounts((_accounts) => ({
               ..._accounts,
               [payload.account.address]: payload.account,
             }));
-            restoreAccountPromise.resolve(payload.account);
+            restoreAccountPromise.resolve[id]?.(payload.account);
           }
+          delete restoreAccountPromise.resolve[id];
+          delete restoreAccountPromise.reject[id];
           break;
         }
 
         case MessageType.EXPORT_ACCOUNT_RESULT: {
-          const payload = data.payload;
+          const payload = message.payload;
           if (payload.error) {
-            exportAccountPromise.reject(payload);
+            exportAccountPromise.reject[id]?.(payload);
           } else {
-            exportAccountPromise.resolve(payload.account);
+            exportAccountPromise.resolve[id]?.(payload.account);
           }
+          delete exportAccountPromise.resolve[id];
+          delete exportAccountPromise.reject[id];
           break;
         }
 
         case MessageType.UPDATE_ACCOUNT_META_RESULT: {
-          const account = accounts[data.payload.address];
+          const account = accounts[message.payload.address];
           if (account) {
-            const updatedAccount = {...account, meta: {...account.meta, ...data.payload.meta}};
+            const updatedAccount = {...account, meta: {...account.meta, ...message.payload.meta}};
             setAccounts((_accounts) => ({
               ..._accounts,
-              [data.payload.address]: updatedAccount,
+              [message.payload.address]: updatedAccount,
             }));
           }
           break;
         }
 
         case MessageType.VERIFY_CREDENTIALS_RESULT: {
-          resolveVerifyCredentials(data.payload);
+          resolveVerifyCredentials[id]?.(message.payload);
+          delete resolveVerifyCredentials[id];
           break;
         }
 
         case MessageType.SIGN_RESULT: {
-          const payload = data.payload;
+          const payload = message.payload;
           if (payload.error) {
-            signPromise.reject(payload);
+            signPromise.reject[id]?.(payload);
           } else {
-            signPromise.resolve(payload.signed);
+            signPromise.resolve[id]?.(payload.signed);
           }
+          delete signPromise.resolve[id];
+          delete signPromise.reject[id];
           break;
         }
 
@@ -434,64 +487,81 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
         }
 
         case MessageType.API_ERROR: {
-          console.warn('API ERROR', data.payload);
+          console.warn('API ERROR', message.payload);
           postMessage(reconnectApiMessage({wsEndpoint: currentNetwork.ws[0] as string}));
           setApiState({isReady: false, isConnecting: true});
           break;
         }
 
         case MessageType.GET_TX_INFO_RESULT: {
-          const payload = data.payload;
+          const payload = message.payload;
           if (payload.error) {
-            getTxInfoPromise.reject(payload);
+            getTxInfoPromise.reject[id]?.(payload);
           } else {
-            getTxInfoPromise.resolve(payload.txInfo);
+            getTxInfoPromise.resolve[id]?.(payload.txInfo);
           }
+          delete getTxInfoPromise.resolve[id];
+          delete getTxInfoPromise.reject[id];
           break;
         }
 
         case MessageType.GET_TX_PAYLOAD_RESULT: {
-          const payload = data.payload;
+          const payload = message.payload;
           if (payload.error) {
-            getTxPayloadPromise.reject(payload);
+            getTxPayloadPromise.reject[id]?.(payload);
           } else {
-            getTxPayloadPromise.resolve({txPayload: payload.txPayload, signablePayload: payload.signablePayload});
+            getTxPayloadPromise.resolve[id]?.({txPayload: payload.txPayload, signablePayload: payload.signablePayload});
           }
+          delete getTxPayloadPromise.resolve[id];
+          delete getTxPayloadPromise.reject[id];
           break;
         }
 
         case MessageType.SEND_TX_RESULT: {
-          const payload = data.payload;
+          const payload = message.payload;
           if (payload.error) {
-            sendTxPromise.reject(payload);
+            sendTxPromise.reject[id]?.(payload);
           } else {
-            sendTxPromise.resolve(payload.txHash);
+            sendTxPromise.resolve[id]?.(payload.txHash);
           }
+          delete sendTxPromise.resolve[id];
+          delete sendTxPromise.reject[id];
           break;
         }
 
         case MessageType.SIGN_AND_SEND_TX_RESULT: {
-          const payload = data.payload;
+          const payload = message.payload;
           if (payload.error) {
-            signAndSendTxPromise.reject(payload);
+            signAndSendTxPromise.reject[id]?.(payload);
           } else {
-            signAndSendTxPromise.resolve(payload.txHash);
+            signAndSendTxPromise.resolve[id]?.(payload.txHash);
           }
+          delete signAndSendTxPromise.resolve[id];
+          delete signAndSendTxPromise.reject[id];
           break;
         }
 
         case MessageType.GET_TX_METHOD_ARGS_LENGTH_RESULT: {
-          resolveGetTxMethodArgsLength(data.payload);
+          resolveGetTxMethodArgsLength[id]?.(message.payload);
+          delete resolveGetTxMethodArgsLength[id];
           break;
         }
 
         case MessageType.DECODE_ADDRESS_RESULT: {
-          resolveDecodeAddress(data.payload);
+          resolveDecodeAddress[id]?.(message.payload);
+          delete resolveDecodeAddress[id];
+          break;
+        }
+
+        case MessageType.BLAKE2_AS_HEX_RESULT: {
+          resolveBlake2AsHex[id]?.(message.payload);
+          delete resolveBlake2AsHex[id];
           break;
         }
 
         case MessageType.CHECK_ADDRESS_RESULT: {
-          resolveCheckAddress(data.payload);
+          resolveCheckAddress[id]?.(message.payload);
+          delete resolveCheckAddress[id];
           break;
         }
       }
@@ -502,10 +572,6 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
   return {webViewOnMessage};
 }
 
-function initialResolver() {
-  return;
-}
-
 export function PolkadotApiWebView() {
   const webViewRef = React.useRef<WebView>(null);
   const [html, setHtml] = React.useState('');
@@ -513,57 +579,59 @@ export function PolkadotApiWebView() {
   const {accounts} = useAppAccounts();
 
   const resolversRef: ResolversRef = React.useRef({
-    resolveMnemonic: initialResolver,
-    resolveValidateMnemonic: initialResolver,
-    resolveCreateAddressFromMnemonic: initialResolver,
-    resolveAddAccount: initialResolver,
-    resolveAddExternalAccount: initialResolver,
-    resolveVerifyCredentials: initialResolver,
+    resolveMnemonic: {},
+    resolveValidateMnemonic: {},
+    resolveCreateAddressFromMnemonic: {},
+    resolveAddAccount: {},
+    resolveAddExternalAccount: {},
+    resolveVerifyCredentials: {},
     restoreAccountPromise: {
-      resolve: initialResolver,
-      reject: initialResolver,
+      resolve: {},
+      reject: {},
     },
     exportAccountPromise: {
-      resolve: initialResolver,
-      reject: initialResolver,
+      resolve: {},
+      reject: {},
     },
     signPromise: {
-      resolve: initialResolver,
-      reject: initialResolver,
+      resolve: {},
+      reject: {},
     },
     getTxInfoPromise: {
-      resolve: initialResolver,
-      reject: initialResolver,
+      resolve: {},
+      reject: {},
     },
     getTxPayloadPromise: {
-      resolve: initialResolver,
-      reject: initialResolver,
+      resolve: {},
+      reject: {},
     },
     getTxSignablePayloadPromise: {
-      resolve: initialResolver,
-      reject: initialResolver,
+      resolve: {},
+      reject: {},
     },
     sendTxPromise: {
-      resolve: initialResolver,
-      reject: initialResolver,
+      resolve: {},
+      reject: {},
     },
     signAndSendTxPromise: {
-      resolve: initialResolver,
-      reject: initialResolver,
+      resolve: {},
+      reject: {},
     },
-    resolveGetTxMethodArgsLength: initialResolver,
-    resolveDecodeAddress: initialResolver,
-    resolveCheckAddress: initialResolver,
+    resolveGetTxMethodArgsLength: {},
+    resolveDecodeAddress: {},
+    resolveBlake2AsHex: {},
+    resolveCheckAddress: {},
   });
 
   const postMessage = React.useCallback(
-    (message: Message) => {
-      webViewRef.current?.postMessage(JSON.stringify(message));
+    (message: Message, id?: string) => {
+      webViewRef.current?.postMessage(JSON.stringify({message, id}));
     },
     [webViewRef],
   );
 
   useLoadHtml(setHtml);
+  useIsWebViewReady(isWebviewLoaded);
   useInitWebViewStore(isWebviewLoaded, accounts, postMessage);
   useInitKeyring(isWebviewLoaded, postMessage);
   useInitApi(isWebviewLoaded, postMessage);

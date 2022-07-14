@@ -29,7 +29,14 @@ import {
   TxHash,
   SignAndSendTxMessage,
   TxPayloadData,
+  Blake2AsHexMessage,
+  Blake2AsHexResultMessage,
 } from 'polkadot-api';
+
+export const webViewReadyState = atom({
+  key: 'webViewReadyState',
+  default: false,
+});
 
 export const appAccountsState: RecoilState<Record<string, KeyringAccount>> = atom({
   key: 'appAccounts',
@@ -48,6 +55,9 @@ export const cryptoUtilState = atom({
     },
     decodeAddress: (_: DecodeAddressMessage['payload']) => {
       return Promise.resolve<DecodeAddressResultMessage['payload']>('0x000');
+    },
+    blake2AsHex: (_: Blake2AsHexMessage['payload']) => {
+      return Promise.resolve<Blake2AsHexResultMessage['payload']>('0x000');
     },
     checkAddress: (_: CheckAddressMessage['payload']) => {
       return Promise.resolve<CheckAddressResultMessage['payload']>({isValid: false, reason: ''});
