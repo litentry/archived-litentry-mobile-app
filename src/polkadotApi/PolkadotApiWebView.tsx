@@ -373,16 +373,19 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
       switch (message.type) {
         case MessageType.GENERATE_MNEMONIC_RESULT: {
           resolveMnemonic[id]?.(message.payload);
+          delete resolveMnemonic[id];
           break;
         }
 
         case MessageType.VALIDATE_MNEMONIC_RESULT: {
           resolveValidateMnemonic[id]?.(message.payload);
+          delete resolveValidateMnemonic[id];
           break;
         }
 
         case MessageType.CREATE_ADDRESS_FROM_MNEMONIC_RESULT: {
           resolveCreateAddressFromMnemonic[id]?.(message.payload.address);
+          delete resolveCreateAddressFromMnemonic[id];
           break;
         }
 
@@ -392,6 +395,7 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
             [message.payload.account.address]: message.payload.account,
           }));
           resolveAddAccount[id]?.(message.payload.account);
+          delete resolveAddAccount[id];
           break;
         }
 
@@ -401,6 +405,7 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
             [message.payload.account.address]: message.payload.account,
           }));
           resolveAddExternalAccount[id]?.(message.payload.account);
+          delete resolveAddExternalAccount[id];
           break;
         }
 
@@ -421,6 +426,8 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
             }));
             restoreAccountPromise.resolve[id]?.(payload.account);
           }
+          delete restoreAccountPromise.resolve[id];
+          delete restoreAccountPromise.reject[id];
           break;
         }
 
@@ -431,6 +438,8 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
           } else {
             exportAccountPromise.resolve[id]?.(payload.account);
           }
+          delete exportAccountPromise.resolve[id];
+          delete exportAccountPromise.reject[id];
           break;
         }
 
@@ -448,6 +457,7 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
 
         case MessageType.VERIFY_CREDENTIALS_RESULT: {
           resolveVerifyCredentials[id]?.(message.payload);
+          delete resolveVerifyCredentials[id];
           break;
         }
 
@@ -458,6 +468,8 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
           } else {
             signPromise.resolve[id]?.(payload.signed);
           }
+          delete signPromise.resolve[id];
+          delete signPromise.reject[id];
           break;
         }
 
@@ -489,6 +501,8 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
           } else {
             getTxInfoPromise.resolve[id]?.(payload.txInfo);
           }
+          delete getTxInfoPromise.resolve[id];
+          delete getTxInfoPromise.reject[id];
           break;
         }
 
@@ -499,6 +513,8 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
           } else {
             getTxPayloadPromise.resolve[id]?.({txPayload: payload.txPayload, signablePayload: payload.signablePayload});
           }
+          delete getTxPayloadPromise.resolve[id];
+          delete getTxPayloadPromise.reject[id];
           break;
         }
 
@@ -509,6 +525,8 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
           } else {
             sendTxPromise.resolve[id]?.(payload.txHash);
           }
+          delete sendTxPromise.resolve[id];
+          delete sendTxPromise.reject[id];
           break;
         }
 
@@ -519,26 +537,32 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
           } else {
             signAndSendTxPromise.resolve[id]?.(payload.txHash);
           }
+          delete signAndSendTxPromise.resolve[id];
+          delete signAndSendTxPromise.reject[id];
           break;
         }
 
         case MessageType.GET_TX_METHOD_ARGS_LENGTH_RESULT: {
           resolveGetTxMethodArgsLength[id]?.(message.payload);
+          delete resolveGetTxMethodArgsLength[id];
           break;
         }
 
         case MessageType.DECODE_ADDRESS_RESULT: {
           resolveDecodeAddress[id]?.(message.payload);
+          delete resolveDecodeAddress[id];
           break;
         }
 
         case MessageType.BLAKE2_AS_HEX_RESULT: {
           resolveBlake2AsHex[id]?.(message.payload);
+          delete resolveBlake2AsHex[id];
           break;
         }
 
         case MessageType.CHECK_ADDRESS_RESULT: {
           resolveCheckAddress[id]?.(message.payload);
+          delete resolveCheckAddress[id];
           break;
         }
       }
