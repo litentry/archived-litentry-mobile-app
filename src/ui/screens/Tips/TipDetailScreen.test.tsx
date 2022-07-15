@@ -37,7 +37,7 @@ test('render the component and test accounts click events', async () => {
   const navigationSpy = jest.spyOn(navigation, 'navigate');
   const {getAllByTestId} = render(<TipDetailScreen navigation={navigation} route={route} />);
   await waitFor(() => {
-    fireEvent.press(getAllByTestId('account-details').at(0) as ReactTestInstance);
+    fireEvent.press(getAllByTestId('account-details')[0] as ReactTestInstance);
     expect(navigationSpy).toHaveBeenCalledTimes(1);
   });
 });
