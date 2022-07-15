@@ -318,19 +318,29 @@ type ReconnectApiMessage = {
 
 type ApiConnectedMessage = {
   type: MessageType.API_CONNECTED;
+  payload: {
+    wsEndpoint: string;
+  };
 };
 
 type ApiReadyMessage = {
   type: MessageType.API_READY;
+  payload: {
+    wsEndpoint: string;
+  };
 };
 
 type ApiDisconnectedMessage = {
   type: MessageType.API_DISCONNECTED;
+  payload: {
+    wsEndpoint: string;
+  };
 };
 
 type ApiErrorMessage = {
   type: MessageType.API_ERROR;
   payload: {
+    wsEndpoint: string;
     error: string;
   };
 };
@@ -717,21 +727,24 @@ export function reconnectApiMessage(payload: ReconnectApiMessage['payload']): Re
   };
 }
 
-export function apiConnectedMessage(): ApiConnectedMessage {
+export function apiConnectedMessage(payload: ApiConnectedMessage['payload']): ApiConnectedMessage {
   return {
     type: MessageType.API_CONNECTED,
+    payload,
   };
 }
 
-export function apiReadyMessage(): ApiReadyMessage {
+export function apiReadyMessage(payload: ApiReadyMessage['payload']): ApiReadyMessage {
   return {
     type: MessageType.API_READY,
+    payload,
   };
 }
 
-export function apiDisconnectedMessage(): ApiDisconnectedMessage {
+export function apiDisconnectedMessage(payload: ApiDisconnectedMessage['payload']): ApiDisconnectedMessage {
   return {
     type: MessageType.API_DISCONNECTED,
+    payload,
   };
 }
 

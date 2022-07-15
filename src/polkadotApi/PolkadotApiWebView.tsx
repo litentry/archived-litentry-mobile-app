@@ -480,16 +480,17 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
           setApiState((state) => ({...state, isReady: true}));
           break;
         }
-        case MessageType.API_DISCONNECTED: {
-          postMessage(reconnectApiMessage({wsEndpoint: currentNetwork.ws[0] as string}));
-          setApiState({isReady: false, isConnecting: true});
-          break;
-        }
 
-        case MessageType.API_ERROR: {
-          console.warn('API ERROR', message.payload);
-          postMessage(reconnectApiMessage({wsEndpoint: currentNetwork.ws[0] as string}));
-          setApiState({isReady: false, isConnecting: true});
+        case MessageType.API_ERROR:
+        case MessageType.API_DISCONNECTED: {
+          if (message.type === MessageType.API_ERROR) {
+            console.warn('API ERROR', message.payload);
+          }
+          const wsEndpoint = currentNetwork.ws[0] as string;
+          if (wsEndpoint === message.payload.wsEndpoint) {
+            postMessage(reconnectApiMessage({wsEndpoint}));
+            setApiState({isReady: false, isConnecting: true});
+          }
           break;
         }
 

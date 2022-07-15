@@ -54,18 +54,18 @@ cryptoWaitReady().then(function () {
   const windowDocument = userAgent.includes('iphone') ? window : document;
   let api: ApiPromise | undefined;
 
-  const runApiListeners = () => {
+  const runApiListeners = (wsEndpoint: string) => {
     api?.on('connected', () => {
-      postMessage(apiConnectedMessage());
+      postMessage(apiConnectedMessage({wsEndpoint}));
     });
     api?.on('ready', () => {
-      postMessage(apiReadyMessage());
+      postMessage(apiReadyMessage({wsEndpoint}));
     });
     api?.on('disconnected', () => {
-      postMessage(apiDisconnectedMessage());
+      postMessage(apiDisconnectedMessage({wsEndpoint}));
     });
     api?.on('error', (error) => {
-      postMessage(apiErrorMessage({error}));
+      postMessage(apiErrorMessage({error, wsEndpoint}));
     });
   };
 
@@ -73,12 +73,17 @@ cryptoWaitReady().then(function () {
     const {message, id} = JSON.parse(event.data) as {message: Message; id: string};
 
     switch (message.type) {
-      case MessageType.INIT_API:
-      case MessageType.RECONNECT_API: {
-        const provider = new WsProvider(message.payload?.wsEndpoint, false);
+      case MessageType.INIT_API: {
+        const wsEndpoint = message.payload.wsEndpoint;
+        const provider = new WsProvider(wsEndpoint, false);
         api = new ApiPromise({provider});
         api.connect();
-        runApiListeners();
+        runApiListeners(wsEndpoint);
+        break;
+      }
+
+      case MessageType.RECONNECT_API: {
+        api?.connect();
         break;
       }
 
