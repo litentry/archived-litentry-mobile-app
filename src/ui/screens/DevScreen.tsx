@@ -1,10 +1,10 @@
 import React, {useContext} from 'react';
 import {View} from 'react-native';
-import {Divider, Button, List, Subheading, useTheme, Select} from '@ui/library';
+import {Divider, Button, List, Subheading, Select} from '@ui/library';
 import {InAppNotificationContent, InAppNotificationContext} from 'context/InAppNotificationContext';
 import {useApi} from 'context/ChainApiContext';
 import {ScrollView} from 'react-native-gesture-handler';
-import globalStyles, {standardPadding} from '@ui/styles';
+import globalStyles from '@ui/styles';
 import {useNetwork} from '@atoms/network';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useConvictions} from 'src/api/hooks/useConvictions';
@@ -15,7 +15,6 @@ import {Padder} from '@ui/components/Padder';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 
 export function DevScreen() {
-  const {colors} = useTheme();
   const {currentNetwork} = useNetwork();
   const {data: convictions} = useConvictions();
   const {trigger} = useContext(InAppNotificationContext);
@@ -23,18 +22,56 @@ export function DevScreen() {
   const {activeAccount, selectActiveAccount} = useActiveAccount();
   const {data: accountInfo} = useAccount(activeAccount?.address);
 
+  const ApiStatus = React.useCallback(
+    () => (
+      <View style={globalStyles.justifyCenter}>
+        <Subheading>{status}</Subheading>
+      </View>
+    ),
+
+    [status],
+  );
+
+  const NotificationTrigger = React.useCallback(
+    () => (
+      <View style={globalStyles.justifyCenter}>
+        <Button mode="contained" onPress={() => trigger({type: 'TextInfo', opts: {text: 'Whatnot'}})}>
+          Trigger
+        </Button>
+      </View>
+    ),
+
+    [trigger],
+  );
+
+  const MultilineNotificationTrigger = React.useCallback(
+    () => (
+      <View style={globalStyles.justifyCenter}>
+        <Button
+          mode="contained"
+          onPress={() =>
+            trigger({
+              type: 'Component',
+              renderContent: () => (
+                <InAppNotificationContent
+                  title="Tx detected"
+                  message="aa very long string[a very long string[a very long string[a very long string[a very long string[]]]]]a very long string[]a very long string[a very long string[a very long string[a very long string[a very long string[]]]]]a very long string[] very long string[a very long string[a very long string[a very long string[a very long string[]]]]]a very long string[]"
+                />
+              ),
+            })
+          }>
+          Trigger
+        </Button>
+      </View>
+    ),
+
+    [trigger],
+  );
+
   return (
     <SafeView edges={noTopEdges}>
       <ScrollView>
-        <List.Item
-          title={`Network: ${currentNetwork.name}`}
-          description={currentNetwork.ws}
-          right={() => (
-            <ItemRight>
-              <Subheading style={{color: colors.success, marginRight: standardPadding * 2}}>{status}</Subheading>
-            </ItemRight>
-          )}
-        />
+        <List.Item title={`Network: ${currentNetwork.name}`} description={currentNetwork.ws} right={ApiStatus} />
         <Divider />
 
         <View style={globalStyles.paddedContainer}>
@@ -62,50 +99,18 @@ export function DevScreen() {
           </View>
         </View>
 
-        <List.Item
-          title="Simple Notification"
-          description="Show simple text in app PN"
-          right={() => (
-            <ItemRight>
-              <Button mode="contained" onPress={() => trigger({type: 'TextInfo', opts: {text: 'Whatnot'}})}>
-                Trigger
-              </Button>
-            </ItemRight>
-          )}
-        />
+        <List.Item title="Simple Notification" description="Show simple text in app PN" right={NotificationTrigger} />
         <Divider />
 
         <List.Item
           title="Show multi-lines Notification"
           description="Show multi-lines In-App-PusNotification"
-          right={() => (
-            <ItemRight>
-              <Button
-                mode="contained"
-                onPress={() =>
-                  trigger({
-                    type: 'Component',
-                    renderContent: () => (
-                      <InAppNotificationContent
-                        title="Tx detected"
-                        message="aa very long string[a very long string[a very long string[a very long string[a very long string[]]]]]a very long string[]a very long string[a very long string[a very long string[a very long string[a very long string[]]]]]a very long string[] very long string[a very long string[a very long string[a very long string[a very long string[]]]]]a very long string[]"
-                      />
-                    ),
-                  })
-                }>
-                Trigger
-              </Button>
-            </ItemRight>
-          )}
+          right={MultilineNotificationTrigger}
         />
         <Divider />
       </ScrollView>
     </SafeView>
   );
-}
-
-function ItemRight({children}: {children: React.ReactNode}) {
-  return <View style={globalStyles.justifyCenter}>{children}</View>;
 }
 
 export default DevScreen;

@@ -20,11 +20,13 @@ export function HomeScreen({navigation, route}: {navigation: any; route: any}) {
     closeBottomSheet();
   };
 
+  const HeaderRight = React.useCallback(() => <NetworkSwitch onPress={openBottomSheet} />, [openBottomSheet]);
+
   const appBarOptions = React.useMemo(() => {
     return {
-      headerRight: () => <NetworkSwitch onPress={openBottomSheet} />,
+      headerRight: HeaderRight,
     };
-  }, [openBottomSheet]);
+  }, [HeaderRight]);
 
   return (
     <Layout style={{flex: 1}}>

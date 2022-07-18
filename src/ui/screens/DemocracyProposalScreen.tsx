@@ -29,11 +29,13 @@ export function DemocracyProposalScreen({
   const proposal = route.params.proposal;
   const title = `${proposal.method}.${proposal.section}`;
 
+  const ItemLeft = React.useCallback(() => <Headline>{proposal.index}</Headline>, [proposal.index]);
+
   return (
     <Layout style={globalStyles.flex}>
       <SafeView edges={noTopEdges}>
         <ScrollView contentContainerStyle={styles.container}>
-          <List.Item title={title} disabled left={() => <Headline>{proposal.index}</Headline>} />
+          <List.Item title={title} disabled left={ItemLeft} />
           <ProposalCall proposal={proposal} />
           <Padder scale={1} />
 

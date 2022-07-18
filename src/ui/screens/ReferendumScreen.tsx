@@ -68,15 +68,13 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
     !balance.gt(BN_ZERO) ||
     balance.gt(formattedStringToBn(state.account.balance?.free));
 
+  const ReferendumHeadline = React.useCallback(() => <Headline>{referendum.index}</Headline>, [referendum.index]);
+
   return (
     <Layout style={globalStyles.flex}>
       <SafeView edges={noTopEdges}>
         <ScrollView contentContainerStyle={styles.container}>
-          <List.Item
-            title={getProposalTitle(referendum)}
-            disabled
-            left={() => <Headline>{referendum.index}</Headline>}
-          />
+          <List.Item title={getProposalTitle(referendum)} disabled left={ReferendumHeadline} />
           <ProposalCall proposal={referendum} />
           <Padder scale={1} />
 

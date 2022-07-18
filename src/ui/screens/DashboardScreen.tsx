@@ -42,11 +42,14 @@ function DashboardScreen({navigation, route}: Props) {
     closeBottomSheet();
   };
 
-  const appBarOptions = React.useMemo(() => {
-    return {
-      headerRight: () => <NetworkSwitch onPress={openBottomSheet} />,
-    };
-  }, [openBottomSheet]);
+  const HeaderRight = React.useCallback(() => <NetworkSwitch onPress={openBottomSheet} />, [openBottomSheet]);
+
+  const appBarOptions = React.useMemo(
+    () => ({
+      headerRight: HeaderRight,
+    }),
+    [HeaderRight],
+  );
 
   return (
     <Layout style={styles.container}>

@@ -52,18 +52,19 @@ export function ExportAccountWithJsonFileScreen({route, navigation}: ScreenProps
     }
   };
 
+  const AccountIdentityIcon = React.useCallback(
+    () => (
+      <View style={globalStyles.justifyCenter}>
+        <IdentityIcon value={address} size={40} />
+      </View>
+    ),
+    [address],
+  );
+
   return (
     <SafeView edges={noTopEdges}>
       <View style={styles.container}>
-        <List.Item
-          title={account?.meta.name}
-          left={() => (
-            <View style={globalStyles.justifyCenter}>
-              <IdentityIcon value={address} size={40} />
-            </View>
-          )}
-          description={address}
-        />
+        <List.Item title={account?.meta.name} left={AccountIdentityIcon} description={address} />
         <Padder scale={1} />
 
         <TextInput

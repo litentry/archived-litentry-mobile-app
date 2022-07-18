@@ -74,7 +74,7 @@ export function TreasuryOverviewScreen() {
                 <Button icon="open-in-new" onPress={openInPolkassembly(item.proposal)}>{`Polkassembly`}</Button>
               </TreasuryProposalTeaser>
             )}
-            ItemSeparatorComponent={() => <Padder scale={1} />}
+            ItemSeparatorComponent={Padder}
             renderSectionHeader={({section: {title, data}}) => (
               <>
                 {title === 'Approved' && <Padder scale={1} />}
@@ -116,10 +116,12 @@ type TreasuryProposalTeaserProps = {
 };
 
 function TreasuryProposalTeaser({proposal, children}: TreasuryProposalTeaserProps) {
+  const ProposalHeadline = React.useCallback(() => <Headline>{`#${proposal.index}`}</Headline>, [proposal.index]);
+
   return (
     <Card>
       <Card.Content>
-        <List.Item title={''} left={() => <Headline>{`#${proposal.index}`}</Headline>} />
+        <List.Item title={''} left={ProposalHeadline} />
         <ItemRowBlock label="Proposer">
           <AccountTeaser account={proposal.proposer.account} />
         </ItemRowBlock>
