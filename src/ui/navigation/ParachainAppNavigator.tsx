@@ -1,6 +1,6 @@
 import React from 'react';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createDrawerNavigator, DrawerContentComponentProps, DrawerHeaderProps} from '@react-navigation/drawer';
+import {createNativeStackNavigator, NativeStackHeaderProps} from '@react-navigation/native-stack';
 import {MainDrawerAppBar, MainStackAppBar} from '@ui/navigation/AppBars';
 import {AccountsNavigator} from '@ui/navigation/AppNavigator';
 import {accountsNavigator, feedbackScreen, tokenMigrationScreen, webviewScreen} from '@ui/navigation/routeKeys';
@@ -28,9 +28,11 @@ const TokenMigrationStack = createNativeStackNavigator<TokenMigrationStackParamL
 const Drawer = createDrawerNavigator<DrawerParamList>();
 const HomeStack = createNativeStackNavigator<{home: undefined}>();
 
+const StackNavigatorHeader = (props: NativeStackHeaderProps) => <MainStackAppBar {...props} />;
+
 function TokenMigrationNavigator() {
   return (
-    <TokenMigrationStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
+    <TokenMigrationStack.Navigator screenOptions={{header: StackNavigatorHeader}}>
       <TokenMigrationStack.Screen name={tokenMigrationScreen} component={TokenMigrationScreen} />
     </TokenMigrationStack.Navigator>
   );
@@ -39,17 +41,18 @@ function TokenMigrationNavigator() {
 // TODO: remove this navigator
 function HomeNavigator() {
   return (
-    <HomeStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
+    <HomeStack.Navigator screenOptions={{header: StackNavigatorHeader}}>
       <HomeStack.Screen name={'home'} component={HomeScreen} options={{headerShown: false}} />
     </HomeStack.Navigator>
   );
 }
 
+const DrawerNavigatorHeader = (props: DrawerHeaderProps) => <MainDrawerAppBar {...props} />;
+const DrawerContent = (props: DrawerContentComponentProps) => <DrawerScreen {...props} />;
+
 function DrawerNavigator() {
   return (
-    <Drawer.Navigator
-      drawerContent={(props) => <DrawerScreen {...props} />}
-      screenOptions={{header: (props) => <MainDrawerAppBar {...props} />}}>
+    <Drawer.Navigator drawerContent={DrawerContent} screenOptions={{header: DrawerNavigatorHeader}}>
       <Drawer.Screen name={'homeScreen'} component={HomeNavigator} options={{headerShown: false}} />
       <Drawer.Screen
         name={'tokenMigrationNavigator'}
