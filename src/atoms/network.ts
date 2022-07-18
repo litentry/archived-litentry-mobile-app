@@ -3,7 +3,7 @@ import {persistAtom} from '@atoms/persist';
 import {useRemoteConfig} from 'src/hooks/useRemoteConfig';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 
-export type SupportedNetworkType = 'polkadot' | 'kusama' | 'litentry-test' | 'litmus' | 'litentry-rococo';
+export type SupportedNetworkType = 'polkadot' | 'kusama' | 'litmus' | 'litentry-rococo';
 
 export type NetworkType = {
   name: string;
