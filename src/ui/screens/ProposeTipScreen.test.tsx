@@ -1,13 +1,7 @@
-import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {
-  AccountsStackParamList,
-  AppStackParamList,
-  CompleteNavigatorParamList,
-  DashboardStackParamList,
-} from '@ui/navigation/navigation';
-import {manageIdentityScreen} from '@ui/navigation/routeKeys';
+import {NavigationProp} from '@react-navigation/native';
+import {DashboardStackParamList} from '@ui/navigation/navigation';
 import React from 'react';
-import {fireEvent, render, waitFor} from 'src/testUtils';
+import {fireEvent, render} from 'src/testUtils';
 import {ProposeTipScreen} from './ProposeTipScreen';
 
 jest.useFakeTimers();

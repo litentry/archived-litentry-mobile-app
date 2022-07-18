@@ -1,9 +1,6 @@
-import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {NavigationProp} from '@react-navigation/native';
 import {AppStackParamList} from '@ui/navigation/navigation';
 import React from 'react';
-import {Linking} from 'react-native';
-import {debug} from 'react-native-reanimated';
-import {ReactTestInstance} from 'react-test-renderer';
 import {fireEvent, render, waitFor} from 'src/testUtils';
 import {TechnicalCommitteeScreen} from './TechnicalCommitteeScreen';
 

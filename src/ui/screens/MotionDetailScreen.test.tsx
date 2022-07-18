@@ -2,9 +2,9 @@ import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {AppStackParamList, DashboardStackParamList} from '@ui/navigation/navigation';
 import React from 'react';
-import {fireEvent, render} from 'src/testUtils';
+import {render} from 'src/testUtils';
 import {MotionDetailScreen} from './MotionDetailScreen';
-import RNWebView from 'react-native-webview';
+
 const navigation = {} as unknown as NativeStackNavigationProp<AppStackParamList>;
 
 const route = {
@@ -35,11 +35,5 @@ describe('MotionDetailScreen', () => {
     await findAllByText('Votes');
     await findByText('Joe');
     await findByText('Wei');
-  });
-
-  it('should open bottom sheets with webview when pressed on on polkassembly', async () => {
-    // const webViewSpy = jest.spyOn(RNWebView , 'injectJavaScript')
-    const {findByText, findAllByText} = render(<MotionDetailScreen navigation={navigation} route={route} />);
-    fireEvent.press(await findByText('on Polkassembly'));
   });
 });

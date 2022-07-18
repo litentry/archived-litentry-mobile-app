@@ -37,15 +37,4 @@ describe('ExportAccountWithJsonFileScreen', () => {
     await findAllByText('Password');
     await findByText('Export');
   });
-
-  it('should backup the account details into JSON file', async () => {
-    // const backUpAccountDetailsSpy = jest.spyOn(Share, 'open');
-    const {findByTestId} = render(<ExportAccountWithJsonFileScreen navigation={navigation} route={route} />);
-    const exportButton = await findByTestId('export-button');
-    expect(exportButton).toBeDisabled();
-    const password = await findByTestId('password-id');
-    fireEvent.changeText(password, 'NewPassword');
-    expect(exportButton).toBeEnabled();
-    fireEvent.press(exportButton);
-  });
 });
