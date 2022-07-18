@@ -6,7 +6,7 @@ import {useAppState} from 'src/hooks/useAppState';
 
 type AuthorizationStatus = FirebaseMessagingTypes.AuthorizationStatus;
 
-enum SUBSCRIPTION_ID {
+export enum SUBSCRIPTION_ID {
   NEW_TREASURY_PROPOSAL = 'treasury.Proposed',
   TIP_SUGGESTION = 'tips.NewTip',
   NEW_REFERENDUM = 'democracy.Started',
@@ -45,7 +45,7 @@ const isPermissionNotDetermined = (status: AuthorizationStatus) =>
 export function usePushTopics() {
   const [subscriptionTopics, setSubscriptionTopics] = useRecoilState(subscriptionState);
 
-  const topics = useMemo(() => {
+  const subscriptions = useMemo(() => {
     const topicIds = Object.keys(subscriptionTopics) as SUBSCRIPTION_ID[];
     return topicIds.map((topicId) => ({
       id: topicId,
@@ -54,7 +54,7 @@ export function usePushTopics() {
     }));
   }, [subscriptionTopics]);
 
-  const toggleTopic = useCallback(
+  const toggleSubscription = useCallback(
     ({id, subscribe}: {id: SUBSCRIPTION_ID; subscribe: boolean}) => {
       // optimistic update
       setSubscriptionTopics({
@@ -104,8 +104,8 @@ export function usePushTopics() {
   }, [subscriptionTopics, setSubscriptionTopics]);
 
   return {
-    topics,
-    toggleTopic,
+    subscriptions,
+    toggleSubscription,
     subscribeToAllTopics,
     unSubscribeToAllTopics,
   };

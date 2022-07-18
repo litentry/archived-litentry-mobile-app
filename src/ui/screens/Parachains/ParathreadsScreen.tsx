@@ -52,29 +52,39 @@ type ParathreadItemProps = {
 function ParathreadItem({parathread}: ParathreadItemProps) {
   const [days, hours] = parathread.lease?.blockTime || [];
 
+  const AccountIdentityIcon = React.useCallback(
+    () => (
+      <View style={globalStyles.justifyCenter}>
+        {parathread?.manager && <Identicon value={parathread.manager.account.address} size={30} />}
+      </View>
+    ),
+    [parathread],
+  );
+
+  const ParathreadId = React.useCallback(
+    () => (
+      <View style={globalStyles.justifyCenter}>
+        <Text>{parathread.id}</Text>
+      </View>
+    ),
+    [parathread],
+  );
+
   return (
     <List.Item
       onPress={() => toParathreadHomepage(String(parathread.homepage))}
-      left={() => (
-        <View style={globalStyles.justifyCenter}>
-          {parathread?.manager && <Identicon value={parathread.manager.account.address} size={30} />}
-        </View>
-      )}
-      title={() => (
+      left={AccountIdentityIcon}
+      title={
         <View style={styles.manager}>{parathread.manager && <Account account={parathread.manager.account} />}</View>
-      )}
-      description={() => (
+      }
+      description={
         <>
           {parathread.name && <Text>{parathread.name}</Text>}
           {parathread.lease ? <Text>{parathread.lease.period}</Text> : null}
           {days ? <Text>{days || hours ? `${days || ''} ${hours || ''}` : null}</Text> : null}
         </>
-      )}
-      right={() => (
-        <View style={globalStyles.justifyCenter}>
-          <Text>{parathread.id}</Text>
-        </View>
-      )}
+      }
+      right={ParathreadId}
     />
   );
 }

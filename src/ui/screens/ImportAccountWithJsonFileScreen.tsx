@@ -43,6 +43,16 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
     }
   }
 
+  const AccountIdentityIcon = React.useCallback(() => {
+    if (parsedJson) {
+      return (
+        <View style={globalStyles.justifyCenter}>
+          <IdentityIcon value={parsedJson.address} size={40} />
+        </View>
+      );
+    }
+  }, [parsedJson]);
+
   return (
     <SafeView edges={noTopEdges}>
       <ScrollView style={styles.container}>
@@ -52,15 +62,7 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
         <Caption>Supply a backed-up JSON file, encrypted with your account-specific password.</Caption>
         <Padder scale={0.5} />
         {parsedJson ? (
-          <List.Item
-            title={parsedJson.meta.name}
-            left={() => (
-              <View style={globalStyles.justifyCenter}>
-                <IdentityIcon value={parsedJson.address} size={40} />
-              </View>
-            )}
-            description={parsedJson.address}
-          />
+          <List.Item title={parsedJson.meta.name} left={AccountIdentityIcon} description={parsedJson.address} />
         ) : (
           <>
             <Button
