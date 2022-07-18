@@ -74,8 +74,7 @@ export function useAvailableNetworks() {
     availableNetworks: [
       polkadotNetwork,
       kusamaNetwork,
-      litentryRococo,
-      ...(__DEV__ || isParachainAppEnabled ? [litmusNetwork] : []),
+      ...(__DEV__ || isParachainAppEnabled ? [litentryRococo, litmusNetwork] : []),
     ],
   };
 }
