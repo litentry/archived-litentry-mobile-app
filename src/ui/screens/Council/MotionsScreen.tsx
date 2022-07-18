@@ -15,7 +15,7 @@ import type {Account} from 'src/api/hooks/useAccount';
 import {InputLabel} from '@ui/library/InputLabel';
 import {useCouncilAccounts} from 'src/hooks/useCouncilAccounts';
 import {useNetwork} from '@atoms/network';
-import type {SupportedNetworkType} from 'src/types';
+import type {SupportedNetworkType} from 'src/atoms/network';
 import {Caption, Card, Divider} from 'react-native-paper';
 import {ProposalCall} from '@ui/components/ProposalCall';
 import {ItemRowBlock} from '@ui/components/ItemRowBlock';
