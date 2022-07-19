@@ -2,7 +2,8 @@ import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import React from 'react';
-import {render, fireEvent} from 'src/testUtils';
+import {render, fireEvent, waitFor} from 'src/testUtils';
+import {ReactTestInstance} from 'react-test-renderer';
 import DashboardScreen from './DashboardScreen';
 
 const navigation = {
@@ -31,7 +32,13 @@ describe('DashboardScreen', () => {
 
   it('should test onPress prop functionality of upcoming events', async () => {
     const {findByText} = render(<DashboardScreen navigation={navigation} route={route} />);
-    const events = await findByText('Upcoming events');
+
+    const sectionTitle = 'Upcoming events';
+    await waitFor(async () => {
+      await findByText(sectionTitle);
+    });
+
+    const events = await findByText(sectionTitle);
     fireEvent.press(events);
     expect(navigationSpy).toBeCalledWith('Events');
   });
@@ -39,6 +46,11 @@ describe('DashboardScreen', () => {
   const sections = ['Democracy', 'Council', 'Treasury', 'Bounties'];
   it.each(sections)('should test onPress prop functionality of %s', async (expected) => {
     const {findByText} = render(<DashboardScreen navigation={navigation} route={route} />);
+
+    await waitFor(async () => {
+      await findByText(expected);
+    });
+
     const expectedTeaser = await findByText(expected);
     fireEvent.press(expectedTeaser);
     expect(navigationSpy).toBeCalledWith(expected);
