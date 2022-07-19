@@ -2805,7 +2805,7 @@ export type SubstrateChainCouncil = {
   members: Array<SubstrateChainCouncilMember>;
   primeMember?: Maybe<SubstrateChainCouncilMember>;
   runnersUp: Array<SubstrateChainCouncilMember>;
-  termProgress: SubstrateChainTermProgress;
+  termProgress?: Maybe<SubstrateChainTermProgress>;
   totalCandidates: Scalars['Int'];
   totalMembers: Scalars['Int'];
   totalRunnersUp: Scalars['Int'];
