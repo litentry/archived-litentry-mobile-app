@@ -24,6 +24,15 @@ type ScreenProps = {
   navigation: NavigationProp<DashboardStackParamList>;
 };
 
+function Footer() {
+  return (
+    <View style={styles.footer}>
+      <Padder scale={1} />
+      <SubmitProposal />
+    </View>
+  );
+}
+
 export function DemocracyScreen({navigation}: ScreenProps) {
   const {currentNetwork} = useNetwork();
   const {data: democracy, loading, refetch, refreshing} = useDemocracy();
@@ -55,7 +64,7 @@ export function DemocracyScreen({navigation}: ScreenProps) {
           <LoadingView />
         ) : (
           <SectionList
-            ItemSeparatorComponent={() => <Padder scale={1} />}
+            ItemSeparatorComponent={Padder}
             contentContainerStyle={styles.content}
             stickySectionHeadersEnabled={false}
             refreshing={refreshing}
@@ -109,12 +118,7 @@ export function DemocracyScreen({navigation}: ScreenProps) {
               );
             }}
             keyExtractor={(item) => item.index}
-            ListFooterComponent={() => (
-              <View style={styles.footer}>
-                <Padder scale={1} />
-                <SubmitProposal />
-              </View>
-            )}
+            ListFooterComponent={Footer}
           />
         )}
       </SafeView>
@@ -129,13 +133,15 @@ type ProposalTeaserProps = {
 };
 
 function DemocracyProposalTeaser({proposal, children, navigation}: ProposalTeaserProps) {
+  const ItemLeft = React.useCallback(() => <Headline>{`#${proposal.index}`}</Headline>, [proposal.index]);
+
   if (proposal.__typename === 'SubstrateChainDemocracyReferendum') {
     return (
       <Card onPress={() => navigation.navigate(referendumScreen, {referendum: proposal})}>
         <Card.Content>
           <List.Item
             title={<Caption>{getProposalTitle(proposal)}</Caption>}
-            left={() => <Headline>{`#${proposal.index}`}</Headline>}
+            left={ItemLeft}
             description={proposal.endPeriod ? proposal.endPeriod.slice(0, 2).join(' ') : ''}
           />
           <ProposalCall proposal={proposal} />
@@ -147,10 +153,7 @@ function DemocracyProposalTeaser({proposal, children, navigation}: ProposalTease
     return (
       <Card onPress={() => navigation.navigate(democracyProposalScreen, {proposal})}>
         <Card.Content>
-          <List.Item
-            title={<Caption>{getProposalTitle(proposal)}</Caption>}
-            left={() => <Headline>{`#${proposal.index}`}</Headline>}
-          />
+          <List.Item title={<Caption>{getProposalTitle(proposal)}</Caption>} left={ItemLeft} />
           <ItemRowBlock label="Balance">
             <Caption>{proposal.formattedBalance}</Caption>
           </ItemRowBlock>

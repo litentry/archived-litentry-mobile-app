@@ -9,7 +9,7 @@ import globalStyles, {standardPadding} from '@ui/styles';
 import {EmptyView} from '@ui/components/EmptyView';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import LoadingView from '@ui/components/LoadingView';
-import {useParaChain} from 'src/api/hooks/useParachain';
+import {Parachain, useParaChain} from 'src/api/hooks/useParachain';
 import {accountScreen} from '@ui/navigation/routeKeys';
 
 type ScreenProps = {
@@ -17,9 +17,68 @@ type ScreenProps = {
   navigation: NavigationProp<AppStackParamList>;
 };
 
+const LeftIcon = (icon: string) => () =>
+  (
+    <View style={globalStyles.justifyCenter}>
+      <Icon name={icon} size={20} />
+    </View>
+  );
+
+function ParachainDetailsHeader({parachain}: {parachain: Parachain}) {
+  const LeaseInfo = React.useCallback(() => {
+    const [days, hours] = parachain?.lease?.blockTime || [];
+    return (
+      <View style={styles.accessoryRight}>
+        {parachain.lease ? <Text>{parachain.lease?.period}</Text> : null}
+        <Text style={globalStyles.rowContainer}>{days || hours ? `${days || ''} ${hours || ''}` : null}</Text>
+      </View>
+    );
+  }, [parachain]);
+
+  const LifecycleInfo = React.useCallback(
+    () => (
+      <View style={styles.accessoryRight}>
+        <Text>{parachain.lifecycle}</Text>
+      </View>
+    ),
+    [parachain],
+  );
+
+  return (
+    <Card>
+      <Card.Content>
+        <Subheading style={globalStyles.textCenter}>{parachain.name}</Subheading>
+        <Paragraph style={globalStyles.textCenter}>{`#${parachain.id}`}</Paragraph>
+        <View style={globalStyles.spaceBetweenRowContainer}>
+          <List.Item style={styles.listItem} title="Included" description={parachain.lastIncludedBlock} />
+          <List.Item style={styles.listItem} title="Backed" description={`${parachain.lastBackedBlock || 0}`} />
+        </View>
+        <Divider />
+        <List.Item title="Lease" left={LeftIcon('clock-outline')} right={LeaseInfo} />
+        <List.Item title="Lifecycle" left={LeftIcon('sync')} right={LifecycleInfo} />
+        {parachain.homepage ? <Divider /> : null}
+        <Padder scale={0.5} />
+        {parachain?.homepage ? (
+          <Button
+            icon="home"
+            onPress={() => {
+              Linking.canOpenURL(String(parachain.homepage)).then((supported) => {
+                if (supported) {
+                  Linking.openURL(String(parachain.homepage));
+                }
+              });
+            }}>
+            {`Homepage`}
+          </Button>
+        ) : null}
+      </Card.Content>
+    </Card>
+  );
+}
+
 export function ParachainDetailScreen({route, navigation}: ScreenProps) {
   const {data: parachain, loading} = useParaChain(route.params.parachainId);
-  const [days, hours] = parachain?.lease?.blockTime || [];
+
   const sections = [
     {
       title: `Val. Group (${parachain?.validators?.validators.length || 0})`,
@@ -42,55 +101,7 @@ export function ParachainDetailScreen({route, navigation}: ScreenProps) {
   return (
     <SafeView edges={noTopEdges}>
       <SectionList
-        ListHeaderComponent={() => (
-          <Card>
-            <Card.Content>
-              <Subheading style={globalStyles.textCenter}>{parachain.name}</Subheading>
-              <Paragraph style={globalStyles.textCenter}>{`#${parachain.id}`}</Paragraph>
-              <View style={globalStyles.spaceBetweenRowContainer}>
-                <List.Item style={styles.listItem} title="Included" description={parachain.lastIncludedBlock} />
-                <List.Item style={styles.listItem} title="Backed" description={`${parachain.lastBackedBlock || 0}`} />
-              </View>
-              <Divider />
-              <List.Item
-                title="Lease"
-                left={() => <LeftIcon icon="clock-outline" />}
-                right={() => (
-                  <View style={styles.accessoryRight}>
-                    {parachain.lease ? <Text>{parachain.lease?.period}</Text> : null}
-                    <Text style={globalStyles.rowContainer}>
-                      {days || hours ? `${days || ''} ${hours || ''}` : null}
-                    </Text>
-                  </View>
-                )}
-              />
-              <List.Item
-                title="Lifecycle"
-                left={() => <LeftIcon icon="sync" />}
-                right={() => (
-                  <View style={styles.accessoryRight}>
-                    <Text>{parachain.lifecycle}</Text>
-                  </View>
-                )}
-              />
-              {parachain.homepage ? <Divider /> : null}
-              <Padder scale={0.5} />
-              {parachain?.homepage ? (
-                <Button
-                  icon="home"
-                  onPress={() => {
-                    Linking.canOpenURL(String(parachain.homepage)).then((supported) => {
-                      if (supported) {
-                        Linking.openURL(String(parachain.homepage));
-                      }
-                    });
-                  }}>
-                  {`Homepage`}
-                </Button>
-              ) : null}
-            </Card.Content>
-          </Card>
-        )}
+        ListHeaderComponent={<ParachainDetailsHeader parachain={parachain} />}
         contentContainerStyle={styles.content}
         stickySectionHeadersEnabled={false}
         sections={sections}
@@ -109,13 +120,13 @@ export function ParachainDetailScreen({route, navigation}: ScreenProps) {
   );
 }
 
-function LeftIcon({icon}: {icon: string}) {
-  return (
-    <View style={globalStyles.justifyCenter}>
-      <Icon name={icon} size={20} />
-    </View>
-  );
-}
+// function LeftIcon({icon}: {icon: string}) {
+//   return (
+//     <View style={globalStyles.justifyCenter}>
+//       <Icon name={icon} size={20} />
+//     </View>
+//   );
+// }
 
 const styles = StyleSheet.create({
   content: {

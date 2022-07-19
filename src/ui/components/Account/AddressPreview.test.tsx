@@ -1,6 +1,6 @@
 import React from 'react';
 import {render} from 'src/testUtils';
-import AddressInfoPreview from './AddressPreview';
+import {AddressInfoPreview} from './AddressPreview';
 
 const address = '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a';
 

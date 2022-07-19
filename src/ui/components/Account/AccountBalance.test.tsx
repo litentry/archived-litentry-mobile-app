@@ -13,7 +13,7 @@ const balance = {
   freeFrozen: '181215680471934',
   formattedFreeFrozen: '18,121.5680 DOT',
   formattedFeeFrozen: '129.641 DOT',
-} as AccountBalanceType;
+} as unknown as AccountBalanceType;
 
 describe('AccountBalance', () => {
   it('should render the component with data', async () => {
