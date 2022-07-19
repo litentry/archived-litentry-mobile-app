@@ -6,16 +6,47 @@ import * as dateUtils from 'src/utils/date';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {usePolkassemblyDiscussionDetail} from 'src/api/hooks/usePolkassemblyDiscussionDetail';
+import {Posts, usePolkassemblyDiscussionDetail} from 'src/api/hooks/usePolkassemblyDiscussionDetail';
 import {PolkassemblyDiscussionStackParamList} from '@ui/navigation/navigation';
 import {polkassemblyDiscussionDetail} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
 
-export function PolkassemblyDiscussionDetail({
-  route,
-}: {
+type ScreenProps = {
   route: RouteProp<PolkassemblyDiscussionStackParamList, typeof polkassemblyDiscussionDetail>;
-}) {
+};
+
+function DiscussionDetailHeader({post}: {post: Posts}) {
+  return (
+    <View style={styles.header}>
+      <Headline>{post.title ?? ''}</Headline>
+      <View style={styles.postDetailRow}>
+        <Caption>{post.author?.username ?? ''} </Caption>
+        <Caption>posted in </Caption>
+        <Chip>{post.topic.name}</Chip>
+      </View>
+      <Caption> {dateUtils.fromNow(post.created_at)}</Caption>
+      <View style={styles.content}>
+        <Text>{post.content?.trim() ?? ''}</Text>
+      </View>
+      <View style={styles.reactionRow}>
+        {post.comments.length ? (
+          <>
+            <View style={globalStyles.rowAlignCenter}>
+              <Icon name="message-outline" size={15} />
+              <Padder scale={0.3} />
+              <Caption>{post.comments.length} comments</Caption>
+            </View>
+            <Padder scale={1} />
+          </>
+        ) : null}
+        <Caption>{`👍 ${post.likes.aggregate.count} `}</Caption>
+        <Caption>{` 👎 ${post.dislikes.aggregate.count}`}</Caption>
+      </View>
+    </View>
+  );
+}
+
+export function PolkassemblyDiscussionDetail({route}: ScreenProps) {
   const {colors} = useTheme();
   const id = route.params.id;
   const {data} = usePolkassemblyDiscussionDetail(id);
@@ -29,34 +60,7 @@ export function PolkassemblyDiscussionDetail({
   return (
     <SafeView edges={noTopEdges}>
       <FlatList
-        ListHeaderComponent={() => (
-          <View style={styles.header}>
-            <Headline>{post.title ?? ''}</Headline>
-            <View style={styles.postDetailRow}>
-              <Caption>{post.author?.username ?? ''} </Caption>
-              <Caption>posted in </Caption>
-              <Chip>{post.topic.name}</Chip>
-            </View>
-            <Caption> {dateUtils.fromNow(post.created_at)}</Caption>
-            <View style={styles.content}>
-              <Text>{post.content?.trim() ?? ''}</Text>
-            </View>
-            <View style={styles.reactionRow}>
-              {post.comments.length ? (
-                <>
-                  <View style={globalStyles.rowAlignCenter}>
-                    <Icon name="message-outline" size={15} />
-                    <Padder scale={0.3} />
-                    <Caption>{post.comments.length} comments</Caption>
-                  </View>
-                  <Padder scale={1} />
-                </>
-              ) : null}
-              <Caption>{`👍 ${post.likes.aggregate.count} `}</Caption>
-              <Caption>{` 👎 ${post.dislikes.aggregate.count}`}</Caption>
-            </View>
-          </View>
-        )}
+        ListHeaderComponent={<DiscussionDetailHeader post={post} />}
         data={post.comments}
         keyExtractor={(item) => item.id}
         renderItem={({item: comment}) => (
@@ -80,7 +84,7 @@ export function PolkassemblyDiscussionDetail({
             </View>
           </View>
         )}
-        ListFooterComponent={() => (
+        ListFooterComponent={
           <View style={styles.footer}>
             <Icon name="information-outline" size={20} />
             <Caption>{` To comment, like or subscribe please `}</Caption>
@@ -88,7 +92,7 @@ export function PolkassemblyDiscussionDetail({
               <Caption style={[styles.textUnderline, {color: colors.primary}]}>login</Caption>
             </TouchableOpacity>
           </View>
-        )}
+        }
         contentContainerStyle={styles.contentContainer}
       />
     </SafeView>

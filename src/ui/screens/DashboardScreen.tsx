@@ -32,7 +32,7 @@ const refetchQueries = [DEMOCRACY_SUMMARY_QUERY, COUNCIL_SUMMARY_QUERY, BOUNTIES
 
 type Props = NativeStackScreenProps<DashboardStackParamList, 'Dashboard'>;
 
-function DashboardScreen({navigation, route}: Props) {
+export function DashboardScreen({navigation, route}: Props) {
   const {closeBottomSheet, openBottomSheet, BottomSheet} = useBottomSheet();
   const {currentNetwork, selectCurrentNetwork} = useNetwork();
   const {availableNetworks} = useAvailableNetworks();
@@ -42,11 +42,14 @@ function DashboardScreen({navigation, route}: Props) {
     closeBottomSheet();
   };
 
-  const appBarOptions = React.useMemo(() => {
-    return {
-      headerRight: () => <NetworkSwitch onPress={openBottomSheet} />,
-    };
-  }, [openBottomSheet]);
+  const HeaderRight = React.useCallback(() => <NetworkSwitch onPress={openBottomSheet} />, [openBottomSheet]);
+
+  const appBarOptions = React.useMemo(
+    () => ({
+      headerRight: HeaderRight,
+    }),
+    [HeaderRight],
+  );
 
   return (
     <Layout style={styles.container}>

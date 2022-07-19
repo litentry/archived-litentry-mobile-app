@@ -79,6 +79,15 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
     navigation.navigate(accountsScreen, {reload: true});
   };
 
+  const AccountIdentityIcon = React.useCallback(
+    () => (
+      <View style={globalStyles.justifyCenter}>
+        <IdentityIcon value={address} size={40} />
+      </View>
+    ),
+    [address],
+  );
+
   return (
     <SafeView edges={noTopEdges}>
       <KeyboardAvoidingView style={globalStyles.flex} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -148,15 +157,7 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
           <Padder scale={2} />
           {address ? (
             <>
-              <List.Item
-                title={account.title}
-                left={() => (
-                  <View style={globalStyles.justifyCenter}>
-                    <IdentityIcon value={address} size={40} />
-                  </View>
-                )}
-                description={address}
-              />
+              <List.Item title={account.title} left={AccountIdentityIcon} description={address} />
               <Padder scale={1} />
             </>
           ) : null}

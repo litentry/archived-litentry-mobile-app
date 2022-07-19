@@ -3,6 +3,7 @@ import type {SubstrateChainRegistrarsSummary, SubstrateChainRegistrar} from 'src
 import {ACCOUNT_FIELDS_FRAGMENT} from 'src/api/hooks/useAccount';
 
 export type Registrar = SubstrateChainRegistrar;
+export type RegistrarsSummary = SubstrateChainRegistrarsSummary;
 
 const REGISTRARS_SUMMARY_QUERY = gql`
   ${ACCOUNT_FIELDS_FRAGMENT}
