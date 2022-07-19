@@ -33,16 +33,20 @@ export function CouncilSummaryTeaser(props: PropTypes) {
               <Padder scale={1} />
               <StatInfoBlock title="Candidates">{`${council.totalCandidates}`}</StatInfoBlock>
             </Card>
-            <Padder scale={0.2} />
-            <Card mode="outlined" style={styles.card}>
-              <ProgressChartWidget
-                title={`Term Progress (${council.termProgress.termDurationParts[0]})`}
-                detail={`${council.termProgress.percentage}%\n${council.termProgress.termLeftParts
-                  ?.slice(0, 2)
-                  .join('\n')}`}
-                progress={council.termProgress.percentage / 100}
-              />
-            </Card>
+            {council.termProgress ? (
+              <>
+                <Padder scale={0.2} />
+                <Card mode="outlined" style={styles.card}>
+                  <ProgressChartWidget
+                    title={`Term Progress (${council.termProgress.termDurationParts[0]})`}
+                    detail={`${council.termProgress.percentage}%\n${council.termProgress.termLeftParts
+                      ?.slice(0, 2)
+                      .join('\n')}`}
+                    progress={council.termProgress.percentage / 100}
+                  />
+                </Card>
+              </>
+            ) : null}
           </View>
           <Padder scale={0.2} />
           {council.primeMember ? (
