@@ -3,7 +3,6 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import React from 'react';
 import {render, fireEvent, waitFor} from 'src/testUtils';
-import {ReactTestInstance} from 'react-test-renderer';
 import DashboardScreen from './DashboardScreen';
 
 const navigation = {
