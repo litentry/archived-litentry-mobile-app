@@ -15,7 +15,7 @@ import globalStyles, {standardPadding} from '@ui/styles';
 import {useNetwork} from '@atoms/network';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
-import {SupportedNetworkType} from 'src/types';
+import {SupportedNetworkType} from 'src/atoms/network';
 
 type ScreenProps = {
   navigation: NavigationProp<PolkassemblyDiscussionStackParamList>;

@@ -1,8 +1,6 @@
 import {Registration} from '@polkadot/types/interfaces';
 import {BarCodeReadEvent} from 'react-native-camera';
 
-export type SupportedNetworkType = 'ethereum' | 'polkadot' | 'kusama' | 'litentry_test' | 'litmus';
-
 export type DeviceType = {
   firebase_token: string;
   device_model: string;

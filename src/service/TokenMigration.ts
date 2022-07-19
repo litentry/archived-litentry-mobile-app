@@ -3,7 +3,7 @@ import Web3 from 'web3';
 import * as ethers from 'ethers';
 import BigNumber from 'bignumber.js';
 import {hexToU8a} from '@polkadot/util';
-import {HexString} from 'polkadot-api';
+import type {HexString} from 'polkadot-api';
 
 const ERC20 = require('../../abi/ERC20.json');
 const BRIDGE = require('../../abi/Bridge.json');
