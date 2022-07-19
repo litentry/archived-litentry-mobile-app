@@ -8,7 +8,7 @@ import QRCamera, {QRCameraRef} from '@ui/components/QRCamera';
 import {SuccessDialog} from '@ui/components/SuccessDialog';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {isAddressValid, parseAddress} from 'src/utils/address';
-import AddressInfoPreview from './AddressPreview';
+import {AddressInfoPreview} from '@ui/components/Account/AddressPreview';
 import {useKeyring} from '@polkadotApi/useKeyring';
 
 type StepType = 'input' | 'preview' | 'success';

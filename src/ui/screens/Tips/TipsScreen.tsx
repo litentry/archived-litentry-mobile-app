@@ -45,15 +45,13 @@ export function TipsScreen({navigation}: ScreenProps) {
           <LoadingView />
         ) : (
           <FlatList
-            ListHeaderComponent={() => {
-              return (
-                <View style={styles.proposeTipContainer}>
-                  <Button mode="outlined" uppercase={false} onPress={() => navigation.navigate(proposeTipScreen)}>
-                    Propose Tip
-                  </Button>
-                </View>
-              );
-            }}
+            ListHeaderComponent={
+              <View style={styles.proposeTipContainer}>
+                <Button mode="outlined" uppercase={false} onPress={() => navigation.navigate(proposeTipScreen)}>
+                  Propose Tip
+                </Button>
+              </View>
+            }
             style={globalStyles.flex}
             data={tips}
             renderItem={({item}) => <TipTeaser tip={item} onPress={toTipDetails} />}
