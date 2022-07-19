@@ -97,29 +97,4 @@ describe('ManageIdentityScreen', () => {
       expect(mockStartTx).toHaveBeenCalledTimes(1);
     });
   });
-
-  it('should open bottom sheets when pressed on request judgement to update the judgement of the account', async () => {
-    const {findByText, findByTestId, findByPlaceholderText} = render(
-      <ManageIdentityScreen navigation={navigation} route={route} />,
-    );
-    fireEvent.press(await findByText('Request Judgement'));
-
-    await findByText('Choose registrar');
-    await findByPlaceholderText('Fee for judgement');
-    await findByText('Fee paid to registrar to provide Judgement');
-
-    const judgementSubmitButton = await findByTestId('judgement-submit-button');
-    expect(judgementSubmitButton).toBeDisabled();
-
-    fireEvent.press(await findByTestId('select-registrar'));
-
-    fireEvent.press(await findByText('W3F/✍️'));
-
-    expect(judgementSubmitButton).toBeEnabled();
-
-    fireEvent.press(judgementSubmitButton);
-    waitFor(() => {
-      expect(mockStartTx).toHaveBeenCalledWith('');
-    });
-  });
 });
