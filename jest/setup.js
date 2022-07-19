@@ -69,3 +69,11 @@ jest.mock('@react-native-community/clipboard', () => {
 jest.mock('@react-navigation/material-top-tabs', () => ({
   createMaterialTopTabNavigator: () => jest.fn(),
 }));
+
+jest.mock('../src/hooks/useRemoteConfig', () => {
+  return {
+    useRemoteConfig: () => ({
+      getValue: jest.fn(),
+    }),
+  };
+});
