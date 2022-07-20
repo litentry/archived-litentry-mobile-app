@@ -2,19 +2,10 @@ import {ApiPromise} from '@polkadot/api';
 import {u8aToHex, bnToBn} from '@polkadot/util';
 import type {KeyringPair} from '@polkadot/keyring/types';
 import type {AccountInfoWithProviders, AccountInfoWithRefCount} from '@polkadot/types/interfaces';
-
-import type {SubmittableExtrinsic, SignerOptions} from '@polkadot/api/submittable/types';
-import type {
-  FunctionMetadataLatest,
-  Hash,
-  ExtrinsicEra,
-  Index,
-  Header,
-  ExtrinsicPayload,
-} from '@polkadot/types/interfaces';
-import type {SignerPayloadJSON, SignatureOptions} from '@polkadot/types/types';
-import type {Registry} from '@polkadot/types-codec/types';
-import {BN_ZERO, assert, isNumber, isUndefined, objectSpread} from '@polkadot/util';
+import type {SubmittableExtrinsic} from '@polkadot/api/submittable/types';
+import type {FunctionMetadataLatest, Hash, ExtrinsicPayload} from '@polkadot/types/interfaces';
+import type {SignerPayloadJSON} from '@polkadot/types/types';
+import {BN_ZERO} from '@polkadot/util';
 import type {TxConfig} from './txTypes';
 import {HexString, TxPayload, TxPayloadData} from './messages';
 import AsyncSigner from './AsyncSigner';
