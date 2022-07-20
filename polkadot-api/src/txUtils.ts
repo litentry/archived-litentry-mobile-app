@@ -1,6 +1,7 @@
 import {ApiPromise} from '@polkadot/api';
-import {u8aToHex} from '@polkadot/util';
+import {u8aToHex, bnToBn} from '@polkadot/util';
 import type {KeyringPair} from '@polkadot/keyring/types';
+import type {AccountInfoWithProviders, AccountInfoWithRefCount} from '@polkadot/types/interfaces';
 
 import type {SubmittableExtrinsic, SignerOptions} from '@polkadot/api/submittable/types';
 import type {
@@ -76,50 +77,101 @@ export async function sendTx(
   signature: HexString,
 ): Promise<Hash> {
   const tx = makeTx(api, txConfig);
+  const canMakeTransaction = await hasEnoughFunds(address, api, tx);
+
+  if (!canMakeTransaction) {
+    return Promise.reject('The account does not have enough free funds available to cover the transaction fees');
+  }
+
   tx.addSignature(address, signature, txPayload);
 
   return new Promise((resolve, reject) => {
-    tx.send((result) => {
-      if (result.isFinalized && !result.isError) {
-        resolve(result.txHash);
-      }
-      if (result.isError && result.dispatchError) {
-        let error;
-        if (result.dispatchError.isModule) {
-          // for module errors, we have the section indexed, lookup
-          const decoded = api.registry.findMetaError(result.dispatchError.asModule);
-          const {docs} = decoded;
-          error = docs.join(' ').trim();
-        } else {
-          error = result.dispatchError.toString();
+    try {
+      tx.send((result) => {
+        if (!result || !result.status) {
+          return;
         }
-        reject(error);
-      }
-    });
+        if (result.status.isFinalized || result.status.isInBlock) {
+          result.events
+            .filter(({event: {section}}) => section === 'system')
+            .forEach(({event: {method}}): void => {
+              if (method === 'ExtrinsicFailed') {
+                reject('ExtrinsicFailed');
+              } else if (method === 'ExtrinsicSuccess') {
+                resolve(result.txHash);
+              }
+            });
+        } else if (result.isError) {
+          let error;
+          if (result.dispatchError?.isModule) {
+            // for module errors, we have the section indexed, lookup
+            const decoded = api.registry.findMetaError(result.dispatchError.asModule);
+            const {docs} = decoded;
+            error = docs.join(' ').trim();
+          } else {
+            error = result.dispatchError?.toString();
+          }
+          reject(error);
+        }
+      });
+    } catch (err) {
+      reject(err);
+    }
   });
+}
+
+async function hasEnoughFunds(address: string, api: ApiPromise, tx: SubmittableExtrinsic<'promise'>) {
+  const info = await tx.paymentInfo(address);
+  const partialFee = info.partialFee;
+  const accountInfo = await api.query.system?.account?.<AccountInfoWithProviders | AccountInfoWithRefCount>(address);
+
+  if (!accountInfo || bnToBn(accountInfo.data.free).lt(bnToBn(partialFee))) {
+    return false;
+  }
+
+  return true;
 }
 
 export async function signAndSendTx(api: ApiPromise, txConfig: TxConfig, pair: KeyringPair): Promise<Hash> {
   const tx = makeTx(api, txConfig);
+  const canMakeTransaction = await hasEnoughFunds(pair.address, api, tx);
+
+  if (!canMakeTransaction) {
+    return Promise.reject('The account does not have enough free funds available to cover the transaction fees');
+  }
 
   return new Promise((resolve, reject) => {
-    tx.signAndSend(pair, (result) => {
-      if (result.isFinalized && !result.isError) {
-        resolve(result.txHash);
-      }
-      if (result.isError && result.dispatchError) {
-        let error;
-        if (result.dispatchError.isModule) {
-          // for module errors, we have the section indexed, lookup
-          const decoded = api.registry.findMetaError(result.dispatchError.asModule);
-          const {docs} = decoded;
-          error = docs.join(' ').trim();
-        } else {
-          error = result.dispatchError.toString();
+    try {
+      tx.signAndSend(pair, (result) => {
+        if (!result || !result.status) {
+          return;
         }
-        reject(error);
-      }
-    });
+        if (result.status.isFinalized || result.status.isInBlock) {
+          result.events
+            .filter(({event: {section}}) => section === 'system')
+            .forEach(({event: {method}}): void => {
+              if (method === 'ExtrinsicFailed') {
+                reject('ExtrinsicFailed');
+              } else if (method === 'ExtrinsicSuccess') {
+                resolve(result.txHash);
+              }
+            });
+        } else if (result.isError) {
+          let error;
+          if (result.dispatchError?.isModule) {
+            // for module errors, we have the section indexed, lookup
+            const decoded = api.registry.findMetaError(result.dispatchError.asModule);
+            const {docs} = decoded;
+            error = docs.join(' ').trim();
+          } else {
+            error = result.dispatchError?.toString();
+          }
+          reject(error);
+        }
+      });
+    } catch (err) {
+      reject(err);
+    }
   });
 }
 
@@ -173,50 +225,4 @@ function splitSingle(value: string[], sep: string): string[] {
   return value.reduce((result: string[], _value: string): string[] => {
     return _value.split(sep).reduce((_result: string[], __value: string) => _result.concat(__value), result);
   }, []);
-}
-
-function makeEraOptions(
-  api: ApiPromise,
-  registry: Registry,
-  partialOptions: Partial<SignerOptions>,
-  {header, mortalLength, nonce}: {header: Header | null; mortalLength: number; nonce: Index},
-): SignatureOptions {
-  if (!header) {
-    assert(
-      partialOptions.era === 0 || !isUndefined(partialOptions.blockHash),
-      'Expected blockHash to be passed alongside non-immortal era options',
-    );
-
-    if (isNumber(partialOptions.era)) {
-      // since we have no header, it is immortal, remove any option overrides
-      // so we only supply the genesisHash and no era to the construction
-      delete partialOptions.era;
-      delete partialOptions.blockHash;
-    }
-
-    return makeSignOptions(api, partialOptions, {nonce});
-  }
-
-  return makeSignOptions(api, partialOptions, {
-    blockHash: header.hash,
-    era: registry.createTypeUnsafe<ExtrinsicEra>('ExtrinsicEra', [
-      {
-        current: header.number,
-        period: partialOptions.era || mortalLength,
-      },
-    ]),
-    nonce,
-  });
-}
-
-function makeSignOptions(
-  api: ApiPromise,
-  partialOptions: Partial<SignerOptions>,
-  extras: {blockHash?: Hash; era?: ExtrinsicEra; nonce?: Index},
-): SignatureOptions {
-  return objectSpread({blockHash: api.genesisHash, genesisHash: api.genesisHash}, partialOptions, extras, {
-    runtimeVersion: api.runtimeVersion,
-    signedExtensions: api.registry.signedExtensions,
-    version: api.extrinsicVersion,
-  });
 }
