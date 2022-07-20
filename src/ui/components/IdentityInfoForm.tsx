@@ -1,10 +1,11 @@
 import React from 'react';
-import {StyleSheet, ScrollView} from 'react-native';
+import {StyleSheet, ScrollView, Alert} from 'react-native';
 import {TextInput, Button} from '@ui/library';
 import {WHITESPACE, validateFormField} from 'src/utils/form';
-import {Account} from 'src/api/hooks/useAccount';
-import {Padder} from './Padder';
+import {useAccount} from 'src/api/hooks/useAccount';
+import {Padder} from '@ui/components/Padder';
 import {standardPadding} from '@ui/styles';
+import {useApiTx} from 'src/api/hooks/useApiTx';
 
 export type IdentityPayload = {
   display: {raw: string} | {none: null};
@@ -16,8 +17,8 @@ export type IdentityPayload = {
 };
 
 type IdentityInfoFormProps = {
-  accountInfo?: Account;
-  onSubmit: (identityPayload: IdentityPayload) => void;
+  address: string;
+  onIdentitySet: () => void;
 };
 
 type FormStatus = Record<
@@ -25,9 +26,10 @@ type FormStatus = Record<
   boolean
 >;
 
-function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps) {
+export function IdentityInfoForm({onIdentitySet, address}: IdentityInfoFormProps) {
+  const startTx = useApiTx();
+  const {data: accountInfo} = useAccount(address);
   const [state, dispatch] = React.useReducer(reducer, {});
-  const {display, legal, email, riot, twitter, web} = state;
   const formStatus = validateForm(state);
 
   React.useEffect(() => {
@@ -44,16 +46,28 @@ function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps) {
     });
   }, [accountInfo]);
 
-  const onSubmitPress = () => {
-    onSubmit({
-      display: display ? {raw: display} : {none: null},
-      email: email ? {raw: email} : {none: null},
-      legal: legal ? {raw: legal} : {none: null},
-      riot: riot ? {raw: riot} : {none: null},
-      twitter: twitter ? {raw: twitter} : {none: null},
-      web: web ? {raw: web} : {none: null},
-    });
-  };
+  const onSubmit = React.useCallback(async () => {
+    const {display, legal, email, riot, twitter, web} = state;
+    await startTx({
+      address,
+      txMethod: 'identity.setIdentity',
+      params: [
+        {
+          display: display ? {raw: display} : {none: null},
+          email: email ? {raw: email} : {none: null},
+          legal: legal ? {raw: legal} : {none: null},
+          riot: riot ? {raw: riot} : {none: null},
+          twitter: twitter ? {raw: twitter} : {none: null},
+          web: web ? {raw: web} : {none: null},
+        },
+      ],
+    })
+      .then(onIdentitySet)
+      .catch((e) => {
+        Alert.alert('Something went wrong!');
+        console.error(e);
+      });
+  }, [address, startTx, state, onIdentitySet]);
 
   return (
     <ScrollView style={styles.container}>
@@ -63,7 +77,7 @@ function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps) {
         label="Display Name"
         placeholder="My On-Chain Name"
         testID="display-name"
-        value={display}
+        value={state.display}
         error={!formStatus.isDisplayValid}
         onChangeText={(value) => dispatch({type: 'set_value', payload: {display: value}})}
         left={<TextInput.Icon name="account-outline" />}
@@ -74,7 +88,7 @@ function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps) {
         mode="outlined"
         label="Legal Name"
         placeholder="Full Legal Name"
-        value={legal}
+        value={state.legal}
         error={!formStatus.isLegalValid}
         onChangeText={(value) => dispatch({type: 'set_value', payload: {legal: value}})}
         left={<TextInput.Icon name="card-text-outline" />}
@@ -86,7 +100,7 @@ function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps) {
         label="Email"
         placeholder="somebody@example.com"
         autoCapitalize="none"
-        value={email}
+        value={state.email}
         error={!formStatus.isEmailValid}
         onChangeText={(value) => dispatch({type: 'set_value', payload: {email: value}})}
         left={<TextInput.Icon name="email-outline" />}
@@ -97,7 +111,7 @@ function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps) {
         mode="outlined"
         label="Web"
         placeholder="https://example.com"
-        value={web}
+        value={state.web}
         autoCapitalize="none"
         error={!formStatus.isWebValid}
         onChangeText={(value) => dispatch({type: 'set_value', payload: {web: value}})}
@@ -109,7 +123,7 @@ function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps) {
         mode="outlined"
         label="Twitter"
         placeholder="@YourTwitterName"
-        value={twitter}
+        value={state.twitter}
         autoCapitalize="none"
         error={!formStatus.isTwitterValid}
         onChangeText={(value) => dispatch({type: 'set_value', payload: {twitter: value}})}
@@ -121,25 +135,19 @@ function IdentityInfoForm({onSubmit, accountInfo}: IdentityInfoFormProps) {
         mode="outlined"
         label="Riot"
         placeholder="@yourName:matrix.org"
-        value={riot}
+        value={state.riot}
         autoCapitalize="none"
         error={!formStatus.isRiotValid}
         onChangeText={(value) => dispatch({type: 'set_value', payload: {riot: value}})}
         left={<TextInput.Icon name="message-outline" />}
       />
       <Padder scale={1} />
-      <Button
-        mode="contained"
-        onPress={onSubmitPress}
-        disabled={!formStatus.isFormValid}
-        testID="identity-submit-button">
+      <Button mode="contained" onPress={onSubmit} disabled={!formStatus.isFormValid} testID="identity-submit-button">
         Submit
       </Button>
     </ScrollView>
   );
 }
-
-export default IdentityInfoForm;
 
 const styles = StyleSheet.create({
   container: {
