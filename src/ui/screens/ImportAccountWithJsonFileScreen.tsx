@@ -14,6 +14,7 @@ import {Padder} from '@ui/components/Padder';
 import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
 import {SecureKeychain} from 'src/service/SecureKeychain';
 import {useKeyring} from '@polkadotApi/useKeyring';
+import {ErrorPayload} from 'polkadot-api';
 
 export function ImportAccountWithJsonFileScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const theme = useTheme();
@@ -38,7 +39,7 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
         navigation.navigate(accountsScreen, {reload: true});
       } catch (e) {
         console.warn(e);
-        setError((e as Error).message);
+        setError((e as ErrorPayload).message);
       }
     }
   }

@@ -14,6 +14,7 @@ import {NavigationProp} from '@react-navigation/core';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 import {useKeyring} from '@polkadotApi/useKeyring';
 import {ErrorText} from '@ui/components/ErrorText';
+import {ErrorPayload} from 'polkadot-api';
 
 type ScreenProps = {
   route: RouteProp<AccountsStackParamList, typeof exportAccountWithJsonFileScreen>;
@@ -47,7 +48,7 @@ export function ExportAccountWithJsonFileScreen({route, navigation}: ScreenProps
       navigation.goBack();
     } catch (e) {
       console.warn(e);
-      setError((e as Error).message);
+      setError((e as ErrorPayload).message);
     }
   };
 
