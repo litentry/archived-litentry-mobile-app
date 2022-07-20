@@ -2,7 +2,6 @@ import React, {useCallback} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import IdentityIcon from '@polkadot/reactnative-identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {Layout} from '@ui/components/Layout';
 import {Button, List, Icon, Caption, Divider, IconButton, useBottomSheet} from '@ui/library';
 import {useNetwork} from '@atoms/network';
 import {IdentityInfoForm} from '@ui/components/IdentityInfoForm';
@@ -202,9 +201,7 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
       </IdentityGuideBottomSheet>
 
       <IdentityInfoBottomSheet>
-        <Layout>
-          <IdentityInfoForm onIdentitySet={onIdentitySet} address={address} />
-        </Layout>
+        <IdentityInfoForm onIdentitySet={onIdentitySet} address={address} />
       </IdentityInfoBottomSheet>
 
       <RequestJudgementBottomSheet>
