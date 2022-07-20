@@ -11,7 +11,7 @@ import {MessageTeaser} from '@ui/components/MessageTeaser';
 import {Subheading, Caption, Icon, useBottomSheet, Button} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
-import type {HexString, TxConfig, TxInfo, TxPayload} from 'polkadot-api';
+import type {ErrorPayload, HexString, TxConfig, TxInfo, TxPayload} from 'polkadot-api';
 import {usePolkadotApiStatus} from '@polkadotApi/usePolkadotApiStatus';
 import {useTx} from '@polkadotApi/useTx';
 
@@ -98,8 +98,8 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
                 .then(() => {
                   dispatch({type: 'SHOW_SUCCESS_VIEW'});
                 })
-                .catch((error) => {
-                  dispatch({type: 'SHOW_ERROR', payload: error});
+                .catch((error: ErrorPayload) => {
+                  dispatch({type: 'SHOW_ERROR', payload: error.message});
                 });
             }}
           />
@@ -128,8 +128,8 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
                   .then(() => {
                     dispatch({type: 'SHOW_SUCCESS_VIEW'});
                   })
-                  .catch((error) => {
-                    dispatch({type: 'SHOW_ERROR', payload: error});
+                  .catch((error: ErrorPayload) => {
+                    dispatch({type: 'SHOW_ERROR', payload: error.message});
                   });
               }}
               showMarker
