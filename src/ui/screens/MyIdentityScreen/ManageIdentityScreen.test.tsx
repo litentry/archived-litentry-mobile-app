@@ -83,18 +83,4 @@ describe('ManageIdentityScreen', () => {
       address: '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a',
     });
   });
-
-  it('should open bottom sheets to update the identity of the entered', async () => {
-    const {findByText, findByTestId} = render(<ManageIdentityScreen navigation={navigation} route={route} />);
-    fireEvent.press(await findByText('Update Identity'));
-    const identitySubmitButton = await findByTestId('identity-submit-button');
-    waitFor(async () => {
-      fireEvent.changeText(await findByTestId('display-name'), 'PureStake/01');
-      expect(identitySubmitButton).toBeEnabled();
-    });
-    fireEvent.press(identitySubmitButton);
-    waitFor(() => {
-      expect(mockStartTx).toHaveBeenCalledTimes(1);
-    });
-  });
 });
