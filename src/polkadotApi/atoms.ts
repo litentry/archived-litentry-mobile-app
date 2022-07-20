@@ -110,12 +110,11 @@ export const keyringState = atom({
   },
 });
 
-export const apiState = atom({
-  key: 'polkadot-api-state',
-  default: {
-    isConnecting: false,
-    isReady: false,
-  },
+type ApiStatus = 'connecting' | 'disconnected' | 'connected' | 'ready' | 'error';
+
+export const apiStatusState = atom<ApiStatus>({
+  key: 'polkadot-api-status',
+  default: 'disconnected',
 });
 
 export const txState = atom({

@@ -12,7 +12,7 @@ import {Subheading, Caption, Icon, useBottomSheet, Button} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
 import type {HexString, TxConfig, TxInfo, TxPayload} from 'polkadot-api';
-import {usePolkadotApiState} from '@polkadotApi/usePolkadotApiState';
+import {usePolkadotApiStatus} from '@polkadotApi/usePolkadotApiStatus';
 import {useTx} from '@polkadotApi/useTx';
 
 const {width, height} = Dimensions.get('window');
@@ -36,17 +36,17 @@ export type StartConfig = {
 export function TxProvider({children}: TxProviderProps): React.ReactElement {
   const {BottomSheet, openBottomSheet, closeBottomSheet} = useBottomSheet();
   const [state, dispatch] = useReducer(reducer, initialState);
-  const apiState = usePolkadotApiState();
+  const apiStatus = usePolkadotApiStatus();
   const {getTxInfo, sendTx, signAndSendTx} = useTx();
 
   useEffect(() => {
-    if (!apiState.isReady && state.view === 'submitting_view') {
+    if (apiStatus !== 'ready' && state.view === 'submitting_view') {
       dispatch({
         type: 'SHOW_WARNING',
         payload: 'The transaction was sent but you got disconnected from the chain. Please verify later.',
       });
     }
-  }, [apiState.isReady, state.view]);
+  }, [apiStatus, state.view]);
 
   const startTx = useCallback(
     async (config: StartConfig) => {

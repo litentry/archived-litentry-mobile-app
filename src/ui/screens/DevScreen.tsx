@@ -12,24 +12,24 @@ import {useActiveAccount} from '@atoms/activeAccount';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {Padder} from '@ui/components/Padder';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
-import {usePolkadotApiState} from '@polkadotApi/usePolkadotApiState';
+import {usePolkadotApiStatus} from '@polkadotApi/usePolkadotApiStatus';
 
 function DevScreen() {
   const {currentNetwork} = useNetwork();
   const {data: convictions} = useConvictions();
   const {trigger} = useContext(InAppNotificationContext);
-  const apiState = usePolkadotApiState();
+  const apiStatus = usePolkadotApiStatus();
   const {activeAccount, selectActiveAccount} = useActiveAccount();
   const {data: accountInfo} = useAccount(activeAccount?.address);
 
   const ApiStatus = React.useCallback(
     () => (
       <View style={globalStyles.justifyCenter}>
-        <Subheading>{apiState.isReady ? 'ready' : 'disconnected'}</Subheading>
+        <Subheading>{apiStatus === 'ready' ? 'ready' : 'disconnected'}</Subheading>
       </View>
     ),
 
-    [apiState.isReady],
+    [apiStatus],
   );
 
   const NotificationTrigger = React.useCallback(

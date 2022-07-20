@@ -4,21 +4,21 @@ import {useNetwork} from '@atoms/network';
 import {Icon, Text, useTheme} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {standardPadding} from '@ui/styles';
-import {usePolkadotApiState} from '@polkadotApi/usePolkadotApiState';
+import {usePolkadotApiStatus} from '@polkadotApi/usePolkadotApiStatus';
 
 type Props = {
   onPress: () => void;
 };
 
 export function NetworkSwitch({onPress}: Props) {
-  const apiStatus = usePolkadotApiState();
+  const apiStatus = usePolkadotApiStatus();
   const {currentNetwork} = useNetwork();
   const {colors} = useTheme();
 
   return (
     <TouchableOpacity onPress={onPress} style={[styles.networkSwitch, {backgroundColor: colors.background}]}>
       <View style={styles.container}>
-        <Icon name={apiStatus.isReady ? 'web' : 'earth-off'} size={16} color={colors.accent} />
+        <Icon name={apiStatus === 'ready' ? 'web' : 'earth-off'} size={16} color={colors.accent} />
         <Padder scale={0.3} />
         <Text style={{color: colors.accent}}>{currentNetwork.name}</Text>
       </View>

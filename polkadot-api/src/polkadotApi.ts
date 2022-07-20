@@ -49,24 +49,39 @@ function postMessage(message: Message, id?: string): void {
   window.ReactNativeWebView.postMessage(JSON.stringify({message, id}));
 }
 
+function apiConnectedHandler() {
+  postMessage(apiConnectedMessage());
+}
+
+function apiReadyHandler() {
+  postMessage(apiReadyMessage());
+}
+
+function apiDisconnectedHandler() {
+  postMessage(apiDisconnectedMessage());
+}
+
+function apiErrorHandler(error: string) {
+  postMessage(apiErrorMessage({error}));
+}
+
 cryptoWaitReady().then(function () {
   const userAgent = navigator.userAgent.toLocaleLowerCase();
   const windowDocument = userAgent.includes('iphone') ? window : document;
   let api: ApiPromise | undefined;
 
-  const runApiListeners = (wsEndpoint: string) => {
-    api?.on('connected', () => {
-      postMessage(apiConnectedMessage({wsEndpoint}));
-    });
-    api?.on('ready', () => {
-      postMessage(apiReadyMessage({wsEndpoint}));
-    });
-    api?.on('disconnected', () => {
-      postMessage(apiDisconnectedMessage({wsEndpoint}));
-    });
-    api?.on('error', (error) => {
-      postMessage(apiErrorMessage({error, wsEndpoint}));
-    });
+  const runApiListeners = () => {
+    api?.on('connected', apiConnectedHandler);
+    api?.on('ready', apiReadyHandler);
+    api?.on('disconnected', apiDisconnectedHandler);
+    api?.on('error', apiErrorHandler);
+  };
+
+  const removeApiListeners = () => {
+    api?.off('connected', apiConnectedHandler);
+    api?.off('ready', apiReadyHandler);
+    api?.off('disconnected', apiDisconnectedHandler);
+    api?.off('error', apiErrorHandler);
   };
 
   function onMessageHandler(event: MessageEvent) {
@@ -74,16 +89,12 @@ cryptoWaitReady().then(function () {
 
     switch (message.type) {
       case MessageType.INIT_API: {
+        removeApiListeners();
         const wsEndpoint = message.payload.wsEndpoint;
         const provider = new WsProvider(wsEndpoint, false);
         api = new ApiPromise({provider});
         api.connect();
-        runApiListeners(wsEndpoint);
-        break;
-      }
-
-      case MessageType.RECONNECT_API: {
-        api?.connect();
+        runApiListeners();
         break;
       }
 

@@ -4,7 +4,7 @@ import {View, Platform, StyleSheet} from 'react-native';
 import {useSetRecoilState} from 'recoil';
 import RNFS from 'react-native-fs';
 import {v4 as uuid4} from 'uuid';
-import {webViewReadyState, cryptoUtilState, keyringState, apiState, txState} from './atoms';
+import {webViewReadyState, cryptoUtilState, keyringState, apiStatusState, txState} from './atoms';
 import {useNetwork} from '@atoms/network';
 import {useAppAccounts} from './useAppAccounts';
 import {
@@ -44,7 +44,6 @@ import {
   SignMessage,
   signMessageMessage,
   initApiMessage,
-  reconnectApiMessage,
   KeyringAccountPayload,
   SignResultPayload,
   GetTxInfoResultPayload,
@@ -279,12 +278,12 @@ function useKeyringUtils(isWebviewLoaded: boolean, postMessage: PostMessage, res
 
 function useInitApi(isWebviewLoaded: boolean, postMessage: PostMessage) {
   const {currentNetwork} = useNetwork();
-  const setApiState = useSetRecoilState(apiState);
+  const setApiState = useSetRecoilState(apiStatusState);
 
   React.useEffect(() => {
     if (isWebviewLoaded) {
       postMessage(initApiMessage({wsEndpoint: currentNetwork.ws[0] as string}));
-      setApiState({isReady: false, isConnecting: true});
+      setApiState('connecting');
     }
   }, [isWebviewLoaded, postMessage, setApiState, currentNetwork.ws]);
 }
@@ -341,7 +340,7 @@ function useApiTx(isWebviewLoaded: boolean, postMessage: PostMessage, resolversR
 
 function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessage) {
   const {accounts, setAccounts} = useAppAccounts();
-  const setApiState = useSetRecoilState(apiState);
+  const setApiState = useSetRecoilState(apiStatusState);
   const {currentNetwork} = useNetwork();
 
   const webViewOnMessage = React.useCallback(
@@ -473,24 +472,23 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
         }
 
         case MessageType.API_CONNECTED: {
-          setApiState((state) => ({...state, isConnecting: false}));
+          setApiState('connected');
           break;
         }
         case MessageType.API_READY: {
-          setApiState((state) => ({...state, isReady: true}));
+          setApiState('ready');
           break;
         }
 
-        case MessageType.API_ERROR:
+        case MessageType.API_ERROR: {
+          console.warn('API ERROR', message.payload);
+          setApiState('error');
+          postMessage(initApiMessage({wsEndpoint: currentNetwork.ws[0] as string}));
+          break;
+        }
+
         case MessageType.API_DISCONNECTED: {
-          if (message.type === MessageType.API_ERROR) {
-            console.warn('API ERROR', message.payload);
-          }
-          const wsEndpoint = currentNetwork.ws[0] as string;
-          if (wsEndpoint === message.payload.wsEndpoint) {
-            postMessage(reconnectApiMessage({wsEndpoint}));
-            setApiState({isReady: false, isConnecting: true});
-          }
+          setApiState('disconnected');
           break;
         }
 
@@ -567,7 +565,7 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
         }
       }
     },
-    [accounts, setAccounts, resolversRef, setApiState, postMessage, currentNetwork.ws],
+    [accounts, setAccounts, resolversRef, setApiState, currentNetwork.ws, postMessage],
   );
 
   return {webViewOnMessage};

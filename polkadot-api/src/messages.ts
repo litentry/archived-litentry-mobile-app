@@ -72,8 +72,6 @@ export enum MessageType {
 
   INIT_API = 'INIT_API',
 
-  RECONNECT_API = 'RECONNECT_API',
-
   API_CONNECTED = 'API_CONNECTED',
 
   API_READY = 'API_READY',
@@ -309,38 +307,21 @@ type InitApiMessage = {
   };
 };
 
-type ReconnectApiMessage = {
-  type: MessageType.RECONNECT_API;
-  payload: {
-    wsEndpoint: string;
-  };
-};
-
 type ApiConnectedMessage = {
   type: MessageType.API_CONNECTED;
-  payload: {
-    wsEndpoint: string;
-  };
 };
 
 type ApiReadyMessage = {
   type: MessageType.API_READY;
-  payload: {
-    wsEndpoint: string;
-  };
 };
 
 type ApiDisconnectedMessage = {
   type: MessageType.API_DISCONNECTED;
-  payload: {
-    wsEndpoint: string;
-  };
 };
 
 type ApiErrorMessage = {
   type: MessageType.API_ERROR;
   payload: {
-    wsEndpoint: string;
     error: string;
   };
 };
@@ -503,7 +484,6 @@ export type Message =
   | SignAndSendTxMessage
   | SignAndSendTxResultMessage
   | InitApiMessage
-  | ReconnectApiMessage
   | ApiConnectedMessage
   | ApiReadyMessage
   | ApiDisconnectedMessage
@@ -720,31 +700,21 @@ export function initApiMessage(payload: InitApiMessage['payload']): InitApiMessa
   };
 }
 
-export function reconnectApiMessage(payload: ReconnectApiMessage['payload']): ReconnectApiMessage {
-  return {
-    type: MessageType.RECONNECT_API,
-    payload,
-  };
-}
-
-export function apiConnectedMessage(payload: ApiConnectedMessage['payload']): ApiConnectedMessage {
+export function apiConnectedMessage(): ApiConnectedMessage {
   return {
     type: MessageType.API_CONNECTED,
-    payload,
   };
 }
 
-export function apiReadyMessage(payload: ApiReadyMessage['payload']): ApiReadyMessage {
+export function apiReadyMessage(): ApiReadyMessage {
   return {
     type: MessageType.API_READY,
-    payload,
   };
 }
 
-export function apiDisconnectedMessage(payload: ApiDisconnectedMessage['payload']): ApiDisconnectedMessage {
+export function apiDisconnectedMessage(): ApiDisconnectedMessage {
   return {
     type: MessageType.API_DISCONNECTED,
-    payload,
   };
 }
 
