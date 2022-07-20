@@ -7,14 +7,9 @@ import {CrowdloanScreen} from './CrowdloanScreen';
 
 const navigation = {
   navigate: () => jest.fn(),
-  goBack: () => jest.fn,
 } as unknown as NavigationProp<CrowdloansStackParamList>;
 
 describe('CrowdloanScreen', () => {
-  beforeEach(() => {
-    jest.resetAllMocks();
-  });
-
   it('should render the loading component view when data is fetching', () => {
     const {getByTestId} = render(<CrowdloanScreen navigation={navigation} />);
     expect(getByTestId('loading_view')).toBeTruthy();
@@ -23,13 +18,15 @@ describe('CrowdloanScreen', () => {
   it('should render the CrowdloanScreen component when the data is fetched', async () => {
     const {findByText, findAllByText} = render(<CrowdloanScreen navigation={navigation} />);
     await findByText('Active Raised / Cap');
-    await findByText('4 MDOT / 33 MDOT');
+    await findByText('7 MDOT / 59 MDOT');
     await findByText('Total Raised / Cap');
-    await findByText('131 MDOT / 492 MDOT');
+    await findByText('211 MDOT / 677 MDOT');
     await findByText('Ongoing (2)');
     await findByText('Completed (2)');
     await findAllByText('Litentry');
+    await findAllByText('943,842.0909 DOT / 3.0000 MDOT');
     await findAllByText('Geminis');
+    await findAllByText('24,613.9104 DOT / 3.0000 MDOT');
   });
 
   it('should navigate to crowdloan fund screes on press of ongoing or completed crowdloan', async () => {

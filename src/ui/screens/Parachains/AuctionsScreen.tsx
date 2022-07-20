@@ -15,6 +15,14 @@ import {useSnackbar} from 'context/SnackbarContext';
 import {EmptyStateTeaser} from '@ui/components/EmptyStateTeaser';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
 
+const WinningBidLeases = (leases: string) => () =>
+  (
+    <View style={globalStyles.justifyCenter}>
+      <Caption>{`Leases`}</Caption>
+      <Caption>{leases}</Caption>
+    </View>
+  );
+
 export function AuctionsScreen() {
   const {formatBalance} = useFormatBalance();
   const {data: auction, loading} = useAuctionsSummary();
@@ -107,12 +115,7 @@ export function AuctionsScreen() {
                         </Caption>
                       </View>
                     }
-                    right={() => (
-                      <View style={globalStyles.justifyCenter}>
-                        <Caption>{`Leases`}</Caption>
-                        <Caption>{`${winningBid?.firstSlot} - ${winningBid?.lastSlot}`}</Caption>
-                      </View>
-                    )}
+                    right={WinningBidLeases(`${winningBid?.firstSlot} - ${winningBid?.lastSlot}`)}
                   />
                 </>
               ) : (

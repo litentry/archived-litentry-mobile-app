@@ -13,7 +13,16 @@ type PropTypes = {
   address: string;
 };
 
-function AddressInfoPreview(props: PropTypes) {
+const ItemLeft = (children: React.ReactNode) => () => <View style={globalStyles.justifyCenter}>{children}</View>;
+
+const ItemRight = (children: React.ReactNode) => () =>
+  (
+    <View style={globalStyles.justifyCenter}>
+      {typeof children === 'string' ? <Caption>{children}</Caption> : children}
+    </View>
+  );
+
+export function AddressInfoPreview(props: PropTypes) {
   const {address} = props;
   const {currentNetwork} = useNetwork();
   const {data: accountInfo, loading} = useAccount(address);
@@ -26,43 +35,25 @@ function AddressInfoPreview(props: PropTypes) {
         <>
           <List.Item
             title="Address"
-            left={() => (
-              <View style={globalStyles.justifyCenter}>
-                <Identicon value={address} size={20} />
-              </View>
-            )}
-            right={() => <Caption>{stringShorten(address)}</Caption>}
+            left={ItemLeft(<Identicon value={address} size={20} />)}
+            right={ItemRight(stringShorten(address))}
           />
           <List.Item
             title="Display"
-            left={() => (
-              <View style={globalStyles.justifyCenter}>
-                <Icon name="account" size={20} />
-              </View>
-            )}
-            right={() => (
-              <Caption>{accountInfo?.display ? stringShorten(accountInfo?.display) : 'Untitled account'}</Caption>
-            )}
+            left={ItemLeft(<Icon name="account" size={20} />)}
+            right={ItemRight(accountInfo?.display ? stringShorten(accountInfo?.display) : 'Untitled account')}
           />
           {accountInfo?.balance ? (
             <List.Item
               title="Balance"
-              left={() => (
-                <View style={globalStyles.justifyCenter}>
-                  <Icon name="card-text-outline" size={20} />
-                </View>
-              )}
-              right={() => <Caption>{accountInfo.balance?.formattedFree}</Caption>}
+              left={ItemLeft(<Icon name="card-text-outline" size={20} />)}
+              right={ItemRight(accountInfo.balance?.formattedFree)}
             />
           ) : null}
           <List.Item
             title="Judgment"
-            left={() => (
-              <View style={globalStyles.justifyCenter}>
-                <Icon name="hammer" size={20} />
-              </View>
-            )}
-            right={() => (
+            left={ItemLeft(<Icon name="hammer" size={20} />)}
+            right={ItemRight(
               <>
                 {accountInfo?.registration?.judgements && accountInfo?.registration?.judgements.length > 0 ? (
                   accountInfo?.registration?.judgements?.map((judgment, i) => {
@@ -79,22 +70,16 @@ function AddressInfoPreview(props: PropTypes) {
                 ) : (
                   <Caption>No judgements provided</Caption>
                 )}
-              </>
+              </>,
             )}
           />
           <List.Item
             title="Network"
-            left={() => (
-              <View style={globalStyles.justifyCenter}>
-                <Icon name="earth" size={20} />
-              </View>
-            )}
-            right={() => <Caption>{currentNetwork.name}</Caption>}
+            left={ItemLeft(<Icon name="earth" size={20} />)}
+            right={ItemRight(currentNetwork.name)}
           />
         </>
       )}
     </View>
   );
 }
-
-export default AddressInfoPreview;
