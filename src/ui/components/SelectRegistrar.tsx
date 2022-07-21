@@ -34,7 +34,10 @@ export function SelectRegistrar({onSelect}: Props) {
       visible={visible}
       onDismiss={closeMenu}
       anchor={
-        <TouchableOpacity style={[styles.anchor, {borderColor: colors.onSurface}]} onPress={openMenu}>
+        <TouchableOpacity
+          style={[styles.anchor, {borderColor: colors.onSurface}]}
+          onPress={openMenu}
+          testID="select-registrar">
           {registrar ? <AccountTeaser account={registrar.account} /> : <Caption>{'Select registrar'}</Caption>}
         </TouchableOpacity>
       }>

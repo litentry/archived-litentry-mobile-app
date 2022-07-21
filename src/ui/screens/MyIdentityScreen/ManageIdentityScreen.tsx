@@ -2,10 +2,9 @@ import React, {useCallback} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import IdentityIcon from '@polkadot/reactnative-identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {Layout} from '@ui/components/Layout';
 import {Button, List, Icon, Caption, Divider, IconButton, useBottomSheet} from '@ui/library';
 import {useNetwork} from '@atoms/network';
-import IdentityInfoForm, {IdentityPayload} from '@ui/components/IdentityInfoForm';
+import {IdentityInfoForm} from '@ui/components/IdentityInfoForm';
 import InfoBanner from '@ui/components/InfoBanner';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -78,18 +77,10 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
   } = useBottomSheet();
   const {openBottomSheet: openPolkassembly, BottomSheet: PolkassemblyBottomSheet} = useBottomSheet();
 
-  const onSubmitIdentityInfo = useCallback(
-    async (info: IdentityPayload) => {
-      closeIdentityInfo();
-      await startTx({address, txMethod: 'identity.setIdentity', params: [info]})
-        .then(() => refetchAccount({address}))
-        .catch((e) => {
-          Alert.alert('Something went wrong!');
-          console.error(e);
-        });
-    },
-    [address, startTx, refetchAccount, closeIdentityInfo],
-  );
+  const onIdentitySet = React.useCallback(() => {
+    closeIdentityInfo();
+    refetchAccount({address});
+  }, [closeIdentityInfo, address, refetchAccount]);
 
   const handleRequestJudgement = useCallback(
     ({id, fee}: Registrar) => {
@@ -210,9 +201,7 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
       </IdentityGuideBottomSheet>
 
       <IdentityInfoBottomSheet>
-        <Layout>
-          <IdentityInfoForm onSubmit={onSubmitIdentityInfo} accountInfo={accountInfo} />
-        </Layout>
+        <IdentityInfoForm onIdentitySet={onIdentitySet} address={address} />
       </IdentityInfoBottomSheet>
 
       <RequestJudgementBottomSheet>
