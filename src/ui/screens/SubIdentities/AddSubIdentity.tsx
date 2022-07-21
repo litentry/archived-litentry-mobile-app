@@ -21,7 +21,7 @@ export function AddSubIdentity({onClose, onAddPress, subIdentities}: Props) {
   const [subAddress, setSubAddress] = useState('');
   const [subName, setSubName] = useState('');
   const {colors} = useTheme();
-  const {isAddressValid} = useIsAddressValid(currentNetwork, subAddress);
+  const {isValid: isAddressValid} = useIsAddressValid(currentNetwork, subAddress);
 
   const addSubIdentity = () => {
     if (subIdentities?.some((sub) => sub.address === subAddress)) {
