@@ -38,7 +38,7 @@ describe('TipDetailScreen', () => {
   it('should render the component and test accounts click events', async () => {
     const navigationSpy = jest.spyOn(navigation, 'navigate');
     const {findAllByTestId} = render(<TipDetailScreen navigation={navigation} route={route} />);
-    fireEvent.press((await findAllByTestId('account-details')).at(0) as ReactTestInstance);
+    fireEvent.press((await findAllByTestId('account-details'))[0] as ReactTestInstance);
     expect(navigationSpy).toHaveBeenCalledWith('Account Details', {
       address: 'DbF59HrqrrPh9L2Fi4EBd7gn4xFUSXmrE6zyMzf3pETXLvg',
     });

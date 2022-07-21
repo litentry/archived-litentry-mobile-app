@@ -1,7 +1,7 @@
 import React from 'react';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
-import {fireEvent, render, waitFor} from 'src/testUtils';
+import {fireEvent, render} from 'src/testUtils';
 import {RegisterSubIdentitiesScreen} from './RegisterSubIdentitiesScreen';
 import {registerSubIdentitiesScreen} from '@ui/navigation/routeKeys';
 import {Alert} from 'react-native';
@@ -30,11 +30,17 @@ describe('RegisterSubIdentitiesScreen', () => {
 
   it('should be able to delete the sub-identities', async () => {
     const alertSpy = jest.spyOn(Alert, 'alert');
-    const {findByText, findAllByTestId} = render(<RegisterSubIdentitiesScreen navigation={navigation} route={route} />);
+    const {findAllByTestId} = render(<RegisterSubIdentitiesScreen navigation={navigation} route={route} />);
     fireEvent.press((await findAllByTestId('delete-button'))[0] as ReactTestInstance);
     expect(alertSpy).toBeCalledTimes(1);
-    waitFor(async () => {
-      await findByText('Remove sub-identity');
-    });
+    expect(alertSpy).toHaveBeenCalledWith(
+      'Remove sub-identity',
+      'Do you want to remove account: \n 14ghKTz5mjZPgGYvgVC9VnFw1HYZmmsnYvSSHFgFTJfMvwQS ?',
+      [
+        {onPress: expect.any(Function), text: 'Yes'},
+        {style: 'cancel', text: 'Cancel'},
+      ],
+      {cancelable: false},
+    );
   });
 });
