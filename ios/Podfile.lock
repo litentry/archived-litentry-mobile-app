@@ -418,9 +418,9 @@ PODS:
     - React-Core
   - react-native-camera/RN (4.2.1):
     - React-Core
-  - react-native-config (1.4.5):
-    - react-native-config/App (= 1.4.5)
-  - react-native-config/App (1.4.5):
+  - react-native-config (1.4.6):
+    - react-native-config/App (= 1.4.6)
+  - react-native-config/App (1.4.6):
     - React-Core
   - react-native-document-picker (8.1.0):
     - React-Core
@@ -922,7 +922,7 @@ SPEC CHECKSUMS:
   React-logger: 1e10789cb84f99288479ba5f20822ce43ced6ffe
   react-native-aes: c75c46aa744bef7c2415fdf7f5b2dcb75ca4364d
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
-  react-native-config: 6502b1879f97ed5ac570a029961fc35ea606cd14
+  react-native-config: 7cd105e71d903104e8919261480858940a6b9c0e
   react-native-document-picker: 5663fe4bcdb646200683a41790464d2793307ac8
   react-native-flipper: 4bfe0a324e663f1ae2f76ad0da75673de6895efe
   react-native-flipper-performance-plugin: ab280430bbdd17deffb7a30d94b604738cd04150

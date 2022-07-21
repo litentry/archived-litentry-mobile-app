@@ -9,7 +9,7 @@ import {ProgressBar} from '@ui/components/ProgressBar';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {accountsScreen, createAccountScreen} from '@ui/navigation/routeKeys';
-import {Button, Caption, List, Text, TextInput, HelperText} from '@ui/library';
+import {Button, Caption, List, TextInput, HelperText} from '@ui/library';
 import {useTheme} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
@@ -69,19 +69,20 @@ export function CreateAccountScreen({
     navigation.navigate(accountsScreen, {reload: true});
   };
 
+  const AccountIdentityIcon = React.useCallback(
+    () => (
+      <View style={globalStyles.justifyCenter}>
+        <IdentityIcon value={address} size={40} />
+      </View>
+    ),
+    [address],
+  );
+
   return (
     <SafeView edges={noTopEdges}>
       <KeyboardAvoidingView style={globalStyles.flex} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <ScrollView style={styles.container}>
-          <List.Item
-            title={() => <Text>{account.title}</Text>}
-            left={() => (
-              <View style={globalStyles.justifyCenter}>
-                <IdentityIcon value={address} size={40} />
-              </View>
-            )}
-            description={address}
-          />
+          <List.Item title={account.title} left={AccountIdentityIcon} description={address} />
           <Padder scale={1} />
           <TextInput autoComplete="off" label={'Mnemonic seed'} value={mnemonic} disabled multiline />
           <Caption>
