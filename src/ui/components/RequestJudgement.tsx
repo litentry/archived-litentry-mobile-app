@@ -51,7 +51,7 @@ export function RequestJudgement({onRequest, onClose}: Props) {
         <Button onPress={handleClose} mode="outlined">
           Cancel
         </Button>
-        <Button mode="contained" disabled={!registrar} onPress={handleRequest}>
+        <Button mode="contained" disabled={!registrar} onPress={handleRequest} testID="judgement-submit-button">
           Submit
         </Button>
       </View>

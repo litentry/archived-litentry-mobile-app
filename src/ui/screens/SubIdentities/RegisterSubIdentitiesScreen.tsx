@@ -127,7 +127,11 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
   return (
     <SafeView edges={noTopEdges}>
       <View style={[globalStyles.paddedContainer, globalStyles.flex]}>
-        <Button mode="contained" onPress={onSetSubIdentities} disabled={submitSubsDisabled}>
+        <Button
+          mode="contained"
+          onPress={onSetSubIdentities}
+          disabled={submitSubsDisabled}
+          testID="set-sub-identity-button">
           Set Sub-identities
         </Button>
         <Padder scale={0.5} />
@@ -172,7 +176,14 @@ function SubAccountItem({account, onRemove}: SubIdentityItemProps) {
   );
 
   const RemoveSubAccount = React.useCallback(
-    () => <IconButton icon="delete-outline" color={colors.error} onPress={() => onRemove(account.address)} />,
+    () => (
+      <IconButton
+        icon="delete-outline"
+        color={colors.error}
+        onPress={() => onRemove(account.address)}
+        testID="delete-button"
+      />
+    ),
     [account.address, onRemove, colors.error],
   );
 

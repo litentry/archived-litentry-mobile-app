@@ -1,14 +1,13 @@
 import React from 'react';
 import {RouteProp} from '@react-navigation/native';
 import {AppStackParamList, DashboardStackParamList} from '@ui/navigation/navigation';
-import {render, waitFor, fireEvent} from 'src/testUtils';
+import {render, fireEvent} from 'src/testUtils';
 import {TipDetailScreen} from './TipDetailScreen';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {ReactTestInstance} from 'react-test-renderer';
 
 const navigation = {
   navigate: () => jest.fn(),
-  goBack: () => jest.fn,
 } as unknown as NativeStackNavigationProp<AppStackParamList>;
 
 const route = {
@@ -17,27 +16,31 @@ const route = {
   },
 } as unknown as RouteProp<DashboardStackParamList, 'Tip'>;
 
-test('render the loading view when data is fetching', () => {
-  const {getByTestId} = render(<TipDetailScreen navigation={navigation} route={route} />);
-  expect(getByTestId('loading_view')).toBeTruthy();
-});
-
-test('render the component when data is fetched', async () => {
-  const {getByText, queryByText} = render(<TipDetailScreen navigation={navigation} route={route} />);
-  await waitFor(() => {
-    expect(getByText('Who')).toBeTruthy();
-    expect(getByText('Finder')).toBeTruthy();
-    expect(getByText('Reason')).toBeTruthy();
-    expect(getByText('Tippers (2)')).toBeTruthy();
-    expect(queryByText('There are no tippers yet')).not.toBeTruthy();
+describe('TipDetailScreen', () => {
+  it('should render the loading view when data is fetching', () => {
+    const {getByTestId} = render(<TipDetailScreen navigation={navigation} route={route} />);
+    expect(getByTestId('loading_view')).toBeTruthy();
   });
-});
 
-test('render the component and test accounts click events', async () => {
-  const navigationSpy = jest.spyOn(navigation, 'navigate');
-  const {getAllByTestId} = render(<TipDetailScreen navigation={navigation} route={route} />);
-  await waitFor(() => {
-    fireEvent.press(getAllByTestId('account-details')[0] as ReactTestInstance);
-    expect(navigationSpy).toHaveBeenCalledTimes(1);
+  it('should render the component when data is fetched', async () => {
+    const {findByText, findAllByText} = render(<TipDetailScreen navigation={navigation} route={route} />);
+    await findByText('Who');
+    await findByText('SPRIN');
+    await findByText('Finder');
+    await findByText('CRYPTONITAS');
+    await findByText('Reason');
+    await findByText('Tippers (2)');
+    await findByText('Chevdor');
+    await findByText('TAFKAPK');
+    await findAllByText('1.0000 KSM');
+  });
+
+  it('should render the component and test accounts click events', async () => {
+    const navigationSpy = jest.spyOn(navigation, 'navigate');
+    const {findAllByTestId} = render(<TipDetailScreen navigation={navigation} route={route} />);
+    fireEvent.press((await findAllByTestId('account-details'))[0] as ReactTestInstance);
+    expect(navigationSpy).toHaveBeenCalledWith('Account Details', {
+      address: 'DbF59HrqrrPh9L2Fi4EBd7gn4xFUSXmrE6zyMzf3pETXLvg',
+    });
   });
 });
