@@ -1,6 +1,5 @@
 import React from 'react';
 import {FlatList, View, StyleSheet, TouchableOpacity, Keyboard} from 'react-native';
-import Identicon from '@polkadot/reactnative-identicon';
 import {NavigationProp} from '@react-navigation/native';
 import {useTheme, Divider, IconButton, List, FAB, Caption, Menu, Subheading, Icon, useBottomSheet} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -16,6 +15,7 @@ import {AddExternalAccount} from '@ui/components/Account/AddExternalAccount';
 import type {AccountMeta, KeyringAccount} from 'polkadot-api';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 import {useKeyring} from '@polkadotApi/useKeyring';
+import {Identicon} from '@ui/components/Identicon';
 
 type Props = {
   navigation: NavigationProp<CompleteNavigatorParamList, typeof accountsScreen>;

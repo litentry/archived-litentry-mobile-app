@@ -21,9 +21,11 @@ const openURLSpy = jest.spyOn(Linking, 'openURL');
 
 const mockStartTx = jest.fn(() => Promise.resolve({}));
 
-jest.mock('src/api/hooks/useApiTx', () => {
+jest.mock('context/TxContext', () => {
   return {
-    useApiTx: () => mockStartTx,
+    useStartTx: () => ({
+      startTx: mockStartTx,
+    }),
   };
 });
 

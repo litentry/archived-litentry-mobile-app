@@ -1,8 +1,9 @@
 import {useRecoilValue} from 'recoil';
-import {keyringState} from './atoms';
+import {keyringState, webViewReadyState} from './atoms';
 
 export function useKeyring() {
+  const isReady = useRecoilValue(webViewReadyState);
   const keyring = useRecoilValue(keyringState);
 
-  return keyring;
+  return {isReady, ...keyring};
 }

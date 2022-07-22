@@ -1,6 +1,6 @@
 import {atom, RecoilState} from 'recoil';
 import {persistAtom} from '@atoms/persist';
-import type {
+import {
   KeyringAccount,
   AddAccountMessage,
   AddExternalAccountMessage,
@@ -17,7 +17,26 @@ import type {
   VerifyCredentialsMessage,
   VerifyCredentialsResultMessage,
   HexString,
+  GetTxInfoMessage,
+  SendTxMessage,
+  TxInfo,
+  GetTxMethodArgsLengthMessage,
+  DecodeAddressMessage,
+  DecodeAddressResultMessage,
+  CheckAddressMessage,
+  CheckAddressResultMessage,
+  GetTxPayloadMessage,
+  TxHash,
+  SignAndSendTxMessage,
+  TxPayloadData,
+  Blake2AsHexMessage,
+  Blake2AsHexResultMessage,
 } from 'polkadot-api';
+
+export const webViewReadyState = atom({
+  key: 'webViewReadyState',
+  default: false,
+});
 
 export const appAccountsState: RecoilState<Record<string, KeyringAccount>> = atom({
   key: 'appAccounts',
@@ -33,6 +52,15 @@ export const cryptoUtilState = atom({
     },
     validateMnemonic: (_: ValidateMnemonicMessage['payload']) => {
       return Promise.resolve<ValidateMnemonicResultMessage['payload']>({isValid: false, address: ''});
+    },
+    decodeAddress: (_: DecodeAddressMessage['payload']) => {
+      return Promise.resolve<DecodeAddressResultMessage['payload']>('0x000');
+    },
+    blake2AsHex: (_: Blake2AsHexMessage['payload']) => {
+      return Promise.resolve<Blake2AsHexResultMessage['payload']>('0x000');
+    },
+    checkAddress: (_: CheckAddressMessage['payload']) => {
+      return Promise.resolve<CheckAddressResultMessage['payload']>({isValid: false, reason: ''});
     },
   },
 });
@@ -82,17 +110,30 @@ export const keyringState = atom({
   },
 });
 
-// export const apiState = atom({
-//   key: 'polkadot-api',
-//   default: {
-//     isConnecting: false,
-//     isReady: false,
-//   },
-// });
+type ApiStatus = 'connecting' | 'disconnected' | 'connected' | 'ready' | 'error';
 
-// export const txState = atom({
-//   key: 'tx',
-//   default: {
-//     getChainName: () => Promise.resolve(''),
-//   },
-// });
+export const apiStatusState = atom<ApiStatus>({
+  key: 'polkadot-api-status',
+  default: 'disconnected',
+});
+
+export const txState = atom({
+  key: 'tx',
+  default: {
+    getTxInfo: (_: GetTxInfoMessage['payload']) => {
+      return Promise.resolve<TxInfo>({} as TxInfo);
+    },
+    getTxPayload: (_: GetTxPayloadMessage['payload']) => {
+      return Promise.resolve<TxPayloadData>({} as TxPayloadData);
+    },
+    sendTx: (_: SendTxMessage['payload']) => {
+      return Promise.resolve<TxHash>({} as TxHash);
+    },
+    signAndSendTx: (_: SignAndSendTxMessage['payload']) => {
+      return Promise.resolve<TxHash>({} as TxHash);
+    },
+    getTxMethodArgsLength: (_: GetTxMethodArgsLengthMessage['payload']) => {
+      return Promise.resolve(0);
+    },
+  },
+});

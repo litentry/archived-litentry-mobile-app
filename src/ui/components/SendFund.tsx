@@ -1,6 +1,5 @@
 import React, {useMemo} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {useApiTx} from 'src/api/hooks/useApiTx';
 import {Button, Subheading, TextInput, Switch, HelperText, useBottomSheetInternal} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
@@ -14,6 +13,7 @@ import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {stringToBn as stringToBnUtil, formattedStringToBn} from 'src/utils/balance';
 import AddressInput from '@ui/components/AddressInput';
 import {Layout} from '@ui/components/Layout';
+import {useStartTx} from 'context/TxContext';
 
 type Props = {
   address: string;
@@ -25,7 +25,7 @@ export function SendFund({address, onFundsSent}: Props) {
   const [amount, setAmount] = React.useState('');
   const [toAddress, setToAddress] = React.useState<string>();
   const [isToAddressValid, setIsToAddressValid] = React.useState(false);
-  const startTx = useApiTx();
+  const {startTx} = useStartTx();
   const {data: chainInfo} = useChainInfo();
   const [isKeepAliveActive, setIsKeepAliveActive] = React.useState(true);
   const snackbar = useSnackbar();
@@ -105,21 +105,25 @@ export function SendFund({address, onFundsSent}: Props) {
             if (chainInfo) {
               setTransferInProgress(true);
               const _amountBN = stringToBnUtil(chainInfo.registry, amount);
-              startTx({
-                address,
-                txMethod: `${isKeepAliveActive ? `balances.transferKeepAlive` : `balances.transfer`}`,
-                params: [toAddress, _amountBN],
-              })
-                .then(() => {
-                  snackbar('Funds transferred');
-                  onFundsSent();
+              if (toAddress) {
+                startTx({
+                  address,
+                  txConfig: {
+                    method: `${isKeepAliveActive ? `balances.transferKeepAlive` : `balances.transfer`}`,
+                    params: [toAddress, _amountBN],
+                  },
                 })
-                .catch(() => {
-                  snackbar('Error while transferring funds');
-                })
-                .finally(() => {
-                  setTransferInProgress(false);
-                });
+                  .then(() => {
+                    snackbar('Funds transferred');
+                    onFundsSent();
+                  })
+                  .catch(() => {
+                    snackbar('Error while transferring funds');
+                  })
+                  .finally(() => {
+                    setTransferInProgress(false);
+                  });
+              }
             }
           }}
           mode="outlined"

@@ -1,8 +1,8 @@
 import React, {useCallback} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
-import IdentityIcon from '@polkadot/reactnative-identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Button, List, Icon, Caption, Divider, IconButton, useBottomSheet} from '@ui/library';
+import {Identicon} from '@ui/components/Identicon';
 import {useNetwork} from '@atoms/network';
 import {IdentityInfoForm} from '@ui/components/IdentityInfoForm';
 import InfoBanner from '@ui/components/InfoBanner';
@@ -11,7 +11,6 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SuccessDialog} from '@ui/components/SuccessDialog';
 import {ScrollView} from 'react-native-gesture-handler';
 import WebView from 'react-native-webview';
-import {useApiTx} from 'src/api/hooks/useApiTx';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {manageIdentityScreen, registerSubIdentitiesScreen} from '@ui/navigation/routeKeys';
 import {buildAddressDetailUrl} from 'src/service/Polkasembly';
@@ -23,6 +22,7 @@ import {useSubAccounts} from 'src/api/hooks/useSubAccounts';
 import {AccountRegistration} from '@ui/components/Account/AccountRegistration';
 import {IdentityGuide} from '@ui/components/IdentityGuide';
 import {RequestJudgement} from '@ui/components/RequestJudgement';
+import {useStartTx} from 'context/TxContext';
 
 type ScreenProps = {
   navigation: NavigationProp<AccountsStackParamList>;
@@ -32,7 +32,7 @@ type ScreenProps = {
 const AccountIdentityIcon = (address: string) => () =>
   (
     <View style={globalStyles.justifyCenter}>
-      <IdentityIcon value={address} size={20} />
+      <Identicon value={address} size={20} />
     </View>
   );
 
@@ -53,7 +53,7 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
   const {currentNetwork} = useNetwork();
   const {address} = route.params;
 
-  const startTx = useApiTx();
+  const {startTx} = useStartTx();
   const {data: accountInfo, refetch: refetchAccount} = useSubAccounts(address);
 
   const judgements = accountInfo?.registration?.judgements;
@@ -85,7 +85,7 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
   const handleRequestJudgement = useCallback(
     ({id, fee}: Registrar) => {
       closeRequestJudgement();
-      startTx({address, txMethod: 'identity.requestJudgement', params: [id, fee]})
+      startTx({address, txConfig: {method: 'identity.requestJudgement', params: [id, fee]}})
         .then(() => refetchAccount({address}))
         .catch((e) => {
           Alert.alert('Something went wrong!');
@@ -113,8 +113,7 @@ export function ManageIdentityScreen({navigation, route}: ScreenProps) {
         onPress: () => {
           startTx({
             address,
-            txMethod: 'identity.clearIdentity',
-            params: [],
+            txConfig: {method: 'identity.clearIdentity', params: []},
           }).then(() => refetchAccount({address}));
         },
         style: 'destructive',
