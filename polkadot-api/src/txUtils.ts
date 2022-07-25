@@ -1,5 +1,5 @@
 import {ApiPromise} from '@polkadot/api';
-import {u8aToHex, bnToBn} from '@polkadot/util';
+import {u8aToHex, bnToBn, hexToBn} from '@polkadot/util';
 import type {KeyringPair} from '@polkadot/keyring/types';
 import type {AccountInfoWithProviders, AccountInfoWithRefCount} from '@polkadot/types/interfaces';
 import type {SubmittableExtrinsic} from '@polkadot/api/submittable/types';
@@ -18,21 +18,25 @@ export type TxInfo = {
 };
 
 export async function getTxInfo(api: ApiPromise, address: string, txConfig: TxConfig): Promise<TxInfo> {
-  const tx = makeTx(api, txConfig);
-  const {meta} = tx.registry.findMetaCall(tx.callIndex);
-  const args = meta?.args.map(({name}) => name).join(', ') || '';
-  const title = `transaction ${txConfig.method}(${args})`;
-  const description = formatCallMeta(meta);
-  const info = await tx.paymentInfo(address);
-  const partialFee = info.partialFee.toNumber();
-  const {txPayload} = await getTxPayload(api, address, txConfig);
+  try {
+    const tx = makeTx(api, txConfig);
+    const {meta} = tx.registry.findMetaCall(tx.callIndex);
+    const args = meta?.args.map(({name}) => name).join(', ') || '';
+    const title = `transaction ${txConfig.method}(${args})`;
+    const description = formatCallMeta(meta);
+    const info = await tx.paymentInfo(address);
+    const partialFee = info.partialFee.toNumber();
+    const {txPayload} = await getTxPayload(api, address, txConfig);
 
-  return {
-    title,
-    description,
-    partialFee,
-    blockHash: txPayload.blockHash,
-  };
+    return {
+      title,
+      description,
+      partialFee,
+      blockHash: txPayload.blockHash,
+    };
+  } catch (error) {
+    return Promise.reject((error as Error).message);
+  }
 }
 
 export async function getTxPayload(api: ApiPromise, address: string, txConfig: TxConfig): Promise<TxPayloadData> {
@@ -190,7 +194,39 @@ function makeTx(api: ApiPromise, txConfig: TxConfig): SubmittableExtrinsic<'prom
     throw new Error(`Unable to find method ${section}.${txMethod}`);
   }
 
-  return tx(...params);
+  let transformedParams: Array<unknown> = [...params];
+
+  if (method === 'balances.transferKeepAlive' || method === 'balances.transfer') {
+    transformedParams = [params[0], hexToBn(params[1] as HexString)];
+  }
+
+  if (method === 'democracy.vote') {
+    const vote = {
+      Standard: {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore ts cannot figure out the correct type here
+        vote: params[1].vote,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        balance: hexToBn(params[1].balance),
+      },
+    };
+    transformedParams = [params[0], vote];
+  }
+
+  if (method === 'democracy.propose') {
+    transformedParams = [params[0], hexToBn(params[1])];
+  }
+
+  if (method === 'crowdloan.contribute') {
+    transformedParams = [params[0], hexToBn(params[1]), params[2]];
+  }
+
+  if (method === 'bounties.proposeBounty') {
+    transformedParams = [hexToBn(params[0]), params[1]];
+  }
+
+  return tx(...transformedParams);
 }
 
 function formatCallMeta(meta?: FunctionMetadataLatest): string {

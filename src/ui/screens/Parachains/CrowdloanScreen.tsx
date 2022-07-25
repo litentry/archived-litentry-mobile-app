@@ -15,7 +15,7 @@ import BalanceInput from '@ui/components/BalanceInput';
 import {Crowdloan, useAllCrowdloans} from 'src/api/hooks/useCrowdloans';
 import type {Account} from 'src/api/hooks/useAccount';
 import {useChainInfo} from 'src/api/hooks/useChainInfo';
-import {BN_ZERO} from '@polkadot/util';
+import {bnToHex, BN_ZERO} from '@polkadot/util';
 import {formattedStringToBn} from 'src/utils/balance';
 import {CrowdloanSummaryTeaser} from '@ui/components/CrowdloanSummaryTeaser';
 import {useNetwork} from '@atoms/network';
@@ -245,7 +245,7 @@ function ContributeBox({
                 address: account.address,
                 txConfig: {
                   method: 'crowdloan.contribute',
-                  params: [parachainId, balance, null],
+                  params: [parachainId, bnToHex(balance), null],
                 },
               });
               reset();

@@ -9,7 +9,7 @@ import BalanceInput from './BalanceInput';
 import type {Account} from 'src/api/hooks/useAccount';
 import {useChainInfo} from 'src/api/hooks/useChainInfo';
 import {InputLabel} from '@ui/library/InputLabel';
-import {BN_ZERO} from '@polkadot/util';
+import {bnToHex, BN_ZERO} from '@polkadot/util';
 import {formattedStringToBn} from 'src/utils/balance';
 import {useStartTx} from 'context/TxContext';
 
@@ -48,7 +48,7 @@ export function SubmitProposal() {
           address: state.account.address,
           txConfig: {
             method: 'democracy.propose',
-            params: [state.preimageHash, balance],
+            params: [state.preimageHash, bnToHex(balance)],
           },
         });
       }

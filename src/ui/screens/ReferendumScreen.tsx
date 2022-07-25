@@ -17,7 +17,7 @@ import BalanceInput from '@ui/components/BalanceInput';
 import {Account} from 'src/api/hooks/useAccount';
 import {useChainInfo} from 'src/api/hooks/useChainInfo';
 import {getProposalTitle} from 'src/utils/proposal';
-import {BN_ZERO} from '@polkadot/util';
+import {bnToHex, BN_ZERO} from '@polkadot/util';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {useStartTx} from 'context/TxContext';
 
@@ -51,10 +51,8 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
           params: [
             referendum?.index,
             {
-              Standard: {
-                balance,
-                vote: {aye: state.voting === 'YES' ? true : false, conviction: state.conviction.value},
-              },
+              balance: bnToHex(balance),
+              vote: {aye: state.voting === 'YES' ? true : false, conviction: state.conviction.value},
             },
           ],
         },

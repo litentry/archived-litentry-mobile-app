@@ -1,3 +1,4 @@
+import {bnToHex} from '@polkadot/util';
 import React from 'react';
 import {SubstrateChainRegistry} from 'src/generated/litentryGraphQLTypes';
 import {render, fireEvent, waitFor} from 'src/testUtils';
@@ -78,7 +79,7 @@ describe('SendFund', () => {
       address: '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a',
       txConfig: {
         method: 'balances.transferKeepAlive',
-        params: ['12NLgzqfhuJkc9mZ5XUTTG85N8yhhzfptwqF1xVhtK3ZX7f6', _amountBN],
+        params: ['12NLgzqfhuJkc9mZ5XUTTG85N8yhhzfptwqF1xVhtK3ZX7f6', bnToHex(_amountBN)],
       },
     });
 
@@ -121,7 +122,7 @@ describe('SendFund', () => {
       address: '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a',
       txConfig: {
         method: 'balances.transfer',
-        params: ['12NLgzqfhuJkc9mZ5XUTTG85N8yhhzfptwqF1xVhtK3ZX7f6', _amountBN],
+        params: ['12NLgzqfhuJkc9mZ5XUTTG85N8yhhzfptwqF1xVhtK3ZX7f6', bnToHex(_amountBN)],
       },
     });
 
@@ -162,7 +163,7 @@ describe('SendFund', () => {
       address: '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a',
       txConfig: {
         method: 'balances.transferKeepAlive',
-        params: ['12NLgzqfhuJkc9mZ5XUTTG85N8yhhzfptwqF1xVhtK3ZX7f6', _amountBN],
+        params: ['12NLgzqfhuJkc9mZ5XUTTG85N8yhhzfptwqF1xVhtK3ZX7f6', bnToHex(_amountBN)],
       },
     });
 
