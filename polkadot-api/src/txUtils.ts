@@ -1,5 +1,5 @@
 import {ApiPromise} from '@polkadot/api';
-import {u8aToHex, bnToBn, hexToBn, bnToHex} from '@polkadot/util';
+import {u8aToHex, bnToBn, hexToBn} from '@polkadot/util';
 import type {KeyringPair} from '@polkadot/keyring/types';
 import type {AccountInfoWithProviders, AccountInfoWithRefCount} from '@polkadot/types/interfaces';
 import type {SubmittableExtrinsic} from '@polkadot/api/submittable/types';
