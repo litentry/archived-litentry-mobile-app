@@ -2,7 +2,6 @@ import React, {useContext} from 'react';
 import {View} from 'react-native';
 import {Divider, Button, List, Subheading, Select} from '@ui/library';
 import {InAppNotificationContent, InAppNotificationContext} from 'context/InAppNotificationContext';
-import {useApi} from 'context/ChainApiContext';
 import {ScrollView} from 'react-native-gesture-handler';
 import globalStyles from '@ui/styles';
 import {useNetwork} from '@atoms/network';
@@ -13,23 +12,24 @@ import {useActiveAccount} from '@atoms/activeAccount';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {Padder} from '@ui/components/Padder';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
+import {usePolkadotApiStatus} from '@polkadotApi/usePolkadotApiStatus';
 
 function DevScreen() {
   const {currentNetwork} = useNetwork();
   const {data: convictions} = useConvictions();
   const {trigger} = useContext(InAppNotificationContext);
-  const {status} = useApi();
+  const apiStatus = usePolkadotApiStatus();
   const {activeAccount, selectActiveAccount} = useActiveAccount();
   const {data: accountInfo} = useAccount(activeAccount?.address);
 
   const ApiStatus = React.useCallback(
     () => (
       <View style={globalStyles.justifyCenter}>
-        <Subheading>{status}</Subheading>
+        <Subheading>{apiStatus === 'ready' ? 'ready' : 'disconnected'}</Subheading>
       </View>
     ),
 
-    [status],
+    [apiStatus],
   );
 
   const NotificationTrigger = React.useCallback(
@@ -73,7 +73,6 @@ function DevScreen() {
       <ScrollView>
         <List.Item title={`Network: ${currentNetwork.name}`} description={currentNetwork.ws} right={ApiStatus} />
         <Divider />
-
         <View style={globalStyles.paddedContainer}>
           <Subheading>Conviction selection</Subheading>
           <Select

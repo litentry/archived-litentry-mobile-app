@@ -6,7 +6,6 @@ import {Layout} from '@ui/components/Layout';
 import {ProgressBar} from '@ui/components/ProgressBar';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SelectAccount} from '@ui/components/SelectAccount';
-import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useConvictions, Conviction} from 'src/api/hooks/useConvictions';
 import {formattedStringToBn, stringToBn as stringToBnUtil} from 'src/utils/balance';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
@@ -18,11 +17,12 @@ import BalanceInput from '@ui/components/BalanceInput';
 import {Account} from 'src/api/hooks/useAccount';
 import {useChainInfo} from 'src/api/hooks/useChainInfo';
 import {getProposalTitle} from 'src/utils/proposal';
-import {BN_ZERO} from '@polkadot/util';
+import {bnToHex, BN_ZERO} from '@polkadot/util';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
+import {useStartTx} from 'context/TxContext';
 
 export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamList, typeof referendumScreen>}) {
-  const startTx = useApiTx();
+  const {startTx} = useStartTx();
   const [state, dispatch] = useReducer(reducer, initialState);
   const referendum = route.params.referendum;
   const {data: convictions} = useConvictions();
@@ -46,16 +46,16 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
       const balance = stringToBnUtil(chainInfo.registry, state.voteValue);
       startTx({
         address: state.account.address,
-        txMethod: 'democracy.vote',
-        params: [
-          referendum?.index,
-          {
-            Standard: {
-              balance,
+        txConfig: {
+          method: 'democracy.vote',
+          params: [
+            referendum?.index,
+            {
+              balance: bnToHex(balance),
               vote: {aye: state.voting === 'YES' ? true : false, conviction: state.conviction.value},
             },
-          },
-        ],
+          ],
+        },
       });
       reset();
     }

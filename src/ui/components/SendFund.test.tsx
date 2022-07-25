@@ -1,3 +1,4 @@
+import {bnToHex} from '@polkadot/util';
 import React from 'react';
 import {SubstrateChainRegistry} from 'src/generated/litentryGraphQLTypes';
 import {render, fireEvent, waitFor} from 'src/testUtils';
@@ -6,15 +7,26 @@ import {SendFund} from './SendFund';
 
 const mockStartTx = jest.fn();
 
-jest.mock('src/api/hooks/useApiTx', () => {
+jest.mock('context/TxContext', () => {
   return {
-    useApiTx: () => mockStartTx,
+    useStartTx: () => ({
+      startTx: mockStartTx,
+    }),
+  };
+});
+
+jest.mock('src/hooks/useIsAddressValid', () => {
+  return {
+    useIsAddressValid: () => ({
+      isAddressValid: jest.fn(() => Promise.resolve(true)),
+    }),
   };
 });
 
 describe('SendFund', () => {
   const address = '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a';
   const onFundsSent = jest.fn();
+
   const mockChainRegistry = {
     __typename: 'SubstrateChainRegistry',
     decimals: 10,
@@ -64,9 +76,11 @@ describe('SendFund', () => {
     });
 
     expect(mockStartTx).toHaveBeenCalledWith({
-      address,
-      params: [toAddress, _amountBN],
-      txMethod: 'balances.transferKeepAlive',
+      address: '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a',
+      txConfig: {
+        method: 'balances.transferKeepAlive',
+        params: ['12NLgzqfhuJkc9mZ5XUTTG85N8yhhzfptwqF1xVhtK3ZX7f6', bnToHex(_amountBN)],
+      },
     });
 
     await waitFor(() => {
@@ -105,9 +119,11 @@ describe('SendFund', () => {
     });
 
     expect(mockStartTx).toHaveBeenCalledWith({
-      address,
-      params: [toAddress, _amountBN],
-      txMethod: 'balances.transfer',
+      address: '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a',
+      txConfig: {
+        method: 'balances.transfer',
+        params: ['12NLgzqfhuJkc9mZ5XUTTG85N8yhhzfptwqF1xVhtK3ZX7f6', bnToHex(_amountBN)],
+      },
     });
 
     await waitFor(() => {
@@ -144,9 +160,11 @@ describe('SendFund', () => {
     });
 
     expect(mockStartTx).toHaveBeenCalledWith({
-      address,
-      params: [toAddress, _amountBN],
-      txMethod: 'balances.transferKeepAlive',
+      address: '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a',
+      txConfig: {
+        method: 'balances.transferKeepAlive',
+        params: ['12NLgzqfhuJkc9mZ5XUTTG85N8yhhzfptwqF1xVhtK3ZX7f6', bnToHex(_amountBN)],
+      },
     });
 
     await waitFor(() => {

@@ -6,17 +6,17 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {useApiTx} from 'src/api/hooks/useApiTx';
 import {Padder} from '@ui/components/Padder';
 import {Account} from 'src/api/hooks/useAccount';
 import {useRefetch} from 'src/api/hooks/useRefetch';
 import {TIPS_QUERY} from 'src/api/hooks/useTips';
 import {InputLabel} from '@ui/library/InputLabel';
 import AddressInput from '@ui/components/AddressInput';
+import {useStartTx} from 'context/TxContext';
 
 export function ProposeTipScreen({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const startTx = useApiTx();
+  const {startTx} = useStartTx();
   const {refetch: refetchTips} = useRefetch([TIPS_QUERY]);
   const [isBeneficiaryAddressValid, setIsBeneficiaryAddressValid] = useState(false);
 
@@ -26,8 +26,10 @@ export function ProposeTipScreen({navigation}: {navigation: NavigationProp<Dashb
     if (state.account) {
       startTx({
         address: state.account.address,
-        txMethod: 'tips.reportAwesome',
-        params: [state.reason, state.beneficiary],
+        txConfig: {
+          method: 'tips.reportAwesome',
+          params: [state.reason, state.beneficiary],
+        },
       })
         .then(() => {
           refetchTips();

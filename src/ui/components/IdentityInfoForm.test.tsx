@@ -6,9 +6,11 @@ const mockOnIdentitySet = jest.fn();
 
 const mockStartTx = jest.fn(() => Promise.resolve({}));
 
-jest.mock('src/api/hooks/useApiTx', () => {
+jest.mock('context/TxContext', () => {
   return {
-    useApiTx: () => mockStartTx,
+    useStartTx: () => ({
+      startTx: mockStartTx,
+    }),
   };
 });
 
@@ -25,17 +27,19 @@ describe('IdentityInfoForm', () => {
       expect(mockStartTx).toHaveBeenCalledTimes(1);
       expect(mockStartTx).toHaveBeenCalledWith({
         address: '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a',
-        params: [
-          {
-            display: {raw: 'PureStake/01'},
-            email: {none: null},
-            legal: {none: null},
-            riot: {none: null},
-            twitter: {none: null},
-            web: {none: null},
-          },
-        ],
-        txMethod: 'identity.setIdentity',
+        txConfig: {
+          params: [
+            {
+              display: {raw: 'PureStake/01'},
+              email: {none: null},
+              legal: {none: null},
+              riot: {none: null},
+              twitter: {none: null},
+              web: {none: null},
+            },
+          ],
+          method: 'identity.setIdentity',
+        },
       });
     });
   });
