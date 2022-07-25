@@ -51,8 +51,12 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
   const startTx = useCallback(
     async (config: StartConfig) => {
       openBottomSheet();
-      const txInfo = await getTxInfo({address: config.address, txConfig: config.txConfig});
-      dispatch({type: 'SHOW_TX_PREVIEW', payload: {address: config.address, txConfig: config.txConfig, txInfo}});
+      try {
+        const txInfo = await getTxInfo({address: config.address, txConfig: config.txConfig});
+        dispatch({type: 'SHOW_TX_PREVIEW', payload: {address: config.address, txConfig: config.txConfig, txInfo}});
+      } catch (error) {
+        console.warn(error);
+      }
     },
     [openBottomSheet, getTxInfo],
   );
