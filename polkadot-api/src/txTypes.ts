@@ -1,7 +1,9 @@
-import {BN} from '@polkadot/util';
 import type {Hash} from '@polkadot/types/interfaces';
+import {HexString} from './messages';
 
 export type TxHash = Hash;
+
+type BNHexString = HexString;
 
 export type IdentityPayload = {
   display: {raw: string} | {none: null};
@@ -36,7 +38,7 @@ type IdentitySetSubsTx = {
 
 type DemocracyVoteTx = {
   method: 'democracy.vote';
-  params: [referendumIndex: string, vote: {Standard: {balance: BN; vote: {aye: boolean; conviction: number}}}];
+  params: [referendumIndex: string, vote: {balance: BNHexString; vote: {aye: boolean; conviction: number}}];
 };
 
 type DemocracySecondTx = {
@@ -46,7 +48,7 @@ type DemocracySecondTx = {
 
 type DemocracyProposeTx = {
   method: 'democracy.propose';
-  params: [preImageHash: string, balance: BN];
+  params: [preImageHash: string, balance: BNHexString];
 };
 
 type TipsReportAwesomeTx = {
@@ -56,7 +58,7 @@ type TipsReportAwesomeTx = {
 
 type CrowdloanContributeTx = {
   method: 'crowdloan.contribute';
-  params: [parachainId: string, balance: BN, signature: string | null];
+  params: [parachainId: string, balance: BNHexString, signature: string | null];
 };
 
 type CouncilVoteTx = {
@@ -83,12 +85,12 @@ type CouncilModuleElectionSubmitCandidacyTx = {
 
 type BountiesProposeBountyTx = {
   method: 'bounties.proposeBounty';
-  params: [bountyAllocation: BN, title: string];
+  params: [bountyAllocation: BNHexString, title: string];
 };
 
 type BalancesTransferTx = {
   method: 'balances.transferKeepAlive' | 'balances.transfer';
-  params: [address: string, amount: BN];
+  params: [address: string, amount: BNHexString];
 };
 
 export type TxConfig =

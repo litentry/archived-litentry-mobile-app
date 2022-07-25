@@ -8,7 +8,7 @@ import {useAccount} from 'src/api/hooks/useAccount';
 import {useChainInfo} from 'src/api/hooks/useChainInfo';
 import {InputLabel} from '@ui/library/InputLabel';
 import {useSnackbar} from 'context/SnackbarContext';
-import {BN_ZERO} from '@polkadot/util';
+import {bnToHex, BN_ZERO} from '@polkadot/util';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {stringToBn as stringToBnUtil, formattedStringToBn} from 'src/utils/balance';
 import AddressInput from '@ui/components/AddressInput';
@@ -110,7 +110,7 @@ export function SendFund({address, onFundsSent}: Props) {
                   address,
                   txConfig: {
                     method: `${isKeepAliveActive ? `balances.transferKeepAlive` : `balances.transfer`}`,
-                    params: [toAddress, _amountBN],
+                    params: [toAddress, bnToHex(_amountBN)],
                   },
                 })
                   .then(() => {
