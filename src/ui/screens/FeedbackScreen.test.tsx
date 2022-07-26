@@ -21,15 +21,14 @@ describe('FeedbackScreen', () => {
   });
 
   it('should enter the feedback and press submit button', async () => {
-    const linkingSpy = jest.spyOn(Linking, 'canOpenURL');
-    const {findByPlaceholderText, findByTestId} = render(<FeedbackScreen />);
+    const {findByPlaceholderText, findByTestId, findByText} = render(<FeedbackScreen />);
     const sendFeedbackButton = await findByTestId('send-feedback-button');
     fireEvent.changeText(await findByPlaceholderText('feedback...'), feedback);
     expect(sendFeedbackButton).toBeEnabled();
     fireEvent.press(sendFeedbackButton);
-    waitFor(() => {
+    await waitFor(() => {
       expect(mockSendEmail).toBeCalledTimes(1);
-      expect(linkingSpy).toHaveBeenCalledTimes(1);
     });
+    await findByText('Thank you for your feedback!');
   });
 });
