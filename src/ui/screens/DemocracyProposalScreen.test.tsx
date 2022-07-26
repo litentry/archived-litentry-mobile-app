@@ -1,7 +1,7 @@
 import React from 'react';
 import {RouteProp} from '@react-navigation/native';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
-import {render, fireEvent} from 'src/testUtils';
+import {render, fireEvent, waitFor} from 'src/testUtils';
 import {DemocracyProposalScreen} from './DemocracyProposalScreen';
 import {democracyProposalScreen} from '@ui/navigation/routeKeys';
 
@@ -161,9 +161,21 @@ const route = {
 
 const mockStartTx = jest.fn();
 
-jest.mock('src/api/hooks/useApiTx', () => {
+const mockTxMethodArgsLength = jest.fn(() => Promise.resolve());
+
+jest.mock('context/TxContext', () => {
   return {
-    useApiTx: () => mockStartTx,
+    useStartTx: () => ({
+      startTx: mockStartTx,
+    }),
+  };
+});
+
+jest.mock('@polkadotApi/useTx', () => {
+  return {
+    useTx: () => ({
+      getTxMethodArgsLength: mockTxMethodArgsLength,
+    }),
   };
 });
 
@@ -217,10 +229,13 @@ describe('DemocracyProposalScreen', () => {
 
     fireEvent.press(secondButton);
 
+    await waitFor(() => {
+      expect(mockTxMethodArgsLength).toHaveBeenCalledWith('democracy.second');
+    });
+
     expect(mockStartTx).toHaveBeenCalledWith({
       address: 'G7UkJAutjbQyZGRiP8z5bBSBPBJ66JbTKAkFDq3cANwENyX',
-      params: ['73'],
-      txMethod: 'democracy.second',
+      txConfig: {method: 'democracy.second', params: ['73']},
     });
   });
 });

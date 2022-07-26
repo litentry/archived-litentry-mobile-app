@@ -145,7 +145,7 @@ export function DemocracyProposalScreen({
               {`Cancel`}
             </Button>
             <Padder scale={1} />
-            <Button mode="outlined" disabled={!state.account} onPress={onSecondPress}>
+            <Button mode="outlined" disabled={!state.account} onPress={onSecondPress} testID="second-button">
               {`Second`}
             </Button>
           </View>
