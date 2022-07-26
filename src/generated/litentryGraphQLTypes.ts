@@ -2411,7 +2411,7 @@ export type SubstrateChainDemocracyProposal = {
   proposer: SubstrateChainAccount;
   seconds: Array<SubstrateChainAccountInfo>;
   status: SubstrateChainDemocracyProposalStatus;
-  tabledAtBlock: Scalars['String'];
+  tabledAtBlock?: Maybe<Scalars['String']>;
   title: Scalars['String'];
   updatedAt: Scalars['String'];
 };
