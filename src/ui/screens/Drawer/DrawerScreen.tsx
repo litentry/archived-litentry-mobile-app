@@ -147,14 +147,6 @@ export function DrawerScreen({navigation, state}: DrawerContentComponentProps) {
               />
             </>
           ) : null}
-          {__DEV__ && (
-            <Drawer.Item
-              label="Dev Kit"
-              icon="code-tags"
-              active={activeScreen === routeKeys.devScreen}
-              onPress={navigateToScreen(routeKeys.devScreen)}
-            />
-          )}
         </Drawer.Section>
         <Drawer.Section>
           <Drawer.Item

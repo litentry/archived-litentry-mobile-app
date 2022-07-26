@@ -36,7 +36,6 @@ describe('DrawerScreen', () => {
     await findByText('Settings');
     await findByText('Dark theme');
     await findByText('Notifications');
-    await findByText('Dev Kit');
 
     await findByText('About Litentry');
     await findByText('Feedback');
@@ -53,7 +52,6 @@ describe('DrawerScreen', () => {
     ['Auctions', 'Auctions'],
     ['Crowdloan', 'CrowdloansNavigator'],
     ['Notifications', 'Notification'],
-    ['Dev Kit', 'Dev Kit'],
     ['Crowdloan', 'CrowdloansNavigator'],
     ['Feedback', 'Feedback'],
   ];

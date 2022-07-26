@@ -14,7 +14,6 @@ import {
   dashboardScreen,
   democracyProposalScreen,
   democracyScreen,
-  devScreen,
   drawerNavigator,
   eventsCalendarScreen,
   exportAccountWithJsonFileScreen,
@@ -82,7 +81,6 @@ type DrawerParamList = {
   [registrarListScreen]: undefined;
   [technicalCommitteeScreen]: undefined;
   [webviewScreen]: {uri: string; title: string};
-  [devScreen]: undefined;
   [notificationSettingsScreen]: undefined;
   [polkassemblyDiscussionsNavigator]: undefined;
   [accountsNavigator]: undefined;

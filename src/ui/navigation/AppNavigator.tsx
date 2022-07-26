@@ -14,7 +14,6 @@ import {VerifyMnemonicScreen} from '@ui/screens/CreateAccount/VerifyMnemonic';
 import DashboardScreen from '@ui/screens/DashboardScreen';
 import {DemocracyProposalScreen} from '@ui/screens/DemocracyProposalScreen';
 import {DemocracyScreen} from '@ui/screens/DemocracyScreen';
-import DevScreen from '@ui/screens/DevScreen';
 import DrawerScreen from '@ui/screens/Drawer/DrawerScreen';
 import {ExportAccountWithJsonFileScreen} from '@ui/screens/ExportAccountWithJsonFileScreen';
 import {ImportAccountScreen} from '@ui/screens/ImportAccountScreen';
@@ -172,7 +171,6 @@ function DrawerNavigator() {
         component={WebviewScreen}
         options={({route}) => ({title: route?.params?.title})}
       />
-      <Drawer.Screen name={routeKeys.devScreen} component={DevScreen} />
       <Drawer.Screen name={routeKeys.notificationSettingsScreen} component={NotificationSettingsScreen} />
       <Drawer.Screen name={routeKeys.feedbackScreen} component={FeedbackScreen} />
     </Drawer.Navigator>

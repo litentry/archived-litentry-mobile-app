@@ -36,7 +36,6 @@ export const feedbackScreen = 'Feedback' as const;
 export const onboardingScreen = 'Onboarding' as const;
 
 export const webviewScreen = 'Webview' as const;
-export const devScreen = 'Dev Kit' as const;
 export const manageIdentityScreen = 'Manage Identity' as const;
 export const registerSubIdentitiesScreen = 'Register Sub-Identities' as const;
 export const councilScreen = 'Council' as const;
