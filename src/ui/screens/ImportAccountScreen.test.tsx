@@ -70,7 +70,7 @@ describe('ImportAccount', () => {
 
     fireEvent.press(importSeedButton);
 
-    waitFor(() => {
+    await waitFor(() => {
       expect(secureKeychainSpy).toHaveBeenCalledTimes(1);
       expect(navigationSpy).toBeCalled();
     });
