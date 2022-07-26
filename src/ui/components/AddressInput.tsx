@@ -97,7 +97,7 @@ export function AddressInput({onAddressChanged, onValidateAddress, onFocus, onBl
       </View>
 
       {!addressValid && inputAddress ? (
-        <HelperText type="error" style={styles.error}>
+        <HelperText type="error" style={styles.error} testID="address-valid">
           {`Enter a valid address for ${currentNetwork.name}`}
         </HelperText>
       ) : null}

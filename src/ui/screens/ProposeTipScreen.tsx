@@ -39,7 +39,6 @@ export function ProposeTipScreen({navigation}: {navigation: NavigationProp<Dashb
           if (e.message.includes('failed on who')) {
             dispatch({type: 'SET_ERROR', payload: 'beneficiary_error'});
           }
-          console.warn(e);
         });
     }
   };
@@ -83,7 +82,7 @@ export function ProposeTipScreen({navigation}: {navigation: NavigationProp<Dashb
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
-        <Button mode="contained" disabled={!valid} onPress={submit}>
+        <Button mode="contained" onPress={submit} testID="propose-tip">
           {`Propose Tip`}
         </Button>
       </View>
