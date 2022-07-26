@@ -288,7 +288,7 @@ function useInitApi(isWebviewLoaded: boolean, postMessage: PostMessage) {
   }, [isWebviewLoaded, postMessage, setApiState, currentNetwork.ws]);
 }
 
-function useApiTx(isWebviewLoaded: boolean, postMessage: PostMessage, resolversRef: ResolversRef) {
+export function useApiTx(isWebviewLoaded: boolean, postMessage: PostMessage, resolversRef: ResolversRef) {
   const setTxState = useSetRecoilState(txState);
 
   React.useEffect(() => {

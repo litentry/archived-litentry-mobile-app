@@ -9,9 +9,11 @@ jest.useFakeTimers();
 
 const mockStartTx = jest.fn();
 
-jest.mock('src/api/hooks/useApiTx', () => {
+jest.mock('context/TxContext', () => {
   return {
-    useApiTx: () => mockStartTx,
+    useStartTx: () => ({
+      startTx: mockStartTx,
+    }),
   };
 });
 
