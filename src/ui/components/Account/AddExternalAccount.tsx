@@ -7,9 +7,10 @@ import {Padder} from '@ui/components/Padder';
 import QRCamera, {QRCameraRef} from '@ui/components/QRCamera';
 import {SuccessDialog} from '@ui/components/SuccessDialog';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {isAddressValid, parseAddress} from 'src/utils/address';
+import {parseAddress} from 'src/utils/address';
 import {AddressInfoPreview} from '@ui/components/Account/AddressPreview';
 import {useKeyring} from '@polkadotApi/useKeyring';
+import {useIsAddressValid} from 'src/hooks/useIsAddressValid';
 
 type StepType = 'input' | 'preview' | 'success';
 
@@ -56,6 +57,7 @@ export function AddExternalAccount({onClose}: Props) {
   const [state, dispatch] = React.useReducer(addAccountReducer, initialState);
   const {addExternalAccount} = useKeyring();
   const {colors} = useTheme();
+  const {isValid: isValidAddress, isAddressValid} = useIsAddressValid(currentNetwork, state.address);
 
   const handleInputChange = (text: string) => {
     dispatch({type: 'SET_ADDRESS', payload: text});
@@ -69,7 +71,7 @@ export function AddExternalAccount({onClose}: Props) {
 
   const handleConfirm = React.useCallback(() => {
     if (state.step === 'input') {
-      if (isAddressValid(currentNetwork, state.address)) {
+      if (isValidAddress) {
         dispatch({type: 'SET_STEP', payload: 'preview'});
         return;
       }
@@ -92,29 +94,31 @@ export function AddExternalAccount({onClose}: Props) {
       close();
       return;
     }
-  }, [addExternalAccount, currentNetwork, state.address, state.step, close]);
+  }, [addExternalAccount, currentNetwork, state.address, state.step, close, isValidAddress]);
 
   const handleScan = React.useCallback(
     ({data}: {data: string}) => {
       try {
         const parsed = parseAddress(data);
-        if (isAddressValid(currentNetwork, parsed.address)) {
-          dispatch({type: 'SET_ADDRESS', payload: parsed.address});
-          dispatch({type: 'SET_STEP', payload: 'preview'});
-        } else {
-          Alert.alert(
-            'Validation Failed',
-            `${parsed.address} is not a valid address for the ${currentNetwork.name} network.`,
-            [{text: 'Ok', onPress: () => qrCameraRef.current?.reactivate()}],
-          );
-        }
+        isAddressValid(parsed.address).then((isValid) => {
+          if (isValid) {
+            dispatch({type: 'SET_ADDRESS', payload: parsed.address});
+            dispatch({type: 'SET_STEP', payload: 'preview'});
+          } else {
+            Alert.alert(
+              'Validation Failed',
+              `${parsed.address} is not a valid address for the ${currentNetwork.name} network.`,
+              [{text: 'Ok', onPress: () => qrCameraRef.current?.reactivate()}],
+            );
+          }
+        });
       } catch (e) {
         Alert.alert('Validation Failed', 'Address is invalid.', [
           {text: 'Ok', onPress: () => qrCameraRef.current?.reactivate()},
         ]);
       }
     },
-    [currentNetwork],
+    [currentNetwork, isAddressValid],
   );
 
   const disabled = state.address.length === 0;

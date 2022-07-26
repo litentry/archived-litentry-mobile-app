@@ -1,19 +1,19 @@
-import {u8aConcat, u8aToU8a} from '@polkadot/util';
-import {decodeAddress} from '@polkadot/util-crypto';
+import {u8aConcat, u8aToU8a, hexToU8a} from '@polkadot/util';
 import {CRYPTO_SR25519, SUBSTRATE_ID} from 'src/constants';
+import {HexString} from 'polkadot-api';
 
 export function createSignPayload(
-  address: string,
+  decodedAddress: HexString,
   cmd: number,
-  payload: string | Uint8Array,
-  genesisHash: string | Uint8Array,
+  payload: HexString,
+  genesisHash: string | HexString,
 ): Uint8Array {
   return u8aConcat(
     SUBSTRATE_ID,
     CRYPTO_SR25519,
     new Uint8Array([cmd]),
-    decodeAddress(address),
-    u8aToU8a(payload),
+    hexToU8a(decodedAddress),
+    hexToU8a(payload),
     u8aToU8a(genesisHash),
   );
 }

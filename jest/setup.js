@@ -47,6 +47,9 @@ jest.mock('@gorhom/bottom-sheet', () => {
   return {
     __esModule: true,
     ...MockBottomSheet,
+    useBottomSheet: {
+      expand: () => {},
+    },
   };
 });
 
@@ -131,3 +134,11 @@ jest.mock('react-native-keychain', () => ({
   ACCESS_CONTROL: {BIOMETRY_CURRENT_SET_OR_DEVICE_PASSCODE: 'mockedpwd'},
   ACCESSIBLE: {WHEN_PASSCODE_SET_THIS_DEVICE_ONLY: true},
 }));
+
+jest.mock('../src/hooks/useRemoteConfig', () => {
+  return {
+    useRemoteConfig: () => ({
+      getValue: jest.fn(),
+    }),
+  };
+});

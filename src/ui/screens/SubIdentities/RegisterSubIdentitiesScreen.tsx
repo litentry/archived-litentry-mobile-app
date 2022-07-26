@@ -1,20 +1,21 @@
 import React, {useEffect, useState} from 'react';
 import {Alert, FlatList, View} from 'react-native';
-import Identicon from '@polkadot/reactnative-identicon';
+import {stringShorten} from '@polkadot/util';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Button, Caption, Subheading, List, Divider, IconButton, useTheme, useBottomSheet} from '@ui/library';
+import {Identicon} from '@ui/components/Identicon';
 import {Layout} from '@ui/components/Layout';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {useApiTx} from 'src/api/hooks/useApiTx';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {registerSubIdentitiesScreen} from '@ui/navigation/routeKeys';
 import globalStyles from '@ui/styles';
 import {AddSubIdentity} from './AddSubIdentity';
 import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
-import {stringShorten} from '@polkadot/util';
 import {useSubAccounts} from 'src/api/hooks/useSubAccounts';
 import {Account} from '@ui/components/Account/Account';
+import {useStartTx} from 'context/TxContext';
+import type {SubIdentityPayload} from 'polkadot-api';
 import type {Account as SubstrateChainAccount, AccountBalance, AccountRegistration} from 'src/api/hooks/useAccount';
 
 export type SubIdentity = {
@@ -33,7 +34,7 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
   const {data: accountInfo, refetch: refetchAccount} = useSubAccounts(address);
   const [subIdentities, setSubIdentities] = useState<SubstrateChainAccount[]>();
   const [submitSubsDisabled, setSubmitSubsDisabled] = useState(true);
-  const startTx = useApiTx();
+  const {startTx} = useStartTx();
 
   useEffect(() => {
     if (accountInfo?.subAccounts?.length) {
@@ -52,20 +53,30 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
     });
   }, [navigation, HeaderRight]);
 
-  const onSetSubIdentities = React.useCallback(async () => {
-    startTx({
-      address,
-      txMethod: 'identity.setSubs',
-      params: [subIdentities?.map((sub) => [sub.address, {raw: sub.registration?.display}])],
-    })
-      .then(() => {
-        refetchAccount({address});
-        setSubmitSubsDisabled(true);
+  const onSetSubIdentities = async () => {
+    const subs = subIdentities?.reduce((_subIdentities, sub) => {
+      if (sub.registration?.display) {
+        _subIdentities.push([sub.address, {raw: sub.registration.display}]);
+      }
+      return _subIdentities;
+    }, [] as Array<SubIdentityPayload>);
+    if (subs) {
+      startTx({
+        address,
+        txConfig: {
+          method: 'identity.setSubs',
+          params: subs,
+        },
       })
-      .catch((e: Error) => {
-        console.warn(e);
-      });
-  }, [address, startTx, subIdentities, refetchAccount, setSubmitSubsDisabled]);
+        .then(() => {
+          refetchAccount({address});
+          setSubmitSubsDisabled(true);
+        })
+        .catch((e: Error) => {
+          console.warn(e);
+        });
+    }
+  };
 
   const onAddAccount = React.useCallback(
     (subIdentity: SubIdentity) => {
@@ -116,7 +127,11 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
   return (
     <SafeView edges={noTopEdges}>
       <View style={[globalStyles.paddedContainer, globalStyles.flex]}>
-        <Button mode="contained" onPress={onSetSubIdentities} disabled={submitSubsDisabled}>
+        <Button
+          mode="contained"
+          onPress={onSetSubIdentities}
+          disabled={submitSubsDisabled}
+          testID="set-sub-identity-button">
           Set Sub-identities
         </Button>
         <Padder scale={0.5} />
@@ -161,7 +176,14 @@ function SubAccountItem({account, onRemove}: SubIdentityItemProps) {
   );
 
   const RemoveSubAccount = React.useCallback(
-    () => <IconButton icon="delete-outline" color={colors.error} onPress={() => onRemove(account.address)} />,
+    () => (
+      <IconButton
+        icon="delete-outline"
+        color={colors.error}
+        onPress={() => onRemove(account.address)}
+        testID="delete-button"
+      />
+    ),
     [account.address, onRemove, colors.error],
   );
 

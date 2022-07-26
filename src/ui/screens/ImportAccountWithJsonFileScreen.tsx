@@ -1,6 +1,5 @@
 import React from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
-import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {NavigationProp} from '@react-navigation/core';
 import {useNetwork} from '@atoms/network';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -9,11 +8,13 @@ import RNFS from 'react-native-fs';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {accountsScreen} from '@ui/navigation/routeKeys';
 import {Button, Caption, List, Text, TextInput, useTheme} from '@ui/library';
+import {Identicon} from '@ui/components/Identicon';
 import {ErrorText} from '@ui/components/ErrorText';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
 import {SecureKeychain} from 'src/service/SecureKeychain';
 import {useKeyring} from '@polkadotApi/useKeyring';
+import {ErrorPayload} from 'polkadot-api';
 
 export function ImportAccountWithJsonFileScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
   const theme = useTheme();
@@ -38,7 +39,7 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
         navigation.navigate(accountsScreen, {reload: true});
       } catch (e) {
         console.warn(e);
-        setError((e as Error).message);
+        setError((e as ErrorPayload).message);
       }
     }
   }
@@ -47,7 +48,7 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
     if (parsedJson) {
       return (
         <View style={globalStyles.justifyCenter}>
-          <IdentityIcon value={parsedJson.address} size={40} />
+          <Identicon value={parsedJson.address} size={40} />
         </View>
       );
     }

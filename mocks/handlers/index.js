@@ -8,9 +8,11 @@ import {convictionsHandler} from './convictionsHandler';
 import {councilHandler} from './councilHandler';
 import {councilMotionDetailsHandler} from './councilMotionDetailsHandler';
 import {councilMotionsHandler} from './councilMotionsHandler';
+import {councilSummaryHandler} from './councilSummaryHandler';
 import {councilVotesHandler} from './councilVotesHandler';
 import {crowdloanHandler} from './crowdloanHandler';
 import {crowdloansHandler} from './crowdloansHandler';
+import {crowdloanSummaryHandler} from './crowdloanSummaryHandler';
 import {democracyHandler} from './democracyHandler';
 import {democracySummaryHandler} from './democracySummaryHandler';
 import {eventsCalendarHandler} from './eventsCalendarHandler';
@@ -24,6 +26,7 @@ import {technicalCommitteeSummaryHandler} from './technicalCommitteeSummaryHandl
 import {tipDetailHandler} from './tipDetailHandler';
 import {tipsHandler} from './tipsHandler';
 import {treasuryHandler} from './treasuryHandler';
+import {treasurySummaryHandler} from './treasurySummaryHandler';
 
 export const handlers = [
   registrarsHandler,
@@ -39,6 +42,9 @@ export const handlers = [
   bountiesSummaryHandler,
   bountyHandler,
   chainInfoHandler,
+  councilSummaryHandler,
+  crowdloanSummaryHandler,
+  treasurySummaryHandler,
   auctionsHandler,
   parachainCrowdloanHandler,
   crowdloanHandler,

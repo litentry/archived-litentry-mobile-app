@@ -21,16 +21,13 @@
     "build-polkadotApi": "yarn --cwd ./polkadot-api"
   },
   "resolutions": {
-    "@polkadot/types": "8.3.1",
-    "@polkadot/util": "9.1.1",
-    "@polkadot/util-crypto": "9.1.1",
     "react-native-svg": "^12.3.0"
   },
   "dependencies": {
     "@apollo/client": "^3.5.10",
     "@gorhom/bottom-sheet": "^4.3.2",
-    "@polkadot/api": "8.3.1",
-    "@polkadot/reactnative-identicon": "2.1.1",
+    "@polkadot/types": "^8.12.2",
+    "@polkadot/util": "^10.0.2",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/clipboard": "^1.5.1",
     "@react-native-firebase/analytics": "^14.9.1",
@@ -45,7 +42,6 @@
     "@react-navigation/native-stack": "^6.6.2",
     "@sentry/react-native": "^3.4.2",
     "@tradle/react-native-http": "^2.0.1",
-    "@types/zxcvbn": "^4.4.1",
     "@walletconnect/react-native-dapp": "^1.7.5",
     "@walletconnect/web3-provider": "^1.7.8",
     "assert": "^1.5.0",
@@ -113,6 +109,7 @@
     "stream-browserify": "^3.0.0",
     "url": "^0.11.0",
     "util": "^0.10.4",
+    "uuid": "^8.3.2",
     "web3": "^1.7.1",
     "yup": "^0.32.11",
     "zxcvbn": "^4.4.2"
@@ -136,6 +133,8 @@
     "@types/react-native": "^0.67.3",
     "@types/react-native-vector-icons": "^6.4.10",
     "@types/react-test-renderer": "^17.0.1",
+    "@types/uuid": "^8.3.4",
+    "@types/zxcvbn": "^4.4.1",
     "@typescript-eslint/eslint-plugin": "^5.26.0",
     "@typescript-eslint/parser": "^5.27.0",
     "babel-jest": "^28.1.0",

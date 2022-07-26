@@ -1,10 +1,10 @@
 import React from 'react';
 import {TouchableOpacity, View} from 'react-native';
-import Identicon from '@polkadot/reactnative-identicon';
 import {Padder} from '@ui/components/Padder';
-import {Account} from './Account';
+import {Account} from '@ui/components/Account/Account';
 import type {Account as SubstrateChainAccount} from 'src/api/hooks/useAccount';
 import globalStyles from '@ui/styles';
+import {Identicon} from '@ui/components/Identicon';
 
 type Props = {
   account: SubstrateChainAccount;
