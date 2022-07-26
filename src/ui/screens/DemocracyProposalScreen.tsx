@@ -165,14 +165,14 @@ const styles = StyleSheet.create({
 
 const initialState: State = {open: false};
 
-export type State = {open: boolean; account?: Account | undefined};
+type State = {open: boolean; account?: Account | undefined};
 type Action =
   | {type: 'RESET'}
   | {type: 'SELECT_ACCOUNT'; payload: Account | undefined}
   | {type: 'OPEN'}
   | {type: 'CLOSE'};
 
-export function reducer(state: State, action: Action): State {
+function reducer(state: State, action: Action): State {
   switch (action.type) {
     case 'RESET':
       return initialState;
