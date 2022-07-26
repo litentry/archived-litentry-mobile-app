@@ -12,7 +12,6 @@ import {
   crowdloansNavigator,
   dashboardNavigator,
   dashboardScreen,
-  democracyProposalScreen,
   democracyScreen,
   devScreen,
   drawerNavigator,
@@ -38,7 +37,6 @@ import {
   polkassemblyDiscussions,
   polkassemblyDiscussionsNavigator,
   proposeTipScreen,
-  referendumScreen,
   registerSubIdentitiesScreen,
   registrarListScreen,
   technicalCommitteeScreen,
@@ -49,7 +47,6 @@ import {
   webviewScreen,
 } from '@ui/navigation/routeKeys';
 import type {CouncilMember} from 'src/api/hooks/useCouncil';
-import type {DemocracyProposal, DemocracyReferendum} from 'src/api/hooks/useDemocracy';
 
 type DashboardStackParamList = {
   [dashboardScreen]: undefined;
@@ -69,8 +66,6 @@ type DashboardStackParamList = {
   [treasuryScreen]: undefined;
   [motionsScreen]: undefined;
   [democracyScreen]: undefined;
-  [referendumScreen]: {referendum: DemocracyReferendum};
-  [democracyProposalScreen]: {proposal: DemocracyProposal};
   [bountiesScreen]: undefined;
   [bountyDetailScreen]: {index: string};
   [eventsCalendarScreen]: undefined;
