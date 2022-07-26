@@ -16,9 +16,11 @@ const preImage = '0x66cb3ecc23fd2ef262f8f451e4f0e0dfcfd2e276b3438dc800522df48636
 
 const mockStartTx = jest.fn();
 
-jest.mock('src/api/hooks/useApiTx', () => {
+jest.mock('context/TxContext', () => {
   return {
-    useApiTx: () => mockStartTx,
+    useStartTx: () => ({
+      startTx: mockStartTx,
+    }),
   };
 });
 
@@ -94,16 +96,10 @@ describe('DemocracyScreen', () => {
 
     expect(mockStartTx).toHaveBeenCalledWith({
       address: 'G7UkJAutjbQyZGRiP8z5bBSBPBJ66JbTKAkFDq3cANwENyX',
-      params: [
-        '0x66cb3ecc23fd2ef262f8f451e4f0e0dfcfd2e276b3438dc800522df4863659db',
-        {
-          length: 2,
-          negative: 0,
-          red: null,
-          words: [26402816, 17881, ,],
-        },
-      ],
-      txMethod: 'democracy.propose',
+      txConfig: {
+        method: 'democracy.propose',
+        params: ['0x66cb3ecc23fd2ef262f8f451e4f0e0dfcfd2e276b3438dc800522df4863659db', '0x01176592e000'],
+      },
     });
   });
 });
