@@ -12,6 +12,9 @@ import {EmptyView} from '@ui/components/EmptyView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {ProgressChart} from '@ui/components/ProgressChart';
+import {NavigationProp} from '@react-navigation/native';
+import {DashboardStackParamList} from '@ui/navigation/navigation';
+import {referendumDetailScreen} from '@ui/navigation/routeKeys';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -33,7 +36,12 @@ export function DemocracyScreen() {
   );
 }
 
-function ReferendumTeaser({referendum}: {referendum: DemocracyReferendum}) {
+type ReferendumTeaserProps = {
+  referendum: DemocracyReferendum;
+  onPress: (id: string) => void;
+};
+
+function ReferendumTeaser({referendum, onPress}: ReferendumTeaserProps) {
   const ItemLeft = React.useCallback(() => {
     const referendumIndex = referendum.id.split(':')[1] as string;
     return (
@@ -44,7 +52,7 @@ function ReferendumTeaser({referendum}: {referendum: DemocracyReferendum}) {
   }, [referendum.id]);
 
   return (
-    <Card style={{padding: standardPadding}}>
+    <Card style={{padding: standardPadding}} onPress={() => onPress(referendum.id)}>
       <List.Item
         left={ItemLeft}
         title={<Paragraph>{referendum.title}</Paragraph>}
@@ -58,16 +66,24 @@ function ReferendumTeaser({referendum}: {referendum: DemocracyReferendum}) {
           <Caption>{referendum.formattedNay}</Caption>
         </Row>
         <Row label={'Support'}>
-          <ProgressChart percent={referendum.ayePercent / 100} width={50} strokeWidth={7} />
+          <View style={globalStyles.rowAlignCenter}>
+            <ProgressChart percent={referendum.ayePercent / 100} width={50} strokeWidth={7} />
+            <Padder scale={0.5} />
+            <Caption>{referendum.voteThreshold}</Caption>
+          </View>
         </Row>
       </View>
     </Card>
   );
 }
 
-function Referendums() {
+function Referendums({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {colors} = useTheme();
   const {data: referendums, loading, fetchMore, fetchingMore, refetch, refetching} = useDemocracyReferendums();
+
+  const toReferendumDetails = (id: string) => {
+    navigation.navigate(referendumDetailScreen, {id});
+  };
 
   const ListFooter = React.useCallback(() => {
     if (fetchingMore) {
@@ -91,7 +107,7 @@ function Referendums() {
           <FlatList
             contentContainerStyle={styles.listContainer}
             data={referendums}
-            renderItem={({item}) => <ReferendumTeaser referendum={item} />}
+            renderItem={({item}) => <ReferendumTeaser referendum={item} onPress={toReferendumDetails} />}
             keyExtractor={(item) => item.id}
             ListEmptyComponent={EmptyView}
             ItemSeparatorComponent={Padder}

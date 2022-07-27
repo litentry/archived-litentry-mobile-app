@@ -97,6 +97,9 @@ const globalStyles = StyleSheet.create({
   textCenter: {
     textAlign: 'center',
   },
+  textJustify: {
+    textAlign: 'justify',
+  },
 });
 
 export default globalStyles;

@@ -13,6 +13,7 @@ import {
   dashboardNavigator,
   dashboardScreen,
   democracyScreen,
+  referendumDetailScreen,
   devScreen,
   drawerNavigator,
   eventsCalendarScreen,
@@ -66,6 +67,7 @@ type DashboardStackParamList = {
   [treasuryScreen]: undefined;
   [motionsScreen]: undefined;
   [democracyScreen]: undefined;
+  [referendumDetailScreen]: {id: string};
   [bountiesScreen]: undefined;
   [bountyDetailScreen]: {index: string};
   [eventsCalendarScreen]: undefined;
