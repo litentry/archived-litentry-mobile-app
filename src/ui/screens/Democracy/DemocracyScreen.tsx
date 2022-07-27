@@ -14,7 +14,7 @@ import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {ProgressChart} from '@ui/components/ProgressChart';
 import {NavigationProp} from '@react-navigation/native';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
-import {proposalDetailScreen, referendumDetailScreen} from '@ui/navigation/routeKeys';
+import {democracyReferendumDetailScreen, democracyProposalDetailScreen} from '@ui/navigation/routeKeys';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -83,7 +83,7 @@ function Referendums({navigation}: {navigation: NavigationProp<DashboardStackPar
 
   const toReferendumDetails = React.useCallback(
     (id: string) => {
-      navigation.navigate(referendumDetailScreen, {id});
+      navigation.navigate(democracyReferendumDetailScreen, {id});
     },
     [navigation],
   );
@@ -174,7 +174,7 @@ function Proposals({navigation}: {navigation: NavigationProp<DashboardStackParam
 
   const toProposalDetails = React.useCallback(
     (id: string) => {
-      navigation.navigate(proposalDetailScreen, {id});
+      navigation.navigate(democracyProposalDetailScreen, {id});
     },
     [navigation],
   );

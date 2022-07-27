@@ -13,8 +13,8 @@ import {
   dashboardNavigator,
   dashboardScreen,
   democracyScreen,
-  referendumDetailScreen,
-  proposalDetailScreen,
+  democracyReferendumDetailScreen,
+  democracyProposalDetailScreen,
   devScreen,
   drawerNavigator,
   eventsCalendarScreen,
@@ -68,8 +68,8 @@ type DashboardStackParamList = {
   [treasuryScreen]: undefined;
   [motionsScreen]: undefined;
   [democracyScreen]: undefined;
-  [referendumDetailScreen]: {id: string};
-  [proposalDetailScreen]: {id: string};
+  [democracyReferendumDetailScreen]: {id: string};
+  [democracyProposalDetailScreen]: {id: string};
   [bountiesScreen]: undefined;
   [bountyDetailScreen]: {index: string};
   [eventsCalendarScreen]: undefined;

@@ -25,7 +25,7 @@ type ScreenProps = {
   route: RouteProp<DashboardStackParamList, 'Referendum'>;
 };
 
-export function ReferendumDetailScreen({route}: ScreenProps) {
+export function DemocracyReferendumDetailScreen({route}: ScreenProps) {
   const {startTx} = useStartTx();
   const {colors} = useTheme();
   const [fullDescription, setFulDescription] = React.useState(false);

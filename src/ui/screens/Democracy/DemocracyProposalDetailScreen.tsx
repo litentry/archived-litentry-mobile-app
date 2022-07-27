@@ -21,7 +21,7 @@ type ScreenProps = {
   route: RouteProp<DashboardStackParamList, 'Proposal'>;
 };
 
-export function ProposalDetailScreen({route}: ScreenProps) {
+export function DemocracyProposalDetailScreen({route}: ScreenProps) {
   const {startTx} = useStartTx();
   const {getTxMethodArgsLength} = useTx();
   const {colors} = useTheme();

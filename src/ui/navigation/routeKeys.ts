@@ -45,8 +45,8 @@ export const treasuryScreen = 'Treasury' as const;
 export const motionsScreen = 'Motions' as const;
 
 export const democracyScreen = 'Democracy' as const;
-export const referendumDetailScreen = 'Referendum' as const;
-export const proposalDetailScreen = 'Proposal' as const;
+export const democracyReferendumDetailScreen = 'Referendum' as const;
+export const democracyProposalDetailScreen = 'Proposal' as const;
 
 export const parathreadsScreen = 'Parathreads' as const;
 export const crowdloanScreen = 'Crowdloan' as const;
