@@ -4,7 +4,7 @@ import {SubstrateChainDemocracyReferendum} from 'src/generated/litentryGraphQLTy
 export type DemocracyReferendum = SubstrateChainDemocracyReferendum;
 
 const REFERENDUM_QUERY = gql`
-  query getReferendum($id: String!) {
+  query getDemocracyReferendum($id: String!) {
     substrateChainDemocracyReferendum(id: $id) {
       id
       title

@@ -77,7 +77,7 @@ export function ReferendumDetailScreen({route}: ScreenProps) {
 
   const disabled = !voteAccount || !voteConviction || !voteValueBN.gt(BN_ZERO) || voteValueBN.gt(accountFreeBalanceBN);
 
-  const vote = () => {
+  const vote = React.useCallback(() => {
     if (voteAccount && voteConviction && voteValueBN.gt(BN_ZERO)) {
       const referendumIndex = referendum?.id.split(':')[1] as string;
       startTx({
@@ -95,123 +95,127 @@ export function ReferendumDetailScreen({route}: ScreenProps) {
       });
       resetVoteModal();
     }
-  };
+  }, [referendum?.id, startTx, voteAccount, voteConviction, voteType, voteValueBN, resetVoteModal]);
 
   return (
     <SafeView edges={noTopEdges}>
-      <View style={globalStyles.flex}>
-        {loading && !referendum ? (
-          <LoadingView />
-        ) : referendum ? (
-          <>
-            <ScrollView style={{paddingHorizontal: standardPadding * 2}}>
-              <List.Item
-                style={styles.padding0}
-                left={ItemLeft}
-                title={<Paragraph>{referendum.title}</Paragraph>}
-                description={<Caption>{`${fromNow(referendum.date)} | ${referendum.status}`}</Caption>}
-              />
+      {loading && !referendum ? (
+        <LoadingView />
+      ) : referendum ? (
+        <ScrollView style={styles.container}>
+          <List.Item
+            style={styles.padding0}
+            left={ItemLeft}
+            title={<Paragraph>{referendum.title}</Paragraph>}
+            description={<Caption>{`${fromNow(referendum.date)} | ${referendum.status}`}</Caption>}
+          />
+
+          {referendum.description ? (
+            <>
               <Padder />
               <HyperLink linkStyle={{color: colors.primary}} linkDefault>
                 <Caption style={globalStyles.textJustify}>
                   {fullDescription ? referendum.description : truncate(referendum.description, 120)}
                 </Caption>
               </HyperLink>
-              <Button uppercase={false} onPress={toggleDescription}>{`Show ${
-                fullDescription ? `less` : `more`
-              }`}</Button>
+              {referendum.description.length > 120 ? (
+                <Button uppercase={false} onPress={toggleDescription}>{`Show ${
+                  fullDescription ? `less` : `more`
+                }`}</Button>
+              ) : null}
+            </>
+          ) : null}
 
-              <Padder scale={1} />
-              <Subheading
-                style={globalStyles.textCenter}>{`Live Result (${referendum.votes.length} votes)`}</Subheading>
-              <Caption
-                style={globalStyles.textCenter}>{`${referendum.voteThreshold}: ${referendum.ayePercent}%`}</Caption>
-              <Padder scale={0.5} />
-              <ProgressBar percentage={referendum.ayePercent} />
-              <Padder />
-              <View style={globalStyles.rowContainer}>
-                <View style={[globalStyles.flex, globalStyles.alignCenter]}>
-                  <Subheading>{`YES`}</Subheading>
-                  <Caption>{referendum.formattedAye}</Caption>
-                </View>
-                <View style={[globalStyles.flex, globalStyles.alignCenter]}>
-                  <Subheading>{`NO`}</Subheading>
-                  <Caption>{referendum.formattedNay}</Caption>
-                </View>
-              </View>
+          <Padder scale={1} />
+          <Subheading style={globalStyles.textCenter}>{`Live Result (${referendum.votes.length} votes)`}</Subheading>
+          <Caption style={globalStyles.textCenter}>{`${referendum.voteThreshold}: ${referendum.ayePercent}%`}</Caption>
+          <Padder scale={0.5} />
+          <ProgressBar percentage={referendum.ayePercent} />
+          <Padder />
+          <View style={globalStyles.rowContainer}>
+            <View style={[globalStyles.flex, globalStyles.alignCenter]}>
+              <Subheading>{`YES`}</Subheading>
+              <Caption>{referendum.formattedAye}</Caption>
+            </View>
+            <View style={[globalStyles.flex, globalStyles.alignCenter]}>
+              <Subheading>{`NO`}</Subheading>
+              <Caption>{referendum.formattedNay}</Caption>
+            </View>
+          </View>
 
-              <Padder scale={3} />
-              <View style={globalStyles.spaceAroundRowContainer}>
-                <Button
-                  mode="contained"
-                  icon="check"
-                  uppercase={false}
-                  onPress={() => {
-                    toggleVoteModal('YES');
-                  }}>{`Vote YES`}</Button>
-                <Button
-                  mode="contained"
-                  icon="alert-circle-outline"
-                  uppercase={false}
-                  onPress={() => {
-                    toggleVoteModal('NO');
-                  }}>{`Vote NO`}</Button>
-              </View>
-              <Padder scale={2} />
-            </ScrollView>
+          <Padder scale={3} />
+          <View style={globalStyles.spaceAroundRowContainer}>
+            <Button
+              mode="contained"
+              icon="check"
+              uppercase={false}
+              onPress={() => {
+                toggleVoteModal('YES');
+              }}>{`Vote YES`}</Button>
+            <Button
+              mode="contained"
+              icon="alert-circle-outline"
+              uppercase={false}
+              onPress={() => {
+                toggleVoteModal('NO');
+              }}>{`Vote NO`}</Button>
+          </View>
+          <Padder scale={2} />
+        </ScrollView>
+      ) : null}
 
-            <Modal
-              visible={Boolean(voteType)}
-              onDismiss={() => {
-                resetVoteModal();
-              }}>
-              <Subheading style={globalStyles.textCenter}>{`Vote ${voteType}`}</Subheading>
-              <Padder />
-              <Caption>{`Vote with account`}</Caption>
-              <SelectAccount
-                onSelect={(account) => {
-                  setVoteAccount(account.accountInfo);
-                }}
-              />
+      <Modal
+        visible={Boolean(voteType)}
+        onDismiss={() => {
+          resetVoteModal();
+        }}>
+        <Subheading style={globalStyles.textCenter}>{`Vote ${voteType}`}</Subheading>
+        <Padder />
+        <Caption>{`Vote with account`}</Caption>
+        <SelectAccount
+          onSelect={(account) => {
+            setVoteAccount(account.accountInfo);
+          }}
+        />
 
-              <Padder scale={1} />
-              <Caption>{`Vote Value`}</Caption>
-              <BalanceInput
-                account={voteAccount}
-                onChangeBalance={(amount) => {
-                  setVoteValue(amount);
-                }}
-              />
+        <Padder scale={1} />
+        <Caption>{`Vote Value`}</Caption>
+        <BalanceInput
+          account={voteAccount}
+          onChangeBalance={(amount) => {
+            setVoteValue(amount);
+          }}
+        />
 
-              <Caption>{`Conviction`}</Caption>
-              <Padder scale={0.5} />
-              <Select
-                items={convictions ?? []}
-                onSelect={(conviction) => {
-                  setVoteConviction(conviction);
-                }}
-              />
+        <Caption>{`Conviction`}</Caption>
+        <Padder scale={0.5} />
+        <Select
+          items={convictions ?? []}
+          onSelect={(conviction) => {
+            setVoteConviction(conviction);
+          }}
+        />
 
-              <Padder scale={2} />
-              <View style={globalStyles.spaceAroundRowContainer}>
-                <Button
-                  mode="outlined"
-                  onPress={() => {
-                    resetVoteModal();
-                  }}>
-                  {`Cancel`}
-                </Button>
-                <Button mode="outlined" disabled={disabled} onPress={vote}>{`Vote ${voteType}`}</Button>
-              </View>
-            </Modal>
-          </>
-        ) : null}
-      </View>
+        <Padder scale={2} />
+        <View style={globalStyles.spaceAroundRowContainer}>
+          <Button
+            mode="outlined"
+            onPress={() => {
+              resetVoteModal();
+            }}>
+            {`Cancel`}
+          </Button>
+          <Button mode="outlined" disabled={disabled} onPress={vote}>{`Vote ${voteType}`}</Button>
+        </View>
+      </Modal>
     </SafeView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: standardPadding * 2,
+  },
   padding0: {
     padding: 0,
   },
