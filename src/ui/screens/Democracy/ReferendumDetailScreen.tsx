@@ -124,6 +124,8 @@ export function ReferendumDetailScreen({route}: ScreenProps) {
               <Padder scale={1} />
               <Subheading
                 style={globalStyles.textCenter}>{`Live Result (${referendum.votes.length} votes)`}</Subheading>
+              <Caption
+                style={globalStyles.textCenter}>{`${referendum.voteThreshold}: ${referendum.ayePercent}%`}</Caption>
               <Padder scale={0.5} />
               <ProgressBar percentage={referendum.ayePercent} />
               <Padder />
