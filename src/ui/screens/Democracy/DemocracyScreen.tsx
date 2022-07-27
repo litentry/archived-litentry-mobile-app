@@ -31,7 +31,7 @@ export function DemocracyScreen() {
         tabBarStyle: {backgroundColor: colors.background},
       }}>
       <Tab.Screen name="Referendums" component={Referendums} />
-      <Tab.Screen name="Proposals" component={Proposals} />
+      <Tab.Screen name="Proposals" component={Proposals} options={{lazy: true}} />
     </Tab.Navigator>
   );
 }
