@@ -37,13 +37,18 @@ const accountInfo = [
 ];
 
 describe('AccountRegistration', () => {
-  it('should render the AccountRegistration component with data', async () => {
+  it('should render the AccountRegistration component with initial user detail data', async () => {
     const {findByText} = render(<AccountRegistration registration={registration} />);
     await findByText('Legal');
+    await findByText('PureStake Ltd');
     await findByText('Email');
+    await findByText('info@purestake.com');
     await findByText('Twitter');
+    await findByText('@purestakeco');
     await findByText('Riot');
+    await findByText('@purestakeco:matrix.parity.io');
     await findByText('Web');
+    await findByText('https://www.purestake.com/');
   });
 
   it.each(accountInfo)('should navigate to %s url when pressed on %s id', async (url, id) => {
