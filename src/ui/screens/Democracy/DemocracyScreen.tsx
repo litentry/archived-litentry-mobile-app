@@ -14,7 +14,7 @@ import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {ProgressChart} from '@ui/components/ProgressChart';
 import {NavigationProp} from '@react-navigation/native';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
-import {referendumDetailScreen} from '@ui/navigation/routeKeys';
+import {proposalDetailScreen, referendumDetailScreen} from '@ui/navigation/routeKeys';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -52,13 +52,13 @@ function ReferendumTeaser({referendum, onPress}: ReferendumTeaserProps) {
   }, [referendum.id]);
 
   return (
-    <Card style={{padding: standardPadding}} onPress={() => onPress(referendum.id)}>
+    <Card style={styles.standardPadding} onPress={() => onPress(referendum.id)}>
       <List.Item
         left={ItemLeft}
         title={<Paragraph>{referendum.title}</Paragraph>}
         description={<Caption>{`${fromNow(referendum.date)} | ${referendum.status}`}</Caption>}
       />
-      <View style={{marginLeft: standardPadding, marginRight: standardPadding * 3}}>
+      <View style={styles.teaserContent}>
         <Row label={'Aye'}>
           <Caption>{referendum.formattedAye}</Caption>
         </Row>
@@ -81,9 +81,12 @@ function Referendums({navigation}: {navigation: NavigationProp<DashboardStackPar
   const {colors} = useTheme();
   const {data: referendums, loading, fetchMore, fetchingMore, refetch, refetching} = useDemocracyReferendums();
 
-  const toReferendumDetails = (id: string) => {
-    navigation.navigate(referendumDetailScreen, {id});
-  };
+  const toReferendumDetails = React.useCallback(
+    (id: string) => {
+      navigation.navigate(referendumDetailScreen, {id});
+    },
+    [navigation],
+  );
 
   const ListFooter = React.useCallback(() => {
     if (fetchingMore) {
@@ -100,41 +103,44 @@ function Referendums({navigation}: {navigation: NavigationProp<DashboardStackPar
 
   return (
     <SafeView edges={noTopEdges}>
-      <View style={globalStyles.flex}>
-        {loading && !referendums ? (
-          <LoadingView />
-        ) : (
-          <FlatList
-            contentContainerStyle={styles.listContainer}
-            data={referendums}
-            renderItem={({item}) => <ReferendumTeaser referendum={item} onPress={toReferendumDetails} />}
-            keyExtractor={(item) => item.id}
-            ListEmptyComponent={EmptyView}
-            ItemSeparatorComponent={Padder}
-            refreshControl={
-              <RefreshControl
-                onRefresh={refetch}
-                refreshing={refetching}
-                tintColor={colors.primary}
-                colors={[colors.primary]}
-              />
-            }
-            onEndReached={() => {
-              fetchMore({
-                variables: {
-                  offset: referendums?.length,
-                },
-              });
-            }}
-            ListFooterComponent={ListFooter}
-          />
-        )}
-      </View>
+      {loading && !referendums ? (
+        <LoadingView />
+      ) : (
+        <FlatList
+          contentContainerStyle={styles.listContainer}
+          data={referendums}
+          renderItem={({item}) => <ReferendumTeaser referendum={item} onPress={toReferendumDetails} />}
+          keyExtractor={(item) => item.id}
+          ListEmptyComponent={EmptyView}
+          ItemSeparatorComponent={Padder}
+          refreshControl={
+            <RefreshControl
+              onRefresh={refetch}
+              refreshing={refetching}
+              tintColor={colors.primary}
+              colors={[colors.primary]}
+            />
+          }
+          onEndReached={() => {
+            fetchMore({
+              variables: {
+                offset: referendums?.length,
+              },
+            });
+          }}
+          ListFooterComponent={ListFooter}
+        />
+      )}
     </SafeView>
   );
 }
 
-function ProposalTeaser({proposal}: {proposal: DemocracyProposal}) {
+type ProposalTeaserProps = {
+  proposal: DemocracyProposal;
+  onPress: (id: string) => void;
+};
+
+function ProposalTeaser({proposal, onPress}: ProposalTeaserProps) {
   const ItemLeft = React.useCallback(() => {
     return (
       <View style={globalStyles.justifyCenter}>
@@ -144,13 +150,13 @@ function ProposalTeaser({proposal}: {proposal: DemocracyProposal}) {
   }, [proposal.proposalIndex]);
 
   return (
-    <Card style={{padding: standardPadding}}>
+    <Card style={styles.standardPadding} onPress={() => onPress(proposal.id)}>
       <List.Item
         left={ItemLeft}
         title={<Paragraph>{proposal.title}</Paragraph>}
         description={<Caption>{`${fromNow(proposal.date)} | ${proposal.status}`}</Caption>}
       />
-      <View style={{marginLeft: standardPadding, marginRight: standardPadding * 3}}>
+      <View style={styles.teaserContent}>
         <Row label={'Deposit'}>
           <Caption>{proposal.formattedDepositAmount}</Caption>
         </Row>
@@ -162,9 +168,16 @@ function ProposalTeaser({proposal}: {proposal: DemocracyProposal}) {
   );
 }
 
-function Proposals() {
+function Proposals({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {colors} = useTheme();
   const {data: proposals, loading, fetchMore, fetchingMore, refetch, refetching} = useDemocracyProposals();
+
+  const toProposalDetails = React.useCallback(
+    (id: string) => {
+      navigation.navigate(proposalDetailScreen, {id});
+    },
+    [navigation],
+  );
 
   const ListFooter = React.useCallback(() => {
     if (fetchingMore) {
@@ -181,36 +194,34 @@ function Proposals() {
 
   return (
     <SafeView edges={noTopEdges}>
-      <View style={globalStyles.flex}>
-        {loading && !proposals ? (
-          <LoadingView />
-        ) : (
-          <FlatList
-            contentContainerStyle={styles.listContainer}
-            data={proposals}
-            renderItem={({item}) => <ProposalTeaser proposal={item} />}
-            keyExtractor={(item) => item.id}
-            ListEmptyComponent={EmptyView}
-            ItemSeparatorComponent={Padder}
-            refreshControl={
-              <RefreshControl
-                onRefresh={refetch}
-                refreshing={refetching}
-                tintColor={colors.primary}
-                colors={[colors.primary]}
-              />
-            }
-            onEndReached={() => {
-              fetchMore({
-                variables: {
-                  offset: proposals?.length,
-                },
-              });
-            }}
-            ListFooterComponent={ListFooter}
-          />
-        )}
-      </View>
+      {loading && !proposals ? (
+        <LoadingView />
+      ) : (
+        <FlatList
+          contentContainerStyle={styles.listContainer}
+          data={proposals}
+          renderItem={({item}) => <ProposalTeaser proposal={item} onPress={toProposalDetails} />}
+          keyExtractor={(item) => item.id}
+          ListEmptyComponent={EmptyView}
+          ItemSeparatorComponent={Padder}
+          refreshControl={
+            <RefreshControl
+              onRefresh={refetch}
+              refreshing={refetching}
+              tintColor={colors.primary}
+              colors={[colors.primary]}
+            />
+          }
+          onEndReached={() => {
+            fetchMore({
+              variables: {
+                offset: proposals?.length,
+              },
+            });
+          }}
+          ListFooterComponent={ListFooter}
+        />
+      )}
     </SafeView>
   );
 }
@@ -219,7 +230,7 @@ function Row({label, children}: {label: string; children: React.ReactNode}) {
   return (
     <View style={styles.row}>
       <Caption style={styles.rowLabel}>{label}:</Caption>
-      <View style={styles.value}>{children}</View>
+      <View style={globalStyles.flex}>{children}</View>
     </View>
   );
 }
@@ -228,8 +239,9 @@ const styles = StyleSheet.create({
   listContainer: {
     padding: standardPadding * 2,
   },
-  box: {
-    flex: 1,
+  teaserContent: {
+    marginLeft: standardPadding,
+    marginRight: standardPadding * 3,
   },
   row: {
     flexDirection: 'row',
@@ -240,7 +252,7 @@ const styles = StyleSheet.create({
   rowLabel: {
     width: '25%',
   },
-  value: {
-    flex: 1,
+  standardPadding: {
+    padding: standardPadding,
   },
 });

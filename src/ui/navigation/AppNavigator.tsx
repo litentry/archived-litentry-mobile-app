@@ -14,6 +14,7 @@ import {VerifyMnemonicScreen} from '@ui/screens/CreateAccount/VerifyMnemonic';
 import DashboardScreen from '@ui/screens/DashboardScreen';
 import {DemocracyScreen} from '@ui/screens/Democracy/DemocracyScreen';
 import {ReferendumDetailScreen} from '@ui/screens/Democracy/ReferendumDetailScreen';
+import {ProposalDetailScreen} from '@ui/screens/Democracy/ProposalDetailScreen';
 import DevScreen from '@ui/screens/DevScreen';
 import DrawerScreen from '@ui/screens/Drawer/DrawerScreen';
 import {ExportAccountWithJsonFileScreen} from '@ui/screens/ExportAccountWithJsonFileScreen';
@@ -88,6 +89,7 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.motionsScreen} component={MotionsScreen} />
       <DashboardStack.Screen name={routeKeys.democracyScreen} component={DemocracyScreen} />
       <DashboardStack.Screen name={routeKeys.referendumDetailScreen} component={ReferendumDetailScreen} />
+      <DashboardStack.Screen name={routeKeys.proposalDetailScreen} component={ProposalDetailScreen} />
       <DashboardStack.Screen name={routeKeys.bountiesScreen} component={BountiesScreen} />
       <DashboardStack.Screen name={routeKeys.bountyDetailScreen} component={BountyDetailScreen} />
       <DashboardStack.Screen name={routeKeys.eventsCalendarScreen} component={EventsCalendarScreen} />
