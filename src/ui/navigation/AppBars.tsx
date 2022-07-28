@@ -4,7 +4,7 @@ import {DrawerHeaderProps} from '@react-navigation/drawer';
 import {NativeStackHeaderProps} from '@react-navigation/native-stack';
 import {DrawerActions} from '@react-navigation/native';
 import {dashboardScreen, tokenMigrationScreen} from '@ui/navigation/routeKeys';
-import {AppBar, AppHeader, Title, useTheme} from '@ui/library';
+import {AppBar, AppHeader, Text, useTheme} from '@ui/library';
 
 export function MainDrawerAppBar({navigation, options, route}: DrawerHeaderProps) {
   const {colors} = useTheme();
@@ -56,12 +56,16 @@ export function MainAppBar({navigation, route, options}: NativeStackHeaderProps)
 
   return (
     <AppHeader style={{backgroundColor: colors.primary}}>
-      {showMenu ? <AppBar.Action onPress={onActionLeftPress} icon={'menu'} color="white" /> : null}
+      {showMenu ? (
+        <AppBar.Action isLeading onPress={onActionLeftPress} icon="menu" iconColor={colors.onPrimary} />
+      ) : null}
       <AppBar.Content
         style={styles.contentContainer}
         title={
           <View style={styles.titleContainer}>
-            <Title style={styles.title}>Litentry</Title>
+            <Text variant="titleLarge" style={styles.title}>
+              Litentry
+            </Text>
           </View>
         }
       />
