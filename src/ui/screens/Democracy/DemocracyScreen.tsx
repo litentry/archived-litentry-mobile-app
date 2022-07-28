@@ -4,7 +4,7 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {useDemocracyReferendums, DemocracyReferendum} from 'src/api/hooks/useDemocracyReferendums';
 import {useDemocracyProposals, DemocracyProposal} from 'src/api/hooks/useDemocracyProposals';
 import {Padder} from '@ui/components/Padder';
-import {ActivityIndicator, useTheme, Card, List, Caption, Paragraph, Headline} from '@ui/library';
+import {ActivityIndicator, useTheme, Card, Caption, Title, Subheading} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {fromNow} from 'src/utils/date';
 import LoadingView from '@ui/components/LoadingView';
@@ -36,29 +36,42 @@ export function DemocracyScreen() {
   );
 }
 
+type ProposalTeaserHeaderProps = {
+  index: string;
+  title: string;
+  subtitle?: string;
+};
+
+export function ProposalTeaserHeader({index, title, subtitle}: ProposalTeaserHeaderProps) {
+  return (
+    <View style={globalStyles.rowContainer}>
+      <Title>{index}</Title>
+      <View style={styles.marginHorizontal}>
+        <Subheading>{title}</Subheading>
+        {subtitle ? <Caption>{subtitle}</Caption> : null}
+      </View>
+    </View>
+  );
+}
+
 type ReferendumTeaserProps = {
   referendum: DemocracyReferendum;
   onPress: (id: string) => void;
 };
 
 function ReferendumTeaser({referendum, onPress}: ReferendumTeaserProps) {
-  const ItemLeft = React.useCallback(() => {
-    const referendumIndex = referendum.id.split(':')[1] as string;
-    return (
-      <View style={globalStyles.justifyCenter}>
-        <Headline>{`${referendumIndex}`}</Headline>
-      </View>
-    );
-  }, [referendum.id]);
+  const referendumIndex = referendum.id.split(':')[1] as string;
 
   return (
     <Card style={styles.standardPadding} onPress={() => onPress(referendum.id)}>
-      <List.Item
-        left={ItemLeft}
-        title={<Paragraph>{referendum.title}</Paragraph>}
-        description={<Caption>{`${fromNow(referendum.date)} | ${referendum.status}`}</Caption>}
-      />
       <View style={styles.teaserContent}>
+        <ProposalTeaserHeader
+          index={referendumIndex}
+          title={referendum.title}
+          subtitle={`${fromNow(referendum.date)} | ${referendum.status}`}
+        />
+
+        <Padder />
         <Row label={'Aye'}>
           <Caption>{referendum.formattedAye}</Caption>
         </Row>
@@ -141,22 +154,16 @@ type ProposalTeaserProps = {
 };
 
 function ProposalTeaser({proposal, onPress}: ProposalTeaserProps) {
-  const ItemLeft = React.useCallback(() => {
-    return (
-      <View style={globalStyles.justifyCenter}>
-        <Headline>{`${proposal.proposalIndex}`}</Headline>
-      </View>
-    );
-  }, [proposal.proposalIndex]);
-
   return (
     <Card style={styles.standardPadding} onPress={() => onPress(proposal.id)}>
-      <List.Item
-        left={ItemLeft}
-        title={<Paragraph>{proposal.title}</Paragraph>}
-        description={<Caption>{`${fromNow(proposal.date)} | ${proposal.status}`}</Caption>}
-      />
       <View style={styles.teaserContent}>
+        <ProposalTeaserHeader
+          index={proposal.proposalIndex.toString()}
+          title={proposal.title}
+          subtitle={`${fromNow(proposal.date)} | ${proposal.status}`}
+        />
+
+        <Padder />
         <Row label={'Deposit'}>
           <Caption>{proposal.formattedDepositAmount}</Caption>
         </Row>
@@ -254,5 +261,9 @@ const styles = StyleSheet.create({
   },
   standardPadding: {
     padding: standardPadding,
+  },
+  marginHorizontal: {
+    flexShrink: 1,
+    marginHorizontal: standardPadding,
   },
 });

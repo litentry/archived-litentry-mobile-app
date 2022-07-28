@@ -6,7 +6,7 @@ import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {useDemocracyReferendum} from 'src/api/hooks/useDemocracyReferendum';
 import globalStyles, {standardPadding} from '@ui/styles';
 import LoadingView from '@ui/components/LoadingView';
-import {useTheme, List, Caption, Paragraph, Subheading, Headline, Button, Modal, Select} from '@ui/library';
+import {useTheme, Caption, Subheading, Button, Modal, Select} from '@ui/library';
 import {fromNow} from 'src/utils/date';
 import HyperLink from 'react-native-hyperlink';
 import {truncate} from 'src/utils';
@@ -20,6 +20,7 @@ import {SelectAccount} from '@ui/components/SelectAccount';
 import BalanceInput from '@ui/components/BalanceInput';
 import {formattedStringToBn} from 'src/utils/balance';
 import {useStartTx} from 'context/TxContext';
+import {ProposalTeaserHeader} from './DemocracyScreen';
 
 type ScreenProps = {
   route: RouteProp<DashboardStackParamList, 'Referendum'>;
@@ -36,15 +37,6 @@ export function DemocracyReferendumDetailScreen({route}: ScreenProps) {
   const [voteAccount, setVoteAccount] = React.useState<Account>();
   const [voteValue, setVoteValue] = React.useState<string>();
   const [voteConviction, setVoteConviction] = React.useState<Conviction>();
-
-  const ItemLeft = React.useCallback(() => {
-    const referendumIndex = referendum?.id.split(':')[1] as string;
-    return (
-      <View style={globalStyles.justifyCenter}>
-        <Headline>{`${referendumIndex}`}</Headline>
-      </View>
-    );
-  }, [referendum?.id]);
 
   const toggleDescription = React.useCallback(() => {
     setFulDescription(!fullDescription);
@@ -97,17 +89,18 @@ export function DemocracyReferendumDetailScreen({route}: ScreenProps) {
     }
   }, [referendum?.id, startTx, voteAccount, voteConviction, voteType, voteValueBN, resetVoteModal]);
 
+  const referendumIndex = referendum?.id.split(':')[1] as string;
+
   return (
     <SafeView edges={noTopEdges}>
       {loading && !referendum ? (
         <LoadingView />
       ) : referendum ? (
         <ScrollView style={styles.container}>
-          <List.Item
-            style={styles.padding0}
-            left={ItemLeft}
-            title={<Paragraph>{referendum.title}</Paragraph>}
-            description={<Caption>{`${fromNow(referendum.date)} | ${referendum.status}`}</Caption>}
+          <ProposalTeaserHeader
+            index={referendumIndex}
+            title={referendum.title}
+            subtitle={`${fromNow(referendum.date)} | ${referendum.status}`}
           />
 
           {referendum.description ? (

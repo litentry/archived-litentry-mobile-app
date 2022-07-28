@@ -6,7 +6,7 @@ import {DashboardStackParamList} from '@ui/navigation/navigation';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {useDemocracyProposal} from 'src/api/hooks/useDemocracyProposal';
 import LoadingView from '@ui/components/LoadingView';
-import {List, Paragraph, Caption, Headline, Button, useTheme, Subheading, Icon, Modal} from '@ui/library';
+import {Caption, Button, useTheme, Subheading, Icon, Modal} from '@ui/library';
 import {fromNow} from 'src/utils/date';
 import HyperLink from 'react-native-hyperlink';
 import {truncate} from 'src/utils';
@@ -16,6 +16,7 @@ import type {Account} from 'src/api/hooks/useAccount';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {useStartTx} from 'context/TxContext';
 import {useTx} from '@polkadotApi/useTx';
+import {ProposalTeaserHeader} from './DemocracyScreen';
 
 type ScreenProps = {
   route: RouteProp<DashboardStackParamList, 'Proposal'>;
@@ -45,14 +46,6 @@ export function DemocracyProposalDetailScreen({route}: ScreenProps) {
     setVoteAccount(undefined);
   }, []);
 
-  const ItemLeft = React.useCallback(() => {
-    return (
-      <View style={globalStyles.justifyCenter}>
-        <Headline>{`${proposal?.proposalIndex}`}</Headline>
-      </View>
-    );
-  }, [proposal?.proposalIndex]);
-
   const toggleSecondsVisibility = React.useCallback(() => {
     setShowSeconds(!showSeconds);
   }, [showSeconds]);
@@ -79,11 +72,10 @@ export function DemocracyProposalDetailScreen({route}: ScreenProps) {
         <LoadingView />
       ) : proposal ? (
         <ScrollView style={styles.container}>
-          <List.Item
-            style={styles.padding0}
-            left={ItemLeft}
-            title={<Paragraph>{proposal.title}</Paragraph>}
-            description={<Caption>{`${fromNow(proposal.date)} | ${proposal.status}`}</Caption>}
+          <ProposalTeaserHeader
+            index={proposal.proposalIndex.toString()}
+            title={proposal.title}
+            subtitle={`${fromNow(proposal.date)} | ${proposal.status}`}
           />
 
           {proposal.description ? (
