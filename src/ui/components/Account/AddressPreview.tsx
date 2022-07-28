@@ -1,6 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
-import {List, Icon, Caption} from '@ui/library';
+import {List, Icon, Text} from '@ui/library';
 import {JudgmentStatus} from '@ui/components/Account/JudgmentStatus';
 import LoadingView from '@ui/components/LoadingView';
 import {useAccount} from 'src/api/hooks/useAccount';
@@ -18,7 +18,7 @@ const ItemLeft = (children: React.ReactNode) => () => <View style={globalStyles.
 const ItemRight = (children: React.ReactNode) => () =>
   (
     <View style={globalStyles.justifyCenter}>
-      {typeof children === 'string' ? <Caption>{children}</Caption> : children}
+      {typeof children === 'string' ? <Text variant="bodySmall">{children}</Text> : children}
     </View>
   );
 
@@ -68,7 +68,7 @@ export function AddressInfoPreview(props: PropTypes) {
                     }
                   })
                 ) : (
-                  <Caption>No judgements provided</Caption>
+                  <Text variant="bodySmall">No judgements provided</Text>
                 )}
               </>,
             )}

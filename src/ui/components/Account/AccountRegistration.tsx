@@ -1,6 +1,6 @@
 import React from 'react';
 import {AccountRegistration as SubstrateChainAccountRegistration} from 'src/api/hooks/useAccount';
-import {List, Icon, Caption, useTheme} from '@ui/library';
+import {List, Icon, Text, useTheme} from '@ui/library';
 import globalStyles from '@ui/styles';
 import {View, Linking} from 'react-native';
 import {isString} from 'lodash';
@@ -11,7 +11,9 @@ type Props = {
 
 const ItemRight = (children: string | React.ReactNode) => () => {
   return (
-    <View style={globalStyles.justifyCenter}>{isString(children) ? <Caption>{children}</Caption> : children}</View>
+    <View style={globalStyles.justifyCenter}>
+      {isString(children) ? <Text variant="bodySmall">{children}</Text> : children}
+    </View>
   );
 };
 
@@ -35,9 +37,12 @@ export function AccountRegistration({registration}: Props) {
           title="Twitter"
           left={ItemLeft('twitter')}
           right={ItemRight(
-            <Caption style={{color: colors.primary}} onPress={() => Linking.openURL(`https://twitter.com/${twitter}`)}>
+            <Text
+              variant="bodySmall"
+              style={{color: colors.primary}}
+              onPress={() => Linking.openURL(`https://twitter.com/${twitter}`)}>
               {twitter}
-            </Caption>,
+            </Text>,
           )}
         />
       ) : null}
@@ -46,9 +51,12 @@ export function AccountRegistration({registration}: Props) {
           title="Riot"
           left={ItemLeft('message-outline')}
           right={ItemRight(
-            <Caption style={{color: colors.primary}} onPress={() => Linking.openURL(`https://matrix.to/#/${riot}`)}>
+            <Text
+              variant="bodySmall"
+              style={{color: colors.primary}}
+              onPress={() => Linking.openURL(`https://matrix.to/#/${riot}`)}>
               {riot}
-            </Caption>,
+            </Text>,
           )}
         />
       ) : null}
@@ -57,9 +65,9 @@ export function AccountRegistration({registration}: Props) {
           title="Web"
           left={ItemLeft('earth')}
           right={ItemRight(
-            <Caption style={{color: colors.primary}} onPress={() => Linking.openURL(web)}>
+            <Text variant="bodySmall" style={{color: colors.primary}} onPress={() => Linking.openURL(web)}>
               {web}
-            </Caption>,
+            </Text>,
           )}
         />
       ) : null}

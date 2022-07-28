@@ -5,17 +5,7 @@ import {stringShorten} from '@polkadot/util';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {
-  Button,
-  Caption,
-  IconButton,
-  IconSource,
-  Card,
-  useTheme,
-  Subheading,
-  Divider,
-  useBottomSheet,
-} from '@ui/library';
+import {Button, Text, IconButton, IconSource, Card, useTheme, Divider, useBottomSheet} from '@ui/library';
 import {Identicon} from '@ui/components/Identicon';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useAccount} from 'src/api/hooks/useAccount';
@@ -72,7 +62,7 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
           <View style={styles.centerAlign}>
             {account?.meta.name ? (
               <>
-                <Caption>{account.meta.name}</Caption>
+                <Text variant="bodySmall">{account.meta.name}</Text>
                 <Padder scale={0.5} />
               </>
             ) : null}
@@ -99,16 +89,18 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
           <Padder scale={1} />
 
           <InfoItem title="ADDRESS">
-            <Caption onPress={copyToClipboard}>{stringShorten(address, 17)}</Caption>
+            <Text variant="bodySmall" onPress={copyToClipboard}>
+              {stringShorten(address, 17)}
+            </Text>
           </InfoItem>
 
           <InfoItem title="IDENTITY">
-            <Caption>{accountInfo?.hasIdentity ? accountInfo.display : 'No Identity Data Found'}</Caption>
-            <Caption>{`${accountInfo?.registration?.judgements?.length} Judgements`}</Caption>
+            <Text variant="bodySmall">{accountInfo?.hasIdentity ? accountInfo.display : 'No Identity Data Found'}</Text>
+            <Text variant="bodySmall">{`${accountInfo?.registration?.judgements?.length} Judgements`}</Text>
           </InfoItem>
 
           <InfoItem title="BALANCE">
-            <Caption>{accountInfo?.balance?.formattedFree}</Caption>
+            <Text variant="bodySmall">{accountInfo?.balance?.formattedFree}</Text>
           </InfoItem>
         </Card>
 
@@ -169,7 +161,7 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
 
       <BalanceBottomSheet>
         <Layout style={styles.balanceContainer}>
-          <Subheading style={globalStyles.textCenter}>{`Account balance`}</Subheading>
+          <Text variant="titleMedium" style={globalStyles.textCenter}>{`Account balance`}</Text>
           <Padder scale={0.5} />
           <Divider />
           {accountInfo?.balance ? <AccountBalance balance={accountInfo.balance} /> : null}
@@ -193,8 +185,10 @@ function ActionButton({icon, title, onPress}: ActionButtonProps) {
   const {colors} = useTheme();
   return (
     <View style={styles.iconButton}>
-      <IconButton icon={icon} color={colors.accent} style={styles.icon} onPress={onPress} />
-      <Caption style={{color: colors.accent}}>{title}</Caption>
+      <IconButton icon={icon} iconColor={colors.accent} style={styles.icon} onPress={onPress} />
+      <Text variant="bodySmall" style={{color: colors.accent}}>
+        {title}
+      </Text>
     </View>
   );
 }
@@ -208,7 +202,9 @@ function InfoItem({title, children}: InfoItemProps) {
   const {colors} = useTheme();
   return (
     <View style={styles.infoItem}>
-      <Caption style={{color: colors.accent}}>{title}</Caption>
+      <Text variant="bodySmall" style={{color: colors.accent}}>
+        {title}
+      </Text>
       {children}
     </View>
   );

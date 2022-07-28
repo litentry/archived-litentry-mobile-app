@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, Dimensions} from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {BarCodeReadEvent} from 'react-native-camera';
-import {Icon, Paragraph} from '@ui/library';
+import {Icon, Text} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 const {width, height} = Dimensions.get('window');
 
@@ -24,7 +24,7 @@ const QRCamera = React.forwardRef<QRCodeScanner, PropTypes>((props, ref) => (
       <Layout style={styles.notAuthorized}>
         <Layout style={styles.notAuthorizedHack}>
           <Icon name="qrcode-scan" size={32} />
-          <Paragraph>This requires your Camera permission to scan.</Paragraph>
+          <Text variant="bodyMedium">This requires your Camera permission to scan.</Text>
         </Layout>
       </Layout>
     }

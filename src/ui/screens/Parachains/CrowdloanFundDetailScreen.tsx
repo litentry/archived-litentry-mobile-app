@@ -1,7 +1,7 @@
 import React from 'react';
 import {Linking, StyleSheet, View} from 'react-native';
 import {RouteProp} from '@react-navigation/core';
-import {Text, Button, Subheading, Headline} from '@ui/library';
+import {Text, Button} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
@@ -38,7 +38,9 @@ export function CrowdloanFundDetailScreen({route}: ScreenProps) {
   return (
     <SafeView edges={noTopEdges}>
       <Layout style={globalStyles.paddedContainer}>
-        <Headline style={styles.title}>{title}</Headline>
+        <Text variant="headlineSmall" style={styles.title}>
+          {title}
+        </Text>
         <Row label={'Index'}>
           <Text>{data.paraId}</Text>
         </Row>
@@ -77,7 +79,9 @@ export function CrowdloanFundDetailScreen({route}: ScreenProps) {
 function Row({label, children}: {label: string; children: React.ReactNode}) {
   return (
     <View style={styles.row}>
-      <Subheading style={styles.rowLabel}>{label}:</Subheading>
+      <Text variant="titleMedium" style={styles.rowLabel}>
+        {label}:
+      </Text>
       <View style={styles.value}>{children}</View>
     </View>
   );

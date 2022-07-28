@@ -5,7 +5,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {AppStackParamList, DashboardStackParamList} from '@ui/navigation/navigation';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useBounty} from 'src/api/hooks/useBounty';
-import {Subheading, Paragraph, Text, Divider} from '@ui/library';
+import {Text, Divider} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import LoadingView from '@ui/components/LoadingView';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
@@ -35,18 +35,18 @@ export function BountyDetailScreen({route, navigation}: ScreenProps) {
       <View style={styles.container}>
         {bounty?.proposer ? (
           <View style={styles.alignItemsCenter}>
-            <Subheading>Proposer</Subheading>
+            <Text variant="titleMedium">Proposer</Text>
             <AccountTeaser account={bounty.proposer.account} identiconSize={40} />
             <Padder scale={1} />
           </View>
         ) : null}
         <View style={styles.section}>
           <View style={[styles.sectionItem, styles.alignItemsCenter]}>
-            <Subheading>Status</Subheading>
+            <Text variant="titleMedium">Status</Text>
             <Text>{bounty?.bountyStatus.status}</Text>
           </View>
           <View style={[styles.sectionItem, styles.alignItemsCenter]}>
-            <Subheading>Value</Subheading>
+            <Text variant="titleMedium">Value</Text>
             <Text>{bounty?.formattedValue}</Text>
           </View>
         </View>
@@ -54,15 +54,15 @@ export function BountyDetailScreen({route, navigation}: ScreenProps) {
         <Divider />
         <Padder scale={1} />
         <View>
-          <Subheading>Description</Subheading>
-          <Paragraph>{bounty?.description}</Paragraph>
+          <Text variant="titleMedium">Description</Text>
+          <Text variant="bodyMedium">{bounty?.description}</Text>
         </View>
         <Padder scale={1} />
         <Divider />
         <Padder scale={1} />
         {bounty?.bountyStatus?.curator ? (
           <View>
-            <Subheading>Curator</Subheading>
+            <Text variant="titleMedium">Curator</Text>
             <AccountTeaser
               account={bounty.bountyStatus.curator.account}
               identiconSize={30}
@@ -75,30 +75,30 @@ export function BountyDetailScreen({route, navigation}: ScreenProps) {
         <Padder scale={1} />
         <View style={styles.section}>
           <View style={styles.sectionItem}>
-            <Subheading>Curator's Fee</Subheading>
-            <Paragraph>{String(bounty?.formattedFee ?? 0)}</Paragraph>
+            <Text variant="titleMedium">Curator's Fee</Text>
+            <Text variant="bodyMedium">{String(bounty?.formattedFee ?? 0)}</Text>
           </View>
           <View style={styles.sectionItem}>
-            <Subheading>Curator's Deposit</Subheading>
-            <Paragraph>{String(bounty?.formattedCuratorDeposit ?? 0)}</Paragraph>
+            <Text variant="titleMedium">Curator's Deposit</Text>
+            <Text variant="bodyMedium">{String(bounty?.formattedCuratorDeposit ?? 0)}</Text>
           </View>
         </View>
         <Padder scale={1} />
         <View style={styles.section}>
           <View style={styles.sectionItem}>
-            <Subheading>Bond</Subheading>
+            <Text variant="titleMedium">Bond</Text>
             <Text>{String(bounty?.formattedBond ?? 0)}</Text>
           </View>
           <View style={styles.sectionItem}>
             {bounty?.bountyStatus.unlockAtTime ? (
               <>
-                <Subheading>Payout at</Subheading>
+                <Text variant="titleMedium">Payout at</Text>
                 <Text>{bounty.bountyStatus.unlockAtTime.slice(0, 2).join('')}</Text>
               </>
             ) : null}
             {bounty?.bountyStatus.updateDueTime ? (
               <>
-                <Subheading>Update at</Subheading>
+                <Text variant="titleMedium">Update at</Text>
                 <Text>{bounty.bountyStatus.updateDueTime.slice(0, 2).join('')}</Text>
               </>
             ) : null}

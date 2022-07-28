@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {View, FlatList} from 'react-native';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {Divider, Card, Subheading, Paragraph, Caption, Skeleton} from '@ui/library';
+import {Divider, Card, Text, Skeleton} from '@ui/library';
 import {Identicon} from '@ui/components/Identicon';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AppStackParamList, DashboardStackParamList} from '@ui/navigation/navigation';
@@ -50,13 +50,13 @@ function CandidateInfo({candidate, accountInfo, toAccountDetails}: CandidateInfo
           <Divider />
           <Padder scale={1} />
           <View style={globalStyles.alignCenter}>
-            <Paragraph>Backing</Paragraph>
-            <Paragraph>{candidate.formattedBacking}</Paragraph>
+            <Text variant="bodyMedium">Backing</Text>
+            <Text variant="bodyMedium">{candidate.formattedBacking}</Text>
           </View>
         </Card.Content>
       </Card>
       <Padder scale={1} />
-      <Subheading style={globalStyles.textCenter}>{`Voters`}</Subheading>
+      <Text variant="titleMedium" style={globalStyles.textCenter}>{`Voters`}</Text>
     </>
   );
 }
@@ -107,7 +107,7 @@ function Voter({address, onPress}: VoterItemProps) {
     <View style={globalStyles.marginVertical}>
       {accountInfo ? (
         <AccountTeaser account={accountInfo} onPress={onPress} identiconSize={30}>
-          {councilVote?.formattedStake && <Caption>{`Stake: ${councilVote.formattedStake}`}</Caption>}
+          {councilVote?.formattedStake && <Text variant="bodySmall">{`Stake: ${councilVote.formattedStake}`}</Text>}
         </AccountTeaser>
       ) : (
         <Skeleton width={60} />

@@ -7,7 +7,7 @@ import DocumentPicker, {DocumentPickerResponse} from 'react-native-document-pick
 import RNFS from 'react-native-fs';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {accountsScreen} from '@ui/navigation/routeKeys';
-import {Button, Caption, List, Text, TextInput, useTheme} from '@ui/library';
+import {Button, List, Text, TextInput, useTheme} from '@ui/library';
 import {Identicon} from '@ui/components/Identicon';
 import {ErrorText} from '@ui/components/ErrorText';
 import {Padder} from '@ui/components/Padder';
@@ -60,7 +60,7 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
         <Text>Add via backup file</Text>
         <Padder scale={1} />
 
-        <Caption>Supply a backed-up JSON file, encrypted with your account-specific password.</Caption>
+        <Text variant="bodySmall">Supply a backed-up JSON file, encrypted with your account-specific password.</Text>
         <Padder scale={0.5} />
         {parsedJson ? (
           <List.Item title={parsedJson.meta.name} left={AccountIdentityIcon} description={parsedJson.address} />

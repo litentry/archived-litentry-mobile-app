@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Alert, Modal, StyleSheet, View, TextInputProps} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
-import {TextInput, HelperText, Button, Title, IconButton} from '@ui/library';
+import {TextInput, HelperText, Button, Text, IconButton} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {parseAddress} from 'src/utils/address';
 import {useNetwork} from '@atoms/network';
@@ -111,7 +111,9 @@ export function AddressInput({onAddressChanged, onValidateAddress, onFocus, onBl
         }}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Title style={globalStyles.textCenter}>Scan the address QR code</Title>
+            <Text variant="titleLarge" style={globalStyles.textCenter}>
+              Scan the address QR code
+            </Text>
             <Padder scale={1.5} />
             <QRCamera onRead={handleScan} ref={qrCameraRef} />
             <Padder scale={3} />

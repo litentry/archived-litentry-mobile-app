@@ -3,7 +3,7 @@ import {View, StyleSheet, SectionList, Linking} from 'react-native';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {AppStackParamList, ParachainsStackParamList} from '@ui/navigation/navigation';
-import {Card, Subheading, Paragraph, List, Divider, Icon, Button, Text} from '@ui/library';
+import {Card, List, Divider, Icon, Button, Text} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {EmptyView} from '@ui/components/EmptyView';
@@ -47,8 +47,10 @@ function ParachainDetailsHeader({parachain}: {parachain: Parachain}) {
   return (
     <Card>
       <Card.Content>
-        <Subheading style={globalStyles.textCenter}>{parachain.name}</Subheading>
-        <Paragraph style={globalStyles.textCenter}>{`#${parachain.id}`}</Paragraph>
+        <Text variant="titleMedium" style={globalStyles.textCenter}>
+          {parachain.name}
+        </Text>
+        <Text variant="bodyMedium" style={globalStyles.textCenter}>{`#${parachain.id}`}</Text>
         <View style={globalStyles.spaceBetweenRowContainer}>
           <List.Item style={styles.listItem} title="Included" description={parachain.lastIncludedBlock} />
           <List.Item style={styles.listItem} title="Backed" description={`${parachain.lastBackedBlock || 0}`} />

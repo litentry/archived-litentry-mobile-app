@@ -3,7 +3,7 @@ import {Dimensions, Image, Share, View, StyleSheet} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import qrcode from 'qrcode-generator';
 import {stringShorten} from '@polkadot/util';
-import {Caption, Subheading, IconButton, Button, Skeleton} from '@ui/library';
+import {Text, IconButton, Button, Skeleton} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {useSnackbar} from 'context/SnackbarContext';
@@ -33,7 +33,7 @@ export function ReceiveFund({address, onClose}: Props) {
 
   return (
     <Layout style={styles.container}>
-      <Subheading>Receive Fund</Subheading>
+      <Text variant="titleMedium">Receive Fund</Text>
       <Padder scale={1} />
       {imageUri ? (
         <Image source={{uri: imageUri}} style={styles.qrCode} />
@@ -45,9 +45,9 @@ export function ReceiveFund({address, onClose}: Props) {
         <IconButton icon="content-copy" size={20} onPress={copyToClipboard} />
         <IconButton icon="share-variant" size={20} onPress={() => share(address)} />
       </View>
-      <Caption onPress={copyToClipboard} style={styles.address}>
+      <Text variant="bodySmall" onPress={copyToClipboard} style={styles.address}>
         {stringShorten(address, 16)}
-      </Caption>
+      </Text>
       <Padder scale={1} />
       <Button onPress={onClose}>Close</Button>
       <Padder scale={2} />

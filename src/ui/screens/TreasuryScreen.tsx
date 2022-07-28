@@ -6,7 +6,7 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {TreasuryProposal, useTreasury} from 'src/api/hooks/useTreasury';
 import globalStyles, {standardPadding} from '@ui/styles';
 import TipsScreen from './Tips/TipsScreen';
-import {useTheme, Card, Subheading, Button, List, Headline, Divider, Caption} from '@ui/library';
+import {useTheme, Card, Button, List, Divider, Text} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
 import {EmptyStateTeaser} from '@ui/components/EmptyStateTeaser';
@@ -78,7 +78,7 @@ function TreasuryOverviewScreen() {
             renderSectionHeader={({section: {title, data}}) => (
               <>
                 {title === 'Approved' && <Padder scale={1} />}
-                <Subheading>{`${title} (${data.length})`}</Subheading>
+                <Text variant="titleMedium">{`${title} (${data.length})`}</Text>
                 <Padder scale={0.5} />
               </>
             )}
@@ -116,7 +116,10 @@ type TreasuryProposalTeaserProps = {
 };
 
 function TreasuryProposalTeaser({proposal, children}: TreasuryProposalTeaserProps) {
-  const ProposalHeadline = React.useCallback(() => <Headline>{`#${proposal.index}`}</Headline>, [proposal.index]);
+  const ProposalHeadline = React.useCallback(
+    () => <Text variant="headlineSmall">{`#${proposal.index}`}</Text>,
+    [proposal.index],
+  );
 
   return (
     <Card>
@@ -126,13 +129,13 @@ function TreasuryProposalTeaser({proposal, children}: TreasuryProposalTeaserProp
           <AccountTeaser account={proposal.proposer.account} />
         </ItemRowBlock>
         <ItemRowBlock label="Payout">
-          <Caption>{proposal.value}</Caption>
+          <Text variant="bodySmall">{proposal.value}</Text>
         </ItemRowBlock>
         <ItemRowBlock label="Beneficiary">
           <AccountTeaser account={proposal.beneficiary.account} />
         </ItemRowBlock>
         <ItemRowBlock label="Bond">
-          <Caption>{proposal.bond}</Caption>
+          <Text variant="bodySmall">{proposal.bond}</Text>
         </ItemRowBlock>
       </Card.Content>
       <Divider />

@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {View} from 'react-native';
-import {Divider, Button, List, Subheading, Select} from '@ui/library';
+import {Divider, Button, List, Text, Select} from '@ui/library';
 import {InAppNotificationContent, InAppNotificationContext} from 'context/InAppNotificationContext';
 import {ScrollView} from 'react-native-gesture-handler';
 import globalStyles from '@ui/styles';
@@ -25,7 +25,7 @@ function DevScreen() {
   const ApiStatus = React.useCallback(
     () => (
       <View style={globalStyles.justifyCenter}>
-        <Subheading>{apiStatus === 'ready' ? 'ready' : 'disconnected'}</Subheading>
+        <Text variant="titleMedium">{apiStatus === 'ready' ? 'ready' : 'disconnected'}</Text>
       </View>
     ),
 
@@ -74,7 +74,7 @@ function DevScreen() {
         <List.Item title={`Network: ${currentNetwork.name}`} description={currentNetwork.ws} right={ApiStatus} />
         <Divider />
         <View style={globalStyles.paddedContainer}>
-          <Subheading>Conviction selection</Subheading>
+          <Text variant="titleMedium">Conviction selection</Text>
           <Select
             items={convictions ?? []}
             onSelect={(selectedItem) => {
@@ -84,7 +84,7 @@ function DevScreen() {
         </View>
 
         <View style={globalStyles.paddedContainer}>
-          <Subheading>Select active account</Subheading>
+          <Text variant="titleMedium">Select active account</Text>
           <SelectAccount
             onSelect={(selectedAccount) => {
               selectActiveAccount(selectedAccount.account);
@@ -93,7 +93,7 @@ function DevScreen() {
           <Padder scale={1} />
 
           <View style={globalStyles.rowAlignCenter}>
-            <Subheading>{`Active account: `}</Subheading>
+            <Text variant="titleMedium">{`Active account: `}</Text>
             {accountInfo ? <AccountTeaser account={accountInfo} name={activeAccount?.meta.name} /> : null}
           </View>
         </View>

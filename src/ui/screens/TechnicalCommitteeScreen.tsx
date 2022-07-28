@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import {Caption, Icon} from '@ui/library';
+import {Text, Icon} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useTechnicalCommitteeSummary} from 'src/api/hooks/useTechnicalCommitteeSummary';
 import LoadingView from '@ui/components/LoadingView';
@@ -21,18 +21,20 @@ export function TechnicalCommitteeScreen() {
           <View style={styles.infoContainer}>
             <Icon name="alert-circle" size={20} />
             <Padder scale={0.5} />
-            <Caption
+            <Text
+              variant="bodySmall"
               style={
                 styles.textWrap
-              }>{`The Technical Committee can, along with the Council, produce emergency referenda, which are fast-tracked for voting and implementation.`}</Caption>
+              }>{`The Technical Committee can, along with the Council, produce emergency referenda, which are fast-tracked for voting and implementation.`}</Text>
           </View>
           <View style={styles.infoContainer}>
             <Icon name="alert-circle" size={20} />
             <Padder scale={0.5} />
-            <Caption
+            <Text
+              variant="bodySmall"
               style={
                 styles.textWrap
-              }>{`Members are added or removed from the Technical Committee via a simple majority vote of the Council.`}</Caption>
+              }>{`Members are added or removed from the Technical Committee via a simple majority vote of the Council.`}</Text>
           </View>
 
           <AccountsList

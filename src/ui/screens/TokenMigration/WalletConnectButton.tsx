@@ -1,12 +1,14 @@
 import React from 'react';
 import {TouchableOpacity, Image, StyleSheet} from 'react-native';
-import {Subheading} from '@ui/library';
+import {Text} from '@ui/library';
 import {standardPadding} from '@ui/styles';
 
 export function WalletConnectButton({title, onPress}: {title: string; onPress: () => void}) {
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
-      <Subheading style={styles.title}>{title}</Subheading>
+      <Text variant="titleMedium" style={styles.title}>
+        {title}
+      </Text>
       <Image source={require('../../../image/walletconnect-logo.png')} resizeMode="contain" style={styles.image} />
     </TouchableOpacity>
   );

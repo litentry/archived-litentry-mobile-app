@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, Image, View} from 'react-native';
 import EmptyState from 'image/EmptyState.png';
-import {Subheading} from '@ui/library';
+import {Text} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {standardPadding} from '@ui/styles';
 import {isString} from 'lodash';
@@ -19,7 +19,7 @@ export function EmptyView({children = DEFAULT_TEXT, height = 400}: Props) {
       <Padder scale={2} />
       <Image source={EmptyState} style={{height}} resizeMode="contain" />
       <Padder scale={2} />
-      {isString(children) ? <Subheading>{children}</Subheading> : children}
+      {isString(children) ? <Text variant="titleMedium">{children}</Text> : children}
     </View>
   );
 }

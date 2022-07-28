@@ -6,7 +6,7 @@ import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {SubmitProposal} from '@ui/components/SubmitProposal';
 import {democracyProposalScreen, referendumScreen} from '@ui/navigation/routeKeys';
-import {Card, Subheading, useTheme, Button, List, Headline, Caption, Divider} from '@ui/library';
+import {Card, useTheme, Button, List, Text, Divider} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {useDemocracy, DemocracyProposal, DemocracyReferendum} from 'src/api/hooks/useDemocracy';
 import {EmptyStateTeaser} from '@ui/components/EmptyStateTeaser';
@@ -91,7 +91,9 @@ export function DemocracyScreen({navigation}: ScreenProps) {
               return (
                 <>
                   {title === 'Proposals' && <Padder scale={1} />}
-                  <Subheading style={styles.header}>{title}</Subheading>
+                  <Text variant="titleMedium" style={styles.header}>
+                    {title}
+                  </Text>
                   <Padder scale={0.5} />
                 </>
               );
@@ -133,14 +135,17 @@ type ProposalTeaserProps = {
 };
 
 function DemocracyProposalTeaser({proposal, children, navigation}: ProposalTeaserProps) {
-  const ItemLeft = React.useCallback(() => <Headline>{`#${proposal.index}`}</Headline>, [proposal.index]);
+  const ItemLeft = React.useCallback(
+    () => <Text variant="headlineSmall">{`#${proposal.index}`}</Text>,
+    [proposal.index],
+  );
 
   if (proposal.__typename === 'SubstrateChainDemocracyReferendum') {
     return (
       <Card onPress={() => navigation.navigate(referendumScreen, {referendum: proposal})}>
         <Card.Content>
           <List.Item
-            title={<Caption>{getProposalTitle(proposal)}</Caption>}
+            title={<Text variant="bodySmall">{getProposalTitle(proposal)}</Text>}
             left={ItemLeft}
             description={proposal.endPeriod ? proposal.endPeriod.slice(0, 2).join(' ') : ''}
           />
@@ -153,9 +158,9 @@ function DemocracyProposalTeaser({proposal, children, navigation}: ProposalTease
     return (
       <Card onPress={() => navigation.navigate(democracyProposalScreen, {proposal})}>
         <Card.Content>
-          <List.Item title={<Caption>{getProposalTitle(proposal)}</Caption>} left={ItemLeft} />
+          <List.Item title={<Text variant="bodySmall">{getProposalTitle(proposal)}</Text>} left={ItemLeft} />
           <ItemRowBlock label="Balance">
-            <Caption>{proposal.formattedBalance}</Caption>
+            <Text variant="bodySmall">{proposal.formattedBalance}</Text>
           </ItemRowBlock>
           <ItemRowBlock label="Proposer">
             <AccountTeaser account={proposal.proposer.account} />

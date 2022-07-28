@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Icon, Subheading, Divider, Button} from '@ui/library';
+import {Icon, Text, Divider, Button} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import globalStyles, {standardPadding, colorGreen} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
@@ -15,9 +15,9 @@ export function SuccessDialog({text, onClosePress}: PropTypes) {
     <Layout style={globalStyles.paddedContainer}>
       <View style={styles.textContainer}>
         <Icon color={colorGreen} name="check-circle-outline" />
-        <Subheading numberOfLines={2} style={{marginLeft: standardPadding}}>
+        <Text variant="titleMedium" numberOfLines={2} style={{marginLeft: standardPadding}}>
           {text}
-        </Subheading>
+        </Text>
       </View>
       <Padder scale={1} />
       {onClosePress ? (

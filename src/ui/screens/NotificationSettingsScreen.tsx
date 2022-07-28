@@ -6,7 +6,7 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {usePushTopics, usePermissions, SUBSCRIPTION_ID} from '@atoms/pushNotification';
 
 import {DrawerParamList} from '@ui/navigation/navigation';
-import {Text, List, Divider, Switch, Headline, Subheading, Button, Caption} from '@ui/library';
+import {Text, List, Divider, Switch, Button} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {PermissionPromptScreen} from '@ui/screens/PermissionPromptScreen';
 import {Linking} from 'react-native';
@@ -74,13 +74,15 @@ export function NotificationSettingsScreen({}: ScreenProps) {
             <View style={styles.container}>
               <View style={styles.infoContainer}>
                 <View style={[globalStyles.rowContainer, globalStyles.alignCenter, globalStyles.justifyCenter]}>
-                  <Headline style={styles.headline}>Turn on notifications?</Headline>
+                  <Text variant="headlineSmall" style={styles.headline}>
+                    Turn on notifications?
+                  </Text>
                 </View>
-                <Subheading>
-                  <Caption style={[globalStyles.textCenter]}>
+                <Text variant="titleMedium">
+                  <Text variant="bodySmall" style={[globalStyles.textCenter]}>
                     To get notifications from Litentry, you'll need to turn them on in your settings
-                  </Caption>
-                </Subheading>
+                  </Text>
+                </Text>
                 <Padder scale={0.5} />
                 <Button onPress={openAppSetting} mode="outlined">
                   Open Settings

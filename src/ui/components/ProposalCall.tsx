@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Paragraph, Card, Caption, Text} from '@ui/library';
+import {Card, Text} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import type {DemocracyProposal, DemocracyReferendum, ProposalSubCall} from 'src/api/hooks/useDemocracy';
 import type {MotionProposal} from 'src/api/hooks/useCouncilMotions';
@@ -20,7 +20,7 @@ export function ProposalCall({proposal}: ProposalCallProps) {
     <>
       {Boolean(proposal.meta) && (
         <>
-          <Paragraph>{proposal.meta}</Paragraph>
+          <Text variant="bodyMedium">{proposal.meta}</Text>
           <Padder scale={0.5} />
         </>
       )}
@@ -30,7 +30,7 @@ export function ProposalCall({proposal}: ProposalCallProps) {
           <Padder scale={0.5} />
           {proposal.args?.map((arg, index) => (
             <View key={`${index}-${arg.name}`}>
-              <Caption>{formatProposalArgs(arg)}</Caption>
+              <Text variant="bodySmall">{formatProposalArgs(arg)}</Text>
               {arg.subCalls &&
                 arg.subCalls.map((subCall, subCallIndex) => {
                   if (subCall) {
@@ -57,14 +57,14 @@ function SubCall({subCall}: SubCallProps) {
       <Card.Content>
         {subCall.meta ? (
           <>
-            <Paragraph>{subCall.meta}</Paragraph>
+            <Text variant="bodyMedium">{subCall.meta}</Text>
             <Padder scale={0.5} />
           </>
         ) : null}
-        <Caption>{title}</Caption>
+        <Text variant="bodySmall">{title}</Text>
         {subCall.args?.map((arg, index) => (
           <View key={`${index}-${arg?.name}`}>
-            <Caption>{`${arg?.name}: ${arg?.value}`}</Caption>
+            <Text variant="bodySmall">{`${arg?.name}: ${arg?.value}`}</Text>
             {arg?.subCalls &&
               arg.subCalls.map((nestedSubCall, nestedSubCallIndex) => {
                 if (nestedSubCall) {

@@ -1,7 +1,7 @@
 import React from 'react';
 import {FlatList, View, StyleSheet, TouchableOpacity, Keyboard} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
-import {useTheme, Divider, IconButton, List, FAB, Caption, Menu, Subheading, Icon, useBottomSheet} from '@ui/library';
+import {useTheme, Divider, IconButton, List, FAB, Menu, Text, Icon, useBottomSheet} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {CompleteNavigatorParamList} from '@ui/navigation/navigation';
 import {accountsScreen, importAccountScreen, mnemonicScreen, myAccountScreen} from '@ui/navigation/routeKeys';
@@ -83,7 +83,7 @@ export function AccountsScreen({navigation}: Props) {
                     setSortMenuVisible(true);
                   }}
                   style={globalStyles.rowAlignCenter}>
-                  <Subheading>Sort by</Subheading>
+                  <Text variant="titleMedium">Sort by</Text>
                   <Icon name="chevron-down" size={25} />
                 </TouchableOpacity>
               }>
@@ -154,7 +154,7 @@ function AccountItem({account, toggleFavorite, onPress}: AccountItemProps) {
     return (
       <IconButton
         onPress={() => toggleFavorite({address, meta: {...meta, isFavorite: !meta.isFavorite}})}
-        color={meta.isFavorite ? colors.accent : colors.disabled}
+        iconColor={meta.isFavorite ? colors.accent : colors.disabled}
         icon={meta.isFavorite ? 'star' : 'star-outline'}
       />
     );
@@ -167,7 +167,7 @@ function AccountItem({account, toggleFavorite, onPress}: AccountItemProps) {
       title={
         <View style={globalStyles.justifyCenter}>
           {accountInfo && <Account account={accountInfo} name={meta.name} />}
-          {meta.isExternal && <Caption>External</Caption>}
+          {meta.isExternal && <Text variant="bodySmall">External</Text>}
         </View>
       }
       right={ItemRight}
@@ -205,7 +205,6 @@ const Buttons = ({navigation, onAddAccount}: FabProps) => {
           icon: 'key-plus',
           label: 'Create new account',
           onPress: () => navigation.navigate(mnemonicScreen),
-          small: false,
         },
       ]}
       onStateChange={onStateChange}

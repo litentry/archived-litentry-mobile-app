@@ -10,7 +10,7 @@ import {SelectAccount} from '@ui/components/SelectAccount';
 import {useCouncil, CouncilMember, Council} from 'src/api/hooks/useCouncil';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {candidateScreen} from '@ui/navigation/routeKeys';
-import {Button, Divider, Modal, useTheme, Caption, Subheading, Text, TextInput, HelperText} from '@ui/library';
+import {Button, Divider, Modal, useTheme, Text, TextInput, HelperText} from '@ui/library';
 import {Identicon} from '@ui/components/Identicon';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
@@ -97,9 +97,9 @@ export function CouncilOverviewScreen({navigation}: ScreenProps) {
                   account={item.account}
                   onPress={() => toMemberScreen(item, section.title)}>
                   <View style={globalStyles.rowAlignCenter}>
-                    <Caption>{`Backing: ${item.formattedBacking}`}</Caption>
+                    <Text variant="bodySmall">{`Backing: ${item.formattedBacking}`}</Text>
                     <Padder />
-                    <Caption>{`votes: ${item.voters.length}`}</Caption>
+                    <Text variant="bodySmall">{`votes: ${item.voters.length}`}</Text>
                   </View>
                 </AccountTeaser>
               </View>
@@ -108,7 +108,7 @@ export function CouncilOverviewScreen({navigation}: ScreenProps) {
           renderSectionHeader={({section: {title}}) => (
             <>
               <Padder />
-              <Subheading>{buildSectionHeaderTitle(title, council)}</Subheading>
+              <Text variant="titleMedium">{buildSectionHeaderTitle(title, council)}</Text>
               {title === 'Member' ? (
                 <View style={styles.voteActions}>
                   <Button
@@ -259,7 +259,7 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
   return (
     <Modal visible={visible} onDismiss={reset}>
       <View style={globalStyles.alignCenter}>
-        <Subheading>{`Vote for council`}</Subheading>
+        <Text variant="titleMedium">{`Vote for council`}</Text>
       </View>
       <Padder scale={1} />
       <InputLabel label={'voting account:'} helperText={'This account will be use to approve each candidate.'} />
@@ -349,7 +349,7 @@ function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandi
   return (
     <Modal visible={visible} onDismiss={reset}>
       <View style={globalStyles.alignCenter}>
-        <Subheading>{`Submit Council Candidacy`}</Subheading>
+        <Text variant="titleMedium">{`Submit Council Candidacy`}</Text>
       </View>
       <Padder scale={1} />
       <InputLabel label={'Candidate account:'} helperText={'Select the account you wish to submit for candidacy.'} />
@@ -401,9 +401,9 @@ function MemberItem({candidate, onSelect, isSelected, order}: MemberItemProps) {
         <View style={styles.candidateIdentity}>
           <Identicon value={candidate.account.address} size={20} />
           <Padder scale={0.3} />
-          <Caption style={styles.candidateName} ellipsizeMode="middle" numberOfLines={1}>
+          <Text variant="bodySmall" style={styles.candidateName} ellipsizeMode="middle" numberOfLines={1}>
             {candidate.account.display}
-          </Caption>
+          </Text>
         </View>
         <View style={styles.badge}>{order > 0 && <Badge color={colors.onSurface} text={String(order)} />}</View>
       </View>

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Alert, StyleSheet, View, Keyboard} from 'react-native';
-import {Divider, Button, Tabs, TabScreen, useTheme, Subheading, BottomSheetTextInput} from '@ui/library';
+import {Divider, Button, Tabs, TabScreen, useTheme, Text, BottomSheetTextInput} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {useNetwork} from '@atoms/network';
 import {Padder} from '@ui/components/Padder';
@@ -128,7 +128,7 @@ export function AddExternalAccount({onClose}: Props) {
 
   return (
     <Layout>
-      <Subheading style={globalStyles.textCenter}>{`Add External Account`}</Subheading>
+      <Text variant="titleMedium" style={globalStyles.textCenter}>{`Add External Account`}</Text>
       {(() => {
         switch (state.step) {
           case 'input':

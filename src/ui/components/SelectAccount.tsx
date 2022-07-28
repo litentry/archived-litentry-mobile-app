@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
 import {useAccount, Account as SubstrateChainAccount} from 'src/api/hooks/useAccount';
-import {Menu, Caption, Divider, TextInput, Text, Icon, useTheme} from '@ui/library';
+import {Menu, Divider, TextInput, Text, Icon, useTheme} from '@ui/library';
 import globalStyles from '@ui/styles';
 import {AccountTeaser} from './Account/AccountTeaser';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
@@ -95,7 +95,7 @@ export function Account({onSelect, account}: AccountProps) {
   return (
     <View style={globalStyles.paddedContainer}>
       <AccountTeaser account={accountInfo} onPress={() => onSelect({account, accountInfo})} name={name}>
-        {isExternal && <Caption style={styles.caption}>{`External`}</Caption>}
+        {isExternal && <Text variant="bodySmall" style={styles.caption}>{`External`}</Text>}
       </AccountTeaser>
     </View>
   );

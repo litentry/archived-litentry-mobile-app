@@ -8,7 +8,7 @@ import {SuccessDialog} from '@ui/components/SuccessDialog';
 import {Layout} from '@ui/components/Layout';
 import {TxPreview} from '@ui/components/Tx/Preview';
 import {MessageTeaser} from '@ui/components/MessageTeaser';
-import {Subheading, Caption, Icon, useBottomSheet, Button} from '@ui/library';
+import {Text, Icon, useBottomSheet, Button} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
 import type {ErrorPayload, HexString, TxConfig, TxInfo, TxPayload} from 'polkadot-api';
@@ -71,7 +71,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
       case 'initial_view':
         return (
           <Layout style={styles.emptyState}>
-            <Subheading>Preparing transaction payload...</Subheading>
+            <Text variant="titleMedium">Preparing transaction payload...</Text>
           </Layout>
         );
 
@@ -122,7 +122,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
       case 'scan_signature_view':
         return (
           <Layout style={globalStyles.paddedContainer}>
-            <Subheading style={globalStyles.textCenter}>{`Scan QR code`}</Subheading>
+            <Text variant="titleMedium" style={globalStyles.textCenter}>{`Scan QR code`}</Text>
             <Padder scale={1} />
             <QRCodeScanner
               onRead={(data) => {
@@ -143,7 +143,7 @@ export function TxProvider({children}: TxProviderProps): React.ReactElement {
                 <Layout style={styles.notAuthorized}>
                   <Layout style={styles.notAuthorizedHack}>
                     <Icon name="alert-outline" size={30} />
-                    <Caption>This requires your Camera permission to scan.</Caption>
+                    <Text variant="bodySmall">This requires your Camera permission to scan.</Text>
                   </Layout>
                 </Layout>
               }

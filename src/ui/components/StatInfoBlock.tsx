@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {isString} from 'lodash';
-import {Caption} from '@ui/library';
+import {Text} from '@ui/library';
 
 type PropTypes = {
   title: string;
@@ -14,8 +14,14 @@ function StatInfoBlock(props: PropTypes) {
 
   return (
     <View testID={testID}>
-      <Caption>{title}</Caption>
-      {isString(children) ? <Caption style={styles.stat}>{children}</Caption> : children}
+      <Text variant="bodySmall">{title}</Text>
+      {isString(children) ? (
+        <Text variant="bodySmall" style={styles.stat}>
+          {children}
+        </Text>
+      ) : (
+        children
+      )}
     </View>
   );
 }

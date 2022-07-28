@@ -8,7 +8,7 @@ import {SelectAccount} from '@ui/components/SelectAccount';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {democracyProposalScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {Button, Caption, Headline, Icon, List, Modal, Text} from '@ui/library';
+import {Button, Icon, List, Modal, Text} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {ProposalCall} from '@ui/components/ProposalCall';
@@ -43,7 +43,7 @@ export function DemocracyProposalScreen({
     }
   }, [startTx, proposal, state.account, getTxMethodArgsLength]);
 
-  const ItemLeft = React.useCallback(() => <Headline>{proposal.index}</Headline>, [proposal.index]);
+  const ItemLeft = React.useCallback(() => <Text variant="headlineSmall">{proposal.index}</Text>, [proposal.index]);
 
   return (
     <Layout style={globalStyles.flex}>
@@ -53,13 +53,13 @@ export function DemocracyProposalScreen({
           <ProposalCall proposal={proposal} />
           <Padder scale={1} />
 
-          <Caption>{`Proposal Hash:`}</Caption>
+          <Text variant="bodySmall">{`Proposal Hash:`}</Text>
           <Text selectable>{proposal.hash}</Text>
 
           <Padder scale={2} />
           <View style={styles.row}>
             <View style={styles.listLeft}>
-              <Caption>{`Proposer:`}</Caption>
+              <Text variant="bodySmall">{`Proposer:`}</Text>
             </View>
             <View style={styles.listRight}>
               <AccountTeaser account={proposal.proposer.account} />
@@ -69,7 +69,7 @@ export function DemocracyProposalScreen({
           <Padder scale={2} />
           <View style={styles.row}>
             <View style={styles.listLeft}>
-              <Caption>{`Locked:`}</Caption>
+              <Text variant="bodySmall">{`Locked:`}</Text>
             </View>
             <View style={styles.listRight}>
               <Text>{proposal.formattedBalance}</Text>
@@ -79,7 +79,7 @@ export function DemocracyProposalScreen({
           <Padder scale={2} />
           <View style={styles.row}>
             <View style={styles.listLeft}>
-              <Caption>{`Seconds:`}</Caption>
+              <Text variant="bodySmall">{`Seconds:`}</Text>
             </View>
             <View style={styles.listRight}>
               <TouchableOpacity
@@ -115,12 +115,12 @@ export function DemocracyProposalScreen({
               <Icon color="grey" name="information-outline" size={25} />
             </View>
             <View style={globalStyles.flex}>
-              <Caption>
+              <Text variant="bodySmall">
                 {`The proposal is in the queue for future referendums. One proposal from this list will move forward to
                 voting.`}
-              </Caption>
+              </Text>
               <Padder scale={0.5} />
-              <Caption>{`Seconding a proposal that indicates your backing for the proposal.`}</Caption>
+              <Text variant="bodySmall">{`Seconding a proposal that indicates your backing for the proposal.`}</Text>
             </View>
           </View>
         </ScrollView>

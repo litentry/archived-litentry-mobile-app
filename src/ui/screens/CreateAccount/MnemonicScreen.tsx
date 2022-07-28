@@ -4,7 +4,7 @@ import {View, StyleSheet} from 'react-native';
 import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
 import {NavigationProp} from '@react-navigation/native';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
-import {Button, Caption, TextInput} from '@ui/library';
+import {Button, Text, TextInput} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {verifyMnemonicScreen} from '@ui/navigation/routeKeys';
 import {useCryptoUtil} from '@polkadotApi/useCryptoUtil';
@@ -38,9 +38,9 @@ export function MnemonicScreen({navigation}: {navigation: NavigationProp<Account
           multiline
         />
         <Padder scale={1} />
-        <Caption>
+        <Text variant="bodySmall">
           {`Please write down the mnemonic seed and keep it in a safe place. The mnemonic can be used to restore your account. keep it carefully to not lose your assets.`}
-        </Caption>
+        </Text>
         <View style={globalStyles.flex} />
         <Button
           mode="outlined"

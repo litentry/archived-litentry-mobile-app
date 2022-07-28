@@ -3,7 +3,7 @@ import {View} from 'react-native';
 import LoadingView from '@ui/components/LoadingView';
 import {StyleSheet} from 'react-native';
 import {useAuctionsSummary} from 'src/api/hooks/useAuctionsSummary';
-import {Card, Caption, List, Subheading} from '@ui/library';
+import {Card, List, Text} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -18,8 +18,8 @@ import {useFormatBalance} from 'src/hooks/useFormatBalance';
 const WinningBidLeases = (leases: string) => () =>
   (
     <View style={globalStyles.justifyCenter}>
-      <Caption>{`Leases`}</Caption>
-      <Caption>{leases}</Caption>
+      <Text variant="bodySmall">{`Leases`}</Text>
+      <Text variant="bodySmall">{leases}</Text>
     </View>
   );
 
@@ -99,20 +99,22 @@ export function AuctionsScreen() {
             <Card.Content>
               {winningBid ? (
                 <>
-                  <Subheading style={globalStyles.textCenter}>{`Winning Bid`}</Subheading>
+                  <Text variant="titleMedium" style={globalStyles.textCenter}>{`Winning Bid`}</Text>
                   <List.Item
                     title={winningBid?.projectName}
                     description={
                       <View>
                         <Padder scale={0.5} />
-                        <Caption>{`ProjectID: ${winningBid?.projectId}`}</Caption>
-                        <Caption>{`Bid: ${winningBid?.amount} ${
+                        <Text variant="bodySmall">{`ProjectID: ${winningBid?.projectId}`}</Text>
+                        <Text variant="bodySmall">{`Bid: ${winningBid?.amount} ${
                           winningBid?.isCrowdloan ? '(crowdloan)' : ''
-                        }`}</Caption>
-                        <Caption>
+                        }`}</Text>
+                        <Text variant="bodySmall">
                           {`Block number: `}
-                          <Caption onPress={copyToClipboard}>{winningBid?.blockNumber}</Caption>
-                        </Caption>
+                          <Text variant="bodySmall" onPress={copyToClipboard}>
+                            {winningBid?.blockNumber}
+                          </Text>
+                        </Text>
                       </View>
                     }
                     right={WinningBidLeases(`${winningBid?.firstSlot} - ${winningBid?.lastSlot}`)}

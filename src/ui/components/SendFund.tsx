@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Button, Subheading, TextInput, Switch, HelperText, useBottomSheetInternal} from '@ui/library';
+import {Button, Text, TextInput, Switch, HelperText, useBottomSheetInternal} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import BalanceInput from '@ui/components/BalanceInput';
@@ -56,7 +56,9 @@ export function SendFund({address, onFundsSent}: Props) {
 
   return (
     <Layout style={styles.container}>
-      <Subheading style={globalStyles.textCenter}>Send funds</Subheading>
+      <Text variant="titleMedium" style={globalStyles.textCenter}>
+        Send funds
+      </Text>
       <Padder scale={1} />
       <InputLabel label="Enter amount" helperText="Type the amount you want to transfer" />
       <BalanceInput

@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Button, Modal, Subheading, TextInput, Caption} from '@ui/library';
+import {Button, Modal, TextInput, Text} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
@@ -64,7 +64,7 @@ export function SubmitProposal() {
 
       <Modal visible={state?.open} onDismiss={closeModal}>
         <View style={globalStyles.alignCenter}>
-          <Subheading>{`Submit proposal`}</Subheading>
+          <Text variant="titleMedium">{`Submit proposal`}</Text>
         </View>
         <Padder scale={1} />
 
@@ -98,9 +98,9 @@ export function SubmitProposal() {
 
         <Padder scale={1} />
 
-        <Caption>{`Minimum deposit: ${
+        <Text variant="bodySmall">{`Minimum deposit: ${
           chainInfo?.democracyMinimumDeposit && formatBalance(chainInfo.democracyMinimumDeposit)
-        }`}</Caption>
+        }`}</Text>
         <Padder scale={1} />
 
         <View style={styles.row}>

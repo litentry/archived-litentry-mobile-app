@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import {Caption} from '@ui/library';
+import {Text} from '@ui/library';
 import {Account} from 'src/api/hooks/useAccount';
 
 type PropTypes = {address: Account | undefined};
@@ -8,7 +8,11 @@ type PropTypes = {address: Account | undefined};
 function MaxBalance(props: PropTypes) {
   return (
     <View style={styles.balance}>
-      {!props.address ? <Caption>MAX: -- </Caption> : <Caption>MAX: {props.address?.balance?.formattedFree}</Caption>}
+      {!props.address ? (
+        <Text variant="bodySmall">MAX: -- </Text>
+      ) : (
+        <Text variant="bodySmall">MAX: {props.address?.balance?.formattedFree}</Text>
+      )}
     </View>
   );
 }

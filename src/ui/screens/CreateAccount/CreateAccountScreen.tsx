@@ -8,7 +8,7 @@ import {ProgressBar} from '@ui/components/ProgressBar';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {accountsScreen, createAccountScreen} from '@ui/navigation/routeKeys';
-import {Button, Caption, List, TextInput, HelperText} from '@ui/library';
+import {Button, Text, List, TextInput, HelperText} from '@ui/library';
 import {useTheme} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
@@ -84,9 +84,9 @@ export function CreateAccountScreen({
           <List.Item title={account.title} left={AccountIdentityIcon} description={address} />
           <Padder scale={1} />
           <TextInput autoComplete="off" label={'Mnemonic seed'} value={mnemonic} disabled multiline />
-          <Caption>
+          <Text variant="bodySmall">
             {`Please write down the mnemonic seed and keep it in a safe place. The mnemonic can be used to restore your account. keep it carefully to not lose your assets.`}
-          </Caption>
+          </Text>
           <Padder scale={2} />
           <TextInput
             mode="outlined"

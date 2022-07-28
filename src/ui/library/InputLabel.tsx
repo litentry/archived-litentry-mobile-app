@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Caption} from '@ui/library';
+import {Text} from '@ui/library';
 import {Icon} from './Icon';
 import {Popover} from './Popover';
 import {Padder} from '@ui/components/Padder';
@@ -13,7 +13,7 @@ export type InputLabelProps = {
 export function InputLabel({label, helperText}: InputLabelProps) {
   return (
     <View style={styles.rowAlignCenter}>
-      <Caption>{label}</Caption>
+      <Text variant="bodySmall">{label}</Text>
       {helperText ? (
         <>
           <Padder scale={0.2} />

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
-import {Divider, Card, List, Caption, Text, Subheading} from '@ui/library';
+import {Divider, Card, List, Text} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {ProgressChart} from '@ui/components/ProgressChart';
 import LoadingView from '@ui/components/LoadingView';
@@ -24,7 +24,9 @@ function ParachainsOverviewHeader({parachainsSummary}: {parachainsSummary?: Para
             <View style={styles.progressChart}>
               {parachainsSummary?.leasePeriod.progressPercent && (
                 <View>
-                  <Caption style={globalStyles.textCenter}> Lease Period</Caption>
+                  <Text variant="bodySmall" style={globalStyles.textCenter}>
+                    Lease Period
+                  </Text>
                   <ProgressChart width={100} percent={parachainsSummary.leasePeriod.progressPercent / 100} />
                 </View>
               )}
@@ -32,24 +34,24 @@ function ParachainsOverviewHeader({parachainsSummary}: {parachainsSummary?: Para
             <View style={styles.summaryInfo}>
               {parachainsSummary?.parachainsCount ? (
                 <Row label="Parachains">
-                  <Caption>{parachainsSummary.parachainsCount.toString()}</Caption>
+                  <Text variant="bodySmall">{parachainsSummary.parachainsCount.toString()}</Text>
                 </Row>
               ) : null}
               {parachainsSummary?.proposalsCount ? (
                 <Row label="Proposals">
-                  <Caption>{parachainsSummary.proposalsCount.toString()}</Caption>
+                  <Text variant="bodySmall">{parachainsSummary.proposalsCount.toString()}</Text>
                 </Row>
               ) : null}
               {parachainsSummary?.leasePeriod ? (
                 <>
                   <Row label="Current lease">
-                    <Caption>{parachainsSummary.leasePeriod.currentLease}</Caption>
+                    <Text variant="bodySmall">{parachainsSummary.leasePeriod.currentLease}</Text>
                   </Row>
                   <Row label="Total period">
-                    <Caption>{parachainsSummary.leasePeriod.totalPeriod}</Caption>
+                    <Text variant="bodySmall">{parachainsSummary.leasePeriod.totalPeriod}</Text>
                   </Row>
                   <Row label="Remaining">
-                    <Caption>{parachainsSummary.leasePeriod.remainderParts[0]}</Caption>
+                    <Text variant="bodySmall">{parachainsSummary.leasePeriod.remainderParts[0]}</Text>
                   </Row>
                 </>
               ) : null}
@@ -61,10 +63,10 @@ function ParachainsOverviewHeader({parachainsSummary}: {parachainsSummary?: Para
       <Padder scale={1} />
       <View style={[globalStyles.rowContainer, globalStyles.paddedContainer]}>
         <View style={globalStyles.flex}>
-          <Subheading>{`Parachains`}</Subheading>
+          <Text variant="titleMedium">{`Parachains`}</Text>
         </View>
         <View style={[globalStyles.flex, globalStyles.alignCenter]}>
-          <Subheading>{`Leases`}</Subheading>
+          <Text variant="titleMedium">{`Leases`}</Text>
         </View>
       </View>
     </>
@@ -109,7 +111,7 @@ function ParachainItem({parachain, onPress}: ParachainProps) {
   const ItemLeft = React.useCallback(
     () => (
       <View style={globalStyles.justifyCenter}>
-        <Caption>{parachain.id}</Caption>
+        <Text variant="bodySmall">{parachain.id}</Text>
       </View>
     ),
     [parachain.id],
@@ -131,7 +133,9 @@ function ParachainItem({parachain, onPress}: ParachainProps) {
 function Row({label, children}: {label: string; children: React.ReactNode}) {
   return (
     <View style={styles.row}>
-      <Caption style={styles.rowLabel}>{label}:</Caption>
+      <Text variant="bodySmall" style={styles.rowLabel}>
+        {label}:
+      </Text>
       <View style={globalStyles.flex}>{children}</View>
     </View>
   );

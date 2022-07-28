@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {stringShorten} from '@polkadot/util';
-import {Caption} from '@ui/library';
+import {Text} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {JudgmentStatus} from '@ui/components/Account/JudgmentStatus';
 import type {Account as AccountType} from 'src/api/hooks/useAccount';
@@ -16,7 +16,9 @@ export function Account({account, name}: Props) {
 
   return (
     <View style={styles.container}>
-      <Caption style={styles.display}>{display}</Caption>
+      <Text variant="bodySmall" style={styles.display}>
+        {display}
+      </Text>
       <Padder scale={0.5} />
       {account.registration?.judgements?.map((judgement, i) => {
         if (judgement) {

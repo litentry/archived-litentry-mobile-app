@@ -1,13 +1,18 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import {List, Caption} from '@ui/library';
+import {List, Text} from '@ui/library';
 import {AccountBalance as AccountBalanceType} from 'src/api/hooks/useAccount';
 
 type Props = {
   balance: AccountBalanceType;
 };
 
-const ItemRight = (text: string) => () => <Caption style={styles.centerAlign}>{text}</Caption>;
+const ItemRight = (text: string) => () =>
+  (
+    <Text variant="bodySmall" style={styles.centerAlign}>
+      {text}
+    </Text>
+  );
 
 export function AccountBalance({balance}: Props) {
   return (

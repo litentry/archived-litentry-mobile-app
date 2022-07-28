@@ -4,7 +4,7 @@ import {BN} from '@polkadot/util';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {HashBlock} from '@ui/components/HashBlock';
 import {Padder} from '@ui/components/Padder';
-import {Button, Caption, Icon, Subheading, Text, useTheme} from '@ui/library';
+import {Button, Icon, Text, useTheme} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {TxConfig, TxInfo} from 'polkadot-api';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
@@ -32,7 +32,7 @@ export function TxPreview({address, txConfig, txInfo, onCancel, onConfirm}: Prop
 
   return (
     <Layout style={styles.container}>
-      <Subheading style={globalStyles.textCenter}>{`Preview`}</Subheading>
+      <Text variant="titleMedium" style={globalStyles.textCenter}>{`Preview`}</Text>
       <Padder scale={1} />
       <HashBlock text={txInfo.blockHash} title={'call hash'} />
       <Padder scale={0.5} />
@@ -40,7 +40,7 @@ export function TxPreview({address, txConfig, txInfo, onCancel, onConfirm}: Prop
         <View style={globalStyles.flex}>
           <Text>{txInfo.title}</Text>
           <Padder scale={0.3} />
-          <Caption>{txInfo.description}</Caption>
+          <Text variant="bodySmall">{txInfo.description}</Text>
         </View>
         {txConfig.params.length ? <Icon name={open ? 'chevron-up' : 'chevron-down'} /> : null}
       </TouchableOpacity>

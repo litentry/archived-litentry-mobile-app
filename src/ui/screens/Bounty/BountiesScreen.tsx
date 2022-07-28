@@ -4,7 +4,7 @@ import {useBounties, Bounty} from 'src/api/hooks/useBounties';
 import {EmptyView} from '@ui/components/EmptyView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import LoadingView from '@ui/components/LoadingView';
-import {Text, Caption, Card, Headline, List, Button, useBottomSheet} from '@ui/library';
+import {Text, Card, List, Button, useBottomSheet} from '@ui/library';
 import {bountyDetailScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
@@ -67,7 +67,7 @@ function BountyItem({bounty, onPress}: BountyItemProps) {
   const ItemLeft = React.useCallback(
     () => (
       <View style={globalStyles.justifyCenter}>
-        <Headline>{index.toString()}</Headline>
+        <Text variant="headlineSmall">{index.toString()}</Text>
       </View>
     ),
     [index],
@@ -87,7 +87,7 @@ function BountyItem({bounty, onPress}: BountyItemProps) {
       <List.Item
         left={ItemLeft}
         title={<Text>{bountyStatus.status}</Text>}
-        description={<Caption>{description}</Caption>}
+        description={<Text variant="bodySmall">{description}</Text>}
         right={getItemRight}
       />
     </Card>

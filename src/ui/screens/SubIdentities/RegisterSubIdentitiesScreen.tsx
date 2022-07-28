@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Alert, FlatList, View} from 'react-native';
 import {stringShorten} from '@polkadot/util';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {Button, Caption, Subheading, List, Divider, IconButton, useTheme, useBottomSheet} from '@ui/library';
+import {Button, Text, List, Divider, IconButton, useTheme, useBottomSheet} from '@ui/library';
 import {Identicon} from '@ui/components/Identicon';
 import {Layout} from '@ui/components/Layout';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -135,12 +135,12 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
           Set Sub-identities
         </Button>
         <Padder scale={0.5} />
-        <Caption>Set sub-identities after adding/removing your accounts.</Caption>
+        <Text variant="bodySmall">Set sub-identities after adding/removing your accounts.</Text>
         <Padder scale={0.5} />
         <Divider />
         <Padder scale={1} />
         <FlatList
-          ListHeaderComponent={<Subheading>{`Sub-identities (${subIdentities?.length || 0})`}</Subheading>}
+          ListHeaderComponent={<Text variant="titleMedium">{`Sub-identities (${subIdentities?.length || 0})`}</Text>}
           data={subIdentities}
           keyExtractor={(account) => account.address}
           renderItem={({item}) => <SubAccountItem account={item} onRemove={onRemoveAccount} />}
@@ -149,7 +149,7 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
       </View>
       <BottomSheet>
         <Layout>
-          <Subheading style={globalStyles.textCenter}>{`Add sub-identity`}</Subheading>
+          <Text variant="titleMedium" style={globalStyles.textCenter}>{`Add sub-identity`}</Text>
           <Padder scale={1} />
           <AddSubIdentity onAddPress={onAddAccount} subIdentities={subIdentities} onClose={closeBottomSheet} />
           <Padder scale={1} />
@@ -179,7 +179,7 @@ function SubAccountItem({account, onRemove}: SubIdentityItemProps) {
     () => (
       <IconButton
         icon="delete-outline"
-        color={colors.error}
+        iconColor={colors.error}
         onPress={() => onRemove(account.address)}
         testID="delete-button"
       />
@@ -191,7 +191,7 @@ function SubAccountItem({account, onRemove}: SubIdentityItemProps) {
     <List.Item
       disabled={true}
       title={<Account account={account} />}
-      description={<Caption>{stringShorten(account.address, 12)}</Caption>}
+      description={<Text variant="bodySmall">{stringShorten(account.address, 12)}</Text>}
       left={AccountIdentityIcon}
       right={RemoveSubAccount}
     />

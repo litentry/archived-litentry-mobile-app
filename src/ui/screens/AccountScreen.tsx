@@ -1,5 +1,5 @@
 import React from 'react';
-import {Divider, Card, Caption, useTheme, IconButton} from '@ui/library';
+import {Divider, Card, Text, useTheme, IconButton} from '@ui/library';
 import {RouteProp} from '@react-navigation/native';
 import {AppStackParamList} from '@ui/navigation/navigation';
 import {ScrollView, StyleSheet, View} from 'react-native';
@@ -42,10 +42,14 @@ export function AccountScreen({route}: {route: RouteProp<AppStackParamList, type
                   </View>
                   <Padder scale={1} />
 
-                  <Caption style={{color: colors.accent}}>ADDRESS</Caption>
+                  <Text variant="bodySmall" style={{color: colors.accent}}>
+                    ADDRESS
+                  </Text>
                   <View style={[globalStyles.rowContainer]}>
                     <View style={styles.caption}>
-                      <Caption onPress={copyToClipboard}>{stringShorten(account?.address, 17)}</Caption>
+                      <Text variant="bodySmall" onPress={copyToClipboard}>
+                        {stringShorten(account?.address, 17)}
+                      </Text>
                     </View>
                     <IconButton icon="content-copy" size={15} onPress={copyToClipboard} />
                   </View>
@@ -59,12 +63,17 @@ export function AccountScreen({route}: {route: RouteProp<AppStackParamList, type
             {account?.registration?.judgements?.length ? (
               <Card>
                 <Card.Content>
-                  <Caption style={{color: colors.accent}}>JUDGEMENT(S)</Caption>
+                  <Text variant="bodySmall" style={{color: colors.accent}}>
+                    JUDGEMENT(S)
+                  </Text>
                   <Padder scale={0.5} />
                   {account?.registration?.judgements.map((judgement, i) => (
-                    <Caption style={[{backgroundColor: colors.accent}, styles.titleContainer]} key={i}>{`"${
+                    <Text
+                      variant="bodySmall"
+                      style={[{backgroundColor: colors.accent}, styles.titleContainer]}
+                      key={i}>{`"${
                       mapStatusText(judgement?.judgement ?? {}, Boolean(account?.registration?.displayParent)).text
-                    }" provided by Registrar #${judgement?.registrarIndex}`}</Caption>
+                    }" provided by Registrar #${judgement?.registrarIndex}`}</Text>
                   ))}
                 </Card.Content>
               </Card>
@@ -73,19 +82,21 @@ export function AccountScreen({route}: {route: RouteProp<AppStackParamList, type
             {account?.balance ? (
               <Card>
                 <Card.Content>
-                  <Caption style={{color: colors.accent}}>BALANCE</Caption>
+                  <Text variant="bodySmall" style={{color: colors.accent}}>
+                    BALANCE
+                  </Text>
                   <Padder scale={0.5} />
                   <View style={styles.balance}>
-                    <Caption>Balance</Caption>
-                    <Caption>{account?.balance.formattedFree}</Caption>
+                    <Text variant="bodySmall">Balance</Text>
+                    <Text variant="bodySmall">{account?.balance.formattedFree}</Text>
                   </View>
                   <View style={styles.balance}>
-                    <Caption>Reserved</Caption>
-                    <Caption>{account?.balance.formattedReserved}</Caption>
+                    <Text variant="bodySmall">Reserved</Text>
+                    <Text variant="bodySmall">{account?.balance.formattedReserved}</Text>
                   </View>
                   <View style={styles.balance}>
-                    <Caption>Locked</Caption>
-                    <Caption>{account?.balance.formattedFeeFrozen}</Caption>
+                    <Text variant="bodySmall">Locked</Text>
+                    <Text variant="bodySmall">{account?.balance.formattedFeeFrozen}</Text>
                   </View>
                 </Card.Content>
               </Card>

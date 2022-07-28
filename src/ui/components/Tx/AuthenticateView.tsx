@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
-import {TextInput, Button, Caption, useTheme, Subheading} from '@ui/library';
+import {TextInput, Button, useTheme, Text} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
 import {SecureKeychain} from 'src/service/SecureKeychain';
@@ -41,7 +41,7 @@ export function AuthenticateView({onAuthenticate, address}: Props) {
 
   return (
     <Layout style={styles.container}>
-      <Subheading style={globalStyles.textCenter}>{`Unlock account`}</Subheading>
+      <Text variant="titleMedium" style={globalStyles.textCenter}>{`Unlock account`}</Text>
       <TextInput
         dense
         mode="outlined"
@@ -50,7 +50,7 @@ export function AuthenticateView({onAuthenticate, address}: Props) {
         value={password}
         onChangeText={setPassword}
       />
-      {isValid === false ? <Caption style={{color: colors.error}}>{`Incorrect password`}</Caption> : null}
+      {isValid === false ? <Text variant="bodySmall" style={{color: colors.error}}>{`Incorrect password`}</Text> : null}
       <Padder scale={1} />
       <Button onPress={onPressUnlock} mode="contained" icon="lock">
         Unlock

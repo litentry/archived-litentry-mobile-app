@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Button, TextInput, Subheading, Caption, Icon} from '@ui/library';
+import {Button, TextInput, Text, Icon} from '@ui/library';
 import {Registrar} from 'src/api/hooks/useRegistrarsSummary';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
@@ -32,7 +32,7 @@ export function RequestJudgement({onRequest, onClose}: Props) {
 
   return (
     <Layout style={styles.container}>
-      <Subheading style={globalStyles.textCenter}>{`Choose registrar`}</Subheading>
+      <Text variant="titleMedium" style={globalStyles.textCenter}>{`Choose registrar`}</Text>
       <Padder scale={1} />
       <SelectRegistrar
         onSelect={(selectedRegistrar) => {
@@ -44,7 +44,7 @@ export function RequestJudgement({onRequest, onClose}: Props) {
       <Padder scale={0.5} />
       <View style={styles.info}>
         <Icon name="alert-circle-outline" size={20} />
-        <Caption style={styles.caption}>{`Fee paid to registrar to provide Judgement`}</Caption>
+        <Text variant="bodySmall" style={styles.caption}>{`Fee paid to registrar to provide Judgement`}</Text>
       </View>
       <Padder scale={2} />
       <View style={styles.buttons}>

@@ -4,7 +4,7 @@ import globalStyles, {standardPadding} from '@ui/styles';
 import {createFrames, QrCode} from 'src/utils/qrCode';
 import {createSignPayload} from 'src/utils/signer';
 import {CMD_HASH, CMD_MORTAL} from 'src/constants';
-import {Button, useTheme, Subheading} from '@ui/library';
+import {Button, useTheme, Text} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {Layout} from '@ui/components/Layout';
 import {TxConfig, TxPayload} from 'polkadot-api';
@@ -62,7 +62,7 @@ export function PayloadQrCodeView({address, txConfig, onConfirm, onCancel}: Prop
 
   return (
     <Layout style={styles.container}>
-      <Subheading style={globalStyles.textCenter}>{`Authorization required`}</Subheading>
+      <Text variant="titleMedium" style={globalStyles.textCenter}>{`Authorization required`}</Text>
       <Padder scale={1} />
       <View style={styles.qrContainer}>
         {!imageUri ? (

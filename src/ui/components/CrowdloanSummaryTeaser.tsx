@@ -4,7 +4,7 @@ import {useCrowdloanSummary} from 'src/api/hooks/useCrowdloanSummary';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {ProgressChart} from '@ui/components/ProgressChart';
 import {Padder} from '@ui/components/Padder';
-import {Subheading, Caption, Card} from '@ui/library';
+import {Text, Card} from '@ui/library';
 import {DashboardTeaserSkeleton} from '@ui/components/DashboardTeaserSkeleton';
 
 export function CrowdloanSummaryTeaser() {
@@ -38,8 +38,8 @@ export function CrowdloanSummaryTeaser() {
             <ProgressChart percent={data.activeProgress} width={100} />
             <Padder />
             <View>
-              <Subheading>{`Active Raised / Cap`}</Subheading>
-              <Caption>{`${activeRaised} / ${activeCap}`}</Caption>
+              <Text variant="titleMedium">{`Active Raised / Cap`}</Text>
+              <Text variant="bodySmall">{`${activeRaised} / ${activeCap}`}</Text>
             </View>
           </View>
           <Padder scale={0.4} />
@@ -47,8 +47,8 @@ export function CrowdloanSummaryTeaser() {
             <ProgressChart percent={data.totalProgress} width={100} />
             <Padder />
             <View>
-              <Subheading>{`Total Raised / Cap`}</Subheading>
-              <Caption>{`${totalRaised} / ${totalCap}`}</Caption>
+              <Text variant="titleMedium">{`Total Raised / Cap`}</Text>
+              <Text variant="bodySmall">{`${totalRaised} / ${totalCap}`}</Text>
             </View>
           </View>
         </View>

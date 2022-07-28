@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Icon, useTheme, Caption} from '@ui/library';
+import {Icon, useTheme, Text} from '@ui/library';
 import {mapStatusText} from 'src/utils/identity';
 import {colorGreen, colorRed, colorGray} from '@ui/styles';
 import {Popable} from 'react-native-popable';
@@ -24,7 +24,7 @@ export function JudgmentStatus({registrationJudgement, hasParent}: Props) {
     <Popable
       content={
         <View style={styles.container}>
-          <Caption>{`"${status.text}" provided by Registrar #${registrationJudgement.registrarIndex}`}</Caption>
+          <Text variant="bodySmall">{`"${status.text}" provided by Registrar #${registrationJudgement.registrarIndex}`}</Text>
         </View>
       }
       backgroundColor={colors.accent}>

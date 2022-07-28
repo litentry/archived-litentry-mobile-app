@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, FlatList, View} from 'react-native';
-import {Caption, Divider} from '@ui/library';
+import {Text, Divider} from '@ui/library';
 import {useRegistrarsSummary, RegistrarsSummary} from 'src/api/hooks/useRegistrarsSummary';
 import StatInfoBlock from '@ui/components/StatInfoBlock';
 import globalStyles, {standardPadding, monofontFamily} from '@ui/styles';
@@ -64,9 +64,9 @@ function RegistrarList() {
             identiconSize={25}
             onPress={() => toAccountDetails(item.account.address)}>
             <View style={globalStyles.rowAlignCenter}>
-              <Caption>{`Index: ${item.id}`}</Caption>
+              <Text variant="bodySmall">{`Index: ${item.id}`}</Text>
               <Padder />
-              <Caption>{`Fee: ${item.formattedFee}`}</Caption>
+              <Text variant="bodySmall">{`Fee: ${item.formattedFee}`}</Text>
             </View>
           </AccountTeaser>
         </View>

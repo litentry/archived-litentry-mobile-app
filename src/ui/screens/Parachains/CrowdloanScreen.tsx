@@ -7,7 +7,7 @@ import {SelectAccount} from '@ui/components/SelectAccount';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {CrowdloansStackParamList} from '@ui/navigation/navigation';
 import {crowdloanFundDetailScreen} from '@ui/navigation/routeKeys';
-import {Button, Card, Subheading, Text, Caption, Title, Modal, useTheme} from '@ui/library';
+import {Button, Card, Text, Modal, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {ProgressChart} from '@ui/components/ProgressChart';
@@ -61,7 +61,7 @@ export function CrowdloanScreen({navigation}: ScreenProps) {
           style={styles.container}
           sections={sectionData}
           SectionSeparatorComponent={Padder}
-          renderSectionHeader={({section}) => <Title>{section.key}</Title>}
+          renderSectionHeader={({section}) => <Text variant="titleLarge">{section.key}</Text>}
           renderItem={({item, section: {key}}) => {
             return (
               <Fund
@@ -117,11 +117,18 @@ function Fund({item, active, onPressContribute, navigation}: FundsProps) {
       }}>
       <View style={[globalStyles.rowAlignCenter]}>
         <View style={styles.shrink}>
-          <Subheading numberOfLines={1} adjustsFontSizeToFit style={{color: isSpecial ? colors.primary : colors.text}}>
+          <Text
+            variant="titleMedium"
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            style={{color: isSpecial ? colors.primary : colors.text}}>
             {item.name}
-          </Subheading>
+          </Text>
           <Padder scale={0.5} />
-          <Caption numberOfLines={1} adjustsFontSizeToFit>{`${item.formattedRaised} / ${item.formattedCap}`}</Caption>
+          <Text
+            variant="bodySmall"
+            numberOfLines={1}
+            adjustsFontSizeToFit>{`${item.formattedRaised} / ${item.formattedCap}`}</Text>
         </View>
         <View style={styles.spacer} />
         <View style={styles.listItemRightSide}>

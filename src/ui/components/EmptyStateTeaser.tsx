@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, Image, View} from 'react-native';
 import EmptyList from 'image/EmptyList.png';
-import {Subheading, Caption} from '@ui/library';
+import {Text} from '@ui/library';
 import {standardPadding} from '@ui/styles';
 
 type Props = {
@@ -16,8 +16,8 @@ export function EmptyStateTeaser({subheading, caption = 'Please check back for u
         <Image source={EmptyList} resizeMode="contain" />
       </View>
       <View style={styles.emptyContainer}>
-        <Subheading>{subheading}</Subheading>
-        <Caption>{caption}</Caption>
+        <Text variant="titleMedium">{subheading}</Text>
+        <Text variant="bodySmall">{caption}</Text>
       </View>
     </View>
   );

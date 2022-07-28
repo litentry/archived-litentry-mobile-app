@@ -2,7 +2,7 @@ import React from 'react';
 import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {Card, Icon, Caption, Subheading, Paragraph, useBottomSheet} from '@ui/library';
+import {Card, Icon, Text, useBottomSheet} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {useNetwork} from '@atoms/network';
 import LoadingView from '@ui/components/LoadingView';
@@ -75,7 +75,9 @@ export function MotionDetailScreen({route, navigation}: PropTypes) {
                 {['kusama', 'polkadot'].includes(currentNetwork.key) ? (
                   <TouchableOpacity onPress={openBottomSheet}>
                     <View style={globalStyles.rowAlignCenter}>
-                      <Caption numberOfLines={1}>on Polkassembly</Caption>
+                      <Text variant="bodySmall" numberOfLines={1}>
+                        on Polkassembly
+                      </Text>
                       <Padder scale={0.3} />
                       <Icon name="share-outline" size={20} />
                     </View>
@@ -83,7 +85,9 @@ export function MotionDetailScreen({route, navigation}: PropTypes) {
                 ) : null}
               </StatInfoBlock>
               <StatInfoBlock title="Status">
-                <Paragraph style={{color: colorGreen}}>{votingStatus?.status}</Paragraph>
+                <Text variant="bodyMedium" style={{color: colorGreen}}>
+                  {votingStatus?.status}
+                </Text>
               </StatInfoBlock>
             </View>
             <Padder scale={1} />
@@ -102,7 +106,11 @@ export function MotionDetailScreen({route, navigation}: PropTypes) {
           <Card style={[styles.item, styles.left]}>
             <Card.Content>
               <StatInfoBlock title="Section">
-                {<Caption style={styles.textCapitalize}>{proposal.section}</Caption>}
+                {
+                  <Text variant="bodySmall" style={styles.textCapitalize}>
+                    {proposal.section}
+                  </Text>
+                }
               </StatInfoBlock>
               <Padder scale={0.5} />
               <StatInfoBlock title="Method">{proposal.method}</StatInfoBlock>
@@ -111,20 +119,20 @@ export function MotionDetailScreen({route, navigation}: PropTypes) {
           <Card style={[styles.item, styles.right]}>
             <Card.Content>
               <View>
-                <Caption>Votes</Caption>
-                <Subheading style={globalStyles.aye}>
+                <Text variant="bodySmall">Votes</Text>
+                <Text variant="titleMedium" style={globalStyles.aye}>
                   {`Aye (${votes?.ayes?.length}/${motion?.votes?.threshold})`}
-                </Subheading>
-                <Subheading style={globalStyles.nay}>
+                </Text>
+                <Text variant="titleMedium" style={globalStyles.nay}>
                   {`Nay (${votes?.nays?.length}/${motion?.votes?.threshold})`}
-                </Subheading>
+                </Text>
               </View>
             </Card.Content>
           </Card>
         </View>
         {motion?.votes ? (
           <View style={styles.votesContainer}>
-            <Subheading>Votes</Subheading>
+            <Text variant="titleMedium">Votes</Text>
             {votes?.ayes?.length ? (
               votes.ayes.map((vote) => (
                 <View style={styles.voteContainer} key={vote.account.address}>
@@ -137,7 +145,7 @@ export function MotionDetailScreen({route, navigation}: PropTypes) {
               <>
                 <Padder scale={0.5} />
                 <VoteItem type="aye">
-                  <Paragraph>{`No one voted "Aye" yet.`}</Paragraph>
+                  <Text variant="bodyMedium">{`No one voted "Aye" yet.`}</Text>
                 </VoteItem>
               </>
             )}
@@ -153,7 +161,7 @@ export function MotionDetailScreen({route, navigation}: PropTypes) {
               <>
                 <Padder scale={0.5} />
                 <VoteItem type="nay">
-                  <Paragraph>{`No one voted "Nay" yet.`}</Paragraph>
+                  <Text variant="bodyMedium">{`No one voted "Nay" yet.`}</Text>
                 </VoteItem>
               </>
             )}

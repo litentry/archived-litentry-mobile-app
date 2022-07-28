@@ -1,7 +1,7 @@
 import React, {useReducer} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
-import {Button, Divider, Headline, Modal, Select, Subheading, Caption, List, Text} from '@ui/library';
+import {Button, Divider, Modal, Select, List, Text} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {ProgressBar} from '@ui/components/ProgressBar';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -68,7 +68,10 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
     !balance.gt(BN_ZERO) ||
     balance.gt(formattedStringToBn(state.account.balance?.free));
 
-  const ReferendumHeadline = React.useCallback(() => <Headline>{referendum.index}</Headline>, [referendum.index]);
+  const ReferendumHeadline = React.useCallback(
+    () => <Text variant="headlineSmall">{referendum.index}</Text>,
+    [referendum.index],
+  );
 
   return (
     <Layout style={globalStyles.flex}>
@@ -80,52 +83,52 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
 
           {referendum.hash ? (
             <>
-              <Caption>{`Proposal Hash:`}</Caption>
+              <Text variant="bodySmall">{`Proposal Hash:`}</Text>
               <Text selectable>{referendum.hash}</Text>
             </>
           ) : (
             <>
-              <Caption>{`Image Hash:`}</Caption>
+              <Text variant="bodySmall">{`Image Hash:`}</Text>
               <Text selectable>{referendum.imageHash}</Text>
             </>
           )}
 
           <View style={styles.row}>
             <View style={styles.center}>
-              <Caption>{`Time left to vote`}</Caption>
-              <Caption adjustsFontSizeToFit={true} numberOfLines={1}>
+              <Text variant="bodySmall">{`Time left to vote`}</Text>
+              <Text variant="bodySmall" adjustsFontSizeToFit={true} numberOfLines={1}>
                 {referendum.endPeriod.slice(0, 2).join(' ')}
-              </Caption>
+              </Text>
             </View>
             <View style={styles.center}>
-              <Caption>{`Time left to activate`}</Caption>
-              <Caption adjustsFontSizeToFit={true} numberOfLines={1}>
+              <Text variant="bodySmall">{`Time left to activate`}</Text>
+              <Text variant="bodySmall" adjustsFontSizeToFit={true} numberOfLines={1}>
                 {referendum.activatePeriod.slice(0, 2).join(' ')}
-              </Caption>
+              </Text>
             </View>
           </View>
           <Padder scale={1} />
 
-          <Headline>{`Live Results`}</Headline>
+          <Text variant="headlineSmall">{`Live Results`}</Text>
           <Padder scale={0.5} />
           <Divider />
           <Padder scale={0.5} />
           <ProgressBar percentage={referendum.ayePercent} requiredAmount={80} />
           <View style={styles.row}>
             <View style={styles.center}>
-              <Subheading>{`YES`}</Subheading>
-              <Caption>{referendum.formattedVotedAye}</Caption>
-              <Caption>{`${referendum.voteCountAye} participants`}</Caption>
+              <Text variant="titleMedium">{`YES`}</Text>
+              <Text variant="bodySmall">{referendum.formattedVotedAye}</Text>
+              <Text variant="bodySmall">{`${referendum.voteCountAye} participants`}</Text>
             </View>
             <View style={styles.center}>
-              <Subheading>{`NO`}</Subheading>
-              <Caption>{referendum.formattedVotedNay}</Caption>
-              <Caption>{`${referendum.voteCountNay} participants`}</Caption>
+              <Text variant="titleMedium">{`NO`}</Text>
+              <Text variant="bodySmall">{referendum.formattedVotedNay}</Text>
+              <Text variant="bodySmall">{`${referendum.voteCountNay} participants`}</Text>
             </View>
           </View>
           <Padder scale={1} />
 
-          <Headline>{`Vote!`}</Headline>
+          <Text variant="headlineSmall">{`Vote!`}</Text>
           <Padder scale={0.5} />
           <Divider />
           <View style={styles.row}>
@@ -139,7 +142,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
         </ScrollView>
 
         <Modal visible={state.voting !== undefined} onDismiss={() => dispatch({type: 'RESET'})}>
-          <Caption>{`Vote with account`}</Caption>
+          <Text variant="bodySmall">{`Vote with account`}</Text>
           <SelectAccount
             onSelect={(account) => {
               dispatch({type: 'SELECT_ACCOUNT', payload: account.accountInfo});
@@ -147,7 +150,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
           />
           <Padder scale={1} />
 
-          <Caption>{`Vote Value`}</Caption>
+          <Text variant="bodySmall">{`Vote Value`}</Text>
           <BalanceInput
             account={state.account}
             onChangeBalance={(amount) => dispatch({type: `SET_VOTE_VALUE`, payload: amount})}
@@ -155,7 +158,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
 
           <Padder scale={1} />
 
-          <Caption>{`Conviction`}</Caption>
+          <Text variant="bodySmall">{`Conviction`}</Text>
           <Padder scale={0.5} />
 
           <Select

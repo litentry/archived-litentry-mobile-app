@@ -3,7 +3,7 @@ import {View, FlatList, StyleSheet, Linking} from 'react-native';
 import globalStyles, {standardPadding} from '@ui/styles';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useParathreads} from 'src/api/hooks/useParaThreads';
-import {List, Text, Divider, Subheading} from '@ui/library';
+import {List, Text, Divider} from '@ui/library';
 import {Identicon} from '@ui/components/Identicon';
 import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
@@ -29,7 +29,9 @@ export function ParathreadsScreen() {
     <SafeView edges={noTopEdges}>
       {parathreads ? (
         <FlatList
-          ListHeaderComponent={<List.Item title={<Subheading>{`Parathreads: ${parathreads.length}`}</Subheading>} />}
+          ListHeaderComponent={
+            <List.Item title={<Text variant="titleMedium">{`Parathreads: ${parathreads.length}`}</Text>} />
+          }
           style={globalStyles.flex}
           contentContainerStyle={styles.content}
           keyExtractor={(item) => item.id.toString()}

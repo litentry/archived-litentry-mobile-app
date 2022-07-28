@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {TextInput, Button, HelperText, Subheading} from '@ui/library';
+import {TextInput, Button, HelperText, Text} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Account} from 'src/api/hooks/useAccount';
@@ -82,7 +82,7 @@ export function AddBounty({onClose}: Props) {
 
   return (
     <Layout style={styles.container}>
-      <Subheading style={globalStyles.textCenter}>{`Add Bounty`}</Subheading>
+      <Text variant="titleMedium" style={globalStyles.textCenter}>{`Add Bounty`}</Text>
       <Padder scale={1} />
       <InputLabel label={'Bounty Title:'} helperText={'Description of the Bounty (to be stored on-chain)'} />
       <TextInput

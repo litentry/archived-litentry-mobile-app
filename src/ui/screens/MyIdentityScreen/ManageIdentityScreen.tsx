@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {Button, List, Icon, Caption, Divider, IconButton, useBottomSheet} from '@ui/library';
+import {Button, List, Icon, Text, Divider, IconButton, useBottomSheet} from '@ui/library';
 import {Identicon} from '@ui/components/Identicon';
 import {useNetwork} from '@atoms/network';
 import {IdentityInfoForm} from '@ui/components/IdentityInfoForm';
@@ -45,7 +45,7 @@ const ViewExternallyIcon = () => (
 const ItemRight = (text: string) => () =>
   (
     <View style={globalStyles.justifyCenter}>
-      <Caption>{text}</Caption>
+      <Text variant="bodySmall">{text}</Text>
     </View>
   );
 

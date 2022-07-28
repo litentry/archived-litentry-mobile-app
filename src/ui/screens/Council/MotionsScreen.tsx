@@ -1,5 +1,5 @@
 import React from 'react';
-import {Subheading, Button, useTheme, Modal, List, Headline} from '@ui/library';
+import {Text, Button, useTheme, Modal, List} from '@ui/library';
 import {FlatList, StyleSheet, View, Linking} from 'react-native';
 import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
@@ -172,7 +172,7 @@ function VoteModal({visible, setVisible, refetchMotions, voteType, motion, counc
   return (
     <Modal visible={visible} onDismiss={reset}>
       <View style={globalStyles.alignCenter}>
-        <Subheading>{`${heading} (Motion ${motion?.proposal.index})`}</Subheading>
+        <Text variant="titleMedium">{`${heading} (Motion ${motion?.proposal.index})`}</Text>
       </View>
       <Padder scale={1} />
 
@@ -219,7 +219,7 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
   const ItemRight = React.useCallback(
     () => (
       <View style={globalStyles.rowAlignCenter} testID="motion-container">
-        <Subheading>{`Aye ${votes?.ayes?.length}/${votes?.threshold} `}</Subheading>
+        <Text variant="titleMedium">{`Aye ${votes?.ayes?.length}/${votes?.threshold} `}</Text>
         <Padder scale={0.5} />
         {(() => {
           if (isCouncilMember) {
@@ -264,7 +264,10 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
     [colors, votes, isCouncilMember, motion, onVote],
   );
 
-  const getItemLeft = React.useCallback(() => <Headline>{`#${proposal.index}`}</Headline>, [proposal.index]);
+  const getItemLeft = React.useCallback(
+    () => <Text variant="headlineSmall">{`#${proposal.index}`}</Text>,
+    [proposal.index],
+  );
 
   return (
     <Card onPress={() => onPress(motion.proposal)}>
