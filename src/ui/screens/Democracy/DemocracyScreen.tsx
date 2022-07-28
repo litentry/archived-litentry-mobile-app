@@ -90,7 +90,7 @@ function ReferendumTeaser({referendum, onPress}: ReferendumTeaserProps) {
   );
 }
 
-function Referendums({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
+export function Referendums({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {colors} = useTheme();
   const {data: referendums, loading, fetchMore, fetchingMore, refetch, refetching} = useDemocracyReferendums();
 
@@ -175,7 +175,7 @@ function ProposalTeaser({proposal, onPress}: ProposalTeaserProps) {
   );
 }
 
-function Proposals({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
+export function Proposals({navigation}: {navigation: NavigationProp<DashboardStackParamList>}) {
   const {colors} = useTheme();
   const {data: proposals, loading, fetchMore, fetchingMore, refetch, refetching} = useDemocracyProposals();
 
