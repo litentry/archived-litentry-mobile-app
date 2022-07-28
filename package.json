@@ -82,7 +82,7 @@
     "react-native-modalize": "^2.0.13",
     "react-native-os": "^1.2.6",
     "react-native-pager-view": "^5.4.24",
-    "react-native-paper": "^4.12.1",
+    "react-native-paper": "5.0.0-rc.3",
     "react-native-paper-tabs": "^0.7.0",
     "react-native-permissions": "^3.3.1",
     "react-native-popable": "^0.4.3",
