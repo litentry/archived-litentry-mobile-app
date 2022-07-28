@@ -7,9 +7,9 @@ export const darkTheme: Theme = {
     primary: themeDark.colors.primary,
     background: themeDark.colors.background,
     card: themeDark.colors.surface,
-    text: themeDark.colors.text,
-    border: themeDark.colors.disabled,
-    notification: themeDark.colors.notification,
+    text: themeDark.colors.onSurface,
+    border: themeDark.colors.outline,
+    notification: themeDark.colors.secondary,
   },
 };
 
@@ -19,8 +19,8 @@ export const lightTheme: Theme = {
     primary: themeLight.colors.primary,
     background: themeLight.colors.background,
     card: themeLight.colors.surface,
-    text: themeLight.colors.text,
-    border: themeLight.colors.disabled,
-    notification: themeLight.colors.notification,
+    text: themeLight.colors.onSurface,
+    border: themeLight.colors.outline,
+    notification: themeLight.colors.secondary,
   },
 };
