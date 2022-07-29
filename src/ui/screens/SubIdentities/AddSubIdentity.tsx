@@ -1,6 +1,7 @@
 import React, {useCallback, useState, useRef} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
-import {TextInput, Button, Tabs, TabScreen, useTabNavigation, useTabIndex, useTheme, HelperText} from '@ui/library';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {TextInput, Button, useTheme, HelperText} from '@ui/library';
 import {useNetwork} from '@atoms/network';
 import QRCamera, {QRCameraRef} from '@ui/components/QRCamera';
 import {Padder} from '@ui/components/Padder';
@@ -9,12 +10,15 @@ import {parseAddress} from 'src/utils/address';
 import type {Account} from 'src/api/hooks/useAccount';
 import type {SubIdentity} from './RegisterSubIdentitiesScreen';
 import {useIsAddressValid} from 'src/hooks/useIsAddressValid';
+import {useNavigation} from '@react-navigation/native';
 
 type Props = {
   onClose: () => void;
   onAddPress: (subIdentity: SubIdentity) => void;
   subIdentities?: Account[];
 };
+
+const Tab = createMaterialTopTabNavigator();
 
 export function AddSubIdentity({onClose, onAddPress, subIdentities}: Props) {
   const {currentNetwork} = useNetwork();
@@ -37,6 +41,30 @@ export function AddSubIdentity({onClose, onAddPress, subIdentities}: Props) {
     }
   };
 
+  const TypeInTabScreen = React.useCallback(() => {
+    return (
+      <View style={globalStyles.paddedContainer}>
+        <TextInput
+          mode="outlined"
+          onChangeText={(newAddress) => setSubAddress(newAddress)}
+          value={subAddress}
+          multiline={true}
+          style={styles.input}
+          placeholder="👉 Paste address here, e.g. 167r...14h"
+        />
+        <HelperText
+          type="error"
+          visible={
+            Boolean(subAddress) && !isAddressValid
+          }>{`${subAddress} is not a valid address for ${currentNetwork.name} network`}</HelperText>
+      </View>
+    );
+  }, [currentNetwork.name, isAddressValid, subAddress]);
+
+  const ViaQRTabScreen = React.useCallback(() => {
+    return <ScanAddressTab onScanSuccess={setSubAddress} />;
+  }, []);
+
   return (
     <>
       <View style={styles.accountName}>
@@ -50,28 +78,14 @@ export function AddSubIdentity({onClose, onAddPress, subIdentities}: Props) {
       </View>
       <Padder scale={1} />
       <View style={styles.tabViewContainer}>
-        <Tabs style={{backgroundColor: colors.background}}>
-          <TabScreen label="Type in" icon="keyboard">
-            <View style={globalStyles.paddedContainer}>
-              <TextInput
-                mode="outlined"
-                onChangeText={(newAddress) => setSubAddress(newAddress)}
-                value={subAddress}
-                multiline={true}
-                style={styles.input}
-                placeholder="👉 Paste address here, e.g. 167r...14h"
-              />
-              <HelperText
-                type="error"
-                visible={
-                  Boolean(subAddress) && !isAddressValid
-                }>{`${subAddress} is not a valid address for ${currentNetwork.name} network`}</HelperText>
-            </View>
-          </TabScreen>
-          <TabScreen label="Via QR" icon="qrcode">
-            <ScanAddressTab onScanSuccess={setSubAddress} />
-          </TabScreen>
-        </Tabs>
+        <Tab.Navigator
+          screenOptions={{
+            tabBarLabelStyle: {color: colors.secondary},
+            tabBarStyle: {backgroundColor: colors.background},
+          }}>
+          <Tab.Screen name="Type in" component={TypeInTabScreen} />
+          <Tab.Screen name="Via QR" component={ViaQRTabScreen} />
+        </Tab.Navigator>
       </View>
 
       <View style={styles.row}>
@@ -88,8 +102,7 @@ export function AddSubIdentity({onClose, onAddPress, subIdentities}: Props) {
 }
 
 function ScanAddressTab({onScanSuccess}: {onScanSuccess: (address: string) => void}) {
-  const goToTabIndex = useTabNavigation();
-  const tabIndex = useTabIndex();
+  const {navigate} = useNavigation();
   const qrCameraRef = useRef<QRCameraRef>(null);
   const {currentNetwork} = useNetwork();
   const {isAddressValid} = useIsAddressValid(currentNetwork);
@@ -101,7 +114,9 @@ function ScanAddressTab({onScanSuccess}: {onScanSuccess: (address: string) => vo
         isAddressValid(parsed.address).then((isValid) => {
           if (isValid) {
             onScanSuccess(parsed.address);
-            goToTabIndex(0);
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore TODO: fix this when updating the top tabs
+            navigate('Type in');
             qrCameraRef.current?.reactivate();
           } else {
             Alert.alert(
@@ -117,12 +132,12 @@ function ScanAddressTab({onScanSuccess}: {onScanSuccess: (address: string) => vo
         ]);
       }
     },
-    [currentNetwork, onScanSuccess, goToTabIndex, isAddressValid],
+    [currentNetwork, onScanSuccess, isAddressValid, navigate],
   );
 
   return (
     <View style={globalStyles.paddedContainer}>
-      {tabIndex === 1 && <QRCamera onRead={handleScan} ref={qrCameraRef} />}
+      <QRCamera onRead={handleScan} ref={qrCameraRef} />
     </View>
   );
 }

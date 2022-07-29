@@ -1,6 +1,7 @@
 import React from 'react';
 import {Alert, StyleSheet, View, Keyboard} from 'react-native';
-import {Divider, Button, Tabs, TabScreen, useTheme, Text, BottomSheetTextInput} from '@ui/library';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {Divider, Button, useTheme, Text, BottomSheetTextInput} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {useNetwork} from '@atoms/network';
 import {Padder} from '@ui/components/Padder';
@@ -50,6 +51,8 @@ function addAccountReducer(state: State, action: Action) {
 type Props = {
   onClose: () => void;
 };
+
+const Tab = createMaterialTopTabNavigator();
 
 export function AddExternalAccount({onClose}: Props) {
   const qrCameraRef = React.useRef<QRCameraRef>(null);
@@ -124,7 +127,28 @@ export function AddExternalAccount({onClose}: Props) {
   const disabled = state.address.length === 0;
   const confirmBtnDisabled = state.step === 'input' && disabled;
 
-  const [tabIndex, setTabIndex] = React.useState(0);
+  const TypeInTabScreen = React.useCallback(() => {
+    return (
+      <View style={globalStyles.paddedContainer}>
+        <BottomSheetTextInput
+          style={[styles.input]}
+          onChangeText={handleInputChange}
+          value={state.address}
+          multiline={true}
+          numberOfLines={4}
+          placeholder="👉 Paste address here, e.g. 167r...14h"
+        />
+      </View>
+    );
+  }, [state.address]);
+
+  const ViaQRTabScreen = React.useCallback(() => {
+    return (
+      <View style={globalStyles.paddedContainer}>
+        <QRCamera onRead={handleScan} ref={qrCameraRef} />
+      </View>
+    );
+  }, [handleScan]);
 
   return (
     <Layout>
@@ -134,25 +158,14 @@ export function AddExternalAccount({onClose}: Props) {
           case 'input':
             return (
               <View style={styles.tabViewContainer}>
-                <Tabs style={{backgroundColor: colors.background}} onChangeIndex={(index) => setTabIndex(index)}>
-                  <TabScreen label="Type in" icon="keyboard">
-                    <View style={globalStyles.paddedContainer}>
-                      <BottomSheetTextInput
-                        style={[styles.input, {borderColor: colors.placeholder}]}
-                        onChangeText={handleInputChange}
-                        value={state.address}
-                        multiline={true}
-                        numberOfLines={4}
-                        placeholder="👉 Paste address here, e.g. 167r...14h"
-                      />
-                    </View>
-                  </TabScreen>
-                  <TabScreen label="Via QR" icon="qrcode">
-                    <View style={globalStyles.paddedContainer}>
-                      {tabIndex === 1 && <QRCamera onRead={handleScan} ref={qrCameraRef} />}
-                    </View>
-                  </TabScreen>
-                </Tabs>
+                <Tab.Navigator
+                  screenOptions={{
+                    tabBarLabelStyle: {color: colors.primary},
+                    tabBarStyle: {backgroundColor: colors.background},
+                  }}>
+                  <Tab.Screen name="Type in" component={TypeInTabScreen} />
+                  <Tab.Screen name="Via QR" component={ViaQRTabScreen} />
+                </Tab.Navigator>
               </View>
             );
           case 'preview':
