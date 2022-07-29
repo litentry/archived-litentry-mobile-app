@@ -23,12 +23,12 @@ export function DemocracyProposalScreen({
 }) {
   const {startTx} = useStartTx();
   const {getTxMethodArgsLength} = useTx();
-  const [secondsOpen, setSecondsOpen] = useState(false);
+  const [endorsedOpen, setEndorsedOpen] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
   const proposal = route.params.proposal;
   const title = `${proposal.method}.${proposal.section}`;
 
-  const onSecondPress = useCallback(async () => {
+  const onEndorsePress = useCallback(async () => {
     if (state.account) {
       const method = 'democracy.second';
       const argsLength = await getTxMethodArgsLength(method);
@@ -79,23 +79,23 @@ export function DemocracyProposalScreen({
           <Padder scale={2} />
           <View style={styles.row}>
             <View style={styles.listLeft}>
-              <Caption>{`Seconds:`}</Caption>
+              <Caption>{`Endorsed:`}</Caption>
             </View>
             <View style={styles.listRight}>
               <TouchableOpacity
                 style={[styles.row, globalStyles.rowAlignCenter]}
                 onPress={() => {
-                  setSecondsOpen(!secondsOpen);
+                  setEndorsedOpen(!endorsedOpen);
                 }}>
                 <Text>{proposal.seconds.length}</Text>
-                <Icon name={secondsOpen ? 'chevron-up' : 'chevron-down'} size={25} color="grey" />
+                <Icon name={endorsedOpen ? 'chevron-up' : 'chevron-down'} size={25} color="grey" />
               </TouchableOpacity>
-              {secondsOpen && (
+              {endorsedOpen && (
                 <>
                   <Padder scale={0.5} />
-                  {proposal.seconds.map((second, index) => (
-                    <View key={`${second.address}-${index}`}>
-                      <AccountTeaser account={second.account} />
+                  {proposal.seconds.map((endorsed, index) => (
+                    <View key={`${endorsed.address}-${index}`}>
+                      <AccountTeaser account={endorsed.account} />
                       <Padder scale={0.5} />
                     </View>
                   ))}
@@ -106,7 +106,7 @@ export function DemocracyProposalScreen({
 
           <Padder scale={2} />
           <Button mode="outlined" onPress={() => dispatch({type: 'OPEN'})}>
-            {`Second`}
+            {`Endorse`}
           </Button>
 
           <Padder scale={2} />
@@ -120,7 +120,7 @@ export function DemocracyProposalScreen({
                 voting.`}
               </Caption>
               <Padder scale={0.5} />
-              <Caption>{`Seconding a proposal that indicates your backing for the proposal.`}</Caption>
+              <Caption>{`Endorsing a proposal indicates your backing for the proposal.`}</Caption>
             </View>
           </View>
         </ScrollView>
@@ -145,8 +145,8 @@ export function DemocracyProposalScreen({
               {`Cancel`}
             </Button>
             <Padder scale={1} />
-            <Button mode="outlined" disabled={!state.account} onPress={onSecondPress}>
-              {`Second`}
+            <Button mode="outlined" disabled={!state.account} onPress={onEndorsePress}>
+              {`Endorse`}
             </Button>
           </View>
         </Modal>
