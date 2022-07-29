@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import {MD3Theme, MD3LightTheme, MD3DarkTheme} from 'react-native-paper';
+// eslint-disable-next-line no-restricted-imports
+import {MD3Theme, MD3LightTheme, MD3DarkTheme, useTheme as usePaperTheme} from 'react-native-paper';
 
 declare global {
   namespace ReactNativePaper {
@@ -73,3 +74,7 @@ export const themeDark: MD3Theme = {
     inverseOnSurface: '#313034',
   },
 };
+
+export function useTheme(): MD3Theme {
+  return usePaperTheme();
+}
