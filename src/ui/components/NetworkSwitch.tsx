@@ -13,10 +13,15 @@ type Props = {
 export function NetworkSwitch({onPress}: Props) {
   const apiStatus = usePolkadotApiStatus();
   const {currentNetwork} = useNetwork();
-  const {colors} = useTheme();
+  const {colors, roundness} = useTheme();
 
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.networkSwitch, {backgroundColor: colors.background}]}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[
+        styles.networkSwitch,
+        {backgroundColor: colors.background, borderTopLeftRadius: roundness, borderTopRightRadius: roundness},
+      ]}>
       <View style={styles.container}>
         <Icon name={apiStatus === 'ready' ? 'web' : 'earth-off'} size={16} color={colors.secondary} />
         <Padder scale={0.3} />
@@ -37,8 +42,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     paddingHorizontal: standardPadding,
     paddingVertical: standardPadding / 2,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
     height: 30,
     justifyContent: 'center',
   },
