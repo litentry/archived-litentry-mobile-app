@@ -79,7 +79,7 @@ export function PayloadQrCodeView({address, txConfig, onConfirm, onCancel}: Prop
       </View>
       <Padder scale={1} />
       <View style={styles.buttonGroup}>
-        <Button mode="outlined" color={colors.accent} onPress={onCancel}>
+        <Button mode="contained" buttonColor={colors.secondary} textColor={colors.onSecondary} onPress={onCancel}>
           Cancel
         </Button>
         <Padder scale={1} />

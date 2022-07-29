@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
 import {useAccount, Account as SubstrateChainAccount} from 'src/api/hooks/useAccount';
-import {Menu, Divider, TextInput, Text, Icon, useTheme} from '@ui/library';
+import {Menu, Divider, TextInput, Text, Icon} from '@ui/library';
 import globalStyles from '@ui/styles';
 import {AccountTeaser} from './Account/AccountTeaser';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
@@ -21,7 +21,6 @@ export function SelectAccount({onSelect, accounts}: Props) {
   const {networkAccounts} = useAppAccounts();
   const [selectedAccount, setSelectedAccount] = React.useState<SelectedAccount>();
   const [visible, setVisible] = React.useState(false);
-  const {colors} = useTheme();
 
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
@@ -47,7 +46,7 @@ export function SelectAccount({onSelect, accounts}: Props) {
                 {selectedAccount?.accountInfo ? (
                   <AccountTeaser account={selectedAccount.accountInfo} />
                 ) : (
-                  <Text style={[styles.placeholder, {color: colors.placeholder}]}>{`Select account`}</Text>
+                  <Text style={styles.placeholder}>{`Select account`}</Text>
                 )}
                 <Icon name="chevron-down" />
               </TouchableOpacity>
@@ -68,11 +67,9 @@ export function SelectAccount({onSelect, accounts}: Props) {
 }
 
 function EmptyAccounts() {
-  const {colors} = useTheme();
-
   return (
     <View style={globalStyles.paddedContainer}>
-      <Text style={{color: colors.placeholder}}>There are no accounts registered.</Text>
+      <Text>There are no accounts registered.</Text>
     </View>
   );
 }

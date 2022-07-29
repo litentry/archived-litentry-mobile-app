@@ -121,7 +121,7 @@ function Fund({item, active, onPressContribute, navigation}: FundsProps) {
             variant="titleMedium"
             numberOfLines={1}
             adjustsFontSizeToFit
-            style={{color: isSpecial ? colors.primary : colors.text}}>
+            style={{color: isSpecial ? colors.primary : undefined}}>
             {item.name}
           </Text>
           <Padder scale={0.5} />
@@ -136,9 +136,8 @@ function Fund({item, active, onPressContribute, navigation}: FundsProps) {
           {active && (
             <Button
               style={styles.button}
-              mode="outlined"
+              mode={isSpecial ? 'contained' : 'contained-tonal'}
               uppercase={false}
-              color={isSpecial ? colors.primary : colors.placeholder}
               compact
               onPress={onPressContribute}
               testID="crowdloan-contribute-button">

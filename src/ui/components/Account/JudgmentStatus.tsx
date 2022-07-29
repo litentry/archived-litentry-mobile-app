@@ -27,7 +27,7 @@ export function JudgmentStatus({registrationJudgement, hasParent}: Props) {
           <Text variant="bodySmall">{`"${status.text}" provided by Registrar #${registrationJudgement.registrarIndex}`}</Text>
         </View>
       }
-      backgroundColor={colors.accent}>
+      backgroundColor={colors.secondary}>
       <Icon name={status.icon} size={20} color={getIconColor(status.category)} />
     </Popable>
   );

@@ -71,7 +71,7 @@ function Schedule({date, events}: {date: string; events: CalendarEvent[]}) {
           <Padder scale={1} />
           {events.map((event, index) => (
             <View key={index} style={styles.eventRow}>
-              <Text variant="titleMedium" style={{color: colors.accent}}>
+              <Text variant="titleMedium" style={{color: colors.secondary}}>
                 {dayjs(event.date).format(EVENT_TIME_FORMAT)}
               </Text>
               <Padder scale={1} />

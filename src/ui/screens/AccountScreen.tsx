@@ -42,7 +42,7 @@ export function AccountScreen({route}: {route: RouteProp<AppStackParamList, type
                   </View>
                   <Padder scale={1} />
 
-                  <Text variant="bodySmall" style={{color: colors.accent}}>
+                  <Text variant="bodySmall" style={{color: colors.secondary}}>
                     ADDRESS
                   </Text>
                   <View style={[globalStyles.rowContainer]}>
@@ -63,14 +63,14 @@ export function AccountScreen({route}: {route: RouteProp<AppStackParamList, type
             {account?.registration?.judgements?.length ? (
               <Card>
                 <Card.Content>
-                  <Text variant="bodySmall" style={{color: colors.accent}}>
+                  <Text variant="bodySmall" style={{color: colors.secondary}}>
                     JUDGEMENT(S)
                   </Text>
                   <Padder scale={0.5} />
                   {account?.registration?.judgements.map((judgement, i) => (
                     <Text
                       variant="bodySmall"
-                      style={[{backgroundColor: colors.accent}, styles.titleContainer]}
+                      style={[{backgroundColor: colors.secondary}, styles.titleContainer]}
                       key={i}>{`"${
                       mapStatusText(judgement?.judgement ?? {}, Boolean(account?.registration?.displayParent)).text
                     }" provided by Registrar #${judgement?.registrarIndex}`}</Text>
@@ -82,7 +82,7 @@ export function AccountScreen({route}: {route: RouteProp<AppStackParamList, type
             {account?.balance ? (
               <Card>
                 <Card.Content>
-                  <Text variant="bodySmall" style={{color: colors.accent}}>
+                  <Text variant="bodySmall" style={{color: colors.secondary}}>
                     BALANCE
                   </Text>
                   <Padder scale={0.5} />

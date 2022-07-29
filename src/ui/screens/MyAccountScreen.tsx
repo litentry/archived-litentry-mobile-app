@@ -185,8 +185,8 @@ function ActionButton({icon, title, onPress}: ActionButtonProps) {
   const {colors} = useTheme();
   return (
     <View style={styles.iconButton}>
-      <IconButton icon={icon} iconColor={colors.accent} style={styles.icon} onPress={onPress} />
-      <Text variant="bodySmall" style={{color: colors.accent}}>
+      <IconButton icon={icon} iconColor={colors.secondary} style={styles.icon} onPress={onPress} />
+      <Text variant="bodySmall" style={{color: colors.secondary}}>
         {title}
       </Text>
     </View>
@@ -202,7 +202,7 @@ function InfoItem({title, children}: InfoItemProps) {
   const {colors} = useTheme();
   return (
     <View style={styles.infoItem}>
-      <Text variant="bodySmall" style={{color: colors.accent}}>
+      <Text variant="bodySmall" style={{color: colors.secondary}}>
         {title}
       </Text>
       {children}

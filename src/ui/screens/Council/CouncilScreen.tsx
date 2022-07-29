@@ -42,7 +42,7 @@ export function CouncilScreen() {
     <Tab.Navigator
       initialLayout={{width: layout.width}}
       screenOptions={{
-        tabBarLabelStyle: {color: colors.text},
+        tabBarLabelStyle: {color: colors.secondary},
         tabBarItemStyle: {width: 200},
         tabBarStyle: {backgroundColor: colors.background},
       }}>
@@ -395,7 +395,7 @@ function MemberItem({candidate, onSelect, isSelected, order}: MemberItemProps) {
           styles.candidateItemContainer,
           // eslint-disable-next-line react-native/no-inline-styles
           {
-            backgroundColor: isSelected ? colors.accent : 'transparent',
+            backgroundColor: isSelected ? colors.secondary : 'transparent',
           },
         ]}>
         <View style={styles.candidateIdentity}>

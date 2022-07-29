@@ -154,7 +154,7 @@ function AccountItem({account, toggleFavorite, onPress}: AccountItemProps) {
     return (
       <IconButton
         onPress={() => toggleFavorite({address, meta: {...meta, isFavorite: !meta.isFavorite}})}
-        iconColor={meta.isFavorite ? colors.accent : colors.disabled}
+        iconColor={meta.isFavorite ? colors.secondary : colors.secondaryContainer}
         icon={meta.isFavorite ? 'star' : 'star-outline'}
       />
     );

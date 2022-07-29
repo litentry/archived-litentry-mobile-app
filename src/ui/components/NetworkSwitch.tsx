@@ -18,9 +18,9 @@ export function NetworkSwitch({onPress}: Props) {
   return (
     <TouchableOpacity onPress={onPress} style={[styles.networkSwitch, {backgroundColor: colors.background}]}>
       <View style={styles.container}>
-        <Icon name={apiStatus === 'ready' ? 'web' : 'earth-off'} size={16} color={colors.accent} />
+        <Icon name={apiStatus === 'ready' ? 'web' : 'earth-off'} size={16} color={colors.secondary} />
         <Padder scale={0.3} />
-        <Text style={{color: colors.accent}}>{currentNetwork.name}</Text>
+        <Text style={{color: colors.secondary}}>{currentNetwork.name}</Text>
       </View>
     </TouchableOpacity>
   );

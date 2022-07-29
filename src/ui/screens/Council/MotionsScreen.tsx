@@ -227,8 +227,9 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
               return (
                 <Button
                   onPress={() => onVote('Close', motion)}
-                  color={colors.error}
-                  mode="outlined"
+                  buttonColor={colors.error}
+                  textColor={colors.onError}
+                  mode="contained"
                   compact
                   uppercase={false}>
                   {`Close`}
@@ -239,19 +240,15 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
                 <View style={globalStyles.rowAlignCenter}>
                   <Button
                     onPress={() => onVote('Nay', motion)}
-                    color={colors.error}
-                    mode="outlined"
+                    buttonColor={colors.error}
+                    textColor={colors.onError}
+                    mode="contained"
                     compact
                     uppercase={false}>
                     {`Nay`}
                   </Button>
                   <Padder scale={0.5} />
-                  <Button
-                    onPress={() => onVote('Aye', motion)}
-                    color={colors.success}
-                    mode="outlined"
-                    compact
-                    uppercase={false}>
+                  <Button onPress={() => onVote('Aye', motion)} mode="contained" compact uppercase={false}>
                     {`Aye`}
                   </Button>
                 </View>

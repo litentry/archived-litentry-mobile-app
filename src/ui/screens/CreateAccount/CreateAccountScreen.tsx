@@ -9,7 +9,6 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {accountsScreen, createAccountScreen} from '@ui/navigation/routeKeys';
 import {Button, Text, List, TextInput, HelperText} from '@ui/library';
-import {useTheme} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {SecureKeychain} from 'src/service/SecureKeychain';
@@ -32,7 +31,6 @@ export function CreateAccountScreen({
 }) {
   const {mnemonic} = route.params;
 
-  const theme = useTheme();
   const {status: keyboardStatus} = useKeyboardStatus();
   const {currentNetwork} = useNetwork();
 
@@ -107,7 +105,6 @@ export function CreateAccountScreen({
               <TextInput.Icon
                 onPress={() => setIsPasswordVisible(!isPasswordVisible)}
                 name={`${isPasswordVisible ? 'eye' : 'eye-off'}-outline`}
-                color={theme.colors.disabled}
               />
             }
             mode="outlined"

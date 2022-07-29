@@ -22,7 +22,7 @@ export function TreasuryScreen() {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarLabelStyle: {color: colors.text},
+        tabBarLabelStyle: {color: colors.secondary},
         tabBarStyle: {backgroundColor: colors.background},
       }}>
       <Tab.Screen name="Overview" component={TreasuryOverviewScreen} />

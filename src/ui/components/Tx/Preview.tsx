@@ -48,7 +48,7 @@ export function TxPreview({address, txConfig, txInfo, onCancel, onConfirm}: Prop
       <Text>{`Fees of ${txInfo.partialFee / 10 ** 6} micro Unit will be applied to the submission`}</Text>
       <Padder scale={2} />
       <View style={styles.buttonGroup}>
-        <Button mode="outlined" onPress={onCancel} color={colors.accent}>
+        <Button mode="outlined" onPress={onCancel} buttonColor={colors.secondary} textColor={colors.onSecondary}>
           Cancel
         </Button>
         <Padder scale={1} />

@@ -20,9 +20,9 @@ export function ProgressBar(props: Props) {
   return (
     <View style={styles.container}>
       <View
-        style={[styles.barBG, {backgroundColor: colors.disabled}]}
+        style={[styles.barBG, {backgroundColor: colors.secondaryContainer}]}
         onLayout={(e) => setBarW(e.nativeEvent.layout.width)}>
-        <View style={[styles.progressed, {width: `${percentage}%`, backgroundColor: colors.accent}]} />
+        <View style={[styles.progressed, {width: `${percentage}%`, backgroundColor: colors.secondary}]} />
       </View>
       <View style={[styles.requiredContainer, {left}]} onLayout={(e) => setRequiredTextW(e.nativeEvent.layout.width)}>
         <Text style={{color: colors.primary}}>{`${requiredAmount}% required`}</Text>

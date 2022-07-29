@@ -34,7 +34,7 @@ export function ImportAccountScreen() {
     <Tab.Navigator
       initialLayout={{width: layout.width}}
       screenOptions={{
-        tabBarLabelStyle: {color: colors.text},
+        tabBarLabelStyle: {color: colors.secondary},
         tabBarItemStyle: {width: 200},
         tabBarStyle: {backgroundColor: colors.background},
       }}>
@@ -45,7 +45,6 @@ export function ImportAccountScreen() {
 }
 
 function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
-  const theme = useTheme();
   const {status: keyboardStatus} = useKeyboardStatus();
   const {currentNetwork} = useNetwork();
   const [account, setAccountState] = React.useState<Account>({title: '', password: '', confirmPassword: ''});
@@ -125,7 +124,6 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
               <TextInput.Icon
                 onPress={() => setIsPasswordVisible(!isPasswordVisible)}
                 name={`${isPasswordVisible ? 'eye' : 'eye-off'}-outline`}
-                color={theme.colors.disabled}
               />
             }
             error={passwordError}

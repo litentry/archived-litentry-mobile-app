@@ -7,7 +7,7 @@ import DocumentPicker, {DocumentPickerResponse} from 'react-native-document-pick
 import RNFS from 'react-native-fs';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {accountsScreen} from '@ui/navigation/routeKeys';
-import {Button, List, Text, TextInput, useTheme} from '@ui/library';
+import {Button, List, Text, TextInput} from '@ui/library';
 import {Identicon} from '@ui/components/Identicon';
 import {ErrorText} from '@ui/components/ErrorText';
 import {Padder} from '@ui/components/Padder';
@@ -17,7 +17,6 @@ import {useKeyring} from '@polkadotApi/useKeyring';
 import {ErrorPayload} from 'polkadot-api';
 
 export function ImportAccountWithJsonFileScreen({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
-  const theme = useTheme();
   const {currentNetwork} = useNetwork();
   const [jsonContent, setJsonContent] = React.useState<string>();
   const [error, setError] = React.useState<string | undefined>(undefined);
@@ -92,7 +91,6 @@ export function ImportAccountWithJsonFileScreen({navigation}: {navigation: Navig
             <TextInput.Icon
               onPress={() => setIsPasswordVisible(!isPasswordVisible)}
               name={`${isPasswordVisible ? 'eye' : 'eye-off'}-outline`}
-              color={theme.colors.disabled}
             />
           }
         />

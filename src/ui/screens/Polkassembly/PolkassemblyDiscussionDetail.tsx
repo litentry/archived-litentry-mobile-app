@@ -65,7 +65,7 @@ export function PolkassemblyDiscussionDetail({route}: ScreenProps) {
         keyExtractor={(item) => item.id}
         renderItem={({item: comment}) => (
           <View style={styles.comment}>
-            <View style={[styles.commentAuthorIcon, {backgroundColor: colors.accent}]}>
+            <View style={[styles.commentAuthorIcon, {backgroundColor: colors.secondary}]}>
               <Text variant="titleMedium">{comment.author?.username?.[0]?.toUpperCase()}</Text>
             </View>
             <View style={styles.commentRightSide}>

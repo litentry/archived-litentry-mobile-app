@@ -45,7 +45,7 @@ export function useBottomSheet() {
       <RNBottomSheet
         keyboardBehavior="fillParent"
         keyboardBlurBehavior="restore"
-        handleIndicatorStyle={{backgroundColor: colors.accent}}
+        handleIndicatorStyle={{backgroundColor: colors.secondary}}
         handleStyle={{backgroundColor: colors.background}}
         backdropComponent={Backdrop}
         ref={bottomSheetRef}

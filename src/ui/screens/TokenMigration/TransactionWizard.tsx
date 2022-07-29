@@ -87,24 +87,24 @@ function Step({step, state}: {step: WizardStep; state: WizardState}) {
   const {colors} = useTheme();
   const animatedTextStyle = useAnimatedStyle(() => {
     return {
-      color: withTiming(state.value[step].active || state.value[step].done ? colors.surface : colors.accent),
+      color: withTiming(state.value[step].active || state.value[step].done ? colors.surface : colors.secondary),
     };
   });
   const animatedCircleStyles = useAnimatedStyle(() => {
     return {
       backgroundColor: withTiming(
-        state.value[step].active || state.value[step].done ? colors.accent : colors.background,
+        state.value[step].active || state.value[step].done ? colors.secondary : colors.background,
       ),
     };
   });
 
   return (
-    <Animated.View style={[styles.stepContainer, {borderColor: colors.accent}, animatedCircleStyles]}>
+    <Animated.View style={[styles.stepContainer, {borderColor: colors.secondary}, animatedCircleStyles]}>
       {step === WizardStep.Completed ? (
         <Icon
           name="check"
           size={18}
-          color={state.value[WizardStep.Completed].active ? colors.surface : colors.accent}
+          color={state.value[WizardStep.Completed].active ? colors.surface : colors.secondary}
         />
       ) : state.value[step].done ? (
         <Icon name="check" size={18} color={colors.surface} />
@@ -118,7 +118,7 @@ function Step({step, state}: {step: WizardStep; state: WizardState}) {
 function WizardStepDivider() {
   const {colors} = useTheme();
 
-  return <View style={[styles.wizardDivider, [{backgroundColor: colors.disabled}]]} />;
+  return <View style={[styles.wizardDivider, [{backgroundColor: colors.secondaryContainer}]]} />;
 }
 
 const styles = StyleSheet.create({
