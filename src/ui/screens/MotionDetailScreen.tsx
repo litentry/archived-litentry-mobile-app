@@ -2,7 +2,7 @@ import React from 'react';
 import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {Card, Icon, Text, useBottomSheet} from '@ui/library';
+import {Card, Icon, Text, useBottomSheet, Surface, useTheme} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {useNetwork} from '@atoms/network';
 import LoadingView from '@ui/components/LoadingView';
@@ -44,9 +44,13 @@ function VoteItem({type, children}: VoteItemProps) {
 }
 
 export function MotionDetailScreen({route, navigation}: PropTypes) {
+  const {colors, roundness} = useTheme();
   const {openBottomSheet, BottomSheet} = useBottomSheet();
   const {currentNetwork} = useNetwork();
   const {data: motion, loading} = useMotionDetail(route.params.hash);
+  const itemStyles = React.useMemo(() => {
+    return {borderRadius: roundness, borderColor: colors.surfaceVariant, backgroundColor: colors.surface};
+  }, [colors, roundness]);
 
   if (loading && !motion) {
     return <LoadingView />;
@@ -67,7 +71,7 @@ export function MotionDetailScreen({route, navigation}: PropTypes) {
   return (
     <SafeView edges={noTopEdges}>
       <ScrollView style={[globalStyles.paddedContainer, styles.container]}>
-        <Card>
+        <View style={[styles.item, itemStyles]}>
           <Card.Content>
             <View style={globalStyles.spaceBetweenRowContainer}>
               <StatInfoBlock title="ID">{motion?.proposal.index || ''}</StatInfoBlock>
@@ -100,10 +104,10 @@ export function MotionDetailScreen({route, navigation}: PropTypes) {
               )}
             </StatInfoBlock>
           </Card.Content>
-        </Card>
+        </View>
         <Padder scale={0.3} />
         <View style={globalStyles.spaceBetweenRowContainer}>
-          <Card style={[styles.item, styles.left]}>
+          <View style={[styles.item, itemStyles]}>
             <Card.Content>
               <StatInfoBlock title="Section">
                 {
@@ -115,20 +119,19 @@ export function MotionDetailScreen({route, navigation}: PropTypes) {
               <Padder scale={0.5} />
               <StatInfoBlock title="Method">{proposal.method}</StatInfoBlock>
             </Card.Content>
-          </Card>
-          <Card style={[styles.item, styles.right]}>
+          </View>
+          <Padder scale={0.3} />
+          <View style={[styles.item, itemStyles]}>
             <Card.Content>
-              <View>
-                <Text variant="bodySmall">Votes</Text>
-                <Text variant="titleMedium" style={globalStyles.aye}>
-                  {`Aye (${votes?.ayes?.length}/${motion?.votes?.threshold})`}
-                </Text>
-                <Text variant="titleMedium" style={globalStyles.nay}>
-                  {`Nay (${votes?.nays?.length}/${motion?.votes?.threshold})`}
-                </Text>
-              </View>
+              <Text variant="bodySmall">Votes</Text>
+              <Text variant="titleMedium" style={globalStyles.aye}>
+                {`Aye (${votes?.ayes?.length}/${motion?.votes?.threshold})`}
+              </Text>
+              <Text variant="titleMedium" style={globalStyles.nay}>
+                {`Nay (${votes?.nays?.length}/${motion?.votes?.threshold})`}
+              </Text>
             </Card.Content>
-          </Card>
+          </View>
         </View>
         {motion?.votes ? (
           <View style={styles.votesContainer}>
@@ -196,6 +199,8 @@ const styles = StyleSheet.create({
   },
   item: {
     flex: 1,
+    borderWidth: 1,
+    padding: standardPadding,
   },
   left: {
     marginRight: 2,

@@ -110,18 +110,18 @@ function Fund({item, active, onPressContribute, navigation}: FundsProps) {
 
   return (
     <Card
-      mode={isSpecial ? 'elevated' : 'outlined'}
+      mode={isSpecial ? 'contained' : 'elevated'}
       style={styles.fund}
       onPress={() => {
         navigation.navigate(crowdloanFundDetailScreen, {title: item.name ?? `# ${item.paraId}`, paraId: item.paraId});
       }}>
-      <View style={[globalStyles.rowAlignCenter]}>
+      <Card.Content style={[globalStyles.rowAlignCenter]}>
         <View style={styles.shrink}>
           <Text
             variant="titleMedium"
             numberOfLines={1}
             adjustsFontSizeToFit
-            style={{color: isSpecial ? colors.primary : undefined}}>
+            style={{color: isSpecial ? colors.primary : colors.onSurface}}>
             {item.name}
           </Text>
           <Padder scale={0.5} />
@@ -145,7 +145,7 @@ function Fund({item, active, onPressContribute, navigation}: FundsProps) {
             </Button>
           )}
         </View>
-      </View>
+      </Card.Content>
     </Card>
   );
 }

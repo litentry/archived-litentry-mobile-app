@@ -15,7 +15,7 @@ function StatInfoBlock(props: PropTypes) {
 
   return (
     <View testID={testID}>
-      <Text variant="bodySmall">{title}</Text>
+      <Text variant="bodyMedium">{title}</Text>
       {isString(children) ? (
         <Text variant="bodySmall" style={styles.stat}>
           {children}

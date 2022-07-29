@@ -132,7 +132,7 @@ export function ReferendumScreen({route}: {route: RouteProp<DashboardStackParamL
           <Padder scale={0.5} />
           <Divider />
           <View style={styles.row}>
-            <Button mode="contained" icon="alert-circle-outline" onPress={voteNo}>
+            <Button mode="contained-tonal" icon="alert-circle-outline" onPress={voteNo}>
               {`Vote No`}
             </Button>
             <Button mode="contained" icon="check" onPress={voteYes}>

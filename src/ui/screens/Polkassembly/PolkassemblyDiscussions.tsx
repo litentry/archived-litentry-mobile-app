@@ -61,7 +61,8 @@ export function PolkassemblyDiscussions({navigation}: ScreenProps) {
           data={flatten(data?.pages)}
           stickyHeaderIndices={[0]}
           ListHeaderComponent={
-            <View style={[globalStyles.rowAlignCenter, styles.menuContainer, {backgroundColor: colors.primary}]}>
+            <View
+              style={[globalStyles.rowAlignCenter, styles.menuContainer, {backgroundColor: colors.primaryContainer}]}>
               <Menu
                 visible={sortMenuVisible}
                 onDismiss={() => {
