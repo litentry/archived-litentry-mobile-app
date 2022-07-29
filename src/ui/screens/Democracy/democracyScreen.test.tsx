@@ -18,7 +18,6 @@ test('democracy referendums renders data correctly', async () => {
   const {findByText} = render(<Referendums navigation={navigation} />);
 
   await findByText('215');
-  await findByText('11 days ago | Started');
   await findByText('Removal of eighteen (18) proposals on the public referenda queue');
   await findByText('Aye:');
   await findByText('4,185.1669 KSM');
@@ -45,7 +44,6 @@ test('democracy proposals renders data correctly', async () => {
   const {findByText} = render(<Proposals navigation={navigation} />);
 
   await findByText('96');
-  await findByText('19 days ago | Proposed');
   await findByText('Untitled - public proposal #96');
   await findByText('Deposit:');
   await findByText('0.0050 KSM');
