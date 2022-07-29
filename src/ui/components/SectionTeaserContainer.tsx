@@ -17,7 +17,7 @@ const TitleRight = () => (
 
 export function SectionTeaserContainer({children, title, onPress}: Props) {
   return (
-    <Card onPress={onPress} style={styles.container}>
+    <Card onPress={onPress}>
       <Card.Title title={title} right={TitleRight} />
       <Card.Content>{children}</Card.Content>
     </Card>
@@ -25,9 +25,6 @@ export function SectionTeaserContainer({children, title, onPress}: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    borderRadius: 10,
-  },
   icon: {
     marginRight: standardPadding,
   },
