@@ -28,8 +28,8 @@ export function DemocracyProposalDetailScreen({route}: ScreenProps) {
   const {colors} = useTheme();
   const {data: proposal, loading} = useDemocracyProposal(route.params.id);
   const [fullDescription, setFulDescription] = React.useState(false);
-  const [showSeconds, setShowSeconds] = React.useState(false);
-  const [secondModalOpen, setSecondModalOpen] = React.useState(false);
+  const [showEndorsed, setShowEndorsed] = React.useState(false);
+  const [endorseModalOpen, setEndorseModalOpen] = React.useState(false);
 
   const [voteAccount, setVoteAccount] = React.useState<Account>();
 
@@ -37,18 +37,18 @@ export function DemocracyProposalDetailScreen({route}: ScreenProps) {
     setFulDescription(!fullDescription);
   }, [fullDescription]);
 
-  const toggleSecondsModal = React.useCallback(() => {
-    setSecondModalOpen(!secondModalOpen);
-  }, [secondModalOpen]);
+  const toggleEndorseModal = React.useCallback(() => {
+    setEndorseModalOpen(!endorseModalOpen);
+  }, [endorseModalOpen]);
 
-  const resetSecondsModal = React.useCallback(() => {
-    setSecondModalOpen(false);
+  const resetEndorseModal = React.useCallback(() => {
+    setEndorseModalOpen(false);
     setVoteAccount(undefined);
   }, []);
 
   const toggleSecondsVisibility = React.useCallback(() => {
-    setShowSeconds(!showSeconds);
-  }, [showSeconds]);
+    setShowEndorsed(!showEndorsed);
+  }, [showEndorsed]);
 
   const second = React.useCallback(async () => {
     if (voteAccount && proposal) {
@@ -62,9 +62,9 @@ export function DemocracyProposalDetailScreen({route}: ScreenProps) {
           params: argsLength === 2 ? [proposalIndexAsString, proposal.seconds.length] : [proposalIndexAsString],
         },
       });
-      resetSecondsModal();
+      resetEndorseModal();
     }
-  }, [startTx, proposal, voteAccount, getTxMethodArgsLength, resetSecondsModal]);
+  }, [startTx, proposal, voteAccount, getTxMethodArgsLength, resetEndorseModal]);
 
   return (
     <SafeView edges={noTopEdges}>
@@ -106,10 +106,10 @@ export function DemocracyProposalDetailScreen({route}: ScreenProps) {
             <>
               <Padder />
               <TouchableOpacity onPress={toggleSecondsVisibility} style={globalStyles.rowAlignCenter}>
-                <Subheading>{`Seconds (${proposal.seconds.length})`}</Subheading>
-                <Icon name={showSeconds ? 'chevron-up' : 'chevron-down'} size={25} color="grey" />
+                <Subheading>{`Endorsed (${proposal.seconds.length})`}</Subheading>
+                <Icon name={showEndorsed ? 'chevron-up' : 'chevron-down'} size={25} color="grey" />
               </TouchableOpacity>
-              {showSeconds ? (
+              {showEndorsed ? (
                 <>
                   <Padder scale={0.5} />
                   <View style={styles.secondItem}>
@@ -126,15 +126,15 @@ export function DemocracyProposalDetailScreen({route}: ScreenProps) {
           ) : null}
 
           <Padder scale={2} />
-          <Button mode="contained" onPress={toggleSecondsModal}>
-            {`Second`}
+          <Button mode="contained" onPress={toggleEndorseModal}>
+            {`Endorse`}
           </Button>
           <Padder scale={2} />
         </ScrollView>
       ) : null}
 
-      <Modal visible={secondModalOpen} onDismiss={resetSecondsModal}>
-        <Caption>{`Vote with account`}</Caption>
+      <Modal visible={endorseModalOpen} onDismiss={resetEndorseModal}>
+        <Caption>{`Endorse with account`}</Caption>
         <SelectAccount
           onSelect={(account) => {
             setVoteAccount(account.accountInfo);
@@ -146,12 +146,12 @@ export function DemocracyProposalDetailScreen({route}: ScreenProps) {
 
         <Padder scale={2} />
         <View style={globalStyles.spaceAroundRowContainer}>
-          <Button onPress={resetSecondsModal} mode="outlined">
+          <Button onPress={resetEndorseModal} mode="outlined">
             {`Cancel`}
           </Button>
           <Padder scale={1} />
           <Button mode="outlined" disabled={!voteAccount} onPress={second}>
-            {`Second`}
+            {`Endorse`}
           </Button>
         </View>
       </Modal>
