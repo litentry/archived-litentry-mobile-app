@@ -67,7 +67,9 @@ const globalStyles = StyleSheet.create({
   dialogMinHeight: {
     minHeight: 240,
   },
-  flex: {flex: 1},
+  flex: {
+    flex: 1,
+  },
   backdrop: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
@@ -96,6 +98,9 @@ const globalStyles = StyleSheet.create({
   },
   textCenter: {
     textAlign: 'center',
+  },
+  textJustify: {
+    textAlign: 'justify',
   },
 });
 
