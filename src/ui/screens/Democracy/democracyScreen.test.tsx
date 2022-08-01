@@ -35,11 +35,6 @@ test('democracy proposals loading view', () => {
   expect(getByTestId('loading_view')).toBeTruthy();
 });
 
-test('democracy referendums loading view', () => {
-  const {getByTestId} = render(<Referendums navigation={navigation} />);
-  expect(getByTestId('loading_view')).toBeTruthy();
-});
-
 test('democracy proposals renders data correctly', async () => {
   const {findByText} = render(<Proposals navigation={navigation} />);
 
