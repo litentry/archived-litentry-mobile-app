@@ -20,8 +20,6 @@ import {useNetwork} from '@atoms/network';
 // init type registry
 import 'src/typeRegistry';
 
-const queryClient = new QueryClient();
-
 function MainApp() {
   return <AppNavigator />;
 }
@@ -51,26 +49,22 @@ export default function App() {
 
   return (
     <RecoilRoot>
-      <LitentryApiClientProvider>
-        <QueryClientProvider client={queryClient}>
-          <NavigationContainer>
-            <SafeAreaProvider>
-              <ThemeProvider>
-                <InAppNotificationContextProvider>
-                  <ErrorBoundary>
-                    <TxProvider>
-                      <SnackbarProvider>
-                        <LitentryApps />
-                        <PolkadotApiWebView />
-                      </SnackbarProvider>
-                    </TxProvider>
-                  </ErrorBoundary>
-                </InAppNotificationContextProvider>
-              </ThemeProvider>
-            </SafeAreaProvider>
-          </NavigationContainer>
-        </QueryClientProvider>
-      </LitentryApiClientProvider>
+      <NavigationContainer>
+        <SafeAreaProvider>
+          <ThemeProvider>
+            <InAppNotificationContextProvider>
+              <ErrorBoundary>
+                <TxProvider>
+                  <SnackbarProvider>
+                    <LitentryApps />
+                    <PolkadotApiWebView />
+                  </SnackbarProvider>
+                </TxProvider>
+              </ErrorBoundary>
+            </InAppNotificationContextProvider>
+          </ThemeProvider>
+        </SafeAreaProvider>
+      </NavigationContainer>
     </RecoilRoot>
   );
 }
