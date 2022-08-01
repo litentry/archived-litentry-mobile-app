@@ -1016,6 +1016,16 @@ export type Query = {
   substrateBalanceAccountByUniqueInput?: Maybe<SubstrateBalanceAccount>;
   substrateBalanceAccounts: Array<SubstrateBalanceAccount>;
   substrateBalanceAccountsConnection: SubstrateBalanceAccountsConnection;
+  substrateBalanceDepositById?: Maybe<SubstrateBalanceDeposit>;
+  /** @deprecated Use `substrateBalanceDepositById` */
+  substrateBalanceDepositByUniqueInput?: Maybe<SubstrateBalanceDeposit>;
+  substrateBalanceDeposits: Array<SubstrateBalanceDeposit>;
+  substrateBalanceDepositsConnection: SubstrateBalanceDepositsConnection;
+  substrateBalanceEndowedById?: Maybe<SubstrateBalanceEndowed>;
+  /** @deprecated Use `substrateBalanceEndowedById` */
+  substrateBalanceEndowedByUniqueInput?: Maybe<SubstrateBalanceEndowed>;
+  substrateBalanceEndoweds: Array<SubstrateBalanceEndowed>;
+  substrateBalanceEndowedsConnection: SubstrateBalanceEndowedsConnection;
   substrateBalanceSetById?: Maybe<SubstrateBalanceSet>;
   /** @deprecated Use `substrateBalanceSetById` */
   substrateBalanceSetByUniqueInput?: Maybe<SubstrateBalanceSet>;
@@ -1203,6 +1213,50 @@ export type QuerySubstrateBalanceAccountsConnectionArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy: Array<SubstrateBalanceAccountOrderByInput>;
   where?: InputMaybe<SubstrateBalanceAccountWhereInput>;
+};
+
+export type QuerySubstrateBalanceDepositByIdArgs = {
+  id: Scalars['ID'];
+};
+
+export type QuerySubstrateBalanceDepositByUniqueInputArgs = {
+  where: SubstrateBalanceDepositWhereUniqueInput;
+};
+
+export type QuerySubstrateBalanceDepositsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<InputMaybe<SubstrateBalanceDepositOrderByInput>>>;
+  where?: InputMaybe<SubstrateBalanceDepositWhereInput>;
+};
+
+export type QuerySubstrateBalanceDepositsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy: Array<SubstrateBalanceDepositOrderByInput>;
+  where?: InputMaybe<SubstrateBalanceDepositWhereInput>;
+};
+
+export type QuerySubstrateBalanceEndowedByIdArgs = {
+  id: Scalars['ID'];
+};
+
+export type QuerySubstrateBalanceEndowedByUniqueInputArgs = {
+  where: SubstrateBalanceEndowedWhereUniqueInput;
+};
+
+export type QuerySubstrateBalanceEndowedsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<InputMaybe<SubstrateBalanceEndowedOrderByInput>>>;
+  where?: InputMaybe<SubstrateBalanceEndowedWhereInput>;
+};
+
+export type QuerySubstrateBalanceEndowedsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy: Array<SubstrateBalanceEndowedOrderByInput>;
+  where?: InputMaybe<SubstrateBalanceEndowedWhereInput>;
 };
 
 export type QuerySubstrateBalanceSetByIdArgs = {
@@ -1780,6 +1834,349 @@ export type SubstrateBalanceAccountWhereUniqueInput = {
 export type SubstrateBalanceAccountsConnection = {
   __typename?: 'SubstrateBalanceAccountsConnection';
   edges: Array<SubstrateBalanceAccountEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type SubstrateBalanceDeposit = {
+  __typename?: 'SubstrateBalanceDeposit';
+  amount: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
+  date: Scalars['DateTime'];
+  decimals: Scalars['Int'];
+  depositee: SubstrateBalanceAccount;
+  depositor: SubstrateBalanceAccount;
+  /** network:block:index */
+  id: Scalars['ID'];
+  network: SubstrateNetwork;
+  symbol: Scalars['String'];
+};
+
+export type SubstrateBalanceDepositEdge = {
+  __typename?: 'SubstrateBalanceDepositEdge';
+  cursor: Scalars['String'];
+  node: SubstrateBalanceDeposit;
+};
+
+export enum SubstrateBalanceDepositOrderByInput {
+  AmountAsc = 'amount_ASC',
+  AmountDesc = 'amount_DESC',
+  BlockNumberAsc = 'blockNumber_ASC',
+  BlockNumberDesc = 'blockNumber_DESC',
+  DateAsc = 'date_ASC',
+  DateDesc = 'date_DESC',
+  DecimalsAsc = 'decimals_ASC',
+  DecimalsDesc = 'decimals_DESC',
+  DepositeeAccountAsc = 'depositee_account_ASC',
+  DepositeeAccountDesc = 'depositee_account_DESC',
+  DepositeeBalanceAsc = 'depositee_balance_ASC',
+  DepositeeBalanceDesc = 'depositee_balance_DESC',
+  DepositeeDecimalsAsc = 'depositee_decimals_ASC',
+  DepositeeDecimalsDesc = 'depositee_decimals_DESC',
+  DepositeeFirstTransferInBlockNumberAsc = 'depositee_firstTransferInBlockNumber_ASC',
+  DepositeeFirstTransferInBlockNumberDesc = 'depositee_firstTransferInBlockNumber_DESC',
+  DepositeeFirstTransferInDateAsc = 'depositee_firstTransferInDate_ASC',
+  DepositeeFirstTransferInDateDesc = 'depositee_firstTransferInDate_DESC',
+  DepositeeFirstTransferOutBlockNumberAsc = 'depositee_firstTransferOutBlockNumber_ASC',
+  DepositeeFirstTransferOutBlockNumberDesc = 'depositee_firstTransferOutBlockNumber_DESC',
+  DepositeeFirstTransferOutDateAsc = 'depositee_firstTransferOutDate_ASC',
+  DepositeeFirstTransferOutDateDesc = 'depositee_firstTransferOutDate_DESC',
+  DepositeeIdAsc = 'depositee_id_ASC',
+  DepositeeIdDesc = 'depositee_id_DESC',
+  DepositeeLastTransferInBlockNumberAsc = 'depositee_lastTransferInBlockNumber_ASC',
+  DepositeeLastTransferInBlockNumberDesc = 'depositee_lastTransferInBlockNumber_DESC',
+  DepositeeLastTransferInDateAsc = 'depositee_lastTransferInDate_ASC',
+  DepositeeLastTransferInDateDesc = 'depositee_lastTransferInDate_DESC',
+  DepositeeLastTransferOutBlockNumberAsc = 'depositee_lastTransferOutBlockNumber_ASC',
+  DepositeeLastTransferOutBlockNumberDesc = 'depositee_lastTransferOutBlockNumber_DESC',
+  DepositeeLastTransferOutDateAsc = 'depositee_lastTransferOutDate_ASC',
+  DepositeeLastTransferOutDateDesc = 'depositee_lastTransferOutDate_DESC',
+  DepositeeNetworkAsc = 'depositee_network_ASC',
+  DepositeeNetworkDesc = 'depositee_network_DESC',
+  DepositeeRootAccountAsc = 'depositee_rootAccount_ASC',
+  DepositeeRootAccountDesc = 'depositee_rootAccount_DESC',
+  DepositeeSymbolAsc = 'depositee_symbol_ASC',
+  DepositeeSymbolDesc = 'depositee_symbol_DESC',
+  DepositeeTotalTransfersAsc = 'depositee_totalTransfers_ASC',
+  DepositeeTotalTransfersDesc = 'depositee_totalTransfers_DESC',
+  DepositorAccountAsc = 'depositor_account_ASC',
+  DepositorAccountDesc = 'depositor_account_DESC',
+  DepositorBalanceAsc = 'depositor_balance_ASC',
+  DepositorBalanceDesc = 'depositor_balance_DESC',
+  DepositorDecimalsAsc = 'depositor_decimals_ASC',
+  DepositorDecimalsDesc = 'depositor_decimals_DESC',
+  DepositorFirstTransferInBlockNumberAsc = 'depositor_firstTransferInBlockNumber_ASC',
+  DepositorFirstTransferInBlockNumberDesc = 'depositor_firstTransferInBlockNumber_DESC',
+  DepositorFirstTransferInDateAsc = 'depositor_firstTransferInDate_ASC',
+  DepositorFirstTransferInDateDesc = 'depositor_firstTransferInDate_DESC',
+  DepositorFirstTransferOutBlockNumberAsc = 'depositor_firstTransferOutBlockNumber_ASC',
+  DepositorFirstTransferOutBlockNumberDesc = 'depositor_firstTransferOutBlockNumber_DESC',
+  DepositorFirstTransferOutDateAsc = 'depositor_firstTransferOutDate_ASC',
+  DepositorFirstTransferOutDateDesc = 'depositor_firstTransferOutDate_DESC',
+  DepositorIdAsc = 'depositor_id_ASC',
+  DepositorIdDesc = 'depositor_id_DESC',
+  DepositorLastTransferInBlockNumberAsc = 'depositor_lastTransferInBlockNumber_ASC',
+  DepositorLastTransferInBlockNumberDesc = 'depositor_lastTransferInBlockNumber_DESC',
+  DepositorLastTransferInDateAsc = 'depositor_lastTransferInDate_ASC',
+  DepositorLastTransferInDateDesc = 'depositor_lastTransferInDate_DESC',
+  DepositorLastTransferOutBlockNumberAsc = 'depositor_lastTransferOutBlockNumber_ASC',
+  DepositorLastTransferOutBlockNumberDesc = 'depositor_lastTransferOutBlockNumber_DESC',
+  DepositorLastTransferOutDateAsc = 'depositor_lastTransferOutDate_ASC',
+  DepositorLastTransferOutDateDesc = 'depositor_lastTransferOutDate_DESC',
+  DepositorNetworkAsc = 'depositor_network_ASC',
+  DepositorNetworkDesc = 'depositor_network_DESC',
+  DepositorRootAccountAsc = 'depositor_rootAccount_ASC',
+  DepositorRootAccountDesc = 'depositor_rootAccount_DESC',
+  DepositorSymbolAsc = 'depositor_symbol_ASC',
+  DepositorSymbolDesc = 'depositor_symbol_DESC',
+  DepositorTotalTransfersAsc = 'depositor_totalTransfers_ASC',
+  DepositorTotalTransfersDesc = 'depositor_totalTransfers_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  NetworkAsc = 'network_ASC',
+  NetworkDesc = 'network_DESC',
+  SymbolAsc = 'symbol_ASC',
+  SymbolDesc = 'symbol_DESC',
+}
+
+export type SubstrateBalanceDepositWhereInput = {
+  AND?: InputMaybe<Array<SubstrateBalanceDepositWhereInput>>;
+  OR?: InputMaybe<Array<SubstrateBalanceDepositWhereInput>>;
+  amount_eq?: InputMaybe<Scalars['BigInt']>;
+  amount_gt?: InputMaybe<Scalars['BigInt']>;
+  amount_gte?: InputMaybe<Scalars['BigInt']>;
+  amount_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  amount_lt?: InputMaybe<Scalars['BigInt']>;
+  amount_lte?: InputMaybe<Scalars['BigInt']>;
+  amount_not_eq?: InputMaybe<Scalars['BigInt']>;
+  amount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  blockNumber_eq?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_gt?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_gte?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  blockNumber_lt?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_lte?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_not_eq?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  date_eq?: InputMaybe<Scalars['DateTime']>;
+  date_gt?: InputMaybe<Scalars['DateTime']>;
+  date_gte?: InputMaybe<Scalars['DateTime']>;
+  date_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  date_lt?: InputMaybe<Scalars['DateTime']>;
+  date_lte?: InputMaybe<Scalars['DateTime']>;
+  date_not_eq?: InputMaybe<Scalars['DateTime']>;
+  date_not_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  decimals_eq?: InputMaybe<Scalars['Int']>;
+  decimals_gt?: InputMaybe<Scalars['Int']>;
+  decimals_gte?: InputMaybe<Scalars['Int']>;
+  decimals_in?: InputMaybe<Array<Scalars['Int']>>;
+  decimals_lt?: InputMaybe<Scalars['Int']>;
+  decimals_lte?: InputMaybe<Scalars['Int']>;
+  decimals_not_eq?: InputMaybe<Scalars['Int']>;
+  decimals_not_in?: InputMaybe<Array<Scalars['Int']>>;
+  depositee?: InputMaybe<SubstrateBalanceAccountWhereInput>;
+  depositor?: InputMaybe<SubstrateBalanceAccountWhereInput>;
+  id_contains?: InputMaybe<Scalars['ID']>;
+  id_endsWith?: InputMaybe<Scalars['ID']>;
+  id_eq?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not_contains?: InputMaybe<Scalars['ID']>;
+  id_not_endsWith?: InputMaybe<Scalars['ID']>;
+  id_not_eq?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_not_startsWith?: InputMaybe<Scalars['ID']>;
+  id_startsWith?: InputMaybe<Scalars['ID']>;
+  network_eq?: InputMaybe<SubstrateNetwork>;
+  network_in?: InputMaybe<Array<SubstrateNetwork>>;
+  network_not_eq?: InputMaybe<SubstrateNetwork>;
+  network_not_in?: InputMaybe<Array<SubstrateNetwork>>;
+  symbol_contains?: InputMaybe<Scalars['String']>;
+  symbol_endsWith?: InputMaybe<Scalars['String']>;
+  symbol_eq?: InputMaybe<Scalars['String']>;
+  symbol_gt?: InputMaybe<Scalars['String']>;
+  symbol_gte?: InputMaybe<Scalars['String']>;
+  symbol_in?: InputMaybe<Array<Scalars['String']>>;
+  symbol_lt?: InputMaybe<Scalars['String']>;
+  symbol_lte?: InputMaybe<Scalars['String']>;
+  symbol_not_contains?: InputMaybe<Scalars['String']>;
+  symbol_not_endsWith?: InputMaybe<Scalars['String']>;
+  symbol_not_eq?: InputMaybe<Scalars['String']>;
+  symbol_not_in?: InputMaybe<Array<Scalars['String']>>;
+  symbol_not_startsWith?: InputMaybe<Scalars['String']>;
+  symbol_startsWith?: InputMaybe<Scalars['String']>;
+};
+
+export type SubstrateBalanceDepositWhereUniqueInput = {
+  id: Scalars['ID'];
+};
+
+export type SubstrateBalanceDepositsConnection = {
+  __typename?: 'SubstrateBalanceDepositsConnection';
+  edges: Array<SubstrateBalanceDepositEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type SubstrateBalanceEndowed = {
+  __typename?: 'SubstrateBalanceEndowed';
+  account: SubstrateBalanceAccount;
+  accountBalanceAtBlock: Scalars['BigInt'];
+  amount: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
+  date: Scalars['DateTime'];
+  decimals: Scalars['Int'];
+  /** network:block:index */
+  id: Scalars['ID'];
+  network: SubstrateNetwork;
+  symbol: Scalars['String'];
+};
+
+export type SubstrateBalanceEndowedEdge = {
+  __typename?: 'SubstrateBalanceEndowedEdge';
+  cursor: Scalars['String'];
+  node: SubstrateBalanceEndowed;
+};
+
+export enum SubstrateBalanceEndowedOrderByInput {
+  AccountBalanceAtBlockAsc = 'accountBalanceAtBlock_ASC',
+  AccountBalanceAtBlockDesc = 'accountBalanceAtBlock_DESC',
+  AccountAccountAsc = 'account_account_ASC',
+  AccountAccountDesc = 'account_account_DESC',
+  AccountBalanceAsc = 'account_balance_ASC',
+  AccountBalanceDesc = 'account_balance_DESC',
+  AccountDecimalsAsc = 'account_decimals_ASC',
+  AccountDecimalsDesc = 'account_decimals_DESC',
+  AccountFirstTransferInBlockNumberAsc = 'account_firstTransferInBlockNumber_ASC',
+  AccountFirstTransferInBlockNumberDesc = 'account_firstTransferInBlockNumber_DESC',
+  AccountFirstTransferInDateAsc = 'account_firstTransferInDate_ASC',
+  AccountFirstTransferInDateDesc = 'account_firstTransferInDate_DESC',
+  AccountFirstTransferOutBlockNumberAsc = 'account_firstTransferOutBlockNumber_ASC',
+  AccountFirstTransferOutBlockNumberDesc = 'account_firstTransferOutBlockNumber_DESC',
+  AccountFirstTransferOutDateAsc = 'account_firstTransferOutDate_ASC',
+  AccountFirstTransferOutDateDesc = 'account_firstTransferOutDate_DESC',
+  AccountIdAsc = 'account_id_ASC',
+  AccountIdDesc = 'account_id_DESC',
+  AccountLastTransferInBlockNumberAsc = 'account_lastTransferInBlockNumber_ASC',
+  AccountLastTransferInBlockNumberDesc = 'account_lastTransferInBlockNumber_DESC',
+  AccountLastTransferInDateAsc = 'account_lastTransferInDate_ASC',
+  AccountLastTransferInDateDesc = 'account_lastTransferInDate_DESC',
+  AccountLastTransferOutBlockNumberAsc = 'account_lastTransferOutBlockNumber_ASC',
+  AccountLastTransferOutBlockNumberDesc = 'account_lastTransferOutBlockNumber_DESC',
+  AccountLastTransferOutDateAsc = 'account_lastTransferOutDate_ASC',
+  AccountLastTransferOutDateDesc = 'account_lastTransferOutDate_DESC',
+  AccountNetworkAsc = 'account_network_ASC',
+  AccountNetworkDesc = 'account_network_DESC',
+  AccountRootAccountAsc = 'account_rootAccount_ASC',
+  AccountRootAccountDesc = 'account_rootAccount_DESC',
+  AccountSymbolAsc = 'account_symbol_ASC',
+  AccountSymbolDesc = 'account_symbol_DESC',
+  AccountTotalTransfersAsc = 'account_totalTransfers_ASC',
+  AccountTotalTransfersDesc = 'account_totalTransfers_DESC',
+  AmountAsc = 'amount_ASC',
+  AmountDesc = 'amount_DESC',
+  BlockNumberAsc = 'blockNumber_ASC',
+  BlockNumberDesc = 'blockNumber_DESC',
+  DateAsc = 'date_ASC',
+  DateDesc = 'date_DESC',
+  DecimalsAsc = 'decimals_ASC',
+  DecimalsDesc = 'decimals_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  NetworkAsc = 'network_ASC',
+  NetworkDesc = 'network_DESC',
+  SymbolAsc = 'symbol_ASC',
+  SymbolDesc = 'symbol_DESC',
+}
+
+export type SubstrateBalanceEndowedWhereInput = {
+  AND?: InputMaybe<Array<SubstrateBalanceEndowedWhereInput>>;
+  OR?: InputMaybe<Array<SubstrateBalanceEndowedWhereInput>>;
+  account?: InputMaybe<SubstrateBalanceAccountWhereInput>;
+  accountBalanceAtBlock_eq?: InputMaybe<Scalars['BigInt']>;
+  accountBalanceAtBlock_gt?: InputMaybe<Scalars['BigInt']>;
+  accountBalanceAtBlock_gte?: InputMaybe<Scalars['BigInt']>;
+  accountBalanceAtBlock_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  accountBalanceAtBlock_lt?: InputMaybe<Scalars['BigInt']>;
+  accountBalanceAtBlock_lte?: InputMaybe<Scalars['BigInt']>;
+  accountBalanceAtBlock_not_eq?: InputMaybe<Scalars['BigInt']>;
+  accountBalanceAtBlock_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  amount_eq?: InputMaybe<Scalars['BigInt']>;
+  amount_gt?: InputMaybe<Scalars['BigInt']>;
+  amount_gte?: InputMaybe<Scalars['BigInt']>;
+  amount_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  amount_lt?: InputMaybe<Scalars['BigInt']>;
+  amount_lte?: InputMaybe<Scalars['BigInt']>;
+  amount_not_eq?: InputMaybe<Scalars['BigInt']>;
+  amount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  blockNumber_eq?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_gt?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_gte?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  blockNumber_lt?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_lte?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_not_eq?: InputMaybe<Scalars['BigInt']>;
+  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  date_eq?: InputMaybe<Scalars['DateTime']>;
+  date_gt?: InputMaybe<Scalars['DateTime']>;
+  date_gte?: InputMaybe<Scalars['DateTime']>;
+  date_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  date_lt?: InputMaybe<Scalars['DateTime']>;
+  date_lte?: InputMaybe<Scalars['DateTime']>;
+  date_not_eq?: InputMaybe<Scalars['DateTime']>;
+  date_not_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  decimals_eq?: InputMaybe<Scalars['Int']>;
+  decimals_gt?: InputMaybe<Scalars['Int']>;
+  decimals_gte?: InputMaybe<Scalars['Int']>;
+  decimals_in?: InputMaybe<Array<Scalars['Int']>>;
+  decimals_lt?: InputMaybe<Scalars['Int']>;
+  decimals_lte?: InputMaybe<Scalars['Int']>;
+  decimals_not_eq?: InputMaybe<Scalars['Int']>;
+  decimals_not_in?: InputMaybe<Array<Scalars['Int']>>;
+  id_contains?: InputMaybe<Scalars['ID']>;
+  id_endsWith?: InputMaybe<Scalars['ID']>;
+  id_eq?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not_contains?: InputMaybe<Scalars['ID']>;
+  id_not_endsWith?: InputMaybe<Scalars['ID']>;
+  id_not_eq?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_not_startsWith?: InputMaybe<Scalars['ID']>;
+  id_startsWith?: InputMaybe<Scalars['ID']>;
+  network_eq?: InputMaybe<SubstrateNetwork>;
+  network_in?: InputMaybe<Array<SubstrateNetwork>>;
+  network_not_eq?: InputMaybe<SubstrateNetwork>;
+  network_not_in?: InputMaybe<Array<SubstrateNetwork>>;
+  symbol_contains?: InputMaybe<Scalars['String']>;
+  symbol_endsWith?: InputMaybe<Scalars['String']>;
+  symbol_eq?: InputMaybe<Scalars['String']>;
+  symbol_gt?: InputMaybe<Scalars['String']>;
+  symbol_gte?: InputMaybe<Scalars['String']>;
+  symbol_in?: InputMaybe<Array<Scalars['String']>>;
+  symbol_lt?: InputMaybe<Scalars['String']>;
+  symbol_lte?: InputMaybe<Scalars['String']>;
+  symbol_not_contains?: InputMaybe<Scalars['String']>;
+  symbol_not_endsWith?: InputMaybe<Scalars['String']>;
+  symbol_not_eq?: InputMaybe<Scalars['String']>;
+  symbol_not_in?: InputMaybe<Array<Scalars['String']>>;
+  symbol_not_startsWith?: InputMaybe<Scalars['String']>;
+  symbol_startsWith?: InputMaybe<Scalars['String']>;
+};
+
+export type SubstrateBalanceEndowedWhereUniqueInput = {
+  id: Scalars['ID'];
+};
+
+export type SubstrateBalanceEndowedsConnection = {
+  __typename?: 'SubstrateBalanceEndowedsConnection';
+  edges: Array<SubstrateBalanceEndowedEdge>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -3046,6 +3443,8 @@ export type SubstrateCrowdloanContributionsConnection = {
 
 export enum SubstrateNetwork {
   Kusama = 'kusama',
+  Litentry = 'litentry',
+  Litmus = 'litmus',
   Phala = 'phala',
   Polkadot = 'polkadot',
 }
