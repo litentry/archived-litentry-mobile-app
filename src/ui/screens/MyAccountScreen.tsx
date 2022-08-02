@@ -29,6 +29,7 @@ import {SendFund} from '@ui/components/SendFund';
 import {ReceiveFund} from '@ui/components/ReceiveFund';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 import {useKeyring} from '@polkadotApi/useKeyring';
+import {DelegateVoting} from '@ui/components/DelegateVoting';
 
 type ScreenProps = {
   navigation: NavigationProp<CompleteNavigatorParamList>;
@@ -63,6 +64,12 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
     closeBottomSheet: closeBalanceDetails,
     openBottomSheet: openBalanceDetails,
     BottomSheet: BalanceBottomSheet,
+  } = useBottomSheet();
+
+  const {
+    closeBottomSheet: closeDelegateVoting,
+    openBottomSheet: openDelegateVoting,
+    BottomSheet: DelegateVotingBottomSheet,
   } = useBottomSheet();
 
   return (
@@ -126,6 +133,10 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
             Manage identity
           </Button>
           <Padder scale={1} />
+          <Button icon="account-arrow-right" mode="text" onPress={openDelegateVoting}>
+            Delegate votes
+          </Button>
+          <Padder scale={1} />
           <Button
             icon="delete"
             mode="text"
@@ -179,6 +190,10 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
           <Padder scale={2} />
         </Layout>
       </BalanceBottomSheet>
+
+      <DelegateVotingBottomSheet>
+        {accountInfo ? <DelegateVoting fromAccount={accountInfo} onClose={closeDelegateVoting} /> : null}
+      </DelegateVotingBottomSheet>
     </SafeView>
   );
 }
