@@ -3,6 +3,7 @@ import {Linking, Platform, Text, View, StyleSheet, Image} from 'react-native';
 import EmptyState from 'image/EmptyState.png';
 import {Button, Modal} from '@ui/library';
 import {standardPadding} from '@ui/styles';
+import {SvgUri} from 'react-native-svg';
 
 export function NetworkConnectionError() {
   const redirectToSettings = () => {
@@ -14,8 +15,9 @@ export function NetworkConnectionError() {
 
   return (
     <Modal visible>
-      <View>
-        <Image source={EmptyState} style={{height: 250}} resizeMode="contain" />
+      <View style={styles.modelContainer}>
+        {/* <Image source={EmptyState} style={{height: 250}} resizeMode="contain" /> */}
+        <SvgUri height="100%" width="100%" uri="https://dev.w3.org/SVG/tools/svgweb/samples/svg-files/debian.svg" />
       </View>
       <View style={styles.modelContainer}>
         <Text style={styles.modelTitle}>OOPS!!</Text>
