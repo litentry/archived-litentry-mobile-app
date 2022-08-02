@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Caption} from '@ui/library';
+import {Caption, useTheme} from '@ui/library';
 import {Icon} from './Icon';
 import {Popover} from './Popover';
 import {Padder} from '@ui/components/Padder';
@@ -11,13 +11,16 @@ export type InputLabelProps = {
 };
 
 export function InputLabel({label, helperText}: InputLabelProps) {
+  const {colors} = useTheme();
   return (
     <View style={styles.rowAlignCenter}>
       <Caption>{label}</Caption>
       {helperText ? (
         <>
           <Padder scale={0.2} />
-          <Popover popableText={helperText} popableContent={<Icon name={`help-circle`} size={20} />} />
+          <Popover content={helperText}>
+            <Icon name={`help-circle`} size={15} color={colors.disabled} />
+          </Popover>
         </>
       ) : null}
     </View>
@@ -28,6 +31,5 @@ const styles = StyleSheet.create({
   rowAlignCenter: {
     flexDirection: 'row',
     alignItems: 'center',
-    flexWrap: 'wrap',
   },
 });

@@ -44,3 +44,4 @@ export {Calendar} from './Calendar';
 export {Tabs, TabScreen, useTabIndex, useTabNavigation} from 'react-native-paper-tabs';
 export {useBottomSheet, BottomSheetTextInput, useBottomSheetInternal} from './BottomSheet';
 export {Skeleton} from './Skeleton';
+export {Popover} from './Popover';
