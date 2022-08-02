@@ -14,16 +14,16 @@ declare global {
 const regularType = {
   fontFamily: 'IBMPlexSans-Regular',
   letterSpacing: 0,
-  fontWeight: 400,
+  fontWeight: '400' as const,
 };
 
 const mediumType = {
   fontFamily: 'IBMPlexSans-Regular',
   letterSpacing: 0.15,
-  fontWeight: 500,
+  fontWeight: '500' as const,
 };
 
-export const typescale = {
+export const typescale: MD3Theme['typescale'] = {
   displayLarge: {
     ...regularType,
     lineHeight: 64,
@@ -113,6 +113,7 @@ export const typescale = {
 
 export const themeLight: MD3Theme = {
   ...MD3LightTheme,
+  typescale,
   colors: {
     ...MD3LightTheme.colors,
     primary: '#4348e2',
@@ -145,6 +146,7 @@ export const themeLight: MD3Theme = {
 
 export const themeDark: MD3Theme = {
   ...MD3DarkTheme,
+  typescale,
   colors: {
     ...MD3DarkTheme.colors,
     primary: '#c0c1ff',
