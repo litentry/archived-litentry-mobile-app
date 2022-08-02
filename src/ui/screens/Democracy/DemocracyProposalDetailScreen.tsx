@@ -143,7 +143,6 @@ export function DemocracyProposalDetailScreen({route}: ScreenProps) {
 
         <Padder />
         <Text variant="bodySmall">{`Deposit required: ${proposal?.formattedDepositAmount}`}</Text>
-
         <Padder scale={2} />
         <View style={globalStyles.spaceAroundRowContainer}>
           <Button onPress={resetEndorseModal} mode="outlined">
