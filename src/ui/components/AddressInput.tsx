@@ -84,6 +84,7 @@ export function AddressInput({onAddressChanged, onValidateAddress, onFocus, onBl
           {...{onFocus, onBlur}}
           autoCorrect={false}
           placeholder="Account address"
+          multiline
           dense
           mode="outlined"
           style={styles.textInput}
