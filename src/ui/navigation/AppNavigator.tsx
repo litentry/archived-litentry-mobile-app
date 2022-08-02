@@ -12,8 +12,9 @@ import {CreateAccountScreen} from '@ui/screens/CreateAccount/CreateAccountScreen
 import {MnemonicScreen} from '@ui/screens/CreateAccount/MnemonicScreen';
 import {VerifyMnemonicScreen} from '@ui/screens/CreateAccount/VerifyMnemonic';
 import DashboardScreen from '@ui/screens/DashboardScreen';
-import {DemocracyProposalScreen} from '@ui/screens/DemocracyProposalScreen';
-import {DemocracyScreen} from '@ui/screens/DemocracyScreen';
+import {DemocracyScreen} from '@ui/screens/Democracy/DemocracyScreen';
+import {DemocracyReferendumDetailScreen} from '@ui/screens/Democracy/DemocracyReferendumDetailScreen';
+import {DemocracyProposalDetailScreen} from '@ui/screens/Democracy/DemocracyProposalDetailScreen';
 import DevScreen from '@ui/screens/DevScreen';
 import DrawerScreen from '@ui/screens/Drawer/DrawerScreen';
 import {ExportAccountWithJsonFileScreen} from '@ui/screens/ExportAccountWithJsonFileScreen';
@@ -32,7 +33,6 @@ import {PermissionPromptScreen} from '@ui/screens/PermissionPromptScreen';
 import {PolkassemblyDiscussionDetail} from '@ui/screens/Polkassembly/PolkassemblyDiscussionDetail';
 import {PolkassemblyDiscussions} from '@ui/screens/Polkassembly/PolkassemblyDiscussions';
 import {ProposeTipScreen} from '@ui/screens/ProposeTipScreen';
-import {ReferendumScreen} from '@ui/screens/ReferendumScreen';
 import RegistrarListScreen from '@ui/screens/RegistrarListScreen';
 import {TechnicalCommitteeScreen} from '@ui/screens/TechnicalCommitteeScreen';
 import {RegisterSubIdentitiesScreen} from '@ui/screens/SubIdentities/RegisterSubIdentitiesScreen';
@@ -88,8 +88,11 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.proposeTipScreen} component={ProposeTipScreen} />
       <DashboardStack.Screen name={routeKeys.motionsScreen} component={MotionsScreen} />
       <DashboardStack.Screen name={routeKeys.democracyScreen} component={DemocracyScreen} />
-      <DashboardStack.Screen name={routeKeys.referendumScreen} component={ReferendumScreen} />
-      <DashboardStack.Screen name={routeKeys.democracyProposalScreen} component={DemocracyProposalScreen} />
+      <DashboardStack.Screen
+        name={routeKeys.democracyReferendumDetailScreen}
+        component={DemocracyReferendumDetailScreen}
+      />
+      <DashboardStack.Screen name={routeKeys.democracyProposalDetailScreen} component={DemocracyProposalDetailScreen} />
       <DashboardStack.Screen name={routeKeys.bountiesScreen} component={BountiesScreen} />
       <DashboardStack.Screen name={routeKeys.bountyDetailScreen} component={BountyDetailScreen} />
       <DashboardStack.Screen name={routeKeys.eventsCalendarScreen} component={EventsCalendarScreen} />

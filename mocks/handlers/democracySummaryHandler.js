@@ -7,7 +7,7 @@ export const democracySummaryHandler = graphql.query('getDemocracySummary', (_, 
         __typename: 'SubstrateChainDemocracySummary',
         activeProposals: 0,
         activeReferendums: 1,
-        launchPeriodInfo: {
+        launchPeriod: {
           __typename: 'SubstrateChainLaunchPeriodInfo',
           progressPercent: 26,
           timeLeft: '20 days 11 hrs',

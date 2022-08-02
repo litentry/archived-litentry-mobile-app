@@ -160,7 +160,7 @@ export function AddExternalAccount({onClose}: Props) {
               <View style={styles.tabViewContainer}>
                 <Tab.Navigator
                   screenOptions={{
-                    tabBarLabelStyle: {color: colors.primary},
+                    tabBarLabelStyle: {color: colors.secondary},
                     tabBarStyle: {backgroundColor: colors.background},
                   }}>
                   <Tab.Screen name="Type in" component={TypeInTabScreen} />

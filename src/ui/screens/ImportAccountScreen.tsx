@@ -179,7 +179,8 @@ const styles = StyleSheet.create({
     fontFamily: monofontFamily,
   },
   progressBar: {
-    marginTop: 5,
+    marginTop: standardPadding * 2,
+    marginHorizontal: standardPadding,
   },
 });
 

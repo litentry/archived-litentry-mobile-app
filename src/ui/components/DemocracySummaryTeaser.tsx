@@ -17,7 +17,7 @@ type Props = {
 export function DemocracySummaryTeaser(props: Props) {
   const {colors, roundness} = useTheme();
   const {data, loading} = useDemocracySummary();
-  const firstTwoNoneEmptyTimeParts = data?.launchPeriodInfo?.timeLeftParts.filter(Boolean).slice(0, 2);
+  const firstTwoNoneEmptyTimeParts = data?.launchPeriod?.timeLeftParts.filter(Boolean).slice(0, 2);
   const timeLeftString = firstTwoNoneEmptyTimeParts?.join('\n') ?? '';
 
   return (
@@ -39,11 +39,11 @@ export function DemocracySummaryTeaser(props: Props) {
           </View>
           <Padder scale={0.2} />
           <View style={[styles.card, {borderColor: colors.surfaceVariant, borderRadius: roundness}]}>
-            {data.launchPeriodInfo && (
+            {data.launchPeriod && (
               <ProgressChartWidget
                 title={`Launch period`}
-                detail={`${data.launchPeriodInfo.progressPercent}%\n${timeLeftString}`}
-                progress={data.launchPeriodInfo.progressPercent / 100}
+                detail={`${data.launchPeriod.progressPercent}%\n${timeLeftString}`}
+                progress={data.launchPeriod.progressPercent / 100}
               />
             )}
           </View>

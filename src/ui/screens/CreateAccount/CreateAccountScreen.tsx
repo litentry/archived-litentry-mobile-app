@@ -147,7 +147,8 @@ const styles = StyleSheet.create({
     padding: standardPadding * 2,
   },
   passwordMeter: {
-    marginTop: 5,
+    marginTop: standardPadding * 2,
+    marginHorizontal: standardPadding,
   },
   icon: {
     width: 20,
