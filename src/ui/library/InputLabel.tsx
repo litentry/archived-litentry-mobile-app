@@ -19,7 +19,7 @@ export function InputLabel({label, helperText}: InputLabelProps) {
         <>
           <Padder scale={0.2} />
           <Popover content={helperText}>
-            <Icon name={`help-circle`} size={15} color={colors.disabled} />
+            <Icon name={`alert-circle`} size={17} color={colors.disabled} />
           </Popover>
         </>
       ) : null}
