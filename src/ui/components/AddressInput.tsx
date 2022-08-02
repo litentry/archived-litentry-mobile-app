@@ -127,7 +127,6 @@ export function AddressInput({onAddressChanged, onValidateAddress, onFocus, onBl
 
 const styles = StyleSheet.create({
   textInput: {
-    height: 45,
     width: '75%',
   },
   icons: {
