@@ -100,6 +100,7 @@ export function DelegateVoting({fromAccount, onClose}: DelegateVotingProps) {
       <Padder scale={2} />
 
       <PagerView
+        showPageIndicator
         style={styles.pagerContainer}
         initialPage={0}
         pageMargin={standardPadding}
@@ -135,6 +136,15 @@ export function DelegateVoting({fromAccount, onClose}: DelegateVotingProps) {
                 case 'SELECT_AMOUNT':
                   return (
                     <View style={styles.pagerItem}>
+                      <Caption>{`Conviction`}</Caption>
+                      <Select
+                        items={convictions ?? []}
+                        onSelect={(_conviction) => {
+                          setConviction(_conviction);
+                        }}
+                      />
+                      <Padder />
+
                       <InputLabel
                         label="Delegating amount"
                         helperText="The amount will be applied to all the votes made on referendum by the delegated account"
@@ -146,15 +156,6 @@ export function DelegateVoting({fromAccount, onClose}: DelegateVotingProps) {
                         onFocus={handleOnFocus}
                         onBlur={handleOnBlur}
                       />
-                      <Caption>{`Conviction`}</Caption>
-                      <Padder scale={0.5} />
-                      <Select
-                        items={convictions ?? []}
-                        onSelect={(_conviction) => {
-                          setConviction(_conviction);
-                        }}
-                      />
-                      <Padder />
                     </View>
                   );
 
@@ -210,7 +211,7 @@ function Row({label, children}: {label: string; children: React.ReactNode}) {
 
 const styles = StyleSheet.create({
   container: {
-    height: 370,
+    height: 400,
   },
   pagerContainer: {
     flex: 1,
