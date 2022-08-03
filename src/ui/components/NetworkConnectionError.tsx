@@ -1,9 +1,8 @@
 import React from 'react';
 import {Linking, Platform, Text, View, StyleSheet, Image} from 'react-native';
-import EmptyState from 'image/EmptyState.png';
+import networkError from 'image/network/networkError.png';
 import {Button, Modal} from '@ui/library';
 import {standardPadding} from '@ui/styles';
-import {SvgUri} from 'react-native-svg';
 
 export function NetworkConnectionError() {
   const redirectToSettings = () => {
@@ -16,8 +15,7 @@ export function NetworkConnectionError() {
   return (
     <Modal visible>
       <View style={styles.modelContainer}>
-        {/* <Image source={EmptyState} style={{height: 250}} resizeMode="contain" /> */}
-        <SvgUri height="100%" width="100%" uri="https://dev.w3.org/SVG/tools/svgweb/samples/svg-files/debian.svg" />
+        <Image source={networkError} style={styles.image} resizeMode="contain" />
       </View>
       <View style={styles.modelContainer}>
         <Text style={styles.modelTitle}>OOPS!!</Text>
@@ -44,5 +42,8 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     padding: standardPadding * 2,
+  },
+  image: {
+    height: 200,
   },
 });

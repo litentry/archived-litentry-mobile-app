@@ -28,7 +28,7 @@ import NetworkSelectionList from '@ui/components/NetworkSelectionList';
 import {NetworkType, useAvailableNetworks, useNetwork} from '@atoms/network';
 import {NetworkSwitch} from '@ui/components/NetworkSwitch';
 import {NetworkConnectionError} from '@ui/components/NetworkConnectionError';
-import {useNetInfo} from 'src/hooks/useNetInfo';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 const refetchQueries = [DEMOCRACY_SUMMARY_QUERY, COUNCIL_SUMMARY_QUERY, BOUNTIES_SUMMARY_QUERY, TREASURY_SUMMARY_QUERY];
 
@@ -38,7 +38,7 @@ export function DashboardScreen({navigation, route}: Props) {
   const {closeBottomSheet, openBottomSheet, BottomSheet} = useBottomSheet();
   const {currentNetwork, selectCurrentNetwork} = useNetwork();
   const {availableNetworks} = useAvailableNetworks();
-  const {networkStatus} = useNetInfo();
+  const networkStatus = useNetInfo();
 
   const changeNetwork = (network: NetworkType) => {
     selectCurrentNetwork(network);
@@ -57,7 +57,7 @@ export function DashboardScreen({navigation, route}: Props) {
   return (
     <Layout style={styles.container}>
       <MainAppBar navigation={navigation} route={route} options={appBarOptions} />
-      {!networkStatus ? <NetworkConnectionError /> : null}
+      {!networkStatus.isConnected ? <NetworkConnectionError /> : null}
       <ScrollViewRefetch contentContainerStyle={styles.scrollView} refetchQueries={refetchQueries}>
         <EventsCalendarTeaser onPress={() => navigation.navigate(eventsCalendarScreen)} />
         <Padder scale={0.6} />
