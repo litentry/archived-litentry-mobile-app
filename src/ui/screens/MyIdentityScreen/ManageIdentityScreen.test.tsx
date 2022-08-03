@@ -1,7 +1,7 @@
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import React from 'react';
-import {render, waitFor, fireEvent} from 'src/testUtils';
+import {render, fireEvent} from 'src/testUtils';
 import {ManageIdentityScreen} from './ManageIdentityScreen';
 import {manageIdentityScreen} from '@ui/navigation/routeKeys';
 import {Alert, Linking} from 'react-native';
@@ -21,9 +21,11 @@ const openURLSpy = jest.spyOn(Linking, 'openURL');
 
 const mockStartTx = jest.fn(() => Promise.resolve({}));
 
-jest.mock('src/api/hooks/useApiTx', () => {
+jest.mock('context/TxContext', () => {
   return {
-    useApiTx: () => mockStartTx,
+    useStartTx: () => ({
+      startTx: mockStartTx,
+    }),
   };
 });
 
@@ -70,9 +72,14 @@ describe('ManageIdentityScreen', () => {
     const {findByText} = render(<ManageIdentityScreen navigation={navigation} route={route} />);
     fireEvent.press(await findByText('Clear Identity'));
     expect(alertSpy).toBeCalledTimes(1);
-    waitFor(async () => {
-      await findByText('Clear Identity');
-    });
+    expect(alertSpy).toHaveBeenCalledWith(
+      'Clear Identity',
+      'Clear identity of account: \n 14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a',
+      [
+        {onPress: expect.any(Function), style: 'destructive', text: 'Yes'},
+        {style: 'cancel', text: 'Cancel'},
+      ],
+    );
   });
 
   it('should navigate to sub-identities when tapping on Set Sub-identities', async () => {

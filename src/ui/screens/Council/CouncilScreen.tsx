@@ -1,6 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {ScrollView, TouchableOpacity, SectionList, StyleSheet, View, useWindowDimensions} from 'react-native';
-import Identicon from '@polkadot/reactnative-identicon';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {NavigationProp} from '@react-navigation/native';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
@@ -12,23 +11,24 @@ import {useCouncil, CouncilMember, Council} from 'src/api/hooks/useCouncil';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {candidateScreen} from '@ui/navigation/routeKeys';
 import {Button, Divider, Modal, useTheme, Caption, Subheading, Text, TextInput, HelperText} from '@ui/library';
+import {Identicon} from '@ui/components/Identicon';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {MotionsScreen} from './MotionsScreen';
 import {useModuleElection, ModuleElection} from 'src/api/hooks/useModuleElection';
 import Badge from '@ui/components/Badge';
 import {noop} from 'lodash';
-import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 import BalanceInput from '@ui/components/BalanceInput';
 import type {Account} from 'src/api/hooks/useAccount';
 import {formattedStringToBn} from 'src/utils/balance';
 import MaxBalance from '@ui/components/MaxBalance';
-import {useApi} from 'context/ChainApiContext';
 import {useSnackbar} from 'context/SnackbarContext';
 import {InputLabel} from '@ui/library/InputLabel';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {BN_ZERO} from '@polkadot/util';
+import {useStartTx} from 'context/TxContext';
+import {useTx} from '@polkadotApi/useTx';
 
 const MAX_VOTES = 16;
 
@@ -206,7 +206,7 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
     }
   }, [councilVote, candidates]);
 
-  const startTx = useApiTx();
+  const {startTx} = useStartTx();
   const {formatBalance} = useFormatBalance();
 
   const onCandidateSelect = (accountId: string, isSelected: boolean) => {
@@ -247,8 +247,10 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
     if (account) {
       startTx({
         address: account.address,
-        txMethod: `${moduleElection.module}.vote`,
-        params: [selectedCandidates, amount],
+        txConfig: {
+          method: `${moduleElection.module}.vote`,
+          params: [selectedCandidates, amount],
+        },
       });
       reset();
     }
@@ -306,8 +308,8 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
 
 function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandidacyProps) {
   const [account, setAccount] = React.useState<Account>();
-  const startTx = useApiTx();
-  const {api} = useApi();
+  const {startTx} = useStartTx();
+  const {getTxMethodArgsLength} = useTx();
   const balance = useFormatBalance();
   const formattedBalance = balance.formatBalance(moduleElection.candidacyBond);
   const {data: council} = useCouncil();
@@ -315,26 +317,27 @@ function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandi
   const candidacyBond = balance.stringToBn(moduleElection.candidacyBond) ?? BN_ZERO;
   const sufficientBalance =
     balance.stringToBn(accountFreeBalance)?.gt(BN_ZERO) && balance.stringToBn(accountFreeBalance)?.gt(candidacyBond);
-
   const submitCandidacy = !account || !sufficientBalance;
-
   const snackbar = useSnackbar();
-  const onSubmitCandidacy = () => {
-    if (account && api && moduleElection.module) {
-      startTx({
-        address: account.address,
-        txMethod: `${moduleElection.module}.submitCandidacy`,
-        params: [
-          api.tx[moduleElection.module]?.submitCandidacy?.meta.args.length === 1 ? [council?.candidates.length] : [],
-        ],
-      })
-        .then(() => {
-          snackbar('Candidacy submitted successfully');
-        })
-        .catch(() => {
-          snackbar('Error while submitting candidacy');
+
+  const onSubmitCandidacy = async () => {
+    if (account && moduleElection.module) {
+      const argsLength = await getTxMethodArgsLength(`${moduleElection.module}.submitCandidacy`);
+      try {
+        await startTx({
+          address: account.address,
+          txConfig: {
+            method: `${moduleElection.module}.submitCandidacy`,
+            params: [argsLength === 1 ? [council?.candidates.length ?? 0] : []],
+          },
         });
-      reset();
+        snackbar('Candidacy submitted successfully');
+      } catch (e) {
+        console.warn(e);
+        snackbar('Error while submitting candidacy');
+      } finally {
+        reset();
+      }
     }
   };
 
