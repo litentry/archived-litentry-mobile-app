@@ -17,7 +17,6 @@ import {useCouncilAccounts} from 'src/hooks/useCouncilAccounts';
 import {useNetwork} from '@atoms/network';
 import type {SupportedNetworkType} from 'src/atoms/network';
 import {Caption, Card, Divider} from 'react-native-paper';
-import {ProposalCall} from '@ui/components/ProposalCall';
 import {ItemRowBlock} from '@ui/components/ItemRowBlock';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {getProposalTitle} from 'src/utils/proposal';
@@ -295,7 +294,6 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
             <Caption>{proposal.bond}</Caption>
           </ItemRowBlock>
         ) : null}
-        {motion.proposal ? <ProposalCall proposal={motion.proposal} /> : null}
       </Card.Content>
       <Padder scale={1} />
       <Divider />

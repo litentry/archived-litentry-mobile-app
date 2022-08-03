@@ -11,8 +11,9 @@ import {councilVotesHandler} from './councilVotesHandler';
 import {crowdloanHandler} from './crowdloanHandler';
 import {crowdloansHandler} from './crowdloansHandler';
 import {crowdloanSummaryHandler} from './crowdloanSummaryHandler';
-import {democracyHandler} from './democracyHandler';
 import {democracySummaryHandler} from './democracySummaryHandler';
+import {democracyReferendumsHandler} from './democracyReferendumsHandler';
+import {democracyProposalsHandler} from './democracyProposalsHandler';
 import {eventsCalendarHandler} from './eventsCalendarHandler';
 import {moduleElectionHandler} from './moduleElectionHandler';
 import {parachainCrowdloanHandler} from './parachainCrowdloanHandler';
@@ -26,13 +27,14 @@ import {treasurySummaryHandler} from './treasurySummaryHandler';
 
 export const handlers = [
   registrarsHandler,
-  democracyHandler,
   councilMotionsHandler,
   accountHandler,
   chainInfoHandler,
   parathreadsHandler,
   parachainSummaryHandler,
   democracySummaryHandler,
+  democracyReferendumsHandler,
+  democracyProposalsHandler,
   eventsCalendarHandler,
   bountiesHandler,
   bountiesSummaryHandler,
