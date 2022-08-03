@@ -1,19 +1,15 @@
 import React from 'react';
-import {Linking, Platform, Text, View, StyleSheet, Image} from 'react-native';
+import {Linking, Text, View, StyleSheet, Image, Platform} from 'react-native';
 import networkError from 'image/network/networkError.png';
 import {Button, Modal} from '@ui/library';
 import {standardPadding} from '@ui/styles';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 export function NetworkConnectionError() {
-  const redirectToSettings = () => {
-    if (Platform.OS === 'ios') {
-      Linking.openURL('app-settings:');
-    } else {
-    }
-  };
+  const networkStatus = useNetInfo();
 
   return (
-    <Modal visible>
+    <Modal visible={!networkStatus.isConnected}>
       <View style={styles.modelContainer}>
         <Image source={networkError} style={styles.image} resizeMode="contain" />
       </View>
@@ -21,12 +17,6 @@ export function NetworkConnectionError() {
         <Text style={styles.modelTitle}>OOPS!!</Text>
         <Text>There is no Internet connection.</Text>
         <Text>Please check your Internet connection</Text>
-      </View>
-      <View>
-        <Button mode="outlined" onPress={redirectToSettings}>
-          {' '}
-          Network Settings
-        </Button>
       </View>
     </Modal>
   );

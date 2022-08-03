@@ -38,7 +38,6 @@ export function DashboardScreen({navigation, route}: Props) {
   const {closeBottomSheet, openBottomSheet, BottomSheet} = useBottomSheet();
   const {currentNetwork, selectCurrentNetwork} = useNetwork();
   const {availableNetworks} = useAvailableNetworks();
-  const networkStatus = useNetInfo();
 
   const changeNetwork = (network: NetworkType) => {
     selectCurrentNetwork(network);
@@ -57,7 +56,7 @@ export function DashboardScreen({navigation, route}: Props) {
   return (
     <Layout style={styles.container}>
       <MainAppBar navigation={navigation} route={route} options={appBarOptions} />
-      {!networkStatus.isConnected ? <NetworkConnectionError /> : null}
+      <NetworkConnectionError />
       <ScrollViewRefetch contentContainerStyle={styles.scrollView} refetchQueries={refetchQueries}>
         <EventsCalendarTeaser onPress={() => navigation.navigate(eventsCalendarScreen)} />
         <Padder scale={0.6} />
