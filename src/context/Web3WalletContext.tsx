@@ -13,6 +13,7 @@ import {
   depositForMigration,
   Result,
 } from 'src/service/TokenMigration';
+import {useCryptoUtil} from '@polkadotApi/useCryptoUtil';
 
 export type TxResult = Result;
 
@@ -50,6 +51,7 @@ export function Web3WalletProvider({children}: {children: React.ReactNode}) {
   const connector = useWalletConnect();
   const [connectedAccount, setConnectedAccount] = useState<Web3Account>();
   const [wallet, setWallet] = useState<Web3>();
+  const {decodeAddress} = useCryptoUtil();
 
   useEffect(() => {
     if (connector.connected && !wallet) {
@@ -122,9 +124,10 @@ export function Web3WalletProvider({children}: {children: React.ReactNode}) {
       if (!wallet) {
         throw new Error('Web3 wallet must be initialized.');
       }
-      return depositForMigration(address, amount, recipientAddress, wallet);
+      const decodedAddress = await decodeAddress({encoded: recipientAddress});
+      return depositForMigration(address, amount, decodedAddress, wallet);
     },
-    [wallet],
+    [wallet, decodeAddress],
   );
 
   const contextValue: Web3Wallet =

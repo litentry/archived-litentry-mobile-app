@@ -5,9 +5,10 @@ import {useNetwork} from '@atoms/network';
 import QRCamera, {QRCameraRef} from '@ui/components/QRCamera';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {isAddressValid, parseAddress} from 'src/utils/address';
+import {parseAddress} from 'src/utils/address';
 import type {Account} from 'src/api/hooks/useAccount';
 import type {SubIdentity} from './RegisterSubIdentitiesScreen';
+import {useIsAddressValid} from 'src/hooks/useIsAddressValid';
 
 type Props = {
   onClose: () => void;
@@ -20,10 +21,7 @@ export function AddSubIdentity({onClose, onAddPress, subIdentities}: Props) {
   const [subAddress, setSubAddress] = useState('');
   const [subName, setSubName] = useState('');
   const {colors} = useTheme();
-
-  const isValidAddress = React.useMemo(() => {
-    return isAddressValid(currentNetwork, subAddress);
-  }, [subAddress, currentNetwork]);
+  const {isValid: isAddressValid} = useIsAddressValid(currentNetwork, subAddress);
 
   const addSubIdentity = () => {
     if (subIdentities?.some((sub) => sub.address === subAddress)) {
@@ -66,7 +64,7 @@ export function AddSubIdentity({onClose, onAddPress, subIdentities}: Props) {
               <HelperText
                 type="error"
                 visible={
-                  Boolean(subAddress) && !isValidAddress
+                  Boolean(subAddress) && !isAddressValid
                 }>{`${subAddress} is not a valid address for ${currentNetwork.name} network`}</HelperText>
             </View>
           </TabScreen>
@@ -80,7 +78,7 @@ export function AddSubIdentity({onClose, onAddPress, subIdentities}: Props) {
         <Button mode="outlined" onPress={onClose}>
           Cancel
         </Button>
-        <Button mode="contained" disabled={!isValidAddress} onPress={addSubIdentity} testID="add-identity-button">
+        <Button mode="contained" disabled={!isAddressValid} onPress={addSubIdentity} testID="add-identity-button">
           Add Identity
         </Button>
       </View>
@@ -94,29 +92,32 @@ function ScanAddressTab({onScanSuccess}: {onScanSuccess: (address: string) => vo
   const tabIndex = useTabIndex();
   const qrCameraRef = useRef<QRCameraRef>(null);
   const {currentNetwork} = useNetwork();
+  const {isAddressValid} = useIsAddressValid(currentNetwork);
 
   const handleScan = useCallback(
     ({data}: {data: string}) => {
       try {
         const parsed = parseAddress(data);
-        if (isAddressValid(currentNetwork, parsed.address)) {
-          onScanSuccess(parsed.address);
-          goToTabIndex(0);
-          qrCameraRef.current?.reactivate();
-        } else {
-          Alert.alert(
-            'Validation Failed',
-            `${parsed.address} is not a valid address for the ${currentNetwork.name} network.`,
-            [{text: 'Ok', onPress: () => qrCameraRef.current?.reactivate()}],
-          );
-        }
+        isAddressValid(parsed.address).then((isValid) => {
+          if (isValid) {
+            onScanSuccess(parsed.address);
+            goToTabIndex(0);
+            qrCameraRef.current?.reactivate();
+          } else {
+            Alert.alert(
+              'Validation Failed',
+              `${parsed.address} is not a valid address for the ${currentNetwork.name} network.`,
+              [{text: 'Ok', onPress: () => qrCameraRef.current?.reactivate()}],
+            );
+          }
+        });
       } catch (e) {
         Alert.alert('Validation Failed', 'Address is invalid.', [
           {text: 'Ok', onPress: () => qrCameraRef.current?.reactivate()},
         ]);
       }
     },
-    [currentNetwork, onScanSuccess, goToTabIndex],
+    [currentNetwork, onScanSuccess, goToTabIndex, isAddressValid],
   );
 
   return (

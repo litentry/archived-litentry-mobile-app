@@ -3,24 +3,22 @@ import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import {useNetwork} from '@atoms/network';
 import {Icon, Text, useTheme} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
-import {useApi} from 'context/ChainApiContext';
 import {standardPadding} from '@ui/styles';
+import {usePolkadotApiStatus} from '@polkadotApi/usePolkadotApiStatus';
 
 type Props = {
   onPress: () => void;
 };
 
 export function NetworkSwitch({onPress}: Props) {
-  const {status} = useApi();
+  const apiStatus = usePolkadotApiStatus();
   const {currentNetwork} = useNetwork();
   const {colors} = useTheme();
-
-  const isConnected = status === 'connected' || status === 'ready';
 
   return (
     <TouchableOpacity onPress={onPress} style={[styles.networkSwitch, {backgroundColor: colors.background}]}>
       <View style={styles.container}>
-        <Icon name={isConnected ? 'web' : 'earth-off'} size={16} color={colors.accent} />
+        <Icon name={apiStatus === 'ready' ? 'web' : 'earth-off'} size={16} color={colors.accent} />
         <Padder scale={0.3} />
         <Text style={{color: colors.accent}}>{currentNetwork.name}</Text>
       </View>

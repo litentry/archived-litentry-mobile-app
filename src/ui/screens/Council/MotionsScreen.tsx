@@ -1,6 +1,5 @@
 import React from 'react';
 import {Subheading, Button, useTheme, Modal, List, Headline} from '@ui/library';
-import {useApi} from 'context/ChainApiContext';
 import {FlatList, StyleSheet, View, Linking} from 'react-native';
 import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
@@ -11,19 +10,19 @@ import {NavigationProp} from '@react-navigation/native';
 import {motionDetailScreen} from '@ui/navigation/routeKeys';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import LoadingView from '@ui/components/LoadingView';
-import {useApiTx} from 'src/api/hooks/useApiTx';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import type {Account} from 'src/api/hooks/useAccount';
 import {InputLabel} from '@ui/library/InputLabel';
 import {useCouncilAccounts} from 'src/hooks/useCouncilAccounts';
 import {useNetwork} from '@atoms/network';
-import type {SupportedNetworkType} from 'src/types';
+import type {SupportedNetworkType} from 'src/atoms/network';
 import {Caption, Card, Divider} from 'react-native-paper';
-import {ProposalCall} from '@ui/components/ProposalCall';
 import {ItemRowBlock} from '@ui/components/ItemRowBlock';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {getProposalTitle} from 'src/utils/proposal';
 import type {KeyringAccount} from 'polkadot-api';
+import {useStartTx} from 'context/TxContext';
+import {useTx} from '@polkadotApi/useTx';
 
 type Vote = 'Aye' | 'Nay' | 'Close';
 
@@ -95,8 +94,8 @@ type VoteModalProps = {
 };
 
 function VoteModal({visible, setVisible, refetchMotions, voteType, motion, councilAccounts}: VoteModalProps) {
-  const {api} = useApi();
-  const startTx = useApiTx();
+  const {startTx} = useStartTx();
+  const {getTxMethodArgsLength} = useTx();
   const heading = voteType === 'Aye' || voteType === 'Nay' ? `Vote ${voteType}` : 'Close';
   const [account, setAccount] = React.useState<Account>();
 
@@ -110,39 +109,47 @@ function VoteModal({visible, setVisible, refetchMotions, voteType, motion, counc
   };
 
   const motionVote = (vote: boolean) => {
-    if (account && api && motion) {
+    if (account && motion) {
       closeModal();
       const {proposal} = motion;
-      startTx({
-        address: account.address,
-        params: [proposal.hash, proposal.index, vote],
-        txMethod: 'council.vote',
-      })
-        .then(() => {
-          reset();
-          refetchMotions();
+      if (proposal.index) {
+        startTx({
+          address: account.address,
+          txConfig: {
+            method: 'council.vote',
+            params: [proposal.hash, proposal.index, vote],
+          },
         })
-        .catch((e) => console.warn(e));
+          .then(() => {
+            reset();
+            refetchMotions();
+          })
+          .catch((e) => console.warn(e));
+      }
     }
   };
 
-  const closeMotion = () => {
-    if (account && api && motion) {
+  const closeMotion = async () => {
+    if (account && motion) {
       closeModal();
       const {proposal} = motion;
-      startTx({
-        address: account.address,
-        params:
-          api?.tx.council.close?.meta.args.length === 4
-            ? [proposal.hash, proposal.index, 0, 0]
-            : [proposal.hash, proposal.index],
-        txMethod: 'council.close',
-      })
-        .then(() => {
+      if (proposal.index) {
+        const method = 'council.close';
+        const argsLength = await getTxMethodArgsLength(method);
+        try {
+          await startTx({
+            address: account.address,
+            txConfig: {
+              method,
+              params: argsLength === 4 ? [proposal.hash, proposal.index, 0, 0] : [proposal.hash, proposal.index],
+            },
+          });
           reset();
           refetchMotions();
-        })
-        .catch((e) => console.warn(e));
+        } catch (e) {
+          console.warn(e);
+        }
+      }
     }
   };
 
@@ -287,7 +294,6 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
             <Caption>{proposal.bond}</Caption>
           </ItemRowBlock>
         ) : null}
-        {motion.proposal ? <ProposalCall proposal={motion.proposal} /> : null}
       </Card.Content>
       <Padder scale={1} />
       <Divider />

@@ -4,7 +4,6 @@ import {NavigationProp} from '@react-navigation/core';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
 import {SelectAccount} from '@ui/components/SelectAccount';
-import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {CrowdloansStackParamList} from '@ui/navigation/navigation';
 import {crowdloanFundDetailScreen} from '@ui/navigation/routeKeys';
@@ -16,11 +15,12 @@ import BalanceInput from '@ui/components/BalanceInput';
 import {Crowdloan, useAllCrowdloans} from 'src/api/hooks/useCrowdloans';
 import type {Account} from 'src/api/hooks/useAccount';
 import {useChainInfo} from 'src/api/hooks/useChainInfo';
-import {BN_ZERO} from '@polkadot/util';
+import {bnToHex, BN_ZERO} from '@polkadot/util';
 import {formattedStringToBn} from 'src/utils/balance';
 import {CrowdloanSummaryTeaser} from '@ui/components/CrowdloanSummaryTeaser';
 import {useNetwork} from '@atoms/network';
 import {InputLabel} from '@ui/library/InputLabel';
+import {useStartTx} from 'context/TxContext';
 
 type ScreenProps = {
   navigation: NavigationProp<CrowdloansStackParamList>;
@@ -195,7 +195,7 @@ function ContributeBox({
   setVisible: (_visible: boolean) => void;
   parachainId: string;
 }) {
-  const startTx = useApiTx();
+  const {startTx} = useStartTx();
   const [account, setAccount] = React.useState<Account>();
   const [amount, setAmount] = React.useState<string>('');
   const {formatBalance, stringToBn} = useFormatBalance();
@@ -243,8 +243,10 @@ function ContributeBox({
             if (account) {
               startTx({
                 address: account.address,
-                txMethod: 'crowdloan.contribute',
-                params: [parachainId, balance, null],
+                txConfig: {
+                  method: 'crowdloan.contribute',
+                  params: [parachainId, bnToHex(balance), null],
+                },
               });
               reset();
             }

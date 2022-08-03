@@ -10,7 +10,7 @@ export const DEMOCRACY_SUMMARY_QUERY = gql`
       proposals
       referendums
       activeReferendums
-      launchPeriodInfo {
+      launchPeriod {
         progressPercent
         timeLeft
         timeLeftParts

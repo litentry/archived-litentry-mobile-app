@@ -4,7 +4,7 @@ import globalStyles, {standardPadding} from '@ui/styles';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useParathreads} from 'src/api/hooks/useParaThreads';
 import {List, Text, Divider, Subheading} from '@ui/library';
-import Identicon from '@polkadot/reactnative-identicon';
+import {Identicon} from '@ui/components/Identicon';
 import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
 import type {Parathread} from 'src/api/hooks/useParaThreads';

@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, StyleSheet, KeyboardAvoidingView, Platform} from 'react-native';
-import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {ScrollView} from 'react-native-gesture-handler';
 import zxcvbn from 'zxcvbn';
@@ -17,6 +16,7 @@ import {SecureKeychain} from 'src/service/SecureKeychain';
 import {useKeyboardStatus} from 'src/hooks/useKeyboardStatus';
 import {InputLabel} from '@ui/library/InputLabel';
 import {useKeyring} from '@polkadotApi/useKeyring';
+import {Identicon} from '@ui/components/Identicon';
 
 type Account = {
   title: string;
@@ -72,7 +72,7 @@ export function CreateAccountScreen({
   const AccountIdentityIcon = React.useCallback(
     () => (
       <View style={globalStyles.justifyCenter}>
-        <IdentityIcon value={address} size={40} />
+        <Identicon value={address} size={40} />
       </View>
     ),
     [address],
@@ -154,7 +154,8 @@ const styles = StyleSheet.create({
     padding: standardPadding * 2,
   },
   passwordMeter: {
-    marginTop: 5,
+    marginTop: standardPadding * 2,
+    marginHorizontal: standardPadding,
   },
   icon: {
     width: 20,

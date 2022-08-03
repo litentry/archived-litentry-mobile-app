@@ -5,7 +5,7 @@ import {WHITESPACE, validateFormField} from 'src/utils/form';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {Padder} from '@ui/components/Padder';
 import {standardPadding} from '@ui/styles';
-import {useApiTx} from 'src/api/hooks/useApiTx';
+import {useStartTx} from 'context/TxContext';
 import {Layout} from '@ui/components/Layout';
 
 export type IdentityPayload = {
@@ -28,7 +28,7 @@ type FormStatus = Record<
 >;
 
 export function IdentityInfoForm({onIdentitySet, address}: IdentityInfoFormProps) {
-  const startTx = useApiTx();
+  const {startTx} = useStartTx();
   const {data: accountInfo} = useAccount(address);
   const [state, dispatch] = React.useReducer(reducer, {});
   const formStatus = validateForm(state);
@@ -51,17 +51,19 @@ export function IdentityInfoForm({onIdentitySet, address}: IdentityInfoFormProps
     const {display, legal, email, riot, twitter, web} = state;
     await startTx({
       address,
-      txMethod: 'identity.setIdentity',
-      params: [
-        {
-          display: display ? {raw: display} : {none: null},
-          email: email ? {raw: email} : {none: null},
-          legal: legal ? {raw: legal} : {none: null},
-          riot: riot ? {raw: riot} : {none: null},
-          twitter: twitter ? {raw: twitter} : {none: null},
-          web: web ? {raw: web} : {none: null},
-        },
-      ],
+      txConfig: {
+        method: 'identity.setIdentity',
+        params: [
+          {
+            display: display ? {raw: display} : {none: null},
+            email: email ? {raw: email} : {none: null},
+            legal: legal ? {raw: legal} : {none: null},
+            riot: riot ? {raw: riot} : {none: null},
+            twitter: twitter ? {raw: twitter} : {none: null},
+            web: web ? {raw: web} : {none: null},
+          },
+        ],
+      },
     })
       .then(onIdentitySet)
       .catch((e) => {

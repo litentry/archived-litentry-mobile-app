@@ -5,11 +5,28 @@ import type {
   SubstrateChainVotingStatus,
 } from 'src/generated/litentryGraphQLTypes';
 import {ACCOUNT_FIELDS_FRAGMENT} from './useAccount';
-import {PROPOSAL_ARGS_FRAGMENT} from './useDemocracy';
 
 export type CouncilMotion = SubstrateChainCouncilMotion;
 export type MotionProposal = SubstrateChainMotionProposal;
 export type VotingStatus = SubstrateChainVotingStatus;
+
+export const PROPOSAL_ARGS_FRAGMENT = gql`
+  fragment ProposalArgFields on SubstrateChainProposalArg {
+    name
+    type
+    value
+    subCalls {
+      meta
+      method
+      section
+      args {
+        name
+        type
+        value
+      }
+    }
+  }
+`;
 
 const COUNCIL_MOTION_QUERY = gql`
   ${ACCOUNT_FIELDS_FRAGMENT}
