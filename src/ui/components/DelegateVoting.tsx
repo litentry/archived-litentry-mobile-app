@@ -14,6 +14,8 @@ import {BalanceInput} from '@ui/components/BalanceInput';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {BN_ZERO} from '@polkadot/util';
 import {formattedStringToBn} from 'src/utils/balance';
+import {Paginator} from '@ui/components/Paginator';
+import {useSharedValue} from 'react-native-reanimated';
 
 type Page = {
   index: number;
@@ -42,6 +44,7 @@ export function DelegateVoting({fromAccount, onClose}: DelegateVotingProps) {
   const pagerRef = React.useRef<PagerView>(null);
   const [currentPage, setCurrentPage] = React.useState(0);
   const {data: delegatedAccountInfo} = useAccount(delegatedAccount);
+  const activeIndex = useSharedValue(0);
 
   const handleOnFocus = React.useCallback(() => {
     shouldHandleKeyboardEvents.value = true;
@@ -55,13 +58,15 @@ export function DelegateVoting({fromAccount, onClose}: DelegateVotingProps) {
     const page = currentPage - 1;
     pagerRef.current?.setPage(page);
     setCurrentPage(page);
-  }, [currentPage]);
+    activeIndex.value = page;
+  }, [currentPage, activeIndex]);
 
   const nextPage = React.useCallback(() => {
     const page = currentPage + 1;
     pagerRef.current?.setPage(page);
     setCurrentPage(page);
-  }, [currentPage]);
+    activeIndex.value = page;
+  }, [currentPage, activeIndex]);
 
   const delegateAmountBn = React.useMemo(() => {
     if (delegateAmount) {
@@ -97,10 +102,12 @@ export function DelegateVoting({fromAccount, onClose}: DelegateVotingProps) {
   return (
     <Layout style={styles.container}>
       <Subheading style={globalStyles.textCenter}>{`Delegate voting`}</Subheading>
+      <Padder />
+
+      <Paginator items={PAGES} activeIndex={activeIndex} />
       <Padder scale={2} />
 
       <PagerView
-        showPageIndicator
         style={styles.pagerContainer}
         initialPage={0}
         pageMargin={standardPadding}
@@ -121,7 +128,7 @@ export function DelegateVoting({fromAccount, onClose}: DelegateVotingProps) {
                         <Padder />
                         <AccountTeaser account={fromAccount} />
                       </View>
-                      <Padder scale={2} />
+                      <Padder scale={1} />
 
                       <InputLabel label="Delegating to" helperText="The account you delegate your voting power to" />
                       <AddressInput
@@ -182,7 +189,6 @@ export function DelegateVoting({fromAccount, onClose}: DelegateVotingProps) {
         ))}
       </PagerView>
 
-      <Padder />
       <View style={globalStyles.spaceAroundRowContainer}>
         <Button mode="outlined" onPress={currentPage === 0 ? onCancel : previousPage}>
           {`${currentPage === 0 ? 'Cancel' : 'Back'}`}
@@ -217,6 +223,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   pagerItem: {
+    flex: 1,
     paddingHorizontal: standardPadding * 2,
   },
   row: {
