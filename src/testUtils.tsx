@@ -2,20 +2,16 @@
 
 import React from 'react';
 import {render, RenderOptions} from '@testing-library/react-native';
-import {ApolloClient, InMemoryCache, HttpLink} from '@apollo/client';
-import fetch from 'cross-fetch';
 import ThemeProvider from 'context/ThemeContext';
 import {RecoilRoot} from 'recoil';
-
-export const client = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: new HttpLink({uri: 'http://localhost:3000/graphql', fetch}),
-});
+import {LitentryApiClientProvider} from 'context/LitentryApiContext';
 
 function Providers({children}: {children: React.ReactNode}) {
   return (
     <RecoilRoot>
-      <ThemeProvider>{children}</ThemeProvider>
+      <LitentryApiClientProvider>
+        <ThemeProvider>{children}</ThemeProvider>
+      </LitentryApiClientProvider>
     </RecoilRoot>
   );
 }

@@ -3,8 +3,6 @@ import {Platform, StatusBar} from 'react-native';
 import {usePersistedState} from '@hooks/usePersistedState';
 import {Provider as PaperProvider} from '@ui/library';
 import {themeDark, themeLight} from '@ui/library/theme';
-import {LitentryApiClientProvider} from './LitentryApiContext';
-import {QueryClient, QueryClientProvider} from 'react-query';
 
 type Theme = 'light' | 'dark';
 
@@ -22,8 +20,6 @@ type PropTypes = {
   children: React.ReactNode;
 };
 
-const queryClient = new QueryClient();
-
 export default function ThemeProvider({children}: PropTypes) {
   const [theme, setTheme] = usePersistedState<Theme>('theme', 'light');
 
@@ -40,13 +36,9 @@ export default function ThemeProvider({children}: PropTypes) {
   const value = useMemo(() => ({theme, toggleTheme}), [theme, toggleTheme]);
 
   return (
-    <LitentryApiClientProvider>
-      <QueryClientProvider client={queryClient}>
-        <ThemeContext.Provider value={value}>
-          <PaperProvider theme={value.theme === 'dark' ? themeDark : themeLight}>{children}</PaperProvider>
-        </ThemeContext.Provider>
-      </QueryClientProvider>
-    </LitentryApiClientProvider>
+    <ThemeContext.Provider value={value}>
+      <PaperProvider theme={value.theme === 'dark' ? themeDark : themeLight}>{children}</PaperProvider>
+    </ThemeContext.Provider>
   );
 }
 
