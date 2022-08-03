@@ -12,10 +12,11 @@ import PagerView from 'react-native-pager-view';
 import {useConvictions, Conviction} from 'src/api/hooks/useConvictions';
 import {BalanceInput} from '@ui/components/BalanceInput';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
-import {BN_ZERO} from '@polkadot/util';
+import {bnToHex, BN_ZERO} from '@polkadot/util';
 import {formattedStringToBn} from 'src/utils/balance';
 import {Paginator} from '@ui/components/Paginator';
 import {useSharedValue} from 'react-native-reanimated';
+import {useStartTx} from 'context/TxContext';
 
 type Page = {
   index: number;
@@ -45,6 +46,7 @@ export function DelegateVoting({fromAccount, onClose}: DelegateVotingProps) {
   const [currentPage, setCurrentPage] = React.useState(0);
   const {data: delegatedAccountInfo} = useAccount(delegatedAccount);
   const activeIndex = useSharedValue(0);
+  const {startTx} = useStartTx();
 
   const handleOnFocus = React.useCallback(() => {
     shouldHandleKeyboardEvents.value = true;
@@ -88,9 +90,15 @@ export function DelegateVoting({fromAccount, onClose}: DelegateVotingProps) {
 
   const delegateVote = React.useCallback(() => {
     if (delegatedAccount && conviction && delegateAmountBn.gt(BN_ZERO)) {
-      console.log('Voting delegation');
+      startTx({
+        address: fromAccount.address,
+        txConfig: {
+          method: 'democracy.delegate',
+          params: [delegatedAccount, conviction.value, bnToHex(delegateAmountBn)],
+        },
+      });
     }
-  }, [delegatedAccount, conviction, delegateAmountBn]);
+  }, [delegatedAccount, conviction, delegateAmountBn, fromAccount.address, startTx]);
 
   const onCancel = React.useCallback(() => {
     setDelegatedAccount(undefined);
