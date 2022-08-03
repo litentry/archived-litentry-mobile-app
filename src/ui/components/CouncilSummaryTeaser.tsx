@@ -5,7 +5,7 @@ import {Padder} from '@ui/components/Padder';
 import {SectionTeaserContainer} from '@ui/components/SectionTeaserContainer';
 import {ProgressChartWidget} from '@ui/components/ProgressChartWidget';
 import StatInfoBlock from '@ui/components/StatInfoBlock';
-import {useTheme, Card} from '@ui/library';
+import {useTheme} from '@ui/library';
 import {useCouncilSummary} from 'src/api/hooks/useCouncilSummary';
 import {AccountTeaser} from './Account/AccountTeaser';
 import {DashboardTeaserSkeleton} from '@ui/components/DashboardTeaserSkeleton';

@@ -2,7 +2,7 @@ import React from 'react';
 import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {Card, Icon, Text, useBottomSheet, Surface, useTheme} from '@ui/library';
+import {Card, Icon, Text, useBottomSheet, useTheme} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {useNetwork} from '@atoms/network';
 import LoadingView from '@ui/components/LoadingView';
