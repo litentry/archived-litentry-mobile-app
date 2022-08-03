@@ -15,3 +15,7 @@ export function decimalKeypad(numericValue: string): string {
 export function countUtf8Bytes(str: string): number {
   return new Blob([str]).size;
 }
+
+export function truncate(str: string, n: number): string {
+  return str.length > n ? `${str.substring(0, n - 1)}...` : str;
+}

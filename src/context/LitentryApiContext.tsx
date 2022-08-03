@@ -10,6 +10,17 @@ type LitentryApiContextType = {
 
 const LitentryApiContext = React.createContext<LitentryApiContextType | undefined>(undefined);
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const mergeFunc = (existing: any, incoming: any, {args}: any) => {
+  const offset = args ? args.offset : 0;
+  const merged = existing ? existing.slice(0) : [];
+  for (let i = 0; i < incoming.length; ++i) {
+    merged[offset + i] = incoming[i];
+  }
+  return merged;
+};
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
 export function LitentryApiClientProvider({children}: {children: React.ReactNode}) {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>();
   const {currentNetwork} = useNetwork();
@@ -30,14 +41,15 @@ export function LitentryApiClientProvider({children}: {children: React.ReactNode
               },
               substrateChainTips: {
                 keyArgs: [],
-                merge(existing, incoming, {args}) {
-                  const offset = args ? args.offset : 0;
-                  const merged = existing ? existing.slice(0) : [];
-                  for (let i = 0; i < incoming.length; ++i) {
-                    merged[offset + i] = incoming[i];
-                  }
-                  return merged;
-                },
+                merge: mergeFunc,
+              },
+              substrateChainDemocracyReferendums: {
+                keyArgs: [],
+                merge: mergeFunc,
+              },
+              substrateChainDemocracyProposals: {
+                keyArgs: [],
+                merge: mergeFunc,
               },
             },
           },
