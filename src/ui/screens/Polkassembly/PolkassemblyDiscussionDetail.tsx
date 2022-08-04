@@ -10,6 +10,7 @@ import {Posts, usePolkassemblyDiscussionDetail} from 'src/api/hooks/usePolkassem
 import {PolkassemblyDiscussionStackParamList} from '@ui/navigation/navigation';
 import {polkassemblyDiscussionDetail} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
+import {FlashList} from '@shopify/flash-list';
 
 type ScreenProps = {
   route: RouteProp<PolkassemblyDiscussionStackParamList, typeof polkassemblyDiscussionDetail>;
@@ -59,7 +60,7 @@ export function PolkassemblyDiscussionDetail({route}: ScreenProps) {
 
   return (
     <SafeView edges={noTopEdges}>
-      <FlatList
+      <FlashList
         ListHeaderComponent={<DiscussionDetailHeader post={post} />}
         data={post.comments}
         keyExtractor={(item) => item.id}
@@ -93,7 +94,7 @@ export function PolkassemblyDiscussionDetail({route}: ScreenProps) {
             </TouchableOpacity>
           </View>
         }
-        contentContainerStyle={styles.contentContainer}
+        estimatedItemSize={post.comments.length}
       />
     </SafeView>
   );
@@ -101,10 +102,7 @@ export function PolkassemblyDiscussionDetail({route}: ScreenProps) {
 
 const styles = StyleSheet.create({
   header: {
-    marginBottom: standardPadding * 2,
-  },
-  contentContainer: {
-    padding: standardPadding * 2,
+    paddingHorizontal: standardPadding * 2,
   },
   postDetailRow: {
     marginTop: standardPadding,
@@ -123,6 +121,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: standardPadding,
     marginBottom: standardPadding * 2,
+    padding: standardPadding * 2,
   },
   commentAuthorIcon: {
     width: 30,
