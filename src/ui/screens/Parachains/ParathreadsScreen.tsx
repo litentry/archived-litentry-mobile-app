@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, FlatList, StyleSheet, Linking} from 'react-native';
+import {View, StyleSheet, Linking} from 'react-native';
 import globalStyles, {standardPadding} from '@ui/styles';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useParathreads} from 'src/api/hooks/useParaThreads';
@@ -9,6 +9,7 @@ import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
 import type {Parathread} from 'src/api/hooks/useParaThreads';
 import {Account} from '@ui/components/Account/Account';
+import {FlashList} from '@shopify/flash-list';
 
 const toParathreadHomepage = (url: string) => {
   Linking.canOpenURL(url).then((supported) => {
@@ -28,7 +29,7 @@ export function ParathreadsScreen() {
   return (
     <SafeView edges={noTopEdges}>
       {parathreads ? (
-        <FlatList
+        <FlashList
           ListHeaderComponent={<List.Item title={<Subheading>{`Parathreads: ${parathreads.length}`}</Subheading>} />}
           style={globalStyles.flex}
           contentContainerStyle={styles.content}
@@ -37,6 +38,7 @@ export function ParathreadsScreen() {
           renderItem={({item}) => <ParathreadItem parathread={item} />}
           ItemSeparatorComponent={Divider}
           ListEmptyComponent={EmptyView}
+          estimatedItemSize={parathreads.length}
         />
       ) : (
         <EmptyView />
@@ -85,6 +87,7 @@ function ParathreadItem({parathread}: ParathreadItemProps) {
         </>
       }
       right={ParathreadId}
+      style={styles.parathreadItem}
     />
   );
 }
@@ -96,5 +99,8 @@ const styles = StyleSheet.create({
   },
   manager: {
     marginRight: 20,
+  },
+  parathreadItem: {
+    paddingHorizontal: standardPadding * 2,
   },
 });
