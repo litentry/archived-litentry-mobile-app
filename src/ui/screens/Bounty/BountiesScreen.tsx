@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, FlatList} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {useBounties, Bounty} from 'src/api/hooks/useBounties';
 import {EmptyView} from '@ui/components/EmptyView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';

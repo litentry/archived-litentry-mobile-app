@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, FlatList} from 'react-native';
+import {View} from 'react-native';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Divider, Card, Subheading, Paragraph, Caption, Skeleton} from '@ui/library';
 import {Identicon} from '@ui/components/Identicon';
@@ -16,6 +16,7 @@ import {AccountRegistration} from '@ui/components/Account/AccountRegistration';
 import LoadingView from '@ui/components/LoadingView';
 import type {CouncilMember} from 'src/api/hooks/useCouncil';
 import type {Account} from 'src/api/hooks/useAccount';
+import {FlashList} from '@shopify/flash-list';
 
 type ScreenProps = {
   navigation: NavigationProp<AppStackParamList>;
@@ -78,8 +79,7 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
       {loading && !accountInfo ? (
         <LoadingView />
       ) : (
-        <FlatList
-          contentContainerStyle={globalStyles.paddedContainer}
+        <FlashList
           ListHeaderComponent={
             <CandidateInfo accountInfo={accountInfo} candidate={candidate} toAccountDetails={toAccountDetails} />
           }
@@ -88,6 +88,7 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
           keyExtractor={(item) => item}
           ItemSeparatorComponent={Divider}
           ListEmptyComponent={<EmptyView height={200}>{`No voters yet.`}</EmptyView>}
+          estimatedItemSize={candidate.voters.length}
         />
       )}
     </SafeView>
