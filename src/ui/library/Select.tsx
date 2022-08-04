@@ -4,6 +4,7 @@ import {Menu, useTheme, List, Caption, Divider, Paragraph} from 'react-native-pa
 import {StyleSheet, View, FlatList} from 'react-native';
 import {Icon} from './Icon';
 import {standardPadding} from '@ui/styles';
+import {FlashList} from '@shopify/flash-list';
 
 type Item = {
   text: string;
@@ -43,7 +44,7 @@ export function Select({items, onSelect}: Props) {
           />
         </View>
       }>
-      <FlatList
+      <FlashList
         style={styles.items}
         ItemSeparatorComponent={Divider}
         data={items}
@@ -61,6 +62,7 @@ export function Select({items, onSelect}: Props) {
             }
           />
         )}
+        estimatedItemSize={items.length}
       />
     </Menu>
   );

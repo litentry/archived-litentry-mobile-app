@@ -6,6 +6,7 @@ import globalStyles from '@ui/styles';
 import {AccountTeaser} from './Account/AccountTeaser';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 import type {KeyringAccount} from 'polkadot-api';
+import {FlashList} from '@shopify/flash-list';
 
 type Props = {
   onSelect: (account: SelectedAccount) => void;
@@ -55,13 +56,14 @@ export function SelectAccount({onSelect, accounts}: Props) {
           }}
         />
       }>
-      <FlatList
+      <FlashList
         style={styles.items}
         ItemSeparatorComponent={Divider}
         data={accounts ?? networkAccounts}
         keyExtractor={(item) => item.address}
         renderItem={({item}) => <Account onSelect={selectAccount} account={item} />}
         ListEmptyComponent={<EmptyAccounts />}
+        estimatedItemSize={accounts?.length ?? networkAccounts.length}
       />
     </Menu>
   );

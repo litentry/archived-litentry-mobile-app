@@ -7,6 +7,7 @@ import {AppStackParamList} from '@ui/navigation/navigation';
 import {accountScreen} from '@ui/navigation/routeKeys';
 import {AccountTeaser} from './AccountTeaser';
 import globalStyles from '@ui/styles';
+import {FlashList} from '@shopify/flash-list';
 
 type Props = {
   accounts: AccountInfo[];
@@ -16,7 +17,7 @@ type Props = {
 export function AccountsList({accounts, header}: Props) {
   const navigation = useNavigation<NavigationProp<AppStackParamList>>();
   return (
-    <FlatList
+    <FlashList
       data={accounts}
       renderItem={({item}) => (
         <View style={globalStyles.paddedContainer}>
@@ -30,6 +31,7 @@ export function AccountsList({accounts, header}: Props) {
       keyExtractor={(item) => item.account.address}
       ItemSeparatorComponent={Divider}
       ListHeaderComponent={header}
+      estimatedItemSize={accounts.length}
     />
   );
 }

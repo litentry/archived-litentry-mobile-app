@@ -5,6 +5,7 @@ import {useRegistrarsSummary, Registrar} from 'src/api/hooks/useRegistrarsSummar
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
 import {AccountTeaser} from './Account/AccountTeaser';
+import {FlashList} from '@shopify/flash-list';
 
 type Props = {
   onSelect: (registrar: Registrar) => void;
@@ -41,12 +42,13 @@ export function SelectRegistrar({onSelect}: Props) {
           {registrar ? <AccountTeaser account={registrar.account} /> : <Caption>{'Select registrar'}</Caption>}
         </TouchableOpacity>
       }>
-      <FlatList
+      <FlashList
         style={styles.items}
         ItemSeparatorComponent={Divider}
         data={registrarsSummary.list}
         keyExtractor={(item) => item.account.address}
         renderItem={({item}) => <RegistrarItem onSelect={selectRegistrar} registrar={item} />}
+        estimatedItemSize={registrarsSummary.list.length}
       />
     </Menu>
   );
