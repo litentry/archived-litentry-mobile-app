@@ -1,6 +1,6 @@
 import React from 'react';
 import {Subheading, Button, useTheme, Modal, List, Headline} from '@ui/library';
-import {FlatList, StyleSheet, View, Linking} from 'react-native';
+import {StyleSheet, View, Linking} from 'react-native';
 import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -23,6 +23,7 @@ import {getProposalTitle} from 'src/utils/proposal';
 import type {KeyringAccount} from 'polkadot-api';
 import {useStartTx} from 'context/TxContext';
 import {useTx} from '@polkadotApi/useTx';
+import {FlashList} from '@shopify/flash-list';
 
 type Vote = 'Aye' | 'Nay' | 'Close';
 
@@ -53,7 +54,7 @@ export function MotionsScreen({navigation}: ScreenProps) {
       {loading && !motions ? (
         <LoadingView />
       ) : (
-        <FlatList
+        <FlashList
           contentContainerStyle={styles.containerStyle}
           data={motions}
           renderItem={({item}) => {
@@ -70,6 +71,7 @@ export function MotionsScreen({navigation}: ScreenProps) {
           ItemSeparatorComponent={Padder}
           keyExtractor={(item) => item.proposal.hash}
           ListEmptyComponent={EmptyView}
+          estimatedItemSize={motions?.length}
         />
       )}
       <VoteModal
@@ -266,7 +268,7 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
   const getItemLeft = React.useCallback(() => <Headline>{`#${proposal.index}`}</Headline>, [proposal.index]);
 
   return (
-    <Card onPress={() => onPress(motion.proposal)}>
+    <Card onPress={() => onPress(motion.proposal)} style={styles.motionCard}>
       <Card.Content>
         <List.Item
           title={<Caption>{getProposalTitle(motion.proposal)}</Caption>}
@@ -310,7 +312,7 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
 const styles = StyleSheet.create({
   containerStyle: {
     marginBottom: standardPadding * 2,
-    padding: standardPadding,
+    padding: standardPadding * 2,
   },
   buttons: {
     flexDirection: 'row',
@@ -318,5 +320,8 @@ const styles = StyleSheet.create({
   },
   polkaLink: {
     marginVertical: standardPadding,
+  },
+  motionCard: {
+    marginHorizontal: standardPadding,
   },
 });
