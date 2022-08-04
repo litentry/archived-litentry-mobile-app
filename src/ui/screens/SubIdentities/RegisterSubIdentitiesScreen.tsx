@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Alert, FlatList, View} from 'react-native';
+import {Alert, FlatList, StyleSheet, View} from 'react-native';
 import {stringShorten} from '@polkadot/util';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Button, Caption, Subheading, List, Divider, IconButton, useTheme, useBottomSheet} from '@ui/library';
@@ -8,7 +8,7 @@ import {Layout} from '@ui/components/Layout';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {registerSubIdentitiesScreen} from '@ui/navigation/routeKeys';
-import globalStyles from '@ui/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {AddSubIdentity} from './AddSubIdentity';
 import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
@@ -17,6 +17,7 @@ import {Account} from '@ui/components/Account/Account';
 import {useStartTx} from 'context/TxContext';
 import type {SubIdentityPayload} from 'polkadot-api';
 import type {Account as SubstrateChainAccount, AccountBalance, AccountRegistration} from 'src/api/hooks/useAccount';
+import {FlashList} from '@shopify/flash-list';
 
 export type SubIdentity = {
   address: string;
@@ -139,12 +140,13 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
         <Padder scale={0.5} />
         <Divider />
         <Padder scale={1} />
-        <FlatList
+        <FlashList
           ListHeaderComponent={<Subheading>{`Sub-identities (${subIdentities?.length || 0})`}</Subheading>}
           data={subIdentities}
           keyExtractor={(account) => account.address}
           renderItem={({item}) => <SubAccountItem account={item} onRemove={onRemoveAccount} />}
           ListEmptyComponent={<EmptyView height={200}>{`No sub-identities set.`}</EmptyView>}
+          estimatedItemSize={subIdentities?.length}
         />
       </View>
       <BottomSheet>
@@ -194,6 +196,13 @@ function SubAccountItem({account, onRemove}: SubIdentityItemProps) {
       description={<Caption>{stringShorten(account.address, 12)}</Caption>}
       left={AccountIdentityIcon}
       right={RemoveSubAccount}
+      style={styles.removeAccount}
     />
   );
 }
+
+const styles = StyleSheet.create({
+  removeAccount: {
+    padding: standardPadding,
+  },
+});
