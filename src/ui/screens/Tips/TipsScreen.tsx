@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, StyleSheet, View, RefreshControl} from 'react-native';
+import {StyleSheet, View, RefreshControl} from 'react-native';
 import {NavigationProp} from '@react-navigation/core';
 import {TipTeaser} from '@ui/components/Tips/TipTeaser';
 import {EmptyView} from '@ui/components/EmptyView';
@@ -12,6 +12,7 @@ import globalStyles from '@ui/styles';
 import {ActivityIndicator, Button, useTheme} from '@ui/library';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {Padder} from '@ui/components/Padder';
+import {FlashList} from '@shopify/flash-list';
 
 type ScreenProps = {
   navigation: NavigationProp<DashboardStackParamList>;
@@ -20,7 +21,6 @@ type ScreenProps = {
 export function TipsScreen({navigation}: ScreenProps) {
   const {data: tips, loading, fetchMore, fetchingMore, refetch, refetching} = useTips();
   const {colors} = useTheme();
-
   const toTipDetails = (id: string) => {
     navigation.navigate(tipDetailScreen, {id});
   };
@@ -44,7 +44,7 @@ export function TipsScreen({navigation}: ScreenProps) {
         {loading && !tips ? (
           <LoadingView />
         ) : (
-          <FlatList
+          <FlashList
             ListHeaderComponent={
               <View style={styles.proposeTipContainer}>
                 <Button mode="outlined" uppercase={false} onPress={() => navigation.navigate(proposeTipScreen)}>
@@ -52,7 +52,6 @@ export function TipsScreen({navigation}: ScreenProps) {
                 </Button>
               </View>
             }
-            style={globalStyles.flex}
             data={tips}
             renderItem={({item}) => <TipTeaser tip={item} onPress={toTipDetails} />}
             keyExtractor={(item) => item.id}
@@ -74,6 +73,7 @@ export function TipsScreen({navigation}: ScreenProps) {
               });
             }}
             ListFooterComponent={ListFooter}
+            estimatedItemSize={tips?.length}
           />
         )}
       </View>
