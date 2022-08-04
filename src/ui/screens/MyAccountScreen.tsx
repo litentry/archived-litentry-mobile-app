@@ -192,7 +192,7 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
       </BalanceBottomSheet>
 
       <DelegateVotingBottomSheet>
-        {accountInfo ? <DelegateVoting fromAccount={accountInfo} onClose={closeDelegateVoting} /> : null}
+        <DelegateVoting fromAccount={accountInfo} onClose={closeDelegateVoting} />
       </DelegateVotingBottomSheet>
     </SafeView>
   );

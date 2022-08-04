@@ -30,7 +30,7 @@ const PAGES: Page[] = [
 ];
 
 type DelegateVotingProps = {
-  fromAccount: Account;
+  fromAccount?: Account;
   onClose: () => void;
 };
 
@@ -78,8 +78,8 @@ export function DelegateVoting({fromAccount, onClose}: DelegateVotingProps) {
   }, [delegateAmount, stringToBn]);
 
   const fromAccountFreeBalanceBN = React.useMemo(
-    () => formattedStringToBn(fromAccount.balance?.free),
-    [fromAccount.balance?.free],
+    () => formattedStringToBn(fromAccount?.balance?.free),
+    [fromAccount?.balance?.free],
   );
 
   const disabled =
@@ -89,7 +89,7 @@ export function DelegateVoting({fromAccount, onClose}: DelegateVotingProps) {
     delegateAmountBn.gt(fromAccountFreeBalanceBN);
 
   const delegateVote = React.useCallback(() => {
-    if (delegatedAccount && conviction && delegateAmountBn.gt(BN_ZERO)) {
+    if (fromAccount?.address && delegatedAccount && conviction && delegateAmountBn.gt(BN_ZERO)) {
       startTx({
         address: fromAccount.address,
         txConfig: {
@@ -98,7 +98,7 @@ export function DelegateVoting({fromAccount, onClose}: DelegateVotingProps) {
         },
       });
     }
-  }, [delegatedAccount, conviction, delegateAmountBn, fromAccount.address, startTx]);
+  }, [delegatedAccount, conviction, delegateAmountBn, fromAccount?.address, startTx]);
 
   const onCancel = React.useCallback(() => {
     setDelegatedAccount(undefined);
@@ -134,7 +134,7 @@ export function DelegateVoting({fromAccount, onClose}: DelegateVotingProps) {
                           helperText="The account you delegate your voting power from"
                         />
                         <Padder />
-                        <AccountTeaser account={fromAccount} />
+                        {fromAccount ? <AccountTeaser account={fromAccount} /> : null}
                       </View>
                       <Padder scale={1} />
 
@@ -184,7 +184,7 @@ export function DelegateVoting({fromAccount, onClose}: DelegateVotingProps) {
                         <Paragraph>{conviction?.text}</Paragraph>
                       </Row>
                       <Row label={'Delegating from'}>
-                        <AccountTeaser account={fromAccount} />
+                        {fromAccount ? <AccountTeaser account={fromAccount} /> : null}
                       </Row>
                       <Row label={'Delegating to'}>
                         {delegatedAccountInfo ? <AccountTeaser account={delegatedAccountInfo} /> : null}
