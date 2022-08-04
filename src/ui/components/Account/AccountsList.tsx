@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, View} from 'react-native';
+import {View} from 'react-native';
 import {Divider} from '@ui/library';
 import type {AccountInfo} from 'src/api/hooks/useAccount';
 import {NavigationProp, useNavigation} from '@react-navigation/native';

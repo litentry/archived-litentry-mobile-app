@@ -5,7 +5,7 @@ import {flatten} from 'lodash';
 import * as dateUtils from 'src/utils/date';
 import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {OrderByType, topicIdMap, usePolkassemblyDiscussions, Posts} from 'src/api/hooks/usePolkassemblyDiscussions';
 import {PolkassemblyDiscussionStackParamList} from '@ui/navigation/navigation';
 import {polkassemblyDiscussionDetail} from '@ui/navigation/routeKeys';

@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, StyleSheet, View, RefreshControl} from 'react-native';
+import {StyleSheet, View, RefreshControl} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Card, Subheading, Caption, Divider, useTheme} from '@ui/library';
@@ -14,6 +14,7 @@ import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
 import {AppStackParamList} from '@ui/navigation/navigation';
 import {accountScreen} from '@ui/navigation/routeKeys';
+import {FlashList} from '@shopify/flash-list';
 
 type TipDetailProps = {
   tip: Tip;
@@ -77,7 +78,6 @@ export function TipDetailScreen({route, navigation}: ScreenProps) {
   const id = route.params?.id;
   const {data: tip, loading, refetching, refetch} = useTip(id);
   const {colors} = useTheme();
-
   if (loading && !tip) {
     return <LoadingView />;
   }
@@ -88,29 +88,31 @@ export function TipDetailScreen({route, navigation}: ScreenProps) {
 
   return (
     <SafeView edges={noTopEdges}>
-      <FlatList
-        ListHeaderComponent={tip ? <TipDetailContent tip={tip} toAccountDetails={toAccountDetails} /> : null}
-        data={tip?.tippers}
-        style={[globalStyles.paddedContainer, styles.container]}
-        ItemSeparatorComponent={Divider}
-        renderItem={({item}) => (
-          <View style={globalStyles.marginVertical}>
-            <AccountTeaser account={item.account} onPress={() => toAccountDetails(item.account.address)}>
-              <Caption testID={'account-details'}>{item.formattedBalance}</Caption>
-            </AccountTeaser>
-          </View>
-        )}
-        ListEmptyComponent={<EmptyView height={200}>{`There are no tippers yet`}</EmptyView>}
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl
-            onRefresh={refetch}
-            refreshing={refetching}
-            tintColor={colors.primary}
-            colors={[colors.primary]}
-          />
-        }
-      />
+      <View style={[globalStyles.paddedContainer, styles.container]}>
+        <FlashList
+          ListHeaderComponent={tip ? <TipDetailContent tip={tip} toAccountDetails={toAccountDetails} /> : null}
+          data={tip?.tippers}
+          ItemSeparatorComponent={Divider}
+          renderItem={({item}) => (
+            <View style={globalStyles.marginVertical}>
+              <AccountTeaser account={item.account} onPress={() => toAccountDetails(item.account.address)}>
+                <Caption testID={'account-details'}>{item.formattedBalance}</Caption>
+              </AccountTeaser>
+            </View>
+          )}
+          ListEmptyComponent={<EmptyView height={200}>{`There are no tippers yet`}</EmptyView>}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              onRefresh={refetch}
+              refreshing={refetching}
+              tintColor={colors.primary}
+              colors={[colors.primary]}
+            />
+          }
+          estimatedItemSize={tip?.tippers.length}
+        />
+      </View>
     </SafeView>
   );
 }
