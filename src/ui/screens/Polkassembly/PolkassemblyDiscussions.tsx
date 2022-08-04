@@ -16,6 +16,7 @@ import {useNetwork} from '@atoms/network';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {SupportedNetworkType} from 'src/atoms/network';
+import {FlashList} from '@shopify/flash-list';
 
 type ScreenProps = {
   navigation: NavigationProp<PolkassemblyDiscussionStackParamList>;
@@ -55,8 +56,7 @@ export function PolkassemblyDiscussions({navigation}: ScreenProps) {
       {isLoading ? (
         <LoadingView />
       ) : (
-        <FlatList
-          style={styles.container}
+        <FlashList
           contentContainerStyle={styles.content}
           data={flatten(data?.pages)}
           stickyHeaderIndices={[0]}
@@ -144,6 +144,7 @@ export function PolkassemblyDiscussions({navigation}: ScreenProps) {
           )}
           ItemSeparatorComponent={ItemSeparator}
           keyExtractor={(item) => String(item.id)}
+          estimatedItemSize={data?.pages.length}
         />
       )}
     </SafeView>
@@ -163,53 +164,55 @@ function PolkassemblyDiscussionItem({post, currentNetwork, onPress}: ItemProps) 
   const {data: accountInfo} = useAccount(address);
 
   return (
-    <Card onPress={() => onPress(post.id)}>
-      <Card.Content>
-        <Caption selectable numberOfLines={1}>
-          {post.title}
-        </Caption>
-        <View style={globalStyles.rowAlignCenter}>
-          <Caption>{`By `}</Caption>
-          {address && accountInfo ? (
-            <AccountTeaser account={accountInfo} />
-          ) : (
-            <Caption>{post.author?.username || ''}</Caption>
-          )}
-        </View>
-        <View style={globalStyles.rowAlignCenter}>
-          <Caption>{`${dateUtils.fromNow(post.created_at)} in `}</Caption>
-          <Text>{post.topic.name}</Text>
-        </View>
-        {post.content ? (
-          <View style={globalStyles.justifyCenter}>
-            <Padder scale={0.5} />
-            <Text numberOfLines={1}>{post.content}</Text>
+    <View style={styles.card}>
+      <Card onPress={() => onPress(post.id)}>
+        <Card.Content>
+          <Caption selectable numberOfLines={1}>
+            {post.title}
+          </Caption>
+          <View style={globalStyles.rowAlignCenter}>
+            <Caption>{`By `}</Caption>
+            {address && accountInfo ? (
+              <AccountTeaser account={accountInfo} />
+            ) : (
+              <Caption>{post.author?.username || ''}</Caption>
+            )}
           </View>
-        ) : null}
-
-        <Padder scale={0.5} />
-        <View style={globalStyles.rowAlignCenter}>
-          {post.comments_aggregate.aggregate?.count ? (
-            <>
-              <View style={globalStyles.rowAlignCenter}>
-                <Icon name="message-outline" size={15} />
-                <Padder scale={0.3} />
-                <Caption>{post.comments_aggregate.aggregate.count} comments</Caption>
-              </View>
-              <Padder scale={1} />
-            </>
-          ) : null}
-
-          {post.last_update?.comment_id && post.last_update.last_update ? (
-            <View style={globalStyles.rowAlignCenter}>
-              <Icon name="clock-outline" size={15} />
-              <Padder scale={0.3} />
-              <Caption>commented {dateUtils.fromNow(post.last_update.last_update)}</Caption>
+          <View style={globalStyles.rowAlignCenter}>
+            <Caption>{`${dateUtils.fromNow(post.created_at)} in `}</Caption>
+            <Text>{post.topic.name}</Text>
+          </View>
+          {post.content ? (
+            <View style={globalStyles.justifyCenter}>
+              <Padder scale={0.5} />
+              <Text numberOfLines={1}>{post.content}</Text>
             </View>
           ) : null}
-        </View>
-      </Card.Content>
-    </Card>
+
+          <Padder scale={0.5} />
+          <View style={globalStyles.rowAlignCenter}>
+            {post.comments_aggregate.aggregate?.count ? (
+              <>
+                <View style={globalStyles.rowAlignCenter}>
+                  <Icon name="message-outline" size={15} />
+                  <Padder scale={0.3} />
+                  <Caption>{post.comments_aggregate.aggregate.count} comments</Caption>
+                </View>
+                <Padder scale={1} />
+              </>
+            ) : null}
+
+            {post.last_update?.comment_id && post.last_update.last_update ? (
+              <View style={globalStyles.rowAlignCenter}>
+                <Icon name="clock-outline" size={15} />
+                <Padder scale={0.3} />
+                <Caption>commented {dateUtils.fromNow(post.last_update.last_update)}</Caption>
+              </View>
+            ) : null}
+          </View>
+        </Card.Content>
+      </Card>
+    </View>
   );
 }
 
@@ -227,5 +230,8 @@ const styles = StyleSheet.create({
   footer: {
     paddingTop: standardPadding * 2,
     marginBottom: standardPadding * 2,
+  },
+  card: {
+    paddingHorizontal: standardPadding,
   },
 });
