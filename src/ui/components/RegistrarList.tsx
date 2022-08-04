@@ -11,6 +11,7 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {AppStackParamList} from '@ui/navigation/navigation';
 import {accountScreen} from '@ui/navigation/routeKeys';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
+import {FlashList} from '@shopify/flash-list';
 
 function RegistrarListHeader({registrarsSummary}: {registrarsSummary: RegistrarsSummary}) {
   const {registrarsCount, formattedLowestFee, formattedHighestFee} = registrarsSummary;
@@ -52,12 +53,11 @@ function RegistrarList() {
   };
 
   return (
-    <FlatList
+    <FlashList
       ListHeaderComponent={<RegistrarListHeader registrarsSummary={registrarsSummary} />}
-      contentContainerStyle={styles.flatList}
       data={registrarsList}
       renderItem={({item}) => (
-        <View style={globalStyles.marginVertical}>
+        <View style={styles.flatList}>
           <AccountTeaser
             testID="registrar_item"
             account={item.account}
@@ -74,6 +74,7 @@ function RegistrarList() {
       keyExtractor={(item) => item.account.address}
       ItemSeparatorComponent={Divider}
       ListEmptyComponent={EmptyView}
+      estimatedItemSize={registrarsList.length}
     />
   );
 }
@@ -81,6 +82,7 @@ function RegistrarList() {
 const styles = StyleSheet.create({
   flatList: {
     marginHorizontal: standardPadding * 2,
+    paddingVertical: standardPadding,
   },
   infoContainer: {
     marginTop: standardPadding * 3,
