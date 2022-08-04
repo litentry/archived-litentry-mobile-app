@@ -41,6 +41,7 @@
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/native-stack": "^6.6.2",
     "@sentry/react-native": "^3.4.2",
+    "@shopify/flash-list": "^1.2.1",
     "@tradle/react-native-http": "^2.0.1",
     "@walletconnect/react-native-dapp": "^1.7.5",
     "@walletconnect/web3-provider": "^1.7.8",
