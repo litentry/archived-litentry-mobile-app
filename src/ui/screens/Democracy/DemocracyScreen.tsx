@@ -64,7 +64,7 @@ function ReferendumTeaser({referendum, onPress}: ReferendumTeaserProps) {
   const referendumIndex = referendum.id.split(':')[1] as string;
 
   return (
-    <Card style={styles.standardPadding} onPress={() => onPress(referendum.id)}>
+    <Card style={styles.teaserCard} onPress={() => onPress(referendum.id)}>
       <View style={styles.teaserContent}>
         <ProposalTeaserHeader
           index={referendumIndex}
@@ -157,7 +157,7 @@ type ProposalTeaserProps = {
 
 function ProposalTeaser({proposal, onPress}: ProposalTeaserProps) {
   return (
-    <Card style={styles.standardPadding} onPress={() => onPress(proposal.id)}>
+    <Card style={styles.teaserCard} onPress={() => onPress(proposal.id)}>
       <View style={styles.teaserContent}>
         <ProposalTeaserHeader
           index={proposal.proposalIndex.toString()}
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
   rowLabel: {
     width: '25%',
   },
-  standardPadding: {
+  teaserCard: {
     padding: standardPadding,
     marginHorizontal: standardPadding,
   },
