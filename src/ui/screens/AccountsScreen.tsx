@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, TouchableOpacity, Keyboard} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Keyboard, FlatList} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
 import {useTheme, Divider, IconButton, List, FAB, Caption, Menu, Subheading, Icon, useBottomSheet} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -16,7 +16,6 @@ import type {AccountMeta, KeyringAccount} from 'polkadot-api';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 import {useKeyring} from '@polkadotApi/useKeyring';
 import {Identicon} from '@ui/components/Identicon';
-import {FlashList} from '@shopify/flash-list';
 
 type Props = {
   navigation: NavigationProp<CompleteNavigatorParamList, typeof accountsScreen>;
@@ -62,7 +61,7 @@ export function AccountsScreen({navigation}: Props) {
   return (
     <SafeView edges={noTopEdges}>
       <Padder scale={1} />
-      <FlashList
+      <FlatList
         contentContainerStyle={styles.content}
         data={sortByFunction(networkAccounts)}
         showsVerticalScrollIndicator
@@ -108,7 +107,6 @@ export function AccountsScreen({navigation}: Props) {
         }
         ItemSeparatorComponent={Divider}
         ListEmptyComponent={EmptyView}
-        estimatedItemSize={networkAccounts.length}
       />
       <Buttons navigation={navigation} onAddAccount={openExternalAccount} />
 

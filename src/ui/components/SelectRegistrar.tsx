@@ -5,7 +5,6 @@ import {useRegistrarsSummary, Registrar} from 'src/api/hooks/useRegistrarsSummar
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
 import {AccountTeaser} from './Account/AccountTeaser';
-import {FlashList} from '@shopify/flash-list';
 
 type Props = {
   onSelect: (registrar: Registrar) => void;

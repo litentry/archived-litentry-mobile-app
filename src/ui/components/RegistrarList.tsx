@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, FlatList, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Caption, Divider} from '@ui/library';
 import {useRegistrarsSummary, RegistrarsSummary} from 'src/api/hooks/useRegistrarsSummary';
 import StatInfoBlock from '@ui/components/StatInfoBlock';

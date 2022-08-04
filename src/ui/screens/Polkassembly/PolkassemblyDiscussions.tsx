@@ -56,96 +56,98 @@ export function PolkassemblyDiscussions({navigation}: ScreenProps) {
       {isLoading ? (
         <LoadingView />
       ) : (
-        <FlashList
-          contentContainerStyle={styles.content}
-          data={flatten(data?.pages)}
-          stickyHeaderIndices={[0]}
-          ListHeaderComponent={
-            <View style={[globalStyles.rowAlignCenter, styles.menuContainer, {backgroundColor: colors.primary}]}>
-              <Menu
-                visible={sortMenuVisible}
-                onDismiss={() => {
-                  setSortMenuVisible(false);
+        <>
+          <View style={[globalStyles.rowAlignCenter, styles.menuContainer, {backgroundColor: colors.primary}]}>
+            <Menu
+              visible={sortMenuVisible}
+              onDismiss={() => {
+                setSortMenuVisible(false);
+              }}
+              anchor={
+                <TouchableOpacity
+                  onPress={() => {
+                    setSortMenuVisible(true);
+                  }}
+                  style={globalStyles.rowAlignCenter}>
+                  <Subheading>Sort by</Subheading>
+                  <Icon name="chevron-down" size={25} />
+                </TouchableOpacity>
+              }>
+              <Menu.Item
+                disabled={orderBy === 'lastCommented'}
+                title="Last Commented"
+                onPress={() => {
+                  sortBy('lastCommented');
                 }}
-                anchor={
-                  <TouchableOpacity
-                    onPress={() => {
-                      setSortMenuVisible(true);
-                    }}
-                    style={globalStyles.rowAlignCenter}>
-                    <Subheading>Sort by</Subheading>
-                    <Icon name="chevron-down" size={25} />
-                  </TouchableOpacity>
-                }>
-                <Menu.Item
-                  disabled={orderBy === 'lastCommented'}
-                  title="Last Commented"
-                  onPress={() => {
-                    sortBy('lastCommented');
-                  }}
-                />
-                <Menu.Item
-                  disabled={orderBy === 'dateAddedNewest'}
-                  title="Date Added (newest)"
-                  onPress={() => {
-                    sortBy('dateAddedNewest');
-                  }}
-                />
-                <Menu.Item
-                  disabled={orderBy === 'dateAddedOldest'}
-                  title="Date Added (oldest)"
-                  onPress={() => {
-                    sortBy('dateAddedOldest');
-                  }}
-                />
-              </Menu>
-              <Padder scale={1} />
-              <Menu
-                visible={filterMenuVisible}
-                onDismiss={() => {
-                  setFilterMenuVisible(false);
+              />
+              <Menu.Item
+                disabled={orderBy === 'dateAddedNewest'}
+                title="Date Added (newest)"
+                onPress={() => {
+                  sortBy('dateAddedNewest');
                 }}
-                anchor={
-                  <TouchableOpacity
-                    onPress={() => {
-                      setFilterMenuVisible(true);
-                    }}
-                    style={globalStyles.rowAlignCenter}>
-                    <Subheading>Filter</Subheading>
-                    <Icon name="chevron-down" size={25} />
-                  </TouchableOpacity>
-                }>
-                {Object.entries(topicIdMap).map(([name, id]) => (
-                  <Menu.Item
-                    disabled={topicId === id}
-                    key={name}
-                    title={name}
-                    onPress={() => {
-                      filterBy(id);
-                    }}
-                  />
-                ))}
-              </Menu>
-            </View>
-          }
-          ListFooterComponent={
-            <View style={styles.footer}>
-              {hasNextPage ? (
-                isFetching || isFetchingNextPage ? (
-                  <ActivityIndicator animating />
-                ) : (
-                  <Button onPress={() => fetchNextPage()}>{`Load more`}</Button>
-                )
-              ) : null}
-            </View>
-          }
-          renderItem={({item}) => (
-            <PolkassemblyDiscussionItem post={item} currentNetwork={currentNetwork.key} onPress={toDiscussionDetail} />
-          )}
-          ItemSeparatorComponent={ItemSeparator}
-          keyExtractor={(item) => String(item.id)}
-          estimatedItemSize={data?.pages.length}
-        />
+              />
+              <Menu.Item
+                disabled={orderBy === 'dateAddedOldest'}
+                title="Date Added (oldest)"
+                onPress={() => {
+                  sortBy('dateAddedOldest');
+                }}
+              />
+            </Menu>
+            <Padder scale={1} />
+            <Menu
+              visible={filterMenuVisible}
+              onDismiss={() => {
+                setFilterMenuVisible(false);
+              }}
+              anchor={
+                <TouchableOpacity
+                  onPress={() => {
+                    setFilterMenuVisible(true);
+                  }}
+                  style={globalStyles.rowAlignCenter}>
+                  <Subheading>Filter</Subheading>
+                  <Icon name="chevron-down" size={25} />
+                </TouchableOpacity>
+              }>
+              {Object.entries(topicIdMap).map(([name, id]) => (
+                <Menu.Item
+                  disabled={topicId === id}
+                  key={name}
+                  title={name}
+                  onPress={() => {
+                    filterBy(id);
+                  }}
+                />
+              ))}
+            </Menu>
+          </View>
+          <FlashList
+            data={flatten(data?.pages)}
+            ListFooterComponent={
+              <View style={styles.footer}>
+                {hasNextPage ? (
+                  isFetching || isFetchingNextPage ? (
+                    <ActivityIndicator animating />
+                  ) : (
+                    <Button onPress={() => fetchNextPage()}>{`Load more`}</Button>
+                  )
+                ) : null}
+              </View>
+            }
+            renderItem={({item}) => (
+              <PolkassemblyDiscussionItem
+                post={item}
+                currentNetwork={currentNetwork.key}
+                onPress={toDiscussionDetail}
+              />
+            )}
+            ItemSeparatorComponent={ItemSeparator}
+            keyExtractor={(item) => String(item.id)}
+            estimatedItemSize={data?.pages.length}
+          />
+        </>
       )}
     </SafeView>
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Linking, StyleSheet, TouchableOpacity, View, FlatList} from 'react-native';
+import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {Icon, Headline, Caption, Chip, Text, useTheme, Subheading} from '@ui/library';
 import * as dateUtils from 'src/utils/date';

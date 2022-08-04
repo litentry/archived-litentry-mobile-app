@@ -1,12 +1,12 @@
 import React, {useEffect} from 'react';
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {Divider, Card, Subheading, Paragraph, Caption, Skeleton} from '@ui/library';
 import {Identicon} from '@ui/components/Identicon';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AppStackParamList, DashboardStackParamList} from '@ui/navigation/navigation';
 import {Padder} from '@ui/components/Padder';
-import globalStyles from '@ui/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {EmptyView} from '@ui/components/EmptyView';
 import {useAccount} from 'src/api/hooks/useAccount';
@@ -31,7 +31,7 @@ type CandidateInfoProps = {
 
 function CandidateInfo({candidate, accountInfo, toAccountDetails}: CandidateInfoProps) {
   return (
-    <>
+    <View style={styles.standardMargin}>
       <Card>
         <Card.Content>
           <View style={globalStyles.alignCenter}>
@@ -58,7 +58,7 @@ function CandidateInfo({candidate, accountInfo, toAccountDetails}: CandidateInfo
       </Card>
       <Padder scale={1} />
       <Subheading style={globalStyles.textCenter}>{`Voters`}</Subheading>
-    </>
+    </View>
   );
 }
 
@@ -105,7 +105,7 @@ function Voter({address, onPress}: VoterItemProps) {
   const {data: accountInfo} = useAccount(address);
 
   return (
-    <View style={globalStyles.marginVertical}>
+    <View style={styles.standardMargin}>
       {accountInfo ? (
         <AccountTeaser account={accountInfo} onPress={onPress} identiconSize={30}>
           {councilVote?.formattedStake && <Caption>{`Stake: ${councilVote.formattedStake}`}</Caption>}
@@ -116,3 +116,9 @@ function Voter({address, onPress}: VoterItemProps) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  standardMargin: {
+    marginHorizontal: standardPadding * 2,
+  },
+});

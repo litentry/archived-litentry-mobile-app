@@ -6,7 +6,6 @@ import globalStyles from '@ui/styles';
 import {AccountTeaser} from './Account/AccountTeaser';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 import type {KeyringAccount} from 'polkadot-api';
-import {FlashList} from '@shopify/flash-list';
 
 type Props = {
   onSelect: (account: SelectedAccount) => void;

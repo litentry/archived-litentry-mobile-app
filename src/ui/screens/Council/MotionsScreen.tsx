@@ -311,8 +311,7 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
 
 const styles = StyleSheet.create({
   containerStyle: {
-    marginBottom: standardPadding * 2,
-    padding: standardPadding * 2,
+    paddingVertical: standardPadding * 2,
   },
   buttons: {
     flexDirection: 'row',
