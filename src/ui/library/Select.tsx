@@ -4,7 +4,6 @@ import {Menu, useTheme, List, Caption, Divider, Paragraph} from 'react-native-pa
 import {StyleSheet, View, FlatList} from 'react-native';
 import {Icon} from './Icon';
 import {standardPadding} from '@ui/styles';
-import {FlashList} from '@shopify/flash-list';
 
 type Item = {
   text: string;
@@ -44,13 +43,14 @@ export function Select({items, onSelect}: Props) {
           />
         </View>
       }>
-      <FlashList
+      <FlatList
+        style={styles.items}
         ItemSeparatorComponent={Divider}
         data={items}
         keyExtractor={(item) => String(item.value)}
         renderItem={({item}) => (
           <Menu.Item
-            style={[styles.menuItem]}
+            style={styles.menuItem}
             onPress={() => {
               selectItem(item);
             }}
@@ -61,7 +61,6 @@ export function Select({items, onSelect}: Props) {
             }
           />
         )}
-        estimatedItemSize={items.length}
       />
     </Menu>
   );
@@ -72,8 +71,10 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 5,
   },
+  items: {
+    maxHeight: 250,
+  },
   menuItem: {
     marginVertical: standardPadding,
-    maxHeight: 250,
   },
 });

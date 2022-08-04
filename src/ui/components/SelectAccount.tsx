@@ -56,13 +56,12 @@ export function SelectAccount({onSelect, accounts}: Props) {
           }}
         />
       }>
-      <FlashList
+      <FlatList
         ItemSeparatorComponent={Divider}
         data={accounts ?? networkAccounts}
         keyExtractor={(item) => item.address}
         renderItem={({item}) => <Account onSelect={selectAccount} account={item} />}
         ListEmptyComponent={<EmptyAccounts />}
-        estimatedItemSize={accounts?.length ?? networkAccounts.length}
       />
     </Menu>
   );

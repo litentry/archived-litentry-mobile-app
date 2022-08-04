@@ -42,12 +42,11 @@ export function SelectRegistrar({onSelect}: Props) {
           {registrar ? <AccountTeaser account={registrar.account} /> : <Caption>{'Select registrar'}</Caption>}
         </TouchableOpacity>
       }>
-      <FlashList
+      <FlatList
         ItemSeparatorComponent={Divider}
         data={registrarsSummary.list}
         keyExtractor={(item) => item.account.address}
         renderItem={({item}) => <RegistrarItem onSelect={selectRegistrar} registrar={item} />}
-        estimatedItemSize={registrarsSummary.list.length}
       />
     </Menu>
   );
