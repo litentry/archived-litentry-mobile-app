@@ -1,5 +1,5 @@
 import React from 'react';
-import {useWindowDimensions, View, FlatList, RefreshControl, StyleSheet} from 'react-native';
+import {useWindowDimensions, View, RefreshControl, StyleSheet} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {useDemocracyReferendums, DemocracyReferendum} from 'src/api/hooks/useDemocracyReferendums';
 import {useDemocracyProposals, DemocracyProposal} from 'src/api/hooks/useDemocracyProposals';
