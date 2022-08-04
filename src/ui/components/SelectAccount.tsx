@@ -57,7 +57,6 @@ export function SelectAccount({onSelect, accounts}: Props) {
         />
       }>
       <FlashList
-        style={styles.items}
         ItemSeparatorComponent={Divider}
         data={accounts ?? networkAccounts}
         keyExtractor={(item) => item.address}
@@ -95,7 +94,7 @@ export function Account({onSelect, account}: AccountProps) {
   }
 
   return (
-    <View style={globalStyles.paddedContainer}>
+    <View style={[globalStyles.paddedContainer, styles.items]}>
       <AccountTeaser account={accountInfo} onPress={() => onSelect({account, accountInfo})} name={name}>
         {isExternal && <Caption style={styles.caption}>{`External`}</Caption>}
       </AccountTeaser>

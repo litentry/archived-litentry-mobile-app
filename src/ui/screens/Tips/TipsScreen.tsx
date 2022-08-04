@@ -8,7 +8,6 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useTips} from 'src/api/hooks/useTips';
 import {tipDetailScreen} from '@ui/navigation/routeKeys';
 import {proposeTipScreen} from '@ui/navigation/routeKeys';
-import globalStyles from '@ui/styles';
 import {ActivityIndicator, Button, useTheme} from '@ui/library';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {Padder} from '@ui/components/Padder';

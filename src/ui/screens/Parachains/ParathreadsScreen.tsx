@@ -21,7 +21,6 @@ const toParathreadHomepage = (url: string) => {
 
 export function ParathreadsScreen() {
   const {data: parathreads, loading} = useParathreads();
-
   if (loading && !parathreads) {
     return <LoadingView />;
   }
@@ -31,8 +30,6 @@ export function ParathreadsScreen() {
       {parathreads ? (
         <FlashList
           ListHeaderComponent={<List.Item title={<Subheading>{`Parathreads: ${parathreads.length}`}</Subheading>} />}
-          style={globalStyles.flex}
-          contentContainerStyle={styles.content}
           keyExtractor={(item) => item.id.toString()}
           data={parathreads}
           renderItem={({item}) => <ParathreadItem parathread={item} />}
@@ -93,14 +90,11 @@ function ParathreadItem({parathread}: ParathreadItemProps) {
 }
 
 const styles = StyleSheet.create({
-  content: {
-    paddingVertical: standardPadding * 2,
-    paddingHorizontal: standardPadding * 2,
-  },
   manager: {
     marginRight: 20,
   },
   parathreadItem: {
     paddingHorizontal: standardPadding * 2,
+    height: 60,
   },
 });

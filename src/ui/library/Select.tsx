@@ -45,13 +45,12 @@ export function Select({items, onSelect}: Props) {
         </View>
       }>
       <FlashList
-        style={styles.items}
         ItemSeparatorComponent={Divider}
         data={items}
         keyExtractor={(item) => String(item.value)}
         renderItem={({item}) => (
           <Menu.Item
-            style={styles.menuItem}
+            style={[styles.menuItem]}
             onPress={() => {
               selectItem(item);
             }}
@@ -73,10 +72,8 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 5,
   },
-  items: {
-    maxHeight: 250,
-  },
   menuItem: {
     marginVertical: standardPadding,
+    maxHeight: 250,
   },
 });

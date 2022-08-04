@@ -43,7 +43,6 @@ export function SelectRegistrar({onSelect}: Props) {
         </TouchableOpacity>
       }>
       <FlashList
-        style={styles.items}
         ItemSeparatorComponent={Divider}
         data={registrarsSummary.list}
         keyExtractor={(item) => item.account.address}

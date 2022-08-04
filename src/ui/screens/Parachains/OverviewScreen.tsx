@@ -85,7 +85,6 @@ export function ParachainsOverviewScreen({navigation}: ScreenProps) {
         <LoadingView />
       ) : (
         <FlashList
-          contentContainerStyle={globalStyles.paddedContainer}
           showsVerticalScrollIndicator={false}
           ListHeaderComponent={<ParachainsOverviewHeader parachainsSummary={parachainsSummary} />}
           data={parachains}
@@ -170,6 +169,7 @@ const styles = StyleSheet.create({
     width: '60%',
   },
   parachainItem: {
+    paddingVertical: standardPadding,
     marginHorizontal: standardPadding,
   },
 });
