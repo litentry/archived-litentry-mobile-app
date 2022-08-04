@@ -109,7 +109,7 @@ export function DelegateVoting({fromAccount, onClose}: DelegateVotingProps) {
   }, [onClose]);
 
   return (
-    <Layout style={styles.container}>
+    <Layout>
       <Subheading style={globalStyles.textCenter}>{`Delegate voting`}</Subheading>
       <Padder />
 
@@ -225,11 +225,8 @@ function Row({label, children}: {label: string; children: React.ReactNode}) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    height: 400,
-  },
   pagerContainer: {
-    flex: 1,
+    height: 200,
   },
   pagerItem: {
     flex: 1,
