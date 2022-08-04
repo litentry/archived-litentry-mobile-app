@@ -11,6 +11,7 @@ import {Padder} from '@ui/components/Padder';
 import {AddBounty} from '@ui/components/AddBounty';
 import {NavigationProp} from '@react-navigation/native';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
+import {FlashList} from '@shopify/flash-list';
 
 type ScreenProps = {
   navigation: NavigationProp<DashboardStackParamList>;
@@ -31,10 +32,8 @@ export function BountiesScreen({navigation}: ScreenProps) {
       {loading && !bounties ? (
         <LoadingView />
       ) : (
-        <FlatList
+        <FlashList
           data={bounties}
-          style={globalStyles.flex}
-          contentContainerStyle={styles.listContent}
           keyExtractor={({index}) => index.toString()}
           ListHeaderComponent={
             <View style={styles.bounty}>
@@ -46,6 +45,7 @@ export function BountiesScreen({navigation}: ScreenProps) {
           renderItem={({item}) => <BountyItem bounty={item} onPress={toBountyDetails} />}
           ItemSeparatorComponent={ItemSeparator}
           ListEmptyComponent={EmptyView}
+          estimatedItemSize={bounties?.length}
         />
       )}
 
@@ -83,7 +83,7 @@ function BountyItem({bounty, onPress}: BountyItemProps) {
   );
 
   return (
-    <Card onPress={() => onPress(index)}>
+    <Card onPress={() => onPress(index)} style={styles.bountyCard}>
       <List.Item
         left={ItemLeft}
         title={<Text>{bountyStatus.status}</Text>}
@@ -95,26 +95,13 @@ function BountyItem({bounty, onPress}: BountyItemProps) {
 }
 
 const styles = StyleSheet.create({
-  listContent: {
-    paddingVertical: standardPadding * 2,
-    paddingHorizontal: standardPadding * 2,
-  },
-  itemRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  itemLeft: {
-    alignItems: 'flex-end',
-  },
-  itemContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  itemContainer: {marginBottom: 10},
   bounty: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     paddingVertical: 15,
+    paddingRight: standardPadding,
+  },
+  bountyCard: {
+    marginHorizontal: standardPadding,
   },
 });
