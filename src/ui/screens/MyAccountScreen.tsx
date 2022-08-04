@@ -1,5 +1,5 @@
 import React from 'react';
-import {Alert, StyleSheet, TouchableOpacity, View, Share, Keyboard} from 'react-native';
+import {Alert, StyleSheet, TouchableOpacity, View, Share} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import {stringShorten} from '@polkadot/util';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
@@ -170,8 +170,8 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
         <Padder scale={2} />
       </ScrollView>
 
-      <SendFundBottomSheet onClose={Keyboard.dismiss}>
-        <SendFund address={address} onFundsSent={closeSendFund} />
+      <SendFundBottomSheet>
+        <SendFund address={address} onClose={closeSendFund} />
       </SendFundBottomSheet>
 
       <ReceiveFundBottomSheet>

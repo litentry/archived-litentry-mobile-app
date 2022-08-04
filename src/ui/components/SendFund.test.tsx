@@ -38,7 +38,7 @@ describe('SendFund', () => {
   });
 
   it('should render the component with initial state correctly', async () => {
-    const {queryByText, getByTestId, findByText} = render(<SendFund address={address} onFundsSent={onFundsSent} />);
+    const {queryByText, getByTestId, findByText} = render(<SendFund address={address} onClose={onFundsSent} />);
 
     await findByText('Enter amount');
     await findByText('Send to address');
@@ -46,14 +46,14 @@ describe('SendFund', () => {
     await findByText('Transfer with account keep-alive checks');
 
     expect(queryByText('Normal transfer without keep-alive checks')).toBe(null);
-    const makeTransferButton = getByTestId('make-transfer-button');
+    const makeTransferButton = getByTestId('send-fund-button');
     expect(makeTransferButton).toBeDisabled();
   });
 
   it('should make the transaction with `balances.transfer` method when keep alive check is enabled', async () => {
     mockStartTx.mockImplementation(() => Promise.resolve());
-    const {getByPlaceholderText, getByTestId, getByA11yRole, queryByA11yRole} = render(
-      <SendFund address={address} onFundsSent={onFundsSent} />,
+    const {getByPlaceholderText, getByTestId, queryByA11yRole} = render(
+      <SendFund address={address} onClose={onFundsSent} />,
     );
 
     const amount = '100';
@@ -63,17 +63,13 @@ describe('SendFund', () => {
     fireEvent.changeText(getByPlaceholderText('Enter amount'), amount);
     fireEvent.changeText(getByPlaceholderText('Account address'), toAddress);
 
-    const makeTransferButton = getByTestId('make-transfer-button');
+    const makeTransferButton = getByTestId('send-fund-button');
 
     await waitFor(() => {
       expect(makeTransferButton).not.toBeDisabled();
     });
 
     fireEvent.press(makeTransferButton);
-
-    await waitFor(() => {
-      expect(getByA11yRole('progressbar')).toBeTruthy();
-    });
 
     expect(mockStartTx).toHaveBeenCalledWith({
       address: '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a',
@@ -92,8 +88,8 @@ describe('SendFund', () => {
 
   it('should make the transaction with `balances.transfer` method when keep alive check is disabled', async () => {
     mockStartTx.mockImplementation(() => Promise.resolve());
-    const {getByPlaceholderText, getByTestId, getByText, getByA11yRole, queryByA11yRole} = render(
-      <SendFund address={address} onFundsSent={onFundsSent} />,
+    const {getByPlaceholderText, getByTestId, getByText, queryByA11yRole} = render(
+      <SendFund address={address} onClose={onFundsSent} />,
     );
 
     const amount = '100';
@@ -104,7 +100,7 @@ describe('SendFund', () => {
     fireEvent.changeText(getByPlaceholderText('Account address'), toAddress);
     fireEvent(getByTestId('keep_alive_switch'), 'valueChange', false);
 
-    const makeTransferButton = getByTestId('make-transfer-button');
+    const makeTransferButton = getByTestId('send-fund-button');
 
     await waitFor(() => {
       expect(makeTransferButton).not.toBeDisabled();
@@ -113,10 +109,6 @@ describe('SendFund', () => {
     expect(getByText('Normal transfer without keep-alive checks')).not.toBeNull();
 
     fireEvent.press(makeTransferButton);
-
-    await waitFor(() => {
-      expect(getByA11yRole('progressbar')).toBeTruthy();
-    });
 
     expect(mockStartTx).toHaveBeenCalledWith({
       address: '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a',
@@ -136,8 +128,8 @@ describe('SendFund', () => {
   it('should not call onFundsSent when the transaction fails', async () => {
     mockStartTx.mockImplementation(() => Promise.reject());
 
-    const {getByPlaceholderText, getByTestId, getByA11yRole, queryByA11yRole} = render(
-      <SendFund address={address} onFundsSent={onFundsSent} />,
+    const {getByPlaceholderText, getByTestId, queryByA11yRole} = render(
+      <SendFund address={address} onClose={onFundsSent} />,
     );
 
     const amount = '100';
@@ -147,17 +139,13 @@ describe('SendFund', () => {
     fireEvent.changeText(getByPlaceholderText('Enter amount'), amount);
     fireEvent.changeText(getByPlaceholderText('Account address'), toAddress);
 
-    const makeTransferButton = getByTestId('make-transfer-button');
+    const makeTransferButton = getByTestId('send-fund-button');
 
     await waitFor(() => {
       expect(makeTransferButton).not.toBeDisabled();
     });
 
     fireEvent.press(makeTransferButton);
-
-    await waitFor(() => {
-      expect(getByA11yRole('progressbar')).toBeTruthy();
-    });
 
     expect(mockStartTx).toHaveBeenCalledWith({
       address: '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a',

@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Keyboard, StyleSheet, View} from 'react-native';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Subheading, Caption, useBottomSheetInternal, Button, Select, Paragraph} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
@@ -101,6 +101,7 @@ export function DelegateVoting({fromAccount, onClose}: DelegateVotingProps) {
   }, [delegatedAccount, conviction, delegateAmountBn, fromAccount?.address, startTx]);
 
   const onCancel = React.useCallback(() => {
+    Keyboard.dismiss();
     setDelegatedAccount(undefined);
     setConviction(undefined);
     setDelegateAmount(undefined);
