@@ -15,6 +15,7 @@ import {ProgressChart} from '@ui/components/ProgressChart';
 import {NavigationProp} from '@react-navigation/native';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {democracyReferendumDetailScreen, democracyProposalDetailScreen} from '@ui/navigation/routeKeys';
+import {FlashList} from '@shopify/flash-list';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -119,7 +120,7 @@ export function Referendums({navigation}: {navigation: NavigationProp<DashboardS
       {loading && !referendums ? (
         <LoadingView />
       ) : (
-        <FlatList
+        <FlashList
           contentContainerStyle={styles.listContainer}
           data={referendums}
           renderItem={({item}) => <ReferendumTeaser referendum={item} onPress={toReferendumDetails} />}
@@ -142,6 +143,7 @@ export function Referendums({navigation}: {navigation: NavigationProp<DashboardS
             });
           }}
           ListFooterComponent={ListFooter}
+          estimatedItemSize={referendums?.length}
         />
       )}
     </SafeView>
@@ -204,7 +206,7 @@ export function Proposals({navigation}: {navigation: NavigationProp<DashboardSta
       {loading && !proposals ? (
         <LoadingView />
       ) : (
-        <FlatList
+        <FlashList
           contentContainerStyle={styles.listContainer}
           data={proposals}
           renderItem={({item}) => <ProposalTeaser proposal={item} onPress={toProposalDetails} />}
@@ -227,6 +229,7 @@ export function Proposals({navigation}: {navigation: NavigationProp<DashboardSta
             });
           }}
           ListFooterComponent={ListFooter}
+          estimatedItemSize={proposals?.length}
         />
       )}
     </SafeView>
@@ -244,7 +247,7 @@ function Row({label, children}: {label: string; children: React.ReactNode}) {
 
 const styles = StyleSheet.create({
   listContainer: {
-    padding: standardPadding * 2,
+    paddingVertical: standardPadding * 2,
   },
   teaserContent: {
     marginLeft: standardPadding,
@@ -261,6 +264,7 @@ const styles = StyleSheet.create({
   },
   standardPadding: {
     padding: standardPadding,
+    marginHorizontal: standardPadding,
   },
   marginHorizontal: {
     flexShrink: 1,
