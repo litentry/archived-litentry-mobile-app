@@ -1,15 +1,15 @@
 import React from 'react';
-import {Linking, Text, View, StyleSheet, Image, Platform} from 'react-native';
+import {Text, View, StyleSheet, Image} from 'react-native';
 import networkError from 'image/network/networkError.png';
-import {Button, Modal} from '@ui/library';
+import {Modal} from '@ui/library';
 import {standardPadding} from '@ui/styles';
-import {useNetInfo} from '@react-native-community/netinfo';
+import {useNetInfo} from 'src/hooks/useNetInfo';
 
 export function NetworkConnectionError() {
   const networkStatus = useNetInfo();
 
   return (
-    <Modal visible={!networkStatus.isConnected}>
+    <Modal visible={!networkStatus}>
       <View style={styles.modelContainer}>
         <Image source={networkError} style={styles.image} resizeMode="contain" />
       </View>

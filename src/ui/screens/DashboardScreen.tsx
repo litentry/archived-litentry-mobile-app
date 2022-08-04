@@ -28,7 +28,6 @@ import NetworkSelectionList from '@ui/components/NetworkSelectionList';
 import {NetworkType, useAvailableNetworks, useNetwork} from '@atoms/network';
 import {NetworkSwitch} from '@ui/components/NetworkSwitch';
 import {NetworkConnectionError} from '@ui/components/NetworkConnectionError';
-import {useNetInfo} from '@react-native-community/netinfo';
 
 const refetchQueries = [DEMOCRACY_SUMMARY_QUERY, COUNCIL_SUMMARY_QUERY, BOUNTIES_SUMMARY_QUERY, TREASURY_SUMMARY_QUERY];
 

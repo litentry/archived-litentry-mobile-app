@@ -5,7 +5,7 @@ import {Icon, Text, useTheme} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {standardPadding} from '@ui/styles';
 import {usePolkadotApiStatus} from '@polkadotApi/usePolkadotApiStatus';
-import {useNetInfo} from '@react-native-community/netinfo';
+import {useNetInfo} from 'src/hooks/useNetInfo';
 
 type Props = {
   onPress: () => void;
@@ -21,7 +21,7 @@ export function NetworkSwitch({onPress}: Props) {
     <TouchableOpacity
       onPress={onPress}
       style={[styles.networkSwitch, {backgroundColor: colors.background}]}
-      disabled={!networkStatus.isConnected}>
+      disabled={!networkStatus}>
       <View style={styles.container}>
         <Icon name={apiStatus === 'ready' ? 'web' : 'earth-off'} size={16} color={colors.accent} />
         <Padder scale={0.3} />
