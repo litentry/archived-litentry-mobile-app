@@ -21,14 +21,14 @@ const mergeFunc = (existing: any, incoming: any, {args}: any) => {
 };
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
+export let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
+
 export function LitentryApiClientProvider({children}: {children: React.ReactNode}) {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>();
   const {currentNetwork} = useNetwork();
 
   useEffect(() => {
     const init = async () => {
-      // @TODO: https://github.com/litentry/litentry-app/issues/869
-      // Enable cache redirects
       const cache = new InMemoryCache({
         typePolicies: {
           Query: {
@@ -55,22 +55,25 @@ export function LitentryApiClientProvider({children}: {children: React.ReactNode
           },
         },
       });
-      setClient(
-        new ApolloClient({
-          link: createHttpLink({
-            uri: LITENTRY_API_URI,
-            headers: {
-              'substrate-network': currentNetwork.key,
-            },
-          }),
-          cache,
-          defaultOptions: {
-            watchQuery: {
-              fetchPolicy: 'cache-and-network',
-            },
+
+      const apolloInstance = new ApolloClient({
+        link: createHttpLink({
+          uri: LITENTRY_API_URI,
+          headers: {
+            'substrate-network': currentNetwork.key,
           },
         }),
-      );
+        cache,
+        defaultOptions: {
+          watchQuery: {
+            fetchPolicy: 'cache-and-network',
+          },
+        },
+      });
+      setClient(apolloInstance);
+      if (__DEV__) {
+        apolloClient = apolloInstance;
+      }
     };
 
     init();
