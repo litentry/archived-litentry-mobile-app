@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Caption, Divider} from '@ui/library';
+import {Caption, Divider, FlatList} from '@ui/library';
 import {useRegistrarsSummary, RegistrarsSummary} from 'src/api/hooks/useRegistrarsSummary';
 import StatInfoBlock from '@ui/components/StatInfoBlock';
 import globalStyles, {standardPadding, monofontFamily} from '@ui/styles';
@@ -11,7 +11,6 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {AppStackParamList} from '@ui/navigation/navigation';
 import {accountScreen} from '@ui/navigation/routeKeys';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
-import {FlashList} from '@shopify/flash-list';
 
 function RegistrarListHeader({registrarsSummary}: {registrarsSummary: RegistrarsSummary}) {
   const {registrarsCount, formattedLowestFee, formattedHighestFee} = registrarsSummary;
@@ -53,7 +52,7 @@ function RegistrarList() {
   };
 
   return (
-    <FlashList
+    <FlatList
       ListHeaderComponent={<RegistrarListHeader registrarsSummary={registrarsSummary} />}
       data={registrarsList}
       renderItem={({item}) => (

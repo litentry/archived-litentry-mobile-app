@@ -1,7 +1,7 @@
 import React from 'react';
 import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
-import {Icon, Headline, Caption, Chip, Text, useTheme, Subheading} from '@ui/library';
+import {Icon, Headline, Caption, Chip, Text, useTheme, Subheading, FlatList} from '@ui/library';
 import * as dateUtils from 'src/utils/date';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
@@ -10,7 +10,6 @@ import {Posts, usePolkassemblyDiscussionDetail} from 'src/api/hooks/usePolkassem
 import {PolkassemblyDiscussionStackParamList} from '@ui/navigation/navigation';
 import {polkassemblyDiscussionDetail} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {FlashList} from '@shopify/flash-list';
 
 type ScreenProps = {
   route: RouteProp<PolkassemblyDiscussionStackParamList, typeof polkassemblyDiscussionDetail>;
@@ -60,7 +59,7 @@ export function PolkassemblyDiscussionDetail({route}: ScreenProps) {
 
   return (
     <SafeView edges={noTopEdges}>
-      <FlashList
+      <FlatList
         ListHeaderComponent={<DiscussionDetailHeader post={post} />}
         data={post.comments}
         keyExtractor={(item) => item.id}

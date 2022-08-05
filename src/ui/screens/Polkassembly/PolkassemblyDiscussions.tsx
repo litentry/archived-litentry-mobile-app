@@ -1,6 +1,6 @@
 import React from 'react';
 import {NavigationProp} from '@react-navigation/native';
-import {Icon, Button, Card, Caption, Text, Menu, Subheading, useTheme} from '@ui/library';
+import {Icon, Button, Card, Caption, Text, Menu, Subheading, useTheme, FlatList} from '@ui/library';
 import {flatten} from 'lodash';
 import * as dateUtils from 'src/utils/date';
 import LoadingView from '@ui/components/LoadingView';
@@ -16,7 +16,6 @@ import {useNetwork} from '@atoms/network';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {SupportedNetworkType} from 'src/atoms/network';
-import {FlashList} from '@shopify/flash-list';
 
 type ScreenProps = {
   navigation: NavigationProp<PolkassemblyDiscussionStackParamList>;
@@ -123,7 +122,7 @@ export function PolkassemblyDiscussions({navigation}: ScreenProps) {
               ))}
             </Menu>
           </View>
-          <FlashList
+          <FlatList
             data={flatten(data?.pages)}
             ListFooterComponent={
               <View style={styles.footer}>

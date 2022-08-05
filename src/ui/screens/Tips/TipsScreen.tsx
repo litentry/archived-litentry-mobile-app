@@ -8,10 +8,9 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useTips} from 'src/api/hooks/useTips';
 import {tipDetailScreen} from '@ui/navigation/routeKeys';
 import {proposeTipScreen} from '@ui/navigation/routeKeys';
-import {ActivityIndicator, Button, useTheme} from '@ui/library';
+import {ActivityIndicator, Button, FlatList, useTheme} from '@ui/library';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {Padder} from '@ui/components/Padder';
-import {FlashList} from '@shopify/flash-list';
 
 type ScreenProps = {
   navigation: NavigationProp<DashboardStackParamList>;
@@ -43,7 +42,7 @@ export function TipsScreen({navigation}: ScreenProps) {
         {loading && !tips ? (
           <LoadingView />
         ) : (
-          <FlashList
+          <FlatList
             ListHeaderComponent={
               <View style={styles.proposeTipContainer}>
                 <Button mode="outlined" uppercase={false} onPress={() => navigation.navigate(proposeTipScreen)}>

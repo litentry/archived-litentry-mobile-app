@@ -1,13 +1,12 @@
 import React from 'react';
 import {View} from 'react-native';
-import {Divider} from '@ui/library';
+import {Divider, FlatList} from '@ui/library';
 import type {AccountInfo} from 'src/api/hooks/useAccount';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {AppStackParamList} from '@ui/navigation/navigation';
 import {accountScreen} from '@ui/navigation/routeKeys';
 import {AccountTeaser} from './AccountTeaser';
 import globalStyles from '@ui/styles';
-import {FlashList} from '@shopify/flash-list';
 
 type Props = {
   accounts: AccountInfo[];
@@ -17,7 +16,7 @@ type Props = {
 export function AccountsList({accounts, header}: Props) {
   const navigation = useNavigation<NavigationProp<AppStackParamList>>();
   return (
-    <FlashList
+    <FlatList
       data={accounts}
       renderItem={({item}) => (
         <View style={globalStyles.paddedContainer}>

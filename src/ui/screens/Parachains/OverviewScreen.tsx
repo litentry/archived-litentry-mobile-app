@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
-import {Divider, Card, List, Caption, Text, Subheading} from '@ui/library';
+import {Divider, Card, List, Caption, Text, Subheading, FlatList} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {ProgressChart} from '@ui/components/ProgressChart';
 import LoadingView from '@ui/components/LoadingView';
@@ -10,7 +10,6 @@ import {Parachain, ParachainsSummary, useParachainsSummary} from 'src/api/hooks/
 import {ParachainsStackParamList} from '@ui/navigation/navigation';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {FlashList} from '@shopify/flash-list';
 
 type ScreenProps = {
   navigation: NavigationProp<ParachainsStackParamList>;
@@ -84,7 +83,7 @@ export function ParachainsOverviewScreen({navigation}: ScreenProps) {
       {loading && (!parachainsSummary || !parachains) ? (
         <LoadingView />
       ) : (
-        <FlashList
+        <FlatList
           showsVerticalScrollIndicator={false}
           ListHeaderComponent={<ParachainsOverviewHeader parachainsSummary={parachainsSummary} />}
           data={parachains}

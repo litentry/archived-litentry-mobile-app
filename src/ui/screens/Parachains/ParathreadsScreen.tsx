@@ -3,13 +3,12 @@ import {View, StyleSheet, Linking} from 'react-native';
 import globalStyles, {standardPadding} from '@ui/styles';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useParathreads} from 'src/api/hooks/useParaThreads';
-import {List, Text, Divider, Subheading} from '@ui/library';
+import {List, Text, Divider, Subheading, FlatList} from '@ui/library';
 import {Identicon} from '@ui/components/Identicon';
 import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
 import type {Parathread} from 'src/api/hooks/useParaThreads';
 import {Account} from '@ui/components/Account/Account';
-import {FlashList} from '@shopify/flash-list';
 
 const toParathreadHomepage = (url: string) => {
   Linking.canOpenURL(url).then((supported) => {
@@ -28,7 +27,7 @@ export function ParathreadsScreen() {
   return (
     <SafeView edges={noTopEdges}>
       {parathreads ? (
-        <FlashList
+        <FlatList
           ListHeaderComponent={<List.Item title={<Subheading>{`Parathreads: ${parathreads.length}`}</Subheading>} />}
           keyExtractor={(item) => item.id.toString()}
           data={parathreads}

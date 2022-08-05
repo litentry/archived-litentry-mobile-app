@@ -4,7 +4,7 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {useDemocracyReferendums, DemocracyReferendum} from 'src/api/hooks/useDemocracyReferendums';
 import {useDemocracyProposals, DemocracyProposal} from 'src/api/hooks/useDemocracyProposals';
 import {Padder} from '@ui/components/Padder';
-import {ActivityIndicator, useTheme, Card, Caption, Title, Subheading} from '@ui/library';
+import {ActivityIndicator, useTheme, Card, Caption, Title, Subheading, FlatList} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {fromNow} from 'src/utils/date';
 import LoadingView from '@ui/components/LoadingView';
@@ -15,7 +15,6 @@ import {ProgressChart} from '@ui/components/ProgressChart';
 import {NavigationProp} from '@react-navigation/native';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {democracyReferendumDetailScreen, democracyProposalDetailScreen} from '@ui/navigation/routeKeys';
-import {FlashList} from '@shopify/flash-list';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -120,7 +119,7 @@ export function Referendums({navigation}: {navigation: NavigationProp<DashboardS
       {loading && !referendums ? (
         <LoadingView />
       ) : (
-        <FlashList
+        <FlatList
           contentContainerStyle={styles.listContainer}
           data={referendums}
           renderItem={({item}) => <ReferendumTeaser referendum={item} onPress={toReferendumDetails} />}
@@ -206,7 +205,7 @@ export function Proposals({navigation}: {navigation: NavigationProp<DashboardSta
       {loading && !proposals ? (
         <LoadingView />
       ) : (
-        <FlashList
+        <FlatList
           contentContainerStyle={styles.listContainer}
           data={proposals}
           renderItem={({item}) => <ProposalTeaser proposal={item} onPress={toProposalDetails} />}

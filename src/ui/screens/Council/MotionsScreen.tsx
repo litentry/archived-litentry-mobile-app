@@ -1,5 +1,5 @@
 import React from 'react';
-import {Subheading, Button, useTheme, Modal, List, Headline} from '@ui/library';
+import {Subheading, Button, useTheme, Modal, List, Headline, FlatList} from '@ui/library';
 import {StyleSheet, View, Linking} from 'react-native';
 import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
@@ -23,7 +23,6 @@ import {getProposalTitle} from 'src/utils/proposal';
 import type {KeyringAccount} from 'polkadot-api';
 import {useStartTx} from 'context/TxContext';
 import {useTx} from '@polkadotApi/useTx';
-import {FlashList} from '@shopify/flash-list';
 
 type Vote = 'Aye' | 'Nay' | 'Close';
 
@@ -54,7 +53,7 @@ export function MotionsScreen({navigation}: ScreenProps) {
       {loading && !motions ? (
         <LoadingView />
       ) : (
-        <FlashList
+        <FlatList
           contentContainerStyle={styles.containerStyle}
           data={motions}
           renderItem={({item}) => {

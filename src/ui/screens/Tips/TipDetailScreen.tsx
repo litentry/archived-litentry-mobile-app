@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View, RefreshControl} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {Card, Subheading, Caption, Divider, useTheme} from '@ui/library';
+import {Card, Subheading, Caption, Divider, useTheme, FlatList} from '@ui/library';
 import {TipReason} from '@ui/components/Tips/TipReason';
 import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -14,7 +14,6 @@ import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
 import {AppStackParamList} from '@ui/navigation/navigation';
 import {accountScreen} from '@ui/navigation/routeKeys';
-import {FlashList} from '@shopify/flash-list';
 
 type TipDetailProps = {
   tip: Tip;
@@ -89,7 +88,7 @@ export function TipDetailScreen({route, navigation}: ScreenProps) {
   return (
     <SafeView edges={noTopEdges}>
       <View style={[globalStyles.paddedContainer, styles.container]}>
-        <FlashList
+        <FlatList
           ListHeaderComponent={tip ? <TipDetailContent tip={tip} toAccountDetails={toAccountDetails} /> : null}
           data={tip?.tippers}
           ItemSeparatorComponent={Divider}

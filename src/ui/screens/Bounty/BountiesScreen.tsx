@@ -4,14 +4,13 @@ import {useBounties, Bounty} from 'src/api/hooks/useBounties';
 import {EmptyView} from '@ui/components/EmptyView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import LoadingView from '@ui/components/LoadingView';
-import {Text, Caption, Card, Headline, List, Button, useBottomSheet} from '@ui/library';
+import {Text, Caption, Card, Headline, List, Button, useBottomSheet, FlatList} from '@ui/library';
 import {bountyDetailScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
 import {AddBounty} from '@ui/components/AddBounty';
 import {NavigationProp} from '@react-navigation/native';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
-import {FlashList} from '@shopify/flash-list';
 
 type ScreenProps = {
   navigation: NavigationProp<DashboardStackParamList>;
@@ -32,7 +31,7 @@ export function BountiesScreen({navigation}: ScreenProps) {
       {loading && !bounties ? (
         <LoadingView />
       ) : (
-        <FlashList
+        <FlatList
           data={bounties}
           keyExtractor={({index}) => index.toString()}
           ListHeaderComponent={
