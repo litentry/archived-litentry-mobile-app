@@ -17,24 +17,25 @@ export function TechnicalCommitteeScreen() {
       {loading && !technicalCommittee ? (
         <LoadingView />
       ) : (
-        <View style={globalStyles.paddedContainer}>
-          <View style={styles.infoContainer}>
-            <Icon name="alert-circle" size={20} />
-            <Padder scale={0.5} />
-            <Caption
-              style={
-                styles.textWrap
-              }>{`The Technical Committee can, along with the Council, produce emergency referenda, which are fast-tracked for voting and implementation.`}</Caption>
+        <>
+          <View style={globalStyles.paddedContainer}>
+            <View style={styles.infoContainer}>
+              <Icon name="alert-circle" size={20} />
+              <Padder scale={0.5} />
+              <Caption
+                style={
+                  styles.textWrap
+                }>{`The Technical Committee can, along with the Council, produce emergency referenda, which are fast-tracked for voting and implementation.`}</Caption>
+            </View>
+            <View style={styles.infoContainer}>
+              <Icon name="alert-circle" size={20} />
+              <Padder scale={0.5} />
+              <Caption
+                style={
+                  styles.textWrap
+                }>{`Members are added or removed from the Technical Committee via a simple majority vote of the Council.`}</Caption>
+            </View>
           </View>
-          <View style={styles.infoContainer}>
-            <Icon name="alert-circle" size={20} />
-            <Padder scale={0.5} />
-            <Caption
-              style={
-                styles.textWrap
-              }>{`Members are added or removed from the Technical Committee via a simple majority vote of the Council.`}</Caption>
-          </View>
-
           <AccountsList
             accounts={technicalCommittee?.members || []}
             header={
@@ -47,7 +48,7 @@ export function TechnicalCommitteeScreen() {
               </View>
             }
           />
-        </View>
+        </>
       )}
     </SafeView>
   );
