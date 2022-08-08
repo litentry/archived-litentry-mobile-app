@@ -82,7 +82,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
  */
 
 project.ext.react = [
-    enableHermes: false,
+    enableHermes: true,
     nodeExecutableAndArgs: ["node", "--max-old-space-size=8192"],
 ]
 
