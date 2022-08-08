@@ -2,13 +2,13 @@ import NetInfo from '@react-native-community/netinfo';
 import {useEffect, useState} from 'react';
 
 export function useNetInfo() {
-  const [networkStatus, setNetworStaus] = useState<boolean>(false);
+  const [networkStatus, setNetworkStatus] = useState<boolean>(false);
 
   useEffect(() => {
     NetInfo.addEventListener((state) => {
-      setNetworStaus(state.isConnected ? true : false);
+      setNetworkStatus(state.isConnected ? true : false);
     });
-  }, []);
+  }, [networkStatus]);
 
-  return {networkStatus};
+  return networkStatus;
 }
