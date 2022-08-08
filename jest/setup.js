@@ -1,3 +1,4 @@
+import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js';
 import {Blob} from 'blob-polyfill';
 import React from 'react';
 import 'react-native-gesture-handler/jestSetup';
@@ -80,3 +81,5 @@ jest.mock('../src/hooks/useRemoteConfig', () => {
     }),
   };
 });
+
+jest.mock('@react-native-community/netinfo', () => mockRNCNetInfo);
