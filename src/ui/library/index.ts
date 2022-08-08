@@ -39,3 +39,4 @@ export {Calendar} from './Calendar';
 // export {Tabs, TabScreen, useTabIndex, useTabNavigation} from 'react-native-paper-tabs'; TODO use when updated or create our own
 export {useBottomSheet, BottomSheetTextInput, useBottomSheetInternal} from './BottomSheet';
 export {Skeleton} from './Skeleton';
+export {Popover} from './Popover';

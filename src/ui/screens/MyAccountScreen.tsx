@@ -1,5 +1,5 @@
 import React from 'react';
-import {Alert, StyleSheet, TouchableOpacity, View, Share, Keyboard} from 'react-native';
+import {Alert, StyleSheet, TouchableOpacity, View, Share} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import {stringShorten} from '@polkadot/util';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
@@ -19,6 +19,7 @@ import {SendFund} from '@ui/components/SendFund';
 import {ReceiveFund} from '@ui/components/ReceiveFund';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 import {useKeyring} from '@polkadotApi/useKeyring';
+import {DelegateVoting} from '@ui/components/DelegateVoting';
 
 type ScreenProps = {
   navigation: NavigationProp<CompleteNavigatorParamList>;
@@ -53,6 +54,12 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
     closeBottomSheet: closeBalanceDetails,
     openBottomSheet: openBalanceDetails,
     BottomSheet: BalanceBottomSheet,
+  } = useBottomSheet();
+
+  const {
+    closeBottomSheet: closeDelegateVoting,
+    openBottomSheet: openDelegateVoting,
+    BottomSheet: DelegateVotingBottomSheet,
   } = useBottomSheet();
 
   return (
@@ -118,6 +125,10 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
             Manage identity
           </Button>
           <Padder scale={1} />
+          <Button icon="account-arrow-right" mode="text" onPress={openDelegateVoting}>
+            Delegate votes
+          </Button>
+          <Padder scale={1} />
           <Button
             icon="delete"
             mode="text"
@@ -151,8 +162,8 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
         <Padder scale={2} />
       </ScrollView>
 
-      <SendFundBottomSheet onClose={Keyboard.dismiss}>
-        <SendFund address={address} onFundsSent={closeSendFund} />
+      <SendFundBottomSheet>
+        <SendFund address={address} onClose={closeSendFund} />
       </SendFundBottomSheet>
 
       <ReceiveFundBottomSheet>
@@ -171,6 +182,10 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
           <Padder scale={2} />
         </Layout>
       </BalanceBottomSheet>
+
+      <DelegateVotingBottomSheet>
+        <DelegateVoting fromAccount={accountInfo} onClose={closeDelegateVoting} />
+      </DelegateVotingBottomSheet>
     </SafeView>
   );
 }
