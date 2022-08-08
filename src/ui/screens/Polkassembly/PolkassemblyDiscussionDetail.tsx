@@ -1,21 +1,52 @@
 import React from 'react';
 import {Linking, StyleSheet, TouchableOpacity, View, FlatList} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
-import {Icon, Headline, Caption, Chip, Text, useTheme, Subheading} from '@ui/library';
+import {Icon, Chip, Text, useTheme} from '@ui/library';
 import * as dateUtils from 'src/utils/date';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {usePolkassemblyDiscussionDetail} from 'src/api/hooks/usePolkassemblyDiscussionDetail';
+import {Posts, usePolkassemblyDiscussionDetail} from 'src/api/hooks/usePolkassemblyDiscussionDetail';
 import {PolkassemblyDiscussionStackParamList} from '@ui/navigation/navigation';
 import {polkassemblyDiscussionDetail} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
 
-export function PolkassemblyDiscussionDetail({
-  route,
-}: {
+type ScreenProps = {
   route: RouteProp<PolkassemblyDiscussionStackParamList, typeof polkassemblyDiscussionDetail>;
-}) {
+};
+
+function DiscussionDetailHeader({post}: {post: Posts}) {
+  return (
+    <View style={styles.header}>
+      <Text variant="headlineSmall">{post.title ?? ''}</Text>
+      <View style={styles.postDetailRow}>
+        <Text variant="bodySmall">{post.author?.username ?? ''} </Text>
+        <Text variant="bodySmall">posted in </Text>
+        <Chip>{post.topic.name}</Chip>
+      </View>
+      <Text variant="bodySmall"> {dateUtils.fromNow(post.created_at)}</Text>
+      <View style={styles.content}>
+        <Text>{post.content?.trim() ?? ''}</Text>
+      </View>
+      <View style={styles.reactionRow}>
+        {post.comments.length ? (
+          <>
+            <View style={globalStyles.rowAlignCenter}>
+              <Icon name="message-outline" size={15} />
+              <Padder scale={0.3} />
+              <Text variant="bodySmall">{post.comments.length} comments</Text>
+            </View>
+            <Padder scale={1} />
+          </>
+        ) : null}
+        <Text variant="bodySmall">{`👍 ${post.likes.aggregate.count} `}</Text>
+        <Text variant="bodySmall">{` 👎 ${post.dislikes.aggregate.count}`}</Text>
+      </View>
+    </View>
+  );
+}
+
+export function PolkassemblyDiscussionDetail({route}: ScreenProps) {
   const {colors} = useTheme();
   const id = route.params.id;
   const {data} = usePolkassemblyDiscussionDetail(id);
@@ -29,66 +60,41 @@ export function PolkassemblyDiscussionDetail({
   return (
     <SafeView edges={noTopEdges}>
       <FlatList
-        ListHeaderComponent={() => (
-          <View style={styles.header}>
-            <Headline>{post.title ?? ''}</Headline>
-            <View style={styles.postDetailRow}>
-              <Caption>{post.author?.username ?? ''} </Caption>
-              <Caption>posted in </Caption>
-              <Chip>{post.topic.name}</Chip>
-            </View>
-            <Caption> {dateUtils.fromNow(post.created_at)}</Caption>
-            <View style={styles.content}>
-              <Text>{post.content?.trim() ?? ''}</Text>
-            </View>
-            <View style={styles.reactionRow}>
-              {post.comments.length ? (
-                <>
-                  <View style={globalStyles.rowAlignCenter}>
-                    <Icon name="message-outline" size={15} />
-                    <Padder scale={0.3} />
-                    <Caption>{post.comments.length} comments</Caption>
-                  </View>
-                  <Padder scale={1} />
-                </>
-              ) : null}
-              <Caption>{`👍 ${post.likes.aggregate.count} `}</Caption>
-              <Caption>{` 👎 ${post.dislikes.aggregate.count}`}</Caption>
-            </View>
-          </View>
-        )}
+        ListHeaderComponent={<DiscussionDetailHeader post={post} />}
         data={post.comments}
         keyExtractor={(item) => item.id}
         renderItem={({item: comment}) => (
           <View style={styles.comment}>
-            <View style={[styles.commentAuthorIcon, {backgroundColor: colors.accent}]}>
-              <Subheading>{comment.author?.username?.[0]?.toUpperCase()}</Subheading>
+            <View style={[styles.commentAuthorIcon, {backgroundColor: colors.secondary}]}>
+              <Text variant="titleMedium">{comment.author?.username?.[0]?.toUpperCase()}</Text>
             </View>
             <View style={styles.commentRightSide}>
               <View style={styles.commentHeader}>
-                <Caption>{comment.author?.username ?? ''}</Caption>
-                <Caption> commented </Caption>
-                <Caption>{dateUtils.fromNow(comment.created_at)}</Caption>
+                <Text variant="bodySmall">{comment.author?.username ?? ''}</Text>
+                <Text variant="bodySmall"> commented </Text>
+                <Text variant="bodySmall">{dateUtils.fromNow(comment.created_at)}</Text>
               </View>
               <Padder scale={0.5} />
               <Text>{comment.content.trim()}</Text>
               <Padder scale={0.5} />
               <View style={globalStyles.rowAlignCenter}>
-                <Caption>{`👍 ${comment.likes.aggregate.count} `}</Caption>
-                <Caption>{` 👎 ${comment.dislikes.aggregate.count}`}</Caption>
+                <Text variant="bodySmall">{`👍 ${comment.likes.aggregate.count} `}</Text>
+                <Text variant="bodySmall">{` 👎 ${comment.dislikes.aggregate.count}`}</Text>
               </View>
             </View>
           </View>
         )}
-        ListFooterComponent={() => (
+        ListFooterComponent={
           <View style={styles.footer}>
             <Icon name="information-outline" size={20} />
-            <Caption>{` To comment, like or subscribe please `}</Caption>
+            <Text variant="bodySmall">{` To comment, like or subscribe please `}</Text>
             <TouchableOpacity onPress={() => Linking.openURL(externalURL)}>
-              <Caption style={[styles.textUnderline, {color: colors.primary}]}>login</Caption>
+              <Text variant="bodySmall" style={[styles.textUnderline, {color: colors.primary}]}>
+                login
+              </Text>
             </TouchableOpacity>
           </View>
-        )}
+        }
         contentContainerStyle={styles.contentContainer}
       />
     </SafeView>

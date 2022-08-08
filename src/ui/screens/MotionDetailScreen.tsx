@@ -2,7 +2,7 @@ import React from 'react';
 import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {Card, Icon, Caption, Subheading, Paragraph, useBottomSheet} from '@ui/library';
+import {Card, Icon, Text, useBottomSheet, useTheme} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {useNetwork} from '@atoms/network';
 import LoadingView from '@ui/components/LoadingView';
@@ -44,9 +44,13 @@ function VoteItem({type, children}: VoteItemProps) {
 }
 
 export function MotionDetailScreen({route, navigation}: PropTypes) {
+  const {colors, roundness} = useTheme();
   const {openBottomSheet, BottomSheet} = useBottomSheet();
   const {currentNetwork} = useNetwork();
   const {data: motion, loading} = useMotionDetail(route.params.hash);
+  const itemStyles = React.useMemo(() => {
+    return {borderRadius: roundness, borderColor: colors.surfaceVariant, backgroundColor: colors.surface};
+  }, [colors, roundness]);
 
   if (loading && !motion) {
     return <LoadingView />;
@@ -67,7 +71,7 @@ export function MotionDetailScreen({route, navigation}: PropTypes) {
   return (
     <SafeView edges={noTopEdges}>
       <ScrollView style={[globalStyles.paddedContainer, styles.container]}>
-        <Card>
+        <View style={[styles.item, itemStyles]}>
           <Card.Content>
             <View style={globalStyles.spaceBetweenRowContainer}>
               <StatInfoBlock title="ID">{motion?.proposal.index || ''}</StatInfoBlock>
@@ -75,7 +79,9 @@ export function MotionDetailScreen({route, navigation}: PropTypes) {
                 {['kusama', 'polkadot'].includes(currentNetwork.key) ? (
                   <TouchableOpacity onPress={openBottomSheet}>
                     <View style={globalStyles.rowAlignCenter}>
-                      <Caption numberOfLines={1}>on Polkassembly</Caption>
+                      <Text variant="bodySmall" numberOfLines={1}>
+                        on Polkassembly
+                      </Text>
                       <Padder scale={0.3} />
                       <Icon name="share-outline" size={20} />
                     </View>
@@ -83,7 +89,9 @@ export function MotionDetailScreen({route, navigation}: PropTypes) {
                 ) : null}
               </StatInfoBlock>
               <StatInfoBlock title="Status">
-                <Paragraph style={{color: colorGreen}}>{votingStatus?.status}</Paragraph>
+                <Text variant="bodyMedium" style={{color: colorGreen}}>
+                  {votingStatus?.status}
+                </Text>
               </StatInfoBlock>
             </View>
             <Padder scale={1} />
@@ -96,35 +104,38 @@ export function MotionDetailScreen({route, navigation}: PropTypes) {
               )}
             </StatInfoBlock>
           </Card.Content>
-        </Card>
+        </View>
         <Padder scale={0.3} />
         <View style={globalStyles.spaceBetweenRowContainer}>
-          <Card style={[styles.item, styles.left]}>
+          <View style={[styles.item, itemStyles]}>
             <Card.Content>
               <StatInfoBlock title="Section">
-                {<Caption style={styles.textCapitalize}>{proposal.section}</Caption>}
+                {
+                  <Text variant="bodySmall" style={styles.textCapitalize}>
+                    {proposal.section}
+                  </Text>
+                }
               </StatInfoBlock>
               <Padder scale={0.5} />
               <StatInfoBlock title="Method">{proposal.method}</StatInfoBlock>
             </Card.Content>
-          </Card>
-          <Card style={[styles.item, styles.right]}>
+          </View>
+          <Padder scale={0.3} />
+          <View style={[styles.item, itemStyles]}>
             <Card.Content>
-              <View>
-                <Caption>Votes</Caption>
-                <Subheading style={globalStyles.aye}>
-                  {`Aye (${votes?.ayes?.length}/${motion?.votes?.threshold})`}
-                </Subheading>
-                <Subheading style={globalStyles.nay}>
-                  {`Nay (${votes?.nays?.length}/${motion?.votes?.threshold})`}
-                </Subheading>
-              </View>
+              <Text variant="bodySmall">Votes</Text>
+              <Text variant="titleMedium" style={globalStyles.aye}>
+                {`Aye (${votes?.ayes?.length}/${motion?.votes?.threshold})`}
+              </Text>
+              <Text variant="titleMedium" style={globalStyles.nay}>
+                {`Nay (${votes?.nays?.length}/${motion?.votes?.threshold})`}
+              </Text>
             </Card.Content>
-          </Card>
+          </View>
         </View>
         {motion?.votes ? (
           <View style={styles.votesContainer}>
-            <Subheading>Votes</Subheading>
+            <Text variant="titleMedium">Votes</Text>
             {votes?.ayes?.length ? (
               votes.ayes.map((vote) => (
                 <View style={styles.voteContainer} key={vote.account.address}>
@@ -137,7 +148,7 @@ export function MotionDetailScreen({route, navigation}: PropTypes) {
               <>
                 <Padder scale={0.5} />
                 <VoteItem type="aye">
-                  <Paragraph>{`No one voted "Aye" yet.`}</Paragraph>
+                  <Text variant="bodyMedium">{`No one voted "Aye" yet.`}</Text>
                 </VoteItem>
               </>
             )}
@@ -153,7 +164,7 @@ export function MotionDetailScreen({route, navigation}: PropTypes) {
               <>
                 <Padder scale={0.5} />
                 <VoteItem type="nay">
-                  <Paragraph>{`No one voted "Nay" yet.`}</Paragraph>
+                  <Text variant="bodyMedium">{`No one voted "Nay" yet.`}</Text>
                 </VoteItem>
               </>
             )}
@@ -188,6 +199,8 @@ const styles = StyleSheet.create({
   },
   item: {
     flex: 1,
+    borderWidth: 1,
+    padding: standardPadding,
   },
   left: {
     marginRight: 2,

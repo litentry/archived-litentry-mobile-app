@@ -3,8 +3,8 @@ import {View, FlatList, StyleSheet, Linking} from 'react-native';
 import globalStyles, {standardPadding} from '@ui/styles';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useParathreads} from 'src/api/hooks/useParaThreads';
-import {List, Text, Divider, Subheading} from '@ui/library';
-import Identicon from '@polkadot/reactnative-identicon';
+import {List, Text, Divider} from '@ui/library';
+import {Identicon} from '@ui/components/Identicon';
 import {EmptyView} from '@ui/components/EmptyView';
 import LoadingView from '@ui/components/LoadingView';
 import type {Parathread} from 'src/api/hooks/useParaThreads';
@@ -29,7 +29,9 @@ export function ParathreadsScreen() {
     <SafeView edges={noTopEdges}>
       {parathreads ? (
         <FlatList
-          ListHeaderComponent={<List.Item title={<Subheading>{`Parathreads: ${parathreads.length}`}</Subheading>} />}
+          ListHeaderComponent={
+            <List.Item title={<Text variant="titleMedium">{`Parathreads: ${parathreads.length}`}</Text>} />
+          }
           style={globalStyles.flex}
           contentContainerStyle={styles.content}
           keyExtractor={(item) => item.id.toString()}
@@ -52,29 +54,39 @@ type ParathreadItemProps = {
 function ParathreadItem({parathread}: ParathreadItemProps) {
   const [days, hours] = parathread.lease?.blockTime || [];
 
+  const AccountIdentityIcon = React.useCallback(
+    () => (
+      <View style={globalStyles.justifyCenter}>
+        {parathread?.manager && <Identicon value={parathread.manager.account.address} size={30} />}
+      </View>
+    ),
+    [parathread],
+  );
+
+  const ParathreadId = React.useCallback(
+    () => (
+      <View style={globalStyles.justifyCenter}>
+        <Text>{parathread.id}</Text>
+      </View>
+    ),
+    [parathread],
+  );
+
   return (
     <List.Item
       onPress={() => toParathreadHomepage(String(parathread.homepage))}
-      left={() => (
-        <View style={globalStyles.justifyCenter}>
-          {parathread?.manager && <Identicon value={parathread.manager.account.address} size={30} />}
-        </View>
-      )}
-      title={() => (
+      left={AccountIdentityIcon}
+      title={
         <View style={styles.manager}>{parathread.manager && <Account account={parathread.manager.account} />}</View>
-      )}
-      description={() => (
+      }
+      description={
         <>
           {parathread.name && <Text>{parathread.name}</Text>}
           {parathread.lease ? <Text>{parathread.lease.period}</Text> : null}
           {days ? <Text>{days || hours ? `${days || ''} ${hours || ''}` : null}</Text> : null}
         </>
-      )}
-      right={() => (
-        <View style={globalStyles.justifyCenter}>
-          <Text>{parathread.id}</Text>
-        </View>
-      )}
+      }
+      right={ParathreadId}
     />
   );
 }

@@ -1,6 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {ScrollView, TouchableOpacity, SectionList, StyleSheet, View, useWindowDimensions} from 'react-native';
-import Identicon from '@polkadot/reactnative-identicon';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {NavigationProp} from '@react-navigation/native';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
@@ -11,24 +10,25 @@ import {SelectAccount} from '@ui/components/SelectAccount';
 import {useCouncil, CouncilMember, Council} from 'src/api/hooks/useCouncil';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {candidateScreen} from '@ui/navigation/routeKeys';
-import {Button, Divider, Modal, useTheme, Caption, Subheading, Text, TextInput, HelperText} from '@ui/library';
+import {Button, Divider, Modal, useTheme, Text, TextInput, HelperText} from '@ui/library';
+import {Identicon} from '@ui/components/Identicon';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {MotionsScreen} from './MotionsScreen';
 import {useModuleElection, ModuleElection} from 'src/api/hooks/useModuleElection';
 import Badge from '@ui/components/Badge';
 import {noop} from 'lodash';
-import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useCouncilVotesOf} from 'src/api/hooks/useCouncilVotesOf';
 import BalanceInput from '@ui/components/BalanceInput';
 import type {Account} from 'src/api/hooks/useAccount';
 import {formattedStringToBn} from 'src/utils/balance';
 import MaxBalance from '@ui/components/MaxBalance';
-import {useApi} from 'context/ChainApiContext';
 import {useSnackbar} from 'context/SnackbarContext';
 import {InputLabel} from '@ui/library/InputLabel';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {BN_ZERO} from '@polkadot/util';
+import {useStartTx} from 'context/TxContext';
+import {useTx} from '@polkadotApi/useTx';
 
 const MAX_VOTES = 16;
 
@@ -42,7 +42,7 @@ export function CouncilScreen() {
     <Tab.Navigator
       initialLayout={{width: layout.width}}
       screenOptions={{
-        tabBarLabelStyle: {color: colors.text},
+        tabBarLabelStyle: {color: colors.secondary},
         tabBarItemStyle: {width: 200},
         tabBarStyle: {backgroundColor: colors.background},
       }}>
@@ -97,9 +97,9 @@ export function CouncilOverviewScreen({navigation}: ScreenProps) {
                   account={item.account}
                   onPress={() => toMemberScreen(item, section.title)}>
                   <View style={globalStyles.rowAlignCenter}>
-                    <Caption>{`Backing: ${item.formattedBacking}`}</Caption>
+                    <Text variant="bodySmall">{`Backing: ${item.formattedBacking}`}</Text>
                     <Padder />
-                    <Caption>{`votes: ${item.voters.length}`}</Caption>
+                    <Text variant="bodySmall">{`votes: ${item.voters.length}`}</Text>
                   </View>
                 </AccountTeaser>
               </View>
@@ -108,7 +108,7 @@ export function CouncilOverviewScreen({navigation}: ScreenProps) {
           renderSectionHeader={({section: {title}}) => (
             <>
               <Padder />
-              <Subheading>{buildSectionHeaderTitle(title, council)}</Subheading>
+              <Text variant="titleMedium">{buildSectionHeaderTitle(title, council)}</Text>
               {title === 'Member' ? (
                 <View style={styles.voteActions}>
                   <Button
@@ -206,7 +206,7 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
     }
   }, [councilVote, candidates]);
 
-  const startTx = useApiTx();
+  const {startTx} = useStartTx();
   const {formatBalance} = useFormatBalance();
 
   const onCandidateSelect = (accountId: string, isSelected: boolean) => {
@@ -247,8 +247,10 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
     if (account) {
       startTx({
         address: account.address,
-        txMethod: `${moduleElection.module}.vote`,
-        params: [selectedCandidates, amount],
+        txConfig: {
+          method: `${moduleElection.module}.vote`,
+          params: [selectedCandidates, amount],
+        },
       });
       reset();
     }
@@ -257,7 +259,7 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
   return (
     <Modal visible={visible} onDismiss={reset}>
       <View style={globalStyles.alignCenter}>
-        <Subheading>{`Vote for council`}</Subheading>
+        <Text variant="titleMedium">{`Vote for council`}</Text>
       </View>
       <Padder scale={1} />
       <InputLabel label={'voting account:'} helperText={'This account will be use to approve each candidate.'} />
@@ -306,8 +308,8 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
 
 function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandidacyProps) {
   const [account, setAccount] = React.useState<Account>();
-  const startTx = useApiTx();
-  const {api} = useApi();
+  const {startTx} = useStartTx();
+  const {getTxMethodArgsLength} = useTx();
   const balance = useFormatBalance();
   const formattedBalance = balance.formatBalance(moduleElection.candidacyBond);
   const {data: council} = useCouncil();
@@ -315,26 +317,27 @@ function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandi
   const candidacyBond = balance.stringToBn(moduleElection.candidacyBond) ?? BN_ZERO;
   const sufficientBalance =
     balance.stringToBn(accountFreeBalance)?.gt(BN_ZERO) && balance.stringToBn(accountFreeBalance)?.gt(candidacyBond);
-
   const submitCandidacy = !account || !sufficientBalance;
-
   const snackbar = useSnackbar();
-  const onSubmitCandidacy = () => {
-    if (account && api && moduleElection.module) {
-      startTx({
-        address: account.address,
-        txMethod: `${moduleElection.module}.submitCandidacy`,
-        params: [
-          api.tx[moduleElection.module]?.submitCandidacy?.meta.args.length === 1 ? [council?.candidates.length] : [],
-        ],
-      })
-        .then(() => {
-          snackbar('Candidacy submitted successfully');
-        })
-        .catch(() => {
-          snackbar('Error while submitting candidacy');
+
+  const onSubmitCandidacy = async () => {
+    if (account && moduleElection.module) {
+      const argsLength = await getTxMethodArgsLength(`${moduleElection.module}.submitCandidacy`);
+      try {
+        await startTx({
+          address: account.address,
+          txConfig: {
+            method: `${moduleElection.module}.submitCandidacy`,
+            params: [argsLength === 1 ? [council?.candidates.length ?? 0] : []],
+          },
         });
-      reset();
+        snackbar('Candidacy submitted successfully');
+      } catch (e) {
+        console.warn(e);
+        snackbar('Error while submitting candidacy');
+      } finally {
+        reset();
+      }
     }
   };
 
@@ -346,7 +349,7 @@ function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandi
   return (
     <Modal visible={visible} onDismiss={reset}>
       <View style={globalStyles.alignCenter}>
-        <Subheading>{`Submit Council Candidacy`}</Subheading>
+        <Text variant="titleMedium">{`Submit Council Candidacy`}</Text>
       </View>
       <Padder scale={1} />
       <InputLabel label={'Candidate account:'} helperText={'Select the account you wish to submit for candidacy.'} />
@@ -392,15 +395,15 @@ function MemberItem({candidate, onSelect, isSelected, order}: MemberItemProps) {
           styles.candidateItemContainer,
           // eslint-disable-next-line react-native/no-inline-styles
           {
-            backgroundColor: isSelected ? colors.accent : 'transparent',
+            backgroundColor: isSelected ? colors.secondary : 'transparent',
           },
         ]}>
         <View style={styles.candidateIdentity}>
           <Identicon value={candidate.account.address} size={20} />
           <Padder scale={0.3} />
-          <Caption style={styles.candidateName} ellipsizeMode="middle" numberOfLines={1}>
+          <Text variant="bodySmall" style={styles.candidateName} ellipsizeMode="middle" numberOfLines={1}>
             {candidate.account.display}
-          </Caption>
+          </Text>
         </View>
         <View style={styles.badge}>{order > 0 && <Badge color={colors.onSurface} text={String(order)} />}</View>
       </View>

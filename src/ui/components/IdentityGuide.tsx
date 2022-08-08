@@ -1,7 +1,7 @@
 import React from 'react';
 import {Image, StyleSheet, View, ImageProps, Dimensions} from 'react-native';
 import {Layout} from '@ui/components/Layout';
-import {Text, Button, Subheading, useTheme} from '@ui/library';
+import {Text, Button, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import Animated, {FadeIn, FadeOut, useSharedValue} from 'react-native-reanimated';
 import Carousel, {ICarouselInstance} from 'react-native-reanimated-carousel';
@@ -67,7 +67,7 @@ export function IdentityGuide({onSkip}: Props) {
 
   return (
     <Layout>
-      <Subheading style={globalStyles.textCenter}>{`Identity Guide`}</Subheading>
+      <Text variant="titleMedium" style={globalStyles.textCenter}>{`Identity Guide`}</Text>
       <Padder scale={1} />
 
       <Carousel

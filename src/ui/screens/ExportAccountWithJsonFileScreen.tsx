@@ -1,8 +1,8 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {RouteProp} from '@react-navigation/core';
 import {List, Button, TextInput} from '@ui/library';
+import {Identicon} from '@ui/components/Identicon';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
@@ -14,6 +14,7 @@ import {NavigationProp} from '@react-navigation/core';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 import {useKeyring} from '@polkadotApi/useKeyring';
 import {ErrorText} from '@ui/components/ErrorText';
+import {ErrorPayload} from 'polkadot-api';
 
 type ScreenProps = {
   route: RouteProp<AccountsStackParamList, typeof exportAccountWithJsonFileScreen>;
@@ -47,22 +48,23 @@ export function ExportAccountWithJsonFileScreen({route, navigation}: ScreenProps
       navigation.goBack();
     } catch (e) {
       console.warn(e);
-      setError((e as Error).message);
+      setError((e as ErrorPayload).message);
     }
   };
+
+  const AccountIdentityIcon = React.useCallback(
+    () => (
+      <View style={globalStyles.justifyCenter}>
+        <Identicon value={address} size={40} />
+      </View>
+    ),
+    [address],
+  );
 
   return (
     <SafeView edges={noTopEdges}>
       <View style={styles.container}>
-        <List.Item
-          title={account?.meta.name}
-          left={() => (
-            <View style={globalStyles.justifyCenter}>
-              <IdentityIcon value={address} size={40} />
-            </View>
-          )}
-          description={address}
-        />
+        <List.Item title={account?.meta.name} left={AccountIdentityIcon} description={address} />
         <Padder scale={1} />
 
         <TextInput

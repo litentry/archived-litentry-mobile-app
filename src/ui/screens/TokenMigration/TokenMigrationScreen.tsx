@@ -10,7 +10,7 @@ import {SelectAccount} from '@ui/components/SelectAccount';
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
 import {decimalKeypad} from 'src/utils';
-import {Text, Card, Button, Subheading, Title, Caption, Icon, TextInput, useBottomSheet, useTheme} from '@ui/library';
+import {Text, Card, Button, Icon, TextInput, useBottomSheet, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {useTransactionWizard, WizardStep} from './TransactionWizard';
 import {WalletConnectButton} from './WalletConnectButton';
@@ -96,7 +96,7 @@ export function TokenMigrationScreen() {
   const renderPreviewHeader = React.useCallback(() => {
     return (
       <View style={styles.previewHeaderContainer}>
-        <Title>Transaction summary</Title>
+        <Text variant="titleLarge">Transaction summary</Text>
         <View style={globalStyles.rowAlignCenter}>
           <Text>Ethereum</Text>
           <Padder scale={0.5} />
@@ -128,32 +128,32 @@ export function TokenMigrationScreen() {
         ) : (
           <View style={[{backgroundColor: colors.surface}, styles.summaryContainer]}>
             <View style={styles.summaryRow}>
-              <Subheading>Amount</Subheading>
+              <Text variant="titleMedium">Amount</Text>
               <Text>{formatBalance(stringToBn(amount?.toString()))}</Text>
             </View>
             <Padder />
             <View style={styles.summaryRow}>
-              <Subheading>Source</Subheading>
+              <Text variant="titleMedium">Source</Text>
               <Text>{toShortAddress(wallet.connectedAccount?.address ?? '')}</Text>
             </View>
             <Padder />
             <View style={styles.summaryRow}>
-              <Subheading>Destination</Subheading>
+              <Text variant="titleMedium">Destination</Text>
               <Text>{toShortAddress(destinationAddress)}</Text>
             </View>
             <Padder />
             <View style={styles.summaryRow}>
-              <Subheading>LIT Balance</Subheading>
+              <Text variant="titleMedium">LIT Balance</Text>
               <Text>{formatBalance(stringToBn(wallet.connectedAccount?.balance.lit.toString() ?? ''))}</Text>
             </View>
             <Padder />
             <View style={styles.summaryRow}>
-              <Subheading>ETH Balance</Subheading>
+              <Text variant="titleMedium">ETH Balance</Text>
               <Text>{`${wallet.connectedAccount?.balance.eth.toFixed(4)} ETH` ?? ''}</Text>
             </View>
             <Padder />
             <View style={styles.summaryRow}>
-              <Subheading>New LIT Balance in Ethereum</Subheading>
+              <Text variant="titleMedium">New LIT Balance in Ethereum</Text>
               <Text>
                 {formatBalance(stringToBn(wallet.connectedAccount?.balance.lit.minus(amount).toString() ?? ''))}
               </Text>
@@ -199,7 +199,7 @@ export function TokenMigrationScreen() {
         <Card mode="outlined">
           <Card.Title title={`From Ethereum to ${currentNetwork.name}`} subtitle="Via ERC-20 Token Standard" />
           <Card.Content>
-            <Subheading>From Account</Subheading>
+            <Text variant="titleMedium">From Account</Text>
             {!wallet.isConnected ? (
               <View style={{marginVertical: standardPadding}}>
                 <WalletConnectButton title="Connect Wallet" onPress={() => wallet.connect()} />
@@ -219,10 +219,10 @@ export function TokenMigrationScreen() {
                 </View>
               </View>
             )}
-            <Subheading>Destination</Subheading>
+            <Text variant="titleMedium">Destination</Text>
             <SelectAccount onSelect={(selectedAccount) => setDestinationAddress(selectedAccount.account.address)} />
             <Padder scale={0.5} />
-            <Subheading>Amount</Subheading>
+            <Text variant="titleMedium">Amount</Text>
             <TextInput
               value={amount}
               mode="outlined"
@@ -237,9 +237,9 @@ export function TokenMigrationScreen() {
             />
             {wallet.isConnected ? (
               <View style={styles.balance}>
-                <Caption>
+                <Text variant="bodySmall">
                   Balance: {formatBalance(stringToBn(wallet.connectedAccount?.balance.lit.toString() || '0'))}
-                </Caption>
+                </Text>
               </View>
             ) : null}
             <Padder scale={2} />

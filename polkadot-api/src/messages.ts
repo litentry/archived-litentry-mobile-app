@@ -1,4 +1,7 @@
 import {KeyringPair$Json} from '@polkadot/keyring/types';
+import type {SignerPayloadJSON} from '@polkadot/types/types';
+import {TxInfo} from './txUtils';
+import type {TxConfig, TxHash} from './txTypes';
 
 export type AccountMeta = {
   name: string;
@@ -12,6 +15,8 @@ export type KeyringAccount = KeyringPair$Json & {
 };
 
 export type HexString = `0x${string}`;
+
+export type TxPayload = SignerPayloadJSON;
 
 export type MnemonicLength = 12 | 15 | 18 | 21 | 24;
 
@@ -37,12 +42,6 @@ export enum MessageType {
 
   VALIDATE_MNEMONIC = 'VALIDATE_MNEMONIC',
   VALIDATE_MNEMONIC_RESULT = 'VALIDATE_MNEMONIC_RESULT',
-
-  GET_ACCOUNTS = 'GET_ACCOUNTS',
-  GET_ACCOUNTS_RESULT = 'GET_ACCOUNTS_RESULT',
-
-  GET_ACCOUNT = 'GET_ACCOUNT',
-  GET_ACCOUNT_RESULT = 'GET_ACCOUNT_RESULT',
 
   CREATE_ADDRESS_FROM_MNEMONIC = 'CREATE_ADDRESS_FROM_MNEMONIC',
   CREATE_ADDRESS_FROM_MNEMONIC_RESULT = 'CREATE_ADDRESS_FROM_MNEMONIC_RESULT',
@@ -73,8 +72,6 @@ export enum MessageType {
 
   INIT_API = 'INIT_API',
 
-  RECONNECT_API = 'RECONNECT_API',
-
   API_CONNECTED = 'API_CONNECTED',
 
   API_READY = 'API_READY',
@@ -82,13 +79,40 @@ export enum MessageType {
   API_DISCONNECTED = 'API_DISCONNECTED',
 
   API_ERROR = 'API_ERROR',
+
+  SIGN_AND_SEND_TX = 'SIGN_AND_SEND_TX',
+  SIGN_AND_SEND_TX_RESULT = 'SIGN_AND_SEND_TX_RESULT',
+
+  GET_TX_INFO = 'GET_TX_INFO',
+  GET_TX_INFO_RESULT = 'GET_TX_INFO_RESULT',
+
+  SEND_TX = 'SEND_TX',
+  SEND_TX_RESULT = 'SEND_TX_RESULT',
+
+  GET_TX_METHOD_ARGS_LENGTH = 'GET_TX_METHOD_ARGS_LENGTH',
+  GET_TX_METHOD_ARGS_LENGTH_RESULT = 'GET_TX_METHOD_ARGS_LENGTH_RESULT',
+
+  DECODE_ADDRESS = 'DECODE_ADDRESS',
+  DECODE_ADDRESS_RESULT = 'DECODE_ADDRESS_RESULT',
+
+  CHECK_ADDRESS = 'CHECK_ADDRESS',
+  CHECK_ADDRESS_RESULT = 'CHECK_ADDRESS_RESULT',
+
+  GET_TX_PAYLOAD = 'GET_TX_PAYLOAD',
+  GET_TX_PAYLOAD_RESULT = 'GET_TX_PAYLOAD_RESULT',
+
+  GET_TX_SIGNABLE_PAYLOAD = 'GET_TX_SIGNABLE_PAYLOAD',
+  GET_TX_SIGNABLE_PAYLOAD_RESULT = 'GET_TX_SIGNABLE_PAYLOAD_RESULT',
+
+  BLAKE2_AS_HEX = 'BLAKE2_AS_HEX',
+  BLAKE2_AS_HEX_RESULT = 'BLAKE2_AS_HEX_RESULT',
 }
 
 type InitStoreMessage = {
   type: MessageType.INIT_STORE;
   payload: {
     key: string;
-    value: unknown;
+    value: KeyringAccount;
   };
 };
 
@@ -283,13 +307,6 @@ type InitApiMessage = {
   };
 };
 
-type ReconnectApiMessage = {
-  type: MessageType.RECONNECT_API;
-  payload: {
-    wsEndpoint: string;
-  };
-};
-
 type ApiConnectedMessage = {
   type: MessageType.API_CONNECTED;
 };
@@ -307,6 +324,135 @@ type ApiErrorMessage = {
   payload: {
     error: string;
   };
+};
+
+export type GetTxInfoMessage = {
+  type: MessageType.GET_TX_INFO;
+  payload: {
+    address: string;
+    txConfig: TxConfig;
+  };
+};
+
+export type GetTxInfoResultPayload = {
+  txInfo: TxInfo;
+  error: false;
+};
+
+export type GetTxInfoResultMessage = {
+  type: MessageType.GET_TX_INFO_RESULT;
+  payload: GetTxInfoResultPayload | ErrorPayload;
+};
+
+export type GetTxPayloadMessage = {
+  type: MessageType.GET_TX_PAYLOAD;
+  payload: {
+    address: string;
+    txConfig: TxConfig;
+  };
+};
+
+export type TxPayloadData = {txPayload: TxPayload; signablePayload: HexString};
+
+export type GetTxPayloadResultPayload = TxPayloadData & {
+  error: false;
+};
+
+export type GetTxPayloadResultMessage = {
+  type: MessageType.GET_TX_PAYLOAD_RESULT;
+  payload: GetTxPayloadResultPayload | ErrorPayload;
+};
+
+export type TxSuccessful = {
+  txHash: TxHash;
+  error: false;
+};
+
+export type SendTxMessage = {
+  type: MessageType.SEND_TX;
+  payload: {
+    address: string;
+    txConfig: TxConfig;
+    txPayload: TxPayload;
+    signature: HexString;
+  };
+};
+
+export type SendTxResultMessage = {
+  type: MessageType.SEND_TX_RESULT;
+  payload: TxSuccessful | ErrorPayload;
+};
+
+export type SignAndSendTxMessage = {
+  type: MessageType.SIGN_AND_SEND_TX;
+  payload: {
+    txConfig: TxConfig;
+    credentials: SignCredentials;
+  };
+};
+
+export type SignAndSendTxResultMessage = {
+  type: MessageType.SIGN_AND_SEND_TX_RESULT;
+  payload: TxSuccessful | ErrorPayload;
+};
+
+export type GetTxMethodArgsLengthMessage = {
+  type: MessageType.GET_TX_METHOD_ARGS_LENGTH;
+  payload: TxConfig['method'];
+};
+
+export type GetTxMethodArgsLengthResultMessage = {
+  type: MessageType.GET_TX_METHOD_ARGS_LENGTH_RESULT;
+  payload: number;
+};
+
+export type DecodeAddressMessage = {
+  type: MessageType.DECODE_ADDRESS;
+  payload: {
+    encoded: HexString | string | null;
+    ignoreChecksum?: boolean;
+    ss58Format?: number;
+  };
+};
+
+export type DecodeAddressResultMessage = {
+  type: MessageType.DECODE_ADDRESS_RESULT;
+  payload: HexString;
+};
+
+export type Blake2AsHexMessage = {
+  type: MessageType.BLAKE2_AS_HEX;
+  payload: {
+    data: string;
+    bitLength?: 256 | 512 | 64 | 128 | 384;
+  };
+};
+
+export type Blake2AsHexResultMessage = {
+  type: MessageType.BLAKE2_AS_HEX_RESULT;
+  payload: HexString;
+};
+
+export type CheckAddressMessage = {
+  type: MessageType.CHECK_ADDRESS;
+  payload: {
+    address: HexString | string;
+    prefix: number;
+  };
+};
+
+type ValidAddressPayload = {
+  isValid: true;
+};
+
+type InvalidAddressPayload = {
+  isValid: false;
+  reason: string;
+};
+
+export type CheckAddressResultMessage = {
+  type: MessageType.CHECK_ADDRESS_RESULT;
+  payload: ValidAddressPayload | InvalidAddressPayload;
 };
 
 export type Message =
@@ -335,12 +481,27 @@ export type Message =
   | VerifyCredentialsResultMessage
   | SignMessage
   | SignResultMessage
+  | SignAndSendTxMessage
+  | SignAndSendTxResultMessage
   | InitApiMessage
-  | ReconnectApiMessage
   | ApiConnectedMessage
   | ApiReadyMessage
   | ApiDisconnectedMessage
-  | ApiErrorMessage;
+  | ApiErrorMessage
+  | GetTxInfoMessage
+  | GetTxInfoResultMessage
+  | SendTxMessage
+  | SendTxResultMessage
+  | GetTxMethodArgsLengthMessage
+  | GetTxMethodArgsLengthResultMessage
+  | DecodeAddressMessage
+  | DecodeAddressResultMessage
+  | Blake2AsHexMessage
+  | Blake2AsHexResultMessage
+  | CheckAddressMessage
+  | CheckAddressResultMessage
+  | GetTxPayloadMessage
+  | GetTxPayloadResultMessage;
 
 export function initStoreMessage(payload: InitStoreMessage['payload']): InitStoreMessage {
   return {
@@ -539,34 +700,143 @@ export function initApiMessage(payload: InitApiMessage['payload']): InitApiMessa
   };
 }
 
-export function reconnectApiMessage(payload: ReconnectApiMessage['payload']): ReconnectApiMessage {
-  return {
-    type: MessageType.RECONNECT_API,
-    payload,
-  };
-}
-
 export function apiConnectedMessage(): ApiConnectedMessage {
   return {
     type: MessageType.API_CONNECTED,
   };
 }
 
-export function ApiReadyMessage(): ApiReadyMessage {
+export function apiReadyMessage(): ApiReadyMessage {
   return {
     type: MessageType.API_READY,
   };
 }
 
-export function ApiDisconnectedMessage(): ApiDisconnectedMessage {
+export function apiDisconnectedMessage(): ApiDisconnectedMessage {
   return {
     type: MessageType.API_DISCONNECTED,
   };
 }
 
-export function ApiErrorMessage(payload: ApiErrorMessage['payload']): ApiErrorMessage {
+export function apiErrorMessage(payload: ApiErrorMessage['payload']): ApiErrorMessage {
   return {
     type: MessageType.API_ERROR,
+    payload,
+  };
+}
+
+export function getTxInfoMessage(payload: GetTxInfoMessage['payload']): GetTxInfoMessage {
+  return {
+    type: MessageType.GET_TX_INFO,
+    payload,
+  };
+}
+
+export function getTxInfoResultMessage(payload: GetTxInfoResultMessage['payload']): GetTxInfoResultMessage {
+  return {
+    type: MessageType.GET_TX_INFO_RESULT,
+    payload,
+  };
+}
+
+export function sendTxMessage(payload: SendTxMessage['payload']): SendTxMessage {
+  return {
+    type: MessageType.SEND_TX,
+    payload,
+  };
+}
+
+export function sendTxResultMessage(payload: SendTxResultMessage['payload']): SendTxResultMessage {
+  return {
+    type: MessageType.SEND_TX_RESULT,
+    payload,
+  };
+}
+
+export function signAndSendTxMessage(payload: SignAndSendTxMessage['payload']): SignAndSendTxMessage {
+  return {
+    type: MessageType.SIGN_AND_SEND_TX,
+    payload,
+  };
+}
+
+export function signAndSendTxResultMessage(payload: SignAndSendTxResultMessage['payload']): SignAndSendTxResultMessage {
+  return {
+    type: MessageType.SIGN_AND_SEND_TX_RESULT,
+    payload,
+  };
+}
+
+export function getTxMethodArgsLengthMessage(
+  payload: GetTxMethodArgsLengthMessage['payload'],
+): GetTxMethodArgsLengthMessage {
+  return {
+    type: MessageType.GET_TX_METHOD_ARGS_LENGTH,
+    payload,
+  };
+}
+
+export function getTxMethodArgsLengthResultMessage(
+  payload: GetTxMethodArgsLengthResultMessage['payload'],
+): GetTxMethodArgsLengthResultMessage {
+  return {
+    type: MessageType.GET_TX_METHOD_ARGS_LENGTH_RESULT,
+    payload,
+  };
+}
+
+export function decodeAddressMessage(payload: DecodeAddressMessage['payload']): DecodeAddressMessage {
+  return {
+    type: MessageType.DECODE_ADDRESS,
+    payload,
+  };
+}
+
+export function decodeAddressResultMessage(payload: DecodeAddressResultMessage['payload']): DecodeAddressResultMessage {
+  return {
+    type: MessageType.DECODE_ADDRESS_RESULT,
+    payload,
+  };
+}
+
+export function blake2AsHexMessage(payload: Blake2AsHexMessage['payload']): Blake2AsHexMessage {
+  return {
+    type: MessageType.BLAKE2_AS_HEX,
+    payload,
+  };
+}
+
+export function blake2AsHexResultMessage(payload: Blake2AsHexResultMessage['payload']): Blake2AsHexResultMessage {
+  return {
+    type: MessageType.BLAKE2_AS_HEX_RESULT,
+    payload,
+  };
+}
+
+export function checkAddressMessage(payload: CheckAddressMessage['payload']): CheckAddressMessage {
+  return {
+    type: MessageType.CHECK_ADDRESS,
+    payload,
+  };
+}
+
+export function checkAddressResultMessage(payload: CheckAddressResultMessage['payload']): CheckAddressResultMessage {
+  return {
+    type: MessageType.CHECK_ADDRESS_RESULT,
+    payload,
+  };
+}
+
+export function getTxPayloadMessage(payload: GetTxPayloadMessage['payload']): GetTxPayloadMessage {
+  return {
+    type: MessageType.GET_TX_PAYLOAD,
+    payload,
+  };
+}
+
+export function getTxPayloadResultMessage(payload: GetTxPayloadResultMessage['payload']): GetTxPayloadResultMessage {
+  return {
+    type: MessageType.GET_TX_PAYLOAD_RESULT,
     payload,
   };
 }

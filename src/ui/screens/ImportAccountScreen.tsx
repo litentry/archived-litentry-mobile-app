@@ -1,6 +1,5 @@
 import React from 'react';
 import {StyleSheet, useWindowDimensions, View, ScrollView, KeyboardAvoidingView, Platform} from 'react-native';
-import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {NavigationProp} from '@react-navigation/native';
 import {useNetwork} from '@atoms/network';
 import {ProgressBar} from '@ui/components/ProgressBar';
@@ -8,6 +7,7 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {accountsScreen} from '@ui/navigation/routeKeys';
 import {Button, List, TextInput, useTheme, HelperText} from '@ui/library';
+import {Identicon} from '@ui/components/Identicon';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {monofontFamily, standardPadding} from '@ui/styles';
 import zxcvbn from 'zxcvbn';
@@ -34,7 +34,7 @@ export function ImportAccountScreen() {
     <Tab.Navigator
       initialLayout={{width: layout.width}}
       screenOptions={{
-        tabBarLabelStyle: {color: colors.text},
+        tabBarLabelStyle: {color: colors.secondary},
         tabBarItemStyle: {width: 200},
         tabBarStyle: {backgroundColor: colors.background},
       }}>
@@ -45,7 +45,6 @@ export function ImportAccountScreen() {
 }
 
 function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackParamList>}) {
-  const theme = useTheme();
   const {status: keyboardStatus} = useKeyboardStatus();
   const {currentNetwork} = useNetwork();
   const [account, setAccountState] = React.useState<Account>({title: '', password: '', confirmPassword: ''});
@@ -78,6 +77,11 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
     SecureKeychain.setPasswordByServiceId(account.password, 'BIOMETRICS', addedAccount.address as string);
     navigation.navigate(accountsScreen, {reload: true});
   };
+
+  const AccountIdentityIcon = React.useCallback(
+    () => <View style={globalStyles.justifyCenter}>{address ? <Identicon value={address} size={40} /> : null}</View>,
+    [address],
+  );
 
   return (
     <SafeView edges={noTopEdges}>
@@ -120,7 +124,6 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
               <TextInput.Icon
                 onPress={() => setIsPasswordVisible(!isPasswordVisible)}
                 name={`${isPasswordVisible ? 'eye' : 'eye-off'}-outline`}
-                color={theme.colors.disabled}
               />
             }
             error={passwordError}
@@ -148,15 +151,7 @@ function ImportAccount({navigation}: {navigation: NavigationProp<AccountsStackPa
           <Padder scale={2} />
           {address ? (
             <>
-              <List.Item
-                title={account.title}
-                left={() => (
-                  <View style={globalStyles.justifyCenter}>
-                    <IdentityIcon value={address} size={40} />
-                  </View>
-                )}
-                description={address}
-              />
+              <List.Item title={account.title} left={AccountIdentityIcon} description={address} />
               <Padder scale={1} />
             </>
           ) : null}
@@ -184,7 +179,8 @@ const styles = StyleSheet.create({
     fontFamily: monofontFamily,
   },
   progressBar: {
-    marginTop: 5,
+    marginTop: standardPadding * 2,
+    marginHorizontal: standardPadding,
   },
 });
 

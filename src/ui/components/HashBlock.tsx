@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
-import {Icon, Text, useTheme, Caption} from '@ui/library';
+import {Icon, Text, useTheme} from '@ui/library';
 import {standardPadding} from '@ui/styles';
 
 export function HashBlock({title, text}: {title: string; text: string}): React.ReactElement {
@@ -12,7 +12,9 @@ export function HashBlock({title, text}: {title: string; text: string}): React.R
     <View style={[styles.container, {borderColor: colors.onSurface}]}>
       <TouchableOpacity onPress={() => setNumOfLines(numOfLines ? undefined : 1)} style={styles.textContainer}>
         <Text>{title}</Text>
-        <Caption numberOfLines={numOfLines}>{text}</Caption>
+        <Text variant="bodySmall" numberOfLines={numOfLines}>
+          {text}
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => Clipboard.setString(text)}>
         <Icon name="content-copy" size={20} />

@@ -44,7 +44,7 @@ export function ProgressChart({width, percent, strokeWidth = DEFAULT_STROKE_WIDT
           text={progressText}
           style={[
             StyleSheet.absoluteFillObject,
-            {fontSize: width / 5, color: colors.placeholder},
+            {fontSize: width / 5, color: colors.secondary},
             globalStyles.textCenter,
           ]}
         />
@@ -55,7 +55,7 @@ export function ProgressChart({width, percent, strokeWidth = DEFAULT_STROKE_WIDT
             cx="50%"
             cy="50%"
             r={r}
-            stroke={colors.accent}
+            stroke={colors.secondary}
             strokeOpacity={0.2}
             strokeWidth={strokeWidth}
             fill="transparent"
@@ -64,7 +64,7 @@ export function ProgressChart({width, percent, strokeWidth = DEFAULT_STROKE_WIDT
             cx="50%"
             cy="50%"
             r={r}
-            stroke={colors.accent}
+            stroke={colors.secondary}
             strokeWidth={strokeWidth}
             strokeLinecap="round"
             fill="transparent"

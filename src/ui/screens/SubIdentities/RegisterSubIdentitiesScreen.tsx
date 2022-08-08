@@ -1,21 +1,22 @@
 import React, {useEffect, useState} from 'react';
 import {Alert, FlatList, View} from 'react-native';
-import Identicon from '@polkadot/reactnative-identicon';
+import {stringShorten} from '@polkadot/util';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {Button, Caption, Subheading, List, Divider, IconButton, useTheme, useBottomSheet} from '@ui/library';
+import {Button, Text, List, Divider, IconButton, useTheme, useBottomSheet} from '@ui/library';
+import {Identicon} from '@ui/components/Identicon';
 import {Layout} from '@ui/components/Layout';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {useApiTx} from 'src/api/hooks/useApiTx';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {registerSubIdentitiesScreen} from '@ui/navigation/routeKeys';
 import globalStyles from '@ui/styles';
 import {AddSubIdentity} from './AddSubIdentity';
 import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
-import {stringShorten} from '@polkadot/util';
 import {useSubAccounts} from 'src/api/hooks/useSubAccounts';
 import {Account} from '@ui/components/Account/Account';
-import type {Account as AccountType, AccountBalance, AccountRegistration} from 'src/api/hooks/useAccount';
+import {useStartTx} from 'context/TxContext';
+import type {SubIdentityPayload} from 'polkadot-api';
+import type {Account as SubstrateChainAccount, AccountBalance, AccountRegistration} from 'src/api/hooks/useAccount';
 
 export type SubIdentity = {
   address: string;
@@ -29,12 +30,11 @@ type ScreenProps = {
 
 export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
   const {closeBottomSheet, openBottomSheet, BottomSheet} = useBottomSheet();
-  const {colors} = useTheme();
   const address = route.params.address;
   const {data: accountInfo, refetch: refetchAccount} = useSubAccounts(address);
-  const [subIdentities, setSubIdentities] = useState<AccountType[]>();
+  const [subIdentities, setSubIdentities] = useState<SubstrateChainAccount[]>();
   const [submitSubsDisabled, setSubmitSubsDisabled] = useState(true);
-  const startTx = useApiTx();
+  const {startTx} = useStartTx();
 
   useEffect(() => {
     if (accountInfo?.subAccounts?.length) {
@@ -42,57 +42,75 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
     }
   }, [accountInfo, setSubIdentities]);
 
+  const HeaderRight = React.useCallback(
+    () => <IconButton size={30} icon="plus-circle-outline" onPress={openBottomSheet} />,
+    [openBottomSheet],
+  );
+
   useEffect(() => {
     navigation.setOptions({
-      headerRight: () => <IconButton size={30} icon="plus-circle-outline" onPress={openBottomSheet} />,
+      headerRight: HeaderRight,
     });
-  }, [navigation, openBottomSheet]);
+  }, [navigation, HeaderRight]);
 
-  const onSetSubIdentitiesPress = async () => {
-    startTx({
-      address,
-      txMethod: 'identity.setSubs',
-      params: [subIdentities?.map((sub) => [sub.address, {raw: sub.registration?.display}])],
-    })
-      .then(() => {
-        refetchAccount({address});
-        setSubmitSubsDisabled(true);
-      })
-      .catch((e: Error) => {
-        console.warn(e);
-      });
-  };
-
-  const onAddPress = (subIdentity: SubIdentity) => {
-    setSubIdentities((prevInfos) => {
-      if (prevInfos) {
-        return [
-          ...prevInfos,
-          {
-            address: subIdentity.address,
-            display: subIdentity.display,
-            hasIdentity: false,
-            registration: [] as AccountRegistration,
-            balance: {} as AccountBalance,
-          },
-        ];
+  const onSetSubIdentities = async () => {
+    const subs = subIdentities?.reduce((_subIdentities, sub) => {
+      if (sub.registration?.display) {
+        _subIdentities.push([sub.address, {raw: sub.registration.display}]);
       }
-      return prevInfos;
-    });
-    setSubmitSubsDisabled(false);
-    closeBottomSheet();
+      return _subIdentities;
+    }, [] as Array<SubIdentityPayload>);
+    if (subs) {
+      startTx({
+        address,
+        txConfig: {
+          method: 'identity.setSubs',
+          params: subs,
+        },
+      })
+        .then(() => {
+          refetchAccount({address});
+          setSubmitSubsDisabled(true);
+        })
+        .catch((e: Error) => {
+          console.warn(e);
+        });
+    }
   };
 
-  const onRemovePress = (accountId: string) => {
+  const onAddAccount = React.useCallback(
+    (subIdentity: SubIdentity) => {
+      setSubIdentities((prevInfos) => {
+        if (prevInfos) {
+          return [
+            ...prevInfos,
+            {
+              address: subIdentity.address,
+              display: subIdentity.display,
+              hasIdentity: false,
+              registration: [] as AccountRegistration,
+              balance: {} as AccountBalance,
+            },
+          ];
+        }
+        return prevInfos;
+      });
+      setSubmitSubsDisabled(false);
+      closeBottomSheet();
+    },
+    [closeBottomSheet],
+  );
+
+  const onRemoveAccount = React.useCallback((account: string) => {
     Alert.alert(
       'Remove sub-identity',
-      `Do you want to remove account: \n ${accountId} ?`,
+      `Do you want to remove account: \n ${account} ?`,
       [
         {
           text: 'Yes',
           onPress: () => {
             setSubIdentities((prevInfos) => {
-              return prevInfos?.filter((info) => info.address !== accountId);
+              return prevInfos?.filter((info) => info.address !== account);
             });
             setSubmitSubsDisabled(false);
           },
@@ -104,49 +122,78 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
       ],
       {cancelable: false},
     );
-  };
+  }, []);
 
   return (
     <SafeView edges={noTopEdges}>
       <View style={[globalStyles.paddedContainer, globalStyles.flex]}>
-        <Button mode="contained" onPress={onSetSubIdentitiesPress} disabled={submitSubsDisabled}>
+        <Button
+          mode="contained"
+          onPress={onSetSubIdentities}
+          disabled={submitSubsDisabled}
+          testID="set-sub-identity-button">
           Set Sub-identities
         </Button>
         <Padder scale={0.5} />
-        <Caption>Set sub-identities after adding/removing your accounts.</Caption>
+        <Text variant="bodySmall">Set sub-identities after adding/removing your accounts.</Text>
         <Padder scale={0.5} />
         <Divider />
         <Padder scale={1} />
         <FlatList
-          ListHeaderComponent={() => <Subheading>{`Sub-identities (${subIdentities?.length || 0})`}</Subheading>}
+          ListHeaderComponent={<Text variant="titleMedium">{`Sub-identities (${subIdentities?.length || 0})`}</Text>}
           data={subIdentities}
           keyExtractor={(account) => account.address}
-          renderItem={({item}) => (
-            <List.Item
-              disabled={true}
-              title={() => <Account account={item} />}
-              description={<Caption>{stringShorten(item.address, 12)}</Caption>}
-              left={() => (
-                <View style={globalStyles.justifyCenter}>
-                  <Identicon value={item.address} size={30} />
-                </View>
-              )}
-              right={() => (
-                <IconButton icon="delete-outline" color={colors.error} onPress={() => onRemovePress(item.address)} />
-              )}
-            />
-          )}
+          renderItem={({item}) => <SubAccountItem account={item} onRemove={onRemoveAccount} />}
           ListEmptyComponent={<EmptyView height={200}>{`No sub-identities set.`}</EmptyView>}
         />
       </View>
       <BottomSheet>
         <Layout>
-          <Subheading style={globalStyles.textCenter}>{`Add sub-identity`}</Subheading>
+          <Text variant="titleMedium" style={globalStyles.textCenter}>{`Add sub-identity`}</Text>
           <Padder scale={1} />
-          <AddSubIdentity onAddPress={onAddPress} subIdentities={subIdentities} onClose={closeBottomSheet} />
+          <AddSubIdentity onAddPress={onAddAccount} subIdentities={subIdentities} onClose={closeBottomSheet} />
           <Padder scale={1} />
         </Layout>
       </BottomSheet>
     </SafeView>
+  );
+}
+
+type SubIdentityItemProps = {
+  account: SubstrateChainAccount;
+  onRemove: (account: string) => void;
+};
+
+function SubAccountItem({account, onRemove}: SubIdentityItemProps) {
+  const {colors} = useTheme();
+  const AccountIdentityIcon = React.useCallback(
+    () => (
+      <View style={globalStyles.justifyCenter}>
+        <Identicon value={account.address} size={30} />
+      </View>
+    ),
+    [account.address],
+  );
+
+  const RemoveSubAccount = React.useCallback(
+    () => (
+      <IconButton
+        icon="delete-outline"
+        iconColor={colors.error}
+        onPress={() => onRemove(account.address)}
+        testID="delete-button"
+      />
+    ),
+    [account.address, onRemove, colors.error],
+  );
+
+  return (
+    <List.Item
+      disabled={true}
+      title={<Account account={account} />}
+      description={<Text variant="bodySmall">{stringShorten(account.address, 12)}</Text>}
+      left={AccountIdentityIcon}
+      right={RemoveSubAccount}
+    />
   );
 }

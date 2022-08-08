@@ -3,7 +3,7 @@ import {persistAtom} from '@atoms/persist';
 import {useRemoteConfig} from 'src/hooks/useRemoteConfig';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 
-export type SupportedNetworkType = 'ethereum' | 'polkadot' | 'kusama' | 'litentry_test' | 'litmus';
+export type SupportedNetworkType = 'polkadot' | 'kusama' | 'litmus' | 'litentry-rococo';
 
 export type NetworkType = {
   name: string;
@@ -31,16 +31,6 @@ const kusamaNetwork: NetworkType = {
   ss58Format: 2,
 };
 
-const litentryNetworkTest: NetworkType = {
-  name: 'Litentry Testnet',
-  key: 'litentry_test',
-  ws: ['wss://staging.registrar.litentry.io'],
-  color: '#006400',
-  ss58Format: 31,
-  isTestnet: true,
-  isParachain: true,
-};
-
 const litmusNetwork: NetworkType = {
   name: 'Litmus',
   key: 'litmus',
@@ -50,7 +40,13 @@ const litmusNetwork: NetworkType = {
   isParachain: true,
 };
 
-export const allNetworks = [polkadotNetwork, kusamaNetwork, litentryNetworkTest, litmusNetwork];
+const litentryRococo: NetworkType = {
+  name: 'Litentry Rococo',
+  key: 'litentry-rococo',
+  ws: ['wss://rpc.rococo-parachain-sg.litentry.io'],
+  color: '#0B6A09',
+  ss58Format: 131,
+};
 
 export const networkState: RecoilState<NetworkType> = atom({
   key: 'networkState',
@@ -78,7 +74,7 @@ export function useAvailableNetworks() {
     availableNetworks: [
       polkadotNetwork,
       kusamaNetwork,
-      ...(__DEV__ || isParachainAppEnabled ? [litentryNetworkTest, litmusNetwork] : []),
+      ...(__DEV__ || isParachainAppEnabled ? [litentryRococo, litmusNetwork] : []),
     ],
   };
 }

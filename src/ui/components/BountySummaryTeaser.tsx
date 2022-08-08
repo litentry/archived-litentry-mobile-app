@@ -6,7 +6,7 @@ import {useBountiesSummary} from 'src/api/hooks/useBountiesSummary';
 import StatInfoBlock from '@ui/components/StatInfoBlock';
 import {Padder} from '@ui/components/Padder';
 import {ProgressChartWidget} from '@ui/components/ProgressChartWidget';
-import {Card} from '@ui/library';
+import {useTheme} from '@ui/library';
 import {DashboardTeaserSkeleton} from '@ui/components/DashboardTeaserSkeleton';
 import {EmptyStateTeaser} from './EmptyStateTeaser';
 
@@ -15,6 +15,7 @@ type Props = {
 };
 
 export function BountySummaryTeaser(props: Props) {
+  const {colors, roundness} = useTheme();
   const {data, loading} = useBountiesSummary();
 
   return (
@@ -23,7 +24,7 @@ export function BountySummaryTeaser(props: Props) {
         <DashboardTeaserSkeleton />
       ) : data ? (
         <View style={styles.boxRow}>
-          <Card mode="outlined" style={styles.card}>
+          <View style={[styles.card, {borderColor: colors.surfaceVariant, borderRadius: roundness}]}>
             <View style={styles.itemRow}>
               {data?.activeBounties && <StatInfoBlock title="Active">{data.activeBounties}</StatInfoBlock>}
               {data?.pastBounties && <StatInfoBlock title="Past">{data.pastBounties}</StatInfoBlock>}
@@ -33,9 +34,9 @@ export function BountySummaryTeaser(props: Props) {
                 <StatInfoBlock title="Active total">{data.formattedTotalValue}</StatInfoBlock>
               )}
             </View>
-          </Card>
+          </View>
           <Padder scale={0.2} />
-          <Card mode="outlined" style={styles.card}>
+          <View style={[styles.card, {borderColor: colors.surfaceVariant, borderRadius: roundness}]}>
             {data.timeLeft && (
               <ProgressChartWidget
                 title={`Funding period (${data.timeLeft[0]})`}
@@ -43,7 +44,7 @@ export function BountySummaryTeaser(props: Props) {
                 progress={data.progressPercent / 100}
               />
             )}
-          </Card>
+          </View>
         </View>
       ) : (
         <EmptyStateTeaser subheading="No Bounties" caption="Check back soon" />
@@ -59,6 +60,7 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     padding: standardPadding * 2,
+    borderWidth: 1,
   },
   itemRow: {
     flexDirection: 'row',

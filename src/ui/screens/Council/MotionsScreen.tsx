@@ -1,6 +1,5 @@
 import React from 'react';
-import {Subheading, Button, useTheme, Modal, List, Headline} from '@ui/library';
-import {useApi} from 'context/ChainApiContext';
+import {Text, Button, useTheme, Modal, List} from '@ui/library';
 import {FlatList, StyleSheet, View, Linking} from 'react-native';
 import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
@@ -11,19 +10,19 @@ import {NavigationProp} from '@react-navigation/native';
 import {motionDetailScreen} from '@ui/navigation/routeKeys';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import LoadingView from '@ui/components/LoadingView';
-import {useApiTx} from 'src/api/hooks/useApiTx';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import type {Account} from 'src/api/hooks/useAccount';
 import {InputLabel} from '@ui/library/InputLabel';
 import {useCouncilAccounts} from 'src/hooks/useCouncilAccounts';
 import {useNetwork} from '@atoms/network';
-import type {SupportedNetworkType} from 'src/types';
+import type {SupportedNetworkType} from 'src/atoms/network';
 import {Caption, Card, Divider} from 'react-native-paper';
-import {ProposalCall} from '@ui/components/ProposalCall';
 import {ItemRowBlock} from '@ui/components/ItemRowBlock';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
 import {getProposalTitle} from 'src/utils/proposal';
 import type {KeyringAccount} from 'polkadot-api';
+import {useStartTx} from 'context/TxContext';
+import {useTx} from '@polkadotApi/useTx';
 
 type Vote = 'Aye' | 'Nay' | 'Close';
 
@@ -68,7 +67,7 @@ export function MotionsScreen({navigation}: ScreenProps) {
               />
             );
           }}
-          ItemSeparatorComponent={() => <Padder scale={1} />}
+          ItemSeparatorComponent={Padder}
           keyExtractor={(item) => item.proposal.hash}
           ListEmptyComponent={EmptyView}
         />
@@ -95,8 +94,8 @@ type VoteModalProps = {
 };
 
 function VoteModal({visible, setVisible, refetchMotions, voteType, motion, councilAccounts}: VoteModalProps) {
-  const {api} = useApi();
-  const startTx = useApiTx();
+  const {startTx} = useStartTx();
+  const {getTxMethodArgsLength} = useTx();
   const heading = voteType === 'Aye' || voteType === 'Nay' ? `Vote ${voteType}` : 'Close';
   const [account, setAccount] = React.useState<Account>();
 
@@ -110,39 +109,47 @@ function VoteModal({visible, setVisible, refetchMotions, voteType, motion, counc
   };
 
   const motionVote = (vote: boolean) => {
-    if (account && api && motion) {
+    if (account && motion) {
       closeModal();
       const {proposal} = motion;
-      startTx({
-        address: account.address,
-        params: [proposal.hash, proposal.index, vote],
-        txMethod: 'council.vote',
-      })
-        .then(() => {
-          reset();
-          refetchMotions();
+      if (proposal.index) {
+        startTx({
+          address: account.address,
+          txConfig: {
+            method: 'council.vote',
+            params: [proposal.hash, proposal.index, vote],
+          },
         })
-        .catch((e) => console.warn(e));
+          .then(() => {
+            reset();
+            refetchMotions();
+          })
+          .catch((e) => console.warn(e));
+      }
     }
   };
 
-  const closeMotion = () => {
-    if (account && api && motion) {
+  const closeMotion = async () => {
+    if (account && motion) {
       closeModal();
       const {proposal} = motion;
-      startTx({
-        address: account.address,
-        params:
-          api?.tx.council.close?.meta.args.length === 4
-            ? [proposal.hash, proposal.index, 0, 0]
-            : [proposal.hash, proposal.index],
-        txMethod: 'council.close',
-      })
-        .then(() => {
+      if (proposal.index) {
+        const method = 'council.close';
+        const argsLength = await getTxMethodArgsLength(method);
+        try {
+          await startTx({
+            address: account.address,
+            txConfig: {
+              method,
+              params: argsLength === 4 ? [proposal.hash, proposal.index, 0, 0] : [proposal.hash, proposal.index],
+            },
+          });
           reset();
           refetchMotions();
-        })
-        .catch((e) => console.warn(e));
+        } catch (e) {
+          console.warn(e);
+        }
+      }
     }
   };
 
@@ -164,7 +171,7 @@ function VoteModal({visible, setVisible, refetchMotions, voteType, motion, counc
   return (
     <Modal visible={visible} onDismiss={reset}>
       <View style={globalStyles.alignCenter}>
-        <Subheading>{`${heading} (Motion ${motion?.proposal.index})`}</Subheading>
+        <Text variant="titleMedium">{`${heading} (Motion ${motion?.proposal.index})`}</Text>
       </View>
       <Padder scale={1} />
 
@@ -208,49 +215,54 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
     });
   };
 
-  const Actions = (
-    <View style={globalStyles.rowAlignCenter} testID="motion-container">
-      <Subheading>{`Aye ${votes?.ayes?.length}/${votes?.threshold} `}</Subheading>
-      <Padder scale={0.5} />
-      {(() => {
-        if (isCouncilMember) {
-          if (motion.votingStatus?.isCloseable) {
-            return (
-              <Button
-                onPress={() => onVote('Close', motion)}
-                color={colors.error}
-                mode="outlined"
-                compact
-                uppercase={false}>
-                {`Close`}
-              </Button>
-            );
-          } else if (motion.votingStatus?.isVoteable) {
-            return (
-              <View style={globalStyles.rowAlignCenter}>
+  const ItemRight = React.useCallback(
+    () => (
+      <View style={globalStyles.rowAlignCenter} testID="motion-container">
+        <Text variant="titleMedium">{`Aye ${votes?.ayes?.length}/${votes?.threshold} `}</Text>
+        <Padder scale={0.5} />
+        {(() => {
+          if (isCouncilMember) {
+            if (motion.votingStatus?.isCloseable) {
+              return (
                 <Button
-                  onPress={() => onVote('Nay', motion)}
-                  color={colors.error}
-                  mode="outlined"
+                  onPress={() => onVote('Close', motion)}
+                  buttonColor={colors.error}
+                  textColor={colors.onError}
+                  mode="contained"
                   compact
                   uppercase={false}>
-                  {`Nay`}
+                  {`Close`}
                 </Button>
-                <Padder scale={0.5} />
-                <Button
-                  onPress={() => onVote('Aye', motion)}
-                  color={colors.success}
-                  mode="outlined"
-                  compact
-                  uppercase={false}>
-                  {`Aye`}
-                </Button>
-              </View>
-            );
+              );
+            } else if (motion.votingStatus?.isVoteable) {
+              return (
+                <View style={globalStyles.rowAlignCenter}>
+                  <Button
+                    onPress={() => onVote('Nay', motion)}
+                    buttonColor={colors.error}
+                    textColor={colors.onError}
+                    mode="contained"
+                    compact
+                    uppercase={false}>
+                    {`Nay`}
+                  </Button>
+                  <Padder scale={0.5} />
+                  <Button onPress={() => onVote('Aye', motion)} mode="contained" compact uppercase={false}>
+                    {`Aye`}
+                  </Button>
+                </View>
+              );
+            }
           }
-        }
-      })()}
-    </View>
+        })()}
+      </View>
+    ),
+    [colors, votes, isCouncilMember, motion, onVote],
+  );
+
+  const getItemLeft = React.useCallback(
+    () => <Text variant="headlineSmall">{`#${proposal.index}`}</Text>,
+    [proposal.index],
   );
 
   return (
@@ -259,8 +271,8 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
         <List.Item
           title={<Caption>{getProposalTitle(motion.proposal)}</Caption>}
           description={<Caption>{motion.votingStatus?.remainingBlocksTime?.slice(0, 2).join(' ')}</Caption>}
-          left={() => <Headline>{`#${proposal.index}`}</Headline>}
-          right={() => <View>{Actions}</View>}
+          left={getItemLeft}
+          right={ItemRight}
         />
         {proposal.proposer ? (
           <ItemRowBlock label="Proposer">
@@ -282,7 +294,6 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
             <Caption>{proposal.bond}</Caption>
           </ItemRowBlock>
         ) : null}
-        {motion.proposal ? <ProposalCall proposal={motion.proposal} /> : null}
       </Card.Content>
       <Padder scale={1} />
       <Divider />

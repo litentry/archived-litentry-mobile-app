@@ -112,9 +112,9 @@ function WordSelector({words, onSelect}: WordSelectorProps) {
       {words.map((word) => (
         <View style={styles.wordButton} key={word.id}>
           <Button
-            color={`${word.isSelected ? theme.colors.success : theme.colors.primary}`}
+            color={`${word.isSelected ? theme.colors.primary : theme.colors.primaryContainer}`}
             onPress={() => onSelect(word)}
-            mode="contained">
+            mode={word.isSelected ? 'contained' : 'contained-tonal'}>
             {word.text}
           </Button>
         </View>

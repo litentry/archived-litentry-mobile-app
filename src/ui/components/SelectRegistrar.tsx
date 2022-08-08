@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
-import {Menu, Caption, useTheme, Divider} from '@ui/library';
+import {Menu, Text, useTheme, Divider} from '@ui/library';
 import {useRegistrarsSummary, Registrar} from 'src/api/hooks/useRegistrarsSummary';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
@@ -34,8 +34,15 @@ export function SelectRegistrar({onSelect}: Props) {
       visible={visible}
       onDismiss={closeMenu}
       anchor={
-        <TouchableOpacity style={[styles.anchor, {borderColor: colors.onSurface}]} onPress={openMenu}>
-          {registrar ? <AccountTeaser account={registrar.account} /> : <Caption>{'Select registrar'}</Caption>}
+        <TouchableOpacity
+          style={[styles.anchor, {borderColor: colors.onSurface}]}
+          onPress={openMenu}
+          testID="select-registrar">
+          {registrar ? (
+            <AccountTeaser account={registrar.account} />
+          ) : (
+            <Text variant="bodySmall">{'Select registrar'}</Text>
+          )}
         </TouchableOpacity>
       }>
       <FlatList
@@ -61,9 +68,9 @@ function RegistrarItem({onSelect, registrar}: RegistrarItemProps) {
     <View style={globalStyles.paddedContainer}>
       <AccountTeaser account={account} onPress={() => onSelect(registrar)}>
         <View style={globalStyles.rowAlignCenter}>
-          <Caption>{`Index: ${id}`}</Caption>
+          <Text variant="bodySmall">{`Index: ${id}`}</Text>
           <Padder scale={0.5} />
-          <Caption>{`Fee: ${formattedFee}`}</Caption>
+          <Text variant="bodySmall">{`Fee: ${formattedFee}`}</Text>
         </View>
       </AccountTeaser>
     </View>

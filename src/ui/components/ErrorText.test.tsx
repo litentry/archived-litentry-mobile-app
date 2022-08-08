@@ -12,39 +12,37 @@ test('snapshot match', () => {
   const errorTextComponent = render(<ErrorText>Mocked Error Text</ErrorText>);
   const tree = errorTextComponent.toJSON();
   expect(tree).toMatchInlineSnapshot(`
-      <View
-        collapsable={false}
-        pointerEvents="box-none"
-        style={
-          Object {
-            "flex": 1,
-          }
+    <View
+      collapsable={false}
+      pointerEvents="box-none"
+      style={
+        Object {
+          "flex": 1,
         }
-      >
-        <Text
-          style={
+      }
+    >
+      <Text
+        style={
+          Array [
+            Object {
+              "color": "#1b1b1f",
+            },
+            Object {
+              "textAlign": "left",
+            },
             Array [
               Object {
-                "color": "#000000",
-                "fontFamily": "System",
-                "fontWeight": "400",
+                "textAlign": "center",
               },
               Object {
-                "textAlign": "left",
+                "color": "#ba1a1a",
               },
-              Array [
-                Object {
-                  "textAlign": "center",
-                },
-                Object {
-                  "color": "#E55047",
-                },
-              ],
-            ]
-          }
-        >
-          Mocked Error Text
-        </Text>
-      </View>
-    `);
+            ],
+          ]
+        }
+      >
+        Mocked Error Text
+      </Text>
+    </View>
+  `);
 });

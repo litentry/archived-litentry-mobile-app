@@ -1,22 +1,12 @@
 import React from 'react';
-import {Alert, StyleSheet, TouchableOpacity, View, Share, Keyboard} from 'react-native';
+import {Alert, StyleSheet, TouchableOpacity, View, Share} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import {stringShorten} from '@polkadot/util';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
-import Identicon from '@polkadot/reactnative-identicon';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {
-  Button,
-  Caption,
-  IconButton,
-  IconSource,
-  Card,
-  useTheme,
-  Subheading,
-  Divider,
-  useBottomSheet,
-} from '@ui/library';
+import {Button, Text, IconButton, IconSource, Card, useTheme, Divider, useBottomSheet} from '@ui/library';
+import {Identicon} from '@ui/components/Identicon';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {AccountsStackParamList, CompleteNavigatorParamList} from '@ui/navigation/navigation';
@@ -29,6 +19,7 @@ import {SendFund} from '@ui/components/SendFund';
 import {ReceiveFund} from '@ui/components/ReceiveFund';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 import {useKeyring} from '@polkadotApi/useKeyring';
+import {DelegateVoting} from '@ui/components/DelegateVoting';
 
 type ScreenProps = {
   navigation: NavigationProp<CompleteNavigatorParamList>;
@@ -65,6 +56,12 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
     BottomSheet: BalanceBottomSheet,
   } = useBottomSheet();
 
+  const {
+    closeBottomSheet: closeDelegateVoting,
+    openBottomSheet: openDelegateVoting,
+    BottomSheet: DelegateVotingBottomSheet,
+  } = useBottomSheet();
+
   return (
     <SafeView edges={noTopEdges}>
       <ScrollView style={styles.container}>
@@ -72,7 +69,7 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
           <View style={styles.centerAlign}>
             {account?.meta.name ? (
               <>
-                <Caption>{account.meta.name}</Caption>
+                <Text variant="bodySmall">{account.meta.name}</Text>
                 <Padder scale={0.5} />
               </>
             ) : null}
@@ -99,16 +96,18 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
           <Padder scale={1} />
 
           <InfoItem title="ADDRESS">
-            <Caption onPress={copyToClipboard}>{stringShorten(address, 17)}</Caption>
+            <Text variant="bodySmall" onPress={copyToClipboard}>
+              {stringShorten(address, 17)}
+            </Text>
           </InfoItem>
 
           <InfoItem title="IDENTITY">
-            <Caption>{accountInfo?.hasIdentity ? accountInfo.display : 'No Identity Data Found'}</Caption>
-            <Caption>{`${accountInfo?.registration?.judgements?.length} Judgements`}</Caption>
+            <Text variant="bodySmall">{accountInfo?.hasIdentity ? accountInfo.display : 'No Identity Data Found'}</Text>
+            <Text variant="bodySmall">{`${accountInfo?.registration?.judgements?.length} Judgements`}</Text>
           </InfoItem>
 
           <InfoItem title="BALANCE">
-            <Caption>{accountInfo?.balance?.formattedFree}</Caption>
+            <Text variant="bodySmall">{accountInfo?.balance?.formattedFree}</Text>
           </InfoItem>
         </Card>
 
@@ -124,6 +123,10 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
               navigation.navigate(manageIdentityScreen, {address});
             }}>
             Manage identity
+          </Button>
+          <Padder scale={1} />
+          <Button icon="account-arrow-right" mode="text" onPress={openDelegateVoting}>
+            Delegate votes
           </Button>
           <Padder scale={1} />
           <Button
@@ -159,8 +162,8 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
         <Padder scale={2} />
       </ScrollView>
 
-      <SendFundBottomSheet onClose={Keyboard.dismiss}>
-        <SendFund address={address} onFundsSent={closeSendFund} />
+      <SendFundBottomSheet>
+        <SendFund address={address} onClose={closeSendFund} />
       </SendFundBottomSheet>
 
       <ReceiveFundBottomSheet>
@@ -169,7 +172,7 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
 
       <BalanceBottomSheet>
         <Layout style={styles.balanceContainer}>
-          <Subheading style={globalStyles.textCenter}>{`Account balance`}</Subheading>
+          <Text variant="titleMedium" style={globalStyles.textCenter}>{`Account balance`}</Text>
           <Padder scale={0.5} />
           <Divider />
           {accountInfo?.balance ? <AccountBalance balance={accountInfo.balance} /> : null}
@@ -179,6 +182,10 @@ export function MyAccountScreen({navigation, route}: ScreenProps) {
           <Padder scale={2} />
         </Layout>
       </BalanceBottomSheet>
+
+      <DelegateVotingBottomSheet>
+        <DelegateVoting fromAccount={accountInfo} onClose={closeDelegateVoting} />
+      </DelegateVotingBottomSheet>
     </SafeView>
   );
 }
@@ -193,8 +200,10 @@ function ActionButton({icon, title, onPress}: ActionButtonProps) {
   const {colors} = useTheme();
   return (
     <View style={styles.iconButton}>
-      <IconButton icon={icon} color={colors.accent} style={styles.icon} onPress={onPress} />
-      <Caption style={{color: colors.accent}}>{title}</Caption>
+      <IconButton icon={icon} iconColor={colors.secondary} style={styles.icon} onPress={onPress} />
+      <Text variant="bodySmall" style={{color: colors.secondary}}>
+        {title}
+      </Text>
     </View>
   );
 }
@@ -208,7 +217,9 @@ function InfoItem({title, children}: InfoItemProps) {
   const {colors} = useTheme();
   return (
     <View style={styles.infoItem}>
-      <Caption style={{color: colors.accent}}>{title}</Caption>
+      <Text variant="bodySmall" style={{color: colors.secondary}}>
+        {title}
+      </Text>
       {children}
     </View>
   );

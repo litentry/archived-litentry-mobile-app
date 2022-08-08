@@ -2,7 +2,7 @@ import React from 'react';
 import {FlatList, StyleSheet, View, RefreshControl} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {Card, Subheading, Caption, Divider, useTheme} from '@ui/library';
+import {Card, Text, Divider, useTheme} from '@ui/library';
 import {TipReason} from '@ui/components/Tips/TipReason';
 import LoadingView from '@ui/components/LoadingView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -27,7 +27,7 @@ function TipDetailContent({tip, toAccountDetails}: TipDetailProps) {
         <Card.Content>
           <View style={styles.whoContainer}>
             <View style={styles.sectionTextContainer}>
-              <Subheading>Who</Subheading>
+              <Text variant="titleMedium">Who</Text>
             </View>
             <View style={styles.addressContainer}>
               <AccountTeaser account={tip.who} onPress={() => toAccountDetails(tip.who.address)} />
@@ -36,7 +36,7 @@ function TipDetailContent({tip, toAccountDetails}: TipDetailProps) {
           {tip.finder ? (
             <View style={styles.finderContainer}>
               <View style={styles.sectionTextContainer}>
-                <Subheading>Finder</Subheading>
+                <Text variant="titleMedium">Finder</Text>
               </View>
               <View style={styles.addressContainer}>
                 <AccountTeaser
@@ -56,13 +56,13 @@ function TipDetailContent({tip, toAccountDetails}: TipDetailProps) {
       <TipReason reason={tip.reason} />
       {tip.closes ? (
         <View style={styles.closesAtContainer}>
-          <Subheading>{`Closes at`}</Subheading>
-          <Subheading>{tip.closesTime?.slice(0, 2).join(' ')}</Subheading>
+          <Text variant="titleMedium">{`Closes at`}</Text>
+          <Text variant="titleMedium">{tip.closesTime?.slice(0, 2).join(' ')}</Text>
         </View>
       ) : null}
       <View style={styles.containerSpacing}>
-        <Subheading>Tippers {tip.tippersCount > 0 ? `(${tip.tippersCount})` : ''}</Subheading>
-        {tip.formattedMedianTipValue ? <Caption>{tip.formattedMedianTipValue}</Caption> : null}
+        <Text variant="titleMedium">Tippers {tip.tippersCount > 0 ? `(${tip.tippersCount})` : ''}</Text>
+        {tip.formattedMedianTipValue ? <Text variant="bodySmall">{tip.formattedMedianTipValue}</Text> : null}
       </View>
     </>
   );
@@ -96,7 +96,9 @@ export function TipDetailScreen({route, navigation}: ScreenProps) {
         renderItem={({item}) => (
           <View style={globalStyles.marginVertical}>
             <AccountTeaser account={item.account} onPress={() => toAccountDetails(item.account.address)}>
-              <Caption testID={'account-details'}>{item.formattedBalance}</Caption>
+              <Text variant="bodySmall" testID={'account-details'}>
+                {item.formattedBalance}
+              </Text>
             </AccountTeaser>
           </View>
         )}

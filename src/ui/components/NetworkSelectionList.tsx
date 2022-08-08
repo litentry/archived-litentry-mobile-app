@@ -1,6 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
-import {Divider, Subheading, RadioButton} from '@ui/library';
+import {Divider, Text, RadioButton} from '@ui/library';
 import globalStyles from '@ui/styles';
 import type {NetworkType} from '@atoms/network';
 import {Padder} from '@ui/components/Padder';
@@ -26,7 +26,7 @@ function NetworkSelectionList(props: PropTypes) {
   return (
     <>
       <View style={globalStyles.alignCenter}>
-        <Subheading>Networks</Subheading>
+        <Text variant="titleMedium">Networks</Text>
       </View>
       <Padder scale={0.5} />
       <Divider />

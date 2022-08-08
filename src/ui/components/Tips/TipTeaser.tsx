@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Card, Caption} from '@ui/library';
+import {Card, Text} from '@ui/library';
 import {TipReason} from '@ui/components/Tips/TipReason';
 import {Padder} from '@ui/components/Padder';
 import {Tip} from 'src/api/hooks/useTips';
@@ -21,12 +21,12 @@ function Teaser({tip, onPress}: TipTeaserProps) {
       <Card.Content>
         <AccountTeaser account={who} />
         <View style={styles.row}>
-          <Caption>Created:</Caption>
-          <Caption>{fromNow(createdAt)}</Caption>
+          <Text variant="bodySmall">Created:</Text>
+          <Text variant="bodySmall">{fromNow(createdAt)}</Text>
         </View>
         <View style={styles.row}>
-          <Caption>Status:</Caption>
-          <Caption>{status}</Caption>
+          <Text variant="bodySmall">Status:</Text>
+          <Text variant="bodySmall">{status}</Text>
         </View>
         <Padder scale={0.5} />
         <TipReason reason={reason} />

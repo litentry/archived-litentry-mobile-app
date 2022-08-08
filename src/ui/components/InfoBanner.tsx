@@ -1,5 +1,5 @@
 import React from 'react';
-import {Icon, Paragraph} from '@ui/library';
+import {Icon, Text} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import globalStyles, {colorRed, colorGray} from '@ui/styles';
 import {Padder} from './Padder';
@@ -17,7 +17,9 @@ function InfoBanner(props: PropTypes) {
       <Layout style={globalStyles.rowAlignCenter}>
         <Icon size={25} color={warning ? colorRed : colorGray} name="information-outline" />
         <Padder scale={0.5} />
-        <Paragraph numberOfLines={3}>{text}</Paragraph>
+        <Text variant="bodyMedium" numberOfLines={3}>
+          {text}
+        </Text>
       </Layout>
       <Padder scale={1} />
     </>

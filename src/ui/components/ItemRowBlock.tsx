@@ -1,12 +1,14 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import {Caption} from '@ui/library';
+import {Text} from '@ui/library';
 import {standardPadding} from '@ui/styles';
 
 export function ItemRowBlock({label, children}: {label: string; children: React.ReactNode}) {
   return (
     <View style={styles.row}>
-      <Caption style={styles.rowLabel}>{label}:</Caption>
+      <Text variant="bodySmall" style={styles.rowLabel}>
+        {label}:
+      </Text>
       <View style={styles.value}>{children}</View>
     </View>
   );

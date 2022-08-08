@@ -3,7 +3,7 @@ import {View, Image, ImageProps, StyleSheet, Dimensions} from 'react-native';
 import {useNavigation, StackActions} from '@react-navigation/native';
 import Animated, {FadeIn, FadeOut, useSharedValue} from 'react-native-reanimated';
 import Carousel, {ICarouselInstance} from 'react-native-reanimated-carousel';
-import {useTheme, Headline, Subheading, Button} from '@ui/library';
+import {useTheme, Text, Button} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles from '@ui/styles';
 import {dashboardScreen} from '@ui/navigation/routeKeys';
@@ -120,9 +120,13 @@ function CarouselItem({item}: {item: CarouselItem}) {
       <View style={[itemStyles.contentContainer, {backgroundColor: colors.background}]}>
         <Image style={itemStyles.image} source={item.source} />
         <View style={globalStyles.paddedContainer}>
-          <Headline style={[globalStyles.textCenter, {color: colors.primary}]}>{item.title}</Headline>
+          <Text variant="headlineSmall" style={[globalStyles.textCenter, {color: colors.primary}]}>
+            {item.title}
+          </Text>
           <Padder scale={1} />
-          <Subheading style={globalStyles.textCenter}>{item.description}</Subheading>
+          <Text variant="titleMedium" style={globalStyles.textCenter}>
+            {item.description}
+          </Text>
           <Padder scale={1} />
         </View>
       </View>

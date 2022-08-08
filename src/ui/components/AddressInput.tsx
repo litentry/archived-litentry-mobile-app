@@ -1,13 +1,12 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, Modal, StyleSheet, View, TextInputProps} from 'react-native';
-import Clipboard from '@react-native-community/clipboard';
-import {TextInput, HelperText, Button, Title, IconButton} from '@ui/library';
+import {TextInput, HelperText, Button, Text} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {isAddressValid, parseAddress} from 'src/utils/address';
+import {parseAddress} from 'src/utils/address';
 import {useNetwork} from '@atoms/network';
-import {useSnackbar} from 'context/SnackbarContext';
 import {Padder} from '@ui/components/Padder';
 import {QRCodeScanner} from '@ui/components/QRCodeScanner';
+import {useIsAddressValid} from 'src/hooks/useIsAddressValid';
 
 type Props = {
   onValidateAddress: (isValid: boolean) => void;
@@ -21,7 +20,7 @@ export function AddressInput({onAddressChanged, onValidateAddress, onFocus, onBl
   const [addressValid, setAddressValid] = useState(false);
   const {currentNetwork} = useNetwork();
   const [modalVisible, setModalVisible] = useState(false);
-  const snackbar = useSnackbar();
+  const {isAddressValid} = useIsAddressValid(currentNetwork);
 
   const updateInputAddress = useCallback(
     (address: string) => {
@@ -31,62 +30,54 @@ export function AddressInput({onAddressChanged, onValidateAddress, onFocus, onBl
     [onAddressChanged],
   );
 
-  const onPastePress = useCallback(async () => {
-    const pastedAddress = await Clipboard.getString();
-    updateInputAddress(pastedAddress);
-    snackbar('Address pasted from clipboard!');
-  }, [updateInputAddress, snackbar]);
-
   const handleScan = useCallback(
     (data: string) => {
       try {
         const parsed = parseAddress(data);
-        if (isAddressValid(currentNetwork, parsed.address)) {
-          updateInputAddress(parsed.address);
-          setModalVisible(false);
-        } else {
-          Alert.alert(
-            'Validation Failed',
-            `${parsed.address} is not a valid address for the ${currentNetwork.name} network.`,
-            [{text: 'Ok'}],
-          );
-        }
+        isAddressValid(parsed.address).then((isValid) => {
+          if (isValid) {
+            updateInputAddress(parsed.address);
+            setModalVisible(false);
+          } else {
+            Alert.alert(
+              'Validation Failed',
+              `${parsed.address} is not a valid address for the ${currentNetwork.name} network.`,
+              [{text: 'Ok'}],
+            );
+          }
+        });
       } catch (e) {
         Alert.alert('Validation Failed', 'Address is invalid.', [{text: 'Ok'}]);
       }
     },
-    [currentNetwork, updateInputAddress],
+    [currentNetwork, updateInputAddress, isAddressValid],
   );
 
   useEffect(
     function validateAddress() {
       if (inputAddress) {
-        const isValid = isAddressValid(currentNetwork, inputAddress);
-        onValidateAddress(isValid);
-        setAddressValid(isValid);
+        isAddressValid(inputAddress).then((isValid) => {
+          onValidateAddress(isValid);
+          setAddressValid(isValid);
+        });
       }
     },
-    [inputAddress, onValidateAddress, currentNetwork],
+    [inputAddress, onValidateAddress, currentNetwork, isAddressValid],
   );
 
   return (
     <>
-      <View style={globalStyles.spaceBetweenRowContainer}>
-        <TextInput
-          {...{onFocus, onBlur}}
-          autoCorrect={false}
-          placeholder="Account address"
-          dense
-          mode="outlined"
-          style={styles.textInput}
-          value={inputAddress}
-          onChangeText={updateInputAddress}
-        />
-        <View style={styles.icons}>
-          <IconButton icon="content-paste" onPress={onPastePress} />
-          <IconButton icon="qrcode-scan" onPress={() => setModalVisible(true)} />
-        </View>
-      </View>
+      <TextInput
+        {...{onFocus, onBlur}}
+        autoCorrect={false}
+        placeholder="Account address"
+        mode="outlined"
+        dense
+        value={inputAddress}
+        onChangeText={updateInputAddress}
+        style={styles.textInput}
+        right={<TextInput.Icon name="qrcode-scan" onPress={() => setModalVisible(true)} />}
+      />
 
       {!addressValid && inputAddress ? (
         <HelperText type="error" style={styles.error}>
@@ -103,7 +94,9 @@ export function AddressInput({onAddressChanged, onValidateAddress, onFocus, onBl
         }}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Title style={globalStyles.textCenter}>Scan the address QR code</Title>
+            <Text variant="titleLarge" style={globalStyles.textCenter}>
+              Scan the address QR code
+            </Text>
             <Padder scale={1.5} />
             <QRCodeScanner onScan={handleScan} />
             <Padder scale={3} />
@@ -119,8 +112,7 @@ export function AddressInput({onAddressChanged, onValidateAddress, onFocus, onBl
 
 const styles = StyleSheet.create({
   textInput: {
-    height: 45,
-    width: '75%',
+    textAlign: 'auto',
   },
   icons: {
     flexDirection: 'row',

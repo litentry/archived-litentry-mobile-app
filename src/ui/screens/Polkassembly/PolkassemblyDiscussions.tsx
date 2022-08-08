@@ -1,6 +1,6 @@
 import React from 'react';
 import {NavigationProp} from '@react-navigation/native';
-import {Icon, Button, Card, Caption, Text, Menu, Subheading, useTheme} from '@ui/library';
+import {Icon, Button, Card, Text, Menu, useTheme} from '@ui/library';
 import {flatten} from 'lodash';
 import * as dateUtils from 'src/utils/date';
 import LoadingView from '@ui/components/LoadingView';
@@ -15,13 +15,15 @@ import globalStyles, {standardPadding} from '@ui/styles';
 import {useNetwork} from '@atoms/network';
 import {useAccount} from 'src/api/hooks/useAccount';
 import {AccountTeaser} from '@ui/components/Account/AccountTeaser';
-import {SupportedNetworkType} from 'src/types';
+import {SupportedNetworkType} from 'src/atoms/network';
 
-export function PolkassemblyDiscussions({
-  navigation,
-}: {
+type ScreenProps = {
   navigation: NavigationProp<PolkassemblyDiscussionStackParamList>;
-}) {
+};
+
+const ItemSeparator = () => <Padder scale={0.5} />;
+
+export function PolkassemblyDiscussions({navigation}: ScreenProps) {
   const {colors} = useTheme();
   const [orderBy, setOrderBy] = React.useState<OrderByType>('lastCommented');
   const [topicId, setTopicId] = React.useState<number>();
@@ -59,7 +61,8 @@ export function PolkassemblyDiscussions({
           data={flatten(data?.pages)}
           stickyHeaderIndices={[0]}
           ListHeaderComponent={
-            <View style={[globalStyles.rowAlignCenter, styles.menuContainer, {backgroundColor: colors.primary}]}>
+            <View
+              style={[globalStyles.rowAlignCenter, styles.menuContainer, {backgroundColor: colors.primaryContainer}]}>
               <Menu
                 visible={sortMenuVisible}
                 onDismiss={() => {
@@ -71,7 +74,7 @@ export function PolkassemblyDiscussions({
                       setSortMenuVisible(true);
                     }}
                     style={globalStyles.rowAlignCenter}>
-                    <Subheading>Sort by</Subheading>
+                    <Text variant="titleMedium">Sort by</Text>
                     <Icon name="chevron-down" size={25} />
                   </TouchableOpacity>
                 }>
@@ -109,7 +112,7 @@ export function PolkassemblyDiscussions({
                       setFilterMenuVisible(true);
                     }}
                     style={globalStyles.rowAlignCenter}>
-                    <Subheading>Filter</Subheading>
+                    <Text variant="titleMedium">Filter</Text>
                     <Icon name="chevron-down" size={25} />
                   </TouchableOpacity>
                 }>
@@ -126,7 +129,7 @@ export function PolkassemblyDiscussions({
               </Menu>
             </View>
           }
-          ListFooterComponent={() => (
+          ListFooterComponent={
             <View style={styles.footer}>
               {hasNextPage ? (
                 isFetching || isFetchingNextPage ? (
@@ -136,11 +139,11 @@ export function PolkassemblyDiscussions({
                 )
               ) : null}
             </View>
-          )}
+          }
           renderItem={({item}) => (
             <PolkassemblyDiscussionItem post={item} currentNetwork={currentNetwork.key} onPress={toDiscussionDetail} />
           )}
-          ItemSeparatorComponent={() => <Padder scale={0.5} />}
+          ItemSeparatorComponent={ItemSeparator}
           keyExtractor={(item) => String(item.id)}
         />
       )}
@@ -163,19 +166,19 @@ function PolkassemblyDiscussionItem({post, currentNetwork, onPress}: ItemProps) 
   return (
     <Card onPress={() => onPress(post.id)}>
       <Card.Content>
-        <Caption selectable numberOfLines={1}>
+        <Text variant="bodySmall" selectable numberOfLines={1}>
           {post.title}
-        </Caption>
+        </Text>
         <View style={globalStyles.rowAlignCenter}>
-          <Caption>{`By `}</Caption>
+          <Text variant="bodySmall">{`By `}</Text>
           {address && accountInfo ? (
             <AccountTeaser account={accountInfo} />
           ) : (
-            <Caption>{post.author?.username || ''}</Caption>
+            <Text variant="bodySmall">{post.author?.username || ''}</Text>
           )}
         </View>
         <View style={globalStyles.rowAlignCenter}>
-          <Caption>{`${dateUtils.fromNow(post.created_at)} in `}</Caption>
+          <Text variant="bodySmall">{`${dateUtils.fromNow(post.created_at)} in `}</Text>
           <Text>{post.topic.name}</Text>
         </View>
         {post.content ? (
@@ -192,7 +195,7 @@ function PolkassemblyDiscussionItem({post, currentNetwork, onPress}: ItemProps) 
               <View style={globalStyles.rowAlignCenter}>
                 <Icon name="message-outline" size={15} />
                 <Padder scale={0.3} />
-                <Caption>{post.comments_aggregate.aggregate.count} comments</Caption>
+                <Text variant="bodySmall">{post.comments_aggregate.aggregate.count} comments</Text>
               </View>
               <Padder scale={1} />
             </>
@@ -202,7 +205,7 @@ function PolkassemblyDiscussionItem({post, currentNetwork, onPress}: ItemProps) 
             <View style={globalStyles.rowAlignCenter}>
               <Icon name="clock-outline" size={15} />
               <Padder scale={0.3} />
-              <Caption>commented {dateUtils.fromNow(post.last_update.last_update)}</Caption>
+              <Text variant="bodySmall">commented {dateUtils.fromNow(post.last_update.last_update)}</Text>
             </View>
           ) : null}
         </View>

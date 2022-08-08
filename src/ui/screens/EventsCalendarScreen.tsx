@@ -3,7 +3,7 @@ import {StyleSheet, ScrollView, View, Platform} from 'react-native';
 import dayjs from 'dayjs';
 import Animated, {FadeInUp, FadeOutDown} from 'react-native-reanimated';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
-import {Card, Title, Text, Caption, Subheading, Calendar, useTheme} from '@ui/library';
+import {Card, Text, Calendar, useTheme} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {standardPadding} from '@ui/styles';
 import {useCalendarEvents, CalendarEvent} from 'src/api/hooks/useCalendarEvents';
@@ -61,17 +61,23 @@ function Schedule({date, events}: {date: string; events: CalendarEvent[]}) {
   return (
     <Container _key={date}>
       <Card style={styles.container}>
-        <Title>{date}</Title>
+        <Text variant="titleLarge">{date}</Text>
         <View>
-          {events.length === 0 && <Caption style={styles.noEventsText}>No events scheduled for this day</Caption>}
+          {events.length === 0 && (
+            <Text variant="bodySmall" style={styles.noEventsText}>
+              No events scheduled for this day
+            </Text>
+          )}
           <Padder scale={1} />
           {events.map((event, index) => (
             <View key={index} style={styles.eventRow}>
-              <Subheading style={{color: colors.accent}}>{dayjs(event.date).format(EVENT_TIME_FORMAT)}</Subheading>
+              <Text variant="titleMedium" style={{color: colors.secondary}}>
+                {dayjs(event.date).format(EVENT_TIME_FORMAT)}
+              </Text>
               <Padder scale={1} />
               <View style={styles.eventDescription}>
                 <Text>{event.title}</Text>
-                <Caption>{event.via}</Caption>
+                <Text variant="bodySmall">{event.via}</Text>
               </View>
             </View>
           ))}

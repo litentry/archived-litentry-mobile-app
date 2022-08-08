@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, StyleSheet, KeyboardAvoidingView, Platform} from 'react-native';
-import IdentityIcon from '@polkadot/reactnative-identicon/Identicon';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {ScrollView} from 'react-native-gesture-handler';
 import zxcvbn from 'zxcvbn';
@@ -9,13 +8,13 @@ import {ProgressBar} from '@ui/components/ProgressBar';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {accountsScreen, createAccountScreen} from '@ui/navigation/routeKeys';
-import {Button, Caption, List, Text, TextInput, HelperText} from '@ui/library';
-import {useTheme} from '@ui/library';
+import {Button, Text, List, TextInput, HelperText} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {SecureKeychain} from 'src/service/SecureKeychain';
 import {useKeyboardStatus} from 'src/hooks/useKeyboardStatus';
 import {useKeyring} from '@polkadotApi/useKeyring';
+import {Identicon} from '@ui/components/Identicon';
 
 type Account = {
   title: string;
@@ -32,7 +31,6 @@ export function CreateAccountScreen({
 }) {
   const {mnemonic} = route.params;
 
-  const theme = useTheme();
   const {status: keyboardStatus} = useKeyboardStatus();
   const {currentNetwork} = useNetwork();
 
@@ -68,24 +66,25 @@ export function CreateAccountScreen({
     navigation.navigate(accountsScreen, {reload: true});
   };
 
+  const AccountIdentityIcon = React.useCallback(
+    () => (
+      <View style={globalStyles.justifyCenter}>
+        <Identicon value={address} size={40} />
+      </View>
+    ),
+    [address],
+  );
+
   return (
     <SafeView edges={noTopEdges}>
       <KeyboardAvoidingView style={globalStyles.flex} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <ScrollView style={styles.container}>
-          <List.Item
-            title={() => <Text>{account.title}</Text>}
-            left={() => (
-              <View style={globalStyles.justifyCenter}>
-                <IdentityIcon value={address} size={40} />
-              </View>
-            )}
-            description={address}
-          />
+          <List.Item title={account.title} left={AccountIdentityIcon} description={address} />
           <Padder scale={1} />
           <TextInput autoComplete="off" label={'Mnemonic seed'} value={mnemonic} disabled multiline />
-          <Caption>
+          <Text variant="bodySmall">
             {`Please write down the mnemonic seed and keep it in a safe place. The mnemonic can be used to restore your account. keep it carefully to not lose your assets.`}
-          </Caption>
+          </Text>
           <Padder scale={2} />
           <TextInput
             mode="outlined"
@@ -106,7 +105,6 @@ export function CreateAccountScreen({
               <TextInput.Icon
                 onPress={() => setIsPasswordVisible(!isPasswordVisible)}
                 name={`${isPasswordVisible ? 'eye' : 'eye-off'}-outline`}
-                color={theme.colors.disabled}
               />
             }
             mode="outlined"
@@ -149,7 +147,8 @@ const styles = StyleSheet.create({
     padding: standardPadding * 2,
   },
   passwordMeter: {
-    marginTop: 5,
+    marginTop: standardPadding * 2,
+    marginHorizontal: standardPadding,
   },
   icon: {
     width: 20,

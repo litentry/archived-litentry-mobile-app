@@ -1,8 +1,7 @@
 import React from 'react';
-import {FlatList, View, StyleSheet, TouchableOpacity, Keyboard} from 'react-native';
-import Identicon from '@polkadot/reactnative-identicon';
+import {FlatList, View, StyleSheet, TouchableOpacity} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
-import {useTheme, Divider, IconButton, List, FAB, Caption, Menu, Subheading, Icon, useBottomSheet} from '@ui/library';
+import {useTheme, Divider, IconButton, List, FAB, Menu, Text, Icon, useBottomSheet} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {CompleteNavigatorParamList} from '@ui/navigation/navigation';
 import {accountsScreen, importAccountScreen, mnemonicScreen, myAccountScreen} from '@ui/navigation/routeKeys';
@@ -16,6 +15,7 @@ import {AddExternalAccount} from '@ui/components/Account/AddExternalAccount';
 import type {AccountMeta, KeyringAccount} from 'polkadot-api';
 import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 import {useKeyring} from '@polkadotApi/useKeyring';
+import {Identicon} from '@ui/components/Identicon';
 
 type Props = {
   navigation: NavigationProp<CompleteNavigatorParamList, typeof accountsScreen>;
@@ -47,11 +47,16 @@ export function AccountsScreen({navigation}: Props) {
     BottomSheet: ExternalAccountBottomSheet,
   } = useBottomSheet();
 
+  const HeaderRight = React.useCallback(
+    () => <IconButton icon="information" onPress={openAccountGuide} />,
+    [openAccountGuide],
+  );
+
   React.useEffect(() => {
     navigation.setOptions({
-      headerRight: () => <IconButton icon="information" onPress={openAccountGuide} />,
+      headerRight: HeaderRight,
     });
-  }, [navigation, openAccountGuide]);
+  }, [navigation, HeaderRight]);
 
   return (
     <SafeView edges={noTopEdges}>
@@ -78,7 +83,7 @@ export function AccountsScreen({navigation}: Props) {
                     setSortMenuVisible(true);
                   }}
                   style={globalStyles.rowAlignCenter}>
-                  <Subheading>Sort by</Subheading>
+                  <Text variant="titleMedium">Sort by</Text>
                   <Icon name="chevron-down" size={25} />
                 </TouchableOpacity>
               }>
@@ -110,26 +115,12 @@ export function AccountsScreen({navigation}: Props) {
         <AccountsGuide />
       </AccountGuideBottomSheet>
 
-      <ExternalAccountBottomSheet onClose={Keyboard.dismiss}>
+      <ExternalAccountBottomSheet>
         <AddExternalAccount onClose={closeExternalAccount} />
       </ExternalAccountBottomSheet>
     </SafeView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
-    paddingHorizontal: standardPadding * 2,
-  },
-  sortBy: {
-    paddingLeft: standardPadding * 2,
-  },
-  emptyContainer: {alignItems: 'center', justifyContent: 'center', padding: standardPadding * 2},
-  emptyText: {fontWeight: 'normal'},
-});
 
 function sortByDisplayName(accounts: KeyringAccount[]) {
   return [...accounts].sort((a, b) => a.meta.name.localeCompare(b.meta.name));
@@ -139,43 +130,47 @@ function sortByIsFavorite(accounts: KeyringAccount[]) {
   return [...accounts].sort((a, b) => Number(b.meta.isFavorite) - Number(a.meta.isFavorite));
 }
 
-function AccountItem({
-  account,
-  toggleFavorite,
-  onPress,
-}: {
+type AccountItemProps = {
   account: KeyringAccount;
   toggleFavorite: (account: {address: string; meta: AccountMeta}) => void;
   onPress: (address: string) => void;
-}) {
-  const theme = useTheme();
-  const {
-    address,
-    meta: {isFavorite, name, isExternal},
-  } = account;
+};
+
+function AccountItem({account, toggleFavorite, onPress}: AccountItemProps) {
+  const {colors} = useTheme();
+  const {address, meta} = account;
   const {data: accountInfo} = useAccount(address);
+
+  const ItemLeft = React.useCallback(
+    () => (
+      <View style={globalStyles.justifyCenter}>
+        <Identicon value={address} size={25} />
+      </View>
+    ),
+    [address],
+  );
+
+  const ItemRight = React.useCallback(() => {
+    return (
+      <IconButton
+        onPress={() => toggleFavorite({address, meta: {...meta, isFavorite: !meta.isFavorite}})}
+        iconColor={meta.isFavorite ? colors.secondary : colors.secondaryContainer}
+        icon={meta.isFavorite ? 'star' : 'star-outline'}
+      />
+    );
+  }, [address, meta, colors, toggleFavorite]);
 
   return (
     <List.Item
       onPress={() => onPress(address)}
-      left={() => (
+      left={ItemLeft}
+      title={
         <View style={globalStyles.justifyCenter}>
-          <Identicon value={address} size={25} />
+          {accountInfo && <Account account={accountInfo} name={meta.name} />}
+          {meta.isExternal && <Text variant="bodySmall">External</Text>}
         </View>
-      )}
-      title={() => (
-        <View style={globalStyles.justifyCenter}>
-          {accountInfo && <Account account={accountInfo} name={name} />}
-          {isExternal && <Caption>External</Caption>}
-        </View>
-      )}
-      right={() => (
-        <IconButton
-          onPress={() => toggleFavorite({address, meta: {...account.meta, isFavorite: !account.meta.isFavorite}})}
-          color={isFavorite ? theme.colors.accent : theme.colors.disabled}
-          icon={isFavorite ? 'star' : 'star-outline'}
-        />
-      )}
+      }
+      right={ItemRight}
     />
   );
 }
@@ -210,10 +205,29 @@ const Buttons = ({navigation, onAddAccount}: FabProps) => {
           icon: 'key-plus',
           label: 'Create new account',
           onPress: () => navigation.navigate(mnemonicScreen),
-          small: false,
         },
       ]}
       onStateChange={onStateChange}
     />
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  content: {
+    paddingHorizontal: standardPadding * 2,
+  },
+  sortBy: {
+    paddingLeft: standardPadding * 2,
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: standardPadding * 2,
+  },
+  emptyText: {
+    fontWeight: 'normal',
+  },
+});

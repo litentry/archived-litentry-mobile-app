@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import HyperLink from 'react-native-hyperlink';
-import {Subheading, Caption, useTheme} from '@ui/library';
+import {Text, useTheme} from '@ui/library';
 
 type Props = {
   reason: string;
@@ -12,11 +12,11 @@ export function TipReason({reason}: Props) {
 
   return (
     <>
-      <Subheading>{`Reason`}</Subheading>
+      <Text variant="titleMedium">{`Reason`}</Text>
       <HyperLink linkStyle={{color: colors.primary}} linkDefault>
-        <Caption selectable style={styles.tipReasonText}>
+        <Text variant="bodySmall" selectable style={styles.tipReasonText}>
           {reason}
-        </Caption>
+        </Text>
       </HyperLink>
     </>
   );

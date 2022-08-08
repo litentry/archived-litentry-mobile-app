@@ -1,4 +1,5 @@
 import {Blob} from 'blob-polyfill';
+import React from 'react';
 import 'react-native-gesture-handler/jestSetup';
 
 jest.mock('react-native-reanimated', () => {
@@ -40,6 +41,9 @@ jest.mock('@gorhom/bottom-sheet', () => {
   return {
     __esModule: true,
     ...MockBottomSheet,
+    useBottomSheet: {
+      expand: () => {},
+    },
   };
 });
 
@@ -63,4 +67,11 @@ jest.mock('@react-native-community/clipboard', () => {
 jest.mock('@react-navigation/material-top-tabs', () => ({
   createMaterialTopTabNavigator: () => jest.fn(),
 }));
-jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
+
+jest.mock('../src/hooks/useRemoteConfig', () => {
+  return {
+    useRemoteConfig: () => ({
+      getValue: jest.fn(),
+    }),
+  };
+});

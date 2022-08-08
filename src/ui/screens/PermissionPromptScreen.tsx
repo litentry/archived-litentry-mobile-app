@@ -4,7 +4,7 @@ import {Padder} from '@ui/components/Padder';
 import SafeView from '@ui/components/SafeView';
 import {useRequestPermission} from '@atoms/pushNotification';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {Caption, Headline, Button, Icon} from '@ui/library';
+import {Text, Button, Icon} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 
 type Props = {
@@ -21,11 +21,11 @@ function PermissionPrompt({skipPermission, allowSkip = true}: Props) {
         <View style={styles.container}>
           <Icon name={'bell-outline'} size={100} />
           <Padder scale={1} />
-          <Headline>Turn on Notifications</Headline>
+          <Text variant="headlineSmall">Turn on Notifications</Text>
           <Padder scale={1} />
-          <Caption style={globalStyles.textCenter}>
+          <Text variant="bodySmall" style={globalStyles.textCenter}>
             Enable notifications to make sure you don't miss out on important events
-          </Caption>
+          </Text>
           <Padder scale={2} />
           <Button mode="contained" onPress={() => requestPermission()}>
             Allow Notifications

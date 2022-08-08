@@ -1,7 +1,7 @@
 import {useFocusEffect} from '@react-navigation/native';
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
-import {Caption, Text, TextInput, Button, useTheme} from '@ui/library';
+import {Text, TextInput, Button, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {noop} from 'lodash';
 import React from 'react';
@@ -44,7 +44,7 @@ export function FeedbackScreen() {
       <Layout style={globalStyles.fillCenter}>
         <Text style={styles.errorMessage}>{`We are having trouble trying to open your mail app.`}</Text>
         <HyperLink linkStyle={{color: colors.primary}} linkDefault>
-          <Caption>Please email us at {FEEDBACK_EMAIL}</Caption>
+          <Text variant="bodySmall">Please email us at {FEEDBACK_EMAIL}</Text>
         </HyperLink>
       </Layout>
     );

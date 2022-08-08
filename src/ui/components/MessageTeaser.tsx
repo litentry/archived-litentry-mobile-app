@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import {Title, Text, Icon, useTheme} from '@ui/library';
+import {Text, Icon, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 
 type Props = {
@@ -16,8 +16,8 @@ export function MessageTeaser({title, msg, type}: Props) {
   return (
     <View style={globalStyles.fillCenter}>
       <View style={styles.titleContainer}>
-        <Icon size={50} color={colors[type]} name={iconName} />
-        <Title>{title}</Title>
+        <Icon size={50} color={type === 'error' ? colors.error : colors.secondary} name={iconName} />
+        <Text variant="titleLarge">{title}</Text>
       </View>
       <Text style={styles.msg}>{msg}</Text>
     </View>

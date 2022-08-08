@@ -1,7 +1,8 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {isString} from 'lodash';
-import {Caption} from '@ui/library';
+import {Text} from '@ui/library';
+import {standardPadding} from '@ui/styles';
 
 type PropTypes = {
   title: string;
@@ -14,8 +15,14 @@ function StatInfoBlock(props: PropTypes) {
 
   return (
     <View testID={testID}>
-      <Caption>{title}</Caption>
-      {isString(children) ? <Caption style={styles.stat}>{children}</Caption> : children}
+      <Text variant="bodyMedium">{title}</Text>
+      {isString(children) ? (
+        <Text variant="bodySmall" style={styles.stat}>
+          {children}
+        </Text>
+      ) : (
+        children
+      )}
     </View>
   );
 }
@@ -24,6 +31,7 @@ const styles = StyleSheet.create({
   stat: {
     textAlign: 'left',
     fontSize: 16,
+    marginTop: standardPadding,
   },
 });
 

@@ -1,12 +1,15 @@
 import React, {useCallback, useState} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
-import {TextInput, Button, Tabs, TabScreen, useTabNavigation, useTabIndex, useTheme, HelperText} from '@ui/library';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {TextInput, Button, useTheme, HelperText} from '@ui/library';
 import {useNetwork} from '@atoms/network';
 import {Padder} from '@ui/components/Padder';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {isAddressValid, parseAddress} from 'src/utils/address';
+import {parseAddress} from 'src/utils/address';
 import type {Account} from 'src/api/hooks/useAccount';
 import type {SubIdentity} from './RegisterSubIdentitiesScreen';
+import {useIsAddressValid} from 'src/hooks/useIsAddressValid';
+import {useNavigation} from '@react-navigation/native';
 import {QRCodeScanner} from '@ui/components/QRCodeScanner';
 
 type Props = {
@@ -15,15 +18,14 @@ type Props = {
   subIdentities?: Account[];
 };
 
+const Tab = createMaterialTopTabNavigator();
+
 export function AddSubIdentity({onClose, onAddPress, subIdentities}: Props) {
   const {currentNetwork} = useNetwork();
   const [subAddress, setSubAddress] = useState('');
   const [subName, setSubName] = useState('');
   const {colors} = useTheme();
-
-  const isValidAddress = React.useMemo(() => {
-    return isAddressValid(currentNetwork, subAddress);
-  }, [subAddress, currentNetwork]);
+  const {isValid: isAddressValid} = useIsAddressValid(currentNetwork, subAddress);
 
   const addSubIdentity = () => {
     if (subIdentities?.some((sub) => sub.address === subAddress)) {
@@ -39,6 +41,30 @@ export function AddSubIdentity({onClose, onAddPress, subIdentities}: Props) {
     }
   };
 
+  const TypeInTabScreen = React.useCallback(() => {
+    return (
+      <View style={globalStyles.paddedContainer}>
+        <TextInput
+          mode="outlined"
+          onChangeText={(newAddress) => setSubAddress(newAddress)}
+          value={subAddress}
+          multiline={true}
+          style={styles.input}
+          placeholder="👉 Paste address here, e.g. 167r...14h"
+        />
+        <HelperText
+          type="error"
+          visible={
+            Boolean(subAddress) && !isAddressValid
+          }>{`${subAddress} is not a valid address for ${currentNetwork.name} network`}</HelperText>
+      </View>
+    );
+  }, [currentNetwork.name, isAddressValid, subAddress]);
+
+  const ViaQRTabScreen = React.useCallback(() => {
+    return <ScanAddressTab onScanSuccess={setSubAddress} />;
+  }, []);
+
   return (
     <>
       <View style={styles.accountName}>
@@ -52,35 +78,21 @@ export function AddSubIdentity({onClose, onAddPress, subIdentities}: Props) {
       </View>
       <Padder scale={1} />
       <View style={styles.tabViewContainer}>
-        <Tabs style={{backgroundColor: colors.background}}>
-          <TabScreen label="Type in" icon="keyboard">
-            <View style={globalStyles.paddedContainer}>
-              <TextInput
-                mode="outlined"
-                onChangeText={(newAddress) => setSubAddress(newAddress)}
-                value={subAddress}
-                multiline={true}
-                style={styles.input}
-                placeholder="👉 Paste address here, e.g. 167r...14h"
-              />
-              <HelperText
-                type="error"
-                visible={
-                  Boolean(subAddress) && !isValidAddress
-                }>{`${subAddress} is not a valid address for ${currentNetwork.name} network`}</HelperText>
-            </View>
-          </TabScreen>
-          <TabScreen label="Via QR" icon="qrcode">
-            <ScanAddressTab onScanSuccess={setSubAddress} />
-          </TabScreen>
-        </Tabs>
+        <Tab.Navigator
+          screenOptions={{
+            tabBarLabelStyle: {color: colors.secondary},
+            tabBarStyle: {backgroundColor: colors.background},
+          }}>
+          <Tab.Screen name="Type in" component={TypeInTabScreen} />
+          <Tab.Screen name="Via QR" component={ViaQRTabScreen} />
+        </Tab.Navigator>
       </View>
 
       <View style={styles.row}>
         <Button mode="outlined" onPress={onClose}>
           Cancel
         </Button>
-        <Button mode="contained" disabled={!isValidAddress} onPress={addSubIdentity}>
+        <Button mode="contained" disabled={!isAddressValid} onPress={addSubIdentity} testID="add-identity-button">
           Add Identity
         </Button>
       </View>
@@ -90,32 +102,40 @@ export function AddSubIdentity({onClose, onAddPress, subIdentities}: Props) {
 }
 
 function ScanAddressTab({onScanSuccess}: {onScanSuccess: (address: string) => void}) {
-  const goToTabIndex = useTabNavigation();
-  const tabIndex = useTabIndex();
+  const {navigate} = useNavigation();
   const {currentNetwork} = useNetwork();
+  const {isAddressValid} = useIsAddressValid(currentNetwork);
 
   const handleScan = useCallback(
     (data: string) => {
       try {
         const parsed = parseAddress(data);
-        if (isAddressValid(currentNetwork, parsed.address)) {
-          onScanSuccess(parsed.address);
-          goToTabIndex(0);
-        } else {
-          Alert.alert(
-            'Validation Failed',
-            `${parsed.address} is not a valid address for the ${currentNetwork.name} network.`,
-            [{text: 'Ok'}],
-          );
-        }
+        isAddressValid(parsed.address).then((isValid) => {
+          if (isValid) {
+            onScanSuccess(parsed.address);
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore TODO: fix this when updating the top tabs
+            navigate('Type in');
+          } else {
+            Alert.alert(
+              'Validation Failed',
+              `${parsed.address} is not a valid address for the ${currentNetwork.name} network.`,
+              [{text: 'Ok'}],
+            );
+          }
+        });
       } catch (e) {
         Alert.alert('Validation Failed', 'Address is invalid.', [{text: 'Ok'}]);
       }
     },
-    [currentNetwork, onScanSuccess, goToTabIndex],
+    [currentNetwork, onScanSuccess, isAddressValid, navigate],
   );
 
-  return <View style={globalStyles.flex}>{tabIndex === 1 && <QRCodeScanner onScan={handleScan} />}</View>;
+  return (
+    <View style={globalStyles.paddedContainer}>
+      <QRCodeScanner onScan={handleScan} />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

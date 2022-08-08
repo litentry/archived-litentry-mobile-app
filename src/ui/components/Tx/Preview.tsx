@@ -1,57 +1,58 @@
-import React, {useState} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {SignerPayloadJSON} from '@polkadot/types/types';
+import React, {useCallback, useState} from 'react';
+import {StyleSheet, TouchableOpacity, View, Dimensions} from 'react-native';
 import {BN} from '@polkadot/util';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {HashBlock} from '@ui/components/HashBlock';
 import {Padder} from '@ui/components/Padder';
-import {Button, Caption, Icon, Subheading, Text, useTheme} from '@ui/library';
+import {Button, Icon, Text, useTheme} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
+import {TxConfig, TxInfo} from 'polkadot-api';
+import {useAppAccounts} from '@polkadotApi/useAppAccounts';
 
-type PropTypes = {
-  transactionTitle: string;
-  transactionInfo: string;
-  txPayload: SignerPayloadJSON;
-  params: unknown[];
-  partialFee: number;
-  onConfirm: () => void;
+const {height} = Dimensions.get('window');
+
+type Props = {
+  address: string;
+  txConfig: TxConfig;
+  txInfo: TxInfo;
+  onConfirm: (isExternalAccount: boolean) => void;
   onCancel: () => void;
-  isExternalAccount: boolean;
 };
 
-export function TxPreview(props: PropTypes): React.ReactElement {
+export function TxPreview({address, txConfig, txInfo, onCancel, onConfirm}: Props): React.ReactElement {
   const [open, setOpen] = useState(false);
   const {colors} = useTheme();
-  const {transactionTitle, transactionInfo, partialFee, txPayload, params, onConfirm, onCancel, isExternalAccount} =
-    props;
+  const {accounts} = useAppAccounts();
+  const isExternal = Boolean(accounts[address]?.meta.isExternal);
+  const toggleShowParams = () => setOpen(!open);
+
+  const onConfirmPress = useCallback(() => {
+    onConfirm(isExternal);
+  }, [onConfirm, isExternal]);
 
   return (
     <Layout style={styles.container}>
-      <Subheading style={globalStyles.textCenter}>{`Preview`}</Subheading>
+      <Text variant="titleMedium" style={globalStyles.textCenter}>{`Preview`}</Text>
       <Padder scale={1} />
-      <HashBlock text={txPayload.blockHash} title={'call hash'} />
+      <HashBlock text={txInfo.blockHash} title={'call hash'} />
       <Padder scale={0.5} />
-      <TouchableOpacity
-        style={styles.infoContainer}
-        onPress={() => {
-          setOpen(!open);
-        }}>
+      <TouchableOpacity style={styles.infoContainer} onPress={txConfig.params.length ? toggleShowParams : undefined}>
         <View style={globalStyles.flex}>
-          <Text>{transactionTitle}</Text>
+          <Text>{txInfo.title}</Text>
           <Padder scale={0.3} />
-          <Caption>{transactionInfo}</Caption>
+          <Text variant="bodySmall">{txInfo.description}</Text>
         </View>
-        <Icon name={open ? 'chevron-up' : 'chevron-down'} />
+        {txConfig.params.length ? <Icon name={open ? 'chevron-up' : 'chevron-down'} /> : null}
       </TouchableOpacity>
-      {open ? <Text style={[styles.payload]}>{stringifyParams(params)}</Text> : undefined}
-      <Text>{`Fees of ${partialFee / 10 ** 6} micro Unit will be applied to the submission`}</Text>
+      {open ? <Text style={[styles.payload]}>{stringifyParams(txConfig.params)}</Text> : undefined}
+      <Text>{`Fees of ${txInfo.partialFee / 10 ** 6} micro Unit will be applied to the submission`}</Text>
       <Padder scale={2} />
       <View style={styles.buttonGroup}>
-        <Button mode="outlined" onPress={onCancel} color={colors.accent}>
+        <Button mode="outlined" onPress={onCancel} buttonColor={colors.secondary} textColor={colors.onSecondary}>
           Cancel
         </Button>
         <Padder scale={1} />
-        <Button mode="contained" compact onPress={onConfirm} icon={isExternalAccount ? 'qrcode-scan' : undefined}>
+        <Button mode="contained" compact onPress={onConfirmPress} icon={isExternal ? 'qrcode-scan' : undefined}>
           Continue
         </Button>
       </View>
@@ -63,6 +64,11 @@ export function TxPreview(props: PropTypes): React.ReactElement {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: standardPadding * 2,
+  },
+  emptyState: {
+    height: height * 0.3,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   content: {padding: standardPadding * 2},
   infoContainer: {

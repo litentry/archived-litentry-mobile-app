@@ -4,7 +4,7 @@ import {Camera, useCameraDevices, useFrameProcessor} from 'react-native-vision-c
 import {BarcodeFormat, scanBarcodes, Barcode} from 'vision-camera-code-scanner';
 import {runOnJS} from 'react-native-reanimated';
 import {useCameraPermission} from 'src/hooks/useCameraPermission';
-import {Subheading, Button} from '@ui/library';
+import {Text, Button} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 
 type Props = {
@@ -48,7 +48,7 @@ export function QRCodeScanner({onScan}: Props) {
   if (!hasPermission) {
     return (
       <View style={styles.centeredContainer}>
-        <Subheading>{`Need camera permission.`}</Subheading>
+        <Text variant="titleMedium">{`Need camera permission.`}</Text>
         <Padder />
         <Button onPress={openAppSetting} mode="outlined">
           Open Settings
@@ -77,8 +77,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cameraView: {
-    width: '80%',
-    height: '80%',
+    width: '90%',
+    height: '90%',
     borderRadius: 7,
   },
   barcodeTextURL: {

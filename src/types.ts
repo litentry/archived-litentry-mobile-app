@@ -1,7 +1,4 @@
-import {DeriveAccountRegistration} from '@polkadot/api-derive/types';
 import {Registration} from '@polkadot/types/interfaces';
-
-export type SupportedNetworkType = 'ethereum' | 'polkadot' | 'kusama' | 'litentry_test' | 'litmus';
 
 export type DeviceType = {
   firebase_token: string;
@@ -29,15 +26,3 @@ export type AddressDetailType =
     };
 
 export type HapticFeedbackType = 'success' | 'warn' | 'error';
-
-// Polkadot specific
-export interface AddressIdentity extends DeriveAccountRegistration {
-  isGood: boolean;
-  isBad: boolean;
-  isKnownGood: boolean;
-  isReasonable: boolean;
-  isErroneous: boolean;
-  isLowQuality: boolean;
-  isExistent: boolean;
-  waitCount: number;
-}

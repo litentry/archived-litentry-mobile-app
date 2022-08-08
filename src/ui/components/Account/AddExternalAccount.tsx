@@ -1,15 +1,17 @@
 import React from 'react';
 import {Alert, StyleSheet, View, Keyboard} from 'react-native';
-import {Divider, Button, Tabs, TabScreen, useTheme, Subheading, BottomSheetTextInput} from '@ui/library';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {Divider, Button, useTheme, Text, BottomSheetTextInput} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {useNetwork} from '@atoms/network';
 import {Padder} from '@ui/components/Padder';
 import {QRCodeScanner} from '@ui/components/QRCodeScanner';
 import {SuccessDialog} from '@ui/components/SuccessDialog';
 import globalStyles, {standardPadding} from '@ui/styles';
-import {isAddressValid, parseAddress} from 'src/utils/address';
-import AddressInfoPreview from './AddressPreview';
+import {parseAddress} from 'src/utils/address';
+import {AddressInfoPreview} from '@ui/components/Account/AddressPreview';
 import {useKeyring} from '@polkadotApi/useKeyring';
+import {useIsAddressValid} from 'src/hooks/useIsAddressValid';
 
 type StepType = 'input' | 'preview' | 'success';
 
@@ -50,11 +52,14 @@ type Props = {
   onClose: () => void;
 };
 
+const Tab = createMaterialTopTabNavigator();
+
 export function AddExternalAccount({onClose}: Props) {
   const {currentNetwork} = useNetwork();
   const [state, dispatch] = React.useReducer(addAccountReducer, initialState);
   const {addExternalAccount} = useKeyring();
   const {colors} = useTheme();
+  const {isValid: isValidAddress, isAddressValid} = useIsAddressValid(currentNetwork, state.address);
 
   const handleInputChange = (text: string) => {
     dispatch({type: 'SET_ADDRESS', payload: text});
@@ -68,7 +73,7 @@ export function AddExternalAccount({onClose}: Props) {
 
   const handleConfirm = React.useCallback(() => {
     if (state.step === 'input') {
-      if (isAddressValid(currentNetwork, state.address)) {
+      if (isValidAddress) {
         dispatch({type: 'SET_STEP', payload: 'preview'});
         return;
       }
@@ -91,59 +96,73 @@ export function AddExternalAccount({onClose}: Props) {
       close();
       return;
     }
-  }, [addExternalAccount, currentNetwork, state.address, state.step, close]);
+  }, [addExternalAccount, currentNetwork, state.address, state.step, close, isValidAddress]);
 
   const handleScan = React.useCallback(
     (data: string) => {
       try {
         const parsed = parseAddress(data);
-        if (isAddressValid(currentNetwork, parsed.address)) {
-          dispatch({type: 'SET_ADDRESS', payload: parsed.address});
-          dispatch({type: 'SET_STEP', payload: 'preview'});
-        } else {
-          Alert.alert(
-            'Validation Failed',
-            `${parsed.address} is not a valid address for the ${currentNetwork.name} network.`,
-            [{text: 'Ok'}],
-          );
-        }
+        isAddressValid(parsed.address).then((isValid) => {
+          if (isValid) {
+            dispatch({type: 'SET_ADDRESS', payload: parsed.address});
+            dispatch({type: 'SET_STEP', payload: 'preview'});
+          } else {
+            Alert.alert(
+              'Validation Failed',
+              `${parsed.address} is not a valid address for the ${currentNetwork.name} network.`,
+              [{text: 'Ok'}],
+            );
+          }
+        });
       } catch (e) {
         Alert.alert('Validation Failed', 'Address is invalid.', [{text: 'Ok'}]);
       }
     },
-    [currentNetwork],
+    [currentNetwork, isAddressValid],
   );
 
   const disabled = state.address.length === 0;
   const confirmBtnDisabled = state.step === 'input' && disabled;
 
-  const [tabIndex, setTabIndex] = React.useState(0);
+  const TypeInTabScreen = React.useCallback(() => {
+    return (
+      <View style={globalStyles.paddedContainer}>
+        <BottomSheetTextInput
+          style={[styles.input]}
+          onChangeText={handleInputChange}
+          value={state.address}
+          multiline={true}
+          numberOfLines={4}
+          placeholder="👉 Paste address here, e.g. 167r...14h"
+        />
+      </View>
+    );
+  }, [state.address]);
+
+  const ViaQRTabScreen = React.useCallback(() => {
+    return (
+      <View style={[globalStyles.paddedContainer, globalStyles.flex]}>
+        <QRCodeScanner onScan={handleScan} />
+      </View>
+    );
+  }, [handleScan]);
 
   return (
     <Layout>
-      <Subheading style={globalStyles.textCenter}>{`Add External Account`}</Subheading>
+      <Text variant="titleMedium" style={globalStyles.textCenter}>{`Add External Account`}</Text>
       {(() => {
         switch (state.step) {
           case 'input':
             return (
               <View style={styles.tabViewContainer}>
-                <Tabs style={{backgroundColor: colors.background}} onChangeIndex={(index) => setTabIndex(index)}>
-                  <TabScreen label="Type in" icon="keyboard">
-                    <View style={globalStyles.paddedContainer}>
-                      <BottomSheetTextInput
-                        style={[styles.input, {borderColor: colors.placeholder}]}
-                        onChangeText={handleInputChange}
-                        value={state.address}
-                        multiline={true}
-                        numberOfLines={4}
-                        placeholder="👉 Paste address here, e.g. 167r...14h"
-                      />
-                    </View>
-                  </TabScreen>
-                  <TabScreen label="Via QR" icon="qrcode">
-                    <View style={globalStyles.flex}>{tabIndex === 1 && <QRCodeScanner onScan={handleScan} />}</View>
-                  </TabScreen>
-                </Tabs>
+                <Tab.Navigator
+                  screenOptions={{
+                    tabBarLabelStyle: {color: colors.secondary},
+                    tabBarStyle: {backgroundColor: colors.background},
+                  }}>
+                  <Tab.Screen name="Type in" component={TypeInTabScreen} />
+                  <Tab.Screen name="Via QR" component={ViaQRTabScreen} options={{lazy: true}} />
+                </Tab.Navigator>
               </View>
             );
           case 'preview':

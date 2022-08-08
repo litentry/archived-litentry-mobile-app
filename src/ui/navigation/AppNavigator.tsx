@@ -1,6 +1,6 @@
 import React from 'react';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createDrawerNavigator, DrawerHeaderProps, DrawerContentComponentProps} from '@react-navigation/drawer';
+import {createNativeStackNavigator, NativeStackHeaderProps} from '@react-navigation/native-stack';
 import {AccountsScreen} from '@ui/screens/AccountsScreen';
 import {BountiesScreen} from '@ui/screens/Bounty/BountiesScreen';
 import {BountyDetailScreen} from '@ui/screens/Bounty/BountyDetailScreen';
@@ -12,8 +12,9 @@ import {CreateAccountScreen} from '@ui/screens/CreateAccount/CreateAccountScreen
 import {MnemonicScreen} from '@ui/screens/CreateAccount/MnemonicScreen';
 import {VerifyMnemonicScreen} from '@ui/screens/CreateAccount/VerifyMnemonic';
 import DashboardScreen from '@ui/screens/DashboardScreen';
-import {DemocracyProposalScreen} from '@ui/screens/DemocracyProposalScreen';
-import {DemocracyScreen} from '@ui/screens/DemocracyScreen';
+import {DemocracyScreen} from '@ui/screens/Democracy/DemocracyScreen';
+import {DemocracyReferendumDetailScreen} from '@ui/screens/Democracy/DemocracyReferendumDetailScreen';
+import {DemocracyProposalDetailScreen} from '@ui/screens/Democracy/DemocracyProposalDetailScreen';
 import DevScreen from '@ui/screens/DevScreen';
 import DrawerScreen from '@ui/screens/Drawer/DrawerScreen';
 import {ExportAccountWithJsonFileScreen} from '@ui/screens/ExportAccountWithJsonFileScreen';
@@ -32,7 +33,6 @@ import {PermissionPromptScreen} from '@ui/screens/PermissionPromptScreen';
 import {PolkassemblyDiscussionDetail} from '@ui/screens/Polkassembly/PolkassemblyDiscussionDetail';
 import {PolkassemblyDiscussions} from '@ui/screens/Polkassembly/PolkassemblyDiscussions';
 import {ProposeTipScreen} from '@ui/screens/ProposeTipScreen';
-import {ReferendumScreen} from '@ui/screens/ReferendumScreen';
 import RegistrarListScreen from '@ui/screens/RegistrarListScreen';
 import {TechnicalCommitteeScreen} from '@ui/screens/TechnicalCommitteeScreen';
 import {RegisterSubIdentitiesScreen} from '@ui/screens/SubIdentities/RegisterSubIdentitiesScreen';
@@ -60,12 +60,14 @@ import {usePersistedState} from '@hooks/usePersistedState';
 
 const DashboardStack = createNativeStackNavigator<DashboardStackParamList>();
 
+const StackNavigatorHeader = (props: NativeStackHeaderProps) => <MainStackAppBar {...props} />;
+
 function DashboardStackNavigator() {
   const [onboardingSeen] = usePersistedState<boolean>('onboarding_seen');
   useFirebase();
 
   return (
-    <DashboardStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
+    <DashboardStack.Navigator screenOptions={{header: StackNavigatorHeader}}>
       {!onboardingSeen ? (
         <DashboardStack.Screen
           name={routeKeys.onboardingScreen}
@@ -86,8 +88,11 @@ function DashboardStackNavigator() {
       <DashboardStack.Screen name={routeKeys.proposeTipScreen} component={ProposeTipScreen} />
       <DashboardStack.Screen name={routeKeys.motionsScreen} component={MotionsScreen} />
       <DashboardStack.Screen name={routeKeys.democracyScreen} component={DemocracyScreen} />
-      <DashboardStack.Screen name={routeKeys.referendumScreen} component={ReferendumScreen} />
-      <DashboardStack.Screen name={routeKeys.democracyProposalScreen} component={DemocracyProposalScreen} />
+      <DashboardStack.Screen
+        name={routeKeys.democracyReferendumDetailScreen}
+        component={DemocracyReferendumDetailScreen}
+      />
+      <DashboardStack.Screen name={routeKeys.democracyProposalDetailScreen} component={DemocracyProposalDetailScreen} />
       <DashboardStack.Screen name={routeKeys.bountiesScreen} component={BountiesScreen} />
       <DashboardStack.Screen name={routeKeys.bountyDetailScreen} component={BountyDetailScreen} />
       <DashboardStack.Screen name={routeKeys.eventsCalendarScreen} component={EventsCalendarScreen} />
@@ -99,7 +104,7 @@ const AccountsStack = createNativeStackNavigator<AccountsStackParamList>();
 
 export function AccountsNavigator() {
   return (
-    <AccountsStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
+    <AccountsStack.Navigator screenOptions={{header: StackNavigatorHeader}}>
       <AccountsStack.Screen name={routeKeys.accountsScreen} component={AccountsScreen} />
       <AccountsStack.Screen name={routeKeys.manageIdentityScreen} component={ManageIdentityScreen} />
       <AccountsStack.Screen name={routeKeys.myAccountScreen} component={MyAccountScreen} />
@@ -120,7 +125,7 @@ const DiscussionNavigator = createNativeStackNavigator<PolkassemblyDiscussionSta
 
 function PolkassemblyDiscussionsNavigator() {
   return (
-    <DiscussionNavigator.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
+    <DiscussionNavigator.Navigator screenOptions={{header: StackNavigatorHeader}}>
       <DiscussionNavigator.Screen name={routeKeys.polkassemblyDiscussions} component={PolkassemblyDiscussions} />
       <DiscussionNavigator.Screen
         name={routeKeys.polkassemblyDiscussionDetail}
@@ -132,11 +137,12 @@ function PolkassemblyDiscussionsNavigator() {
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
+const DrawerNavigatorHeader = (props: DrawerHeaderProps) => <MainDrawerAppBar {...props} />;
+const DrawerContent = (props: DrawerContentComponentProps) => <DrawerScreen {...props} />;
+
 function DrawerNavigator() {
   return (
-    <Drawer.Navigator
-      drawerContent={(props) => <DrawerScreen {...props} />}
-      screenOptions={{header: (props) => <MainDrawerAppBar {...props} />}}>
+    <Drawer.Navigator drawerContent={DrawerContent} screenOptions={{header: DrawerNavigatorHeader}}>
       <Drawer.Screen
         name={routeKeys.dashboardNavigator}
         component={DashboardStackNavigator}
@@ -180,7 +186,7 @@ const ParachainsStack = createNativeStackNavigator<ParachainsStackParamList>();
 
 function ParachainsNavigator() {
   return (
-    <ParachainsStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
+    <ParachainsStack.Navigator screenOptions={{header: StackNavigatorHeader}}>
       <ParachainsStack.Screen name={routeKeys.parachainsOverviewScreen} component={ParachainsOverviewScreen} />
       <ParachainsStack.Screen name={routeKeys.parachainDetailScreen} component={ParachainDetailScreen} />
     </ParachainsStack.Navigator>
@@ -191,7 +197,7 @@ const CrowdloansStack = createNativeStackNavigator<CrowdloansStackParamList>();
 
 function CrowdloansNavigator() {
   return (
-    <CrowdloansStack.Navigator screenOptions={{header: (props) => <MainStackAppBar {...props} />}}>
+    <CrowdloansStack.Navigator screenOptions={{header: StackNavigatorHeader}}>
       <CrowdloansStack.Screen name={routeKeys.crowdloanScreen} component={CrowdloanScreen} />
       <CrowdloansStack.Screen name={routeKeys.crowdloanFundDetailScreen} component={CrowdloanFundDetailScreen} />
     </CrowdloansStack.Navigator>
@@ -225,7 +231,7 @@ function AppNavigator() {
       <AppStack.Screen
         name={routeKeys.accountScreen}
         component={AccountScreen}
-        options={{header: (props) => <MainStackAppBar {...props} />, headerShown: true}}
+        options={{header: StackNavigatorHeader, headerShown: true}}
       />
     </AppStack.Navigator>
   );

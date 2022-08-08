@@ -4,11 +4,10 @@ import {NavigationProp} from '@react-navigation/core';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
 import {SelectAccount} from '@ui/components/SelectAccount';
-import {useApiTx} from 'src/api/hooks/useApiTx';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {CrowdloansStackParamList} from '@ui/navigation/navigation';
 import {crowdloanFundDetailScreen} from '@ui/navigation/routeKeys';
-import {Button, Card, Subheading, Text, Caption, Title, Modal, useTheme} from '@ui/library';
+import {Button, Card, Text, Modal, useTheme} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {ProgressChart} from '@ui/components/ProgressChart';
@@ -16,11 +15,12 @@ import BalanceInput from '@ui/components/BalanceInput';
 import {Crowdloan, useAllCrowdloans} from 'src/api/hooks/useCrowdloans';
 import type {Account} from 'src/api/hooks/useAccount';
 import {useChainInfo} from 'src/api/hooks/useChainInfo';
-import {BN_ZERO} from '@polkadot/util';
+import {bnToHex, BN_ZERO} from '@polkadot/util';
 import {formattedStringToBn} from 'src/utils/balance';
 import {CrowdloanSummaryTeaser} from '@ui/components/CrowdloanSummaryTeaser';
 import {useNetwork} from '@atoms/network';
 import {InputLabel} from '@ui/library/InputLabel';
+import {useStartTx} from 'context/TxContext';
 
 type ScreenProps = {
   navigation: NavigationProp<CrowdloansStackParamList>;
@@ -60,8 +60,8 @@ export function CrowdloanScreen({navigation}: ScreenProps) {
           contentContainerStyle={styles.listContent}
           style={styles.container}
           sections={sectionData}
-          SectionSeparatorComponent={() => <Padder scale={1} />}
-          renderSectionHeader={({section}) => <Title>{section.key}</Title>}
+          SectionSeparatorComponent={Padder}
+          renderSectionHeader={({section}) => <Text variant="titleLarge">{section.key}</Text>}
           renderItem={({item, section: {key}}) => {
             return (
               <Fund
@@ -110,18 +110,25 @@ function Fund({item, active, onPressContribute, navigation}: FundsProps) {
 
   return (
     <Card
-      mode={isSpecial ? 'elevated' : 'outlined'}
+      mode={isSpecial ? 'contained' : 'elevated'}
       style={styles.fund}
       onPress={() => {
         navigation.navigate(crowdloanFundDetailScreen, {title: item.name ?? `# ${item.paraId}`, paraId: item.paraId});
       }}>
-      <View style={[globalStyles.rowAlignCenter]}>
+      <Card.Content style={[globalStyles.rowAlignCenter]}>
         <View style={styles.shrink}>
-          <Subheading numberOfLines={1} adjustsFontSizeToFit style={{color: isSpecial ? colors.primary : colors.text}}>
+          <Text
+            variant="titleMedium"
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            style={{color: isSpecial ? colors.primary : colors.onSurface}}>
             {item.name}
-          </Subheading>
+          </Text>
           <Padder scale={0.5} />
-          <Caption numberOfLines={1} adjustsFontSizeToFit>{`${item.formattedRaised} / ${item.formattedCap}`}</Caption>
+          <Text
+            variant="bodySmall"
+            numberOfLines={1}
+            adjustsFontSizeToFit>{`${item.formattedRaised} / ${item.formattedCap}`}</Text>
         </View>
         <View style={styles.spacer} />
         <View style={styles.listItemRightSide}>
@@ -129,9 +136,8 @@ function Fund({item, active, onPressContribute, navigation}: FundsProps) {
           {active && (
             <Button
               style={styles.button}
-              mode="outlined"
+              mode={isSpecial ? 'contained' : 'contained-tonal'}
               uppercase={false}
-              color={isSpecial ? colors.primary : colors.placeholder}
               compact
               onPress={onPressContribute}
               testID="crowdloan-contribute-button">
@@ -139,7 +145,7 @@ function Fund({item, active, onPressContribute, navigation}: FundsProps) {
             </Button>
           )}
         </View>
-      </View>
+      </Card.Content>
     </Card>
   );
 }
@@ -195,7 +201,7 @@ function ContributeBox({
   setVisible: (_visible: boolean) => void;
   parachainId: string;
 }) {
-  const startTx = useApiTx();
+  const {startTx} = useStartTx();
   const [account, setAccount] = React.useState<Account>();
   const [amount, setAmount] = React.useState<string>('');
   const {formatBalance, stringToBn} = useFormatBalance();
@@ -243,8 +249,10 @@ function ContributeBox({
             if (account) {
               startTx({
                 address: account.address,
-                txMethod: 'crowdloan.contribute',
-                params: [parachainId, balance, null],
+                txConfig: {
+                  method: 'crowdloan.contribute',
+                  params: [parachainId, bnToHex(balance), null],
+                },
               });
               reset();
             }

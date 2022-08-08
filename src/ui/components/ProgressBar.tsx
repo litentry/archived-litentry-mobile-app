@@ -5,38 +5,34 @@ import {useTheme} from '@ui/library';
 
 interface Props {
   percentage: number;
-  requiredAmount: number;
+  requiredAmount?: number;
 }
 
-export function ProgressBar(props: Props) {
+export function ProgressBar({percentage, requiredAmount = 0}: Props) {
   const [barW, setBarW] = useState<number>();
   const [requiredTextW, setRequiredTextW] = useState<number>();
   const {colors} = useTheme();
 
-  const {percentage, requiredAmount} = props;
-
   const left = barW && requiredTextW ? (requiredAmount * barW) / 100 - requiredTextW / 2 : 0;
 
   return (
-    <View style={styles.container}>
+    <>
       <View
-        style={[styles.barBG, {backgroundColor: colors.disabled}]}
+        style={[styles.barBG, {backgroundColor: colors.secondaryContainer}]}
         onLayout={(e) => setBarW(e.nativeEvent.layout.width)}>
-        <View style={[styles.progressed, {width: `${percentage}%`, backgroundColor: colors.accent}]} />
+        <View style={[styles.progressed, {width: `${percentage}%`, backgroundColor: colors.secondary}]} />
       </View>
-      <View style={[styles.requiredContainer, {left}]} onLayout={(e) => setRequiredTextW(e.nativeEvent.layout.width)}>
-        <Text style={{color: colors.primary}}>{`${requiredAmount}% required`}</Text>
-        <View style={[styles.requiredLine, {backgroundColor: colors.primary}]} />
-      </View>
-    </View>
+      {requiredAmount ? (
+        <View style={[styles.requiredContainer, {left}]} onLayout={(e) => setRequiredTextW(e.nativeEvent.layout.width)}>
+          <Text style={{color: colors.primary}}>{`${requiredAmount}% required`}</Text>
+          <View style={[styles.requiredLine, {backgroundColor: colors.primary}]} />
+        </View>
+      ) : null}
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginHorizontal: 30,
-    paddingTop: 23,
-  },
   barBG: {
     height: 10,
     borderRadius: 10,
@@ -48,6 +44,7 @@ const styles = StyleSheet.create({
   requiredContainer: {
     position: 'absolute',
     alignItems: 'center',
+    bottom: -4,
   },
   requiredLine: {
     height: 20,

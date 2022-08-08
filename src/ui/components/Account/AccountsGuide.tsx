@@ -1,22 +1,22 @@
 import React from 'react';
 import {Layout} from '@ui/components/Layout';
 import {Padder} from '@ui/components/Padder';
-import {Caption, Headline} from '@ui/library';
+import {Text} from '@ui/library';
 import globalStyles from '@ui/styles';
 
 export function AccountsGuide() {
   return (
     <Layout style={globalStyles.paddedContainer}>
-      <Headline>Import account</Headline>
-      <Caption>
+      <Text variant="headlineSmall">Import account</Text>
+      <Text variant="bodySmall">
         Import an existing account through your mnemonics seed or a json file and sign transactions within the app
-      </Caption>
+      </Text>
       <Padder scale={2} />
-      <Headline>Add external account</Headline>
-      <Caption>Add your public Polkadot account and sign transactions with Parity signer</Caption>
+      <Text variant="headlineSmall">Add external account</Text>
+      <Text variant="bodySmall">Add your public Polkadot account and sign transactions with Parity signer</Text>
       <Padder scale={2} />
-      <Headline>Create new account</Headline>
-      <Caption>Generate a new seed and sign transactions within the app</Caption>
+      <Text variant="headlineSmall">Create new account</Text>
+      <Text variant="bodySmall">Generate a new seed and sign transactions within the app</Text>
       <Padder scale={2} />
     </Layout>
   );

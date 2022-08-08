@@ -1,21 +1,20 @@
 import React, {useMemo} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {TextInput, Button, HelperText, Subheading} from '@ui/library';
+import {TextInput, Button, HelperText, Text} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Account} from 'src/api/hooks/useAccount';
 import {SelectAccount} from '@ui/components/SelectAccount';
 import {Padder} from '@ui/components/Padder';
-import {useApiTx} from 'src/api/hooks/useApiTx';
-import {useApi} from 'context/ChainApiContext';
 import {useSnackbar} from 'context/SnackbarContext';
 import {InputLabel} from '@ui/library/InputLabel';
 import {decimalKeypad} from 'src/utils';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {useBountiesSummary} from 'src/api/hooks/useBountiesSummary';
-import type {BN} from '@polkadot/util';
+import {BN, bnToHex} from '@polkadot/util';
 import {formattedStringToBn} from 'src/utils/balance';
 import {countUtf8Bytes} from 'src/utils';
+import {useStartTx} from 'context/TxContext';
 
 type Props = {
   onClose: () => void;
@@ -29,8 +28,7 @@ export function AddBounty({onClose}: Props) {
   const [bountyAllocation, SetBountyAllocation] = React.useState('');
 
   const [account, setAccount] = React.useState<Account>();
-  const startTx = useApiTx();
-  const {api} = useApi();
+  const {startTx} = useStartTx();
   const snackbar = useSnackbar();
 
   const {calculatedBountyBond, bountyAllocationBN, isBountyValid, isBountyTitleValid} = useMemo(() => {
@@ -64,11 +62,13 @@ export function AddBounty({onClose}: Props) {
   const disabled = !bountyAllocation || !account || !isBountyValid || !isBountyTitleValid;
 
   const submitBounty = () => {
-    if (account && api && bountyAllocationBN) {
+    if (account && bountyAllocationBN) {
       startTx({
         address: account.address,
-        txMethod: `${api.tx.bounties ? `bounties.proposeBounty` : `treasury.proposeBounty`}`,
-        params: [bountyAllocationBN, bountyTitle],
+        txConfig: {
+          method: 'bounties.proposeBounty',
+          params: [bnToHex(bountyAllocationBN), bountyTitle],
+        },
       })
         .then(() => {
           snackbar('New bounty created');
@@ -82,7 +82,7 @@ export function AddBounty({onClose}: Props) {
 
   return (
     <Layout style={styles.container}>
-      <Subheading style={globalStyles.textCenter}>{`Add Bounty`}</Subheading>
+      <Text variant="titleMedium" style={globalStyles.textCenter}>{`Add Bounty`}</Text>
       <Padder scale={1} />
       <InputLabel label={'Bounty Title:'} helperText={'Description of the Bounty (to be stored on-chain)'} />
       <TextInput

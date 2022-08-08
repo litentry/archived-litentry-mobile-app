@@ -9,12 +9,12 @@ export function Calendar(props: CalendarProps) {
     <RNCalendar
       key={`${dark}`}
       theme={{
-        selectedDayBackgroundColor: colors.accent,
+        selectedDayBackgroundColor: colors.secondary,
         backgroundColor: colors.background,
         calendarBackground: colors.surface,
-        dayTextColor: colors.text,
-        textDisabledColor: colors.disabled,
-        dotColor: colors.accent,
+        dayTextColor: colors.onSurface,
+        textDisabledColor: colors.secondary,
+        dotColor: colors.secondary,
         arrowColor: colors.primary,
         monthTextColor: colors.primary,
         indicatorColor: colors.primary,

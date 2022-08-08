@@ -4,9 +4,6 @@ import {fireEvent, render} from 'src/testUtils';
 import {AuctionsScreen} from './AuctionsScreen';
 
 describe('AuctionsScreen', () => {
-  beforeEach(() => {
-    jest.resetAllMocks();
-  });
   it('should render the loading component view when data is fetching', () => {
     const {getByTestId} = render(<AuctionsScreen />);
     expect(getByTestId('loading_view')).toBeTruthy();
