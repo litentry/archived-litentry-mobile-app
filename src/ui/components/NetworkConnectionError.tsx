@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {Banner} from 'react-native-paper';
+import {StyleSheet, View} from 'react-native';
+import {Caption, useTheme} from '@ui/library';
 import {useNetInfo} from 'src/hooks/useNetInfo';
 
 export function NetworkConnectionError() {
+  const theme = useTheme();
   const networkStatus = useNetInfo();
   const [bannerVisible, setBannerVisible] = useState<boolean>(networkStatus);
 
@@ -10,16 +12,13 @@ export function NetworkConnectionError() {
     setBannerVisible(networkStatus);
   }, [networkStatus]);
 
-  return (
-    <Banner
-      visible={!bannerVisible}
-      actions={[
-        {
-          label: 'Cancel',
-          onPress: () => setBannerVisible(true),
-        },
-      ]}>
-      There is an issue in the network connection. Please check your network connection settings
-    </Banner>
-  );
+  return !bannerVisible ? (
+    <View>
+      <Caption style={[{color: theme.colors.error}, styles.banner]}>No internet connectivity</Caption>
+    </View>
+  ) : null;
 }
+
+const styles = StyleSheet.create({
+  banner: {textAlign: 'center'},
+});
