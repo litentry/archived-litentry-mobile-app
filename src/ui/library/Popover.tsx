@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: 'center',
+    // @TODO: Use color from theme
     color: '#171414',
   },
 });
