@@ -43,3 +43,4 @@ export {Icon} from './Icon';
 export {Modal} from './Modal';
 export {Select} from './Select';
 export {Skeleton} from './Skeleton';
+export {Popover} from './Popover';

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, TouchableOpacity, Keyboard, FlatList} from 'react-native';
+import {FlatList, View, StyleSheet, TouchableOpacity} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
 import {useTheme, Divider, IconButton, List, FAB, Caption, Menu, Subheading, Icon, useBottomSheet} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -62,6 +62,7 @@ export function AccountsScreen({navigation}: Props) {
     <SafeView edges={noTopEdges}>
       <Padder scale={1} />
       <FlatList
+        style={styles.container}
         contentContainerStyle={styles.content}
         data={sortByFunction(networkAccounts)}
         showsVerticalScrollIndicator
@@ -114,7 +115,7 @@ export function AccountsScreen({navigation}: Props) {
         <AccountsGuide />
       </AccountGuideBottomSheet>
 
-      <ExternalAccountBottomSheet onClose={Keyboard.dismiss}>
+      <ExternalAccountBottomSheet>
         <AddExternalAccount onClose={closeExternalAccount} />
       </ExternalAccountBottomSheet>
     </SafeView>
@@ -170,7 +171,6 @@ function AccountItem({account, toggleFavorite, onPress}: AccountItemProps) {
         </View>
       }
       right={ItemRight}
-      style={styles.accountsList}
     />
   );
 }
@@ -230,8 +230,5 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontWeight: 'normal',
-  },
-  accountsList: {
-    marginHorizontal: standardPadding,
   },
 });
