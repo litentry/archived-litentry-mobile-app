@@ -55,7 +55,7 @@ export function DashboardScreen({navigation, route}: Props) {
   return (
     <Layout style={styles.container}>
       <MainAppBar navigation={navigation} route={route} options={appBarOptions} />
-      <NetworkConnectionError />
+      {/* <NetworkConnectionError /> */}
       <ScrollViewRefetch contentContainerStyle={styles.scrollView} refetchQueries={refetchQueries}>
         <EventsCalendarTeaser onPress={() => navigation.navigate(eventsCalendarScreen)} />
         <Padder scale={0.6} />

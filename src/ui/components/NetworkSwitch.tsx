@@ -15,13 +15,13 @@ export function NetworkSwitch({onPress}: Props) {
   const apiStatus = usePolkadotApiStatus();
   const {currentNetwork} = useNetwork();
   const {colors} = useTheme();
-  const networkStatus = useNetInfo();
+  const {isConnected} = useNetInfo();
 
   return (
     <TouchableOpacity
       onPress={onPress}
       style={[styles.networkSwitch, {backgroundColor: colors.background}]}
-      disabled={!networkStatus}>
+      disabled={!isConnected}>
       <View style={styles.container}>
         <Icon name={apiStatus === 'ready' ? 'web' : 'earth-off'} size={16} color={colors.accent} />
         <Padder scale={0.3} />
