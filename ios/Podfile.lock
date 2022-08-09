@@ -436,6 +436,8 @@ PODS:
   - react-native-mmkv (2.1.2):
     - MMKV
     - React-Core
+  - react-native-netinfo (9.3.0):
+    - React-Core
   - react-native-pager-view (5.4.25):
     - React-Core
   - react-native-randombytes (3.6.1):
@@ -658,6 +660,7 @@ DEPENDENCIES:
   - react-native-flipper-performance-plugin (from `../node_modules/react-native-flipper-performance-plugin`)
   - react-native-in-app-message (from `../node_modules/react-native-in-app-message`)
   - react-native-mmkv (from `../node_modules/react-native-mmkv`)
+  - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -793,6 +796,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-in-app-message"
   react-native-mmkv:
     :path: "../node_modules/react-native-mmkv"
+  react-native-netinfo:
+    :path: "../node_modules/@react-native-community/netinfo"
   react-native-pager-view:
     :path: "../node_modules/react-native-pager-view"
   react-native-randombytes:
@@ -933,6 +938,7 @@ SPEC CHECKSUMS:
   react-native-flipper-performance-plugin: ab280430bbdd17deffb7a30d94b604738cd04150
   react-native-in-app-message: 00952df970f85d162b9100f6b767ae37c6520dda
   react-native-mmkv: 5f6f070d2dbd0e4785aabfd94fb7fccc29b70462
+  react-native-netinfo: 129bd99f607a2dc5bb096168f3e5c150fd1f1c95
   react-native-pager-view: da490aa1f902c9a5aeecf0909cc975ad0e92e53e
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: ebf8c413eb8b5f7c392a036a315eb7b46b96845f
