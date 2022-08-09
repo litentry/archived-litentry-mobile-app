@@ -6,12 +6,14 @@ import {runOnJS} from 'react-native-reanimated';
 import {useCameraPermission} from 'src/hooks/useCameraPermission';
 import {Text, Button} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
+import {useIsFocused} from '@react-navigation/native';
 
 type Props = {
   onScan: (data: string) => void;
 };
 
 export function QRCodeScanner({onScan}: Props) {
+  const isFocused = useIsFocused();
   const {hasPermission, isAppActive} = useCameraPermission();
   const devices = useCameraDevices();
   const device = devices.back;
@@ -59,13 +61,15 @@ export function QRCodeScanner({onScan}: Props) {
 
   return (
     <View style={styles.centeredContainer}>
-      <Camera
-        style={styles.cameraView}
-        device={device}
-        isActive={isAppActive}
-        frameProcessor={frameProcessor}
-        frameProcessorFps={1}
-      />
+      {isFocused ? (
+        <Camera
+          style={styles.cameraView}
+          device={device}
+          isActive={isAppActive}
+          frameProcessor={frameProcessor}
+          frameProcessorFps={1}
+        />
+      ) : null}
     </View>
   );
 }
