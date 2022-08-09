@@ -5,7 +5,7 @@ import {useTheme} from '@ui/library';
 
 type ModalProps = {
   visible: boolean;
-  onDismiss: () => void;
+  onDismiss?: () => void;
   children: React.ReactNode;
 };
 

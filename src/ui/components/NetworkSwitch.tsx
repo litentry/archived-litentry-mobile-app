@@ -5,6 +5,7 @@ import {Icon, Text, useTheme} from '@ui/library';
 import {Padder} from '@ui/components/Padder';
 import {standardPadding} from '@ui/styles';
 import {usePolkadotApiStatus} from '@polkadotApi/usePolkadotApiStatus';
+import {useNetInfo} from 'src/hooks/useNetInfo';
 
 type Props = {
   onPress: () => void;
@@ -14,6 +15,7 @@ export function NetworkSwitch({onPress}: Props) {
   const apiStatus = usePolkadotApiStatus();
   const {currentNetwork} = useNetwork();
   const {colors, roundness} = useTheme();
+  const {isConnected} = useNetInfo();
 
   return (
     <TouchableOpacity
@@ -21,7 +23,8 @@ export function NetworkSwitch({onPress}: Props) {
       style={[
         styles.networkSwitch,
         {backgroundColor: colors.background, borderTopLeftRadius: roundness, borderTopRightRadius: roundness},
-      ]}>
+      ]}
+      disabled={!isConnected}>
       <View style={styles.container}>
         <Icon name={apiStatus === 'ready' ? 'web' : 'earth-off'} size={16} color={colors.secondary} />
         <Padder scale={0.3} />

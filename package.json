@@ -30,6 +30,7 @@
     "@polkadot/util": "^10.0.2",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/clipboard": "^1.5.1",
+    "@react-native-community/netinfo": "^9.3.0",
     "@react-native-firebase/analytics": "^14.9.1",
     "@react-native-firebase/app": "^14.9.1",
     "@react-native-firebase/messaging": "^14.9.1",
