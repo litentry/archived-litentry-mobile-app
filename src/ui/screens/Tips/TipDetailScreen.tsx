@@ -61,7 +61,7 @@ function TipDetailContent({tip, toAccountDetails}: TipDetailProps) {
         </View>
       ) : null}
       <View style={styles.containerSpacing}>
-        <Subheading>Tippers {tip.tippersCount > 0 ? `(${tip.tippersCount})` : ''}</Subheading>
+        <Subheading>Tippers {tip.tippersCount > 0 ? `(${tip.tippersCount})` : '(0)'}</Subheading>
         {tip.formattedMedianTipValue ? <Caption>{tip.formattedMedianTipValue}</Caption> : null}
       </View>
     </>
@@ -109,7 +109,7 @@ export function TipDetailScreen({route, navigation}: ScreenProps) {
               colors={[colors.primary]}
             />
           }
-          estimatedItemSize={tip?.tippers.length}
+          estimatedItemSize={tip?.tippers.length ?? 0}
         />
       </View>
     </SafeView>
