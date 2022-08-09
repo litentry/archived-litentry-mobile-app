@@ -132,7 +132,7 @@ function ScanAddressTab({onScanSuccess}: {onScanSuccess: (address: string) => vo
   );
 
   return (
-    <View style={globalStyles.paddedContainer}>
+    <View style={[globalStyles.paddedContainer, globalStyles.flex]}>
       <QRCodeScanner onScan={handleScan} />
     </View>
   );
