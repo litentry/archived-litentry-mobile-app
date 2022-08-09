@@ -27,7 +27,6 @@ import {useBottomSheet} from '@ui/library';
 import NetworkSelectionList from '@ui/components/NetworkSelectionList';
 import {NetworkType, useAvailableNetworks, useNetwork} from '@atoms/network';
 import {NetworkSwitch} from '@ui/components/NetworkSwitch';
-import {NetworkConnectionError} from '@ui/components/NetworkConnectionError';
 
 const refetchQueries = [DEMOCRACY_SUMMARY_QUERY, COUNCIL_SUMMARY_QUERY, BOUNTIES_SUMMARY_QUERY, TREASURY_SUMMARY_QUERY];
 
@@ -55,7 +54,6 @@ export function DashboardScreen({navigation, route}: Props) {
   return (
     <Layout style={styles.container}>
       <MainAppBar navigation={navigation} route={route} options={appBarOptions} />
-      {/* <NetworkConnectionError /> */}
       <ScrollViewRefetch contentContainerStyle={styles.scrollView} refetchQueries={refetchQueries}>
         <EventsCalendarTeaser onPress={() => navigation.navigate(eventsCalendarScreen)} />
         <Padder scale={0.6} />

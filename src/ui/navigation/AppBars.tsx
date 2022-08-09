@@ -14,15 +14,17 @@ export function MainDrawerAppBar({navigation, options, route}: DrawerHeaderProps
     navigation.openDrawer();
   };
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View>
-        <AppHeader style={{backgroundColor: colors.background}}>
-          <AppBar.Action onPress={openDrawer} icon={'menu'} />
-          <AppBar.Content title={options.title ?? route.name} />
-        </AppHeader>
-        <NetworkConnectionError />
-      </View>
-    </TouchableWithoutFeedback>
+    <>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <View>
+          <AppHeader style={{backgroundColor: colors.background}}>
+            <AppBar.Action onPress={openDrawer} icon={'menu'} />
+            <AppBar.Content title={options.title ?? route.name} />
+          </AppHeader>
+        </View>
+      </TouchableWithoutFeedback>
+      <NetworkConnectionError />
+    </>
   );
 }
 
@@ -60,18 +62,21 @@ export function MainAppBar({navigation, route, options}: NativeStackHeaderProps)
   }, [navigation]);
 
   return (
-    <AppHeader style={{backgroundColor: colors.primary}}>
-      {showMenu ? <AppBar.Action onPress={onActionLeftPress} icon={'menu'} color="white" /> : null}
-      <AppBar.Content
-        style={styles.contentContainer}
-        title={
-          <View style={styles.titleContainer}>
-            <Title style={styles.title}>Litentry</Title>
-          </View>
-        }
-      />
-      {options.headerRight ? options.headerRight({canGoBack: navigation.canGoBack()}) : null}
-    </AppHeader>
+    <>
+      <AppHeader style={{backgroundColor: colors.primary}}>
+        {showMenu ? <AppBar.Action onPress={onActionLeftPress} icon={'menu'} color="white" /> : null}
+        <AppBar.Content
+          style={styles.contentContainer}
+          title={
+            <View style={styles.titleContainer}>
+              <Title style={styles.title}>Litentry</Title>
+            </View>
+          }
+        />
+        {options.headerRight ? options.headerRight({canGoBack: navigation.canGoBack()}) : null}
+      </AppHeader>
+      <NetworkConnectionError />
+    </>
   );
 }
 
