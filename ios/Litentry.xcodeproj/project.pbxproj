@@ -23,9 +23,10 @@
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DC19FB5C5A74087AD3148E0 /* IBMPlexSans-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B5D4B651DB294CD7950DE3E5 /* IBMPlexSans-MediumItalic.ttf */; };
 		2DCD954D1E0B4F2C00145EB5 /* LitentryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* LitentryTests.m */; };
-		32474834DF705BF2BD74A5CB /* libPods-Litentry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 86CB3E182E033C48FE853073 /* libPods-Litentry.a */; };
+		3D131979E97F4B49664B85FF /* libPods-Litentry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 86CB3E182E033C48FE853073 /* libPods-Litentry.a */; };
 		42BCCB43A41446CCB204EC54 /* IBMPlexSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D61B64C937E4709A936A4C0 /* IBMPlexSans-Bold.ttf */; };
 		462C0E005E4D44C1A11FF47E /* IBMPlexSans-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 75CA0D0F38C5411E80EDBD79 /* IBMPlexSans-Thin.ttf */; };
+		46E75EBE2897CB1100C6286B /* BuildFile in Resources */ = {isa = PBXBuildFile; };
 		6124E7B263B1F7067E1328B2 /* libPods-Litentry-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 29FDBF5D7B92E16BD0939B4C /* libPods-Litentry-tvOS.a */; };
 		799A317D155F44C3A6F8C62A /* IBMPlexSans-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 83C9E8169DC04CC3AB1BE734 /* IBMPlexSans-ThinItalic.ttf */; };
 		801E8067BDEA467EAA6CC4AE /* IBMPlexSans-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 180F753204B24CC9807197BB /* IBMPlexSans-LightItalic.ttf */; };
@@ -144,7 +145,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				32474834DF705BF2BD74A5CB /* libPods-Litentry.a in Frameworks */,
+				3D131979E97F4B49664B85FF /* libPods-Litentry.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -461,6 +462,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				15FF7A8528991E180028C9D5 /* MaterialCommunityIcons.ttf in Resources */,
+				46E75EBE2897CB1100C6286B /* BuildFile in Resources */,
 				CA5B8BFB28623BD100A0FAA2 /* polkadotApi.html in Resources */,
 				8804DE6E2576F18D00D915D3 /* logo-256.png in Resources */,
 				2902EEF926820A6F009FB826 /* GoogleService-Info.plist in Resources */,
