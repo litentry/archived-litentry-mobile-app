@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, StyleSheet, View, RefreshControl} from 'react-native';
+import {StyleSheet, View, RefreshControl} from 'react-native';
 import {NavigationProp} from '@react-navigation/core';
 import {TipTeaser} from '@ui/components/Tips/TipTeaser';
 import {EmptyView} from '@ui/components/EmptyView';
@@ -8,8 +8,7 @@ import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {useTips} from 'src/api/hooks/useTips';
 import {tipDetailScreen} from '@ui/navigation/routeKeys';
 import {proposeTipScreen} from '@ui/navigation/routeKeys';
-import globalStyles from '@ui/styles';
-import {ActivityIndicator, Button, useTheme} from '@ui/library';
+import {ActivityIndicator, Button, FlatList, useTheme} from '@ui/library';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {Padder} from '@ui/components/Padder';
 
@@ -20,7 +19,6 @@ type ScreenProps = {
 export function TipsScreen({navigation}: ScreenProps) {
   const {data: tips, loading, fetchMore, fetchingMore, refetch, refetching} = useTips();
   const {colors} = useTheme();
-
   const toTipDetails = (id: string) => {
     navigation.navigate(tipDetailScreen, {id});
   };
@@ -52,7 +50,6 @@ export function TipsScreen({navigation}: ScreenProps) {
                 </Button>
               </View>
             }
-            style={globalStyles.flex}
             data={tips}
             renderItem={({item}) => <TipTeaser tip={item} onPress={toTipDetails} />}
             keyExtractor={(item) => item.id}
@@ -74,6 +71,7 @@ export function TipsScreen({navigation}: ScreenProps) {
               });
             }}
             ListFooterComponent={ListFooter}
+            estimatedItemSize={tips?.length}
           />
         )}
       </View>

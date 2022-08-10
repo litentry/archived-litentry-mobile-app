@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, FlatList, View} from 'react-native';
-import {Caption, Divider} from '@ui/library';
+import {StyleSheet, View} from 'react-native';
+import {Caption, Divider, FlatList} from '@ui/library';
 import {useRegistrarsSummary, RegistrarsSummary} from 'src/api/hooks/useRegistrarsSummary';
 import StatInfoBlock from '@ui/components/StatInfoBlock';
 import globalStyles, {standardPadding, monofontFamily} from '@ui/styles';
@@ -54,10 +54,9 @@ function RegistrarList() {
   return (
     <FlatList
       ListHeaderComponent={<RegistrarListHeader registrarsSummary={registrarsSummary} />}
-      contentContainerStyle={styles.flatList}
       data={registrarsList}
       renderItem={({item}) => (
-        <View style={globalStyles.marginVertical}>
+        <View style={styles.flatList}>
           <AccountTeaser
             testID="registrar_item"
             account={item.account}
@@ -74,6 +73,7 @@ function RegistrarList() {
       keyExtractor={(item) => item.account.address}
       ItemSeparatorComponent={Divider}
       ListEmptyComponent={EmptyView}
+      estimatedItemSize={registrarsList.length}
     />
   );
 }
@@ -81,6 +81,7 @@ function RegistrarList() {
 const styles = StyleSheet.create({
   flatList: {
     marginHorizontal: standardPadding * 2,
+    paddingVertical: standardPadding,
   },
   infoContainer: {
     marginTop: standardPadding * 3,
