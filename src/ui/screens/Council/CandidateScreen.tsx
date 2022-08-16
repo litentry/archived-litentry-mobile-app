@@ -87,7 +87,7 @@ export function CandidateScreen({route, navigation}: ScreenProps) {
           keyExtractor={(item) => item}
           ItemSeparatorComponent={Divider}
           ListEmptyComponent={<EmptyView height={200}>{`No voters yet.`}</EmptyView>}
-          estimatedItemSize={candidate.voters.length}
+          // estimatedItemSize={candidate.voters.length}
         />
       )}
     </SafeView>

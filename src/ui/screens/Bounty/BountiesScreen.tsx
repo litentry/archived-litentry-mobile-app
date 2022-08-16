@@ -44,7 +44,7 @@ export function BountiesScreen({navigation}: ScreenProps) {
           renderItem={({item}) => <BountyItem bounty={item} onPress={toBountyDetails} />}
           ItemSeparatorComponent={ItemSeparator}
           ListEmptyComponent={EmptyView}
-          estimatedItemSize={bounties?.length}
+          // estimatedItemSize={bounties?.length}
         />
       )}
 

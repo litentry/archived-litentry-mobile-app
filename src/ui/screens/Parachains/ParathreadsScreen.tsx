@@ -34,7 +34,7 @@ export function ParathreadsScreen() {
           renderItem={({item}) => <ParathreadItem parathread={item} />}
           ItemSeparatorComponent={Divider}
           ListEmptyComponent={EmptyView}
-          estimatedItemSize={parathreads.length}
+          // estimatedItemSize={parathreads.length}
         />
       ) : (
         <EmptyView />

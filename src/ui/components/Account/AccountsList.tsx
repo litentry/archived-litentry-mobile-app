@@ -30,7 +30,7 @@ export function AccountsList({accounts, header}: Props) {
       keyExtractor={(item) => item.account.address}
       ItemSeparatorComponent={Divider}
       ListHeaderComponent={header}
-      estimatedItemSize={accounts.length}
+      // estimatedItemSize={accounts.length}
     />
   );
 }
