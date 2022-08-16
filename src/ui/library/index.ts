@@ -3,7 +3,7 @@
  *  This is the entry point for third party libraries (UI).
  *  All components from a third party library should be exported here.
  **/
-export {FlashList as FlatList} from '@shopify/flash-list';
+export {FlatList} from 'react-native';
 export {ProgressChart} from 'react-native-chart-kit';
 export {
   ActivityIndicator,
@@ -41,6 +41,6 @@ export {BottomSheetTextInput, useBottomSheet, useBottomSheetInternal} from './Bo
 export {Calendar} from './Calendar';
 export {Icon} from './Icon';
 export {Modal} from './Modal';
+export {Popover} from './Popover';
 export {Select} from './Select';
 export {Skeleton} from './Skeleton';
-export {Popover} from './Popover';
