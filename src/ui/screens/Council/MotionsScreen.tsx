@@ -70,7 +70,7 @@ export function MotionsScreen({navigation}: ScreenProps) {
           ItemSeparatorComponent={Padder}
           keyExtractor={(item) => item.proposal.hash}
           ListEmptyComponent={EmptyView}
-          estimatedItemSize={motions?.length}
+          // estimatedItemSize={motions?.length}
         />
       )}
       <VoteModal

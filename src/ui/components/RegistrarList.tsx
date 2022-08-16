@@ -73,7 +73,7 @@ function RegistrarList() {
       keyExtractor={(item) => item.account.address}
       ItemSeparatorComponent={Divider}
       ListEmptyComponent={EmptyView}
-      estimatedItemSize={registrarsList.length}
+      // estimatedItemSize={registrarsList.length}
     />
   );
 }
