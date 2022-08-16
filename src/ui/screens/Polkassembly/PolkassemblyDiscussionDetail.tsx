@@ -93,7 +93,7 @@ export function PolkassemblyDiscussionDetail({route}: ScreenProps) {
             </TouchableOpacity>
           </View>
         }
-        estimatedItemSize={post.comments.length}
+        // estimatedItemSize={post.comments.length}
       />
     </SafeView>
   );

@@ -110,7 +110,7 @@ export function TipDetailScreen({route, navigation}: ScreenProps) {
             />
           }
           // TODO: review why providing 0 doesn't work here.
-          estimatedItemSize={tip?.tippersCount ? tip?.tippersCount : 1}
+          // estimatedItemSize={tip?.tippersCount ? tip?.tippersCount : 1}
         />
       </View>
     </SafeView>

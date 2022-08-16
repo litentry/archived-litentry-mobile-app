@@ -144,7 +144,7 @@ export function PolkassemblyDiscussions({navigation}: ScreenProps) {
             )}
             ItemSeparatorComponent={ItemSeparator}
             keyExtractor={(item) => String(item.id)}
-            estimatedItemSize={data?.pages.length}
+            // estimatedItemSize={data?.pages.length}
           />
         </>
       )}
