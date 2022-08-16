@@ -42,7 +42,6 @@ export function SelectRegistrar({onSelect}: Props) {
         </TouchableOpacity>
       }>
       <FlatList
-        style={styles.items}
         ItemSeparatorComponent={Divider}
         data={registrarsSummary.list}
         keyExtractor={(item) => item.account.address}

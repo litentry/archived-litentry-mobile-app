@@ -1,6 +1,8 @@
+import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js';
 import {Blob} from 'blob-polyfill';
 import React from 'react';
 import 'react-native-gesture-handler/jestSetup';
+require('@shopify/flash-list/jestSetup');
 
 jest.mock('react-native-reanimated', () => {
   const Reanimated = require('react-native-reanimated/mock');
@@ -81,3 +83,5 @@ jest.mock('../src/hooks/useRemoteConfig', () => {
     }),
   };
 });
+
+jest.mock('@react-native-community/netinfo', () => mockRNCNetInfo);

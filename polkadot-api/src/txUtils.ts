@@ -226,6 +226,10 @@ function makeTx(api: ApiPromise, txConfig: TxConfig): SubmittableExtrinsic<'prom
     transformedParams = [hexToBn(params[0]), params[1]];
   }
 
+  if (method === 'democracy.delegate') {
+    transformedParams = [params[0], params[1], hexToBn(params[2])];
+  }
+
   return tx(...transformedParams);
 }
 

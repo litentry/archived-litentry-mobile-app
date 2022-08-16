@@ -1,10 +1,10 @@
 import React from 'react';
-import {StyleSheet, View, FlatList} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {useBounties, Bounty} from 'src/api/hooks/useBounties';
 import {EmptyView} from '@ui/components/EmptyView';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import LoadingView from '@ui/components/LoadingView';
-import {Text, Caption, Card, Headline, List, Button, useBottomSheet} from '@ui/library';
+import {Text, Caption, Card, Headline, List, Button, useBottomSheet, FlatList} from '@ui/library';
 import {bountyDetailScreen} from '@ui/navigation/routeKeys';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {Padder} from '@ui/components/Padder';
@@ -33,8 +33,6 @@ export function BountiesScreen({navigation}: ScreenProps) {
       ) : (
         <FlatList
           data={bounties}
-          style={globalStyles.flex}
-          contentContainerStyle={styles.listContent}
           keyExtractor={({index}) => index.toString()}
           ListHeaderComponent={
             <View style={styles.bounty}>
@@ -46,6 +44,7 @@ export function BountiesScreen({navigation}: ScreenProps) {
           renderItem={({item}) => <BountyItem bounty={item} onPress={toBountyDetails} />}
           ItemSeparatorComponent={ItemSeparator}
           ListEmptyComponent={EmptyView}
+          estimatedItemSize={bounties?.length}
         />
       )}
 
@@ -83,7 +82,7 @@ function BountyItem({bounty, onPress}: BountyItemProps) {
   );
 
   return (
-    <Card onPress={() => onPress(index)}>
+    <Card onPress={() => onPress(index)} style={styles.bountyCard}>
       <List.Item
         left={ItemLeft}
         title={<Text>{bountyStatus.status}</Text>}
@@ -95,26 +94,13 @@ function BountyItem({bounty, onPress}: BountyItemProps) {
 }
 
 const styles = StyleSheet.create({
-  listContent: {
-    paddingVertical: standardPadding * 2,
-    paddingHorizontal: standardPadding * 2,
-  },
-  itemRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  itemLeft: {
-    alignItems: 'flex-end',
-  },
-  itemContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  itemContainer: {marginBottom: 10},
   bounty: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     paddingVertical: 15,
+    paddingRight: standardPadding,
+  },
+  bountyCard: {
+    marginHorizontal: standardPadding,
   },
 });

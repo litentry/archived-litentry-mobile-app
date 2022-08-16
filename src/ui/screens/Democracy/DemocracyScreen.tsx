@@ -1,10 +1,10 @@
 import React from 'react';
-import {useWindowDimensions, View, FlatList, RefreshControl, StyleSheet} from 'react-native';
+import {useWindowDimensions, View, RefreshControl, StyleSheet} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {useDemocracyReferendums, DemocracyReferendum} from 'src/api/hooks/useDemocracyReferendums';
 import {useDemocracyProposals, DemocracyProposal} from 'src/api/hooks/useDemocracyProposals';
 import {Padder} from '@ui/components/Padder';
-import {ActivityIndicator, useTheme, Card, Caption, Title, Subheading} from '@ui/library';
+import {ActivityIndicator, useTheme, Card, Caption, Title, Subheading, FlatList} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {fromNow} from 'src/utils/date';
 import LoadingView from '@ui/components/LoadingView';
@@ -63,7 +63,7 @@ function ReferendumTeaser({referendum, onPress}: ReferendumTeaserProps) {
   const referendumIndex = referendum.id.split(':')[1] as string;
 
   return (
-    <Card style={styles.standardPadding} onPress={() => onPress(referendum.id)}>
+    <Card style={styles.teaserCard} onPress={() => onPress(referendum.id)}>
       <View style={styles.teaserContent}>
         <ProposalTeaserHeader
           index={referendumIndex}
@@ -142,6 +142,7 @@ export function Referendums({navigation}: {navigation: NavigationProp<DashboardS
             });
           }}
           ListFooterComponent={ListFooter}
+          estimatedItemSize={referendums?.length}
         />
       )}
     </SafeView>
@@ -155,7 +156,7 @@ type ProposalTeaserProps = {
 
 function ProposalTeaser({proposal, onPress}: ProposalTeaserProps) {
   return (
-    <Card style={styles.standardPadding} onPress={() => onPress(proposal.id)}>
+    <Card style={styles.teaserCard} onPress={() => onPress(proposal.id)}>
       <View style={styles.teaserContent}>
         <ProposalTeaserHeader
           index={proposal.proposalIndex.toString()}
@@ -227,6 +228,7 @@ export function Proposals({navigation}: {navigation: NavigationProp<DashboardSta
             });
           }}
           ListFooterComponent={ListFooter}
+          estimatedItemSize={proposals?.length}
         />
       )}
     </SafeView>
@@ -244,7 +246,7 @@ function Row({label, children}: {label: string; children: React.ReactNode}) {
 
 const styles = StyleSheet.create({
   listContainer: {
-    padding: standardPadding * 2,
+    paddingVertical: standardPadding * 2,
   },
   teaserContent: {
     marginLeft: standardPadding,
@@ -259,8 +261,9 @@ const styles = StyleSheet.create({
   rowLabel: {
     width: '25%',
   },
-  standardPadding: {
+  teaserCard: {
     padding: standardPadding,
+    marginHorizontal: standardPadding,
   },
   marginHorizontal: {
     flexShrink: 1,

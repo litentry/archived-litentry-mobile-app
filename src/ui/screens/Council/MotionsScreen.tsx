@@ -1,6 +1,6 @@
 import React from 'react';
-import {Subheading, Button, useTheme, Modal, List, Headline} from '@ui/library';
-import {FlatList, StyleSheet, View, Linking} from 'react-native';
+import {Subheading, Button, useTheme, Modal, List, Headline, FlatList} from '@ui/library';
+import {StyleSheet, View, Linking} from 'react-native';
 import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -70,6 +70,7 @@ export function MotionsScreen({navigation}: ScreenProps) {
           ItemSeparatorComponent={Padder}
           keyExtractor={(item) => item.proposal.hash}
           ListEmptyComponent={EmptyView}
+          estimatedItemSize={motions?.length}
         />
       )}
       <VoteModal
@@ -266,7 +267,7 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
   const getItemLeft = React.useCallback(() => <Headline>{`#${proposal.index}`}</Headline>, [proposal.index]);
 
   return (
-    <Card onPress={() => onPress(motion.proposal)}>
+    <Card onPress={() => onPress(motion.proposal)} style={styles.motionCard}>
       <Card.Content>
         <List.Item
           title={<Caption>{getProposalTitle(motion.proposal)}</Caption>}
@@ -309,8 +310,7 @@ function MotionItem({motion, isCouncilMember, onVote, onPress, network}: MotionI
 
 const styles = StyleSheet.create({
   containerStyle: {
-    marginBottom: standardPadding * 2,
-    padding: standardPadding,
+    paddingVertical: standardPadding * 2,
   },
   buttons: {
     flexDirection: 'row',
@@ -318,5 +318,8 @@ const styles = StyleSheet.create({
   },
   polkaLink: {
     marginVertical: standardPadding,
+  },
+  motionCard: {
+    marginHorizontal: standardPadding,
   },
 });

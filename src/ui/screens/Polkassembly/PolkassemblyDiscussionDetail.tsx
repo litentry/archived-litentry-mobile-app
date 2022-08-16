@@ -1,7 +1,7 @@
 import React from 'react';
-import {Linking, StyleSheet, TouchableOpacity, View, FlatList} from 'react-native';
+import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
-import {Icon, Headline, Caption, Chip, Text, useTheme, Subheading} from '@ui/library';
+import {Icon, Headline, Caption, Chip, Text, useTheme, Subheading, FlatList} from '@ui/library';
 import * as dateUtils from 'src/utils/date';
 import LoadingView from '@ui/components/LoadingView';
 import {Padder} from '@ui/components/Padder';
@@ -93,7 +93,7 @@ export function PolkassemblyDiscussionDetail({route}: ScreenProps) {
             </TouchableOpacity>
           </View>
         }
-        contentContainerStyle={styles.contentContainer}
+        estimatedItemSize={post.comments.length}
       />
     </SafeView>
   );
@@ -101,10 +101,7 @@ export function PolkassemblyDiscussionDetail({route}: ScreenProps) {
 
 const styles = StyleSheet.create({
   header: {
-    marginBottom: standardPadding * 2,
-  },
-  contentContainer: {
-    padding: standardPadding * 2,
+    paddingHorizontal: standardPadding * 2,
   },
   postDetailRow: {
     marginTop: standardPadding,
@@ -123,6 +120,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: standardPadding,
     marginBottom: standardPadding * 2,
+    padding: standardPadding * 2,
   },
   commentAuthorIcon: {
     width: 30,

@@ -1,18 +1,35 @@
 import React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import {useTheme} from 'react-native-paper';
+import {StyleSheet, View} from 'react-native';
+import {Caption, useTheme} from '@ui/library';
 import {Popable} from 'react-native-popable';
 
 export type PopoverProps = {
-  popableText: string;
-  popableContent?: React.ReactNode;
+  content: string;
+  children?: React.ReactNode;
 };
 
-export function Popover({popableContent, popableText}: PopoverProps) {
+export function Popover({content, children}: PopoverProps) {
   const {colors} = useTheme();
   return (
-    <Popable content={popableText} backgroundColor={colors.accent}>
-      {popableContent}
+    <Popable
+      content={
+        <View style={styles.container}>
+          <Caption style={styles.text}>{content}</Caption>
+        </View>
+      }
+      backgroundColor={colors.accent}>
+      {children}
     </Popable>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 5,
+  },
+  text: {
+    textAlign: 'center',
+    // @TODO: Use color from theme
+    color: '#171414',
+  },
+});
