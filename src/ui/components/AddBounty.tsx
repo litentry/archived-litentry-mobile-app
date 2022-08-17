@@ -21,7 +21,7 @@ type Props = {
 };
 
 export function AddBounty({onClose}: Props) {
-  const {data: bounty} = useBountiesSummary();
+  const {data: bounty, refetch: refetchBountiesSummary} = useBountiesSummary();
   const {formatBalance, stringToBn} = useFormatBalance();
 
   const [bountyTitle, setBountyTitle] = React.useState('');
@@ -72,6 +72,7 @@ export function AddBounty({onClose}: Props) {
       })
         .then(() => {
           snackbar('New bounty created');
+          refetchBountiesSummary();
         })
         .catch(() => {
           snackbar('Error while submitting bounty');
