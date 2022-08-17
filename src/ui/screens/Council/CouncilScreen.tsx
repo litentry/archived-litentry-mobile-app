@@ -193,7 +193,7 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
   const [account, setAccount] = React.useState<Account>();
   const [amount, setAmount] = React.useState<string>('');
   const [selectedCandidates, setSelectedCandidates] = React.useState<Array<string>>([]);
-  const {data: councilVote} = useCouncilVotesOf(account?.address);
+  const {data: councilVote, refetch: refetchCouncilVotesOf} = useCouncilVotesOf(account?.address);
   const {dark: isDarkTheme} = useTheme();
   const {stringToBn} = useFormatBalance();
 
@@ -251,7 +251,7 @@ function CouncilVoteModal({visible, setVisible, candidates, moduleElection}: Cou
           method: `${moduleElection.module}.vote`,
           params: [selectedCandidates, amount],
         },
-      });
+      }).then(() => refetchCouncilVotesOf({substrateChainCouncilVote: account?.address}));
       reset();
     }
   };
@@ -312,7 +312,7 @@ function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandi
   const {getTxMethodArgsLength} = useTx();
   const balance = useFormatBalance();
   const formattedBalance = balance.formatBalance(moduleElection.candidacyBond);
-  const {data: council} = useCouncil();
+  const {data: council, refetch: refetchCouncil} = useCouncil();
   const accountFreeBalance = account?.balance?.free ?? '';
   const candidacyBond = balance.stringToBn(moduleElection.candidacyBond) ?? BN_ZERO;
   const sufficientBalance =
@@ -330,7 +330,7 @@ function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandi
             method: `${moduleElection.module}.submitCandidacy`,
             params: [argsLength === 1 ? [council?.candidates.length ?? 0] : []],
           },
-        });
+        }).then(() => refetchCouncil);
         snackbar('Candidacy submitted successfully');
       } catch (e) {
         console.warn(e);
