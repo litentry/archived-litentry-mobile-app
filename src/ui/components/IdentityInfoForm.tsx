@@ -29,7 +29,7 @@ type FormStatus = Record<
 
 export function IdentityInfoForm({onIdentitySet, address}: IdentityInfoFormProps) {
   const {startTx} = useStartTx();
-  const {data: accountInfo} = useAccount(address);
+  const {data: accountInfo, refetch: refetchAccount} = useAccount(address);
   const [state, dispatch] = React.useReducer(reducer, {});
   const formStatus = validateForm(state);
 
@@ -65,12 +65,15 @@ export function IdentityInfoForm({onIdentitySet, address}: IdentityInfoFormProps
         ],
       },
     })
-      .then(onIdentitySet)
+      .then(() => {
+        onIdentitySet();
+        refetchAccount({address});
+      })
       .catch((e) => {
         Alert.alert('Something went wrong!');
         console.error(e);
       });
-  }, [address, startTx, state, onIdentitySet]);
+  }, [address, startTx, state, onIdentitySet, refetchAccount]);
 
   return (
     <Layout>
