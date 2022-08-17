@@ -35,7 +35,7 @@ type DelegateVotingProps = {
 };
 
 export function DelegateVoting({fromAccount, onClose}: DelegateVotingProps) {
-  const {data: convictions} = useConvictions();
+  const {data: convictions, refetch: refetchConvictions} = useConvictions();
   const {stringToBn, formatBalance} = useFormatBalance();
   const {shouldHandleKeyboardEvents} = useBottomSheetInternal();
   const [isDelegatedAccountValid, setIsDelegatedAccountValid] = React.useState(false);
@@ -96,9 +96,11 @@ export function DelegateVoting({fromAccount, onClose}: DelegateVotingProps) {
           method: 'democracy.delegate',
           params: [delegatedAccount, conviction.value, bnToHex(delegateAmountBn)],
         },
+      }).then(() => {
+        refetchConvictions();
       });
     }
-  }, [delegatedAccount, conviction, delegateAmountBn, fromAccount?.address, startTx]);
+  }, [delegatedAccount, conviction, delegateAmountBn, fromAccount?.address, startTx, refetchConvictions]);
 
   const onCancel = React.useCallback(() => {
     Keyboard.dismiss();
