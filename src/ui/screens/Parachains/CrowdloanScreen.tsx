@@ -38,7 +38,7 @@ function CrowdloanHeader() {
 
 export function CrowdloanScreen({navigation}: ScreenProps) {
   const [openContributeId, setOpenContributeId] = React.useState<string>();
-  const {activeCrowdloans, endedCrowdloans, loading} = useAllCrowdloans();
+  const {activeCrowdloans, endedCrowdloans, loading, refetchCrowdloans} = useAllCrowdloans();
   const ongoingKey = `Ongoing (${activeCrowdloans.length ?? 0})`;
   const completedKey = `Completed (${endedCrowdloans.length ?? 0})`;
 
@@ -69,6 +69,7 @@ export function CrowdloanScreen({navigation}: ScreenProps) {
                 active={key === ongoingKey}
                 onPressContribute={() => {
                   setOpenContributeId(item.paraId);
+                  refetchCrowdloans();
                 }}
                 navigation={navigation}
               />
