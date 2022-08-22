@@ -2,18 +2,10 @@
 
 import React from 'react';
 import {render, RenderOptions} from '@testing-library/react-native';
-import {ApolloClient, InMemoryCache, HttpLink} from '@apollo/client';
-import fetch from 'cross-fetch';
 import ThemeProvider from 'context/ThemeContext';
-import {LitentryApiClientProvider} from 'context/LitentryApiContext';
 import {RecoilRoot} from 'recoil';
+import {LitentryApiClientProvider} from 'context/LitentryApiContext';
 
-export const client = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: new HttpLink({uri: 'http://localhost:3000/graphql', fetch}),
-});
-
-// TODO: https://github.com/litentry/litentry-app/issues/1275
 function Providers({children}: {children: React.ReactNode}) {
   return (
     <RecoilRoot>
