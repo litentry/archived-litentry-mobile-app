@@ -283,7 +283,7 @@ function useInitApi(isWebviewLoaded: boolean, postMessage: PostMessage) {
   const {isConnected} = useNetInfo();
 
   React.useEffect(() => {
-    if (isWebviewLoaded) {
+    if (isWebviewLoaded && isConnected) {
       postMessage(initApiMessage({wsEndpoint: currentNetwork.ws[0] as string}));
       setApiState('connecting');
     }
