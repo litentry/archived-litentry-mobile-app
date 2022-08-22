@@ -345,7 +345,9 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
 
   const webViewOnMessage = React.useCallback(
     (event: WebViewMessageEvent) => {
-      console.info('WebView Response: ', event.nativeEvent.data);
+      if (__DEV__) {
+        console.info('WebView Response: ', event.nativeEvent.data);
+      }
       const {message, id} = JSON.parse(event.nativeEvent.data) as {message: Message; id: string};
 
       const {

@@ -93,6 +93,11 @@ type BalancesTransferTx = {
   params: [address: string, amount: BNHexString];
 };
 
+type DelegateVotingTx = {
+  method: 'democracy.delegate';
+  params: [toAddress: string, conviction: number, balance: BNHexString];
+};
+
 export type TxConfig =
   | IdentitySetIdentityTx
   | IdentityRequestJudgementTx
@@ -108,4 +113,5 @@ export type TxConfig =
   | CouncilModuleElectionVoteTx
   | CouncilModuleElectionSubmitCandidacyTx
   | BountiesProposeBountyTx
-  | BalancesTransferTx;
+  | BalancesTransferTx
+  | DelegateVotingTx;

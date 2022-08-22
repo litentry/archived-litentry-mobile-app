@@ -1,7 +1,7 @@
-import {beforeAll, afterEach, afterAll} from '@jest/globals';
-import {server} from '../mocks/server';
-import {client} from '../src/testUtils';
+import {afterAll, afterEach, beforeAll} from '@jest/globals';
+import {apolloClient} from 'context/LitentryApiContext';
 import fetch from 'cross-fetch';
+import {server} from '../mocks/server';
 
 // required to implement fetch within node tests
 global.fetch = fetch;
@@ -12,9 +12,10 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
-  client.clearStore();
+  if (apolloClient != null) {
+    apolloClient.clearStore();
+  }
 });
-
 // // Reset any request handlers that we may add during the tests,
 // // so they don't affect other tests.
 afterEach(() => server.resetHandlers());

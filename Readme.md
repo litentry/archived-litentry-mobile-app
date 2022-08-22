@@ -24,6 +24,8 @@ With this app, we want to create a governance mobile application which could:
 
 ## Misc
 
+* integrate with GH Asana bot
+
 ### Distinct colors
 https://sashamaps.net/docs/resources/20-colors/
 

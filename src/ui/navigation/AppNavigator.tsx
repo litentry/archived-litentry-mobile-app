@@ -57,6 +57,7 @@ import {FeedbackScreen} from '@ui/screens/FeedbackScreen';
 import {AccountScreen} from '@ui/screens/AccountScreen';
 import {OnboardingScreen} from '@ui/screens/Onboarding/OnboardingScreen';
 import {usePersistedState} from '@hooks/usePersistedState';
+import {useApiRefetch} from 'src/hooks/useApiRefetch';
 
 const DashboardStack = createNativeStackNavigator<DashboardStackParamList>();
 
@@ -211,6 +212,7 @@ function AppNavigator() {
   const {isChecking} = useCheckAuthorizationStatus();
   const {isPermissionPromptNeeded} = usePermissions();
   const {skipPermission} = useSkipPermission();
+  useApiRefetch();
 
   if (isChecking) {
     return null;
