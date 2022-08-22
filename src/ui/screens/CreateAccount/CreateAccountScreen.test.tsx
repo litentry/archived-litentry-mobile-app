@@ -4,7 +4,6 @@ import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {render, fireEvent} from 'src/testUtils';
 import {CreateAccountScreen} from './CreateAccountScreen';
 import {createAccountScreen} from '@ui/navigation/routeKeys';
-import {useKeyring} from '@polkadotApi/useKeyring';
 
 const navigation = {
   navigate: () => jest.fn(),
@@ -17,7 +16,9 @@ const route = {
   },
 } as RouteProp<AccountsStackParamList, typeof createAccountScreen>;
 
-const mockCreateAddressFromMnemonic = jest.fn(() => Promise.resolve());
+const mockCreateAddressFromMnemonic = jest.fn(() =>
+  Promise.resolve('13TZCWrhYJ7LEfUAtb3ZbK4mArnCX8TYHJa8EPFR2mxhCNf9'),
+);
 const mockAddAccount = jest.fn(() => Promise.resolve());
 
 jest.mock('@polkadotApi/useKeyring', () => {
@@ -51,9 +52,14 @@ describe('CreateAccountScreen', () => {
     expect(submitButton).toBeDisabled();
   });
 
+  it('should verify the address from mnemonic seed.', async () => {
+    const {findByText} = render(<CreateAccountScreen navigation={navigation} route={route} />);
+    await findByText('13TZCWrhYJ7LEfUAtb3ZbK4mArnCX8TYHJa8EPFR2mxhCNf9');
+  });
+
   it('should test if the entered password is weak or strong', async () => {
-    const {getByPlaceholderText, findByTestId} = render(<CreateAccountScreen navigation={navigation} route={route} />);
-    const weakPassword = await findByTestId('weak-password');
+    const {getByPlaceholderText, findByText} = render(<CreateAccountScreen navigation={navigation} route={route} />);
+    const weakPassword = await findByText('Password is too weak');
     fireEvent.changeText(getByPlaceholderText('New password'), accountWeakPassword);
     expect(weakPassword).toBeTruthy();
     fireEvent.changeText(getByPlaceholderText('New password'), accountStrongPassword);

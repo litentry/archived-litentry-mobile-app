@@ -117,7 +117,7 @@ export function CreateAccountScreen({
             autoComplete="off"
             error={Boolean(account.password) && passwordStrength < 3}
           />
-          <HelperText type="error" visible={passwordError} testID="weak-password">
+          <HelperText type="error" visible={passwordError}>
             {`Password is too weak`}
           </HelperText>
           <View style={styles.passwordMeter}>
