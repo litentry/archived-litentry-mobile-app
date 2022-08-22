@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, View, StyleSheet, TouchableOpacity, Keyboard} from 'react-native';
+import {FlatList, View, StyleSheet, TouchableOpacity} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
 import {useTheme, Divider, IconButton, List, FAB, Caption, Menu, Subheading, Icon, useBottomSheet} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
@@ -115,7 +115,7 @@ export function AccountsScreen({navigation}: Props) {
         <AccountsGuide />
       </AccountGuideBottomSheet>
 
-      <ExternalAccountBottomSheet onClose={Keyboard.dismiss}>
+      <ExternalAccountBottomSheet>
         <AddExternalAccount onClose={closeExternalAccount} />
       </ExternalAccountBottomSheet>
     </SafeView>
