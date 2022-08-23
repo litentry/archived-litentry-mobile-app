@@ -90,7 +90,6 @@ export function ParachainsOverviewScreen({navigation}: ScreenProps) {
           keyExtractor={(item) => item.id}
           renderItem={({item}) => <ParachainItem parachain={item} onPress={() => toParachainDetails(item.id)} />}
           ItemSeparatorComponent={Divider}
-          // estimatedItemSize={parachains?.length}
         />
       )}
     </SafeView>

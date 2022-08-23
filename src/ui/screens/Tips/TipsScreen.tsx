@@ -71,7 +71,6 @@ export function TipsScreen({navigation}: ScreenProps) {
               });
             }}
             ListFooterComponent={ListFooter}
-            // estimatedItemSize={tips?.length}
           />
         )}
       </View>
