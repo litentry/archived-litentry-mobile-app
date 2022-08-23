@@ -96,11 +96,9 @@ export function DelegateVoting({fromAccount, onClose}: DelegateVotingProps) {
           method: 'democracy.delegate',
           params: [delegatedAccount, conviction.value, bnToHex(delegateAmountBn)],
         },
-      }).then(() => {
-        refetchConvictions();
       });
     }
-  }, [delegatedAccount, conviction, delegateAmountBn, fromAccount?.address, startTx, refetchConvictions]);
+  }, [delegatedAccount, conviction, delegateAmountBn, fromAccount?.address, startTx]);
 
   const onCancel = React.useCallback(() => {
     Keyboard.dismiss();

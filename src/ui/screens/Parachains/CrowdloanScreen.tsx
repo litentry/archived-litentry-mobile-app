@@ -69,7 +69,6 @@ export function CrowdloanScreen({navigation}: ScreenProps) {
                 active={key === ongoingKey}
                 onPressContribute={() => {
                   setOpenContributeId(item.paraId);
-                  refetchCrowdloans();
                 }}
                 navigation={navigation}
               />
@@ -88,6 +87,7 @@ export function CrowdloanScreen({navigation}: ScreenProps) {
             }
           }}
           parachainId={openContributeId}
+          refetch={refetchCrowdloans}
         />
       ) : null}
     </SafeView>
@@ -191,10 +191,12 @@ function ContributeBox({
   visible,
   setVisible,
   parachainId,
+  refetch,
 }: {
   visible: boolean;
   setVisible: (_visible: boolean) => void;
   parachainId: string;
+  refetch: () => void;
 }) {
   const {startTx} = useStartTx();
   const [account, setAccount] = React.useState<Account>();
@@ -248,7 +250,7 @@ function ContributeBox({
                   method: 'crowdloan.contribute',
                   params: [parachainId, bnToHex(balance), null],
                 },
-              });
+              }).then(refetch);
               reset();
             }
           }}
