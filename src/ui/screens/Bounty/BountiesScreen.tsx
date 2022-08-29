@@ -20,7 +20,7 @@ const ItemSeparator = () => <Padder scale={0.5} />;
 
 export function BountiesScreen({navigation}: ScreenProps) {
   const {openBottomSheet, closeBottomSheet, BottomSheet} = useBottomSheet();
-  const {data: bounties, loading} = useBounties();
+  const {data: bounties, loading, refetch: refetchBounties} = useBounties();
 
   const toBountyDetails = (index: string) => {
     navigation.navigate(bountyDetailScreen, {index});
@@ -48,7 +48,7 @@ export function BountiesScreen({navigation}: ScreenProps) {
       )}
 
       <BottomSheet>
-        <AddBounty onClose={closeBottomSheet} />
+        <AddBounty onClose={closeBottomSheet} onSubmit={refetchBounties} />
       </BottomSheet>
     </SafeView>
   );

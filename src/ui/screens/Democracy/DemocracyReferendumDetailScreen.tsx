@@ -30,7 +30,7 @@ export function DemocracyReferendumDetailScreen({route}: ScreenProps) {
   const {startTx} = useStartTx();
   const {colors} = useTheme();
   const [fullDescription, setFulDescription] = React.useState(false);
-  const {data: referendum, loading} = useDemocracyReferendum(route.params.id);
+  const {data: referendum, loading, refetch: refetchDemocracyReferendum} = useDemocracyReferendum(route.params.id);
   const {data: convictions} = useConvictions();
   const {stringToBn} = useFormatBalance();
   const [voteType, setVoteType] = React.useState<'YES' | `NO`>();
@@ -84,10 +84,20 @@ export function DemocracyReferendumDetailScreen({route}: ScreenProps) {
             },
           ],
         },
-      });
+      }).then(() => refetchDemocracyReferendum({id: route.params.id}));
       resetVoteModal();
     }
-  }, [referendum?.id, startTx, voteAccount, voteConviction, voteType, voteValueBN, resetVoteModal]);
+  }, [
+    voteAccount,
+    voteConviction,
+    voteValueBN,
+    referendum?.id,
+    startTx,
+    voteType,
+    resetVoteModal,
+    refetchDemocracyReferendum,
+    route.params.id,
+  ]);
 
   const referendumIndex = referendum?.id.split(':')[1] as string;
 
