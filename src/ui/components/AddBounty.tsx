@@ -15,13 +15,19 @@ import {BN, bnToHex} from '@polkadot/util';
 import {formattedStringToBn} from 'src/utils/balance';
 import {countUtf8Bytes} from 'src/utils';
 import {useStartTx} from 'context/TxContext';
+import {ApolloQueryResult} from '@apollo/client/core/types';
+import {SubstrateChainBounty} from 'src/generated/litentryGraphQLTypes';
 
 type Props = {
   onClose: () => void;
-  refetch: () => void;
+  onSubmit: () => Promise<
+    ApolloQueryResult<{
+      substrateChainBounties: SubstrateChainBounty[];
+    }>
+  >;
 };
 
-export function AddBounty({onClose, refetch}: Props) {
+export function AddBounty({onClose, onSubmit}: Props) {
   const {data: bounty} = useBountiesSummary();
   const {formatBalance, stringToBn} = useFormatBalance();
 
@@ -73,7 +79,7 @@ export function AddBounty({onClose, refetch}: Props) {
       })
         .then(() => {
           snackbar('New bounty created');
-          refetch();
+          onSubmit();
         })
         .catch(() => {
           snackbar('Error while submitting bounty');

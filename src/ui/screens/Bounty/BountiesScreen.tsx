@@ -26,10 +26,6 @@ export function BountiesScreen({navigation}: ScreenProps) {
     navigation.navigate(bountyDetailScreen, {index});
   };
 
-  const bountiesRefetch = () => {
-    refetchBounties();
-  };
-
   return (
     <SafeView edges={noTopEdges}>
       {loading && !bounties ? (
@@ -52,7 +48,7 @@ export function BountiesScreen({navigation}: ScreenProps) {
       )}
 
       <BottomSheet>
-        <AddBounty onClose={closeBottomSheet} refetch={bountiesRefetch} />
+        <AddBounty onClose={closeBottomSheet} onSubmit={refetchBounties} />
       </BottomSheet>
     </SafeView>
   );
