@@ -145,7 +145,6 @@ export function RegisterSubIdentitiesScreen({route, navigation}: ScreenProps) {
           keyExtractor={(account) => account.address}
           renderItem={({item}) => <SubAccountItem account={item} onRemove={onRemoveAccount} />}
           ListEmptyComponent={<EmptyView height={200}>{`No sub-identities set.`}</EmptyView>}
-          // estimatedItemSize={subIdentities?.length}
         />
       </View>
       <BottomSheet>

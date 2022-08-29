@@ -142,7 +142,6 @@ export function Referendums({navigation}: {navigation: NavigationProp<DashboardS
             });
           }}
           ListFooterComponent={ListFooter}
-          // estimatedItemSize={referendums?.length}
         />
       )}
     </SafeView>
@@ -228,7 +227,6 @@ export function Proposals({navigation}: {navigation: NavigationProp<DashboardSta
             });
           }}
           ListFooterComponent={ListFooter}
-          // estimatedItemSize={proposals?.length}
         />
       )}
     </SafeView>
