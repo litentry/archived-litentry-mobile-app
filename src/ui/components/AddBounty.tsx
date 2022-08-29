@@ -18,10 +18,11 @@ import {useStartTx} from 'context/TxContext';
 
 type Props = {
   onClose: () => void;
+  refetch: () => void;
 };
 
-export function AddBounty({onClose}: Props) {
-  const {data: bounty, refetch: refetchBountiesSummary} = useBountiesSummary();
+export function AddBounty({onClose, refetch}: Props) {
+  const {data: bounty} = useBountiesSummary();
   const {formatBalance, stringToBn} = useFormatBalance();
 
   const [bountyTitle, setBountyTitle] = React.useState('');
@@ -72,7 +73,7 @@ export function AddBounty({onClose}: Props) {
       })
         .then(() => {
           snackbar('New bounty created');
-          refetchBountiesSummary();
+          refetch();
         })
         .catch(() => {
           snackbar('Error while submitting bounty');

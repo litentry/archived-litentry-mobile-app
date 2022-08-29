@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useBounties, Bounty} from 'src/api/hooks/useBounties';
 import {EmptyView} from '@ui/components/EmptyView';
@@ -20,10 +20,14 @@ const ItemSeparator = () => <Padder scale={0.5} />;
 
 export function BountiesScreen({navigation}: ScreenProps) {
   const {openBottomSheet, closeBottomSheet, BottomSheet} = useBottomSheet();
-  const {data: bounties, loading} = useBounties();
+  const {data: bounties, loading, refetch: refetchBounties} = useBounties();
 
   const toBountyDetails = (index: string) => {
     navigation.navigate(bountyDetailScreen, {index});
+  };
+
+  const bountiesRefetch = () => {
+    refetchBounties();
   };
 
   return (
@@ -49,7 +53,7 @@ export function BountiesScreen({navigation}: ScreenProps) {
       )}
 
       <BottomSheet>
-        <AddBounty onClose={closeBottomSheet} />
+        <AddBounty onClose={closeBottomSheet} refetch={bountiesRefetch} />
       </BottomSheet>
     </SafeView>
   );

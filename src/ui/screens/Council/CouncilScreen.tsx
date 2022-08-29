@@ -330,7 +330,7 @@ function SubmitCandidacyModel({visible, setVisible, moduleElection}: SubmitCandi
             method: `${moduleElection.module}.submitCandidacy`,
             params: [argsLength === 1 ? [council?.candidates.length ?? 0] : []],
           },
-        }).then(() => refetchCouncil);
+        }).then(() => refetchCouncil());
         snackbar('Candidacy submitted successfully');
       } catch (e) {
         console.warn(e);
