@@ -15,16 +15,11 @@ import {BN, bnToHex} from '@polkadot/util';
 import {formattedStringToBn} from 'src/utils/balance';
 import {countUtf8Bytes} from 'src/utils';
 import {useStartTx} from 'context/TxContext';
-import {ApolloQueryResult} from '@apollo/client/core/types';
-import {SubstrateChainBounty} from 'src/generated/litentryGraphQLTypes';
+import {BountiesQueryResult} from 'src/api/hooks/useBounties';
 
 type Props = {
   onClose: () => void;
-  onSubmit: () => Promise<
-    ApolloQueryResult<{
-      substrateChainBounties: SubstrateChainBounty[];
-    }>
-  >;
+  onSubmit: () => BountiesQueryResult;
 };
 
 export function AddBounty({onClose, onSubmit}: Props) {

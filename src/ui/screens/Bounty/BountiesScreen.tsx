@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useBounties, Bounty} from 'src/api/hooks/useBounties';
 import {EmptyView} from '@ui/components/EmptyView';

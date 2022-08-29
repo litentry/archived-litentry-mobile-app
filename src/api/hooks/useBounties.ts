@@ -1,6 +1,6 @@
-import {gql, useQuery} from '@apollo/client';
-import type {SubstrateChainBounty} from 'src/generated/litentryGraphQLTypes';
+import {ApolloQueryResult, gql, useQuery} from '@apollo/client';
 import {ACCOUNT_FIELDS_FRAGMENT} from 'src/api/hooks/useAccount';
+import type {SubstrateChainBounty} from 'src/generated/litentryGraphQLTypes';
 
 export type Bounty = SubstrateChainBounty;
 
@@ -39,6 +39,12 @@ const BOUNTIES_QUERY = gql`
     }
   }
 `;
+
+export type BountiesQueryResult = Promise<
+  ApolloQueryResult<{
+    substrateChainBounties: SubstrateChainBounty[];
+  }>
+>;
 
 export function useBounties() {
   const {data, ...rest} = useQuery<{substrateChainBounties: Bounty[]}>(BOUNTIES_QUERY);

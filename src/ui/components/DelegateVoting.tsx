@@ -35,7 +35,7 @@ type DelegateVotingProps = {
 };
 
 export function DelegateVoting({fromAccount, onClose}: DelegateVotingProps) {
-  const {data: convictions, refetch: refetchConvictions} = useConvictions();
+  const {data: convictions} = useConvictions();
   const {stringToBn, formatBalance} = useFormatBalance();
   const {shouldHandleKeyboardEvents} = useBottomSheetInternal();
   const [isDelegatedAccountValid, setIsDelegatedAccountValid] = React.useState(false);
