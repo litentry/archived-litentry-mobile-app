@@ -15,11 +15,10 @@ import {BN, bnToHex} from '@polkadot/util';
 import {formattedStringToBn} from 'src/utils/balance';
 import {countUtf8Bytes} from 'src/utils';
 import {useStartTx} from 'context/TxContext';
-import {BountiesQueryResult} from 'src/api/hooks/useBounties';
 
 type Props = {
   onClose: () => void;
-  onSubmit: () => BountiesQueryResult;
+  onSubmit: () => void;
 };
 
 export function AddBounty({onClose, onSubmit}: Props) {
