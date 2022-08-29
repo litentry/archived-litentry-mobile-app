@@ -56,7 +56,8 @@ export function AccountsScreen({navigation}: Props) {
     navigation.setOptions({
       headerRight: HeaderRight,
     });
-  }, [navigation, HeaderRight]);
+    closeExternalAccount();
+  }, [navigation, HeaderRight, closeExternalAccount]);
 
   return (
     <SafeView edges={noTopEdges}>
