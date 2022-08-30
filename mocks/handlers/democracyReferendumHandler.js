@@ -1,6 +1,6 @@
 import {graphql} from 'msw';
 
-export const democracyReferendum = graphql.query('getDemocracyReferendum', (_, res, ctx) => {
+export const democracyReferendumHandler = graphql.query('getDemocracyReferendum', (_, res, ctx) => {
   return res(
     ctx.data({
       substrateChainDemocracyReferendum: {

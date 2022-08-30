@@ -13,8 +13,9 @@ import {councilVotesHandler} from './councilVotesHandler';
 import {crowdloanHandler} from './crowdloanHandler';
 import {crowdloansHandler} from './crowdloansHandler';
 import {crowdloanSummaryHandler} from './crowdloanSummaryHandler';
+import {democracyProposalHandler} from './democracyProposalHandler';
 import {democracyProposalsHandler} from './democracyProposalsHandler';
-import {democracyReferendum} from './democracyReferendumHandler';
+import {democracyReferendumHandler} from './democracyReferendumHandler';
 import {democracyReferendumsHandler} from './democracyReferendumsHandler';
 import {democracySummaryHandler} from './democracySummaryHandler';
 import {eventsCalendarHandler} from './eventsCalendarHandler';
@@ -63,6 +64,7 @@ export const handlers = [
   crowdloansHandler,
   treasuryHandler,
   technicalCommitteeSummaryHandler,
-  democracyReferendum,
+  democracyReferendumHandler,
+  democracyProposalHandler,
   // other handlers
 ];
