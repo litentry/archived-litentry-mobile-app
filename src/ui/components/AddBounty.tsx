@@ -18,9 +18,10 @@ import {useStartTx} from 'context/TxContext';
 
 type Props = {
   onClose: () => void;
+  onSubmit: () => void;
 };
 
-export function AddBounty({onClose}: Props) {
+export function AddBounty({onClose, onSubmit}: Props) {
   const {data: bounty} = useBountiesSummary();
   const {formatBalance, stringToBn} = useFormatBalance();
 
@@ -72,6 +73,7 @@ export function AddBounty({onClose}: Props) {
       })
         .then(() => {
           snackbar('New bounty created');
+          onSubmit();
         })
         .catch(() => {
           snackbar('Error while submitting bounty');

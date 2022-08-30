@@ -26,7 +26,7 @@ export function DemocracyProposalDetailScreen({route}: ScreenProps) {
   const {startTx} = useStartTx();
   const {getTxMethodArgsLength} = useTx();
   const {colors} = useTheme();
-  const {data: proposal, loading} = useDemocracyProposal(route.params.id);
+  const {data: proposal, loading, refetch: refetchDemocracyProposal} = useDemocracyProposal(route.params.id);
   const [fullDescription, setFulDescription] = React.useState(false);
   const [showEndorsed, setShowEndorsed] = React.useState(false);
   const [endorseModalOpen, setEndorseModalOpen] = React.useState(false);
@@ -61,10 +61,18 @@ export function DemocracyProposalDetailScreen({route}: ScreenProps) {
           method,
           params: argsLength === 2 ? [proposalIndexAsString, proposal.seconds.length] : [proposalIndexAsString],
         },
-      });
+      }).then(() => refetchDemocracyProposal({id: route.params.id}));
       resetEndorseModal();
     }
-  }, [startTx, proposal, voteAccount, getTxMethodArgsLength, resetEndorseModal]);
+  }, [
+    startTx,
+    proposal,
+    voteAccount,
+    getTxMethodArgsLength,
+    resetEndorseModal,
+    refetchDemocracyProposal,
+    route.params.id,
+  ]);
 
   return (
     <SafeView edges={noTopEdges}>
