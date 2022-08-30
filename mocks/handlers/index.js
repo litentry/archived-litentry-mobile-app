@@ -13,9 +13,10 @@ import {councilVotesHandler} from './councilVotesHandler';
 import {crowdloanHandler} from './crowdloanHandler';
 import {crowdloansHandler} from './crowdloansHandler';
 import {crowdloanSummaryHandler} from './crowdloanSummaryHandler';
-import {democracySummaryHandler} from './democracySummaryHandler';
-import {democracyReferendumsHandler} from './democracyReferendumsHandler';
 import {democracyProposalsHandler} from './democracyProposalsHandler';
+import {democracyReferendum} from './democracyReferendum';
+import {democracyReferendumsHandler} from './democracyReferendumsHandler';
+import {democracySummaryHandler} from './democracySummaryHandler';
 import {eventsCalendarHandler} from './eventsCalendarHandler';
 import {moduleElectionHandler} from './moduleElectionHandler';
 import {parachainCrowdloanHandler} from './parachainCrowdloanHandler';
@@ -62,5 +63,6 @@ export const handlers = [
   crowdloansHandler,
   treasuryHandler,
   technicalCommitteeSummaryHandler,
+  democracyReferendum,
   // other handlers
 ];

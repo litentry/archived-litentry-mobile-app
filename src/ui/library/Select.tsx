@@ -40,6 +40,7 @@ export function Select({items, onSelect}: Props) {
             title={<Caption>{selectedItem.text ? selectedItem.text : 'Select item'}</Caption>}
             onPress={openMenu}
             right={ItemRight}
+            testID="select-conviction"
           />
         </View>
       }>

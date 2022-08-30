@@ -208,7 +208,7 @@ export function DemocracyReferendumDetailScreen({route}: ScreenProps) {
             }}>
             {`Cancel`}
           </Button>
-          <Button mode="outlined" disabled={disabled} onPress={vote}>{`Vote ${voteType}`}</Button>
+          <Button mode="outlined" disabled={disabled} onPress={vote} testID="vote-type">{`Vote ${voteType}`}</Button>
         </View>
       </Modal>
     </SafeView>
