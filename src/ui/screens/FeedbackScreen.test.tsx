@@ -1,7 +1,6 @@
 import React from 'react';
 import {fireEvent, render, waitFor} from 'src/testUtils';
 import {FeedbackScreen} from './FeedbackScreen';
-import {Linking} from 'react-native';
 
 const feedback = 'test feedback';
 

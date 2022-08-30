@@ -2,9 +2,8 @@ import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {exportAccountWithJsonFileScreen} from '@ui/navigation/routeKeys';
 import React from 'react';
-import {fireEvent, render, waitFor} from 'src/testUtils';
+import {render} from 'src/testUtils';
 import {ExportAccountWithJsonFileScreen} from './ExportAccountWithJsonFileScreen';
-import Share from 'react-native-share';
 
 jest.useFakeTimers();
 

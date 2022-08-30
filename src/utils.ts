@@ -29,3 +29,7 @@ export function blobToBase64(blob: Blob) {
     reader.readAsDataURL(blob);
   });
 }
+
+export function truncate(str: string, n: number): string {
+  return str.length > n ? `${str.substring(0, n - 1)}...` : str;
+}

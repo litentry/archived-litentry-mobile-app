@@ -56,7 +56,6 @@ export function SelectAccount({onSelect, accounts}: Props) {
         />
       }>
       <FlatList
-        style={styles.items}
         ItemSeparatorComponent={Divider}
         data={accounts ?? networkAccounts}
         keyExtractor={(item) => item.address}
@@ -94,11 +93,7 @@ export function Account({onSelect, account}: AccountProps) {
 
   return (
     <View style={globalStyles.paddedContainer}>
-      <AccountTeaser
-        account={accountInfo}
-        onPress={() => onSelect({account, accountInfo})}
-        name={name}
-        testID="account-teaser">
+      <AccountTeaser account={accountInfo} onPress={() => onSelect({account, accountInfo})} name={name}>
         {isExternal && <Caption style={styles.caption}>{`External`}</Caption>}
       </AccountTeaser>
     </View>

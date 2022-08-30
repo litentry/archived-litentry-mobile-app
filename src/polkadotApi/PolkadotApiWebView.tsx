@@ -70,6 +70,7 @@ import {
   Blake2AsHexMessage,
   blake2AsHexMessage,
 } from 'polkadot-api';
+import {useNetInfo} from 'src/hooks/useNetInfo';
 
 type PostMessage = (message: Message, id?: string) => void;
 
@@ -279,13 +280,14 @@ function useKeyringUtils(isWebviewLoaded: boolean, postMessage: PostMessage, res
 function useInitApi(isWebviewLoaded: boolean, postMessage: PostMessage) {
   const {currentNetwork} = useNetwork();
   const setApiState = useSetRecoilState(apiStatusState);
+  const {isConnected} = useNetInfo();
 
   React.useEffect(() => {
-    if (isWebviewLoaded) {
+    if (isWebviewLoaded && isConnected) {
       postMessage(initApiMessage({wsEndpoint: currentNetwork.ws[0] as string}));
       setApiState('connecting');
     }
-  }, [isWebviewLoaded, postMessage, setApiState, currentNetwork.ws]);
+  }, [isWebviewLoaded, postMessage, setApiState, currentNetwork.ws, isConnected]);
 }
 
 export function useApiTx(isWebviewLoaded: boolean, postMessage: PostMessage, resolversRef: ResolversRef) {
@@ -345,7 +347,9 @@ function useWebViewOnMessage(resolversRef: ResolversRef, postMessage: PostMessag
 
   const webViewOnMessage = React.useCallback(
     (event: WebViewMessageEvent) => {
-      console.info('WebView Response: ', event.nativeEvent.data);
+      if (__DEV__) {
+        console.info('WebView Response: ', event.nativeEvent.data);
+      }
       const {message, id} = JSON.parse(event.nativeEvent.data) as {message: Message; id: string};
 
       const {

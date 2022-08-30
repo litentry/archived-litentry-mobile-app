@@ -1,6 +1,6 @@
 import {gql, useQuery} from '@apollo/client';
-import type {SubstrateChainBounty} from 'src/generated/litentryGraphQLTypes';
 import {ACCOUNT_FIELDS_FRAGMENT} from 'src/api/hooks/useAccount';
+import type {SubstrateChainBounty} from 'src/generated/litentryGraphQLTypes';
 
 export type Bounty = SubstrateChainBounty;
 

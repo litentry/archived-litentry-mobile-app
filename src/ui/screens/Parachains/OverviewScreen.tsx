@@ -1,7 +1,7 @@
 import React from 'react';
-import {View, StyleSheet, FlatList} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
-import {Divider, Card, List, Caption, Text, Subheading} from '@ui/library';
+import {Divider, Card, List, Caption, Text, Subheading, FlatList} from '@ui/library';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {ProgressChart} from '@ui/components/ProgressChart';
 import LoadingView from '@ui/components/LoadingView';
@@ -18,7 +18,7 @@ type ScreenProps = {
 function ParachainsOverviewHeader({parachainsSummary}: {parachainsSummary?: ParachainsSummary}) {
   return (
     <>
-      <Card>
+      <Card style={styles.parachainItem}>
         <Card.Content>
           <View style={globalStyles.rowAlignCenter}>
             <View style={styles.progressChart}>
@@ -84,7 +84,6 @@ export function ParachainsOverviewScreen({navigation}: ScreenProps) {
         <LoadingView />
       ) : (
         <FlatList
-          contentContainerStyle={globalStyles.paddedContainer}
           showsVerticalScrollIndicator={false}
           ListHeaderComponent={<ParachainsOverviewHeader parachainsSummary={parachainsSummary} />}
           data={parachains}
@@ -125,7 +124,15 @@ function ParachainItem({parachain, onPress}: ParachainProps) {
     [days, hours, lease],
   );
 
-  return <List.Item title={parachain.name} onPress={onPress} left={ItemLeft} right={ItemRight} />;
+  return (
+    <List.Item
+      title={parachain.name}
+      onPress={onPress}
+      left={ItemLeft}
+      right={ItemRight}
+      style={styles.parachainItem}
+    />
+  );
 }
 
 function Row({label, children}: {label: string; children: React.ReactNode}) {
@@ -158,5 +165,9 @@ const styles = StyleSheet.create({
   },
   rowLabel: {
     width: '60%',
+  },
+  parachainItem: {
+    paddingVertical: standardPadding,
+    marginHorizontal: standardPadding,
   },
 });

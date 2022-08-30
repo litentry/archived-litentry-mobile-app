@@ -1,20 +1,16 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
 import {Edge, SafeAreaView} from 'react-native-safe-area-context';
 import {Layout} from '@ui/components/Layout';
+import globalStyles from '@ui/styles';
 
 export default function SafeView({children, edges}: {children: React.ReactNode; edges?: Edge[]}) {
   return (
-    <Layout style={styles.container}>
-      <SafeAreaView edges={edges} style={styles.container}>
+    <Layout style={globalStyles.flex}>
+      <SafeAreaView edges={edges} style={globalStyles.flex}>
         {children}
       </SafeAreaView>
     </Layout>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {flex: 1},
-});
 
 export const noTopEdges: Edge[] = ['left', 'right', 'bottom'];

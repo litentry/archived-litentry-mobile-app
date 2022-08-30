@@ -19,9 +19,10 @@
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* LitentryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* LitentryTests.m */; };
-		32474834DF705BF2BD74A5CB /* libPods-Litentry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 86CB3E182E033C48FE853073 /* libPods-Litentry.a */; };
+		46E75EBE2897CB1100C6286B /* BuildFile in Resources */ = {isa = PBXBuildFile; };
 		6124E7B263B1F7067E1328B2 /* libPods-Litentry-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 29FDBF5D7B92E16BD0939B4C /* libPods-Litentry-tvOS.a */; };
 		63991905202E452FBFC2D38C /* DMSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F302499289A54007B731735B /* DMSans-Bold.ttf */; };
+		640A0C35FC6E74AED791826F /* libPods-Litentry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 86CB3E182E033C48FE853073 /* libPods-Litentry.a */; };
 		81A74323D4924FFA94AB2407 /* DMSans-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B3C5624626DD4EB58CA220E6 /* DMSans-Italic.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		8804DE6E2576F18D00D915D3 /* logo-256.png in Resources */ = {isa = PBXBuildFile; fileRef = 8804DE6D2576F18D00D915D3 /* logo-256.png */; };
@@ -105,7 +106,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				32474834DF705BF2BD74A5CB /* libPods-Litentry.a in Frameworks */,
+				640A0C35FC6E74AED791826F /* libPods-Litentry.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -391,6 +392,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				46E75EBE2897CB1100C6286B /* BuildFile in Resources */,
 				CA5B8BFB28623BD100A0FAA2 /* polkadotApi.html in Resources */,
 				8804DE6E2576F18D00D915D3 /* logo-256.png in Resources */,
 				2902EEF926820A6F009FB826 /* GoogleService-Info.plist in Resources */,
@@ -435,7 +437,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		136A89E08362EFBA2AE566AD /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;

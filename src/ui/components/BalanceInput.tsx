@@ -1,5 +1,5 @@
 import React, {useMemo, useState} from 'react';
-import {StyleSheet, TextInputProps} from 'react-native';
+import {TextInputProps} from 'react-native';
 import {TextInput} from '@ui/library';
 import {useFormatBalance} from 'src/hooks/useFormatBalance';
 import {decimalKeypad} from 'src/utils';
@@ -35,7 +35,6 @@ export function BalanceInput(props: PropTypes) {
       <TextInput
         {...{onFocus, onBlur}}
         dense
-        style={styles.textInput}
         error={Boolean(!hasEnoughBalance && amount)}
         mode="outlined"
         autoComplete="off"
@@ -47,16 +46,11 @@ export function BalanceInput(props: PropTypes) {
           props.onChangeBalance(decimalKeypad(nextValue));
         }}
         contextMenuHidden={true}
-        right={<TextInput.Affix textStyle={styles.affix} text={formatBalance(stringToBn(amount)) ?? ''} />}
+        right={<TextInput.Affix text={formatBalance(stringToBn(amount)) ?? ''} />}
       />
       <MaxBalance address={account} />
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  textInput: {height: 45},
-  affix: {paddingTop: 10},
-});
 
 export default BalanceInput;

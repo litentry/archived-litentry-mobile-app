@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {Alert, FlatList, View} from 'react-native';
+import {Alert, StyleSheet, View} from 'react-native';
 import {stringShorten} from '@polkadot/util';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {Button, Caption, Subheading, List, Divider, IconButton, useTheme, useBottomSheet} from '@ui/library';
+import {Button, Caption, Subheading, List, Divider, IconButton, useTheme, useBottomSheet, FlatList} from '@ui/library';
 import {Identicon} from '@ui/components/Identicon';
 import {Layout} from '@ui/components/Layout';
 import SafeView, {noTopEdges} from '@ui/components/SafeView';
 import {AccountsStackParamList} from '@ui/navigation/navigation';
 import {registerSubIdentitiesScreen} from '@ui/navigation/routeKeys';
-import globalStyles from '@ui/styles';
+import globalStyles, {standardPadding} from '@ui/styles';
 import {AddSubIdentity} from './AddSubIdentity';
 import {EmptyView} from '@ui/components/EmptyView';
 import {Padder} from '@ui/components/Padder';
@@ -194,6 +194,13 @@ function SubAccountItem({account, onRemove}: SubIdentityItemProps) {
       description={<Caption>{stringShorten(account.address, 12)}</Caption>}
       left={AccountIdentityIcon}
       right={RemoveSubAccount}
+      style={styles.removeAccount}
     />
   );
 }
+
+const styles = StyleSheet.create({
+  removeAccount: {
+    padding: standardPadding,
+  },
+});

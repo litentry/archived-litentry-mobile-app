@@ -1,11 +1,9 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Alert, Modal, StyleSheet, View, TextInputProps} from 'react-native';
-import Clipboard from '@react-native-community/clipboard';
-import {TextInput, HelperText, Button, Title, IconButton} from '@ui/library';
+import {TextInput, HelperText, Button, Title} from '@ui/library';
 import globalStyles, {standardPadding} from '@ui/styles';
 import {parseAddress} from 'src/utils/address';
 import {useNetwork} from '@atoms/network';
-import {useSnackbar} from 'context/SnackbarContext';
 import QRCamera, {QRCameraRef} from './QRCamera';
 import {Padder} from './Padder';
 import {useIsAddressValid} from 'src/hooks/useIsAddressValid';
@@ -23,7 +21,6 @@ export function AddressInput({onAddressChanged, onValidateAddress, onFocus, onBl
   const {currentNetwork} = useNetwork();
   const qrCameraRef = useRef<QRCameraRef>(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const snackbar = useSnackbar();
   const {isAddressValid} = useIsAddressValid(currentNetwork);
 
   const updateInputAddress = useCallback(
@@ -33,12 +30,6 @@ export function AddressInput({onAddressChanged, onValidateAddress, onFocus, onBl
     },
     [onAddressChanged],
   );
-
-  const onPastePress = useCallback(async () => {
-    const pastedAddress = await Clipboard.getString();
-    updateInputAddress(pastedAddress);
-    snackbar('Address pasted from clipboard!');
-  }, [updateInputAddress, snackbar]);
 
   const handleScan = useCallback(
     ({data}: {data: string}) => {
@@ -79,22 +70,17 @@ export function AddressInput({onAddressChanged, onValidateAddress, onFocus, onBl
 
   return (
     <>
-      <View style={globalStyles.spaceBetweenRowContainer}>
-        <TextInput
-          {...{onFocus, onBlur}}
-          autoCorrect={false}
-          placeholder="Account address"
-          dense
-          mode="outlined"
-          style={styles.textInput}
-          value={inputAddress}
-          onChangeText={updateInputAddress}
-        />
-        <View style={styles.icons}>
-          <IconButton icon="content-paste" onPress={onPastePress} />
-          <IconButton icon="qrcode-scan" onPress={() => setModalVisible(true)} />
-        </View>
-      </View>
+      <TextInput
+        {...{onFocus, onBlur}}
+        autoCorrect={false}
+        placeholder="Account address"
+        mode="outlined"
+        dense
+        value={inputAddress}
+        onChangeText={updateInputAddress}
+        style={styles.textInput}
+        right={<TextInput.Icon name="qrcode-scan" onPress={() => setModalVisible(true)} />}
+      />
 
       {!addressValid && inputAddress ? (
         <HelperText type="error" style={styles.error} testID="address-valid">
@@ -127,8 +113,7 @@ export function AddressInput({onAddressChanged, onValidateAddress, onFocus, onBl
 
 const styles = StyleSheet.create({
   textInput: {
-    height: 45,
-    width: '75%',
+    textAlign: 'auto',
   },
   icons: {
     flexDirection: 'row',

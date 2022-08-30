@@ -10,14 +10,25 @@ type LitentryApiContextType = {
 
 const LitentryApiContext = React.createContext<LitentryApiContextType | undefined>(undefined);
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const mergeFunc = (existing: any, incoming: any, {args}: any) => {
+  const offset = args ? args.offset : 0;
+  const merged = existing ? existing.slice(0) : [];
+  for (let i = 0; i < incoming.length; ++i) {
+    merged[offset + i] = incoming[i];
+  }
+  return merged;
+};
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
+export let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
+
 export function LitentryApiClientProvider({children}: {children: React.ReactNode}) {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>();
   const {currentNetwork} = useNetwork();
 
   useEffect(() => {
     const init = async () => {
-      // @TODO: https://github.com/litentry/litentry-app/issues/869
-      // Enable cache redirects
       const cache = new InMemoryCache({
         typePolicies: {
           Query: {
@@ -30,35 +41,39 @@ export function LitentryApiClientProvider({children}: {children: React.ReactNode
               },
               substrateChainTips: {
                 keyArgs: [],
-                merge(existing, incoming, {args}) {
-                  const offset = args ? args.offset : 0;
-                  const merged = existing ? existing.slice(0) : [];
-                  for (let i = 0; i < incoming.length; ++i) {
-                    merged[offset + i] = incoming[i];
-                  }
-                  return merged;
-                },
+                merge: mergeFunc,
+              },
+              substrateChainDemocracyReferendums: {
+                keyArgs: [],
+                merge: mergeFunc,
+              },
+              substrateChainDemocracyProposals: {
+                keyArgs: [],
+                merge: mergeFunc,
               },
             },
           },
         },
       });
-      setClient(
-        new ApolloClient({
-          link: createHttpLink({
-            uri: LITENTRY_API_URI,
-            headers: {
-              'substrate-network': currentNetwork.key,
-            },
-          }),
-          cache,
-          defaultOptions: {
-            watchQuery: {
-              fetchPolicy: 'cache-and-network',
-            },
+
+      const apolloInstance = new ApolloClient({
+        link: createHttpLink({
+          uri: LITENTRY_API_URI,
+          headers: {
+            'substrate-network': currentNetwork.key,
           },
         }),
-      );
+        cache,
+        defaultOptions: {
+          watchQuery: {
+            fetchPolicy: 'cache-and-network',
+          },
+        },
+      });
+      setClient(apolloInstance);
+      if (__DEV__) {
+        apolloClient = apolloInstance;
+      }
     };
 
     init();
