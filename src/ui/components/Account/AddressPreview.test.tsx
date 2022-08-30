@@ -1,23 +1,24 @@
 import React from 'react';
-import {render, waitFor} from 'src/testUtils';
+import {render} from 'src/testUtils';
 import {AddressInfoPreview} from './AddressPreview';
 
 const address = '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a';
 
-test('render the loading view when rendered with no data', async () => {
-  const {getByTestId, getByText} = render(<AddressInfoPreview address={address} />);
-  expect(getByTestId('loading_view')).toBeTruthy();
-  expect(getByText('Fetching Address Info')).toBeTruthy();
+describe('AddressPreview', () => {
+  it('should render the loading view while data is fetching', async () => {
+    const {findByTestId} = render(<AddressInfoPreview address={address} />);
+    await findByTestId('loading_view');
+  });
 });
 
-test('render the component after data fetched', async () => {
-  const {getByText, queryByText} = render(<AddressInfoPreview address={address} />);
-
-  await waitFor(() => {
-    expect(getByText('Address')).toBeTruthy();
-    expect(getByText('Display')).toBeTruthy();
-    expect(getByText('Judgment')).toBeTruthy();
-    expect(queryByText('No judgements provided')).toBeTruthy();
-    expect(getByText('Network')).toBeTruthy();
-  });
+it('should render the AddressInfoPreview component after fetched', async () => {
+  const {findByText} = render(<AddressInfoPreview address={address} />);
+  await findByText('Address');
+  await findByText('14yx4v…hhS29a');
+  await findByText('Display');
+  await findByText('PureStake/01');
+  await findByText('Judgment');
+  await findByText('"Reasonable" provided by Registrar #1');
+  await findByText('Network');
+  await findByText('Polkadot');
 });
