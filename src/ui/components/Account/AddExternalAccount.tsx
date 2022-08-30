@@ -1,6 +1,6 @@
 import React from 'react';
 import {Alert, StyleSheet, View, Keyboard} from 'react-native';
-import {Divider, Button, Tabs, TabScreen, useTheme, Subheading, BottomSheetTextInput} from '@ui/library';
+import {Divider, Button, Tabs, TabScreen, useTheme, Subheading, BottomSheetTextInput, TextInput} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {useNetwork} from '@atoms/network';
 import {Padder} from '@ui/components/Padder';
@@ -137,7 +137,7 @@ export function AddExternalAccount({onClose}: Props) {
                 <Tabs style={{backgroundColor: colors.background}} onChangeIndex={(index) => setTabIndex(index)}>
                   <TabScreen label="Type in" icon="keyboard">
                     <View style={globalStyles.paddedContainer}>
-                      <BottomSheetTextInput
+                      <TextInput
                         style={[styles.input, {borderColor: colors.placeholder}]}
                         onChangeText={handleInputChange}
                         value={state.address}
