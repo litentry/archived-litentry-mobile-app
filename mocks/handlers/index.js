@@ -14,7 +14,7 @@ import {crowdloanHandler} from './crowdloanHandler';
 import {crowdloansHandler} from './crowdloansHandler';
 import {crowdloanSummaryHandler} from './crowdloanSummaryHandler';
 import {democracyProposalsHandler} from './democracyProposalsHandler';
-import {democracyReferendum} from './democracyReferendum';
+import {democracyReferendum} from './democracyReferendumHandler';
 import {democracyReferendumsHandler} from './democracyReferendumsHandler';
 import {democracySummaryHandler} from './democracySummaryHandler';
 import {eventsCalendarHandler} from './eventsCalendarHandler';
