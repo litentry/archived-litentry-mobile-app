@@ -1,15 +1,6 @@
 import React from 'react';
 import {render, waitFor} from 'src/testUtils';
-import {NetworkType} from 'src/types';
-import AddressInfoPreview from './AddressPreview';
-
-const polka_network = {
-  color: '#800000',
-  key: 'polkadot',
-  name: 'Polkadot',
-  ss58Format: 0,
-  ws: ['wss://rpc.polkadot.io'],
-} as NetworkType;
+import {AddressInfoPreview} from './AddressPreview';
 
 const address = '14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a';
 
