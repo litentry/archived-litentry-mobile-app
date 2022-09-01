@@ -56,7 +56,9 @@ export function AccountsScreen({navigation}: Props) {
     navigation.setOptions({
       headerRight: HeaderRight,
     });
-  }, [navigation, HeaderRight]);
+    // TODO: https://github.com/gorhom/react-native-bottom-sheet/issues/972
+    closeExternalAccount();
+  }, [navigation, HeaderRight, closeExternalAccount]);
 
   return (
     <SafeView edges={noTopEdges}>
