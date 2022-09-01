@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {RouteProp} from '@react-navigation/native';
 import {DashboardStackParamList} from '@ui/navigation/navigation';
 import {fireEvent, render, waitFor} from 'src/testUtils';

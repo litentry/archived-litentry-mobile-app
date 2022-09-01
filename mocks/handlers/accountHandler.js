@@ -6,7 +6,6 @@ export const accountHandler = graphql.query('getAccount', (req, res, ctx) => {
     ctx.data({
       substrateChainAccount: {
         __typename: 'SubstrateChainAccount',
-        subAccounts: [],
         address,
         display: 'PureStake/01',
         hasIdentity: true,

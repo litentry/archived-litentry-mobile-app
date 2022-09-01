@@ -18,14 +18,14 @@ const route = {
 
 describe('MyAccountScreen', () => {
   it('should render the loading component when data is fetching', async () => {
-    const {findByText} = render(<MyAccountScreen navigation={navigation} route={route} />);
-    await findByText('Send');
+    const {findByText, findAllByText} = render(<MyAccountScreen navigation={navigation} route={route} />);
+    await findAllByText('Send');
     await findByText('Receive');
     await findByText('Share');
     await findByText('ADDRESS');
     await findByText('14yx4vPAACZRhoDQm…RCe5tj1zPomhhS29a');
     await findByText('IDENTITY');
-    await findByText('PureStake/01');
+    await findAllByText('PureStake/01');
     await findByText('1 Judgements');
     await findByText('BALANCE');
     await findByText('20,000.9333 DOT');
@@ -36,8 +36,8 @@ describe('MyAccountScreen', () => {
 
   it('should copy the address to clipboard when clicked on the address', async () => {
     const clipboardSpy = jest.spyOn(Clipboard, 'setString');
-    const {findByText} = render(<MyAccountScreen navigation={navigation} route={route} />);
-    await findByText('Send');
+    const {findByText, findAllByText} = render(<MyAccountScreen navigation={navigation} route={route} />);
+    await findAllByText('Send');
     fireEvent.press(await findByText('14yx4vPAACZRhoDQm…RCe5tj1zPomhhS29a'));
     expect(clipboardSpy).toBeCalledWith('14yx4vPAACZRhoDQm1dyvXD3QdRQyCRRCe5tj1zPomhhS29a');
   });
