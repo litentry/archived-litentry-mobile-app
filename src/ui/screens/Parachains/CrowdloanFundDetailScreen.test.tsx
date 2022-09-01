@@ -13,6 +13,9 @@ const route = {
 } as RouteProp<CrowdloansStackParamList, 'Fund Detail'>;
 
 describe('CrowdloanFundDetailScreen', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
   it('should render loading component when data is fetching', () => {
     const {getByTestId} = render(<CrowdloanFundDetailScreen route={route} />);
     expect(getByTestId('loading_view')).toBeTruthy();
