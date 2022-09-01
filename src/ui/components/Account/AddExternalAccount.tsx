@@ -1,6 +1,6 @@
 import React from 'react';
 import {Alert, StyleSheet, View, Keyboard} from 'react-native';
-import {Divider, Button, Tabs, TabScreen, useTheme, Subheading, BottomSheetTextInput} from '@ui/library';
+import {Divider, Button, Tabs, TabScreen, useTheme, Subheading, TextInput, useBottomSheetInternal} from '@ui/library';
 import {Layout} from '@ui/components/Layout';
 import {useNetwork} from '@atoms/network';
 import {Padder} from '@ui/components/Padder';
@@ -58,6 +58,15 @@ export function AddExternalAccount({onClose}: Props) {
   const {addExternalAccount} = useKeyring();
   const {colors} = useTheme();
   const {isValid: isValidAddress, isAddressValid} = useIsAddressValid(currentNetwork, state.address);
+  const {shouldHandleKeyboardEvents} = useBottomSheetInternal();
+
+  const handleOnFocus = React.useCallback(() => {
+    shouldHandleKeyboardEvents.value = true;
+  }, [shouldHandleKeyboardEvents]);
+
+  const handleOnBlur = React.useCallback(() => {
+    shouldHandleKeyboardEvents.value = false;
+  }, [shouldHandleKeyboardEvents]);
 
   const handleInputChange = (text: string) => {
     dispatch({type: 'SET_ADDRESS', payload: text});
@@ -137,13 +146,15 @@ export function AddExternalAccount({onClose}: Props) {
                 <Tabs style={{backgroundColor: colors.background}} onChangeIndex={(index) => setTabIndex(index)}>
                   <TabScreen label="Type in" icon="keyboard">
                     <View style={globalStyles.paddedContainer}>
-                      <BottomSheetTextInput
+                      <TextInput
                         style={[styles.input, {borderColor: colors.placeholder}]}
                         onChangeText={handleInputChange}
                         value={state.address}
                         multiline={true}
                         numberOfLines={4}
                         placeholder="👉 Paste address here, e.g. 167r...14h"
+                        onBlur={handleOnBlur}
+                        onFocus={handleOnFocus}
                       />
                     </View>
                   </TabScreen>
