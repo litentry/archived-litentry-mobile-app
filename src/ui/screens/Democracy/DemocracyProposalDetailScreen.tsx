@@ -158,7 +158,7 @@ export function DemocracyProposalDetailScreen({route}: ScreenProps) {
             {`Cancel`}
           </Button>
           <Padder scale={1} />
-          <Button mode="outlined" disabled={!voteAccount} onPress={second}>
+          <Button mode="outlined" disabled={!voteAccount} onPress={second} testID="endorse-button">
             {`Endorse`}
           </Button>
         </View>
