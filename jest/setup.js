@@ -41,6 +41,7 @@ jest.mock('react-native/Libraries/Components/Switch/Switch', () => {
     default: mockComponent('react-native/Libraries/Components/Switch/Switch'),
   };
 });
+
 jest.mock('react-native-qrcode-scanner', () => <></>);
 
 jest.mock('@gorhom/bottom-sheet', () => {
@@ -48,9 +49,6 @@ jest.mock('@gorhom/bottom-sheet', () => {
   return {
     __esModule: true,
     ...MockBottomSheet,
-    useBottomSheet: {
-      expand: () => {},
-    },
   };
 });
 
