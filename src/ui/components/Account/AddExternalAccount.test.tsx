@@ -7,6 +7,9 @@ jest.useFakeTimers();
 const closeModel = () => jest.fn;
 
 describe('AddExternalAccount', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
   it('should render the AddExternalAccount component, test for wrong address', () => {
     const {getByPlaceholderText} = render(<AddExternalAccount onClose={closeModel} />);
     const inputAddress = getByPlaceholderText('👉 Paste address here, e.g. 167r...14h');

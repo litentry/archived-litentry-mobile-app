@@ -13,6 +13,10 @@ const route = {
 } as RouteProp<AppStackParamList, typeof accountScreen>;
 
 describe('AccountScreen', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+
   it('should render the loading view when data is fetching', () => {
     const {getByTestId} = render(<AccountScreen route={route} />);
     expect(getByTestId('loading_view')).toBeTruthy();

@@ -17,6 +17,9 @@ const route = {
 } as unknown as RouteProp<DashboardStackParamList, 'Tip'>;
 
 describe('TipDetailScreen', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
   it('should render the loading view when data is fetching', () => {
     const {getByTestId} = render(<TipDetailScreen navigation={navigation} route={route} />);
     expect(getByTestId('loading_view')).toBeTruthy();
