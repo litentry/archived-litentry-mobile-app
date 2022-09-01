@@ -34,11 +34,12 @@ describe('TechnicalCommitteeScreen', () => {
   });
 
   it('should navigate to account details screen on press of a technical committee', async () => {
+    const navigationSpy = jest.spyOn(navigation, 'navigate');
     const {findByText} = render(<TechnicalCommitteeScreen />);
     await findByText('Members');
     fireEvent.press(await findByText('Parity/🦿'));
-    await waitFor(() => {
-      expect(navigation.navigate).toBeCalledWith();
+    waitFor(() => {
+      expect(navigationSpy).toBeCalledTimes(1);
     });
   });
 });
