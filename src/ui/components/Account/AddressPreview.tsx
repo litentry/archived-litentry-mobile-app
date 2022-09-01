@@ -43,13 +43,13 @@ export function AddressInfoPreview(props: PropTypes) {
             left={ItemLeft(<Icon name="account" size={20} />)}
             right={ItemRight(accountInfo?.display ? stringShorten(accountInfo?.display) : 'Untitled account')}
           />
-          {accountInfo?.balance && (
+          {accountInfo?.balance ? (
             <List.Item
               title="Balance"
               left={ItemLeft(<Icon name="card-text-outline" size={20} />)}
               right={ItemRight(accountInfo.balance?.formattedFree)}
             />
-          )}
+          ) : null}
           <List.Item
             title="Judgment"
             left={ItemLeft(<Icon name="hammer" size={20} />)}

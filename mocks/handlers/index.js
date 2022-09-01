@@ -36,6 +36,7 @@ export const handlers = [
   democracyReferendumsHandler,
   democracyProposalsHandler,
   eventsCalendarHandler,
+  accountHandler,
   bountiesHandler,
   bountiesSummaryHandler,
   bountyHandler,
