@@ -40,7 +40,7 @@
     "@react-navigation/drawer": "^6.4.1",
     "@react-navigation/material-top-tabs": "^6.2.1",
     "@react-navigation/native": "^6.0.10",
-    "@react-navigation/native-stack": "^6.6.2",
+    "@react-navigation/native-stack": "^6.9.7",
     "@sentry/react-native": "^3.4.2",
     "@shopify/flash-list": "^1.2.1",
     "@tradle/react-native-http": "^2.0.1",
