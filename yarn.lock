@@ -2724,10 +2724,10 @@
     color "^3.1.3"
     warn-once "^0.1.0"
 
-"@react-navigation/elements@^1.3.3":
-  version "1.3.3"
-  resolved "https://registry.npmjs.org/@react-navigation/elements/-/elements-1.3.3.tgz"
-  integrity sha512-Lv2lR7si5gNME8dRsqz57d54m4FJtrwHRjNQLOyQO546ZxO+g864cSvoLC6hQedQU0+IJnPTsZiEI2hHqfpEpw==
+"@react-navigation/elements@^1.3.16", "@react-navigation/elements@^1.3.3":
+  version "1.3.16"
+  resolved "https://registry.yarnpkg.com/@react-navigation/elements/-/elements-1.3.16.tgz#58fc337926eae9a26e51931826fec4f43088ade8"
+  integrity sha512-KUvL9HvlYuJs5WZ/r4XFo4dYqfNo9VJa8IE5Wdc0Wr5rMwzFFVdna1rHk6Wbqc17fVqQ3B+4uWiM54w8yb89ug==
 
 "@react-navigation/material-top-tabs@^6.2.1":
   version "6.2.1"
@@ -2737,12 +2737,12 @@
     color "^3.1.3"
     warn-once "^0.1.0"
 
-"@react-navigation/native-stack@^6.6.2":
-  version "6.6.2"
-  resolved "https://registry.yarnpkg.com/@react-navigation/native-stack/-/native-stack-6.6.2.tgz#09e696ad72299872f4c5c1e5b1ad309869853628"
-  integrity sha512-pFMuzhxbPml5MBvJVAzHWoaUkQaefAOKpuUnAs/AxNQuHQwwnxRmDit1PQLuIPo7g7DlfwFXagDHE1R0tbnS8Q==
+"@react-navigation/native-stack@^6.9.11":
+  version "6.9.11"
+  resolved "https://registry.yarnpkg.com/@react-navigation/native-stack/-/native-stack-6.9.11.tgz#3430b4993fad9f9cdca212aadf15d5ef7a8bd80b"
+  integrity sha512-8QbHQ83RRvtTPGn627v7ZioZo0tFSADdVzh0s6laklCMYzKUK6Kp5gQq3kS0TAzsKD3C5WBwJ2DFrCYPvDKeEw==
   dependencies:
-    "@react-navigation/elements" "^1.3.3"
+    "@react-navigation/elements" "^1.3.16"
     warn-once "^0.1.0"
 
 "@react-navigation/native@^6.0.10":
