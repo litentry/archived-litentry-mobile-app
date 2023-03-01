@@ -90,7 +90,7 @@
     "react-native-popable": "^0.4.3",
     "react-native-qrcode-scanner": "^1.5.5",
     "react-native-randombytes": "^3.6.1",
-    "react-native-reanimated": "^2.8.0",
+    "react-native-reanimated": "^3.0.0",
     "react-native-reanimated-carousel": "^2.5.1",
     "react-native-redash": "^16.2.4",
     "react-native-safe-area-context": "^4.2.5",
