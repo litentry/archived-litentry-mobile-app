@@ -126,7 +126,7 @@
     "@graphql-codegen/typescript-operations": "2.3.5",
     "@graphql-codegen/typescript-react-apollo": "3.2.8",
     "@react-native-community/eslint-config": "^3.0.2",
-    "@testing-library/jest-native": "^4.0.5",
+    "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react-native": "^9.1.0",
     "@types/jest": "^27.4.1",
     "@types/lodash": "^4.14.178",
